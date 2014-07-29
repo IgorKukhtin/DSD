@@ -4,8 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPartnerCodeLoad(TVarChar, Int
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPartnerCodeLoad(
     IN inOKPO                TVarChar  ,    -- ОКПО
+    IN inObjectId            Integer   , 
     IN inMainCode            Integer   ,    -- Код товара
-    IN inPartnerCode         TVarChar  ,    -- Код товара партнера
+    IN inPartnerGoodsCode    TVarChar  ,    -- Код товара партнера
+    IN inPartnerGoodsName    TVarChar  ,    -- Название товара партнера
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID AS
@@ -18,12 +20,16 @@ BEGIN
      FROM Object_MainGoods_View
     WHERE Object_MainGoods_View.ObjectCode = inMainCode;
 
-   SELECT JuridicalId INTO vbJuridicalId
-     FROM ObjectHistory_JuridicalDetails_View
-    WHERE OKPO = inOKPO;
+   IF COALESCE(inObjectId, 0) = 0 THEN
+      SELECT JuridicalId INTO vbJuridicalId
+        FROM ObjectHistory_JuridicalDetails_View
+       WHERE OKPO = inOKPO;
+   ELSE
+      vbJuridicalId := inObjectId;
+   END IF;
    
    IF (COALESCE(vbGoodsMainId, 0) <> 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN
-      PERFORM gpInsertUpdate_Object_GoodsLink(0, inPartnerCode, '', vbGoodsMainId, vbJuridicalId, inSession);
+      PERFORM gpInsertUpdate_Object_GoodsLink(0, inPartnerGoodsCode, inPartnerGoodsName, vbGoodsMainId, vbJuridicalId, inSession);
    END IF;
 
 END;$BODY$

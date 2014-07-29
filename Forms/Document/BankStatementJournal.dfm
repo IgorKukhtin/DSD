@@ -121,6 +121,31 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
     end
+    object BankMarfinLoad: TClientBankLoadAction [4]
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbMarfinBank
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+    end
+    object BankMarfin: TMultiAction [5]
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankMarfinLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1052#1072#1088#1092#1080#1085' '#1041#1072#1085#1082#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1052#1072#1088#1092#1080#1085' '#1041#1072#1085#1082#1072
+      ImageIndex = 71
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
     end
@@ -351,6 +376,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbPireusDBFLoad'
         end
         item
+          Visible = True
+          ItemName = 'bbMarfinLoad'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -406,6 +435,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbPireusDBFLoad: TdxBarButton
       Action = BankPireusDBF
+      Category = 0
+    end
+    object bbMarfinLoad: TdxBarButton
+      Action = BankMarfin
       Category = 0
     end
   end

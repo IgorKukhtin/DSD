@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS Object_Goods_View CASCADE;
 DROP VIEW IF EXISTS Object_Bank_View CASCADE;
 DROP VIEW IF EXISTS Object_BankAccount_View CASCADE;
 DROP VIEW IF EXISTS Object_ProfitLossDirection_View CASCADE;

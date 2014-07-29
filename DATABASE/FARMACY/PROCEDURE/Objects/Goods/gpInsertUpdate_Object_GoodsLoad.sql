@@ -23,7 +23,7 @@ BEGIN
        vbNDSKindId  := zc_Enum_NDSKind_Medical();
     END IF; 
 
-    ioId := gpInsertUpdate_Object_Goods(ioId, inCode, inName, 0, inMeasureId, vbNDSKindId, inSession);
+    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inMeasureId, vbNDSKindId, 0, 0, inSession);
 
 END;$BODY$
 

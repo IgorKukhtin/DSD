@@ -27,7 +27,6 @@ type
     procedure GoodsProperty_Test;
     procedure GoodsPropertyValue_Test;
     procedure JuridicalGroup_Test;
-    procedure Measure_Test;
     procedure PaidKind_Test;
 //    procedure DocumentTaxKind_Test;
     procedure Partner_Test;
@@ -1366,49 +1365,6 @@ begin
     // Получение данных о Виде товара
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Вид товара'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-{TMeasureTest}
-constructor TMeasureTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Measure';
-  spSelect := 'gpSelect_Object_Measure';
-  spGet := 'gpGet_Object_Measure';
-end;
-
-function TMeasureTest.InsertDefault: integer;
-begin
-  result := InsertUpdateMeasure(0, -11, 'Единица измерения');
-  inherited;
-end;
-
-function TMeasureTest.InsertUpdateMeasure;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.Measure_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TMeasureTest;
-begin
-  ObjectTest := TMeasureTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Единицы измерения
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Единице измерения
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Единица измерения'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;

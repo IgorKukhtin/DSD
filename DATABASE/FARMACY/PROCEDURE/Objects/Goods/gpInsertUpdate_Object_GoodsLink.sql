@@ -30,14 +30,8 @@ BEGIN
                       AND ObjectString.DescId = zc_ObjectString_Goods_Code()
                       AND ObjectString.ValueData = inCode
     WHERE Object.DescId = zc_Object_Goods();   
-   -- сохранили <Объект>
-   vbGoodsId := lpInsertUpdate_Object(vbGoodsId, zc_Object_Goods(), 0, inName);
-   -- Строковый код
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), vbGoodsId, inCode);
-   -- сохранили связь с <Главным товаром>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), vbGoodsId, inGoodsMainId);
-   -- сохранили свойство <связи чьи товары>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), vbGoodsId, inObjectId);
+   
+    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inGoodsMainId, inObjectId, UserId);
   
 
    -- сохранили протокол
@@ -45,7 +39,7 @@ BEGIN
 
 END;$BODY$
 
-LANGUAGE plpgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
   

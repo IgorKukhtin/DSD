@@ -280,7 +280,7 @@ begin
 
   DECLAR.DECLARBODY.HORIG := '1';
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumber').asString;
+  DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumberPartner').asString;
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').asString;
   DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
@@ -373,7 +373,7 @@ begin
   // сохранить на диск
   XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + '0024447183' +
       C_DOC + C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
-      PAD0(copy(HeaderDataSet.FieldByName('InvNumber').asString, 1, 7),7) + '1' +
+      PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1, 7),7) + '1' +
       FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);

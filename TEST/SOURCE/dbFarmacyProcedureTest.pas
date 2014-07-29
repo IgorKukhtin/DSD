@@ -163,21 +163,6 @@ begin
   ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
 
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpInsertUpdate_Object_Goods.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpSelect_Object_Goods.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpGet_Object_Goods.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpInsertUpdate_Object_Measure.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql');
-  ZQuery.ExecSQL;
-
-
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpSelect_Object_Unit.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql', ZQuery);
@@ -200,13 +185,10 @@ begin
   ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpGet_Object_Country.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpSelect_Object_Country.sql', ZQuery);
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpInsertUpdate_Object_FileTypeKind.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpSelect_Object_FileTypeKind.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpGet_Object_FileTypeKind.sql', ZQuery);
 
   ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpInsertUpdate_Object_ImportTypeItems.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpSelect_Object_ImportTypeItems.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpGet_Object_ImportTypeItems.sql', ZQuery);
 
   ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpInsertUpdate_Object_ImportType.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpSelect_Object_ImportType.sql', ZQuery);

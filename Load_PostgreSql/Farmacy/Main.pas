@@ -49,6 +49,7 @@ type
     cbOnlyOpen: TCheckBox;
     OKDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
+    toTwoStoredProc: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -62,6 +63,7 @@ type
     function myExecToStoredProc: Boolean;
     procedure myDisabledCB(cb: TCheckBox);
     function GetStringValue(aSQL: string): string;
+    function GetRetailId: integer;
     procedure pLoadGuide_Goods;
     procedure pLoadGuide_GoodsPartnerCode;
     procedure pLoadUnit;
@@ -76,7 +78,7 @@ implementation
 
 {$R *.dfm}
 
-uses Authentication, CommonData, Storage;
+uses Authentication, CommonData, Storage, DBClient;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc:Boolean;
@@ -126,7 +128,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsLoad';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_MainGoodsLoad';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -440,6 +442,29 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
+function TMainForm.GetRetailId: integer;
+var DataSet: TClientDataSet;
+begin
+  DataSet := TClientDataSet.Create(nil);
+  toStoredProc.StoredProcName:='gpSelect_Object_Retail';
+  toStoredProc.OutputType := otDataSet;
+  toStoredProc.Params.Clear;
+  toStoredProc.DataSet := DataSet;
+  toStoredProc.Execute;
+  if DataSet.Locate('Name', 'Не болей', []) then
+     result := DataSet.FieldByName('Id').AsInteger
+  else begin
+    toStoredProc.StoredProcName:='gpInsertUpdate_Object_Retail';
+    toStoredProc.OutputType := otResult;
+    toStoredProc.Params.Clear;
+    toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+    toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+    toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+    toStoredProc.Execute;
+    result := toStoredProc.Params.ParamByName('ioId').Value;
+  end;
 end;
 
 function TMainForm.GetStringValue(aSQL: string): string;

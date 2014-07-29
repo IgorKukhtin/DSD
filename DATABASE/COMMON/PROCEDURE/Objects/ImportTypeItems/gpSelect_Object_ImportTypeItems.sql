@@ -5,9 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ImportTypeItems(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportTypeItems(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               ImportTypeId Integer, ParamType TVarChar, ParamNumber Integer, 
-               isErased boolean) AS
+RETURNS TABLE (Id Integer, ParamNumber Integer, Name TVarChar,
+               ImportTypeId Integer, ParamType TVarChar, isErased boolean) AS
 $BODY$
 BEGIN
 
@@ -17,7 +16,7 @@ BEGIN
    RETURN QUERY 
        SELECT 
              Object_ImportTypeItems_View.Id
-           , Object_ImportTypeItems_View.Code
+           , Object_ImportTypeItems_View.ParamNumber
            , Object_ImportTypeItems_View.Name
            , Object_ImportTypeItems_View.ImportTypeId
            , Object_ImportTypeItems_View.ParamType

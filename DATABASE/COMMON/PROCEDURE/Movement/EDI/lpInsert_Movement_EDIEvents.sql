@@ -13,7 +13,7 @@ DECLARE
   vbXML TVarChar;
 BEGIN
 
-  vbXML := '<XML><EDIEvent Value = "' || inEDIEvent || '"/></XML>';
+  vbXML := '<XML><EDIEvent Value = "' || replace(inEDIEvent, '"', '&quot;') || '"/></XML>';
 
   -- Сохранили
   INSERT INTO MovementProtocol (MovementId, OperDate, UserId, ProtocolData, isInsert)

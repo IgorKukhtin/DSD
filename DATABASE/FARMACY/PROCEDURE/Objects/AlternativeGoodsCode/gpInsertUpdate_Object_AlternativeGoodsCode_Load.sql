@@ -4,34 +4,32 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AlternativeGoodsCode (Integer, Int
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode(
  INOUT ioId               Integer   , -- ключ объекта <Условия договора>
-    IN inGoodsMainId      Integer   , -- Главный товар
-    IN inGoodsId          Integer   , -- Товар для замены
+    IN inGoodsMainCode    TVarChar  , -- Главный товар
+    IN inGoodsCode        TVarChar  , -- Товар для замены
     IN inRetailId         Integer   , -- Торговая сеть
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsUpdate Boolean;   
+   DECLARE vbGoodsMainId Integer;
+   DECLARE vbGoodsId  Integer;
+
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AlternativeGoodsCode());
-   
-   -- определили <Признак>
-   vbIsUpdate:= COALESCE (ioId, 0) > 0;
+--   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AlternativeGoodsCode());
+     SELECT Id from Object_Goods_View
+      WHERE ObjectId = 25603 AND GoodsCode = 24673::TVarChar
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_AlternativeGoodsCode(), 0, '');
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode(
+    IN inGoodsMainId   , -- Главный товар
+    IN inGoodsId       , -- Товар для замены
+    IN inRetailId      , -- Торговая сеть
+    IN inSession          TVarChar    -- сессия пользователя
    
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_GoodsMain(), ioId, inGoodsMainId);   
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_Goods(), ioId, inGoodsId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_Retail(), ioId, inRetailId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
+--   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$

@@ -358,4 +358,11 @@ object MainForm: TMainForm
     Left = 120
     Top = 416
   end
+  object toTwoStoredProc: TdsdStoredProc
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    Left = 72
+    Top = 160
+  end
 end

@@ -23,10 +23,6 @@ CREATE OR REPLACE VIEW Object_ImportTypeItems_View AS
                                 ON ObjectString_ImportTypeItems_ParamType.ObjectId = Object_ImportTypeItems.Id
                                AND ObjectString_ImportTypeItems_ParamType.DescId = zc_ObjectString_ImportTypeItems_ParamType()
 
-           LEFT JOIN ObjectFloat AS ObjectFloat_ImportTypeItems_ParamNumber
-                                 ON ObjectFloat_ImportTypeItems_ParamNumber.ObjectId = Object_ImportTypeItems.Id
-                                AND ObjectFloat_ImportTypeItems_ParamNumber.DescId = zc_ObjectFloat_ImportTypeItems_ParamNumber()
-
        WHERE Object_ImportTypeItems.DescId = zc_Object_ImportTypeItems();
 
 ALTER TABLE Object_ImportTypeItems_View  OWNER TO postgres;

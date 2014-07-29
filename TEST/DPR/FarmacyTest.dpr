@@ -122,7 +122,8 @@ uses
   FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
-  AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm};
+  AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm},
+  MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -130,6 +131,7 @@ uses
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
+  LocalViewPath := '..\DATABASE\FARMACY\View\';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;
