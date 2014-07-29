@@ -37,6 +37,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCurrencyMovementFormTest;
     procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEDIForm;
@@ -268,6 +269,14 @@ begin
   // форма для просмотра
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrency_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadCurrencyMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
 end;
 
 procedure TLoadFormTest.LoadDefaultFormTest;
