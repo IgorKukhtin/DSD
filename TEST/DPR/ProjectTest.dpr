@@ -475,7 +475,8 @@ uses
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
-  MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas';
+  MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

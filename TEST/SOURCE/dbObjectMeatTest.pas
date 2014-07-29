@@ -15,7 +15,6 @@ type
     function GetRecordCount(ObjectTest: TObjectTest): integer;
 
   published
-    procedure Bank_Test;
     procedure Branch_Test;
     procedure CarModel_Test;
     procedure Car_Test;
@@ -50,14 +49,6 @@ type
     procedure ReceiptChild_Test;
     procedure Receipt_Test;
    end;
-
-  TBankTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
-    constructor Create; override;
-  end;
 
   TContractTest = class(TObjectTest)
   private
@@ -193,13 +184,6 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoodsKind(Id, Code: Integer; Name: String): integer;
-    constructor Create; override;
-  end;
-
-  TMeasureTest = class(TObjectTest)
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMeasure(Id, Code: Integer; Name: String): integer;
     constructor Create; override;
   end;
 
@@ -602,35 +586,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-    {TBankTest }
- constructor TBankTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Bank';
-  spSelect := 'gpSelect_Object_Bank';
-  spGet := 'gpGet_Object_Bank';
-end;
-
-function TBankTest.InsertDefault: integer;
-var
-  JuridicalId: Integer;
-begin
-  JuridicalId := TJuridical.Create.GetDefault;
-  result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId);
-  inherited;
-end;
-
-function TBankTest.InsertUpdateBank;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inMFO', ftString, ptInput, MFO);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  result := InsertUpdate(FParams);
-end;
-
     { TPartnerTest }
  constructor TPartnerTest.Create;
 begin
@@ -757,28 +712,6 @@ end;
 procedure TdbObjectTest.PriceList_Test;
 begin
 
-end;
-
-procedure TdbObjectTest.Bank_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TBankTest;
-begin
-  ObjectTest := TBankTest.Create;
-  // Проверили выполнение Get для 0 записи
-  ObjectTest.GetRecord(0);
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Банка
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о банке
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Банк'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-
-  finally
-    ObjectTest.Delete(Id);
-  end;
 end;
 
 procedure TdbObjectTest.Contract_Test;
