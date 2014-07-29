@@ -1,9 +1,11 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
+  Align = alLeft
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 310
-  ClientWidth = 981
-  ExplicitWidth = 987
-  ExplicitHeight = 335
+  ClientHeight = 482
+  ClientWidth = 867
+  ExplicitLeft = -84
+  ExplicitWidth = 873
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -54,38 +56,35 @@
     Width = 111
   end
   object Panel: TPanel [7]
-    Left = 304
+    Left = 190
     Top = 0
     Width = 677
-    Height = 310
+    Height = 482
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
+    ExplicitLeft = 196
+    ExplicitTop = 1
     object PageControl: TcxPageControl
-      Left = 0
+      Left = -2
       Top = 0
-      Width = 675
-      Height = 310
-      Align = alClient
+      Width = 677
+      Height = 482
+      Align = alRight
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 310
-      ClientRectRight = 675
-      ExplicitWidth = 841
-      ExplicitHeight = 312
-      ClientRectBottom = 300
+      ClientRectBottom = 478
       ClientRectLeft = 4
-      ClientRectRight = 671
+      ClientRectRight = 673
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = 0
-        ExplicitWidth = 675
-        ExplicitHeight = 280
+        ExplicitLeft = -23
+        ExplicitTop = 0
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -212,92 +211,64 @@
           TabOrder = 17
           Width = 193
         end
-      end
-      object PartnerTS: TcxTabSheet
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-        ImageIndex = 1
-        object PartnerDockControl: TdxBarDockControl
-          Left = 0
+        object JuridicalDetailsGrid: TcxGrid
+          Left = 447
           Top = 0
-          Width = 667
-          Height = 28
-          Align = dalTop
-          BarManager = dxBarManager
-        end
-        object PartnerGrid: TcxGrid
-          Left = 0
-          Top = 28
-          Width = 667
-          Height = 248
-          Align = alClient
-          TabOrder = 0
-          ExplicitTop = 26
-          ExplicitWidth = 841
-          ExplicitHeight = 262
-          object PartnerGridDBTableView: TcxGridDBTableView
+          Width = 222
+          Height = 454
+          Align = alRight
+          TabOrder = 18
+          object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
-            DataController.DataSource = PartnerDS
+            DataController.DataSource = JuridicalDetailsDS
             DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
+            OptionsData.Appending = True
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
             OptionsData.Inserting = False
-            OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object colPartnerCode: TcxGridDBColumn
-              Caption = #1050#1086#1076
-              DataBinding.FieldName = 'Code'
-              Options.Editing = False
-            end
-            object colPartnerAddress: TcxGridDBColumn
-              Caption = #1040#1076#1088#1077#1089
-              DataBinding.FieldName = 'Address'
-              Options.Editing = False
-              Width = 423
-            end
-            object colPartnerisErased: TcxGridDBColumn
-              Caption = #1059#1076#1072#1083#1077#1085
-              DataBinding.FieldName = 'isErased'
-              Visible = False
-              Options.Editing = False
+            object colJDData: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072
+              DataBinding.FieldName = 'StartDate'
+              PropertiesClassName = 'TcxDateEditProperties'
+              Properties.InputKind = ikRegExpr
+              Properties.SaveTime = False
+              Properties.ShowTime = False
+              Properties.WeekNumbers = True
+              Width = 101
             end
           end
-          object PartnerGridLevel: TcxGridLevel
-            GridView = PartnerGridDBTableView
+          object JuridicalDetailsGridLevel: TcxGridLevel
+            GridView = JuridicalDetailsGridDBTableView
           end
         end
       end
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
+        ExplicitWidth = 667
+        ExplicitHeight = 282
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 667
-          Height = 28
+          Width = 669
           Align = dalTop
           BarManager = dxBarManager
+          ExplicitWidth = 667
         end
         object ContractGrid: TcxGrid
           Left = 0
-          Top = 26
-          Width = 675
-          Height = 260
-          Align = alClient
-          TabOrder = 0
-          Top = 28
+          Top = 3
           Width = 667
-          Height = 248
-          Align = alClient
+          Height = 451
+          Align = alLeft
           TabOrder = 0
-          ExplicitLeft = -32
-          ExplicitTop = 18
-          ExplicitWidth = 675
-          ExplicitHeight = 240
+          ExplicitLeft = -320
+          ExplicitTop = 27
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -551,7 +522,6 @@
     end
     object actContractRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      TabSheet = ContractTS
       MoveParams = <>
       StoredProc = spContract
       StoredProcList = <
@@ -610,7 +580,6 @@
     end
     object actMultiContractInsert: TMultiAction
       Category = 'DSDLib'
-      TabSheet = ContractTS
       MoveParams = <>
       ActionList = <
         item
@@ -753,10 +722,10 @@
     object ContractBar: TdxBar
       Caption = 'ContractBar'
       CaptionButtons = <>
-      DockControl = ContractDockControl
-      DockedDockControl = ContractDockControl
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
+      DockingStyle = dsTop
       FloatLeft = 877
       FloatTop = 8
       FloatClientWidth = 0
@@ -781,7 +750,7 @@
       OneOnRow = True
       Row = 0
       UseOwnFont = False
-      Visible = True
+      Visible = False
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
@@ -801,8 +770,8 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 96
-    Top = 192
+    Left = 376
+    Top = 272
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
@@ -888,7 +857,6 @@
   end
   object ContractAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = ContractGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
