@@ -476,7 +476,11 @@ uses
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
-  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  Storage_Object in '..\..\Forms\Guides\Storage_Object.pas' {Storage_ObjectForm: TParentForm},
+  Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
+  CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
+  CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

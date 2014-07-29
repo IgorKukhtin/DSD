@@ -2,26 +2,32 @@ inherited ImportTypeForm: TImportTypeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 743
-  ExplicitWidth = 751
-  ExplicitHeight = 366
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitWidth = 759
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 313
+    Height = 311
+    ExplicitTop = 28
     ExplicitWidth = 743
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 743
+    ExplicitHeight = 311
+    ClientRectBottom = 307
+    ClientRectRight = 739
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 743
-      ExplicitHeight = 313
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 735
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 465
-        Height = 313
+        Height = 303
         Align = alLeft
+        ExplicitLeft = -3
         ExplicitWidth = 465
-        ExplicitHeight = 313
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -59,8 +65,8 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 468
         Top = 0
-        Width = 275
-        Height = 313
+        Width = 267
+        Height = 303
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -133,7 +139,7 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 465
         Top = 0
         Width = 3
-        Height = 313
+        Height = 303
         Control = cxGrid
       end
     end
@@ -251,7 +257,11 @@ inherited ImportTypeForm: TImportTypeForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Component = MasterCDS
+          ToParam.Value = Null
+        end>
       Params = <
         item
           Name = 'key'
@@ -276,6 +286,7 @@ inherited ImportTypeForm: TImportTypeForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -296,7 +307,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -348,6 +359,10 @@ inherited ImportTypeForm: TImportTypeForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Left = 368
+      Top = 112
     end
     object bbSetErased: TdxBarButton
       Action = dsdSetErased
@@ -481,8 +496,8 @@ inherited ImportTypeForm: TImportTypeForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 632
-    Top = 147
+    Left = 648
+    Top = 187
   end
   object dsdDBViewAddOnItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -495,8 +510,8 @@ inherited ImportTypeForm: TImportTypeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 464
-    Top = 200
+    Left = 512
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'

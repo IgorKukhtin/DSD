@@ -37,6 +37,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCurrencyMovementFormTest;
     procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEDIForm;
@@ -97,6 +98,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStorage_ObjectFormTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
@@ -267,6 +269,14 @@ begin
   // форма для просмотра
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrency_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadCurrencyMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
 end;
 
 procedure TLoadFormTest.LoadDefaultFormTest;
@@ -1053,7 +1063,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProvinceCityEditForm');
 end;
 
-
+procedure TLoadFormTest.LoadStorage_ObjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorage_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorage_ObjectEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectEditForm');
+end;
 
 procedure TLoadFormTest.LoadRoleFormTest;
 begin
