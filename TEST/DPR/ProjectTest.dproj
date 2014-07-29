@@ -1425,7 +1425,6 @@
 				<Form>Currency_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-<<<<<<< HEAD
 			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\Storage_Object.pas">
