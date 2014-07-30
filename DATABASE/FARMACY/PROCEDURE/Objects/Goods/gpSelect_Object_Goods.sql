@@ -30,7 +30,7 @@ BEGIN
         , Object_NDSKind.Id        AS NDSKindId
         , Object_NDSKind.ValueData AS NDSKindName
    
-    FROM Object AS Object_Goods
+    FROM Object_MainGoods_View AS Object_Goods
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -44,9 +44,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId;
 
-    WHERE Object_Goods.DescId = zc_Object_Goods();
   
 END;
 $BODY$

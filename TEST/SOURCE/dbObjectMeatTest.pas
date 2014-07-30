@@ -15,7 +15,6 @@ type
     function GetRecordCount(ObjectTest: TObjectTest): integer;
 
   published
-    procedure Bank_Test;
     procedure Branch_Test;
     procedure CarModel_Test;
     procedure Car_Test;
@@ -27,7 +26,6 @@ type
     procedure GoodsProperty_Test;
     procedure GoodsPropertyValue_Test;
     procedure JuridicalGroup_Test;
-    procedure Measure_Test;
     procedure PaidKind_Test;
 //    procedure DocumentTaxKind_Test;
     procedure Partner_Test;
@@ -51,14 +49,6 @@ type
     procedure ReceiptChild_Test;
     procedure Receipt_Test;
    end;
-
-  TBankTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
-    constructor Create; override;
-  end;
 
   TContractTest = class(TObjectTest)
   private
@@ -194,13 +184,6 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoodsKind(Id, Code: Integer; Name: String): integer;
-    constructor Create; override;
-  end;
-
-  TMeasureTest = class(TObjectTest)
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMeasure(Id, Code: Integer; Name: String): integer;
     constructor Create; override;
   end;
 
@@ -603,35 +586,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-    {TBankTest }
- constructor TBankTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Bank';
-  spSelect := 'gpSelect_Object_Bank';
-  spGet := 'gpGet_Object_Bank';
-end;
-
-function TBankTest.InsertDefault: integer;
-var
-  JuridicalId: Integer;
-begin
-  JuridicalId := TJuridical.Create.GetDefault;
-  result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId);
-  inherited;
-end;
-
-function TBankTest.InsertUpdateBank;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inMFO', ftString, ptInput, MFO);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  result := InsertUpdate(FParams);
-end;
-
     { TPartnerTest }
  constructor TPartnerTest.Create;
 begin
@@ -758,28 +712,6 @@ end;
 procedure TdbObjectTest.PriceList_Test;
 begin
 
-end;
-
-procedure TdbObjectTest.Bank_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TBankTest;
-begin
-  ObjectTest := TBankTest.Create;
-  // Проверили выполнение Get для 0 записи
-  ObjectTest.GetRecord(0);
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Банка
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о банке
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Банк'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-
-  finally
-    ObjectTest.Delete(Id);
-  end;
 end;
 
 procedure TdbObjectTest.Contract_Test;
@@ -1366,49 +1298,6 @@ begin
     // Получение данных о Виде товара
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Вид товара'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-{TMeasureTest}
-constructor TMeasureTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Measure';
-  spSelect := 'gpSelect_Object_Measure';
-  spGet := 'gpGet_Object_Measure';
-end;
-
-function TMeasureTest.InsertDefault: integer;
-begin
-  result := InsertUpdateMeasure(0, -11, 'Единица измерения');
-  inherited;
-end;
-
-function TMeasureTest.InsertUpdateMeasure;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.Measure_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TMeasureTest;
-begin
-  ObjectTest := TMeasureTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Единицы измерения
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Единице измерения
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Единица измерения'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;

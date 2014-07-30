@@ -43,6 +43,9 @@ type
     BankPireusDBF: TMultiAction;
     BankPireusDBFLoad: TClientBankLoadAction;
     bbPireusDBFLoad: TdxBarButton;
+    BankMarfinLoad: TClientBankLoadAction;
+    BankMarfin: TMultiAction;
+    bbMarfinLoad: TdxBarButton;
   private
     { Private declarations }
   public

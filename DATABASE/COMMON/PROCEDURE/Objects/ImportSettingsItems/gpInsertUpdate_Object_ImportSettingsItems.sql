@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettingsItems (Integer, TVar
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettingsItems(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
-    IN inName                    TVarChar  ,    -- Название объекта <>
-    IN inImportSettingsId        Integer   ,    -- ссылка на главное юр.лицо
-    IN inImportTypeItemsId       Integer   ,    -- ссылка на 
+    IN inName                    TVarChar  ,    -- Значение параметра
+    IN inImportSettingsId        Integer   ,    -- ссылка на настройки импорта
+    IN inImportTypeItemsId       Integer   ,    -- ссылка на параметры
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -19,9 +19,6 @@ BEGIN
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
    vbUserId := lpGetUserBySession (inSession); 
 
-   -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportSettingsItems(), inName);
-   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportSettingsItems(), 0, inName);
    

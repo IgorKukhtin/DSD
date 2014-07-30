@@ -10,7 +10,7 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter;
+  cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit;
 
 type
   TImportTypeForm = class(TAncestorDBGridForm)
@@ -46,6 +46,7 @@ type
     bbdsdChoiceGuides: TdxBarButton;
     clParamType: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
+    clNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

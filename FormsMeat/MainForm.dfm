@@ -3,16 +3,15 @@
   ClientWidth = 1118
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -320
   ExplicitWidth = 1126
-  ExplicitHeight = 201
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -276,6 +275,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbStorage_Object'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsGroup'
         end
         item
@@ -509,6 +512,10 @@
         item
           Visible = True
           ItemName = 'bbSendDebt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCurrencyMovement'
         end>
     end
     object bbFinanceDocuments_Separator: TdxBarSeparator
@@ -1631,6 +1638,14 @@
       Action = actPartnerAddress
       Category = 0
     end
+    object bbStorage_Object: TdxBarButton
+      Action = actStorage_Object
+      Category = 0
+    end
+    object bbCurrencyMovement: TdxBarButton
+      Action = actCurrencyMovement
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actAssetGroup: TdsdOpenForm
@@ -1716,6 +1731,17 @@
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actStorage_Object: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1052#1077#1089#1090#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1052#1077#1089#1090#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+      FormName = 'TStorage_ObjectForm'
+      FormNameParam.Value = 'TStorage_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3403,6 +3429,20 @@
       FormName = 'TPriceCorrectiveJournalForm'
       FormNameParam.Name = 'TPriceCorrectiveJournalForm'
       FormNameParam.Value = 'TPriceCorrectiveJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object Action1: TAction
+      Caption = 'Action1'
+    end
+    object actCurrencyMovement: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+      Hint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+      FormName = 'TCurrencyJournalForm'
+      FormNameParam.Value = 'TCurrencyJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

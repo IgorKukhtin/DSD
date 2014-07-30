@@ -10,6 +10,7 @@ type
 
   IXMLЕлектроннийДокументType = interface;
   IXMLЗаголовокType = interface;
+  IXMLДокПідставаType = interface;
   IXMLСторониType = interface;
   IXMLКонтрагентType = interface;
   IXMLПараметриType = interface;
@@ -18,6 +19,7 @@ type
   IXMLРядокType = interface;
   IXMLШтрихкодType = interface;
   IXMLВсьогоПоРядкуType = interface;
+  IXMLДоПоверненняType = interface;
   IXMLВсьогоПоДокументуType = interface;
 
 { IXMLЕлектроннийДокументType }
@@ -65,6 +67,26 @@ type
     property НомерЗамовлення: UnicodeString read Get_НомерЗамовлення write Set_НомерЗамовлення;
     property ДатаЗамовлення: UnicodeString read Get_ДатаЗамовлення write Set_ДатаЗамовлення;
     property МісцеСкладання: UnicodeString read Get_МісцеСкладання write Set_МісцеСкладання;
+  end;
+
+{ IXMLДокПідставаType }
+
+  IXMLДокПідставаType = interface(IXMLNode)
+    ['{A0FE8FAB-308F-463F-A37D-889038B51506}']
+    { Property Accessors }
+    function Get_НомерДокументу: UnicodeString;
+    function Get_ТипДокументу: UnicodeString;
+    function Get_КодТипуДокументу: UnicodeString;
+    function Get_ДатаДокументу: UnicodeString;
+    procedure Set_НомерДокументу(Value: UnicodeString);
+    procedure Set_ТипДокументу(Value: UnicodeString);
+    procedure Set_КодТипуДокументу(Value: UnicodeString);
+    procedure Set_ДатаДокументу(Value: UnicodeString);
+    { Methods & Properties }
+    property НомерДокументу: UnicodeString read Get_НомерДокументу write Set_НомерДокументу;
+    property ТипДокументу: UnicodeString read Get_ТипДокументу write Set_ТипДокументу;
+    property КодТипуДокументу: UnicodeString read Get_КодТипуДокументу write Set_КодТипуДокументу;
+    property ДатаДокументу: UnicodeString read Get_ДатаДокументу write Set_ДатаДокументу;
   end;
 
 { IXMLСторониType }
@@ -117,6 +139,7 @@ type
     { Methods & Properties }
     function Add: IXMLПараметрType;
     function Insert(const Index: Integer): IXMLПараметрType;
+    function ParamByName(const Name: string): IXMLПараметрType;
     property Параметр[Index: Integer]: IXMLПараметрType read Get_Параметр; default;
   end;
 
@@ -162,6 +185,7 @@ type
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
     function Get_ВсьогоПоРядку: IXMLВсьогоПоРядкуType;
+    function Get_ДоПовернення: IXMLДоПоверненняType;
     procedure Set_ІД(Value: Integer);
     procedure Set_НомПоз(Value: Integer);
     procedure Set_АртикулПокупця(Value: UnicodeString);
@@ -183,6 +207,7 @@ type
     property ПДВ: UnicodeString read Get_ПДВ write Set_ПДВ;
     property Ціна: UnicodeString read Get_Ціна write Set_Ціна;
     property ВсьогоПоРядку: IXMLВсьогоПоРядкуType read Get_ВсьогоПоРядку;
+    property ДоПовернення: IXMLДоПоверненняType read Get_ДоПовернення;
   end;
 
 { IXMLШтрихкодType }
@@ -194,6 +219,17 @@ type
     procedure Set_ІД(Value: Integer);
     { Methods & Properties }
     property ІД: Integer read Get_ІД write Set_ІД;
+  end;
+
+{ IXMLДоПоверненняType }
+
+  IXMLДоПоверненняType = interface(IXMLNode)
+    ['{6C154905-794B-4E10-AFCB-C903BAA9B3F2}']
+    { Property Accessors }
+    function Get_Кількість: UnicodeString;
+    procedure Set_Кількість(Value: UnicodeString);
+    { Methods & Properties }
+    property Кількість: UnicodeString read Get_Кількість write Set_Кількість;
   end;
 
 { IXMLВсьогоПоРядкуType }
@@ -234,6 +270,7 @@ type
 
   TXMLЕлектроннийДокументType = class;
   TXMLЗаголовокType = class;
+  TXMLДокПідставаType = class;
   TXMLСторониType = class;
   TXMLКонтрагентType = class;
   TXMLПараметриType = class;
@@ -242,6 +279,7 @@ type
   TXMLРядокType = class;
   TXMLШтрихкодType = class;
   TXMLВсьогоПоРядкуType = class;
+  TXMLДоПоверненняType = class;
   TXMLВсьогоПоДокументуType = class;
 
 { TXMLЕлектроннийДокументType }
@@ -277,6 +315,23 @@ type
     procedure Set_НомерЗамовлення(Value: UnicodeString);
     procedure Set_ДатаЗамовлення(Value: UnicodeString);
     procedure Set_МісцеСкладання(Value: UnicodeString);
+  public
+    procedure AfterConstruction; override;
+  end;
+
+{ TXMLДокПідставаType }
+
+  TXMLДокПідставаType = class(TXMLNode, IXMLДокПідставаType)
+  protected
+    { IXMLДокПідставаType }
+    function Get_НомерДокументу: UnicodeString;
+    function Get_ТипДокументу: UnicodeString;
+    function Get_КодТипуДокументу: UnicodeString;
+    function Get_ДатаДокументу: UnicodeString;
+    procedure Set_НомерДокументу(Value: UnicodeString);
+    procedure Set_ТипДокументу(Value: UnicodeString);
+    procedure Set_КодТипуДокументу(Value: UnicodeString);
+    procedure Set_ДатаДокументу(Value: UnicodeString);
   end;
 
 { TXMLСторониType }
@@ -320,6 +375,7 @@ type
     function Get_Параметр(Index: Integer): IXMLПараметрType;
     function Add: IXMLПараметрType;
     function Insert(const Index: Integer): IXMLПараметрType;
+    function ParamByName(const Name: string): IXMLПараметрType;
   public
     procedure AfterConstruction; override;
   end;
@@ -363,6 +419,7 @@ type
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
     function Get_ВсьогоПоРядку: IXMLВсьогоПоРядкуType;
+    function Get_ДоПовернення: IXMLДоПоверненняType;
     procedure Set_ІД(Value: Integer);
     procedure Set_НомПоз(Value: Integer);
     procedure Set_АртикулПокупця(Value: UnicodeString);
@@ -396,6 +453,15 @@ type
     procedure Set_СумаБезПДВ(Value: UnicodeString);
     procedure Set_СумаПДВ(Value: UnicodeString);
     procedure Set_Сума(Value: UnicodeString);
+  end;
+
+{ TXMLДоПоверненняType }
+
+  TXMLДоПоверненняType = class(TXMLNode, IXMLДоПоверненняType)
+  protected
+    { IXMLДоПоверненняType }
+    function Get_Кількість: UnicodeString;
+    procedure Set_Кількість(Value: UnicodeString);
   end;
 
 { TXMLВсьогоПоДокументуType }
@@ -481,6 +547,12 @@ end;
 
 { TXMLЗаголовокType }
 
+procedure TXMLЗаголовокType.AfterConstruction;
+begin
+  RegisterChildNode('ДокПідстава', TXMLДокПідставаType);
+  inherited;
+end;
+
 function TXMLЗаголовокType.Get_НомерДокументу: UnicodeString;
 begin
   Result := ChildNodes['НомерДокументу'].Text;
@@ -549,6 +621,48 @@ end;
 procedure TXMLЗаголовокType.Set_МісцеСкладання(Value: UnicodeString);
 begin
   ChildNodes['МісцеСкладання'].NodeValue := Value;
+end;
+
+{ TXMLДокПідставаType }
+
+function TXMLДокПідставаType.Get_НомерДокументу: UnicodeString;
+begin
+  Result := ChildNodes['НомерДокументу'].Text;
+end;
+
+procedure TXMLДокПідставаType.Set_НомерДокументу(Value: UnicodeString);
+begin
+  ChildNodes['НомерДокументу'].NodeValue := Value;
+end;
+
+function TXMLДокПідставаType.Get_ТипДокументу: UnicodeString;
+begin
+  Result := ChildNodes['ТипДокументу'].Text;
+end;
+
+procedure TXMLДокПідставаType.Set_ТипДокументу(Value: UnicodeString);
+begin
+  ChildNodes['ТипДокументу'].NodeValue := Value;
+end;
+
+function TXMLДокПідставаType.Get_КодТипуДокументу: UnicodeString;
+begin
+  Result := ChildNodes['КодТипуДокументу'].Text;
+end;
+
+procedure TXMLДокПідставаType.Set_КодТипуДокументу(Value: UnicodeString);
+begin
+  ChildNodes['КодТипуДокументу'].NodeValue := Value;
+end;
+
+function TXMLДокПідставаType.Get_ДатаДокументу: UnicodeString;
+begin
+  Result := ChildNodes['ДатаДокументу'].Text;
+end;
+
+procedure TXMLДокПідставаType.Set_ДатаДокументу(Value: UnicodeString);
+begin
+  ChildNodes['ДатаДокументу'].NodeValue := Value;
 end;
 
 { TXMLСторониType }
@@ -673,6 +787,18 @@ begin
   Result := AddItem(Index) as IXMLПараметрType;
 end;
 
+function TXMLПараметриType.ParamByName(
+  const Name: string): IXMLПараметрType;
+var i: integer;
+begin
+  result := nil;
+  for i := 0 to GetCount - 1 do
+      if Get_Параметр(i).назва = Name then begin
+         result := Get_Параметр(i);
+         break
+      end;
+end;
+
 { TXMLПараметрType }
 
 function TXMLПараметрType.Get_ІД: Integer;
@@ -726,6 +852,7 @@ procedure TXMLРядокType.AfterConstruction;
 begin
   RegisterChildNode('Штрихкод', TXMLШтрихкодType);
   RegisterChildNode('ВсьогоПоРядку', TXMLВсьогоПоРядкуType);
+  RegisterChildNode('ДоПовернення', TXMLДоПоверненняType);
   inherited;
 end;
 
@@ -829,6 +956,11 @@ begin
   Result := ChildNodes['ВсьогоПоРядку'] as IXMLВсьогоПоРядкуType;
 end;
 
+function TXMLРядокType.Get_ДоПовернення: IXMLДоПоверненняType;
+begin
+  Result := ChildNodes['ДоПовернення'] as IXMLДоПоверненняType;
+end;
+
 { TXMLШтрихкодType }
 
 function TXMLШтрихкодType.Get_ІД: Integer;
@@ -839,6 +971,18 @@ end;
 procedure TXMLШтрихкодType.Set_ІД(Value: Integer);
 begin
   SetAttribute('ІД', Value);
+end;
+
+{ TXMLДоПоверненняType }
+
+function TXMLДоПоверненняType.Get_Кількість: UnicodeString;
+begin
+  Result := ChildNodes['Кількість'].Text;
+end;
+
+procedure TXMLДоПоверненняType.Set_Кількість(Value: UnicodeString);
+begin
+  ChildNodes['Кількість'].NodeValue := Value;
 end;
 
 { TXMLВсьогоПоРядкуType }

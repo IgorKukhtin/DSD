@@ -5,9 +5,11 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettingsItems(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettingsItems(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar,
-               ImportSettingsId Integer, ImportSettingsName TVarChar,
-               ImportTypeItemsId Integer, ImportTypeItemsName TVarChar,
+RETURNS TABLE (Id Integer, ParamValue TVarChar,
+               ImportSettingsId Integer,
+               ImportTypeItemsId Integer,  
+               ParamName TVarChar,
+               ParamNumber Integer,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -16,30 +18,19 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportSettingsItems());
 
    RETURN QUERY 
-       SELECT 
-             Object_ImportSettingsItems.Id           AS Id
-           , Object_ImportSettingsItems.ValueData    AS Name
-         
-           , Object_ImportSettings.Id         AS ImportSettingsId
-           , Object_ImportSettings.ValueData  AS ImportSettingsName 
-                     
-           , Object_ImportTypeItems.Id         AS ImportTypeItemsId
-           , Object_ImportTypeItems.ValueData  AS ImportTypeItemsName 
-           
-           , Object_ImportSettingsItems.isErased   AS isErased
-           
-       FROM Object AS Object_ImportSettingsItems
-           LEFT JOIN ObjectLink AS ObjectLink_ImportSettingsItems_ImportSettings
-                                ON ObjectLink_ImportSettingsItems_ImportSettings.ObjectId = Object_ImportSettingsItems.Id
-                               AND ObjectLink_ImportSettingsItems_ImportSettings.DescId = zc_ObjectLink_ImportSettingsItems_ImportSettings()
-           LEFT JOIN Object AS Object_ImportSettings ON Object_ImportSettings.Id = ObjectLink_ImportSettingsItems_ImportSettings.ChildObjectId
-           
-           LEFT JOIN ObjectLink AS ObjectLink_ImportSettingsItems_ImportTypeItems
-                                ON ObjectLink_ImportSettingsItems_ImportTypeItems.ObjectId = Object_ImportSettingsItems.Id
-                               AND ObjectLink_ImportSettingsItems_ImportTypeItems.DescId = zc_ObjectLink_ImportSettingsItems_ImportTypeItems()
-           LEFT JOIN Object AS Object_ImportTypeItems ON Object_ImportTypeItems.Id = ObjectLink_ImportSettingsItems_ImportTypeItems.ChildObjectId           
+    SELECT 
+       Object_ImportSettingsItems_View.Id,
+       Object_ImportSettingsItems_View.ValueData, 
+       Object_ImportSettings_View.Id AS ImportSettingsId, 
+       Object_ImportTypeItems_View.Id,
+       Object_ImportTypeItems_View.Name,
+       Object_ImportTypeItems_View.ParamNumber,
+       Object_ImportSettingsItems_View.isErased
 
-       WHERE Object_ImportSettingsItems.DescId = zc_Object_ImportSettingsItems();
+FROM Object_ImportSettings_View
+   LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = Object_ImportSettings_View.ImportTypeId
+   LEFT JOIN Object_ImportSettingsItems_View ON Object_ImportSettingsItems_View.ImportSettingsId = Object_ImportSettings_View.Id
+                                            AND Object_ImportSettingsItems_View.ImportTypeItemsId = Object_ImportTypeItems_View.Id;
   
 END;
 $BODY$

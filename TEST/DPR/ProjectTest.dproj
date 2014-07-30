@@ -1425,6 +1425,24 @@
 				<Form>Currency_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Storage_Object.pas">
+				<Form>Storage_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Storage_ObjectEdit.pas">
+				<Form>Storage_ObjectEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CurrencyMovement.pas">
+				<Form>CurrencyMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CurrencyJournal.pas">
+				<Form>CurrencyJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AlternativeGoodsCode (Integer, Int
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode(
  INOUT ioId               Integer   , -- ключ объекта <Условия договора>
-    IN inGoodsMainId      Integer   , -- Договор
-    IN inGoodsId          Integer   , -- Виды бонусов
-    IN inRetailId         Integer   , -- Статьи назначения
+    IN inGoodsMainId      Integer   , -- Главный товар
+    IN inGoodsId          Integer   , -- Товар для замены
+    IN inRetailId         Integer   , -- Торговая сеть
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS

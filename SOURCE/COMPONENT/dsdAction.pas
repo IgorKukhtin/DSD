@@ -4,7 +4,7 @@ interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
      cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
-     cxGridDBTableView, frxClass, cxGridCustomView;
+     cxGridDBTableView, frxClass, cxGridCustomView, Dialogs;
 
 type
 
@@ -530,12 +530,28 @@ type
     property ImageIndexFalse: TImageIndex read FImageIndexFalse write SetImageIndexFalse;
   end;
 
+  TFileDialogAction = class(TdsdCustomAction)
+  private
+    FFileOpenDialog: TFileOpenDialog;
+    FParam: TdsdParam;
+  protected
+    function LocalExecute: boolean; override;
+    procedure SetupDialog;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property FileOpenDialog: TFileOpenDialog read FFileOpenDialog write FFileOpenDialog;
+    property Param: TdsdParam read FParam write FParam;
+  end;
+
   procedure Register;
 
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
+     Vcl.Controls, Menus, cxGridExportLink, ShellApi,
      frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
      cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet,
      cxGridAddOn, cxTextEdit;
@@ -556,6 +572,7 @@ begin
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
+  RegisterActions('DSDLib', [TFileDialogAction], TFileDialogAction);
   RegisterActions('DSDLib', [TInsertUpdateChoiceAction], TInsertUpdateChoiceAction);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
   RegisterActions('DSDLib', [TMultiAction], TMultiAction);
@@ -1981,6 +1998,47 @@ begin
      exit
   end;
   FGridView := Value;
+end;
+
+{ TFileDialogAction }
+
+constructor TFileDialogAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  SetupDialog;
+  FParam := TdsdParam.Create(nil);
+end;
+
+destructor TFileDialogAction.Destroy;
+begin
+  FreeAndNil(FFileOpenDialog);
+  FreeAndNil(FParam);
+  inherited;
+end;
+
+function TFileDialogAction.LocalExecute: boolean;
+begin
+  result := false;
+  if FFileOpenDialog.Execute then begin
+     Param.Value := FFileOpenDialog.FileName;
+     result := true
+  end;
+end;
+
+procedure TFileDialogAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if not (csDestroying in ComponentState) and (Operation = opRemove) and
+     (AComponent = FFileOpenDialog) then
+    SetupDialog;
+end;
+
+procedure TFileDialogAction.SetupDialog;
+begin
+  FFileOpenDialog := TFileOpenDialog.Create(Self);
+  FFileOpenDialog.SetSubComponent(True);
+  FFileOpenDialog.FreeNotification(Self);
 end;
 
 end.

@@ -189,6 +189,7 @@ var List: TStrings;
     Stream: TStringStream;
     FileData: string;
     ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+    isReturn: boolean;
 begin
     FTPSetConnection;
     // загружаем файлы с FTP
@@ -203,7 +204,7 @@ begin
          try
            Start;
            for I := 0 to List.Count - 1 do begin
-               // если первые буквы файла comdoc, а последние .p7s
+               // если первые буквы файла comdoc, а последние .p7s. Реализация
                if (copy(list[i], 1, 6) = 'comdoc') and (copy(list[i], length(list[i]) - 3, 4) = '.p7s') then begin
                   if (StartDate <= gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd'))
                     and (gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd') <= EndDate)  then begin
@@ -216,7 +217,8 @@ begin
                     FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
                     ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
                     if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
-                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004') then begin
+                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
+                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')then begin
                          // загружаем в базенку
                          InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                     end;
@@ -280,17 +282,17 @@ begin
 
   DECLAR.DECLARBODY.HORIG := '1';
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumber').asString;
+  DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumberPartner').asString;
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').asString;
-  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('OKPO_From').asString;
-  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('OKPO_To').asString;
+  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
+  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
   DECLAR.DECLARBODY.HLOCSEL := HeaderDataSet.FieldByName('JuridicalAddress_From').asString;
   DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName('JuridicalAddress_To').asString;
   DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
 
-  DECLAR.DECLARBODY.H01G1S := 'Договір;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + HeaderDataSet.FieldByName('OperDatePartnerEDI').asString;
+  DECLAR.DECLARBODY.H01G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime) + ';';
   DECLAR.DECLARBODY.H01G2D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
   DECLAR.DECLARBODY.H01G3S := HeaderDataSet.FieldByName('ContractName').AsString;
   DECLAR.DECLARBODY.H02G1S := 'Оплата з поточного рахунка';
@@ -373,7 +375,7 @@ begin
   // сохранить на диск
   XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + '0024447183' +
       C_DOC + C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
-      PAD0(copy(HeaderDataSet.FieldByName('InvNumber').asString, 1, 7),7) + '1' +
+      PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1, 7),7) + '1' +
       FormatDateTime('mmyyyy', HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
@@ -516,8 +518,16 @@ begin
        ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаЗамовлення)
     else
        ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаДокументу);
-    ParamByName('inSaleInvNumber').Value  := Заголовок.НомерДокументу;
-    ParamByName('inSaleOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+    ParamByName('inPartnerInvNumber').Value  := Заголовок.НомерДокументу;
+    ParamByName('inPartnerOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+    if Заголовок.КодТипуДокументу = '012' then begin
+       ParamByName('inDesc').Value   := 'Return';
+       ParamByName('inInvNumberTax').Value  := Параметри.ParamByName('Номер податкової накладної').NodeValue;
+       if not VarIsNull(Параметри.ParamByName('Дата податкової накладної').NodeValue) then
+          ParamByName('inOperDateTax').Value   := VarToDateTime(Параметри.ParamByName('Дата податкової накладної').NodeValue);
+    end
+    else
+       ParamByName('inDesc').Value   := 'Sale';
 
     for i:= 0 to Сторони.Count - 1 do
         if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
@@ -535,9 +545,11 @@ begin
              ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
              ParamByName('inGoodsName').Value := Найменування;
              ParamByName('inGLNCode').Value := АртикулПокупця;
-             ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
+             if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then
+                ParamByName('inAmountPartner').Value := gfStrToFloat(ДоПовернення.Кількість)
+             else
+                ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
              ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.СумаБезПДВ);
-//             ParamByName('inPricePartner').Value := ParamByName('inSummPartner').Value / ParamByName('inAmountPartner').Value;
              ParamByName('inPricePartner').Value := gfStrToFloat(БазоваЦіна);
              Execute;
            end;

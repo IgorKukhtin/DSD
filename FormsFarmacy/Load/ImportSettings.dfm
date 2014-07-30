@@ -1,21 +1,21 @@
 inherited ImportSettingsForm: TImportSettingsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
-  ClientWidth = 921
-  ExplicitWidth = 937
-  ExplicitHeight = 378
+  ClientWidth = 969
+  ExplicitLeft = -171
+  ExplicitWidth = 977
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 921
-    Height = 311
-    ExplicitTop = 28
-    ExplicitWidth = 921
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 917
+    Width = 969
+    Height = 313
+    ExplicitWidth = 969
+    ExplicitHeight = 313
+    ClientRectBottom = 313
+    ClientRectRight = 969
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 921
+      ExplicitWidth = 969
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 633
@@ -46,6 +46,13 @@ inherited ImportSettingsForm: TImportSettingsForm
           object clDirectory: TcxGridDBColumn
             Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' '#1079#1072#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'Directory'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = FileDialogAction
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
@@ -96,7 +103,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ImportTypeItemsChoiceForm
+                Caption = 'ImportTypeItemsChoiceForm'
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -119,15 +126,13 @@ inherited ImportSettingsForm: TImportSettingsForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 596
+        Left = 636
         Top = 0
-        Width = 317
-        Height = 303
+        Width = 333
+        Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 593
-        ExplicitWidth = 320
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -150,27 +155,36 @@ inherited ImportSettingsForm: TImportSettingsForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clIName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
-            DataBinding.FieldName = 'Name'
-            Width = 98
+          object colParamNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1087
+            DataBinding.FieldName = 'ParamNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 38
           end
-          object clImportTypeItemsName: TcxGridDBColumn
+          object clParamName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
+            DataBinding.FieldName = 'ParamName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object colParamValue: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
-            DataBinding.FieldName = 'ImportTypeItemsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ImportTypeItemsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Width = 124
+            DataBinding.FieldName = 'ParamValue'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.Items.Strings = (
+              '%JURIDICAL%'
+              '%CONTRACT%')
+            HeaderAlignmentVert = vaCenter
+            Width = 127
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            Width = 52
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -178,11 +192,12 @@ inherited ImportSettingsForm: TImportSettingsForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 593
+        Left = 633
         Top = 0
         Width = 3
-        Height = 303
+        Height = 313
         AutoPosition = False
+        Control = cxGrid
       end
     end
   end
@@ -297,27 +312,6 @@ inherited ImportSettingsForm: TImportSettingsForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object ImportTypeItemsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ImportTypeItemsChoiceForm'
-      FormName = 'TImportTypeForm'
-      FormNameParam.Value = 'TImportTypeForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'ImportTypeItemsId'
-          Component = ChildCDS
-          ComponentItem = 'ImportTypeItemsId'
-        end
-        item
-          Name = 'ImportTypeItemsName'
-          Component = ChildCDS
-          ComponentItem = 'ImportTypeItemsName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -356,14 +350,14 @@ inherited ImportSettingsForm: TImportSettingsForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'key'
+          Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'FileTypeKindId'
+          ComponentItem = 'FileTypeId'
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'FileTypeKindName'
+          ComponentItem = 'FileTypeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -410,6 +404,16 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = True
     end
+    object FileDialogAction: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = [fdoPickFolders]
+      Param.Component = MasterCDS
+      Param.ComponentItem = 'Directory'
+      Param.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -429,7 +433,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -616,7 +620,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       item
         Name = 'inName'
         Component = ChildCDS
-        ComponentItem = 'Name'
+        ComponentItem = 'ParamValue'
         DataType = ftString
         ParamType = ptInput
       end

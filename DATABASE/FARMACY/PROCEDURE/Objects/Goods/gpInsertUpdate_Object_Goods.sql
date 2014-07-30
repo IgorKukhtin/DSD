@@ -4,12 +4,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
-    IN inCode                Integer   ,    -- Код объекта <Товар>
+    IN inCode                TVarChar  ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
-    
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
+    IN inGoodsMainId         Integer   ,    -- Ссылка на главный товар
+    IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -22,23 +23,8 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
-   vbCode := lfGet_ObjectCode (inCode, zc_Object_Goods());
-   
-   -- !!! проверка уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
-
-   -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
-
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), vbCode, inName);
-   -- сохранили связь с <Группа>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
-   -- сохранили свойство <НДС>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
-  
+   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, vbNDSKindId, inGoodsMainId, inObjectId, inSession);
+ 
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);

@@ -1136,13 +1136,25 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inSaleInvNumber'
+        Name = 'inPartnerInvNumber'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inSaleOperDate'
+        Name = 'inPartnerOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateTax'
         Value = Null
         DataType = ftDateTime
         ParamType = ptInput
@@ -1155,6 +1167,12 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inJuridicalName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDesc'
         Value = Null
         DataType = ftString
         ParamType = ptInput

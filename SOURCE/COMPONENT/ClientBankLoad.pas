@@ -6,7 +6,8 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
 
 type
 
-  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank, cbPireusBank, cbPireusBankDBF);
+  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank,
+                     cbOTPBank, cbPireusBank, cbPireusBankDBF, cbMarfinBank);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
@@ -211,7 +212,7 @@ begin
     cbPrivatBank: result := TPrivatBankLoad.Create(StartDate, EndDate);
     cbForum, cbPireusBankDBF: result := TForumBankLoad.Create(StartDate, EndDate);
     cbVostok: result := TVostokBankLoad.Create(StartDate, EndDate);
-    cbFidoBank: result := TFidoBankLoad.Create(StartDate, EndDate);
+    cbFidoBank, cbMarfinBank: result := TFidoBankLoad.Create(StartDate, EndDate);
     cbOTPBank: result := TOTPBankLoad.Create(StartDate, EndDate);
     cbPireusBank: result := TPireusBankLoad.Create(StartDate, EndDate);
   end;

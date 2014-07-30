@@ -117,6 +117,7 @@ begin
   FParams.AddParam('isCorporate', ftBoolean, ptInput, isCorporate);
   FParams.AddParam('inJuridicalGroupId', ftInteger, ptInput, JuridicalGroupId);
   FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
+  FParams.AddParam('inRetailId', ftInteger, ptInput, 0);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inPriceListId', ftInteger, ptInput, PriceListId);
   FParams.AddParam('inPriceListPromoId', ftInteger, ptInput, PriceListPromoId);

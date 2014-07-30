@@ -3,12 +3,12 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_AlternativeGoodsCode(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_AlternativeGoodsCode(
+    IN inRetailId    Integer,       -- Торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
              , GoodsMainId Integer, GoodsMainName TVarChar                
              , GoodsId Integer, GoodsName TVarChar    
-             , RetailId Integer, RetailName TVarChar 
              , isErased boolean
              ) AS
 $BODY$
@@ -26,9 +26,6 @@ BEGIN
          , Object_Goods.Id            AS GoodsId
          , Object_Goods.ValueData     AS GoodsName
 
-         , Object_Retail.Id           AS RetailId
-         , Object_Retail.ValueData    AS RetailName
-         
          , Object_AlternativeGoodsCode.isErased  AS isErased
          
      FROM Object AS Object_AlternativeGoodsCode
@@ -46,7 +43,6 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_Retail
                                ON ObjectLink_AlternativeGoodsCode_Retail.ObjectId = Object_AlternativeGoodsCode.Id
                               AND ObjectLink_AlternativeGoodsCode_Retail.DescId = zc_ObjectLink_AlternativeGoodsCode_Retail()
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_AlternativeGoodsCode_Retail.ChildObjectId
            
      WHERE Object_AlternativeGoodsCode.DescId = zc_Object_AlternativeGoodsCode()
        AND Object_AlternativeGoodsCode.isErased = FALSE
@@ -55,7 +51,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_AlternativeGoodsCode (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_AlternativeGoodsCode (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

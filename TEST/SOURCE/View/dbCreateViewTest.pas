@@ -21,6 +21,8 @@ procedure TView.ProcedureLoad;
 begin
   ScriptDirectory := ViewPath;
   inherited;
+  ScriptDirectory := LocalViewPath;
+  inherited;
 end;
 
 initialization

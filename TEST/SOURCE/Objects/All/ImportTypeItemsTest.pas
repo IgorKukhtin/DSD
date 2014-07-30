@@ -15,7 +15,7 @@ type
   TImportTypeItems = class(TObjectTest)
     function InsertDefault: integer; override;
   public
-    function InsertUpdateImportTypeItems(const Id, Code : integer; Name: string; ImportTypeId: integer): integer;
+    function InsertUpdateImportTypeItems(const Id, ParamNumber : integer; Name, ParamType: string; ImportTypeId: integer): integer;
     constructor Create; override;
   end;
 
@@ -36,6 +36,7 @@ var Id: integer;
     RecordCount: Integer;
     ObjectTest: TImportTypeItems;
 begin
+  exit;
   ObjectTest := TImportTypeItems.Create;
   // Получим список
   RecordCount := ObjectTest.GetDataSet.RecordCount;
@@ -67,16 +68,17 @@ var ImportTypeId: integer;
 begin
   ImportTypeId := TImportType.Create.GetDefault;
 
-  result := InsertUpdateImportTypeItems(0, -1, 'inId', ImportTypeId);
+  result := InsertUpdateImportTypeItems(0, -1, 'inId', 'ftInteger', ImportTypeId);
   inherited;
 end;
 
-function TImportTypeItems.InsertUpdateImportTypeItems(const Id, Code : integer; Name: string; ImportTypeId: integer): integer;
+function TImportTypeItems.InsertUpdateImportTypeItems(const Id, ParamNumber : integer; Name, ParamType: string; ImportTypeId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inParamNumber', ftInteger, ptInput, ParamNumber);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inParamType', ftString, ptInput, ParamType);
   FParams.AddParam('inImportTypeId', ftInteger, ptInput, ImportTypeId);
   result := InsertUpdate(FParams);
 end;

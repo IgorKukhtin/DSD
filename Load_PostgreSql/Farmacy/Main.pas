@@ -36,7 +36,7 @@ type
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
     cbBank: TCheckBox;
-    cbOwnedType: TCheckBox;
+    cbGoodsPartnerCode: TCheckBox;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
@@ -49,6 +49,7 @@ type
     cbOnlyOpen: TCheckBox;
     OKDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
+    toTwoStoredProc: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -62,7 +63,9 @@ type
     function myExecToStoredProc: Boolean;
     procedure myDisabledCB(cb: TCheckBox);
     function GetStringValue(aSQL: string): string;
+    function GetRetailId: integer;
     procedure pLoadGuide_Goods;
+    procedure pLoadGuide_GoodsPartnerCode;
     procedure pLoadUnit;
   public
     { Public declarations }
@@ -75,7 +78,7 @@ implementation
 
 {$R *.dfm}
 
-uses Authentication, CommonData, Storage;
+uses Authentication, CommonData, Storage, DBClient;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc:Boolean;
@@ -125,7 +128,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsLoad';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_MainGoodsLoad';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -158,6 +161,57 @@ begin
      //
      myDisabledCB(cbGoods);
 end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_GoodsPartnerCode;
+begin
+     if (not cbGoodsPartnerCode.Checked)or(not cbGoodsPartnerCode.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsPartnerCode);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('SELECT AlternativeCode, Code, OKPO FROM AlternativeCode');
+        Add('     join GoodsProperty on GoodsProperty.Id = AlternativeCode.MasterId');
+        Add('     join Client on Client.Id = CategoriesId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsPartnerCodeLoad';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+
+        toStoredProc.Params.AddParam ('inOKPO',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMainCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartnerCode',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('inOKPO').Value := FieldByName('OKPO').AsString;
+             toStoredProc.Params.ParamByName('inMainCode').Value := FieldByName('Code').AsInteger;
+             toStoredProc.Params.ParamByName('inPartnerCode').Value := FieldByName('AlternativeCode').AsString;
+             if not myExecToStoredProc then ;//exit;
+             //
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsPartnerCode);
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_ExtraChargeCategories;
 begin
@@ -341,6 +395,7 @@ begin
   if not fStop then pLoadGuide_Measure;
   if not fStop then pLoadGuide_ExtraChargeCategories;
   if not fStop then pLoadGuide_Goods;
+  if not fStop then pLoadGuide_GoodsPartnerCode;
   if not fStop then pLoadUnit;
 (*  if not fStop then pLoadGuide_GoodsGroup;
   //if not fStop then pLoadGuide_Goods_toZConnection;
@@ -387,6 +442,29 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
+function TMainForm.GetRetailId: integer;
+var DataSet: TClientDataSet;
+begin
+  DataSet := TClientDataSet.Create(nil);
+  toStoredProc.StoredProcName:='gpSelect_Object_Retail';
+  toStoredProc.OutputType := otDataSet;
+  toStoredProc.Params.Clear;
+  toStoredProc.DataSet := DataSet;
+  toStoredProc.Execute;
+  if DataSet.Locate('Name', 'Не болей', []) then
+     result := DataSet.FieldByName('Id').AsInteger
+  else begin
+    toStoredProc.StoredProcName:='gpInsertUpdate_Object_Retail';
+    toStoredProc.OutputType := otResult;
+    toStoredProc.Params.Clear;
+    toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+    toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+    toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+    toStoredProc.Execute;
+    result := toStoredProc.Params.ParamByName('ioId').Value;
+  end;
 end;
 
 function TMainForm.GetStringValue(aSQL: string): string;

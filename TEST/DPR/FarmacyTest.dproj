@@ -98,6 +98,7 @@
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
@@ -372,9 +373,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas">
 				<Form>AlternativeGoodsCodeForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

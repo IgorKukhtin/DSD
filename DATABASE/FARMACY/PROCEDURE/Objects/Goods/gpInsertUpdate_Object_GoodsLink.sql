@@ -14,26 +14,24 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLink(
 RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
+   DECLARE vbGoodsId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
+   -- Ищем по коду и inObjectId
+   SELECT Object.Id INTO vbGoodsId
+     FROM Object 
+     JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
+                    AND ObjectLink.ChildObjectId = inObjectId
+                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+     JOIN ObjectString ON ObjectString.ObjectId = Object.Id
+                      AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+                      AND ObjectString.ValueData = inCode
+    WHERE Object.DescId = zc_Object_Goods();   
    
-   -- !!! проверка уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
-
-   -- проверка уникальности <Код>
-   -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
-
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), 0, inName);
-   -- Строковый код
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
-   -- сохранили связь с <Главным товаром>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), ioId, inGoodsMainId);
-   -- сохранили свойство <связи чьи товары>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
+    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inGoodsMainId, inObjectId, UserId);
   
 
    -- сохранили протокол
@@ -41,7 +39,7 @@ BEGIN
 
 END;$BODY$
 
-LANGUAGE plpgsql VOLATILE;
+	LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
   

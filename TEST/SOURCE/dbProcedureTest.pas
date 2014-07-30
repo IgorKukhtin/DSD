@@ -302,6 +302,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\CityKind\';
   ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Storage\';
+  ProcedureLoad;
 
 end;
 
