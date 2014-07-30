@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              )
@@ -24,7 +24,8 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+           -- , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+           , Movement.InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName

@@ -1,5 +1,5 @@
 alter PROCEDURE "DBA"."_pgSelect_Bill_Inventory_Item" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, MovementId Integer, BillNumber TVarCharShort, BillDate Date, UnitId Integer, GoodsId Integer, Amount TSumm, PartionGoodsDate date, Summ TSumm, HeadCount TSumm, myCount TSumm, PartionGoods TVarCharMedium, GoodsKindId Integer, AssetId Integer, isCar smallint, InfoMoneyCode Integer, Id_Postgres Integer)
+result(ObjectId Integer, MovementId Integer, BillNumber TVarCharShort, BillDate Date, UnitId Integer, GoodsId Integer, Amount TSumm, PartionGoodsDate date, Price TSumm, Summ TSumm, HeadCount TSumm, myCount TSumm, PartionGoods TVarCharMedium, GoodsKindId Integer, AssetId Integer, isCar smallint, InfoMoneyCode Integer, Id_Postgres Integer)
 begin
   --
   declare @saveRemains smallint;
@@ -29,6 +29,17 @@ begin
   EndSummIn TSumm not null,
   primary key (UnitId,GoodsPropertyId,KindPackageId,PartionStr_MB),
   ) on commit preserve rows;
+  //
+  declare local temporary table _tmpList_Bill(
+  UnitId integer not null,
+  BillId integer null,
+  primary key(UnitId),
+  ) on commit delete rows;
+  declare local temporary table _tmpList_Bill_find(
+  UnitId integer not null,
+  BillId integer null,
+  primary key(UnitId),
+  ) on commit delete rows;
   //
   -- by Calc ALL remains
   declare local temporary table _tmpList_Unit(
@@ -112,8 +123,12 @@ begin
     select Unit.Id, isnull (isUnit.isPartionDate, zc_rvNo())
     from dba.Unit
          left outer join dba.isUnit on isUnit.UnitId = Unit.Id
-    where (isUnit.UnitId is not null or Unit.ParentId = 4137)
+         -- left outer join dba._pgUnit on _pgUnit.Id = Unit.pgUnitId
+         -- left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres
+         -- left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = _pgUnit.Id or Unit_find.PersonalId_Postgres = _pgPersonal.Id
+    where (isUnit.UnitId is not null or Unit.ParentId = 4137) -- MO
       and Unit.Id not in (zc_UnitId_StoreReturnBrak(), zc_UnitId_StoreReturn())
+    group by Unit.Id, isUnit.isPartionDate
 --      and Unit.ParentId in (4188)
 -- and 1=0
     ;
@@ -176,6 +191,7 @@ begin
 
    if @saveRemains = zc_rvYes()
    then 
+    print '-----@saveRemains = zc_rvYes()';
     -- calc remains only by PartionStr
     call dba.pInsert_ReportRemainsAll_byKindPackage_onPartionStr (@inEndDate, @inEndDate);
     -- my delete
@@ -226,6 +242,68 @@ begin
 
 
     // 
+    -- Calculate PartionDate - TM÷ and ÃÕÃ¿
+    update _tmpList_Remains_byKindPackage
+          set _tmpList_Remains_byKindPackage.PartionDate = GoodsProperty.BillDate
+    from dba.Unit
+       , (select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (Bill.BillDate) as BillDate
+          from (select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage.UnitId
+                from dba.GoodsProperty
+                     inner join _tmpList_Remains_byKindPackage on _tmpList_Remains_byKindPackage.GoodsPropertyId = GoodsProperty.Id
+                where GoodsProperty.InfoMoneyCode in (20201, 20202, 20205, 20301, 20302, 20303, 20304, 20305)
+                group by GoodsProperty.Id, _tmpList_Remains_byKindPackage.UnitId
+                ) as GoodsProperty
+                join dba.BillItems on BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
+                                  and BillItems.BillKind = zc_bkSendUnitToUnit()
+                                  and BillItems.OperCount <>0
+                join dba.Bill on Bill.Id = BillItems.BillId
+                             -- and Bill.FromId in (zc_UnitId_Composition(), zc_UnitId_CompositionZ())
+                             and Bill.ToId = GoodsProperty.UnitId
+          group by GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId
+         ) as GoodsProperty
+     where _tmpList_Remains_byKindPackage.UnitId = Unit.Id and Unit.ParentId = 4137 -- MO
+       and _tmpList_Remains_byKindPackage.GoodsPropertyId = GoodsProperty.GoodsPropertyId
+       and _tmpList_Remains_byKindPackage.UnitId = GoodsProperty.UnitId;
+    // 
+    // 
+    insert into _tmpList_Bill_find (BillId,UnitId)
+                          select max (Bill.Id) as BillId, Bill.FromId as UnitId -- Unit_find.Id as UnitId
+                          from dba.Bill
+                               -- left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
+                               -- left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
+                               -- left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
+                               --                                                  and pgPersonalFrom.Id_Postgres > 0
+                               -- left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = pgUnitFrom.Id or Unit_find.PersonalId_Postgres = pgPersonalFrom.Id
+                          where Bill.BillDate = @inEndDate
+                            and Bill.BillKind in (zc_bkProductionInFromReceipt())
+                            and Bill.isRemains = zc_rvYes()
+                            and Bill.Id_Postgres <> 0
+                          group by UnitId;
+    --
+    insert into _tmpList_Bill(UnitId,BillId)
+    select _tmpList_Remains_byKindPackage.UnitId, _tmp.BillId
+    from (select UnitId from _tmpList_Remains_byKindPackage group by UnitId) as _tmpList_Remains_byKindPackage
+         join dba.Unit on Unit.Id = _tmpList_Remains_byKindPackage.UnitId
+         left outer join (select max (Unit.Id) as UnitId_find, isnull (Unit_find.pgUnitId,isnull (-Unit_find.PersonalId_Postgres, Unit.Id)) as myId
+                          from dba.Unit
+                               left outer join dba.isUnit on isUnit.UnitId = Unit.Id
+                               left outer join dba._pgUnit on _pgUnit.Id = Unit.pgUnitId and isnull(Unit.ParentId,0) <> 4137 -- MO
+                               left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres and Unit.ParentId = 4137 -- MO
+                               left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = _pgUnit.Id or Unit_find.PersonalId_Postgres = _pgPersonal.Id
+                          where isUnit.UnitId is not null or Unit.ParentId = 4137 -- MO
+                          group by Unit_find.pgUnitId, Unit_find.PersonalId_Postgres, isnull (Unit_find.pgUnitId,isnull (-Unit_find.PersonalId_Postgres, Unit.Id))
+                         ) as tmpUnit on myId = case when Unit.ParentId = 4137 then isnull(-Unit.PersonalId_Postgres,Unit.Id)
+                                                     else isnull(Unit.pgUnitId,Unit.Id)
+                                                end
+--                                         (tmpUnit.pgUnitId = Unit.pgUnitId and isnull(Unit.ParentId,0) <> 4137) -- MO
+--                                      or (tmpUnit.PersonalId_Postgres = Unit.PersonalId_Postgres and Unit.ParentId = 4137) -- MO
+--                                      or (tmpUnit.UnitId_find = Unit.Id)
+         left outer join _tmpList_Bill_find as _tmp on _tmp.UnitId = tmpUnit.UnitId_find
+     where _tmp.BillId <>0;
+
+    //
+    print '----------- Start Finish';
+    // 
     -- result
     select 0 as ObjectId
          , Bill.Id_Postgres as MovementId
@@ -235,6 +313,7 @@ begin
          , GoodsProperty.Id_Postgres as GoodsId
          , sum (EndCount) as Amount
          , _tmpList_Remains_byKindPackage.PartionDate as PartionGoodsDate
+         , case when BI_find.OperCount > 0 then BI_find.SummIn / BI_find.OperCount else 0 end as Price
          , sum (case when (Goods.ParentId=686 and @inEndDate>='2013-01-01')
                         or GoodsProperty.InfoMoneyCode not in (10101 -- ÃˇÒÌÓÂ Ò˚¸Â
                                                               ,10102 -- 
@@ -261,25 +340,35 @@ begin
          , GoodsProperty.InfoMoneyCode
          , 0 as Id_Postgres
     from _tmpList_Remains_byKindPackage
-         left outer join (select Bill.Id as BillId, Unit_find.Id as UnitId
-                          from dba.Bill
-                               left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
-                               left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
-                               left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
-                                                                                and pgPersonalFrom.Id_Postgres > 0
-                               left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = pgUnitFrom.Id or Unit_find.PersonalId_Postgres = pgPersonalFrom.Id
-                          where Bill.BillDate = @inEndDate
-                            and Bill.BillKind in (zc_bkProductionInFromReceipt())
-                            and Bill.isRemains = zc_rvYes()
-                          group by BillId, UnitId
-                         ) as _tmp on _tmp.UnitId = _tmpList_Remains_byKindPackage.UnitId
+         left outer join  _tmpList_Bill as _tmp on _tmp.UnitId = _tmpList_Remains_byKindPackage.UnitId
+
 
          left outer join dba.Bill on Bill.Id = _tmp.BillId
          left outer join dba.GoodsProperty on GoodsProperty.Id = _tmpList_Remains_byKindPackage.GoodsPropertyId
          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId
          left outer join dba.KindPackage on KindPackage.Id = _tmpList_Remains_byKindPackage.KindPackageId
-                                        and Goods.ParentId not in(686,1670,2387,2849,5874) where MovementId <> 0 --  “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+                                        and Goods.ParentId not in(686,1670,2387,2849,5874) --  “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+         left outer join (select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (BillItems.Id) as BillItemsId
+                          from (select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage.UnitId, max (isnull(_tmpList_Remains_byKindPackage.PartionDate,zc_DateEnd())) as PartionDate
+                                from dba.GoodsProperty
+                                     inner join _tmpList_Remains_byKindPackage on _tmpList_Remains_byKindPackage.GoodsPropertyId = GoodsProperty.Id
+                                where GoodsProperty.InfoMoneyCode in (20201, 20202, 20205, 20301, 20302, 20303, 20304, 20305)
+                                group by GoodsProperty.Id, _tmpList_Remains_byKindPackage.UnitId
+                                ) as GoodsProperty
+                                join dba.BillItems on BillItems.GoodsPropertyId = GoodsProperty.GoodsPropertyId
+                                                  and BillItems.BillKind = zc_bkIncomeToUnit()
+                                                  and BillItems.OperCount <>0
+                                                  and BillItems.OperPrice <>0
+                                join dba.Bill on Bill.Id = BillItems.BillId
+                                             and Bill.BillDate <= GoodsProperty.PartionDate
+                          group by GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId
+                         ) as GoodsProperty_find on GoodsProperty_find.GoodsPropertyId = _tmpList_Remains_byKindPackage.GoodsPropertyId
+                                                and GoodsProperty_find.UnitId = _tmpList_Remains_byKindPackage.UnitId
 
+         left outer join dba.BillItems as BI_find on BI_find.Id = GoodsProperty_find.BillItemsId
+         -- left outer join dba.Bill as Bill_find on Bill_find.Id = BI_find.BillId
+
+    where MovementId <> 0 
     group by Bill.Id_Postgres
            , Bill.BillNumber
            , Bill.BillDate
@@ -288,11 +377,12 @@ begin
            , _tmpList_Remains_byKindPackage.PartionDate
            , KindPackage.Id_Postgres
            , GoodsProperty.InfoMoneyCode
+           , BI_find.SummIn
+           , BI_find.OperCount
     order by 4, 3, 5
    ;
 
 end
 go
 //
--- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2012-12-01', '2012-12-31')
--- call dba._pgSelect_Bill_Inventory_Item (zc_rvYes(), '2013-09-01', '2013-09-30')
+-- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2014-05-01', '2014-05-31')

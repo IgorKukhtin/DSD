@@ -113,6 +113,7 @@ type
     dxBarStatic1: TdxBarStatic;
     GuidesFiller: TGuidesFiller;
     colPartionGoodsDate: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
   private
   public
   end;

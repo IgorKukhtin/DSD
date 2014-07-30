@@ -39,4 +39,4 @@ ALTER FUNCTION lfGet_Object_TreeNameFull (Integer, Integer) OWNER TO postgres;
 */
 
 -- тест
- SELECT * FROM lfGet_Object_TreeNameFull (1946, zc_ObjectLink_GoodsGroup_Parent())
+-- SELECT * FROM lfGet_Object_TreeNameFull (1946, zc_ObjectLink_GoodsGroup_Parent())

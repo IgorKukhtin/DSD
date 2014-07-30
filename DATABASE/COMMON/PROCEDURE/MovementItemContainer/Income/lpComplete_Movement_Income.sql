@@ -565,8 +565,11 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate:= _tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                   THEN lpInsertFind_Object_PartionGoods (inStorageId:= NULL
-                                                                                        , inInvNumber:= NULL
+                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Price:= NULL
+                                                                                        , inGoodsId     := NULL
+                                                                                        , inStorageId   := NULL
+                                                                                        , inInvNumber   := NULL
+                                                                                        , inOperDate    := NULL
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
@@ -712,11 +715,19 @@ BEGIN
                                               ) AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT _tmpItem.InfoMoneyDestinationId
-                      , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
+                      , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                               OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                  THEN zc_InfoMoneyDestination_WorkProgress()
+                             ELSE _tmpItem.InfoMoneyDestinationId
+                        END AS InfoMoneyDestinationId_calc
                  FROM _tmpItem
                  WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId
-                        , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END
+                        , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                                 OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                    THEN zc_InfoMoneyDestination_WorkProgress()
+                               ELSE _tmpItem.InfoMoneyDestinationId
+                          END
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
      WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
@@ -1147,6 +1158,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.07.14                                        * change zc_GoodsKind_WorkProgress
  26.07.14                                        * add МНМА
  25.05.14                                        * add lpComplete_Movement
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
