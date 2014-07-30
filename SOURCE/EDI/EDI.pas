@@ -189,6 +189,7 @@ var List: TStrings;
     Stream: TStringStream;
     FileData: string;
     ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+    isReturn: boolean;
 begin
     FTPSetConnection;
     // загружаем файлы с FTP
@@ -203,7 +204,7 @@ begin
          try
            Start;
            for I := 0 to List.Count - 1 do begin
-               // если первые буквы файла comdoc, а последние .p7s
+               // если первые буквы файла comdoc, а последние .p7s. Реализация
                if (copy(list[i], 1, 6) = 'comdoc') and (copy(list[i], length(list[i]) - 3, 4) = '.p7s') then begin
                   if (StartDate <= gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd'))
                     and (gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd') <= EndDate)  then begin
@@ -216,7 +217,8 @@ begin
                     FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
                     ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
                     if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
-                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004') then begin
+                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
+                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')then begin
                          // загружаем в базенку
                          InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                     end;
@@ -516,8 +518,16 @@ begin
        ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаЗамовлення)
     else
        ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаДокументу);
-    ParamByName('inSaleInvNumber').Value  := Заголовок.НомерДокументу;
-    ParamByName('inSaleOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+    ParamByName('inPartnerInvNumber').Value  := Заголовок.НомерДокументу;
+    ParamByName('inPartnerOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+    if Заголовок.КодТипуДокументу = '012' then begin
+       ParamByName('inDesc').Value   := 'Return';
+       ParamByName('inInvNumberTax').Value  := Параметри.ParamByName('Номер податкової накладної').NodeValue;
+       if not VarIsNull(Параметри.ParamByName('Дата податкової накладної').NodeValue) then
+          ParamByName('inOperDateTax').Value   := VarToDateTime(Параметри.ParamByName('Дата податкової накладної').NodeValue);
+    end
+    else
+       ParamByName('inDesc').Value   := 'Sale';
 
     for i:= 0 to Сторони.Count - 1 do
         if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
@@ -535,9 +545,11 @@ begin
              ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
              ParamByName('inGoodsName').Value := Найменування;
              ParamByName('inGLNCode').Value := АртикулПокупця;
-             ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
+             if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then
+                ParamByName('inAmountPartner').Value := gfStrToFloat(ДоПовернення.Кількість)
+             else
+                ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
              ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.СумаБезПДВ);
-//             ParamByName('inPricePartner').Value := ParamByName('inSummPartner').Value / ParamByName('inAmountPartner').Value;
              ParamByName('inPricePartner').Value := gfStrToFloat(БазоваЦіна);
              Execute;
            end;

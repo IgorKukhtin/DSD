@@ -16,6 +16,7 @@ uses
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
+  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
   Storage in '..\..\SOURCE\Storage.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
@@ -123,7 +124,8 @@ uses
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm},
-  MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas';
+  MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

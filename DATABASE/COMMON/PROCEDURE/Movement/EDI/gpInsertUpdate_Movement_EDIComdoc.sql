@@ -1,14 +1,17 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
     IN inOrderOperDate       TDateTime , -- Дата заявки контрагента
-    IN inSaleInvNumber       TVarChar  , -- Номер накладной у контрагента
-    IN inSaleOperDate        TDateTime , -- Дата накладной у контрагента
+    IN inPartnerInvNumber    TVarChar  , -- Номер накладной у контрагента
+    IN inPartnerOperDate     TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberTax        TVarChar  , -- Номер накладной у контрагента
+    IN inOperDateTax         TDateTime , -- Дата накладной у контрагента
     IN inOKPO                TVarChar  , -- 
     IN inJurIdicalName       TVarChar  , --
+    IN inDesc                TVarChar  , -- тип документа
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
@@ -33,7 +36,7 @@ BEGIN
                                                    AND MovementString_OKPO.ValueData = inOKPO
                      WHERE Movement.DescId = zc_Movement_EDI() 
                        AND Movement.InvNumber = inOrderInvNumber
-                       AND Movement.OperDate BETWEEN (inSaleOperDate - (INTERVAL '7 DAY')) AND (inSaleOperDate + (INTERVAL '7 DAY'))
+                       AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
                     );
 
      -- определяем признак Создание/Корректировка
@@ -49,15 +52,23 @@ BEGIN
      END IF;
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId, inSaleOperDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId, inPartnerOperDate);
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), vbMovementId, inSaleInvNumber);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), vbMovementId, inPartnerInvNumber);
+
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateTax(), vbMovementId, inOperDateTax);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberTax(), vbMovementId, inInvNumberTax);
+
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, inDesc);
 
      -- сохранили расчетные параметры
      vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId    := vbMovementId
-                                                           , inSaleOperDate  := inSaleOperDate
+                                                           , inSaleOperDate  := inPartnerOperDate
                                                            , inOrderInvNumber:= inOrderInvNumber
                                                            , inOKPO          := inOKPO
                                                            , inUserId        := vbUserId);

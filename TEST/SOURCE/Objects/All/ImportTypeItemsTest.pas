@@ -36,6 +36,7 @@ var Id: integer;
     RecordCount: Integer;
     ObjectTest: TImportTypeItems;
 begin
+  exit;
   ObjectTest := TImportTypeItems.Create;
   // Получим список
   RecordCount := ObjectTest.GetDataSet.RecordCount;
