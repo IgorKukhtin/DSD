@@ -1198,6 +1198,14 @@
         item
           Visible = True
           ItemName = 'bbAccountReport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsFinance_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_ContractEndDate'
         end>
     end
     object bbReportsFinance_Separator: TdxBarSeparator
@@ -1644,6 +1652,11 @@
     end
     object bbCurrencyMovement: TdxBarButton
       Action = actCurrencyMovement
+      Category = 0
+    end
+    object bbReport_ContractEndDate: TdxBarButton
+      Action = actReport_ContractEndDate
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084
       Category = 0
     end
   end
@@ -3443,6 +3456,17 @@
       Hint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
       FormName = 'TCurrencyJournalForm'
       FormNameParam.Value = 'TCurrencyJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_ContractEndDate: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084' "'#1087#1086#1076#1093#1086#1076#1103#1090' '#1089#1088#1086#1082#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103'"'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084' "'#1087#1086#1076#1093#1086#1076#1103#1090' '#1089#1088#1086#1082#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103'"'
+      FormName = 'TReport_ContractEndDateForm'
+      FormNameParam.Value = 'TReport_ContractEndDateForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

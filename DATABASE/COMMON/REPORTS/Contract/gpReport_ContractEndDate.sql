@@ -1,6 +1,5 @@
 -- FunctiON: gpReport_CheckBonus ()
 
-DROP FUNCTION IF EXISTS gpReport_ContractEndDate (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_ContractEndDate (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ContractEndDate (
@@ -12,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_ContractEndDate (
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
 
-             , InvNumber_Key TVarChar, ContractStateKindName_Key TVarChar
+             , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
              , Comment TVarChar, BankAccountExternal TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
@@ -34,7 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer
                           
              , AreaName TVarChar
              , ContractArticleName TVarChar
-             , ContractStateKindName TVarChar
+             , ContractStateKindCode Integer
              , OKPO TVarChar
              , BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -61,7 +60,7 @@ BEGIN
        , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
 
        , View_Contract_InvNumber_Key.InvNumber             AS InvNumber_Key
-       , View_Contract_InvNumber_Key.ContractStateKindName AS ContractStateKindName_Key
+       , View_Contract_InvNumber_Key.ContractStateKindCode AS ContractStateKindCode_Key
 
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
@@ -102,7 +101,7 @@ BEGIN
 
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_Contract_View.ContractStateKindName
+       , Object_Contract_View.ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 

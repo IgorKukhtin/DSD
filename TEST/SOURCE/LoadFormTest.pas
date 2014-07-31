@@ -836,6 +836,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ContractEndDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ContractEndDateForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
