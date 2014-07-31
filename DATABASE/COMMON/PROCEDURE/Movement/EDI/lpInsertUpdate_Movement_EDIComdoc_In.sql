@@ -1,10 +1,12 @@
 -- Function: lpInsertUpdate_Movement_EDIComdoc_In()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_In (Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_In (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_In(
     IN inMovementId      Integer   , --
-    IN inUserId          Integer     -- пользователь
+    IN inUserId          Integer   , -- пользователь
+    IN inSession         TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
 AS
@@ -76,12 +78,12 @@ BEGIN
      -- сохранили <Возврат от покупателя>
      SELECT lpInsertUpdate_Movement_ReturnIn
                                        (ioId               := vbMovementId_ReturnIn
-                                      , inInvNumber        := CASE WHEN vbMovementId_ReturnIn <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_ReturnIn) ELSE CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) END
+                                      , inInvNumber        := CASE WHEN vbMovementId_ReturnIn <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_ReturnIn) ELSE CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) END :: TVarChar
                                       , inInvNumberPartner := MovementString_InvNumberPartner.ValueData
-                                      , inInvNumberMark    := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementString_InvNumberMark())
+                                      , inInvNumberMark    := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementString_InvNumberMark()) :: TVarChar
                                       , inOperDate         := MovementDate_OperDatePartner.ValueData
                                       , inOperDatePartner  := MovementDate_OperDatePartner.ValueData
-                                      , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked())
+                                      , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked()) :: Boolean
                                       , inPriceWithVAT     := MovementBoolean_PriceWithVAT.ValueData
                                       , inVATPercent       := MovementFloat_VATPercent.ValueData
                                       , inChangePercent    := (SELECT ValueData FROM MovementFloat WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementFloat_ChangePercent())
@@ -89,8 +91,8 @@ BEGIN
                                       , inToId             := 8461 -- !!!Склад Возвратов!!!
                                       , inPaidKindId       := zc_Enum_PaidKind_FirstForm() 
                                       , inContractId       := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Contract())
-                                      -- , inCurrencyDocumentId := inCurrencyDocumentId
-                                      -- , inCurrencyPartnerId  := inCurrencyPartnerId
+                                      , inCurrencyDocumentId := NULL
+                                      , inCurrencyPartnerId  := NULL
                                       , inUserId           := inUserId
                                        ) INTO vbMovementId_ReturnIn
      FROM Movement
@@ -120,7 +122,7 @@ BEGIN
                                                  , inPartionGoods       := NULL
                                                  , inGoodsKindId        := tmpMI.GoodsKindId
                                                  , inAssetId            := NULL
-                                                 , inUserId             := vbUserId
+                                                 , inUserId             := inUserId
                                                   )
      FROM (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                 , tmpMI.GoodsId
@@ -185,6 +187,16 @@ BEGIN
      -- сформировали связь Корректировки с Налоговой
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), vbMovementId_TaxCorrective, vbMovementId_Tax);
 
+     -- сформировали связь <Возврат от покупателя> с EDI
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_MasterEDI(), vbMovementId_ReturnIn, inMovementId);
+
+     -- сформировали связь <Корректировка к налоговой накладной> с EDI
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_ChildEDI(), vbMovementId_TaxCorrective, inMovementId);
+
+     -- ФИНИШ - Проводим <Возврат от покупателя>
+     PERFORM gpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_ReturnIn
+                                         , inIsLastComplete := TRUE
+                                         , inSession        := inSession);
 
 END;
 $BODY$

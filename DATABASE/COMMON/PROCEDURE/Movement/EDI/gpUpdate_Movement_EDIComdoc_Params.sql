@@ -74,6 +74,7 @@ BEGIN
           -- !!!создаются док-ты <Возврат от покупателя> и <Корректировка к налоговой накладной>!!!
           PERFORM lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId
                                                       , inUserId        := vbUserId
+                                                      , inSession       := inSession
                                                        );
      END IF;
 

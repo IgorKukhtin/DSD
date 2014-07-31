@@ -107,6 +107,11 @@ type
     EDIDeclar: TEDIAction;
     bbDeclar: TdxBarButton;
     actStoredProcTaxPrint: TdsdExecStoredProc;
+    clOperDateTax: TcxGridDBColumn;
+    clInvNumberTax: TcxGridDBColumn;
+    clDescName: TcxGridDBColumn;
+    clOperDate_TaxCorrective: TcxGridDBColumn;
+    clInvNumberPartner_TaxCorrective: TcxGridDBColumn;
   private
     { Private declarations }
   public

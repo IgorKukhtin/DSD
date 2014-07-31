@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar, OperDateTax TDateTime, InvNumberTax TVarChar
              , TotalCountPartner TFloat
              , TotalSumm TFloat
              , OKPO TVarChar, JuridicalName TVarChar
@@ -24,9 +24,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Tax Integer
              , OperDate_Tax TDateTime, InvNumberPartner_Tax TVarChar
 
+             , MovementId_TaxCorrective Integer
+             , OperDate_TaxCorrective TDateTime, InvNumberPartner_TaxCorrective TVarChar
+
              , MovementId_Order Integer
              , OperDate_Order TDateTime, InvNumber_Order TVarChar
 
+             , DescName TVarChar
              , isCheck Boolean
               )
 AS
@@ -46,6 +50,9 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
+           , MovementDate_OperDateTax.ValueData             AS OperDateTax
+           , MovementString_InvNumberTax.ValueData          AS InvNumberTax
+
            , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
           
@@ -57,7 +64,7 @@ BEGIN
            , Object_Juridical.ValueData             AS JuridicalNameFind
            , Object_Partner.ValueData               AS PartnerNameFind
 
-           , MovementLinkMovement_Sale.MovementId           AS MovementId_Sale
+           , COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId) :: Integer AS MovementId_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
            , Movement_Sale.InvNumber                        AS InvNumber_Sale
            , Object_From_Sale.ValueData                     AS FromName_Sale
@@ -65,15 +72,21 @@ BEGIN
            , MovementFloat_TotalCountPartner_Sale.ValueData AS TotalCountPartner_Sale
            , MovementFloat_TotalSumm_Sale.ValueData         AS TotalSumm_Sale
 
-           , MovementLinkMovement_Tax.MovementId            AS MovementId_Tax
+           , COALESCE (MovementLinkMovement_Tax.MovementId, MovementLinkMovement_TaxCorrective_Tax.MovementChildId) :: Integer AS MovementId_Tax
            , Movement_Tax.OperDate                          AS OperDate_Tax
            , MovementString_InvNumberPartner_Tax.ValueData  AS InvNumberPartner_Tax
 
-           , MovementLinkMovement_Order.MovementId          AS MovementId_Tax
-           , Movement_Order.OperDate                        AS OperDate_Tax
-           , Movement_Order.InvNumber                       AS InvNumber_Sale
+           , MovementLinkMovement_ChildEDI.MovementId                 AS MovementId_TaxCorrective
+           , Movement_TaxCorrective.OperDate                          AS OperDate_Tax
+           , MovementString_InvNumberPartner_TaxCorrective.ValueData  AS InvNumberPartner_Tax
 
-           , CASE WHEN MovementLinkMovement_Sale.MovementId IS NOT NULL
+           , MovementLinkMovement_Order.MovementId          AS MovementId_Order
+           , Movement_Order.OperDate                        AS OperDate_Order
+           , Movement_Order.InvNumber                       AS InvNumber_Order
+
+           , MovementDesc.ItemName AS DescName
+
+           , CASE WHEN (MovementLinkMovement_Sale.MovementId IS NOT NULL OR MovementLinkMovement_MasterEDI.MovementId IS NOT NULL)
                    AND (COALESCE (MovementFloat_TotalCountPartner.ValueData, 0) <> COALESCE (MovementFloat_TotalCountPartner_Sale.ValueData, 0)
                      OR COALESCE (MovementFloat_TotalSumm_Sale.ValueData, 0) <> COALESCE (MovementFloat_TotalSumm.ValueData, 0))
                        THEN TRUE
@@ -109,7 +122,19 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDateTax
+                                   ON MovementDate_OperDateTax.MovementId =  Movement.Id
+                                  AND MovementDate_OperDateTax.DescId = zc_MovementDate_OperDateTax()
+            LEFT JOIN MovementString AS MovementString_InvNumberTax
+                                     ON MovementString_InvNumberTax.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberTax.DescId = zc_MovementString_InvNumberTax()
                                    
+            LEFT JOIN MovementString AS MovementString_MovementDesc
+                                     ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                    AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+            LEFT JOIN MovementDesc ON MovementDesc.Code =  MovementString_MovementDesc.ValueData
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
@@ -128,7 +153,10 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Sale.MovementId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                           ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
                                                AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
                                    ON MovementDate_OperDatePartner_Sale.MovementId =  Movement_Sale.Id
@@ -151,10 +179,22 @@ BEGIN
                                         AND MovementLinkObject_To_Sale.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To_Sale ON Object_To_Sale.Id = MovementLinkObject_To_Sale.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TaxCorrective_Tax
+                                           ON MovementLinkMovement_TaxCorrective_Tax.MovementId = MovementLinkMovement_ChildEDI.MovementId
+                                          AND MovementLinkMovement_TaxCorrective_Tax.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MovementLinkMovement_ChildEDI.MovementId
+                                                        AND Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
+                                     ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
+                                    AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
-            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementId
+            LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = COALESCE (MovementLinkMovement_Tax.MovementId, MovementLinkMovement_TaxCorrective_Tax.MovementChildId)
                                               AND Movement_Tax.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Tax
                                      ON MovementString_InvNumberPartner_Tax.MovementId =  Movement_Tax.Id

@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1102
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1110
-  ExplicitHeight = 451
+  ExplicitWidth = 1118
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -126,12 +126,28 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 70
           end
           object clOperDate_Tax: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'  '#1085#1072#1083#1086#1075'.'
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'OperDate_Tax'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object clOperDate_TaxCorrective: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'OperDate_TaxCorrective'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clOperDateTax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'. (EDI)'
+            DataBinding.FieldName = 'OperDateTax'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. (EDI)'
@@ -156,6 +172,20 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
+          end
+          object clInvNumberTax: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'. (EDI)'
+            DataBinding.FieldName = 'InvNumberTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInvNumberPartner_TaxCorrective: TcxGridDBColumn
+            Caption = #8470' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'InvNumberPartner_TaxCorrective'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clFromName_Sale: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -261,6 +291,13 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object clDescName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'DescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
           end
           object clmovIsCheck: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
