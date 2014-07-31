@@ -361,6 +361,8 @@ type
     Action1: TAction;
     actCurrencyMovement: TdsdOpenForm;
     bbCurrencyMovement: TdxBarButton;
+    actReport_ContractEndDate: TdsdOpenForm;
+    bbReport_ContractEndDate: TdxBarButton;
   public
     { Public declarations }
   end;

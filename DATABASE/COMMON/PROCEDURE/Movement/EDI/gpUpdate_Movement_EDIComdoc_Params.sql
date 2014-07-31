@@ -68,6 +68,17 @@ BEGIN
     ;
 
 
+     -- !!!только для возврата!!!
+     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+          -- !!!создаются док-ты <Возврат от покупателя> и <Корректировка к налоговой накладной>!!!
+          PERFORM lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId
+                                                      , inUserId        := vbUserId
+                                                      , inSession       := inSession
+                                                       );
+     END IF;
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -86,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.07.14                                        * add lpInsertUpdate_Movement_EDIComdoc_In
  20.07.14                                        *
 */
 

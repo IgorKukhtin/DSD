@@ -265,8 +265,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Asset\gpSelect_Object_Asset.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Asset\gpGet_Object_Asset.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - Date.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - String.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lfGet_Object_PartionGoods_InvNumber.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - InvNumber.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - PartionDate.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\PartionGoods\lpInsertFind_Object_PartionGoods - PartionString.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\PartionMovement\lpInsertFind_Object_PartionMovement.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\GoodsByGoodsKind\lfSelect_Object_GoodsByGoodsKind.sql', ZQuery);

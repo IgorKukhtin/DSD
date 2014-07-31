@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, DocumentValue TVarChar, Registered Boolean, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -49,6 +49,7 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementBoolean_Document.ValueData         AS Document
+           , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementBoolean_Registered.ValueData       AS Registered
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
@@ -249,6 +250,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.07.14                                        * add DocumentValue
  03.05.14                                        * add ContractTagName
  01.05.14                                        * InvNumber, InvNumberPartner, InvNumberPartner_Child is Integer
  24.04.14                                                        * add zc_MovementString_InvNumberBranch

@@ -1,30 +1,80 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Send();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inPartionGoodsDate    TDateTime , -- Дата партии
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара
+ INOUT ioPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inUnitId              Integer   , -- Подразделение (для МО)
+    IN inStorageId           Integer   , -- Место хранения
+    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Send());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+
+
+     -- меняем параметр
+     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+
+     -- расчет Инвентарный номер: если Инвентарный номер не установлен и это перемещение на МО
+     IF (vbIsInsert = TRUE OR COALESCE (ioPartionGoods, '') = '' OR COALESCE (ioPartionGoods, '0') = '0')
+        AND EXISTS (SELECT MovementLinkObject_From.ObjectId
+                    FROM MovementLinkObject AS MovementLinkObject_From
+                         INNER JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                                         AND Object_From.DescId = zc_Object_Unit()
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                       ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
+                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                         INNER JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                                       AND Object_To.DescId = zc_Object_Member()
+                    WHERE MovementLinkObject_From.MovementId = inMovementId
+                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
+     THEN
+         ioPartionGoods:= lfGet_Object_PartionGoods_InvNumber (inGoodsId);
+     ELSE 
+         -- находим Инвентарный номер: если это перемещение с МО на МО
+         IF EXISTS (SELECT MovementLinkObject_From.ObjectId
+                    FROM MovementLinkObject AS MovementLinkObject_From
+                         INNER JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                                         AND Object_From.DescId = zc_Object_Member()
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                       ON MovementLinkObject_To.MovementId = MovementLinkObject_From.MovementId
+                                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                         INNER JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                                                           AND Object_To.DescId = zc_Object_Member()
+                    WHERE MovementLinkObject_From.MovementId = inMovementId
+                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
+         THEN
+             ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId);
+         END IF;
+     END IF;
+
+
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+
+     -- сохранили свойство <Дата партии>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
      -- сохранили свойство <Количество батонов или упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
@@ -33,13 +83,21 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
 
      -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, ioPartionGoods);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+
+     -- сохранили связь с <Подразделение (для МО)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     -- сохранили связь с <Место хранения>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     -- сохранили связь с <Партии товаров (для партии расхода если с МО)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+
 
      IF inGoodsId <> 0
      THEN
@@ -56,12 +114,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.07.14                                        * add inPartionGoodsDate and inUnitId and inStorageId and inPartionGoodsId and ioPartionGoods
  23.05.14                                                       *
  18.07.13         * add inAssetId
  16.07.13                                        * del params by SendOnPrice

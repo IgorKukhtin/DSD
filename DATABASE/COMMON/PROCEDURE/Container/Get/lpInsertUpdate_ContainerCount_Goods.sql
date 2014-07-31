@@ -69,8 +69,8 @@ BEGIN
                                                  , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId ELSE inUnitId END
                                                  , inDescId_2          := zc_ContainerLinkObject_Member()
                                                  , inObjectId_2        := inMemberId
-                                                 , inDescId_2          := zc_ContainerLinkObject_PartionGoods()
-                                                 , inObjectId_2        := inPartionGoodsId
+                                                 , inDescId_3          := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_3        := inPartionGoodsId
                                                   );
      ELSE
      -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
@@ -118,7 +118,6 @@ BEGIN
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                    );
-     END IF;
      END IF;
      END IF;
      END IF;

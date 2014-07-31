@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat
-             , HeadCount TFloat, Count TFloat, Summ TFloat
+             , HeadCount TFloat, Count TFloat, Price TFloat, Summ TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar 
@@ -38,6 +38,7 @@ BEGIN
 
            , CAST (NULL AS TFloat) AS HeadCount
            , CAST (NULL AS TFloat) AS Count
+           , CAST (NULL AS TFloat) AS Price
            , CAST (NULL AS TFloat) AS Summ
            
            , CAST (NULL AS TDateTime) AS PartionGoodsDate
@@ -97,6 +98,7 @@ BEGIN
 
            , MIFloat_HeadCount.ValueData AS HeadCount
            , MIFloat_Count.ValueData AS Count
+           , MIFloat_Price.ValueData AS Price
            , MIFloat_Summ.ValueData  AS Summ
 
            , MIDate_PartionGoods.ValueData    AS PartionGoodsDate
@@ -128,6 +130,9 @@ BEGIN
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
          
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
@@ -169,6 +174,7 @@ BEGIN
 
            , MIFloat_HeadCount.ValueData AS HeadCount
            , MIFloat_Count.ValueData AS Count
+           , MIFloat_Price.ValueData AS Price
            , MIFloat_Summ.ValueData  AS Summ
 
            , MIDate_PartionGoods.ValueData    AS PartionGoodsDate
@@ -200,6 +206,9 @@ BEGIN
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
          
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
@@ -239,6 +248,7 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.07.14                                        * add Price
  23.07.14                                        * add Object_InfoMoney_View
  27.01.14                                        * all
  22.07.13         * add PartionGoodsDate              

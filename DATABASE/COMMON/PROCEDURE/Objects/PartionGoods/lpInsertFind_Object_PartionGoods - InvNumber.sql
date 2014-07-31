@@ -1,52 +1,156 @@
--- Function: lpInsertFind_Object_PartionGoods (Integer, TVarChar)
+-- Function: lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime)
 
-DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inStorageId  Integer -- Место хранения
-    IN inInvNumber  TVarChar  -- Инвентарный номер
+    IN inUnitId_Partion Integer   , -- Подразделение(для цены)
+    IN inGoodsId        Integer   , -- Товар
+    IN inStorageId      Integer   , -- Место хранения
+    IN inInvNumber      TVarChar  , -- Инвентарный номер
+    IN inOperDate       TDateTime , -- Дата перемещения
+    IN inPrice          TFloat      -- Цена
 )
   RETURNS Integer AS
 $BODY$
    DECLARE vbPartionGoodsId Integer;
 BEGIN
+     -- в этом случае партия не нужна
+     IF COALESCE (inUnitId_Partion, 0) = 0 AND COALESCE (inGoodsId, 0) = 0 
+     THEN
+         RETURN (0);
+     END IF;
+
+
+     -- проверка
+     IF inUnitId_Partion IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определено <Подразделеление>.';
+     END IF;
+     -- проверка
+     IF inGoodsId IS NULL
+     THEN
+         RAISE EXCEPTION 'lpInsertFind_Object_PartionGoods: inGoodsId IS NULL';
+     END IF;
+
      -- меняем параметр
      IF COALESCE (inInvNumber, '') = ''
      THEN
          inInvNumber:= '0';
      END IF;
+     -- меняем параметр
+     IF inOperDate IN (zc_DateStart(), zc_DateEnd())
+     THEN
+         inOperDate:= NULL;
+     END IF;
 
-     -- Находим
+
      IF COALESCE (inStorageId, 0) = 0
      THEN 
-         vbPartionGoodsId:= (SELECT Object.Id
-                             FROM Object
-                                  INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
-                                                       AND ObjectLink.DescId = zc_ObjectLink_PartionGoods_Storage()
-                                                       AND ObjectLink.ChildObjectId IS NULL
-                             WHERE Object.ValueData = inInvNumber
-                               AND Object.DescId = zc_Object_PartionGoods()
-                            );
-     THEN 
-         vbPartionGoodsId:= (SELECT Object.Id
-                             FROM Object
-                                  INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
-                                                       AND ObjectLink.DescId = zc_ObjectLink_PartionGoods_Storage()
-                                                       AND ObjectLink.ChildObjectId = inStorageId
-                             WHERE Object.ValueData = inInvNumber
-                               AND Object.DescId = zc_Object_PartionGoods()
-                            );
+         IF inOperDate IS NULL
+         THEN 
+             -- Находим по св-вам: Товар + Дата перемещения=NULL + Инвентарный номер + Место учета + Место хранения=NULL
+             vbPartionGoodsId:= (SELECT ObjectLink_Goods.ObjectId
+                                 FROM ObjectLink AS ObjectLink_Goods
+                                      INNER JOIN ObjectDate ON ObjectDate.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                           AND ObjectDate.ValueData IS NULL
+                                      INNER JOIN Object ON Object.Id = ObjectLink_Goods.ObjectId
+                                                       AND Object.ValueData = inInvNumber
+                                      INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                            ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                                           AND ObjectLink_Unit.ChildObjectId = inUnitId_Partion
+                                      INNER JOIN ObjectLink AS ObjectLink_Storage
+                                                            ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                                           AND ObjectLink_Storage.ChildObjectId IS NULL
+                                 WHERE ObjectLink_Goods.ChildObjectId = inGoodsId
+                                   AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                );
+         ELSE
+             -- Находим по св-вам: Товар + Дата перемещения + Инвентарный номер + Место учета + Место хранения=NULL
+             vbPartionGoodsId:= (SELECT ObjectLink_Goods.ObjectId
+                                 FROM ObjectLink AS ObjectLink_Goods
+                                      INNER JOIN ObjectDate ON ObjectDate.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                           AND ObjectDate.ValueData = inOperDate
+                                      INNER JOIN Object ON Object.Id = ObjectLink_Goods.ObjectId
+                                                       AND Object.ValueData = inInvNumber
+                                      INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                            ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                                           AND ObjectLink_Unit.ChildObjectId = inUnitId_Partion
+                                      INNER JOIN ObjectLink AS ObjectLink_Storage
+                                                            ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                                           AND ObjectLink_Storage.ChildObjectId IS NULL
+                                 WHERE ObjectLink_Goods.ChildObjectId = inGoodsId
+                                   AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                );
+         END IF;
+     ELSE 
+         IF inOperDate IS NULL
+         THEN 
+             -- Находим по св-вам: Товар + Дата перемещения=NULL + Инвентарный номер + Место учета + Место хранения
+             vbPartionGoodsId:= (SELECT ObjectLink_Goods.ObjectId
+                                 FROM ObjectLink AS ObjectLink_Goods
+                                      INNER JOIN ObjectDate ON ObjectDate.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                           AND ObjectDate.ValueData IS NULL
+                                      INNER JOIN Object ON Object.Id = ObjectLink_Goods.ObjectId
+                                                       AND Object.ValueData = inInvNumber
+                                      INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                            ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                                           AND ObjectLink_Unit.ChildObjectId = inUnitId_Partion
+                                      INNER JOIN ObjectLink AS ObjectLink_Storage
+                                                            ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                                           AND ObjectLink_Storage.ChildObjectId = inStorageId
+                                 WHERE ObjectLink_Goods.ChildObjectId = inGoodsId
+                                   AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                );
+         ELSE
+             -- Находим по св-вам: Товар + Дата перемещения + Инвентарный номер + Место учета + Место хранения
+             vbPartionGoodsId:= (SELECT ObjectLink_Goods.ObjectId
+                                 FROM ObjectLink AS ObjectLink_Goods
+                                      INNER JOIN ObjectDate ON ObjectDate.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                           AND ObjectDate.ValueData = inOperDate
+                                      INNER JOIN Object ON Object.Id = ObjectLink_Goods.ObjectId
+                                                       AND Object.ValueData = inInvNumber
+                                      INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                            ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                                           AND ObjectLink_Unit.ChildObjectId = inUnitId_Partion
+                                      INNER JOIN ObjectLink AS ObjectLink_Storage
+                                                            ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId
+                                                           AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                                           AND ObjectLink_Storage.ChildObjectId = inStorageId
+                                 WHERE ObjectLink_Goods.ChildObjectId = inGoodsId
+                                   AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                );
+         END IF;
      END IF;
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
      THEN
-         -- сохранили <Объект>
+         -- сохранили <Инвентарный номер>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, inInvNumber);
 
-         -- сохранили
+         -- сохранили <Подразделения(для цены)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Unit(), vbPartionGoodsId, inUnitId_Partion);
+         -- сохранили <Товар>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, inGoodsId);
+         -- сохранили <Место хранения>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Storage(), vbPartionGoodsId, CASE WHEN inStorageId = 0 THEN NULL ELSE inStorageId END);
 
+         -- сохранили <Дата перемещения>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+         -- сохранили <Цена>
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), vbPartionGoodsId, inPrice);
      END IF;
 
      -- Возвращаем значение
@@ -55,7 +159,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionGoods (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime, TFloat) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -65,5 +169,4 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (Integer, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= '31.01.2013');
--- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= NULL);
+-- SELECT * FROM lpInsertFind_Object_PartionGoods ();

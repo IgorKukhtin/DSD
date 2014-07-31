@@ -171,9 +171,11 @@ type
     function myExecToStoredProc_two:Boolean;
     function myExecSqlUpdateErased(ObjectId:Integer;Erased,Erased_del:byte):Boolean;
 
+    function myReplaceStr(const S, Srch, Replace: string): string;
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
 
+    function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
     function fExecFlSqFromQuery (mySql:String):Boolean;
 
@@ -297,6 +299,7 @@ type
     procedure pLoadGuide_PositionLevel_SheetWorkTime;
     procedure pLoadGuide_PersonalGroup_SheetWorkTime;
     procedure pLoadGuide_Member_andPersonal;
+    procedure pLoadGuide_Member_Update;
     procedure pLoadGuide_Position;
     procedure pLoadGuide_PersonalGroup;
     procedure pLoadGuide_Car;
@@ -628,6 +631,16 @@ end;
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fOpenSqFromQuery(mySql:String):Boolean;
+begin
+     with fromSqlQuery,Sql do begin
+        Clear;
+        Add(mySql);
+        try Open except ShowMessage('fOpenSqFromQuery'+#10+#13+mySql);Result:=false;exit;end;
+     end;
+     Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqFromQuery(mySql:String):Boolean;
 begin
      with fromSqlQuery,Sql do begin
@@ -670,6 +683,23 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
 begin if trim(_Value)='' then Result:=chr(39)+''+chr(39) else Result:=chr(39)+trim(_Value)+chr(39);end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myReplaceStr(const S, Srch, Replace: string): string;
+var
+  I: Integer;
+  Source: string;
+begin
+  Source := S;
+  Result := '';
+  repeat
+    I := Pos(Srch, Source);
+    if I > 0 then begin
+      Result := Result + Copy(Source, 1, I - 1) + Replace;
+      Source := Copy(Source, I + Length(Srch), MaxInt);
+    end
+    else Result := Result + Source;
+  until I <= 0;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToDateServer_notNULL(_Date:TDateTime):string;
 var
@@ -909,6 +939,7 @@ begin
      if not fStop then pLoadGuide_PersonalGroup;
      if not fStop then pLoadGuide_Position;
      if not fStop then pLoadGuide_Member_andPersonal;
+     if not fStop then pLoadGuide_Member_Update;
 
      if not fStop then pLoadGuide_Route;
      if not fStop then pLoadGuide_Freight;
@@ -1467,6 +1498,8 @@ begin
                      +'        left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode'
                      +' = case when GoodsProperty.Id in (5510) then 30201' // !!!–”À‹ ¿ ¬¿–≈Õ¿ﬂ ‚ Ô‡ÍÂÚÂ ‰Îˇ Á‡ÔÂÍ‡ÌËˇ!!! - 30201	ƒÓıÓ‰˚	ÃˇÒÌÓÂ Ò˚¸Â
                      +'        when Goods.Id in (1063) then 30101' // !!!ÍÓÎ·‡Ò‡ ‚ ‡ÒÒÓÚËÏÂÌÚÂ!!! - 30101	ƒÓıÓ‰˚	œÓ‰ÛÍˆËˇ	√ÓÚÓ‚‡ˇ ÔÓ‰ÛÍˆËˇ
+                     +'        when Goods.Id in (3409) then 20201' // !!!›ÚËÍÂÚ- ÔËÒÚÓÎÂÚ!!! - 20201	Œ·˘ÂÙËÏÂÌÌ˚Â œÓ˜ËÂ “Ã÷ »ÌÒÚÛÏÂÌÚ˚/»Ì‚ÂÌÚ‡¸
+
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // √—Ã  - 20401	Œ·˘ÂÙËÏÂÌÌ˚Â √—Ã √—Ã
 
                      +'        when fCheckGoodsParentID(9323,Goods.ParentId) =zc_rvYes() then 20701' // “Œ¬¿–€ œ¿¬»À‹ŒÕ€  - 20701	Œ·˘ÂÙËÏÂÌÌ˚Â “Ó‚‡˚ œÓ˜ËÂ ÚÓ‚‡˚
@@ -1498,7 +1531,7 @@ begin
                      +'        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601' // ÷≈ÕÕ» », ﬂ–À€ », ›“. ƒ¿“¿ - 20601	Œ·˘ÂÙËÏÂÌÌ˚Â  œÓ˜ËÂ Ï‡ÚÂË‡Î˚	œÓ˜ËÂ Ï‡ÚÂË‡Î˚
                      +'        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601' // Ÿ≈œ¿ - 20601	Œ·˘ÂÙËÏÂÌÌ˚Â  œÓ˜ËÂ Ï‡ÚÂË‡Î˚	œÓ˜ËÂ Ï‡ÚÂË‡Î˚
                      +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // —-œ–Œ◊≈≈ - 20601	Œ·˘ÂÙËÏÂÌÌ˚Â  œÓ˜ËÂ Ï‡ÚÂË‡Î˚	œÓ˜ËÂ Ï‡ÚÂË‡Î˚
-                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205' // —ƒ- ”’Õﬂ - 20205	Œ·˘ÂÙËÏÂÌÌ˚Â  œÓ˜ËÂ “Ã÷ œÓ˜ËÂ “Ã÷
+                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // —ƒ- ”’Õﬂ - 10201		ŒÒÌÓ‚ÌÓÂ Ò˚¸Â œÓ˜ÂÂ Ò˚¸Â	—ÔÂˆËË
 
                      +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // —ƒ-«¿œ◊¿—“» Ó·ÓÛ‰-Â - 20101	Œ·˘ÂÙËÏÂÌÌ˚Â  «‡Ô˜‡ÒÚË Ë –ÂÏÓÌÚ˚	«‡Ô˜‡ÒÚË Ë –ÂÏÓÌÚ˚
 
@@ -1556,7 +1589,7 @@ begin
                                                                       // ›Ã”À‹—»ﬂ ∆»–Œ¬¿ﬂ
                                                                       // À≈ƒ
 
-                     +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10201' // —€– - 10201		ŒÒÌÓ‚ÌÓÂ Ò˚¸Â œÓ˜ÂÂ Ò˚¸Â	œÓ˜ÂÂ Ò˚¸Â
+                     +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 20701' // —€– - 20701		Œ·˘ÂÙËÏÂÌÌ˚Â “Ó‚‡˚ œÓ˜ËÂ ÚÓ‚‡˚
                      +'        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501' // “‡‡ - 20501		Œ·˘ÂÙËÏÂÌÌ˚Â Œ·ÓÓÚÌ‡ˇ Ú‡‡	Œ·ÓÓÚÌ‡ˇ Ú‡‡
 
                      +'                                                                      end'
@@ -5454,6 +5487,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Position;
 begin
+     exit;
      if (not cbMember_andPersonal.Checked)or(not cbMember_andPersonal.Enabled) then exit;
      //
      myEnabledCB(cbMember_andPersonal);
@@ -5508,6 +5542,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PersonalGroup;
 begin
+     exit;
      if (not cbMember_andPersonal.Checked)or(not cbMember_andPersonal.Enabled) then exit;
      //
      myEnabledCB(cbMember_andPersonal);
@@ -5575,6 +5610,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Member_andPersonal;
 begin
+     exit;
      if (not cbMember_andPersonal.Checked)or(not cbMember_andPersonal.Enabled) then exit;
      //
      myEnabledCB(cbMember_andPersonal);
@@ -5663,6 +5699,71 @@ begin
         end;
         //EnableControls;
      end;
+     //
+     myDisabledCB(cbMember_andPersonal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Member_Update;
+begin
+     if (not cbMember_andPersonal.Checked)or(not cbMember_andPersonal.Enabled) then exit;
+     //
+     myEnabledCB(cbMember_andPersonal);
+     //
+     //!!!1. InsertUpdate Sybase
+     fOpenSqToQuery (' select Object_Member.Id            AS Id'
+                    +'      , Object_Member.ObjectCode    AS Code'
+                    +'      , Object_Member.ValueData     AS Name'
+                    +'      , ObjectString_INN.ValueData  AS INN'
+                    +' from Object AS Object_Member'
+                    +'      LEFT JOIN ObjectString AS ObjectString_INN on ObjectString_INN.ObjectId = Object_Member.Id'
+                    +'                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()'
+                    +' WHERE Object_Member.DescId = zc_Object_Member()'
+                    );
+     //
+     with toSqlQuery do begin
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             fOpenSqFromQuery('select Id from dba._pgPersonal where Id_Postgres='+FieldByName('Id').AsString);
+             // Member
+             if fromSqlQuery.RecordCount=0
+             then fExecSqFromQuery('insert into dba._pgPersonal(PersonalCode,PersonalName,PositionName,Id_Postgres)'
+                                  +' values ('+FieldByName('Code').AsString
+                                  +'        ,'+FormatToVarCharServer_notNULL(myReplaceStr(FieldByName('Name').AsString,chr(39),'`'))
+                                  +'        ,'+FormatToVarCharServer_notNULL(FieldByName('INN').AsString)
+                                  +'        ,'+FieldByName('Id').AsString
+                                  +'        )'
+                                  )
+             else if fromSqlQuery.RecordCount=1
+                  then fExecSqFromQuery('update dba._pgPersonal'
+                                       +' set PersonalCode = '+FieldByName('Code').AsString
+                                       +'    ,PersonalName = '+FormatToVarCharServer_notNULL(myReplaceStr(FieldByName('Name').AsString,chr(39),'`'))
+                                       +'    ,PositionName = '+FormatToVarCharServer_notNULL(FieldByName('INN').AsString)
+                                       +' where Id_Postgres = '+FieldByName('Id').AsString
+                                       )
+                  else ShowMessage('Error.pLoadGuide_Member_Update.Id_Postgres='+FieldByName('Id').AsString);
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     fExecSqFromQuery('update dba.Unit'
+                     +'       left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID'
+                     +'                                            and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
+                     +'       left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id'
+                     +'       left outer join dba._pgPersonal on _pgPersonal.PositionName = isnull(Information1.OKPO,Information2.OKPO)'
+                     +'                                      and _pgPersonal.PositionName <> '+FormatToVarCharServer_notNULL('')
+                     +' set Unit.PersonalId_Postgres = _pgPersonal.Id'
+                     );
      //
      myDisabledCB(cbMember_andPersonal);
 end;
@@ -7977,25 +8078,29 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , isnull (pgPersonalTo.Id2_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId'
+           +'                                              and UnitFrom.ParentId<>4137'); // ÃŒ À»÷¿-¬—≈
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId'
+           +'                                            and UnitTo.ParentId<>4137'); // ÃŒ À»÷¿-¬—≈
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
            +'                                                      and UnitFrom.ParentId=4137'); // ÃŒ À»÷¿-¬—≈
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-           +'                                                      and pgPersonalTo.Id2_Postgres>0'
            +'                                                      and UnitTo.ParentId=4137'); // ÃŒ À»÷¿-¬—≈
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
            +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
@@ -8034,9 +8139,13 @@ begin
              end;
              if cbComplete.Checked then
              begin
-                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
-                  if not myExecToStoredProc_two then ;//exit;
+                  // ÔÓ‚ÂÍ‡ ˜ÚÓ ÓÌ ÔÓ‚Â‰ÂÚÒˇ
+                  if (FieldByName('FromId_Postgres').AsInteger>0)and(FieldByName('ToId_Postgres').AsInteger>0) then
+                  begin
+                       toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                       if not myExecToStoredProc_two then ;//exit;
+                  end;
              end;
              //
              Next;
@@ -8064,29 +8173,48 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null and pgPersonalFrom.Id is null)'
+           +'                                 or (pgUnitTo.Id is null and pgPersonalTo.Id is null)'
+           +'                                    then '+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡')
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' ŒÚ  Ó„Ó:')+'|| UnitFrom.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitTo.Id is null and pgPersonalTo.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL('  ÓÏÛ:')+'|| UnitTo.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
-        Add('     , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , isnull (pgPersonalTo.Id2_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId'
+           +'                                              and UnitFrom.ParentId<>4137'); // ÃŒ À»÷¿-¬—≈
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId'
+           +'                                            and UnitTo.ParentId<>4137'); // ÃŒ À»÷¿-¬—≈
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
+//           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
            +'                                                      and UnitFrom.ParentId=4137'); // ÃŒ À»÷¿-¬—≈
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-           +'                                                      and pgPersonalTo.Id2_Postgres>0'
+//           +'                                                      and pgPersonalTo.Id2_Postgres>0'
            +'                                                      and UnitTo.ParentId=4137'); // ÃŒ À»÷¿-¬—≈
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -8153,15 +8281,18 @@ begin
         Add('     , BillItems.OperCount_Upakovka as inCount');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , zc_DateStart() AS PartionGoodsDate');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+//        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+//        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -8169,10 +8300,12 @@ begin
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
-           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
            +'  and BillItems.Id is not null'
            );
         Add('order by Bill.BillDate, ObjectId');
@@ -8192,11 +8325,15 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStorageId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
@@ -8208,11 +8345,17 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             if FieldByName('PartionGoodsDate').AsDateTime <= StrToDate('01.01.1900')
+             then toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=StrToDate('01.01.1900')
+             else toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=FieldByName('PartionGoodsDate').AsDateTime;
              toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('inCount').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=0;
+             toStoredProc.Params.ParamByName('inStorageId').Value:=0;
+             toStoredProc.Params.ParamByName('inPartionGoodsId').Value:=0;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -13865,9 +14008,21 @@ begin
              end;
              if cbComplete.Checked then
              begin
-                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
-                  if not myExecToStoredProc_two then ;//exit;
+                  // ÔÓ‚ÂÍ‡ ˜ÚÓ ÓÌ ÔÓ‚Â‰ÂÚÒˇ
+                  fOpenSqToQuery (' select COALESCE (MovementLinkObject_From.ObjectId, 0) AS UnitId'
+                                 +' from Movement'
+                                 +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_From'
+                                 +'                                   ON MovementLinkObject_From.MovementId = Movement.Id'
+                                 +'                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()'
+                                 +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString
+                                 +'   and Movement.DescId = zc_Movement_Inventory()'
+                                 );
+                  if toSqlQuery.FieldByName('UnitId').AsInteger>0 then
+                  begin
+                       toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                       if not myExecToStoredProc_two then ;//exit;
+                  end;
              end;
              //
              Next;
@@ -13890,6 +14045,17 @@ begin
      //
      myEnabledCB(cbInventory);
      //
+     //!!!1. InsertUpdate Sybase
+     {fOpenSqToQuery (' select Movement.Id  AS Id_Postgres'
+                    +'       ,1            AS isCar' // zc_rvNo
+                    +' from Movement'
+                    +' WHERE Movement.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+                    +'   and Movement.DescId = zc_Movement_Inventory()'
+                    +'   and Movement.StatusId = zc_Enum_Status_UnComplete()'
+                    );
+     //
+     with toSqlQuery do begin}
+     {!!!!!}
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -13915,7 +14081,7 @@ begin
            );
         Add('order by OperDate, InvNumber, ObjectId');
 
-        Open;
+        Open;{!!!!!}
         cbInventory.Caption:='6. ('+IntToStr(RecordCount)+') »Ì‚ÂÌÚ‡ËÁ‡ˆËˇ';
         //
         fStop:=(cbOnlyOpen.Checked);
@@ -13941,6 +14107,7 @@ begin
              if FieldByName('isCar').AsInteger=zc_rvYes
              then fExecSqFromQuery('update dba._pgCar set MovementId_pg=null where Id = '+FieldByName('ObjectId').AsString)
              else fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);
+             //else fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id_Postgres = '+FieldByName('Id_Postgres').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -14103,12 +14270,15 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inSumm',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStorageId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
@@ -14125,12 +14295,15 @@ begin
              then toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=StrToDate('01.01.1900')
              else toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=FieldByName('PartionGoodsDate').AsDateTime;
 
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inSumm').Value:=FieldByName('Summ').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('myCount').AsFloat;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=0;
+             toStoredProc.Params.ParamByName('inStorageId').Value:=0;
 
              if not myExecToStoredProc then ;//exit;
              //
