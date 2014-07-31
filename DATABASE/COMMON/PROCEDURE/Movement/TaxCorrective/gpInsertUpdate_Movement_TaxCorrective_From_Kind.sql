@@ -3,13 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
-    IN inMovementId            Integer  , -- ключ Документа
-    IN inDocumentTaxKindId     Integer  , -- Тип формирования налогового документа
-    IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
-    IN inIsTaxLink             Boolean  , -- Признак привязки к налоговым
-   OUT outDocumentTaxKindId    Integer  , --
-   OUT outDocumentTaxKindName  TVarChar , --
-    IN inSession               TVarChar   -- сессия пользователя
+    IN inMovementId             Integer  , -- ключ Документа
+    IN inDocumentTaxKindId      Integer  , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId_inf  Integer  , -- Тип формирования налогового документа
+    IN inIsTaxLink              Boolean  , -- Признак привязки к налоговым
+   OUT outDocumentTaxKindId     Integer  , --
+   OUT outDocumentTaxKindName   TVarChar , --
+   OUT outMovementId_Corrective Integer  , --
+    IN inSession                TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -441,6 +442,12 @@ BEGIN
 
 
      -- результат
+     IF (SELECT COUNT(*) FROM _tmpResult) = 1
+     THEN
+         outMovementId_Corrective:= (SELECT MovementId_Corrective FROM _tmpResult);
+     END IF;
+
+     -- результат
      SELECT Object_TaxKind.Id, Object_TaxKind.ValueData
             INTO outDocumentTaxKindId, outDocumentTaxKindName
      FROM Object AS Object_TaxKind
@@ -455,6 +462,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.07.14                                        * add outMovementId_Corrective
  06.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  03.06.14                                        * add zc_Movement_PriceCorrective

@@ -19,6 +19,10 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
 
 
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
+
      -- таблица - Аналитики остатка
      CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <элемент с/с>
@@ -86,7 +90,10 @@ BEGIN
              , _tmp.UnitId_Item
              , _tmp.StorageId_Item
              , _tmp.PartionGoodsId_Item
-             , CASE WHEN vbMemberId <> 0 THEN _tmp.UnitId_From ELSE 0 END AS UnitId_Partion
+             , CASE WHEN _tmp.MemberId_From <> 0 AND _tmp.MemberId_To <> 0 THEN _tmp.UnitId_Partion
+                    WHEN _tmp.UnitId_From <> 0 AND _tmp.MemberId_To <> 0 THEN _tmp.UnitId_From
+                    ELSE 0
+               END AS UnitId_Partion
              , _tmp.Price_Partion
 
             , _tmp.isPartionCount
@@ -114,6 +121,7 @@ BEGIN
                   , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
                   , COALESCE (MILinkObject_PartionGoods.ObjectId, 0) AS PartionGoodsId_Item
                   , COALESCE (ObjectFloat_PartionGoods_Price.ValueData, 0) AS Price_Partion
+                  , COALESCE (ObjectLink_PartionGoods_Unit.ChildObjectId, 0) AS UnitId_Partion
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_From
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_To
@@ -185,6 +193,9 @@ BEGIN
                    LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
                                          ON ObjectFloat_PartionGoods_Price.ObjectId = MILinkObject_PartionGoods.ObjectId
                                         AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+                   LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
+                                        ON ObjectLink_PartionGoods_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId
+                                       AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
 
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -277,7 +288,7 @@ BEGIN
                                                                                              , inGoodsId       := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.GoodsId ELSE NULL END
                                                                                              , inStorageId     := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.StorageId_Item ELSE NULL END
                                                                                              , inInvNumber     := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.PartionGoods ELSE NULL END
-                                                                                             , inOperDate      := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.PartionGoodsDate ELSE NULL END
+                                                                                             , inOperDate      := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.PartionGoodsDate_To ELSE NULL END
                                                                                              , inPrice         := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.Price_Partion ELSE NULL END
                                                                                               )
                                                     ELSE lpInsertFind_Object_PartionGoods ('')

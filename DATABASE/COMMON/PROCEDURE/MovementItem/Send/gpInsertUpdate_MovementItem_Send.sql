@@ -58,9 +58,9 @@ BEGIN
                          INNER JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
                                                            AND Object_To.DescId = zc_Object_Member()
                     WHERE MovementLinkObject_From.MovementId = inMovementId
-                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From());
+                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
          THEN
-             ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId)
+             ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId);
          END IF;
      END IF;
 

@@ -70,7 +70,7 @@ BEGIN
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
-               LEFT JOIN Object AS Object_To ON Object_To.Id = 8461
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 8461 -- !!!Склад Возвратов!!!
          ;
      ELSE
 

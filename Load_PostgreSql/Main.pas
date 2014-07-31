@@ -1531,7 +1531,7 @@ begin
                      +'        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601' // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
                      +'        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601' // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
                      +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // С-ПРОЧЕЕ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205' // СД-КУХНЯ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
 
                      +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
 
@@ -8078,25 +8078,29 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , isnull (pgPersonalTo.Id2_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId'
+           +'                                              and UnitFrom.ParentId<>4137'); // МО ЛИЦА-ВСЕ
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId'
+           +'                                            and UnitTo.ParentId<>4137'); // МО ЛИЦА-ВСЕ
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
            +'                                                      and UnitFrom.ParentId=4137'); // МО ЛИЦА-ВСЕ
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-           +'                                                      and pgPersonalTo.Id2_Postgres>0'
            +'                                                      and UnitTo.ParentId=4137'); // МО ЛИЦА-ВСЕ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
@@ -8135,9 +8139,13 @@ begin
              end;
              if cbComplete.Checked then
              begin
-                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
-                  if not myExecToStoredProc_two then ;//exit;
+                  // проверка что он проведется
+                  if (FieldByName('FromId_Postgres').AsInteger>0)and(FieldByName('ToId_Postgres').AsInteger>0) then
+                  begin
+                       toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                       if not myExecToStoredProc_two then ;//exit;
+                  end;
              end;
              //
              Next;
