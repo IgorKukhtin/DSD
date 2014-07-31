@@ -20,16 +20,15 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
-   -- »щем по коду и inObjectId
-   SELECT Object.Id INTO vbGoodsId
-     FROM Object 
-     JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
-                    AND ObjectLink.ChildObjectId = inObjectId
-                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
-     JOIN ObjectString ON ObjectString.ObjectId = Object.Id
-                      AND ObjectString.DescId = zc_ObjectString_Goods_Code()
-                      AND ObjectString.ValueData = inCode
-    WHERE Object.DescId = zc_Object_Goods();   
+   IF COALESCE(ioId, 0) = 0 THEN
+     -- »щем по коду и inObjectId
+     SELECT Object_Goods_View.Id INTO vbGoodsId
+       FROM Object_Goods_View 
+      WHERE Object_Goods_View.ObjectId = inObjectId
+        AND Object_Goods_View.GoodsCode = inCode;   
+    ELSE
+      vbGoodsId := ioId;
+    END IF;
    
     ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inGoodsMainId, inObjectId, UserId);
   

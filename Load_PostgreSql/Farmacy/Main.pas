@@ -101,10 +101,12 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods;
+var RetailId: integer;
 begin
 //update Object set ObjectCode = null where DescId = zc_Object_Goods()
 //select * from Object where DescId = zc_Object_Goods()
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+     RetailId := GetRetailId;
      //
      myEnabledCB(cbGoods);
      //
@@ -136,6 +138,17 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inNDS',ftFloat,ptInput, 0);
+
+        toTwoStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsLoad';
+        toTwoStoredProc.OutputType := otResult;
+        toTwoStoredProc.Params.Clear;
+
+        toTwoStoredProc.Params.AddParam ('ioId', ftInteger, ptInputOutput, 0);
+        toTwoStoredProc.Params.AddParam ('inOKPO', ftString, ptInput, '');
+        toTwoStoredProc.Params.AddParam ('inObjectId', ftInteger, ptInput, RetailId);
+        toTwoStoredProc.Params.AddParam ('inMainCode', ftInteger, ptInput, 0);
+        toTwoStoredProc.Params.AddParam ('inGoodsCode', ftString, ptInput, '');
+        toTwoStoredProc.Params.AddParam ('inGoodsName', ftString, ptInput, '');
         //
         while not EOF do
         begin
@@ -147,10 +160,17 @@ begin
              toStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;
-             if not myExecToStoredProc then ;//exit;
+
+             myExecToStoredProc;
+
+             toTwoStoredProc.Params.ParamByName('ioId').Value := FieldByName('Id_Postgres').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inMainCode').Value := FieldByName('ObjectCode').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inGoodsCode').Value := FieldByName('ObjectCode').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inGoodsName').Value := FieldByName('ObjectName').AsString;
+             toTwoStoredProc.Execute;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toTwoStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -461,7 +481,7 @@ begin
     toStoredProc.Params.Clear;
     toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
     toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
-    toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+    toStoredProc.Params.AddParam ('inName',ftString,ptInput, 'Не болей');
     toStoredProc.Execute;
     result := toStoredProc.Params.ParamByName('ioId').Value;
   end;
