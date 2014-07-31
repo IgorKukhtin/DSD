@@ -55,14 +55,36 @@ object InventoryJournalForm: TInventoryJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderHeight = 40
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
@@ -116,6 +138,9 @@ object InventoryJournalForm: TInventoryJournalForm
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -123,6 +148,9 @@ object InventoryJournalForm: TInventoryJournalForm
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -290,6 +318,7 @@ object InventoryJournalForm: TInventoryJournalForm
     Top = 32
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -303,6 +332,7 @@ object InventoryJournalForm: TInventoryJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TInventoryForm'
@@ -327,9 +357,11 @@ object InventoryJournalForm: TInventoryJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TInventoryForm'
@@ -356,9 +388,11 @@ object InventoryJournalForm: TInventoryJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -372,6 +406,7 @@ object InventoryJournalForm: TInventoryJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -385,6 +420,7 @@ object InventoryJournalForm: TInventoryJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -398,6 +434,7 @@ object InventoryJournalForm: TInventoryJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -507,6 +544,10 @@ object InventoryJournalForm: TInventoryJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 184
     Top = 248
   end

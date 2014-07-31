@@ -405,8 +405,11 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                   THEN lpInsertFind_Object_PartionGoods (inStorageId:= NULL
-                                                                                        , inInvNumber:= NULL
+                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Price:= NULL
+                                                                                        , inGoodsId     := NULL
+                                                                                        , inStorageId   := NULL
+                                                                                        , inInvNumber   := NULL
+                                                                                        , inOperDate    := NULL
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END

@@ -1,5 +1,5 @@
 alter PROCEDURE "DBA"."_pgSelect_Bill_Inventory" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, InvNumber integer, OperDate Date, FromId_Postgres Integer, ToId_Postgres Integer, isCar smallint, Id_Postgres Integer)
+result(ObjectId Integer, InvNumber TVarCharLong, OperDate Date, FromId_Postgres Integer, ToId_Postgres Integer, isCar smallint, Id_Postgres Integer)
 begin
   -- 
   declare local temporary table _tmpList_Unit(
@@ -38,15 +38,19 @@ begin
   // 
   -- Unit
   insert into _tmpList_Unit (UnitId)
-     select max (Unit_find.Id) as UnitId
+     select max (Unit.Id) as UnitId
      from dba.Unit
           left outer join dba.isUnit on isUnit.UnitId = Unit.Id
-          left outer join dba._pgUnit on _pgUnit.Id = Unit.pgUnitId
-          left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres
+          left outer join dba._pgUnit on _pgUnit.Id = Unit.pgUnitId and isnull(Unit.ParentId,0) <> 4137 -- MO
+          left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres and Unit.ParentId = 4137 -- MO
           left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = _pgUnit.Id or Unit_find.PersonalId_Postgres = _pgPersonal.Id
-     where Unit_find.Id is not null
-       -- and (isUnit.UnitId is not null or Unit.ParentId = 4137) -- !!!!!!
-     group by _pgUnit.Id, _pgPersonal.Id;
+     where (isUnit.UnitId is not null or Unit.ParentId = 4137) -- MO
+       and Unit.Id <> 2324 -- Склад С/К
+       and Unit.Id <> 2791 -- Склад УТИЛЬ
+       and Unit.Id <> 2612 -- Склад-автомат-пересортица
+       and Unit.Id <> 2827 -- Цех Упаковки (брак)
+       and Unit.Id <> 2826 -- Цех Упаковки (переработка)
+     group by Unit_find.pgUnitId, Unit_find.PersonalId_Postgres, isnull (Unit_find.pgUnitId,isnull (Unit_find.PersonalId_Postgres, Unit.Id));
 
   -- insert exists Bill 
   insert into _tmpList (BillId, UnitId)
@@ -74,7 +78,7 @@ begin
     // 
     -- result
     select (Bill.Id) as ObjectId
-         , (Bill.BillNumber) as InvNumber
+         , (Bill.BillNumber) || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null then '-ошибка '|| UnitFrom.UnitName else '-'||UnitFrom.UnitName end as InvNumber
          , @inEndDate as OperDate
          , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
          , FromId_Postgres as ToId_Postgres
@@ -83,7 +87,9 @@ begin
     from dba.Bill
          left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
          left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
-         left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres
+                                                  and UnitFrom.ParentId <> 4137 -- MO
+         left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
+                                                          and UnitFrom.ParentId = 4137 -- MO
     where Bill.BillDate = @inEndDate
       and Bill.BillKind in (zc_bkProductionInFromReceipt())
       and Bill.isRemains = zc_rvYes()
@@ -92,5 +98,4 @@ begin
 
 end
 //
--- call dba._pgSelect_Bill_Inventory (zc_rvNo(), '2013-12-01', '2013-12-31')
--- call dba._pgSelect_Bill_Inventory (zc_rvYes(), '2013-09-01', '2013-09-30')
+-- call dba._pgSelect_Bill_Inventory (zc_rvNo(), '2014-05-01', '2014-05-31')

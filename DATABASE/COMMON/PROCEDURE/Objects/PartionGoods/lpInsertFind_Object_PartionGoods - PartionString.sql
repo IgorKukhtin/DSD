@@ -11,24 +11,31 @@ $BODY$
    DECLARE vbOperDate       TDateTime;
    DECLARE vbPartnerId      Integer;
    DECLARE vbGoodsId        Integer;
-   DECLARE vbValue          TVarChar;
 BEGIN
-   
-     -- обрабатываем NULL
-     vbValue:= COALESCE (inValue, '');
+     -- меняем параметр
+     inValue:= COALESCE (inValue, '');
 
-     -- Находим 
-     vbPartionGoodsId:= (SELECT Id FROM Object WHERE ValueData = vbValue AND DescId = zc_Object_PartionGoods());
+     -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
+     vbPartionGoodsId:= (SELECT Object.Id
+                         FROM Object 
+                              INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.ObjectId = Object.Id
+                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                         WHERE Object.ValueData = inValue
+                           AND Object.DescId = zc_Object_PartionGoods()
+                           AND ObjectLink_Unit.ObjectId IS NULL
+                        );
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
      THEN
-         -- сохранили <Объект>
-         vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbValue);
-         -- сохранили
+         -- сохранили <Полное значение партии>
+         vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, inValue);
+         -- сохранили <Дата партии>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, vbOperDate);
-         -- сохранили
+         -- сохранили <Контрагенты>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Partner(), vbPartionGoodsId, vbPartnerId);
+         -- сохранили <Товар>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, vbGoodsId);
      END IF;
 
@@ -44,6 +51,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.07.14                                        * add zc_ObjectLink_PartionGoods_Unit
  20.07.13                                        * vbOperDate
  19.07.13         *  rename zc_ObjectDate_              
  12.07.13                                        * разделил на 2 проц-ки
