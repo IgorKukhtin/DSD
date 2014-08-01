@@ -78,7 +78,7 @@ begin
     // 
     -- result
     select (Bill.Id) as ObjectId
-         , (Bill.BillNumber) || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null then '-ошибка '|| UnitFrom.UnitName else '-'||UnitFrom.UnitName end as InvNumber
+         , (Bill.BillNumber) || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null then '-ошибка '|| UnitFrom.UnitName else '' /*'-'||UnitFrom.UnitName*/ end as InvNumber
          , @inEndDate as OperDate
          , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
          , FromId_Postgres as ToId_Postgres

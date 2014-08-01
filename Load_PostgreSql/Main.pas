@@ -5800,7 +5800,7 @@ begin
                   Add('order by ObjectId');
              end;
         Open;
-        cbRouteSorting.Caption:='4.8. ('+IntToStr(RecordCount)+') Топливные карты';
+        cbCardFuel.Caption:='4.8. ('+IntToStr(RecordCount)+') Топливные карты';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5865,14 +5865,25 @@ begin
                   Add('     , Unit.UnitCode as ObjectCode');
                   Add('     , Unit.UnitName as ObjectName');
                   Add('     , Unit.Id_Postgres_RouteSorting as Id_Postgres');
-                  Add('from dba.Unit as Unit_all');
-                  Add('     join dba.Unit on Unit.Id = Unit_all.RouteUnitID');
-                  Add('where (Unit_all.ID<>Unit_all.RouteUnitID)');
+                  Add('from (select Unit.Id as RouteUnitId'
+                     +'      from dba.Unit as Unit_all'
+                     +'           join dba.Unit on Unit.Id = Unit_all.RouteUnitID'
+                     +'      where (Unit_all.ID<>Unit_all.RouteUnitID)'
+                     +'      group by Unit.Id'
+                     +'     union'
+                     +'      select RouteUnitId'
+                     +'      from Bill'
+                     +'           join dba.Unit on Unit.Id = Unit_all.RouteUnitID'
+                     +'      where RouteUnitId<>0'
+                     +'        and Bill.BillDate>='+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
+                     +'      group by RouteUnitId) as tmp'
+                     +'      left join dba.Unit on Unit.Id = tmp.RouteUnitId');
                   Add('group by ObjectId');
                   Add('       , ObjectCode');
                   Add('       , ObjectName');
                   Add('       , Id_Postgres');
                   Add('order by ObjectId');
+
              end;
         Open;
         cbRouteSorting.Caption:='3.4. ('+IntToStr(RecordCount)+') Сортировки Маршрутов';
@@ -10203,7 +10214,20 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null)'
+           +'                                 or (pgUnitTo.Id is null)'
+           +'                                    then '+FormatToVarCharServer_notNULL('-ошибка')
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitFrom.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' От Кого:')+'|| UnitFrom.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitTo.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
         Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
@@ -10552,7 +10576,19 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null)'
+           +'                                 or (pgUnitTo.Id is null)'
+           +'                                    then '+FormatToVarCharServer_notNULL('-ошибка')
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitFrom.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' От Кого:')+'|| UnitFrom.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end'
+           +'                       || case when pgUnitTo.Id is null'
+           +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
+           +'                               else '+FormatToVarCharServer_notNULL('')
+           +'                           end');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.PartionStr_MB as PartionGoods');
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');

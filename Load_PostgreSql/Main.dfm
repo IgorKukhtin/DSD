@@ -196,6 +196,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.1. '#1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
+      Enabled = False
       TabOrder = 5
     end
     object cbJuridicalGroup: TCheckBox
@@ -205,6 +206,7 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094' '
+      Enabled = False
       TabOrder = 6
     end
     object cbContractKind: TCheckBox
@@ -214,6 +216,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.2. '#1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+      Enabled = False
       TabOrder = 7
     end
     object cbContractFl: TCheckBox
@@ -223,6 +226,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
+      Enabled = False
       TabOrder = 8
     end
     object cbJuridicalFl: TCheckBox
@@ -232,6 +236,7 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '3.2. '#1070#1088'.'#1083#1080#1094#1072' Fl'
+      Enabled = False
       TabOrder = 9
     end
     object cbPartnerFl: TCheckBox
@@ -241,6 +246,7 @@ object MainForm: TMainForm
       Width = 119
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Fl'
+      Enabled = False
       TabOrder = 10
     end
     object cbBusiness: TCheckBox
@@ -250,6 +256,7 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '4.1. '#1041#1080#1079#1085#1077#1089#1099
+      Enabled = False
       TabOrder = 11
     end
     object cbBranch: TCheckBox
@@ -260,6 +267,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.2. '#1060#1080#1083#1080#1072#1083#1099
       Color = clBtnFace
+      Enabled = False
       ParentColor = False
       TabOrder = 12
     end
@@ -425,6 +433,7 @@ object MainForm: TMainForm
       Width = 135
       Height = 17
       Caption = '1.5. '#1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -449,6 +458,7 @@ object MainForm: TMainForm
       Width = 135
       Height = 17
       Caption = '1.6. '#1042#1080#1076#1099' '#1058#1086#1087#1083#1080#1074#1072
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -464,6 +474,7 @@ object MainForm: TMainForm
       Width = 115
       Height = 17
       Caption = '4.6. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
+      Enabled = False
       TabOrder = 32
     end
     object cbRoute: TCheckBox
@@ -473,6 +484,7 @@ object MainForm: TMainForm
       Width = 115
       Height = 17
       Caption = '4.7. '#1052#1072#1088#1096#1088#1091#1090#1099
+      Enabled = False
       TabOrder = 33
     end
     object cbCardFuel: TCheckBox
@@ -492,6 +504,7 @@ object MainForm: TMainForm
       Width = 145
       Height = 17
       Caption = '1.7. '#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -539,6 +552,7 @@ object MainForm: TMainForm
       Width = 160
       Height = 17
       Caption = '4.11. '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1080#1079' '#1090#1072#1073#1077#1083#1103
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -554,6 +568,7 @@ object MainForm: TMainForm
       Width = 172
       Height = 17
       Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
+      Enabled = False
       TabOrder = 39
     end
     object cbContractInt: TCheckBox
