@@ -21,7 +21,7 @@ $BODY$
 BEGIN
 
      -- ќпредел€ютс€ параметры
-     SELECT MovementLinkMovement_MasterEDI.MovementChildId, MovementLinkMovement_ChildEDI.MovementChildId
+     SELECT MovementLinkMovement_MasterEDI.MovementId, MovementLinkMovement_ChildEDI.MovementId
           , MovementString_InvNumberTax.ValueData, MovementDate_OperDateTax.ValueData, MovementLinkObject_Juridical.ObjectId
             INTO vbMovementId_ReturnIn, vbMovementId_TaxCorrective
                , vbInvNumberPartner_Tax, vbOperDate_Tax, vbJuridicalId_Tax
@@ -33,10 +33,10 @@ BEGIN
                                          ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id
                                         AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
           LEFT JOIN MovementString AS MovementString_InvNumberTax
-                                   ON MovementString_InvNumberTax.MovementId =  Movement.Id
+                                   ON MovementString_InvNumberTax.MovementChildId =  Movement.Id
                                   AND MovementString_InvNumberTax.DescId = zc_MovementString_InvNumberTax()
           LEFT JOIN MovementDate AS MovementDate_OperDateTax
-                                 ON MovementDate_OperDateTax.MovementId =  Movement.Id
+                                 ON MovementDate_OperDateTax.MovementChildId =  Movement.Id
                                 AND MovementDate_OperDateTax.DescId = zc_MovementDate_OperDateTax()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -118,8 +118,8 @@ BEGIN
                                                  , inAmountPartner      := tmpMI.AmountPartner
                                                  , inPrice              := tmpMI.Price
                                                  , ioCountForPrice      := 1
-                                                 , inHeadCount          := NULL
-                                                 , inPartionGoods       := NULL
+                                                 , inHeadCount          := 0
+                                                 , inPartionGoods       := ''
                                                  , inGoodsKindId        := tmpMI.GoodsKindId
                                                  , inAssetId            := NULL
                                                  , inUserId             := inUserId

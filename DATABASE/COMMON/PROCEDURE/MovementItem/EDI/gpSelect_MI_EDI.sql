@@ -32,7 +32,10 @@ BEGIN
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                                                 ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
                                                                AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-                                 LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Sale.MovementId
+                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                                                ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                                               AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+                                 LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
                                                                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                             WHERE Movement.DescId = zc_Movement_EDI()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -175,6 +178,7 @@ ALTER FUNCTION gpSelect_MI_EDI (TDateTime, TDateTime, TVarChar) OWNER TO postgre
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.07.14                                        * add zc_MovementLinkMovement_MasterEDI
  19.07.14                                        * ALL
  15.05.14                         *
 */
