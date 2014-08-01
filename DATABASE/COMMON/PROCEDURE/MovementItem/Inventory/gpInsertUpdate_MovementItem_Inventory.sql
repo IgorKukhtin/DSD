@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -34,7 +34,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
+
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Сумма>
@@ -44,7 +44,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
      -- сохранили свойство <Количество батонов или упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
-     
+
 
      -- сохранили свойство <Дата партии/Дата перемещения>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
@@ -85,4 +85,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
-

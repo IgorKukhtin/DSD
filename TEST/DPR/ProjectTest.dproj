@@ -345,12 +345,6 @@
 			<DCCReference Include="..\..\Forms\Document\Loss.pas">
 				<Form>LossForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\InventoryJournal.pas">
-				<Form>InventoryJournalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Inventory.pas">
-				<Form>InventoryForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnionJournal.pas">
 				<Form>ProductionUnionJournalForm</Form>
 			</DCCReference>
@@ -1374,12 +1368,12 @@
 				<Form>ProvinceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Send.pas">
-				<Form>SendForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Inventory.pas">
+				<Form>InventoryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
-				<Form>SendJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\InventoryJournal.pas">
+				<Form>InventoryJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderInternalJournal.pas">
@@ -1445,6 +1439,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ContractEndDate.pas">
 				<Form>Report_ContractEndDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
+				<Form>SendJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
+				<Form>SendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
