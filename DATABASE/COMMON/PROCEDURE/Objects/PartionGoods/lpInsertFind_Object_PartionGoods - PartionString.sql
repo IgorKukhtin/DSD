@@ -18,9 +18,9 @@ BEGIN
      -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object 
-                              INNER JOIN ObjectLink AS ObjectLink_Unit
-                                                    ON ObjectLink_Unit.ObjectId = Object.Id
-                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId IS NULL
