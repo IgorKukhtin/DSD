@@ -2,27 +2,29 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ExplicitWidth = 1080
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1064
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -251,19 +253,44 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -320,7 +347,7 @@ inherited InventoryForm: TInventoryForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -566,7 +593,7 @@ inherited InventoryForm: TInventoryForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
