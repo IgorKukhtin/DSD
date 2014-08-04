@@ -66,6 +66,8 @@ type
     clInfoMoneyCode: TcxGridDBColumn;
     clBusinessName: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    clIsPartionCount: TcxGridDBColumn;
+    clIsPartionSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

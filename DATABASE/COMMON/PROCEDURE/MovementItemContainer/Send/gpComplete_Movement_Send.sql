@@ -391,7 +391,10 @@ BEGIN
      UPDATE _tmpItemSumm SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM _tmpItem
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                  , inAccountDirectionId     := _tmpItem_group.AccountDirectionId_To
+                                                  , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                                                                                          THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
+                                                                                     ELSE _tmpItem_group.AccountDirectionId_To
+                                                                                END
                                                   , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
                                                   , inInfoMoneyId            := NULL
                                                   , inUserId                 := vbUserId

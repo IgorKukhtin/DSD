@@ -646,13 +646,13 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = cbAllDocumentClick
     end
-    object cbIncome: TCheckBox
+    object cbIncomeBN: TCheckBox
       Tag = 20
       Left = 3
       Top = 61
       Width = 235
       Height = 17
-      Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -676,10 +676,10 @@ object MainForm: TMainForm
     object cbIncomePacker: TCheckBox
       Tag = 20
       Left = 3
-      Top = 81
+      Top = 99
       Width = 235
       Height = 17
-      Caption = '1.2. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1103
+      Caption = '1.3. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1103
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -691,7 +691,7 @@ object MainForm: TMainForm
     object cbSendUnit: TCheckBox
       Tag = 20
       Left = 3
-      Top = 131
+      Top = 170
       Width = 235
       Height = 17
       Caption = '2.1. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084#1080
@@ -706,10 +706,11 @@ object MainForm: TMainForm
     object cbSendPersonal: TCheckBox
       Tag = 20
       Left = 3
-      Top = 151
+      Top = 190
       Width = 235
       Height = 17
       Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072#1084#1080
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -721,7 +722,7 @@ object MainForm: TMainForm
     object cbSendUnitBranch: TCheckBox
       Tag = 20
       Left = 3
-      Top = 171
+      Top = 210
       Width = 235
       Height = 17
       Caption = '2.3. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
@@ -733,13 +734,13 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 7
     end
-    object cbSaleFl: TCheckBox
+    object cbSaleIntNal: TCheckBox
       Tag = 20
       Left = 3
-      Top = 201
+      Top = 240
       Width = 235
       Height = 17
-      Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.Fl'
+      Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'. '#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -748,13 +749,13 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 8
     end
-    object cbReturnOut: TCheckBox
+    object cbReturnOutBN: TCheckBox
       Tag = 20
       Left = 3
-      Top = 101
+      Top = 79
       Width = 235
       Height = 17
-      Caption = '1.3. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -763,13 +764,13 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 9
     end
-    object cbReturnInFl: TCheckBox
+    object cbReturnInIntNal: TCheckBox
       Tag = 20
       Left = 3
-      Top = 219
+      Top = 258
       Width = 228
       Height = 17
-      Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Fl'
+      Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'. '#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -781,7 +782,7 @@ object MainForm: TMainForm
     object cbProductionUnion: TCheckBox
       Tag = 20
       Left = 3
-      Top = 311
+      Top = 350
       Width = 235
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -796,7 +797,7 @@ object MainForm: TMainForm
     object cbProductionSeparate: TCheckBox
       Tag = 20
       Left = 3
-      Top = 331
+      Top = 370
       Width = 235
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -811,7 +812,7 @@ object MainForm: TMainForm
     object cbLoss: TCheckBox
       Tag = 20
       Left = 3
-      Top = 361
+      Top = 400
       Width = 235
       Height = 17
       Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -827,7 +828,7 @@ object MainForm: TMainForm
     object cbInventory: TCheckBox
       Tag = 20
       Left = 3
-      Top = 391
+      Top = 430
       Width = 235
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -842,7 +843,7 @@ object MainForm: TMainForm
     object cbZakaz: TCheckBox
       Tag = 20
       Left = 3
-      Top = 421
+      Top = 460
       Width = 235
       Height = 17
       Caption = '7. '#1047#1072#1103#1074#1082#1080
@@ -872,11 +873,12 @@ object MainForm: TMainForm
     end
     object cbTaxFl: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 451
+      Left = 152
+      Top = 484
       Width = 235
       Height = 17
       Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -884,14 +886,16 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 17
+      Visible = False
     end
     object cbTaxCorrective: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 474
+      Left = 152
+      Top = 499
       Width = 235
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -899,14 +903,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 18
+      Visible = False
     end
     object cbReturnInInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 276
+      Top = 319
       Width = 235
       Height = 17
-      Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int'
+      Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -918,10 +923,10 @@ object MainForm: TMainForm
     object cbSaleInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 259
+      Top = 298
       Width = 235
       Height = 17
-      Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int'
+      Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -932,7 +937,7 @@ object MainForm: TMainForm
     end
     object OKPOEdit: TEdit
       Left = 3
-      Top = 638
+      Top = 640
       Width = 121
       Height = 21
       TabOrder = 21
@@ -953,11 +958,12 @@ object MainForm: TMainForm
     end
     object cbDeleteFl: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 551
+      Left = 152
+      Top = 515
       Width = 235
       Height = 17
       Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -965,6 +971,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 23
+      Visible = False
     end
     object cbDeleteInt: TCheckBox
       Tag = 20
@@ -985,7 +992,7 @@ object MainForm: TMainForm
       Tag = 20
       Left = 3
       Top = 497
-      Width = 235
+      Width = 143
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
       Font.Charset = DEFAULT_CHARSET
@@ -1012,7 +1019,7 @@ object MainForm: TMainForm
     end
     object cbOnlyUpdateInt: TCheckBox
       Left = 3
-      Top = 240
+      Top = 279
       Width = 235
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1072#1085#1085#1099#1077' '#1057#1082#1083#1072#1076#1072
@@ -1025,11 +1032,12 @@ object MainForm: TMainForm
       TabOrder = 27
     end
     object cbErr: TCheckBox
-      Left = 160
-      Top = 451
+      Left = 152
+      Top = 437
       Width = 63
       Height = 17
       Caption = 'Error'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1037,13 +1045,15 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 28
+      Visible = False
     end
     object cbTotalTaxCorr: TCheckBox
-      Left = 160
-      Top = 474
+      Left = 152
+      Top = 453
       Width = 63
       Height = 17
       Caption = 'TaxCorr'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1051,13 +1061,15 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 29
+      Visible = False
     end
     object cblTaxPF: TCheckBox
-      Left = 160
-      Top = 496
+      Left = 152
+      Top = 468
       Width = 63
       Height = 17
       Caption = 'PF'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1065,13 +1077,14 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 30
+      Visible = False
     end
     object cbUpdateConrtact: TCheckBox
       Left = 185
       Top = 61
       Width = 53
       Height = 51
-      Caption = #1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Caption = #1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1094,6 +1107,36 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 32
+    end
+    object cbIncomeNal: TCheckBox
+      Tag = 20
+      Left = 3
+      Top = 119
+      Width = 235
+      Height = 17
+      Caption = '1.4. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1053#1040#1051
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 33
+    end
+    object cbReturnOutNal: TCheckBox
+      Tag = 20
+      Left = 3
+      Top = 140
+      Width = 235
+      Height = 17
+      Caption = '1.5. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1053#1040#1051
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 34
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1148,13 +1191,13 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = cbAllCompleteDocumentClick
     end
-    object cbCompleteIncome: TCheckBox
+    object cbCompleteIncomeBN: TCheckBox
       Tag = 30
       Left = 15
       Top = 101
       Width = 194
       Height = 17
-      Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1162,7 +1205,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object StartDateCompleteEdit: TcxDateEdit
       Left = 14
@@ -1209,7 +1252,7 @@ object MainForm: TMainForm
     object cbCompleteSend: TCheckBox
       Tag = 30
       Left = 15
-      Top = 151
+      Top = 190
       Width = 194
       Height = 17
       Caption = '2.1. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -1220,12 +1263,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 6
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteSendOnPrice: TCheckBox
       Tag = 30
       Left = 15
-      Top = 171
+      Top = 210
       Width = 194
       Height = 17
       Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
@@ -1236,7 +1279,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 7
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbInsertHistoryCost: TCheckBox
       Tag = 100
@@ -1256,7 +1299,7 @@ object MainForm: TMainForm
     object cbCompleteProductionUnion: TCheckBox
       Tag = 30
       Left = 15
-      Top = 311
+      Top = 350
       Width = 194
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -1267,12 +1310,12 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 9
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteProductionSeparate: TCheckBox
       Tag = 30
       Left = 15
-      Top = 334
+      Top = 371
       Width = 194
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -1283,7 +1326,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 10
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbLastComplete: TCheckBox
       Left = 15
@@ -1303,7 +1346,7 @@ object MainForm: TMainForm
     object cbCompleteInventory: TCheckBox
       Tag = 30
       Left = 15
-      Top = 391
+      Top = 431
       Width = 194
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1314,15 +1357,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 12
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
-    object cbCompleteSaleFl: TCheckBox
+    object cbCompleteSaleIntNal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 201
+      Top = 240
       Width = 200
       Height = 17
-      Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.Fl'
+      Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.'#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1330,15 +1373,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 13
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
-    object cbCompleteReturnInFl: TCheckBox
+    object cbCompleteReturnInIntNal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 221
+      Top = 258
       Width = 200
       Height = 17
-      Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Fl'
+      Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.'#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1346,15 +1389,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 14
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
-    object cbCompleteReturnOut: TCheckBox
+    object cbCompleteReturnOutBN: TCheckBox
       Tag = 30
       Left = 15
-      Top = 121
+      Top = 119
       Width = 194
       Height = 17
-      Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Caption = '1.2. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1362,15 +1405,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 15
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteSaleInt: TCheckBox
       Tag = 30
       Left = 15
-      Top = 241
+      Top = 298
       Width = 200
       Height = 17
-      Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int'
+      Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1378,15 +1421,15 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 16
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteReturnInInt: TCheckBox
       Tag = 30
       Left = 15
-      Top = 261
+      Top = 319
       Width = 200
       Height = 17
-      Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int'
+      Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1394,15 +1437,16 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 17
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteTaxFl: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 451
+      Left = 119
+      Top = 456
       Width = 194
       Height = 17
       Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1410,15 +1454,17 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 18
-      OnClick = cbCompleteIncomeClick
+      Visible = False
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteTaxCorrective: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 474
+      Left = 119
+      Top = 472
       Width = 194
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1426,7 +1472,8 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 19
-      OnClick = cbCompleteIncomeClick
+      Visible = False
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteTaxInt: TCheckBox
       Tag = 30
@@ -1442,7 +1489,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 20
-      OnClick = cbCompleteIncomeClick
+      OnClick = cbCompleteIncomeBNClick
     end
     object cbSelectData_afterLoad: TCheckBox
       Left = 15
@@ -1535,6 +1582,38 @@ object MainForm: TMainForm
       Height = 21
       TabOrder = 27
       Text = '0'
+    end
+    object cbCompleteIncomeNal: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 137
+      Width = 194
+      Height = 17
+      Caption = '1.4. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1053#1040#1051
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 28
+      OnClick = cbCompleteIncomeBNClick
+    end
+    object cbCompleteReturnOutNal: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 156
+      Width = 194
+      Height = 17
+      Caption = '1.5. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' - '#1053#1040#1051
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 29
+      OnClick = cbCompleteIncomeBNClick
     end
   end
   object DataSource: TDataSource
