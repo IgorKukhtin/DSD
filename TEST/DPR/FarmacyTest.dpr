@@ -125,7 +125,25 @@ uses
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
-  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',
+  CarModelTest in '..\SOURCE\Objects\All\CarModelTest.pas',
+  CarTest in '..\SOURCE\Objects\All\CarTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
+  ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
+  GoodsTest in '..\SOURCE\Objects\All\GoodsTest.pas',
+  GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
+  GoodsKindTest in '..\SOURCE\Objects\All\GoodsKindTest.pas',
+  GoodsPropertyTest in '..\SOURCE\Objects\All\GoodsPropertyTest.pas',
+  GoodsPropertyValueTest in '..\SOURCE\Objects\All\GoodsPropertyValueTest.pas',
+  JuridicalGroupTest in '..\SOURCE\Objects\All\JuridicalGroupTest.pas',
+  PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas',
+  PartnerTest in '..\SOURCE\Objects\All\PartnerTest.pas',
+  RouteTest in '..\SOURCE\Objects\All\RouteTest.pas',
+  RouteSortingTest in '..\SOURCE\Objects\All\RouteSortingTest.pas',
+  UserTest in '..\SOURCE\Objects\All\UserTest.pas',
+  AccountGroupTest in '..\SOURCE\Objects\All\AccountGroupTest.pas',
+  AccountDirectionTest in '..\SOURCE\Objects\All\AccountDirectionTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
