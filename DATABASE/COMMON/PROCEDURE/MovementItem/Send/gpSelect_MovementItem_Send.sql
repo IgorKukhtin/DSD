@@ -13,6 +13,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , StorageId Integer, StorageName TVarChar
+             , PartionGoodsId Integer, PartionGoodsName TVarChar
              , isErased Boolean
               )
 AS
@@ -40,6 +43,12 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , 0 ::Integer                AS AssetId
            , CAST (NULL AS TVarChar)    AS AssetName
+           , 0 ::Integer                AS UnitId
+           , CAST (NULL AS TVarChar)    AS UnitName
+           , 0 ::Integer                AS StorageId
+           , CAST (NULL AS TVarChar)    AS StorageName
+           , 0 ::Integer                AS PartionGoodsId
+           , CAST (NULL AS TVarChar)    AS PartionGoodsName
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -87,6 +96,13 @@ BEGIN
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
+
+           , Object_Unit.Id                     AS UnitId
+           , Object_Unit.ValueData              AS UnitName
+           , Object_Storage.Id                  AS StorageId
+           , Object_Storage.ValueData           AS StorageName
+           , Object_PartionGoods.Id             AS PartionGoodsId
+           , Object_PartionGoods.ValueData      AS PartionGoodsName
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -116,6 +132,21 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
 
             ;
 
@@ -136,6 +167,14 @@ BEGIN
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
+
+           , Object_Unit.Id                     AS UnitId
+           , Object_Unit.ValueData              AS UnitName
+           , Object_Storage.Id                  AS StorageId
+           , Object_Storage.ValueData           AS StorageName
+           , Object_PartionGoods.Id             AS PartionGoodsId
+           , Object_PartionGoods.ValueData      AS PartionGoodsName
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -166,6 +205,22 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+
             ;
 
      END IF;
@@ -179,6 +234,9 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 04.08.14         * add zc_MILinkObject_Unit
+                        zc_MILinkObject_Storage
+                        zc_MILinkObject_PartionGoods
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add FuelName and tmpUserTransport
  30.10.13                       *            FULL JOIN
