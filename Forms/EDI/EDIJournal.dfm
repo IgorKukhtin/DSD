@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1102
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1118
-  ExplicitHeight = 459
+  ExplicitWidth = 1110
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -660,6 +660,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 184
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Top = 183
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -672,6 +673,21 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           StoredProc = spProtocol
         end>
+    end
+    object maEDIReceiptLoad: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIReceipt
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080#1079' EDI?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1093' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1084' '#1080#1079' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1084' '#1080#1079' EDI'
     end
     object EDIActionComdocLoad: TEDIAction
       Category = 'EDI'
@@ -864,6 +880,16 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
       Caption = 'actExecPrintStoredProc'
     end
+    object EDIReceipt: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediReceipt
+      spHeader = spInsert_Protocol_EDIReceipt
+      Directory = '/inbox'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -919,6 +945,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReceipt'
         end
         item
           BeginGroup = True
@@ -997,6 +1027,10 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbDeclar: TdxBarButton
       Action = mactDECLAR
+      Category = 0
+    end
+    object bbReceipt: TdxBarButton
+      Action = maEDIReceiptLoad
       Category = 0
     end
   end
@@ -1478,5 +1512,43 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Left = 679
     Top = 72
+  end
+  object spInsert_Protocol_EDIReceipt: TdsdStoredProc
+    StoredProcName = 'gpInsert_Protocol_EDIReceipt'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOKPOIn'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOKPOOut'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inTaxNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEDIEvent'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperMonth'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 256
+    Top = 64
   end
 end
