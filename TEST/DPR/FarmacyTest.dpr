@@ -126,6 +126,7 @@ uses
   AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  GoodsTest in '..\SOURCE\Objects\All\Farmacy\GoodsTest.pas',
   BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',
   CarModelTest in '..\SOURCE\Objects\All\CarModelTest.pas',
   CarTest in '..\SOURCE\Objects\All\CarTest.pas',
@@ -152,6 +153,7 @@ begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
+  LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

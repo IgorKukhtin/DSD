@@ -1,41 +1,49 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, Integer, TVarChar, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLoad(
- INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
-    IN inCode                Integer   ,    -- Код объекта <Товар>
-    IN inName                TVarChar  ,    -- Название объекта <Товар>
-    
-    IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inNDS                 TFloat     ,    -- НДС
-
+    IN ioId                  Integer   , 
+    IN inOKPO                TVarChar  ,    -- ОКПО
+    IN inObjectId            Integer   , 
+    IN inMainCode            Integer   ,    -- Код товара
+    IN inGoodsCode           TVarChar  ,    -- Код товара партнера
+    IN inGoodsName           TVarChar  ,    -- Название товара партнера
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS integer AS
+RETURNS VOID AS
 $BODY$
-DECLARE vbNDSKindId Integer;
+DECLARE vbJuridicalId Integer;
+DECLARE vbGoodsMainId Integer;
 BEGIN
 
-    IF inNDS = 20 THEN 
-       vbNDSKindId  := zc_Enum_NDSKind_Common();
-    ELSE
-       vbNDSKindId  := zc_Enum_NDSKind_Medical();
-    END IF; 
+   SELECT Id INTO vbGoodsMainId
+     FROM Object_Goods_View
+    WHERE Object_Goods_View.GoodsCodeInt = inMainCode
+      AND Object_Goods_View.ObjectId IS Null;
 
-    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inMeasureId, vbNDSKindId, 0, 0, inSession);
+   IF COALESCE(inObjectId, 0) = 0 THEN
+      SELECT JuridicalId INTO vbJuridicalId
+        FROM ObjectHistory_JuridicalDetails_View
+       WHERE OKPO = inOKPO;
+   ELSE
+      vbJuridicalId := inObjectId;
+   END IF;
+   
+   IF (COALESCE(vbGoodsMainId, 0) <> 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN
+      ioId := gpInsertUpdate_Object_GoodsLink(ioId, inGoodsCode, inGoodsName, vbGoodsMainId, vbJuridicalId, inSession);
+   END IF;
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, Integer, TVarChar, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.06.14         *
- 19.06.13                        * 
+ 23.07.13                        * 
 
 */
 

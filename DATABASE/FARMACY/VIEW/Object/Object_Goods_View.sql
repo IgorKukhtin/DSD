@@ -5,23 +5,24 @@ DROP VIEW IF EXISTS Object_Goods_View;
 CREATE OR REPLACE VIEW Object_Goods_View AS
          SELECT 
              Object_Goods.Id                                  AS Id
+           , Object_Goods.ObjectCode                          AS GoodsCodeInt
            , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods.ValueData                           AS GoodsName
            , Object_Goods.isErased                            AS isErased
            , ObjectLink_Goods_Object.ChildObjectId            AS ObjectId
            , ObjectLink_Goods_GoodsGroup.ChildObjectId        AS GoodsGroupId
            , Object_GoodsGroup.ValueData                      AS GoodsGroupName
-           , Object_Measure.Id        AS MeasureId
-           , Object_Measure.ValueData AS MeasureName
-           , Object_NDSKind.Id        AS NDSKindId
-           , Object_NDSKind.ValueData AS NDSKindName
+           , Object_Measure.Id                                AS MeasureId
+           , Object_Measure.ValueData                         AS MeasureName
+           , Object_NDSKind.Id                                AS NDSKindId
+           , Object_NDSKind.ValueData                         AS NDSKindName
 
        FROM Object AS Object_Goods
-                 JOIN ObjectLink AS ObjectLink_Goods_Object 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
                                  ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
 
-                 JOIN ObjectString ON ObjectString.ObjectId = Object_Goods.Id
+            LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_Goods.Id
                                   AND ObjectString.DescId = zc_ObjectString_Goods_Code()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup

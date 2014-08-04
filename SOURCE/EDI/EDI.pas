@@ -6,7 +6,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
-  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave);
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediReceipt);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -39,6 +39,7 @@ type
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
+    procedure ReceiptLoad(spHeader: TdsdStoredProc; Directory: String);
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
@@ -264,12 +265,13 @@ var
 begin
   // создать xml файл
   DECLAR := NewDECLAR;
+  DECLAR.OwnerDocument.Encoding :='WINDOWS-1251';
   DECLAR.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').asString;
   DECLAR.DECLARHEAD.C_DOC := C_DOC;
   DECLAR.DECLARHEAD.C_DOC_SUB := C_DOC_SUB;
   DECLAR.DECLARHEAD.C_DOC_VER := C_DOC_VER;
   DECLAR.DECLARHEAD.C_DOC_TYPE := C_DOC_TYPE;
-  DECLAR.DECLARHEAD.C_DOC_CNT :=  copy(HeaderDataSet.FieldByName('InvNumber').asString, 1, 7);
+  DECLAR.DECLARHEAD.C_DOC_CNT :=  copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1, 7);
   DECLAR.DECLARHEAD.C_REG := C_REG;
   DECLAR.DECLARHEAD.C_RAJ := C_RAJ;
   DECLAR.DECLARHEAD.PERIOD_MONTH := FormatDateTime('mm', HeaderDataSet.FieldByName('OperDate').asDateTime);
@@ -477,6 +479,9 @@ begin
   FIdFTP.Username := ConnectionParams.User.AsString;
   FIdFTP.Password := ConnectionParams.Password.AsString;
   FIdFTP.Host := ConnectionParams.Host.AsString;
+  FIdFTP.ListenTimeout := 600;
+  FIdFTP.TransferTimeOut := 600;
+  FIdFTP.ReadTimeOut := 600000;
 end;
 
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
@@ -622,6 +627,71 @@ begin
      end;
 end;
 
+procedure TEDI.ReceiptLoad(spHeader: TdsdStoredProc; Directory: String);
+var List, Receipt: TStrings;
+    i, j: integer;
+    Stream: TStringStream;
+    FileStream: TFileStream;
+    f: Text;
+    s: string;
+    c: string;
+begin
+    FTPSetConnection;
+    // загружаем файлы с FTP
+    FIdFTP.Connect;
+    if FIdFTP.Connected then begin
+       FIdFTP.ChangeDir(Directory);
+       try
+         List := TStringList.Create;
+         Receipt := TStringList.Create;
+         Stream := TStringStream.Create;
+         //FIdFTP.List(List, '' ,false);
+         List.Add('28010024447183J1201005100000184610720142801.RPL');
+         AssignFile(f, 'c:\' + List[0]);
+         Reset(F);
+         with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+         try
+           Start;
+           for I := 0 to List.Count - 1 do begin
+               // последние .rpl.
+               if AnsiLowerCase(copy(list[i], length(list[i]) - 3, 4)) = '.rpl' then begin
+                  // тянем файл к нам
+                  Stream.Clear;
+                  s := '';
+                  while not Eof(F) do
+                  begin
+                     ReadLn(F, c);
+                     Receipt.add(c);
+                  end;
+                  //FIdFTP.Get(List[i], Stream);
+                  if Receipt[4] = 'RESULT=0' then
+                     ShowMessage(Receipt[4]);
+
+                  exit;
+
+                  // теперь перенесли файл в директроию Archive
+                  try
+                    FIdFTP.ChangeDir('/archive');
+                    FIdFTP.Put(Stream, List[i]);
+                  finally
+                    FIdFTP.ChangeDir(Directory);
+                    FIdFTP.Delete(List[i]);
+                  end;
+               end;
+               IncProgress;
+           end;
+         finally
+           Finish;
+         end;
+       finally
+         FIdFTP.Quit;
+         List.Free;
+         Receipt.Free;
+         Stream.Free;
+       end;
+    end;
+end;
+
 procedure TEDI.SignFile(FileName: string; SignType: TSignType);
 var
   ComSigner: OleVariant;
@@ -697,6 +767,7 @@ begin
     ediComDoc: EDI.ComdocLoad(spHeader, spList, Directory, StartDateParam.Value, EndDateParam.Value);
     ediComDocSave: EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory);
     ediDeclar: EDI.DeclarSave(HeaderDataSet, ListDataSet, Directory);
+    ediReceipt: EDI.ReceiptLoad(spHeader, Directory);
 //    ediDesadv,
   end;
 end;
