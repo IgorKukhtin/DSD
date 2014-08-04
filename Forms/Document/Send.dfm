@@ -7,25 +7,24 @@ inherited SendForm: TSendForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1064
-    Height = 540
-    ExplicitLeft = 8
-    ExplicitTop = 168
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -110,7 +109,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 75
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -118,7 +117,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 249
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -133,7 +132,7 @@ inherited SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 133
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
@@ -151,7 +150,7 @@ inherited SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 100
           end
           object colCount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1091#1087#1072#1082#1086#1074#1086#1082
@@ -161,7 +160,7 @@ inherited SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 99
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
@@ -171,7 +170,7 @@ inherited SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 152
           end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
@@ -181,19 +180,59 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actUnitChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentVert = vaCenter
+            Width = 104
+          end
+          object colStorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'StorageName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 68
+          end
+          object colPartionGoodsName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'PartionGoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -250,7 +289,7 @@ inherited SendForm: TSendForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -381,6 +420,69 @@ inherited SendForm: TSendForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actStorageChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'StorageForm'
+      FormName = 'TStorageForm'
+      FormNameParam.Value = 'TStorageForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actUnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'UnitForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actPartionGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartionGoodsForm'
+      FormName = 'TPartionGoodsForm'
+      FormNameParam.Value = 'TPartionGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -433,7 +535,7 @@ inherited SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1017,19 +1119,22 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'inUnitId'
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
       end
       item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'inStorageId'
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
       end
       item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'inPartionGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
       end
       item
         Value = Null

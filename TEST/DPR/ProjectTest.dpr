@@ -138,8 +138,6 @@ uses
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
   LossJournal in '..\..\Forms\Document\LossJournal.pas' {LossJournalForm},
   Loss in '..\..\Forms\Document\Loss.pas' {LossForm},
-  InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm},
-  Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm},
   ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
   Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
   Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
@@ -461,8 +459,8 @@ uses
   RegionEdit in '..\..\Forms\Guides\RegionEdit.pas' {RegionEditForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
-  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm: TParentForm},
+  InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
   OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
@@ -481,7 +479,9 @@ uses
   Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
-  Report_ContractEndDate in '..\..\Forms\Report\Report_ContractEndDate.pas' {Report_ContractEndDateForm: TParentForm};
+  Report_ContractEndDate in '..\..\Forms\Report\Report_ContractEndDate.pas' {Report_ContractEndDateForm: TParentForm},
+  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

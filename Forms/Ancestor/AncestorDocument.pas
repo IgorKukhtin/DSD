@@ -12,7 +12,8 @@ uses
   cxTextEdit, Vcl.ExtCtrls, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters;
+  cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TAncestorDocumentForm = class(TAncestorDBGridForm)

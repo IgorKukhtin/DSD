@@ -16,15 +16,29 @@ BEGIN
      inValue:= COALESCE (inValue, '');
 
      -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
-     vbPartionGoodsId:= (SELECT Object.Id
+     IF inValue = ''
+     THEN
+     -- !!!это надо убрать после исправления ошибки!!!
+     vbPartionGoodsId:= (SELECT MIN (Object.Id)
                          FROM Object 
-                              INNER JOIN ObjectLink AS ObjectLink_Unit
-                                                    ON ObjectLink_Unit.ObjectId = Object.Id
-                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId IS NULL
                         );
+     ELSE
+     vbPartionGoodsId:= (SELECT Object.Id
+                         FROM Object 
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                         WHERE Object.ValueData = inValue
+                           AND Object.DescId = zc_Object_PartionGoods()
+                           AND ObjectLink_Unit.ObjectId IS NULL
+                        );
+     END IF;
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
@@ -51,6 +65,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.08.14                                        * add !!!это надо убрать после исправления ошибки!!!
  26.07.14                                        * add zc_ObjectLink_PartionGoods_Unit
  20.07.13                                        * vbOperDate
  19.07.13         *  rename zc_ObjectDate_              

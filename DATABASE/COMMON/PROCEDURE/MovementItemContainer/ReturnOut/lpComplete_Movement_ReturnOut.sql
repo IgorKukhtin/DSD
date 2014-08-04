@@ -29,6 +29,7 @@ $BODY$
 
   DECLARE vbJuridicalId_To Integer;
   DECLARE vbIsCorporate_To Boolean;
+  DECLARE vbInfoMoneyId_CorporateTo Integer;
   DECLARE vbPartnerId_To Integer;
   DECLARE vbInfoMoneyDestinationId_To Integer;
   DECLARE vbInfoMoneyId_To Integer;
@@ -62,8 +63,15 @@ BEGIN
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
 
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS vbJuridicalId_To
-          , COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) AS vbIsCorporate_To
+          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_To
+          , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
+                      THEN TRUE
+                 ELSE COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE)
+            END AS isCorporate_To
+          , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
+                      THEN ObjectLink_Juridical_InfoMoney.ChildObjectId
+                 ELSE 0
+            END AS InfoMoneyId_CorporateTo
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END, 0) AS PartnerId_To
 
             -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
@@ -78,7 +86,7 @@ BEGIN
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbOperDate, vbOperDatePartner
                , vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit
-               , vbJuridicalId_To, vbIsCorporate_To, vbPartnerId_To, vbInfoMoneyId_To
+               , vbJuridicalId_To, vbIsCorporate_To, vbInfoMoneyId_CorporateTo, vbPartnerId_To, vbInfoMoneyId_To
                , vbPaidKindId, vbContractId
                , vbJuridicalId_Basis_From, vbBusinessId_From
      FROM Movement
@@ -157,6 +165,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                ON ObjectLink_Juridical_InfoMoney.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
+          LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -405,11 +414,12 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Price:= NULL
-                                                                                        , inGoodsId     := NULL
-                                                                                        , inStorageId   := NULL
-                                                                                        , inInvNumber   := NULL
-                                                                                        , inOperDate    := NULL
+                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
+                                                                                        , inGoodsId       := NULL
+                                                                                        , inStorageId     := NULL
+                                                                                        , inInvNumber     := NULL
+                                                                                        , inOperDate      := NULL
+                                                                                        , inPrice         := NULL
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
@@ -571,18 +581,21 @@ BEGIN
      -- 3.1. определяется Счет(справочника) для проводок по долг Поставщику
      UPDATE _tmpItem SET AccountId_Partner = _tmpItem_byAccount.AccountId
                        , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
-     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
-                                             , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
-                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
-                                             , inInfoMoneyId            := NULL
-                                             , inUserId                 := inUserId
-                                              ) AS AccountId
+     FROM (SELECT CASE WHEN vbIsCorporate_To = TRUE
+                            THEN _tmpItem_group.AccountId
+                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
+                                                       , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
+                                                       , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
+                                                       , inInfoMoneyId            := NULL
+                                                       , inUserId                 := inUserId
+                                                        )
+                  END AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
-           FROM (SELECT CASE WHEN vbIsCorporate_To
+           FROM (SELECT CASE WHEN vbIsCorporate_To = TRUE
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
                              ELSE zc_Enum_AccountGroup_70000()  -- Кредиторы select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
                         END AS AccountGroupId
-                      , CASE WHEN vbIsCorporate_To
+                      , CASE WHEN vbIsCorporate_To = TRUE
                                   THEN zc_Enum_AccountDirection_30200() -- наши компании -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30200())
                              ELSE zc_Enum_AccountDirection_70100() -- поставщики select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70100())
                         END AS AccountDirectionId
@@ -591,6 +604,17 @@ BEGIN
                             ELSE _tmpItem.InfoMoneyDestinationId -- иначе берем по товару
                        END AS InfoMoneyDestinationId_calc
                       , _tmpItem.InfoMoneyDestinationId
+                      , CASE WHEN zc_Enum_InfoMoney_20801() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30201() -- Алан
+                             WHEN zc_Enum_InfoMoney_20901() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30202() -- Ирна
+                             WHEN zc_Enum_InfoMoney_21001() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30203() -- Чапли
+                             WHEN zc_Enum_InfoMoney_21101() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30204() -- Дворкин
+                             WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                        END AS AccountId
                  FROM _tmpItem
                  -- WHERE _tmpItem.OperSumm_Partner <> 0 !!!нельзя ограничивать, т.к. этот AccountId в проводках для отчета!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId
@@ -938,6 +962,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.07.14                                        * add Constant_InfoMoney_isCorporate_View
  26.07.14                                        * add МНМА
  25.05.14                                        * add lpComplete_Movement
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last

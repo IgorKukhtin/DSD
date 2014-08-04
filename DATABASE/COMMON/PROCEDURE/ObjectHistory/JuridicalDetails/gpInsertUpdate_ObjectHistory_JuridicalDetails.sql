@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_JuridicalDetails ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
@@ -26,8 +26,9 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
 
 
-   -- проверка уникальность <ОКПО>
-   IF inOKPO <> ''
+
+   -- проверка уникальность <ОКПО>, кроме "виртуальных"
+   IF inOKPO <> '' AND NOT (LENGTH (inOKPO) = 5 AND SUBSTRING (inOKPO, 3, 1) = '-')
    THEN
        -- находим Юр. лицо
        SELECT MAX (ObjectHistory.ObjectId) INTO vbJuridicalId_find
@@ -99,6 +100,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.08.14                                        * add кроме "виртуальных"
  12.02.14                                                       * add phone
  06.01.14                                        * add проверка уникальность  <Юр. лицо полное наименование>
  05.01.14                                        * add проверка уникальность <ОКПО>

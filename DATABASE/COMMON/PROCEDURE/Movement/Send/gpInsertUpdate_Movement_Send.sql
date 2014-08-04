@@ -11,15 +11,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inToId                Integer   , -- Кому (в документе)
 
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      vbUserId := inSession;
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Send(), inInvNumber, inOperDate, NULL);
@@ -31,7 +36,7 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-   
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

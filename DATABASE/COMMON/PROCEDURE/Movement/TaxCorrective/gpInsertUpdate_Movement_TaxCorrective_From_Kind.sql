@@ -442,9 +442,9 @@ BEGIN
 
 
      -- результат
-     IF (SELECT COUNT(*) FROM _tmpResult) = 1
+     IF (SELECT COUNT(*) FROM (SELECT MovementId_Corrective FROM _tmpResult GROUP BY MovementId_Corrective) AS tmp) = 1
      THEN
-         outMovementId_Corrective:= (SELECT MovementId_Corrective FROM _tmpResult);
+         outMovementId_Corrective:= (SELECT MAX (MovementId_Corrective) FROM _tmpResult);
      END IF;
 
      -- результат

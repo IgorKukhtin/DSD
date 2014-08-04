@@ -71,10 +71,10 @@ BEGIN
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = MovementItem.MovementId
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_To.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = MovementItem.MovementId
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_From.ObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
@@ -115,7 +115,7 @@ BEGIN
                   END AS InfoMoneyId_CorporateFrom
 
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner()    THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member()     THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member()     THEN Object_From.Id ELSE 0 END, 0) AS MemberId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_CardFuel()   THEN Object_From.Id ELSE 0 END, 0) AS CardFuelId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_TicketFuel() THEN Object_From.Id ELSE 0 END, 0) AS TicketFuelId_From
                   -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
@@ -132,7 +132,7 @@ BEGIN
                             END, 0) AS AccountDirectionId_To
                 , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE)  AS isPartionDate_Unit
 
-                , COALESCE (ObjectLink_PersonalPacker_Member.ChildObjectId, 0) AS MemberId_Packer
+                , COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0) AS MemberId_Packer
                 , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
@@ -229,16 +229,9 @@ BEGIN
                                      ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                     AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
 
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                     ON ObjectLink_Personal_Member.ObjectId = Object_From.Id
-                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                                    AND Object_From.DescId = zc_Object_Personal()
                 LEFT JOIN ObjectLink AS ObjectLink_PersonalDriver_Member
                                      ON ObjectLink_PersonalDriver_Member.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
                                     AND ObjectLink_PersonalDriver_Member.DescId = zc_ObjectLink_Personal_Member()
-                LEFT JOIN ObjectLink AS ObjectLink_PersonalPacker_Member
-                                     ON ObjectLink_PersonalPacker_Member.ObjectId = MovementLinkObject_PersonalPacker.ObjectId
-                                    AND ObjectLink_PersonalPacker_Member.DescId = zc_ObjectLink_Personal_Member()
 
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_Income()
@@ -367,7 +360,7 @@ BEGIN
  
                    , MovementItem.ObjectId AS GoodsId_TicketFuel
 
-                   , MovementItem.Amount AS OperCount
+                   , MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS OperCount
                    , COALESCE (MIFloat_Price.ValueData, 0) AS Price
 
                      -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
@@ -467,7 +460,7 @@ BEGIN
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE)
-                                       AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!! НАЛ !!!
+                                       -- AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!! НАЛ !!!
                                            )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
@@ -565,11 +558,12 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate:= _tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Price:= NULL
-                                                                                        , inGoodsId     := NULL
-                                                                                        , inStorageId   := NULL
-                                                                                        , inInvNumber   := NULL
-                                                                                        , inOperDate    := NULL
+                                                   THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
+                                                                                        , inGoodsId       := NULL
+                                                                                        , inStorageId     := NULL
+                                                                                        , inInvNumber     := NULL
+                                                                                        , inOperDate      := NULL
+                                                                                        , inPrice         := NULL
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
@@ -717,7 +711,7 @@ BEGIN
            FROM (SELECT _tmpItem.InfoMoneyDestinationId
                       , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
-                                  THEN zc_InfoMoneyDestination_WorkProgress()
+                                  THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                              ELSE _tmpItem.InfoMoneyDestinationId
                         END AS InfoMoneyDestinationId_calc
                  FROM _tmpItem
@@ -725,7 +719,7 @@ BEGIN
                  GROUP BY _tmpItem.InfoMoneyDestinationId
                         , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                  OR (vbAccountDirectionId_To = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
-                                    THEN zc_InfoMoneyDestination_WorkProgress()
+                                    THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                ELSE _tmpItem.InfoMoneyDestinationId
                           END
                 ) AS _tmpItem_group
@@ -915,8 +909,8 @@ BEGIN
 
      -- 3.1. определяется Счет(справочника) для проводок по доплата Физ.лицу (заготовитель)
      UPDATE _tmpItem_SummPacker SET AccountId = _tmpItem_byAccount.AccountId
-     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000() -- Кредиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_70600() -- Сотрудник (заготовитель) -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70600())
+     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
@@ -1158,6 +1152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.08.14                                        * zc_Enum_AccountDirection... Сотрудник (заготовитель) -> сотрудники (подотчетные лица)
  29.07.14                                        * change zc_GoodsKind_WorkProgress
  26.07.14                                        * add МНМА
  25.05.14                                        * add lpComplete_Movement

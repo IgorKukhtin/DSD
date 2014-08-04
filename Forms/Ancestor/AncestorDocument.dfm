@@ -8,15 +8,15 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 88
+    Top = 86
     Width = 829
-    Height = 328
+    Height = 330
     TabOrder = 5
     ExplicitTop = 88
     ExplicitWidth = 829
     ExplicitHeight = 328
-    ClientRectBottom = 324
-    ClientRectRight = 825
+    ClientRectBottom = 330
+    ClientRectRight = 829
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -48,7 +48,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
       ExplicitHeight = 0
@@ -557,7 +556,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

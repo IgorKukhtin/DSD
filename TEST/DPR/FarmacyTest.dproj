@@ -378,6 +378,24 @@
 			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\BranchTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\CarModelTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\GoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\GoodsKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyValueTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\JuridicalGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\PaidKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\RouteTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\RouteSortingTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
