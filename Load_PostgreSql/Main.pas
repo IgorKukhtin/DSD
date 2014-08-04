@@ -5808,6 +5808,7 @@ begin
                      +'       left outer join dba._pgPersonal on _pgPersonal.PositionName = isnull(Information1.OKPO,Information2.OKPO)'
                      +'                                      and _pgPersonal.PositionName <> '+FormatToVarCharServer_notNULL('')
                      +' set Unit.PersonalId_Postgres = _pgPersonal.Id'
+                     +'   , Unit.pgUnitId = case when _pgPersonal.Id is not null then null else Unit.pgUnitId end'
                      );
      //
      myDisabledCB(cbMember_andPersonal);
@@ -11371,7 +11372,8 @@ begin
            +'                       || case when pgUnitTo.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
-           +'                           end');
+           +'                           end'
+           +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.PartionStr_MB as PartionGoods');
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
