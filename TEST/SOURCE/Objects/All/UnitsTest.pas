@@ -2,7 +2,7 @@ unit UnitsTest;
 
 interface
 
-uses dbTest, dbObjectTest, dbObjectMeatTest, ObjectTest;
+uses dbTest, dbObjectTest, dbObjectMeatTest, ObjectTest, BranchTest;
 
 type
 
@@ -14,7 +14,7 @@ type
 
   TUnit = class(TObjectTest)
   private
-    BranchTest: TBranchTest;
+    BranchTest: TBranch;
     function InsertDefault: integer; override;
   public
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
@@ -126,7 +126,7 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Unit';
   spSelect := 'gpSelect_Object_Unit';
   spGet := 'gpGet_Object_Unit';
-  BranchTest := TBranchTest.Create;
+  BranchTest := TBranch.Create;
 end;
 
 function TUnit.InsertDefault: integer;

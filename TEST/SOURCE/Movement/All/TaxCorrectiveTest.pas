@@ -25,7 +25,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, DocumentTaxKindTest,
+     dbObjectTest, SysUtils, Db, TestFramework, PartnerTest, Contracttest;
 
 { TTaxCorrective }
 
@@ -57,9 +58,9 @@ begin
 
   FromId := TJuridical.Create.GetDefault;
   ToId :=TJuridical.Create.GetDefault;
-  PartnerId:=TPartnerTest.Create.GetDefault;
-  DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
-  ContractId:=TContractTest.Create.GetDefault;
+  PartnerId := TPartner.Create.GetDefault;
+  DocumentTaxKindId := TDocumentTaxKind.Create.GetDefault;
+  ContractId := TContract.Create.GetDefault;
 
   result := InsertUpdateTaxCorrective(Id, InvNumber, InvNumberPartner,InvNumberBranch, OperDate,
              Checked, Document, PriceWithVAT,

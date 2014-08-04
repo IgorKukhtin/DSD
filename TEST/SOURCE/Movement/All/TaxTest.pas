@@ -26,7 +26,7 @@ type
 implementation
 
 uses UtilConst, dbObjectMeatTest, JuridicalTest, DocumentTaxKindTest
-   , dbObjectTest, SysUtils, Db, TestFramework;
+   , dbObjectTest, SysUtils, Db, TestFramework, PartnerTest, ContractTest;
 
 { TTax }
 
@@ -58,9 +58,9 @@ begin
 
   FromId := TJuridical.Create.GetDefault;
   ToId :=TJuridical.Create.GetDefault;
-  PartnerId:=TPartnerTest.Create.GetDefault;
+  PartnerId:=TPartner.Create.GetDefault;
   DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
-  ContractId:=TContractTest.Create.GetDefault;
+  ContractId:=TContract.Create.GetDefault;
 
   result := InsertUpdateTax(Id, InvNumber, InvNumberPartner,InvNumberBranch, OperDate,
              Checked, Document, PriceWithVAT,

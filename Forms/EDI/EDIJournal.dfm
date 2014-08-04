@@ -1519,6 +1519,12 @@ inherited EDIJournalForm: TEDIJournalForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inisOk'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inOKPOIn'
         Value = Null
         DataType = ftString

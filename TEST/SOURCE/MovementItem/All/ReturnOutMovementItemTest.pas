@@ -31,7 +31,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants, dbObjectMeatTest, ReturnOutTest;
+     Variants, dbObjectMeatTest, ReturnOutTest, GoodsTest;
 
 { TReturnOutMovementItemTest }
 
@@ -58,7 +58,7 @@ var Id, MovementId, GoodsId: Integer;
 begin
   Id:=0;
   MovementId:= TReturnOut.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
   Price:=2.34;

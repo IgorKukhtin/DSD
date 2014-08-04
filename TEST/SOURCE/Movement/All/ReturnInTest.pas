@@ -5,7 +5,7 @@ interface
 uses dbTest, dbMovementTest, ObjectTest;
 
 type
-  TReturnInTest = class (TdbMovementTestNew)
+  TReturnInTest = class(TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
@@ -15,16 +15,18 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateReturnIn(Id: Integer; InvNumber,InvNumberPartner,InvNumberMark: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+    function InsertUpdateReturnIn(Id: integer; InvNumber, InvNumberPartner,
+      InvNumberMark: String; OperDate: TDateTime; OperDatePartner: TDateTime;
+      Checked, PriceWithVAT: Boolean; VATPercent, ChangePercent: double;
+      FromId, ToId, PaidKindId, ContractId: integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, DocumentTaxKindTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, DocumentTaxKindTest, UnitsTest, dbObjectTest,
+  SysUtils, Db, TestFramework, PartnerTest, PaidKindTest, ContractTest;
+
 
 { TReturnIn }
 
@@ -37,41 +39,42 @@ begin
 end;
 
 function TReturnIn.InsertDefault: integer;
-var Id: Integer;
-    InvNumber,InvNumberPartner,InvNumberMark: String;
-    OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    Checked, PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId: Integer;
+var
+  Id: integer;
+  InvNumber, InvNumberPartner, InvNumberMark: String;
+  OperDate: TDateTime;
+  OperDatePartner: TDateTime;
+  Checked, PriceWithVAT: Boolean;
+  VATPercent, ChangePercent: double;
+  FromId, ToId, PaidKindId, ContractId: integer;
 begin
-  Id:=0;
-  InvNumber:='1';
-  InvNumberPartner:='123';
-  InvNumberMark:='456';
-  OperDate:= Date;
+  Id := 0;
+  InvNumber := '1';
+  InvNumberPartner := '123';
+  InvNumberMark := '456';
+  OperDate := Date;
 
-  OperDatePartner:= Date;
-  Checked:=true;
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
+  OperDatePartner := Date;
+  Checked := true;
+  PriceWithVAT := true;
+  VATPercent := 20;
+  ChangePercent := -10;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  PaidKindId:=TPaidKindTest.Create.GetDefault;
-  ContractId:=TContractTest.Create.GetDefault;
+  PaidKindId := TPaidKind.Create.GetDefault;
+  ContractId := TContract.Create.GetDefault;
   //
-  result := InsertUpdateReturnIn(Id, InvNumber, InvNumberPartner,InvNumberMark, OperDate,
-             OperDatePartner, Checked, PriceWithVAT,
-             VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId);
+  result := InsertUpdateReturnIn(Id, InvNumber, InvNumberPartner, InvNumberMark,
+    OperDate, OperDatePartner, Checked, PriceWithVAT, VATPercent, ChangePercent,
+    FromId, ToId, PaidKindId, ContractId);
 end;
 
-function TReturnIn.InsertUpdateReturnIn(Id: Integer; InvNumber,InvNumberPartner,InvNumberMark: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+function TReturnIn.InsertUpdateReturnIn(Id: integer;
+  InvNumber, InvNumberPartner, InvNumberMark: String; OperDate: TDateTime;
+  OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
+  VATPercent, ChangePercent: double; FromId, ToId, PaidKindId,
+  ContractId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -108,8 +111,9 @@ begin
 end;
 
 procedure TReturnInTest.Test;
-var MovementReturnIn: TReturnIn;
-    Id: Integer;
+var
+  MovementReturnIn: TReturnIn;
+  Id: integer;
 begin
   inherited;
   // Создаем документ
@@ -117,7 +121,7 @@ begin
   Id := MovementReturnIn.InsertDefault;
   // создание документа
   try
-  // редактирование
+    // редактирование
   finally
     MovementReturnIn.Delete(Id);
   end;
@@ -125,6 +129,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TReturnInTest.Suite);
+TestFramework.RegisterTest('Документы', TReturnInTest.Suite);
 
 end.

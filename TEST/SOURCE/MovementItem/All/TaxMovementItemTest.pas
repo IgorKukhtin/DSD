@@ -28,7 +28,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants, dbObjectMeatTest, TaxTest;
+     Variants, dbObjectMeatTest, TaxTest, GoodsTest;
 
 { TTaxMovementItemTest }
 
@@ -55,7 +55,7 @@ var Id, MovementId, GoodsId: Integer;
 begin
   Id:=0;
   MovementId:= TTax.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
   Price:=2.34;

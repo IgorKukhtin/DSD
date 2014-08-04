@@ -23,7 +23,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db,
+     TestFramework, ContractTest;
 
 { TService }
 
@@ -52,7 +53,7 @@ begin
   AmountOut := 0;
   Comment:='';
   BusinessId := 0;
-  ContractId:=TContractTest.Create.GetDefault;
+  ContractId:= TContract.Create.GetDefault;
   InfoMoneyId := 0;
   with TInfoMoneyTest.Create.GetDataSet do begin
      if Locate('Code', '21501', []) then
