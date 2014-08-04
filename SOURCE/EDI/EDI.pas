@@ -39,7 +39,7 @@ type
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
-    procedure ReceiptLoad(spHeader: TdsdStoredProc; Directory: String);
+    procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
@@ -627,7 +627,7 @@ begin
      end;
 end;
 
-procedure TEDI.ReceiptLoad(spHeader: TdsdStoredProc; Directory: String);
+procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
 var List, Receipt: TStrings;
     i, j: integer;
     Stream: TStringStream;
@@ -664,8 +664,13 @@ begin
                      Receipt.add(c);
                   end;
                   //FIdFTP.Get(List[i], Stream);
-                  if Receipt[4] = 'RESULT=0' then
-                     ShowMessage(Receipt[4]);
+                  spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
+                  spProtocol.ParamByName('inOKPOIn').Value := Copy(Receipt[2], 7, MaxInt);
+                  spProtocol.ParamByName('inOKPOOut').Value := Copy(Receipt[3], 10, MaxInt);
+                  spProtocol.ParamByName('inTaxNumber').Value := Copy(list[i], 25, 7);
+                  spProtocol.ParamByName('inEDIEvent').Value := Copy(Receipt[1], 9, MaxInt);
+                  spProtocol.ParamByName('inOperMonth').Value := EncodeDate(StrToInt(Copy(list[i], 36, 4)), StrToInt(Copy(list[i], 34, 2)), 1);
+                  spProtocol.Execute;
 
                   exit;
 

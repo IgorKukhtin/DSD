@@ -33,7 +33,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants, dbObjectMeatTest, SaleTest;
+     Variants, dbObjectMeatTest, SaleTest, GoodsTest;
 
 { TSaleMovementItemTest }
 
@@ -64,8 +64,8 @@ var Id, MovementId, GoodsId: Integer;
     GoodsKindId, AssetId: Integer;
 begin
   Id:=0;
-  MovementId:= TSale.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
+  MovementId := TSale.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
   ChangePercentAmount := 10;

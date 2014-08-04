@@ -1,8 +1,9 @@
 -- Function: gpInsertUpdate_MI_EDI()
 
-DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
+    IN inisOk                Boolean   ,
     IN inOKPOIn              TVarChar  ,
     IN inOKPOOut             TVarChar  ,
     IN inTaxNumber           TVarChar  , 

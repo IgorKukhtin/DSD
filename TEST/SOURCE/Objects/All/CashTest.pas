@@ -22,7 +22,8 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest, dbObjectMeatTest;
+uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest, dbObjectMeatTest,
+     BranchTest, BusinessTest;
 
 { TdbUnitTest }
 
@@ -67,9 +68,9 @@ function TCash.InsertDefault: integer;
 var CurrencyId, BranchId, MainJuridicalId, BusinessId: Integer;
 begin
   CurrencyId := TCurrencyTest.Create.GetDefault;
-  BranchId := TBranchTest.Create.GetDefault;
+  BranchId := TBranch.Create.GetDefault;
   MainJuridicalId := TJuridical.Create.GetDefault;
-  BusinessId := TBranchTest.Create.GetDefault;
+  BusinessId := TBusiness.Create.GetDefault;
 
   result := InsertUpdateCash(0, -3, 'Главная касса', CurrencyId, BranchId, MainJuridicalId, BusinessId);
   inherited;

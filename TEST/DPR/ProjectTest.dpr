@@ -481,7 +481,21 @@ uses
   CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   Report_ContractEndDate in '..\..\Forms\Report\Report_ContractEndDate.pas' {Report_ContractEndDateForm: TParentForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm};
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',
+  JuridicalGroupTest in '..\SOURCE\Objects\All\JuridicalGroupTest.pas',
+  GoodsPropertyTest in '..\SOURCE\Objects\All\GoodsPropertyTest.pas',
+  GoodsTest in '..\SOURCE\Objects\All\GoodsTest.pas',
+  GoodsKindTest in '..\SOURCE\Objects\All\GoodsKindTest.pas',
+  PartnerTest in '..\SOURCE\Objects\All\PartnerTest.pas',
+  RouteSortingTest in '..\SOURCE\Objects\All\RouteSortingTest.pas',
+  RouteTest in '..\SOURCE\Objects\All\RouteTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
+  AccountDirectionTest in '..\SOURCE\Objects\All\AccountDirectionTest.pas',
+  AccountGroupTest in '..\SOURCE\Objects\All\AccountGroupTest.pas',
+  CarTest in '..\SOURCE\Objects\All\CarTest.pas',
+  CarModelTest in '..\SOURCE\Objects\All\CarModelTest.pas',
+  PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

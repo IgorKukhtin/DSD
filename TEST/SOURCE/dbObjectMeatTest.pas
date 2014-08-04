@@ -157,7 +157,8 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, ZLibEx, zLibUtil,UnitsTest, JuridicalTest, BusinessTest;
+     UtilConvert, ZLibEx, zLibUtil,UnitsTest, JuridicalTest, BusinessTest,
+     GoodsTest, GoodsKindTest;
 
 
 { TDataBaseObjectTest }
@@ -874,8 +875,8 @@ function TReceiptChildTest.InsertDefault: integer;
 var
   GoodsId, GoodsKindId: Integer;
 begin
-  GoodsId:= TGoodsTest.Create.GetDefault;
-  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+  GoodsId:= TGoods.Create.GetDefault;
+  GoodsKindId:= TGoodsKind.Create.GetDefault;
 
   result := InsertUpdateReceiptChild(0, 123,true, true, date, date, 'Составляющие рецептур - Значение', 2, GoodsId, GoodsKindId);
 end;
@@ -930,8 +931,8 @@ var
   GoodsId, GoodsKindId, ReceiptCostId: Integer;
 begin
   ReceiptCostId := TReceiptCostTest.Create.GetDefault;
-  GoodsId:= TGoodsTest.Create.GetDefault;
-  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+  GoodsId:= TGoods.Create.GetDefault;
+  GoodsKindId:= TGoodsKind.Create.GetDefault;
 
   result := InsertUpdateReceipt(0, 'Рецептура 1', '123', 'Рецептуры', 1, 2, 80, 2, 1,1 , date, date, true, GoodsId, GoodsKindId, 1, ReceiptCostId, 1);
 end;

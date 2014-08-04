@@ -23,7 +23,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db,
+     TestFramework, ContractTest;
 
 { TProfitLossService }
 
@@ -50,7 +51,7 @@ begin
   AmountIn := 123.45;
   AmountOut := 0;
   Comment:='';
-  ContractId:=TContractTest.Create.GetDefault;
+  ContractId := TContract.Create.GetDefault;
   ContractConditionKindId:=0;
   InfoMoneyId := 0;
   with TInfoMoneyTest.Create.GetDataSet do begin

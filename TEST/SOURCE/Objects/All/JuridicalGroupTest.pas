@@ -9,7 +9,8 @@ type
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
-   TJuridicalGroup = class(TObjectTest)
+
+  TJuridicalGroup = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public

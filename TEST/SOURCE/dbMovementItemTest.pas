@@ -115,7 +115,8 @@ type
 
 implementation
 
-uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication, dbObjectMeatTest;
+uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication,
+     dbObjectMeatTest, GoodsTest, GoodsKindTest;
 { TdbMovementItemTest }
 
 {------------------------------------------------------------------------------}
@@ -241,7 +242,7 @@ var Id, MovementId, GoodsId: Integer;
 begin
   Id:=0;
   MovementId:= TMovementIncomeTest.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
+  GoodsId:=TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
   AmountPacker:=12;
@@ -306,7 +307,7 @@ var Id, MovementId, GoodsId: Integer;
 begin
   Id := 0;
   MovementId := TMovementSendOnPriceTest.Create.GetDefault;
-  GoodsId := TGoodsTest.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
   Amount := 10;
   AmountPartner := 11;
   Price := 2.34;
@@ -370,7 +371,7 @@ var Id, MovementId, GoodsId: Integer;
 begin
   Id:=0;
   MovementId:= TMovementReturnOutTest.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
+  GoodsId:=TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
   Price:=2.34;
@@ -432,8 +433,8 @@ function TMovementItemProductionUnionMasterTest.InsertDefault: integer;
 var MovementId, GoodsKindId, GoodsId: Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
-  GoodsId := TGoodsTest.Create.GetDefault;
-  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
+  GoodsKindId:= TGoodsKind.Create.GetDefault;
 
   result := InsertUpdateMovementProductionUnionMaster(0, MovementId, GoodsId,
   10, false, 2.34, 505.67, 1, 'Партия', 'Партия', GoodsKindId, 0);
@@ -491,9 +492,9 @@ function TMovementItemProductionUnionChildTest.InsertDefault: integer;
 var MovementId, GoodsId, GoodsKindId : Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
-  GoodsId := TGoodsTest.Create.GetDefault;
+  GoodsId := TGoods.Create.GetDefault;
   MovementItem_InId := TMovementItemProductionUnionMasterTest.Create.GetDefault;
-  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+  GoodsKindId:= TGoodsKind.Create.GetDefault;
 
   result := InsertUpdateMovementProductionUnionChild(0, MovementId, GoodsId, 10,
   MovementItem_InId, 10, Date,'Партия', 'Comment', GoodsKindId);

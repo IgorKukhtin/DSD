@@ -23,7 +23,8 @@ type
 
 implementation
 
-uses DB, UtilConst, dbObjectMeatTest, TestFramework, SysUtils;
+uses DB, UtilConst, dbObjectMeatTest, TestFramework, SysUtils, AccountGroupTest,
+     AccountDirectionTest;
 
 { TdbUnitTest }
 
@@ -66,8 +67,8 @@ var
   AccountGroupId: Integer;
   AccountDirectionId: Integer;
 begin
-  AccountGroupId := TAccountGroupTest.Create.GetDefault;
-  AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
+  AccountGroupId := TAccountGroup.Create.GetDefault;
+  AccountDirectionId:= TAccountDirection.Create.GetDefault;;
   result := InsertUpdateAccount(0, -3, 'Test - ”правленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
   inherited;
 end;
