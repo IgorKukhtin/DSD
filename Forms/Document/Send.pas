@@ -44,6 +44,12 @@ type
     colCount: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colStorageName: TcxGridDBColumn;
+    colPartionGoodsName: TcxGridDBColumn;
+    actUnitChoiceForm: TOpenChoiceForm;
+    actStorageChoiceForm: TOpenChoiceForm;
+    actPartionGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
