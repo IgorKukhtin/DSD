@@ -118,6 +118,9 @@ type
     spInsert_Protocol_EDIReceipt: TdsdStoredProc;
     clisElectron: TcxGridDBColumn;
     colDocType: TcxGridDBColumn;
+    EDIReturnComDoc: TEDIAction;
+    mactReturnComdoc: TMultiAction;
+    bbReturnCOMDOC: TdxBarButton;
   private
     { Private declarations }
   public

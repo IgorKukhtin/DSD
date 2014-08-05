@@ -6,7 +6,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
-  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediReceipt);
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediReceipt, ediReturnComDoc);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -31,7 +31,7 @@ type
     FInsertEDIEvents: TdsdStoredProc;
     FInsertEDIFile: TdsdStoredProc;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType; spHeader, spList: TdsdStoredProc);
-    procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
+    function InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
     procedure SignFile(FileName: string; SignType: TSignType);
     procedure PutFileToFTP(FileName: string; Directory: string);
@@ -83,7 +83,7 @@ type
 implementation
 
 uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
-UtilConvert, ComObj, DeclarXML, DateUtils;
+UtilConvert, ComObj, DeclarXML, DateUtils, FormStorage;
 
 procedure Register;
 begin
@@ -179,6 +179,12 @@ begin
   FConnectionParams := TConnectionParams.Create;
   FIdFTP := TIdFTP.Create(nil);
   FInsertEDIFile := TdsdStoredProc.Create(nil);
+  FInsertEDIFile.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIFile.Params.AddParam('inFileName', ftString, ptInput, '');
+  FInsertEDIFile.Params.AddParam('inFileText', ftBlob, ptInput, '');
+  FInsertEDIFile.StoredProcName := 'gpInsert_EDIFiles';
+  FInsertEDIFile.OutputType := otResult;
+
   FInsertEDIEvents := TdsdStoredProc.Create(nil);
   FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
@@ -188,7 +194,7 @@ end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
 var List: TStrings;
-    i: integer;
+    i, MovementId: integer;
     Stream: TStringStream;
     FileData: string;
     ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
@@ -223,17 +229,23 @@ begin
                       or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
                       or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')then begin
                          // загружаем в базенку
-                         InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                         MovementId := InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                      if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then begin
+                         FInsertEDIFile.ParamByName('inMovementId').Value := MovementId;
+                         FInsertEDIFile.ParamByName('inFileName').Value := List[i];
+                         FInsertEDIFile.ParamByName('inFileText').Value := ConvertConvert(Stream.DataString);
+                         FInsertEDIFile.Execute;
+                      end;
                     end;
                     // теперь перенесли файл в директроию Archive
-{                    try
+                    try
                       FIdFTP.ChangeDir('/archive');
                       FIdFTP.Put(Stream, List[i]);
                     finally
                       FIdFTP.ChangeDir(Directory);
                       FIdFTP.Delete(List[i]);
                     end;
- }                 end;
+                  end;
                end;
                IncProgress;
            end;
@@ -513,9 +525,9 @@ begin
      end;
 end;
 
-procedure TEDI.InsertUpdateComDoc(
+function TEDI.InsertUpdateComDoc(
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
-  spHeader, spList: TdsdStoredProc);
+  spHeader, spList: TdsdStoredProc): integer;
 var MovementId, GoodsPropertyId: Integer;
     i: integer;
 begin
@@ -561,6 +573,7 @@ begin
              Execute;
            end;
        end;
+   result := MovementId
 end;
 
 function lpStrToDateTime(DateTimeString: string): TDateTime;

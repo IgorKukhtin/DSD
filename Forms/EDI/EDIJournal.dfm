@@ -731,6 +731,19 @@ inherited EDIJournalForm: TEDIJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' ComDoc '#1080#1079' EDI'
       ImageIndex = 30
     end
+    object mactReturnComdoc: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIComdoc
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
+      Caption = 'ReturnCOMDOC'
+    end
     object maEDIOrdersLoad: TMultiAction
       Category = 'EDI'
       MoveParams = <>
@@ -901,6 +914,16 @@ inherited EDIJournalForm: TEDIJournalForm
       spHeader = spInsert_Protocol_EDIReceipt
       Directory = '/inbox'
     end
+    object EDIReturnComDoc: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediReturnComDoc
+      HeaderDataSet = MasterCDS
+      Directory = '/outbox'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -997,6 +1020,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbReturnCOMDOC'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1042,6 +1069,10 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbReceipt: TdxBarButton
       Action = maEDIReceiptLoad
+      Category = 0
+    end
+    object bbReturnCOMDOC: TdxBarButton
+      Action = mactReturnComdoc
       Category = 0
     end
   end
@@ -1414,7 +1445,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftString
       end>
     Left = 464
-    Top = 32
+    Top = 48
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1434,7 +1465,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftString
       end>
     Left = 520
-    Top = 40
+    Top = 48
   end
   object spInsertUpdate_SaleLinkEDI: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SaleLinkEDI'
