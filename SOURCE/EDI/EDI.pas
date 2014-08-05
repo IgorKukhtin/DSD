@@ -631,10 +631,7 @@ procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
 var List, Receipt: TStrings;
     i, j: integer;
     Stream: TStringStream;
-    FileStream: TFileStream;
-    f: Text;
-    s: string;
-    c: string;
+    g: string;
 begin
     FTPSetConnection;
     // загружаем файлы с FTP
@@ -645,10 +642,7 @@ begin
          List := TStringList.Create;
          Receipt := TStringList.Create;
          Stream := TStringStream.Create;
-         //FIdFTP.List(List, '' ,false);
-         List.Add('28010024447183J1201005100000184610720142801.RPL');
-         AssignFile(f, 'c:\' + List[0]);
-         Reset(F);
+         FIdFTP.List(List, '' ,false);
          with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
          try
            Start;
@@ -657,31 +651,34 @@ begin
                if AnsiLowerCase(copy(list[i], length(list[i]) - 3, 4)) = '.rpl' then begin
                   // тянем файл к нам
                   Stream.Clear;
-                  s := '';
-                  while not Eof(F) do
-                  begin
-                     ReadLn(F, c);
-                     Receipt.add(c);
-                  end;
-                  //FIdFTP.Get(List[i], Stream);
+                  FIdFTP.Get(List[i], Stream);
+                  g := '';
+                  for j := 1 to length(Stream.DataString) do
+                    if Stream.DataString[j] = #13 then begin
+                       Receipt.Add(g);
+                       g := '';
+                    end
+                    else
+                      if Stream.DataString[j] <> #10 then
+                         g := g + Stream.DataString[j];
+                  if g <> '' then
+                     Receipt.Add(g);
                   spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
-                  spProtocol.ParamByName('inOKPOIn').Value := Copy(Receipt[2], 7, MaxInt);
-                  spProtocol.ParamByName('inOKPOOut').Value := Copy(Receipt[3], 10, MaxInt);
+                  spProtocol.ParamByName('inOKPOIn').Value := Copy(Receipt[2], 8, MaxInt);
+                  spProtocol.ParamByName('inOKPOOut').Value := Copy(Receipt[3], 12, MaxInt);
                   spProtocol.ParamByName('inTaxNumber').Value := Copy(list[i], 25, 7);
                   spProtocol.ParamByName('inEDIEvent').Value := Copy(Receipt[1], 9, MaxInt);
                   spProtocol.ParamByName('inOperMonth').Value := EncodeDate(StrToInt(Copy(list[i], 36, 4)), StrToInt(Copy(list[i], 34, 2)), 1);
                   spProtocol.Execute;
 
-                  exit;
-
                   // теперь перенесли файл в директроию Archive
-                  try
+                (*  try
                     FIdFTP.ChangeDir('/archive');
                     FIdFTP.Put(Stream, List[i]);
                   finally
                     FIdFTP.ChangeDir(Directory);
                     FIdFTP.Delete(List[i]);
-                  end;
+                  end;*)
                end;
                IncProgress;
            end;

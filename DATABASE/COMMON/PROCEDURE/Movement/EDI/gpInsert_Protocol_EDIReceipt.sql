@@ -14,12 +14,35 @@ CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
-   PERFORM lpInsert_Movement_EDIEvents(inMovementId, inEDIEvent, vbUserId);
+   -- Задача найти документ EDI по ОКПО от кого и кому, номеру налоговой и дате
+    SELECT Movement.Id INTO vbMovementId
+      FROM Movement
+            JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                    ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                   AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = MovementLinkObject_Juridical.objectid
+            JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                      ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
+                                     AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+            JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementId
+                                         AND Movement_Tax.StatusId = zc_Enum_Status_Complete()
+            JOIN MovementString AS MovementString_InvNumberPartner_Tax
+                                ON MovementString_InvNumberPartner_Tax.MovementId =  Movement_Tax.Id
+                               AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+
+     WHERE Movement.DescId = zc_movement_EDI() AND ObjectHistory_JuridicalDetails_View.OKPO = '38516786'
+       AND MovementString_InvNumberPartner_Tax.valuedata = 'NUMBER';
+
+   IF COALESCE(vbMovement, 0) <> 0 THEN 
+      PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
+      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
+   END IF;
 
 END;
 $BODY$
