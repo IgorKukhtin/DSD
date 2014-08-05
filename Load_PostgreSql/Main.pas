@@ -233,6 +233,8 @@ type
 
     function pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
+    function pLoadDocument_SaleNal:Integer;
+    procedure pLoadDocumentItem_SaleNal(SaveCount:Integer);
     function pLoadDocument_Sale_Fl:Integer;
     procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
 
@@ -243,6 +245,8 @@ type
 
     function pLoadDocument_ReturnIn:Integer;
     procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
+    function pLoadDocument_ReturnInNal:Integer;
+    procedure pLoadDocumentItem_ReturnInNal(SaveCount:Integer);
     function pLoadDocument_ReturnIn_Fl:Integer;
     procedure pLoadDocumentItem_ReturnIn_Fl(SaveCount:Integer);
 
@@ -1097,8 +1101,13 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Sale;
      if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_SaleNal;
+     if not fStop then pLoadDocumentItem_SaleNal(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
      if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnInNal;
+     if not fStop then pLoadDocumentItem_ReturnInNal(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_Tax_Int;
      if not fStop then pLoadDocumentItem_Tax_Int(myRecordCount1);
@@ -5808,6 +5817,7 @@ begin
                      +'       left outer join dba._pgPersonal on _pgPersonal.PositionName = isnull(Information1.OKPO,Information2.OKPO)'
                      +'                                      and _pgPersonal.PositionName <> '+FormatToVarCharServer_notNULL('')
                      +' set Unit.PersonalId_Postgres = _pgPersonal.Id'
+                     +'   , Unit.pgUnitId = case when _pgPersonal.Id is not null then null else Unit.pgUnitId end'
                      );
      //
      myDisabledCB(cbMember_andPersonal);
@@ -10217,6 +10227,16 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
+function TMainForm.pLoadDocument_SaleNal:Integer;
+begin
+
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_SaleNal(SaveCount:Integer);
+begin
+
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Sale:Integer;
 var ContractId_pg,PriceListId:Integer;
 begin
@@ -10427,8 +10447,8 @@ begin
            +'           left join dba.isUnit on isUnit.UnitId = Bill.ToId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'        and Bill.FromId=zc_UnitId_StoreSale()'
-           +'        and Bill.Id_Postgres>0'
+           //+'        and Bill.FromId=zc_UnitId_StoreSale()'
+           +'        and Bill.MoneyKindId = zc_mkBN()' // Bill.Id_Postgres>0
            +'        and isUnit.UnitId is null'
            +'     ) as Bill');
 
@@ -11371,7 +11391,8 @@ begin
            +'                       || case when pgUnitTo.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
-           +'                           end');
+           +'                           end'
+           +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.PartionStr_MB as PartionGoods');
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
@@ -12426,6 +12447,16 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!INTEGER
+function TMainForm.pLoadDocument_ReturnInNal:Integer;
+begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_ReturnInNal(SaveCount:Integer);
+begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnIn:Integer;
 var ContractId_pg:Integer;
     InvNumberMark:String;
