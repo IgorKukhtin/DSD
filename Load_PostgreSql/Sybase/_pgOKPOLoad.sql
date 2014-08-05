@@ -1,4 +1,4 @@
-create FUNCTION DBA.fInsert_pgPartner (in @ClientID integer,in @OKPO TVarCharLongLong,in @adr TVarCharLongLong)
+alter FUNCTION DBA.fInsert_pgPartner (in @ClientID integer,in @OKPO TVarCharLongLong,in @adr TVarCharLongLong, in @CodeIM TVarCharLongLong)
 returns smallint
 begin atomic
     declare @Main integer;
@@ -28,6 +28,8 @@ print zf_isOKPO_Virtual_PG(@OKPO);
                         , UnitId
                         , UnitName
                         , AdrUnit
+                        , CodeIM
+                        , MoneyKindID
 
                         , NPP
                         , Inn
@@ -35,7 +37,6 @@ print zf_isOKPO_Virtual_PG(@OKPO);
                         , PHone
                         , FioB
                         , Nalog5
-                        , CodeIM
                         , NameIM
                         , ContractName
                         , ContractNumber
@@ -46,7 +47,7 @@ print zf_isOKPO_Virtual_PG(@OKPO);
                         , NumberSheet
 
                         )
-    select @main, Unit_inf.UnitName, Unit_inf.UnitName, OKPO, AddressFirm, Unit.id, Unit.UnitName,  @adr, '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''
+    select @main, Unit_inf.UnitName, Unit_inf.UnitName, OKPO, AddressFirm, Unit.id, Unit.UnitName,  @adr, @CodeIM, zc_mkNal(), '', '', '', '', '', '', '', '', '', '', '', '', '', ''
     from dba.Unit
          left outer join dba.ClientInformation as Information on Information.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)
          left outer join dba.Unit as Unit_inf on Unit_inf.ID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)

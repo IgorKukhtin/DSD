@@ -1,19 +1,24 @@
 inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  ExplicitWidth = 951
+  ExplicitHeight = 767
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 124
-    Height = 250
+    Top = 122
+    Height = 252
     TabOrder = 2
-    ExplicitTop = 124
-    ExplicitHeight = 250
-    ClientRectBottom = 246
+    ClientRectBottom = 252
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 224
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 935
+      ExplicitHeight = 228
       inherited cxGrid: TcxGrid
-        Height = 224
-        ExplicitHeight = 224
+        Width = 935
+        Height = 228
+        ExplicitWidth = 935
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -74,10 +79,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitHeight = 224
+      ExplicitTop = 24
+      ExplicitWidth = 935
+      ExplicitHeight = 228
       inherited cxGridEntry: TcxGrid
-        Height = 224
-        ExplicitHeight = 224
+        Width = 935
+        Height = 228
+        ExplicitWidth = 935
+        ExplicitHeight = 228
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -180,6 +189,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -218,7 +230,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -410,6 +422,12 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         ParamType = ptInput
       end>
+  end
+  inherited ChildCDS: TClientDataSet
+    IndexFieldNames = ''
+    MasterFields = ''
+    MasterSource = nil
+    PacketRecords = -1
   end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetErased'
