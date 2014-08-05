@@ -77,6 +77,11 @@ inherited EDIJournalForm: TEDIJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colDocType: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DocumentType'
+            HeaderAlignmentVert = vaCenter
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082'. (EDI)'
             DataBinding.FieldName = 'OperDate'
@@ -305,6 +310,12 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object clisElectron: TcxGridDBColumn
+            Caption = #1050#1074#1080#1090#1072#1085#1094#1080#1103
+            DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end
@@ -1522,18 +1533,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'inisOk'
         Value = Null
         DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOKPOIn'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOKPOOut'
-        Value = Null
-        DataType = ftString
         ParamType = ptInput
       end
       item

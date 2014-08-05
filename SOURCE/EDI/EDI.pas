@@ -29,6 +29,7 @@ type
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
     FInsertEDIEvents: TdsdStoredProc;
+    FInsertEDIFile: TdsdStoredProc;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType; spHeader, spList: TdsdStoredProc);
     procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
     procedure FTPSetConnection;
@@ -177,6 +178,7 @@ begin
   inherited;
   FConnectionParams := TConnectionParams.Create;
   FIdFTP := TIdFTP.Create(nil);
+  FInsertEDIFile := TdsdStoredProc.Create(nil);
   FInsertEDIEvents := TdsdStoredProc.Create(nil);
   FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
@@ -224,14 +226,14 @@ begin
                          InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                     end;
                     // теперь перенесли файл в директроию Archive
-                    try
+{                    try
                       FIdFTP.ChangeDir('/archive');
                       FIdFTP.Put(Stream, List[i]);
                     finally
                       FIdFTP.ChangeDir(Directory);
                       FIdFTP.Delete(List[i]);
                     end;
-                  end;
+ }                 end;
                end;
                IncProgress;
            end;
@@ -664,21 +666,19 @@ begin
                   if g <> '' then
                      Receipt.Add(g);
                   spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
-                  spProtocol.ParamByName('inOKPOIn').Value := Copy(Receipt[2], 8, MaxInt);
-                  spProtocol.ParamByName('inOKPOOut').Value := Copy(Receipt[3], 12, MaxInt);
-                  spProtocol.ParamByName('inTaxNumber').Value := Copy(list[i], 25, 7);
+                  spProtocol.ParamByName('inTaxNumber').Value := StrToInt(Copy(list[i], 26, 7));
                   spProtocol.ParamByName('inEDIEvent').Value := Copy(Receipt[1], 9, MaxInt);
                   spProtocol.ParamByName('inOperMonth').Value := EncodeDate(StrToInt(Copy(list[i], 36, 4)), StrToInt(Copy(list[i], 34, 2)), 1);
                   spProtocol.Execute;
 
                   // теперь перенесли файл в директроию Archive
-                (*  try
+                  try
                     FIdFTP.ChangeDir('/archive');
                     FIdFTP.Put(Stream, List[i]);
                   finally
                     FIdFTP.ChangeDir(Directory);
                     FIdFTP.Delete(List[i]);
-                  end;*)
+                  end;
                end;
                IncProgress;
            end;

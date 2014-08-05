@@ -1,11 +1,9 @@
 -- Function: gpInsertUpdate_MI_EDI()
 
-DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(Boolean, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
     IN inisOk                Boolean   ,
-    IN inOKPOIn              TVarChar  ,
-    IN inOKPOOut             TVarChar  ,
     IN inTaxNumber           TVarChar  , 
     IN inEDIEvent            TVarChar  , -- Описание события
     IN inOperMonth           TDateTime , 
@@ -20,13 +18,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
-   -- Задача найти документ EDI по ОКПО от кого и кому, номеру налоговой и дате
+   -- Задача найти документ EDI по номеру налоговой и дате
     SELECT Movement.Id INTO vbMovementId
       FROM Movement
-            JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                    ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                   AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-            JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = MovementLinkObject_Juridical.objectid
             JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                       ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
                                      AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
@@ -36,10 +30,11 @@ BEGIN
                                 ON MovementString_InvNumberPartner_Tax.MovementId =  Movement_Tax.Id
                                AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-     WHERE Movement.DescId = zc_movement_EDI() AND ObjectHistory_JuridicalDetails_View.OKPO = '38516786'
-       AND MovementString_InvNumberPartner_Tax.valuedata = 'NUMBER';
+     WHERE Movement.DescId = zc_movement_EDI() 
+       AND Movement_Tax.OperDate BETWEEN inOperMonth AND (inOperMonth + (interval '1 MONTH'))
+       AND MovementString_InvNumberPartner_Tax.valuedata = inTaxNumber;
 
-   IF COALESCE(vbMovement, 0) <> 0 THEN 
+   IF COALESCE(vbMovementId, 0) <> 0 THEN 
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
       PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
    END IF;

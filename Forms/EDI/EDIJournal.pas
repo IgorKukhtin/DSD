@@ -116,6 +116,8 @@ type
     bbReceipt: TdxBarButton;
     maEDIReceiptLoad: TMultiAction;
     spInsert_Protocol_EDIReceipt: TdsdStoredProc;
+    clisElectron: TcxGridDBColumn;
+    colDocType: TcxGridDBColumn;
   private
     { Private declarations }
   public
