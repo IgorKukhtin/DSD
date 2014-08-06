@@ -32,6 +32,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
              , DescName TVarChar
              , isCheck Boolean
+             , isElectron Boolean
+             , DocumentType TVarChar
               )
 AS
 $BODY$
@@ -92,13 +94,24 @@ BEGIN
                        THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isCheck
+           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
+           , MovementString_Desc.ValueData AS DocumentType
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+
+            LEFT JOIN MovementString AS MovementString_Desc
+                                     ON MovementString_Desc.MovementId =  Movement.Id
+                                    AND MovementString_Desc.DescId = zc_MovementString_Desc()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
                                     ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()

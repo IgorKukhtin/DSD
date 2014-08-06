@@ -6,7 +6,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
-  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediReceipt);
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediReceipt, ediReturnComDoc);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -29,8 +29,9 @@ type
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
     FInsertEDIEvents: TdsdStoredProc;
+    FInsertEDIFile: TdsdStoredProc;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType; spHeader, spList: TdsdStoredProc);
-    procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
+    function InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
     procedure SignFile(FileName: string; SignType: TSignType);
     procedure PutFileToFTP(FileName: string; Directory: string);
@@ -82,7 +83,7 @@ type
 implementation
 
 uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
-UtilConvert, ComObj, DeclarXML, DateUtils;
+UtilConvert, ComObj, DeclarXML, DateUtils, FormStorage;
 
 procedure Register;
 begin
@@ -177,6 +178,13 @@ begin
   inherited;
   FConnectionParams := TConnectionParams.Create;
   FIdFTP := TIdFTP.Create(nil);
+  FInsertEDIFile := TdsdStoredProc.Create(nil);
+  FInsertEDIFile.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIFile.Params.AddParam('inFileName', ftString, ptInput, '');
+  FInsertEDIFile.Params.AddParam('inFileText', ftBlob, ptInput, '');
+  FInsertEDIFile.StoredProcName := 'gpInsert_EDIFiles';
+  FInsertEDIFile.OutputType := otResult;
+
   FInsertEDIEvents := TdsdStoredProc.Create(nil);
   FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
   FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
@@ -186,7 +194,7 @@ end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
 var List: TStrings;
-    i: integer;
+    i, MovementId: integer;
     Stream: TStringStream;
     FileData: string;
     ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
@@ -221,7 +229,13 @@ begin
                       or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
                       or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')then begin
                          // загружаем в базенку
-                         InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                         MovementId := InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                      if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then begin
+                         FInsertEDIFile.ParamByName('inMovementId').Value := MovementId;
+                         FInsertEDIFile.ParamByName('inFileName').Value := List[i];
+                         FInsertEDIFile.ParamByName('inFileText').Value := ConvertConvert(Stream.DataString);
+                         FInsertEDIFile.Execute;
+                      end;
                     end;
                     // теперь перенесли файл в директроию Archive
                     try
@@ -511,9 +525,9 @@ begin
      end;
 end;
 
-procedure TEDI.InsertUpdateComDoc(
+function TEDI.InsertUpdateComDoc(
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
-  spHeader, spList: TdsdStoredProc);
+  spHeader, spList: TdsdStoredProc): integer;
 var MovementId, GoodsPropertyId: Integer;
     i: integer;
 begin
@@ -559,6 +573,7 @@ begin
              Execute;
            end;
        end;
+   result := MovementId
 end;
 
 function lpStrToDateTime(DateTimeString: string): TDateTime;
@@ -631,10 +646,7 @@ procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
 var List, Receipt: TStrings;
     i, j: integer;
     Stream: TStringStream;
-    FileStream: TFileStream;
-    f: Text;
-    s: string;
-    c: string;
+    g: string;
 begin
     FTPSetConnection;
     // загружаем файлы с FTP
@@ -645,10 +657,7 @@ begin
          List := TStringList.Create;
          Receipt := TStringList.Create;
          Stream := TStringStream.Create;
-         //FIdFTP.List(List, '' ,false);
-         List.Add('28010024447183J1201005100000184610720142801.RPL');
-         AssignFile(f, 'c:\' + List[0]);
-         Reset(F);
+         FIdFTP.List(List, '' ,false);
          with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
          try
            Start;
@@ -657,22 +666,23 @@ begin
                if AnsiLowerCase(copy(list[i], length(list[i]) - 3, 4)) = '.rpl' then begin
                   // тянем файл к нам
                   Stream.Clear;
-                  s := '';
-                  while not Eof(F) do
-                  begin
-                     ReadLn(F, c);
-                     Receipt.add(c);
-                  end;
-                  //FIdFTP.Get(List[i], Stream);
+                  FIdFTP.Get(List[i], Stream);
+                  g := '';
+                  for j := 1 to length(Stream.DataString) do
+                    if Stream.DataString[j] = #13 then begin
+                       Receipt.Add(g);
+                       g := '';
+                    end
+                    else
+                      if Stream.DataString[j] <> #10 then
+                         g := g + Stream.DataString[j];
+                  if g <> '' then
+                     Receipt.Add(g);
                   spProtocol.ParamByName('inisOk').Value := Receipt[4] = 'RESULT=0';
-                  spProtocol.ParamByName('inOKPOIn').Value := Copy(Receipt[2], 7, MaxInt);
-                  spProtocol.ParamByName('inOKPOOut').Value := Copy(Receipt[3], 10, MaxInt);
-                  spProtocol.ParamByName('inTaxNumber').Value := Copy(list[i], 25, 7);
+                  spProtocol.ParamByName('inTaxNumber').Value := StrToInt(Copy(list[i], 26, 7));
                   spProtocol.ParamByName('inEDIEvent').Value := Copy(Receipt[1], 9, MaxInt);
                   spProtocol.ParamByName('inOperMonth').Value := EncodeDate(StrToInt(Copy(list[i], 36, 4)), StrToInt(Copy(list[i], 34, 2)), 1);
                   spProtocol.Execute;
-
-                  exit;
 
                   // теперь перенесли файл в директроию Archive
                   try
