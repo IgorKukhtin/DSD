@@ -691,7 +691,7 @@ object MainForm: TMainForm
     object cbSendUnit: TCheckBox
       Tag = 20
       Left = 3
-      Top = 170
+      Top = 191
       Width = 235
       Height = 17
       Caption = '2.1. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084#1080
@@ -705,8 +705,8 @@ object MainForm: TMainForm
     end
     object cbSendPersonal: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 190
+      Left = 155
+      Top = 225
       Width = 235
       Height = 17
       Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072#1084#1080
@@ -725,7 +725,7 @@ object MainForm: TMainForm
       Top = 210
       Width = 235
       Height = 17
-      Caption = '2.3. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
+      Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1137,6 +1137,21 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 34
+    end
+    object cbPartner_Income: TCheckBox
+      Tag = 20
+      Left = 36
+      Top = 162
+      Width = 196
+      Height = 17
+      Caption = '!!!'#1085#1086#1074#1099#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1053#1040#1051'!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 35
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1713,5 +1728,11 @@ object MainForm: TMainForm
     Parameters = <>
     Left = 376
     Top = 118
+  end
+  object toStoredProc_three: TdsdStoredProc
+    DataSets = <>
+    Params = <>
+    Left = 120
+    Top = 112
   end
 end

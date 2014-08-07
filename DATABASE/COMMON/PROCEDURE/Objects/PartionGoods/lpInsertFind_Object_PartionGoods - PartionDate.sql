@@ -21,6 +21,19 @@ BEGIN
      END IF;
 
      -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
+     IF vbOperDate_str = ''
+     THEN
+     -- !!!это надо убрать после исправления ошибки!!!
+     vbPartionGoodsId:= (SELECT MIN (Object.Id)
+                         FROM Object
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                         WHERE Object.ValueData = vbOperDate_str
+                           AND Object.DescId = zc_Object_PartionGoods()
+                           AND ObjectLink_Unit.ObjectId IS NULL
+                        );
+     ELSE
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
@@ -30,6 +43,7 @@ BEGIN
                            AND Object.DescId = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId IS NULL
                         );
+     END IF;
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
@@ -57,6 +71,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TDateTime) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.08.14                                        * add !!!это надо убрать после исправления ошибки!!!
  26.07.14                                        * add zc_ObjectLink_PartionGoods_Unit
  20.07.13                                        * vbOperDate_str
  19.07.13         * rename zc_ObjectDate_            
@@ -65,6 +80,40 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TDateTime) OWNER TO postgres;
  02.07.13         *
 */
 
+/*
+-- !!!ошибки!!!
+-- SELECT Movement.Id
+SELECT Movement.DescId, Object_From.ValueData, Object_From.Id, Object_To.ValueData, Object_To.Id, min (MovementItem.ObjectId) , max (MovementItem.ObjectId)
+-- SELECT  min (Movement.StatusId), max (Movement.StatusId)
+FROM MovementItemContainer
+ join Movement on Movement.Id = MovementId 
+and Movement.DescId = 6
+            LEFT JOIN MovementItem on MovementItem.Id = MovementItemId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+-- and 1=0
+where ContainerId in (SELECT ContainerId FROM ContainerLinkObject where ObjectId in (
+                         SELECT Object .Id
+                         FROM Object 
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                         WHERE Object.ValueData = ''
+                           AND Object.DescId = zc_Object_PartionGoods()
+                           AND ObjectLink_Unit.ObjectId IS NULL
+                           and Object.Id <> 80132
+)
+)
+-- where  Object_From.Id = 8423 and MovementItem.ObjectId = 
+group by Movement.DescId, Object_From.ValueData, Object_From.Id, Object_To.ValueData, Object_To.Id
+-- group by Movement.Id;
+*/
 -- тест
 -- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= '31.01.2013');
 -- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= NULL);

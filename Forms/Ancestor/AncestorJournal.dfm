@@ -7,14 +7,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 57
     Width = 717
-    Height = 270
+    Height = 272
     ExplicitTop = 59
     ExplicitWidth = 717
     ExplicitHeight = 270
-    ClientRectBottom = 266
-    ClientRectRight = 713
+    ClientRectBottom = 272
+    ClientRectRight = 717
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
@@ -433,7 +433,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
