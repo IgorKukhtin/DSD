@@ -98,10 +98,10 @@ BEGIN
                 INTO vbMovementId_Master, vbMovementId_Child
          FROM MovementString AS MovementString_InvNumberPartner
               INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                      ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
+                                      ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberPartner.MovementId
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                      AND MovementDate_OperDatePartner.ValueData = inPartnerOperDate
-              INNER JOIN Movement ON Movement.Id = MovementString_InvNumberOrder.MovementId
+              INNER JOIN Movement ON Movement.Id = MovementString_InvNumberPartner.MovementId
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  AND Movement.DescId = zc_Movement_ReturnIn()
 
@@ -119,7 +119,7 @@ BEGIN
                                             AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
               LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
                                                            AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
-         WHERE MovementString_InvNumberPartner.ValueData = inInvNumberPartner
+         WHERE MovementString_InvNumberPartner.ValueData = inPartnerInvNumber
            AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner();
 
          --

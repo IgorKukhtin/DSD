@@ -27,17 +27,60 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDIComdoc());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Меняем параметр
+     inDesc:= COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')
+                       , COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_ReturnIn() AND inDesc = 'Return')
+                                 , (SELECT MovementDesc.Code FROM MovementDesc WHERE Id IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND MovementDesc.Code = inDesc))
+                       );
+
+     IF inDesc IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка в параметре.<%>', inDesc;
+     END IF;
+
      -- Поиск документа в журнале EDI
-     vbMovementId:= (SELECT Movement.Id
-                     FROM Movement
-                          INNER JOIN MovementString AS MovementString_OKPO
-                                                    ON MovementString_OKPO.MovementId =  Movement.Id
-                                                   AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
-                                                   AND MovementString_OKPO.ValueData = inOKPO
-                     WHERE Movement.DescId = zc_Movement_EDI() 
-                       AND Movement.InvNumber = inOrderInvNumber
-                       AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
-                    );
+     IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_Sale())
+     THEN
+         -- !!!так для продажи!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_OKPO
+                                                        ON MovementString_OKPO.MovementId =  Movement.Id
+                                                       AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                       AND MovementString_OKPO.ValueData = inOKPO
+                              INNER JOIN MovementString AS MovementString_MovementDesc
+                                                        ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                       AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_MovementDesc.ValueData = inDesc
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                        );
+     END IF;
+
+     IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_ReturnIn())
+     THEN
+         -- !!!так для возврата!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_OKPO
+                                                        ON MovementString_OKPO.MovementId =  Movement.Id
+                                                       AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                       AND MovementString_OKPO.ValueData = inOKPO
+                              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                        ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_InvNumberPartner.ValueData = inPartnerInvNumber
+                              INNER JOIN MovementString AS MovementString_MovementDesc
+                                                        ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                       AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_MovementDesc.ValueData = inDesc
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                        );
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementId, 0) = 0;
@@ -64,9 +107,7 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')
-                                                                                             , COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_ReturnIn()), inDesc)
-                                                                                             ));
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, inDesc);
 
      -- сохранили расчетные параметры
      vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId       := vbMovementId

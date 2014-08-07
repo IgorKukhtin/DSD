@@ -513,6 +513,9 @@ group by tmp.ObjectCostId
  left join ContainerObjectCost on ContainerObjectCost.ObjectCostId = tmp.ObjectCostId
  where ContainerObjectCost.KeyValue <> tmp.KeyValue
 
+-- update ContainerObjectCost set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
+
+
 -- select * from ContainerObjectCost where coalesce (KeyValue,'') = ''
 -- select KeyValue from (select ObjectCostId, KeyValue from ContainerObjectCost group by ObjectCostId, KeyValue) as tmp group by KeyValue having count (*) > 1
 
