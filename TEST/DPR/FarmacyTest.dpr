@@ -24,8 +24,6 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  ExtraChargeCategories in '..\..\FormsFarmacy\Guides\ExtraChargeCategories.pas' {ExtraChargeCategoriesForm},
-  ExtraChargeCategoriesEdit in '..\..\FormsFarmacy\Guides\ExtraChargeCategoriesEdit.pas' {ExtraChargeCategoriesEditForm},
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm},
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm},
   Units in '..\..\FormsFarmacy\Guides\Units.pas' {UnitForm},

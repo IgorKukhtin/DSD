@@ -36,6 +36,8 @@ $BODY$
    DECLARE vbContainerId Integer;
    DECLARE vbRecordCount Integer;
    DECLARE vbIs_tmp1 Boolean;
+
+   DECLARE vbKeyValue TVarChar;
 BEGIN
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
@@ -55,7 +57,6 @@ BEGIN
      inObjectId_9        := COALESCE (inObjectId_9, 0);
      inObjectId_10       := COALESCE (inObjectId_10, 0);
 
-
      -- !!!
      -- !!!пока не понятно с проводками по Бизнесу, кроме счета Прибыль, поэтому учитывать по этой аналитике не будем, т.е. обнуляем значение!!!
      IF inObjectId <> zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
@@ -65,8 +66,53 @@ BEGIN
      -- !!!
      -- !!!
 
-     -- находим
+
+     -- !!!определяется КЛЮЧ!!!
+     vbKeyValue = (SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
+                   FROM (SELECT tmp.Value :: TVarChar AS Value
+                              , tmp.myOrder1
+                         FROM     (SELECT COALESCE (inContainerDescId, 0)         AS Value, 0 AS myOrder1, -1 AS myOrder2
+                         UNION ALL SELECT COALESCE (inParentId, 0)                AS Value, 0 AS myOrder1, -2 AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId, 0)                AS Value, 0 AS myOrder1, -3 AS myOrder2
+
+                         UNION ALL SELECT zc_ContainerLinkObject_JuridicalBasis() AS Value, 0 AS myOrder1, zc_ContainerLinkObject_JuridicalBasis() AS myOrder2
+                         UNION ALL SELECT COALESCE (inJuridicalId_basis, 0)       AS Value, 1 AS myOrder1, zc_ContainerLinkObject_JuridicalBasis() AS myOrder2
+                         UNION ALL SELECT zc_ContainerLinkObject_Business()       AS Value, 0 AS myOrder1, zc_ContainerLinkObject_Business() AS myOrder2
+                         UNION ALL SELECT COALESCE (inBusinessId, 0)              AS Value, 1 AS myOrder1, zc_ContainerLinkObject_Business() AS myOrder2
+
+                         UNION ALL SELECT COALESCE (inDescId_1, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_1, 1000000001)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_1, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_1, 1000000001)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_2, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_2, 1000000002)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_2, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_2, 1000000002)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_3, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_3, 1000000003)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_3, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_3, 1000000003)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_4, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_4, 1000000004)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_4, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_4, 1000000004)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_5, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_5, 1000000005)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_5, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_5, 1000000005)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_6, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_6, 1000000006)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_6, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_6, 1000000006)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_7, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_7, 1000000007)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_7, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_7, 1000000007)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_8, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_8, 1000000008)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_8, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_8, 1000000008)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_9, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_9, 1000000009)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_9, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_9, 1000000009)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_10, 0)   AS Value, 0 AS myOrder1, COALESCE (inDescId_10, 1000000010) AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_10, 0) AS Value, 1 AS myOrder1, COALESCE (inDescId_10, 1000000010) AS myOrder2
+                                  ) AS tmp
+                         ORDER BY tmp.myOrder2, tmp.myOrder1
+                        ) AS tmp
+                  );
+
      BEGIN
+     -- !!!находим СРАЗУ!!!
+     vbContainerId := (SELECT Container.Id FROM Container WHERE Container.KeyValue = vbKeyValue);
+
+/*
+     -- Если не нашли, находим по старому алгоритму
+     IF COALESCE (vbContainerId, 0) = 0
+     THEN
           IF inParentId IS NOT NULL AND inContainerDescId = zc_Container_Summ()
           THEN
               -- Это Суммовой учет для Товаров
@@ -459,6 +505,15 @@ BEGIN
 
           END IF;
 
+     
+          -- !!!Если нашли по старому алгоритму, устанавливаем ключ на будущее!!!
+          IF vbContainerId <> 0
+          THEN
+              UPDATE Container SET KeyValue = vbKeyValue WHERE Id = vbContainerId;
+          END IF;
+
+     END IF; -- if Если не нашли, находим по старому алгоритму
+*/
      EXCEPTION
               WHEN invalid_row_count_in_limit_clause
               THEN RAISE EXCEPTION 'Счет не уникален : vbContainerId = "%", inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', vbContainerId, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
@@ -475,8 +530,8 @@ BEGIN
      IF COALESCE (vbContainerId, 0) = 0
      THEN
          -- добавили Остаток
-         INSERT INTO Container (DescId, ObjectId, ParentId, Amount)
-                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0)
+         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue)
+                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue)
             RETURNING Id INTO vbContainerId;
 
          -- добавили Аналитики
@@ -510,6 +565,7 @@ BEGIN
          WHERE Id = vbContainerId AND COALESCE (ParentId, 0) <> COALESCE (inParentId, 0);
      END IF;  
 
+     /*
      -- если есть Аналитики <элемент с/с.>
      IF COALESCE (inObjectCostDescId, 0) <> 0
      THEN
@@ -521,21 +577,18 @@ BEGIN
              INSERT INTO ContainerObjectCost (ObjectCostDescId, ContainerId, ObjectCostId)
                                       VALUES (inObjectCostDescId, vbContainerId, inObjectCostId);
          END IF;  
-     END IF;  
-
+     END IF;*/
 
 --if vbContainerId <> 5632 and inContainerDescId <> 1 then
 --RAISE EXCEPTION 'vbContainerId = % : inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', vbContainerId, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
 --end if;
 
-
      -- Возвращаем значение
      RETURN (vbContainerId);
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
@@ -543,6 +596,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.14                                        * ALL
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  28.03.14                                        * удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  27.01.14                                        * !!!пока не понятно с проводками по Бизнесу, кроме счета Прибыль, поэтому учитывать по этой аналитике не будем, т.е. обнуляем значение!!!
@@ -604,4 +658,64 @@ SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                     , inObjectId_5 := 23463
                                     , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
                                      )
+*/
+
+/*
+-- !!!!!!!!!!!!!!!!!!!!!
+-- !!!update KeyValue!!!
+-- !!!!!!!!!!!!!!!!!!!!!
+
+select  co, tmp.KeyValue, Container.KeyValue, Container.*
+
+-- update Container set KeyValue = tmp.KeyValue
+from (
+SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
+ || case count(*) when 1 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 3 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 5 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 7 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 9 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 11 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 13 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 15 then ';0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 17 then ';0,0;0,0;0,0;0,0;0,0'
+                  when 19 then ';0,0;0,0;0,0;0,0'
+                  when 21 then ';0,0;0,0;0,0'
+                  when 23 then ';0,0;0,0'
+                  when 25 then ';0,0'
+                          else ''
+    end 
+    as KeyValue
+
+
+, tmp.ContainerId, count(*) as co
+                   FROM (SELECT tmp.Value :: TVarChar AS Value
+                              , tmp.myOrder1
+                              , tmp.ContainerId
+                         FROM     (SELECT DescId AS Value, 0 AS myOrder1, -1 AS myOrder2, Id as ContainerId FROM Container
+                         UNION ALL SELECT COALESCE (ParentId, 0)                AS Value, 0 AS myOrder1, -2 AS myOrder2, Id as ContainerId FROM Container
+                         UNION ALL SELECT COALESCE (ObjectId, 0)                AS Value, 0 AS myOrder1, -3 AS myOrder2, Id as ContainerId FROM Container
+                         UNION ALL SELECT COALESCE (DescId, 0)                  AS Value, 0 AS myOrder1, DescId AS myOrder2, ContainerId FROM ContainerLinkObject
+                         UNION ALL SELECT COALESCE (ObjectId, 0)                AS Value, 1 AS myOrder1, DescId AS myOrder2, ContainerId FROM ContainerLinkObject
+
+                         UNION ALL SELECT zc_ContainerLinkObject_JuridicalBasis() AS Value, 0 AS myOrder1, zc_ContainerLinkObject_JuridicalBasis() AS myOrder2, Container.Id FROM Container where DescId in (zc_Container_Count(), zc_Container_CountSupplier())
+                         UNION ALL SELECT 0                                       AS Value, 1 AS myOrder1, zc_ContainerLinkObject_JuridicalBasis() AS myOrder2, Container.Id FROM Container where DescId in (zc_Container_Count(), zc_Container_CountSupplier())
+                         UNION ALL SELECT zc_ContainerLinkObject_Business()       AS Value, 0 AS myOrder1, zc_ContainerLinkObject_Business() AS myOrder2, Container.Id FROM Container where DescId in (zc_Container_Count(), zc_Container_CountSupplier())
+                         UNION ALL SELECT 0                                       AS Value, 1 AS myOrder1, zc_ContainerLinkObject_Business() AS myOrder2, Container.Id FROM Container where DescId in (zc_Container_Count(), zc_Container_CountSupplier())
+
+                                  ) AS tmp
+  -- join Container on Container.Id = ContainerId and Container.KeyValue <> ''
+-- where ContainerId in (109108 , 141579) --
+                         ORDER BY ContainerId, tmp.myOrder2, tmp.myOrder1
+                        ) as tmp
+group by tmp.ContainerId
+) as tmp
+where Container.Id = tmp.ContainerId 
+-- left join Container on Container.Id = ContainerId 
+
+ where Container.KeyValue <> tmp.KeyValue
+
+-- select * from Container where coalesce (KeyValue,'') = ''
+-- select KeyValue from Container group by KeyValue having count (*) > 1
+
 */

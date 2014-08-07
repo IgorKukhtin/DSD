@@ -1,27 +1,21 @@
 inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
   Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
   ClientWidth = 798
-  ExplicitWidth = 814
-  ExplicitHeight = 347
+  ExplicitWidth = 806
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 798
-    ExplicitTop = 28
     ExplicitWidth = 798
-    ExplicitHeight = 280
-    ClientRectRight = 794
+    ClientRectRight = 798
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 790
-      ExplicitHeight = 272
+      ExplicitWidth = 798
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 310
-        Height = 272
         Align = alLeft
         ExplicitWidth = 310
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -30,34 +24,20 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
           object clObjectCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'ObjectCode'
+            Width = 52
           end
           object clValueData: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ValueData'
-          end
-          object clGoodsMain: TcxGridDBColumn
-            Caption = #1057#1089#1099#1083#1082#1072' '#1085#1072' '#1090#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsMain'
-          end
-          object clGoods: TcxGridDBColumn
-            Caption = #1057#1089#1099#1083#1082#1072' '#1085#1072' '#1090#1086#1074#1072#1088
-            DataBinding.FieldName = 'Goods'
-          end
-          object clRetail: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-            DataBinding.FieldName = 'Retail'
-          end
-          object clisErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
+            Width = 244
           end
         end
       end
       object TcxGrid
-        Left = 555
+        Left = 563
         Top = 0
         Width = 0
-        Height = 272
+        Height = 282
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -111,8 +91,8 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
       object cxGrid1: TcxGrid
         Left = 313
         Top = 0
-        Width = 242
-        Height = 272
+        Width = 250
+        Height = 282
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
@@ -146,17 +126,12 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 100
+            Width = 52
           end
           object clValueData1: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ValueData'
-            Width = 100
-          end
-          object clisErased1: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            Width = 30
+            Width = 184
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -167,14 +142,14 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Left = 310
         Top = 0
         Width = 3
-        Height = 272
+        Height = 282
         Control = cxGrid
       end
       object cxGrid2: TcxGrid
-        Left = 558
+        Left = 566
         Top = 0
         Width = 232
-        Height = 272
+        Height = 282
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 4
@@ -208,17 +183,12 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 100
+            Width = 42
           end
           object clValueData2: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ValueData'
-            Width = 100
-          end
-          object clisErased2: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'isErased'
-            Width = 30
+            Width = 176
           end
         end
         object cxGridLevel3: TcxGridLevel
@@ -226,10 +196,10 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         end
       end
       object cxSplitter2: TcxSplitter
-        Left = 555
+        Left = 563
         Top = 0
         Width = 3
-        Height = 272
+        Height = 282
         AlignSplitter = salRight
       end
     end
@@ -253,25 +223,59 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
       end>
   end
   inherited MasterDS: TDataSource
-    Left = 88
-    Top = 104
+    Left = 104
+    Top = 72
   end
   inherited MasterCDS: TClientDataSet
-    Left = 240
-    Top = 120
+    Left = 200
+    Top = 72
   end
   inherited spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Goods_Lite'
     Left = 152
-    Top = 88
+    Top = 72
   end
   inherited BarManager: TdxBarManager
-    Left = 240
-    Top = 160
+    Left = 264
+    Top = 48
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end>
+    end
     inherited dxBarStatic: TdxBarStatic
       Left = 8
       Top = 96

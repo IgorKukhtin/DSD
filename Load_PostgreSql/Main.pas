@@ -1588,7 +1588,7 @@ begin
                      +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
 
                      +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные Запчасти и Ремонты	Запчасти и Ремонты
-                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // СД-ЗАПЧАСТИ оборуд-е - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
+                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // СД-ИНСТРУМЕНТЫ - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
 
                      +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
                      +'        when Goods.Id in (6041, 7013) then 10201' // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи

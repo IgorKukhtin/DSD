@@ -19,7 +19,7 @@ BEGIN
      IF inValue = ''
      THEN
      -- !!!это надо убрать после исправления ошибки!!!
-     vbPartionGoodsId:= (SELECT MIN (Object.Id)
+     vbPartionGoodsId:= 80132;/*(SELECT MIN (Object.Id)
                          FROM Object 
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                    ON ObjectLink_Unit.ObjectId = Object.Id
@@ -27,7 +27,7 @@ BEGIN
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId IS NULL
-                        );
+                        );*/
      ELSE
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object 

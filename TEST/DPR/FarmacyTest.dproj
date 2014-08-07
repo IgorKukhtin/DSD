@@ -109,12 +109,6 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\ExtraChargeCategories.pas">
-				<Form>ExtraChargeCategoriesForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\ExtraChargeCategoriesEdit.pas">
-				<Form>ExtraChargeCategoriesEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
 			</DCCReference>

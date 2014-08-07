@@ -10,7 +10,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, Vcl.Menus,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxPCdxBarPopupMenu;
 
 type
   TAlternativeGoodsCodeForm = class(TAncestorGuidesForm)
@@ -25,20 +25,14 @@ type
     cxGridDBTableView2: TcxGridDBTableView;
     clValueData1: TcxGridDBColumn;
     clObjectCode1: TcxGridDBColumn;
-    clisErased1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     cxGrid2: TcxGrid;
     cxGridDBTableView3: TcxGridDBTableView;
     clObjectCode2: TcxGridDBColumn;
     clValueData2: TcxGridDBColumn;
-    clisErased2: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     cxSplitter2: TcxSplitter;
-    clGoodsMain: TcxGridDBColumn;
-    clGoods: TcxGridDBColumn;
-    clRetail: TcxGridDBColumn;
-    clisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public
