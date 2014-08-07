@@ -24,7 +24,7 @@ type
 implementation
 
 uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db,
-     TestFramework, ContractTest;
+     TestFramework, ContractTest, InfoMoneyTest;
 
 { TService }
 
@@ -55,7 +55,7 @@ begin
   BusinessId := 0;
   ContractId:= TContract.Create.GetDefault;
   InfoMoneyId := 0;
-  with TInfoMoneyTest.Create.GetDataSet do begin
+  with TInfoMoney.Create.GetDataSet do begin
      if Locate('Code', '21501', []) then
         InfoMoneyId := FieldByName('Id').AsInteger;
   end;

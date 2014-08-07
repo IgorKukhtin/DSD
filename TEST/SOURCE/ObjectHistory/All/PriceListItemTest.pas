@@ -35,7 +35,7 @@ var
 implementation
 
 uses DB, UtilConst, TestFramework, Authentication, CommonData, Storage,
-   dbMovementItemTest, dbMovementTest, dbObjectMeatTest, GoodsTest;
+   dbMovementItemTest, dbMovementTest, dbObjectMeatTest, GoodsTest, PriceListTest;
 
 procedure TPriceListItemTest.ProcedureLoad;
 begin
@@ -80,7 +80,7 @@ var GoodsId, PriceListId: Integer;
     Id_2012, Id_2013, Id_2011, Id_2011_06_06: Integer;
 begin
   GoodsId := TGoods.Create.GetDefault;
-  PriceListId := TPriceListTest.Create.GetDefault;
+  PriceListId := TPriceList.Create.GetDefault;
   try
     ObjectTest := TPriceListItem.Create;
     // Добавляем историю с датой 01.01.2012

@@ -23,7 +23,8 @@ type
 
 implementation
 
-uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, UnitsTest;
+uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, UnitsTest,
+     MemberTest, PositionTest;
 
 { TdbUnitTest }
 
@@ -70,8 +71,8 @@ var
   UnitId: Integer;
   PersonalGroupId: Integer;
 begin
-  MemberId := TMemberTest.Create.GetDefault;
-  PositionId := TPositionTest.Create.GetDefault;
+  MemberId := TMember.Create.GetDefault;
+  PositionId := TPosition.Create.GetDefault;
   UnitId := TUnit.Create.GetDefault;
   PersonalGroupId:= 0;
   result := InsertUpdatePersonal(0, MemberId, PositionId, UnitId, PersonalGroupId, Date,Date);

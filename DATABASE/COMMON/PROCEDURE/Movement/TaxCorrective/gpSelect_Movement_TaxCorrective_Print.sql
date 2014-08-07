@@ -161,6 +161,7 @@ BEGIN
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
            , OH_JuridicalDetails_To.Phone                                   AS Phone_To
+           , ObjectString_BuyerGLNCode.ValueData                            AS BuyerGLNCode
 
            , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress                      AS JuridicalAddress_From
@@ -172,6 +173,7 @@ BEGIN
            , OH_JuridicalDetails_From.BankName                              AS BankName_From
            , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
            , OH_JuridicalDetails_From.Phone                                 AS Phone_From
+           , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode
 
            , MovementItem.Id                                                AS Id
            , Object_Goods.ObjectCode                                        AS GoodsCode
@@ -293,6 +295,14 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+
+            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
+                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
+            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
+                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id

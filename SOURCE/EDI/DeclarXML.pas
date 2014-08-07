@@ -157,6 +157,7 @@ type
     { Methods & Properties }
     property HORIG: UnicodeString read Get_HORIG write Set_HORIG;
     property HFILL: UnicodeString read Get_HFILL write Set_HFILL;
+    property HPODFILL: UnicodeString read Get_HFILL write Set_HFILL;
     property HNUM: UnicodeString read Get_HNUM write Set_HNUM;
     property HNAMESEL: UnicodeString read Get_HNAMESEL write Set_HNAMESEL;
     property HNAMEBUY: UnicodeString read Get_HNAMEBUY write Set_HNAMEBUY;

@@ -24,8 +24,6 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  ExtraChargeCategories in '..\..\FormsFarmacy\Guides\ExtraChargeCategories.pas' {ExtraChargeCategoriesForm},
-  ExtraChargeCategoriesEdit in '..\..\FormsFarmacy\Guides\ExtraChargeCategoriesEdit.pas' {ExtraChargeCategoriesEditForm},
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm},
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm},
   Units in '..\..\FormsFarmacy\Guides\Units.pas' {UnitForm},
@@ -132,11 +130,9 @@ uses
   CarTest in '..\SOURCE\Objects\All\CarTest.pas',
   ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
   ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
-  GoodsTest in '..\SOURCE\Objects\All\GoodsTest.pas',
   GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
   GoodsKindTest in '..\SOURCE\Objects\All\GoodsKindTest.pas',
   GoodsPropertyTest in '..\SOURCE\Objects\All\GoodsPropertyTest.pas',
-  GoodsPropertyValueTest in '..\SOURCE\Objects\All\GoodsPropertyValueTest.pas',
   JuridicalGroupTest in '..\SOURCE\Objects\All\JuridicalGroupTest.pas',
   PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas',
   PartnerTest in '..\SOURCE\Objects\All\PartnerTest.pas',
@@ -144,7 +140,20 @@ uses
   RouteSortingTest in '..\SOURCE\Objects\All\RouteSortingTest.pas',
   UserTest in '..\SOURCE\Objects\All\UserTest.pas',
   AccountGroupTest in '..\SOURCE\Objects\All\AccountGroupTest.pas',
-  AccountDirectionTest in '..\SOURCE\Objects\All\AccountDirectionTest.pas';
+  AccountDirectionTest in '..\SOURCE\Objects\All\AccountDirectionTest.pas',
+  ProfitLossGroupTest in '..\SOURCE\Objects\All\ProfitLossGroupTest.pas',
+  ProfitLossDirectionTest in '..\SOURCE\Objects\All\ProfitLossDirectionTest.pas',
+  ProfitLossTest in '..\SOURCE\Objects\All\ProfitLossTest.pas',
+  InfoMoneyGroupTest in '..\SOURCE\Objects\All\InfoMoneyGroupTest.pas',
+  InfoMoneyDestinationTest in '..\SOURCE\Objects\All\InfoMoneyDestinationTest.pas',
+  InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
+  MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
+  PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
+  PriceListTest in '..\SOURCE\Objects\All\PriceListTest.pas',
+  AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
+  AssetTest in '..\SOURCE\Objects\All\AssetTest.pas',
+  ReceiptCostTest in '..\SOURCE\Objects\All\ReceiptCostTest.pas',
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -32,7 +32,7 @@ type
 implementation
 
 uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB, dbObjectMeatTest,
-     JuridicalGroupTest, GoodsPropertyTest;
+     JuridicalGroupTest, GoodsPropertyTest, InfoMoneyTest;
 
 { TdbUnitTest }
 
@@ -93,7 +93,7 @@ var
 begin
   JuridicalGroupId := TJuridicalGroup.Create.GetDefault;
   GoodsPropertyId := TGoodsProperty.Create.GetDefault;
-  InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;
+  InfoMoneyId:= TInfoMoney.Create.GetDefault;
   PriceListId := 0;
   PriceListPromoId := 0;
   StartPromo := Date;
