@@ -715,6 +715,8 @@ where Container.Id = tmp.ContainerId
 
  where Container.KeyValue <> tmp.KeyValue
 
+-- update Container set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
+
 -- select * from Container where coalesce (KeyValue,'') = ''
 -- select KeyValue from Container group by KeyValue having count (*) > 1
 
