@@ -33,7 +33,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DescName TVarChar
              , isCheck Boolean
              , isElectron Boolean
-             , DocumentType TVarChar
               )
 AS
 $BODY$
@@ -95,7 +94,6 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isCheck
            , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
-           , MovementString_Desc.ValueData AS DocumentType
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

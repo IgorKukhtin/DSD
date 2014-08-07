@@ -77,11 +77,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colDocType: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'DocumentType'
-            HeaderAlignmentVert = vaCenter
-          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082'. (EDI)'
             DataBinding.FieldName = 'OperDate'
@@ -685,6 +680,16 @@ inherited EDIJournalForm: TEDIJournalForm
           StoredProc = spProtocol
         end>
     end
+    object actStoredProcTaxCorrectivePrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTaxCorrective_Client
+        end>
+      Caption = 'actExecPrintStoredProc'
+    end
     object maEDIReceiptLoad: TMultiAction
       Category = 'EDI'
       MoveParams = <>
@@ -736,7 +741,13 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = EDIComdoc
+          Action = EDIReturnComDoc
+        end
+        item
+          Action = actStoredProcTaxCorrectivePrint
+        end
+        item
+          Action = EDIDeclarReturn
         end
         item
           Action = actRefresh
@@ -921,7 +932,19 @@ inherited EDIJournalForm: TEDIJournalForm
       EndDateParam.Value = Null
       EDI = EDI
       EDIDocType = ediReturnComDoc
+      spHeader = spGetFileName
+      spList = spGetFileBlob
       HeaderDataSet = MasterCDS
+      Directory = '/outbox'
+    end
+    object EDIDeclarReturn: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediDeclarReturn
+      HeaderDataSet = PrintHeaderCDS
       Directory = '/outbox'
     end
   end
@@ -1478,7 +1501,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end>
-    Left = 584
+    Left = 680
     Top = 144
   end
   object spUpdate_EDIComdoc_Params: TdsdStoredProc
@@ -1492,8 +1515,8 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 176
+    Left = 712
+    Top = 152
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -1543,7 +1566,7 @@ inherited EDIJournalForm: TEDIJournalForm
       item
         Name = 'inMovementId'
         Component = MasterCDS
-        ComponentItem = 'MovementId_Sale'
+        ComponentItem = 'MovementId_Tax'
         ParamType = ptInput
       end
       item
@@ -1586,5 +1609,63 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Left = 256
     Top = 64
+  end
+  object spGetFileBlob: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ComDoc'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+      end>
+    Left = 392
+    Top = 192
+  end
+  object spGetFileName: TdsdStoredProc
+    StoredProcName = 'gpGet_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 400
+    Top = 240
+  end
+  object spSelectTaxCorrective_Client: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TaxCorrective'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 679
+    Top = 112
   end
 end

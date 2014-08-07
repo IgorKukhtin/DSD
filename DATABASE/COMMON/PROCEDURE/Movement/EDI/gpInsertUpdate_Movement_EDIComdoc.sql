@@ -22,6 +22,7 @@ $BODY$
 
    DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
+   DECLARE vbDescCode TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDIComdoc());
@@ -63,8 +64,15 @@ BEGIN
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);
+
+     IF inDesc = 'Sale' THEN
+        SELECT MovementDesc.Code INTO vbDescCode FROM MovementDesc WHERE Id = zc_Movement_Sale();
+     ELSE
+        SELECT MovementDesc.Code INTO vbDescCode FROM MovementDesc WHERE Id = zc_Movement_ReturnIn();
+     END IF;   
+
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, inDesc);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, vbDescCode);
 
      -- сохранили расчетные параметры
      vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId    := vbMovementId

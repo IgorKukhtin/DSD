@@ -117,10 +117,14 @@ type
     maEDIReceiptLoad: TMultiAction;
     spInsert_Protocol_EDIReceipt: TdsdStoredProc;
     clisElectron: TcxGridDBColumn;
-    colDocType: TcxGridDBColumn;
     EDIReturnComDoc: TEDIAction;
     mactReturnComdoc: TMultiAction;
     bbReturnCOMDOC: TdxBarButton;
+    spGetFileBlob: TdsdStoredProc;
+    spGetFileName: TdsdStoredProc;
+    spSelectTaxCorrective_Client: TdsdStoredProc;
+    EDIDeclarReturn: TEDIAction;
+    actStoredProcTaxCorrectivePrint: TdsdExecStoredProc;
   private
     { Private declarations }
   public
