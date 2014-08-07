@@ -2,8 +2,9 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 703
+  ExplicitLeft = -74
+  ExplicitWidth = 1072
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -225,6 +226,7 @@ inherited SendForm: TSendForm
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
@@ -450,8 +452,8 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'StorageForm'
-      FormName = 'TStorageForm'
-      FormNameParam.Value = 'TStorageForm'
+      FormName = 'TStorage_ObjectForm'
+      FormNameParam.Value = 'TStorage_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -1112,6 +1114,13 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartionGoodsDate'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inCount'
         Component = MasterCDS
         ComponentItem = 'Count'
@@ -1130,7 +1139,7 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inGoodsKindId'
@@ -1161,11 +1170,6 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
         Value = Null

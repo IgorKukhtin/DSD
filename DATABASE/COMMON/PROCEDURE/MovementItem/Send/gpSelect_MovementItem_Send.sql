@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PartionGoodsDate TDateTime
              , Amount TFloat, Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -36,6 +37,7 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
@@ -98,6 +100,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
@@ -137,6 +140,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
@@ -178,6 +185,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
@@ -219,6 +227,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
