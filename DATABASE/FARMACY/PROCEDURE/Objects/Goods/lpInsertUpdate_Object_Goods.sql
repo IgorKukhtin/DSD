@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -15,22 +15,19 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
 )
 RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE vbCode Integer;   
+  DECLARE vbCode INTEGER;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   UserId := inSession;
    
    -- !!! проверка уникальности <Наименование>
-   IF EXISTS (SELECT GoodsName FROM Object_Goods_View AND GoodsName = inName AND Id <> COALESCE(inId, 0) ) THEN
+   IF EXISTS (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = inObjectId AND GoodsName = inName AND Id <> COALESCE(ioId, 0) ) THEN
       RAISE EXCEPTION 'Значение "%" не уникально для справочника "Товары"', inName;
    END IF; 
 
    -- !!! проверка уникальности <Код>
-   IF EXISTS (SELECT ObjectCode FROM Object WHERE DescId = inDescId AND ObjectCode = inObjectCode AND Id <> COALESCE( inId, 0) ) THEN
-      SELECT ItemName INTO ObjectName FROM ObjectDesc WHERE Id = inDescId;
-      RAISE EXCEPTION 'Значение "%" не уникально для справочника "%"', inObjectCode, ObjectName;
+   IF EXISTS (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = inObjectId AND GoodsCode = inCode AND Id <> COALESCE(ioId, 0)  ) THEN
+      RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
    END IF; 
 
    vbCode := inCode::Integer;
@@ -40,12 +37,12 @@ BEGIN
 
    IF COALESCE(inObjectId, 0) <> 0 THEN
       -- Строковый код
-      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), vbGoodsId, inCode);
+      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
       -- сохранили свойство <связи чьи товары>
       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
       -- сохранили связь с <Главным товаром>
-      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), vbGoodsId, inGoodsMainId);
-   END; 
+      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), ioId, inGoodsMainId);
+   END IF; 
 
    -- сохранили связь с <Группа>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
@@ -60,7 +57,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
 /*

@@ -233,6 +233,8 @@ type
 
     function pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
+    function pLoadDocument_SaleNal:Integer;
+    procedure pLoadDocumentItem_SaleNal(SaveCount:Integer);
     function pLoadDocument_Sale_Fl:Integer;
     procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
 
@@ -243,6 +245,8 @@ type
 
     function pLoadDocument_ReturnIn:Integer;
     procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
+    function pLoadDocument_ReturnInNal:Integer;
+    procedure pLoadDocumentItem_ReturnInNal(SaveCount:Integer);
     function pLoadDocument_ReturnIn_Fl:Integer;
     procedure pLoadDocumentItem_ReturnIn_Fl(SaveCount:Integer);
 
@@ -1097,8 +1101,13 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Sale;
      if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_SaleNal;
+     if not fStop then pLoadDocumentItem_SaleNal(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
      if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnInNal;
+     if not fStop then pLoadDocumentItem_ReturnInNal(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_Tax_Int;
      if not fStop then pLoadDocumentItem_Tax_Int(myRecordCount1);
@@ -1543,6 +1552,7 @@ begin
                      +' = case when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
                      +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
                      +'        when Goods.Id in (3409) then 20201' // !!!Этикет- пистолет!!! - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
+                     +'        when Goods.Id in (538) then 10102' // !!!П/К!!! - 10102		Основное сырье Мясное сырье Свинина
 
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
 
@@ -1578,7 +1588,7 @@ begin
                      +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
 
                      +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные Запчасти и Ремонты	Запчасти и Ремонты
-                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // СД-ЗАПЧАСТИ оборуд-е - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
+                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // СД-ИНСТРУМЕНТЫ - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
 
                      +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
                      +'        when Goods.Id in (6041, 7013) then 10201' // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
@@ -5808,6 +5818,7 @@ begin
                      +'       left outer join dba._pgPersonal on _pgPersonal.PositionName = isnull(Information1.OKPO,Information2.OKPO)'
                      +'                                      and _pgPersonal.PositionName <> '+FormatToVarCharServer_notNULL('')
                      +' set Unit.PersonalId_Postgres = _pgPersonal.Id'
+                     +'   , Unit.pgUnitId = case when _pgPersonal.Id is not null then null else Unit.pgUnitId end'
                      );
      //
      myDisabledCB(cbMember_andPersonal);
@@ -8920,22 +8931,14 @@ begin
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId'
-           +'                                              and UnitFrom.ParentId<>4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId'
-           +'                                            and UnitTo.ParentId<>4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-           +'                                                      and UnitFrom.ParentId=4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-           +'                                                      and UnitTo.ParentId=4137'); // МО ЛИЦА-ВСЕ
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.PersonalId_Postgres is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitTo.UnitId is not null or UnitTo.PersonalId_Postgres is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
@@ -9031,25 +9034,15 @@ begin
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId'
-           +'                                              and UnitFrom.ParentId<>4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId'
-           +'                                            and UnitTo.ParentId<>4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-//           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
-           +'                                                      and UnitFrom.ParentId=4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-//           +'                                                      and pgPersonalTo.Id2_Postgres>0'
-           +'                                                      and UnitTo.ParentId=4137'); // МО ЛИЦА-ВСЕ
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.PersonalId_Postgres is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitTo.UnitId is not null or UnitTo.PersonalId_Postgres is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -9126,8 +9119,7 @@ begin
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
-//        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
-//        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -9135,12 +9127,8 @@ begin
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and (isUnitFrom.UnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-           +'  and (isUnitTo.UnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
-//           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitFrom.UnitId is not null or UnitFrom.PersonalId_Postgres is not null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
+           +'  and (isUnitTo.UnitId is not null or UnitTo.PersonalId_Postgres is not null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            +'  and BillItems.Id is not null'
            );
         Add('order by Bill.BillDate, ObjectId');
@@ -10217,6 +10205,16 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
+function TMainForm.pLoadDocument_SaleNal:Integer;
+begin
+
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_SaleNal(SaveCount:Integer);
+begin
+
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Sale:Integer;
 var ContractId_pg,PriceListId:Integer;
 begin
@@ -10427,8 +10425,8 @@ begin
            +'           left join dba.isUnit on isUnit.UnitId = Bill.ToId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'        and Bill.FromId=zc_UnitId_StoreSale()'
-           +'        and Bill.Id_Postgres>0'
+           //+'        and Bill.FromId=zc_UnitId_StoreSale()'
+           +'        and Bill.MoneyKindId = zc_mkBN()' // Bill.Id_Postgres>0
            +'        and isUnit.UnitId is null'
            +'     ) as Bill');
 
@@ -10913,27 +10911,22 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , isnull (pgPersonalTo.Id2_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
-        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
-           +'                                                      and pgPersonalFrom.Id2_Postgres>0'
-           +'                                                      and UnitFrom.ParentId=4137'); // МО ЛИЦА-ВСЕ
-        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
-           +'                                                      and pgPersonalTo.Id2_Postgres>0'
-           +'                                                      and UnitTo.ParentId=4137'); // МО ЛИЦА-ВСЕ
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
-           +'  and Id_Postgres >0'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
+           +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
-
         Add('order by OperDate,ObjectId');
         Open;
         cbCompleteProductionUnion.Caption:='4.1. ('+IntToStr(RecordCount)+') Производство смешивание';
@@ -10997,29 +10990,31 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null)'
-           +'                                 or (pgUnitTo.Id is null)'
+        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null and pgPersonalFrom.Id is null)'
+           +'                                 or (pgUnitTo.Id is null and pgPersonalTo.Id is null)'
            +'                                    then '+FormatToVarCharServer_notNULL('-ошибка')
            +'                               else '+FormatToVarCharServer_notNULL('')
            +'                           end'
-           +'                       || case when pgUnitFrom.Id is null'
+           +'                       || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' От Кого:')+'|| UnitFrom.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
            +'                           end'
-           +'                       || case when pgUnitTo.Id is null'
+           +'                       || case when pgUnitTo.Id is null and pgPersonalTo.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
            +'                           end'
            +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
-        Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
-        Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
@@ -11282,20 +11277,21 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
-        Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
-
         Add('order by OperDate,ObjectId');
         Open;
         cbCompleteProductionSeparate.Caption:='4.2. ('+IntToStr(RecordCount)+') Производство разделение';
@@ -11359,19 +11355,20 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null)'
-           +'                                 or (pgUnitTo.Id is null)'
+        Add('     , Bill.BillNumber || case when (pgUnitFrom.Id is null and pgPersonalFrom.Id is null)'
+           +'                                 or (pgUnitTo.Id is null and pgPersonalTo.Id is null)'
            +'                                    then '+FormatToVarCharServer_notNULL('-ошибка')
            +'                               else '+FormatToVarCharServer_notNULL('')
            +'                           end'
-           +'                       || case when pgUnitFrom.Id is null'
+           +'                       || case when pgUnitFrom.Id is null and pgPersonalFrom.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' От Кого:')+'|| UnitFrom.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
            +'                           end'
-           +'                       || case when pgUnitTo.Id is null'
+           +'                       || case when pgUnitTo.Id is null and pgPersonalTo.Id is null'
            +'                                    then '+FormatToVarCharServer_notNULL(' Кому:')+'|| UnitTo.UnitName'
            +'                               else '+FormatToVarCharServer_notNULL('')
-           +'                           end');
+           +'                           end'
+           +'       as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.PartionStr_MB as PartionGoods');
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
@@ -11382,6 +11379,8 @@ begin
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkProduction())'
@@ -12426,6 +12425,16 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!INTEGER
+function TMainForm.pLoadDocument_ReturnInNal:Integer;
+begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_ReturnInNal(SaveCount:Integer);
+begin
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnIn:Integer;
 var ContractId_pg:Integer;
     InvNumberMark:String;

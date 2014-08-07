@@ -3,7 +3,7 @@ unit EDIJournal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -112,6 +112,15 @@ type
     clDescName: TcxGridDBColumn;
     clOperDate_TaxCorrective: TcxGridDBColumn;
     clInvNumberPartner_TaxCorrective: TcxGridDBColumn;
+    EDIReceipt: TEDIAction;
+    bbReceipt: TdxBarButton;
+    maEDIReceiptLoad: TMultiAction;
+    spInsert_Protocol_EDIReceipt: TdsdStoredProc;
+    clisElectron: TcxGridDBColumn;
+    colDocType: TcxGridDBColumn;
+    EDIReturnComDoc: TEDIAction;
+    mactReturnComdoc: TMultiAction;
+    bbReturnCOMDOC: TdxBarButton;
   private
     { Private declarations }
   public

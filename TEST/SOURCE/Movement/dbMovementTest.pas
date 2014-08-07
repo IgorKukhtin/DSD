@@ -132,7 +132,7 @@ type
 implementation
 
 uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData
-   , Authentication, dbObjectMeatTest;
+   , Authentication, dbObjectMeatTest, PartnerTest;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.DeleteMovement(Id: integer);
@@ -344,7 +344,7 @@ begin
   VATPercent:=20;
   ChangePercent:=-10;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
@@ -468,7 +468,7 @@ begin
   VATPercent:=20;
   ChangePercent:=-10;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   CarId:=0;
   PersonalDriverId:=0;
@@ -538,7 +538,7 @@ begin
   VATPercent:=20;
   ChangePercent:=-10;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
@@ -592,7 +592,7 @@ begin
   InvNumber:='1';
   OperDate:= Date;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
 
   //
@@ -633,7 +633,7 @@ begin
   InvNumber:='1';
   OperDate:= Date;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   //
   result := InsertUpdateMovementLoss(Id, InvNumber, OperDate, FromId, ToId);
@@ -672,7 +672,7 @@ begin
   InvNumber:='1';
   OperDate:= Date;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   //
   result := InsertUpdateMovementInventory(Id, InvNumber, OperDate, FromId, ToId);
@@ -717,7 +717,7 @@ begin
   OperDateMark:= Date;
   InvNumberPartner:='4';
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   PersonalId:=0;
   RouteId:=0;
   RouteSortingId:=0;
@@ -768,7 +768,7 @@ begin
   InvNumber:='1';
   OperDate:= Date;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   //
   result := InsertUpdateMovementZakazInternal(Id, InvNumber, OperDate

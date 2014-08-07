@@ -377,6 +377,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\BranchTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CarModelTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>

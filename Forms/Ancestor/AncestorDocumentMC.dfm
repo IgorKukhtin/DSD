@@ -3,32 +3,31 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 943
-  ExplicitHeight = 766
+  ExplicitWidth = 951
+  ExplicitHeight = 767
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 122
+    Top = 120
     Width = 935
-    Height = 252
-    ExplicitTop = 122
+    Height = 254
+    ExplicitTop = 120
     ExplicitWidth = 935
-    ExplicitHeight = 252
-    ClientRectBottom = 248
-    ClientRectRight = 931
+    ExplicitHeight = 254
+    ClientRectBottom = 254
+    ClientRectRight = 935
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 929
-      ExplicitHeight = 226
+      ExplicitTop = 24
+      ExplicitWidth = 935
+      ExplicitHeight = 230
       inherited cxGrid: TcxGrid
-        Width = 929
-        Height = 226
-        ExplicitWidth = 929
-        ExplicitHeight = 226
+        Width = 935
+        Height = 230
+        ExplicitWidth = 935
+        ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -82,15 +81,11 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 929
-        Height = 226
+        Width = 935
+        Height = 230
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -897,7 +892,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1071,6 +1066,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       item
         Name = 'inMovementId'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

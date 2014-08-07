@@ -13,7 +13,7 @@ uses
   cxGridDBTableView, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
   Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  cxCurrencyEdit;
+  cxCurrencyEdit, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TAncestorDocumentMCForm = class(TAncestorDBGridForm)

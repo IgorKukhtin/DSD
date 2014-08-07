@@ -31,7 +31,8 @@ type
 
 implementation
 
-uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB, dbObjectMeatTest;
+uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB, dbObjectMeatTest,
+     JuridicalGroupTest, GoodsPropertyTest;
 
 { TdbUnitTest }
 
@@ -90,8 +91,8 @@ var
   PriceListId, PriceListPromoId: Integer;
   StartPromo, EndPromo: TDateTime;
 begin
-  JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
-  GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
+  JuridicalGroupId := TJuridicalGroup.Create.GetDefault;
+  GoodsPropertyId := TGoodsProperty.Create.GetDefault;
   InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;
   PriceListId := 0;
   PriceListPromoId := 0;

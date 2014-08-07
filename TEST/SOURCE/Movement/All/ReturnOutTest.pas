@@ -24,7 +24,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest,
+     SysUtils, Db, TestFramework, PartnerTest, ContractTest, PaidKindTest;
 
 { TReturnOut }
 
@@ -54,10 +55,10 @@ begin
   VATPercent:=20;
   ChangePercent:=-10;
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  PaidKindId:=TPaidKindTest.Create.GetDefault;
-  ContractId:=TContractTest.Create.GetDefault;
+  PaidKindId:=TPaidKind.Create.GetDefault;
+  ContractId:=TContract.Create.GetDefault;
   //
   result := InsertUpdateReturnOut(Id, InvNumber, OperDate,
              OperDatePartner, PriceWithVAT,

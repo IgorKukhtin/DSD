@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderOperDate       TDateTime , -- Дата заявки контрагента
     IN inPartnerInvNumber    TVarChar  , -- Номер накладной у контрагента
     IN inPartnerOperDate     TDateTime , -- Дата накладной у контрагента
-    IN inInvNumberTax        TVarChar  , -- Номер накладной у контрагента
-    IN inOperDateTax         TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberTax        TVarChar  , -- Номер налоговой накладной у контрагента (привязка возврата)
+    IN inOperDateTax         TDateTime , -- Дата налоговой накладной у контрагента (привязка возврата)
     IN inOKPO                TVarChar  , -- 
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
@@ -27,17 +27,60 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDIComdoc());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Меняем параметр
+     inDesc:= COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')
+                       , COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_ReturnIn() AND inDesc = 'Return')
+                                 , (SELECT MovementDesc.Code FROM MovementDesc WHERE Id IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND MovementDesc.Code = inDesc))
+                       );
+
+     IF inDesc IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка в параметре.<%>', inDesc;
+     END IF;
+
      -- Поиск документа в журнале EDI
-     vbMovementId:= (SELECT Movement.Id
-                     FROM Movement
-                          INNER JOIN MovementString AS MovementString_OKPO
-                                                    ON MovementString_OKPO.MovementId =  Movement.Id
-                                                   AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
-                                                   AND MovementString_OKPO.ValueData = inOKPO
-                     WHERE Movement.DescId = zc_Movement_EDI() 
-                       AND Movement.InvNumber = inOrderInvNumber
-                       AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
-                    );
+     IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_Sale())
+     THEN
+         -- !!!так для продажи!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_OKPO
+                                                        ON MovementString_OKPO.MovementId =  Movement.Id
+                                                       AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                       AND MovementString_OKPO.ValueData = inOKPO
+                              INNER JOIN MovementString AS MovementString_MovementDesc
+                                                        ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                       AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_MovementDesc.ValueData = inDesc
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                        );
+     END IF;
+
+     IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_ReturnIn())
+     THEN
+         -- !!!так для возврата!!!
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_OKPO
+                                                        ON MovementString_OKPO.MovementId =  Movement.Id
+                                                       AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                       AND MovementString_OKPO.ValueData = inOKPO
+                              INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                        ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_InvNumberPartner.ValueData = inPartnerInvNumber
+                              INNER JOIN MovementString AS MovementString_MovementDesc
+                                                        ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                       AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                       AND MovementString_MovementDesc.ValueData = inDesc
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.InvNumber = inOrderInvNumber
+                           AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                        );
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementId, 0) = 0;
@@ -67,11 +110,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, inDesc);
 
      -- сохранили расчетные параметры
-     vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId    := vbMovementId
-                                                           , inSaleOperDate  := inPartnerOperDate
-                                                           , inOrderInvNumber:= inOrderInvNumber
-                                                           , inOKPO          := inOKPO
-                                                           , inUserId        := vbUserId);
+     vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId       := vbMovementId
+                                                           , inPartnerOperDate  := inPartnerOperDate
+                                                           , inPartnerInvNumber := inPartnerInvNumber
+                                                           , inOrderInvNumber   := inOrderInvNumber
+                                                           , inOKPO             := inOKPO
+                                                           , inUserId           := vbUserId);
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -94,6 +138,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.14                                        * add calc inDesc
+ 07.08.14                                        * add inPartnerInvNumber := inPartnerInvNumber
  20.07.14                                        * ALL
  29.05.14                         *
 */

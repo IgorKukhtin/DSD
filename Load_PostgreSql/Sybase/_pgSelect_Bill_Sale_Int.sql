@@ -219,9 +219,9 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- ћ€сное сырье
                          and Bill.BillDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
       where Bill.BillDate between @inStartDate and @inEndDate
-        and Bill.FromId in (zc_UnitId_StoreSale())
+        -- and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSendUnitToUnit())
-        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and (Bill.MoneyKindId = zc_mkBN() /*or isnull(Bill.Id_Postgres,0) <> 0*/)
         and isUnit.UnitId is null
       group by Bill.Id
      ) as Bill_find

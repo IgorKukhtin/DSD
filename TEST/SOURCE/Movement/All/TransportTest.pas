@@ -23,7 +23,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db,
+     TestFramework, CarTest;
 
 { TTransport }
 
@@ -52,7 +53,7 @@ begin
   EndRun      := Date;
   HoursAdd := -123;
   Comment:='';
-  CarId := TCarTest.Create.GetDefault;
+  CarId := TCar.Create.GetDefault;
   CarTrailerId:=0;
   PersonalDriverId := 0;
   PersonalDriverMoreId := 0;

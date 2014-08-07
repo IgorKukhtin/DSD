@@ -25,7 +25,8 @@ type
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest,
+     SysUtils, Db, TestFramework, PartnerTest, ContractTest;
 
 { TSale }
 
@@ -60,10 +61,10 @@ begin
 
   InvNumberOrder:='';
 
-  FromId := TPartnerTest.Create.GetDefault;
+  FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=1;
-  ContractId:=TContractTest.Create.GetDefault;
+  ContractId:=TContract.Create.GetDefault;
   //CarId:=0;
   //PersonalDriverId:=0;
   //RouteId:=0;

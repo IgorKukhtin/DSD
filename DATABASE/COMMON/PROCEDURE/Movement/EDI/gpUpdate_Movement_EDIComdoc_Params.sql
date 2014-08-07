@@ -18,16 +18,26 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!только для продажи!!!
+     IF NOT EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Данные перенести можно только для документа <Продажа покупателю>.';
+     END IF;
+
      -- сохранили расчетные параметры
-     vbGoodsPropertyId:= (SELECT lpUpdate_Movement_EDIComdoc_Params (inMovementId    := Movement.Id
-                                                                   , inSaleOperDate  := MovementDate_OperDatePartner.ValueData
-                                                                   , inOrderInvNumber:= Movement.InvNumber
-                                                                   , inOKPO          := MovementString_OKPO.ValueData
-                                                                   , inUserId        := vbUserId)
+     vbGoodsPropertyId:= (SELECT lpUpdate_Movement_EDIComdoc_Params (inMovementId      := Movement.Id
+                                                                   , inSaleOperDate    := MovementDate_OperDatePartner.ValueData
+                                                                   , inPartnerInvNumber:= MovementString_InvNumberPartner.ValueData
+                                                                   , inOrderInvNumber  := Movement.InvNumber
+                                                                   , inOKPO            := MovementString_OKPO.ValueData
+                                                                   , inUserId          := vbUserId)
                           FROM Movement
                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                               LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                        ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                                LEFT JOIN MovementString AS MovementString_OKPO
                                                         ON MovementString_OKPO.MovementId =  Movement.Id
                                                        AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
@@ -97,6 +107,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.14                                        * add !!!только для продажи!!!
+ 07.08.14                                        * add zc_MovementString_InvNumberPartner
  31.07.14                                        * add lpInsertUpdate_Movement_EDIComdoc_In
  20.07.14                                        *
 */
