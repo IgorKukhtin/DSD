@@ -1,8 +1,10 @@
 -- Function: lpInsertFind_ObjectCost
 
--- DROP FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_ObjectCost(
+    IN inContainerId             Integer               , -- 
     IN inObjectCostDescId        Integer               , -- DescId для <элемент с/с>
     IN inDescId_1                Integer  DEFAULT NULL , -- DescId для 1-ой Аналитики
     IN inObjectId_1              Integer  DEFAULT NULL , -- ObjectId для 1-ой Аналитики
@@ -29,6 +31,8 @@ CREATE OR REPLACE FUNCTION lpInsertFind_ObjectCost(
 $BODY$
    DECLARE vbObjectCostId Integer;
    DECLARE vbIs_tmp1 Boolean;
+
+   DECLARE vbKeyValue TVarChar;
 BEGIN
      --
      inObjectCostDescId := COALESCE (inObjectCostDescId, 0);
@@ -60,8 +64,47 @@ BEGIN
      -- !!!
 
 
+     -- !!!определяется КЛЮЧ!!!
+     vbKeyValue = (SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
+                   FROM (SELECT tmp.Value :: TVarChar AS Value
+                              , tmp.myOrder1
+                         FROM     (SELECT COALESCE (inObjectCostDescId, 0)        AS Value, 0 AS myOrder1, -1 AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_1, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_1, 1000000001)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_1, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_1, 1000000001)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_2, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_2, 1000000002)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_2, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_2, 1000000002)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_3, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_3, 1000000003)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_3, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_3, 1000000003)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_4, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_4, 1000000004)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_4, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_4, 1000000004)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_5, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_5, 1000000005)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_5, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_5, 1000000005)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_6, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_6, 1000000006)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_6, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_6, 1000000006)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_7, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_7, 1000000007)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_7, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_7, 1000000007)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_8, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_8, 1000000008)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_8, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_8, 1000000008)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_9, 0)    AS Value, 0 AS myOrder1, COALESCE (inDescId_9, 1000000009)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_9, 0)  AS Value, 1 AS myOrder1, COALESCE (inDescId_9, 1000000009)  AS myOrder2
+                         UNION ALL SELECT COALESCE (inDescId_10, 0)   AS Value, 0 AS myOrder1, COALESCE (inDescId_10, 1000000010) AS myOrder2
+                         UNION ALL SELECT COALESCE (inObjectId_10, 0) AS Value, 1 AS myOrder1, COALESCE (inDescId_10, 1000000010) AS myOrder2
+                                  ) AS tmp
+                         ORDER BY tmp.myOrder2, tmp.myOrder1
+                        ) AS tmp
+                  );
+
+
      -- находим
      BEGIN
+     -- !!!находим СРАЗУ!!!
+     vbObjectCostId := (SELECT MAX (ContainerObjectCost.ObjectCostId) FROM ContainerObjectCost WHERE ContainerObjectCost.KeyValue = vbKeyValue);
+
+/*
+     -- Если не нашли, находим по старому алгоритму
+     IF COALESCE (vbObjectCostId, 0) = 0
+     THEN
+
               IF inDescId_1 IS NOT NULL
               THEN
                    -- первый
@@ -333,7 +376,8 @@ BEGIN
                    vbObjectCostId := (SELECT Id FROM _tmp2___);
               END IF;
 
-
+     END IF; -- if Если не нашли, находим по старому алгоритму
+*/
      EXCEPTION
               WHEN invalid_row_count_in_limit_clause
               THEN RAISE EXCEPTION 'Ошибка lpInsertFind_ObjectCost : vbObjectCostId = "%", inObjectCostDescId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', vbObjectCostId, inObjectCostDescId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
@@ -369,6 +413,20 @@ BEGIN
 
      END IF;  
 
+
+     -- Финиш - Связь с Container
+
+     -- Устанавливаем новое значение
+     UPDATE ContainerObjectCost SET ObjectCostId = vbObjectCostId
+                                  , KeyValue     = vbKeyValue
+     WHERE ContainerId = inContainerId AND ObjectCostDescId = inObjectCostDescId;
+     -- Если не нашли, добавляем
+     IF NOT FOUND
+     THEN
+         INSERT INTO ContainerObjectCost (ObjectCostDescId, ContainerId, ObjectCostId, KeyValue)
+                                  VALUES (inObjectCostDescId, inContainerId, vbObjectCostId, vbKeyValue);
+     END IF;  
+
 -- if vbObjectCostId <> 796 then
 -- RAISE EXCEPTION 'lpInsertFind_ObjectCost';
 -- end if;
@@ -376,17 +434,17 @@ BEGIN
      -- Возвращаем значение
      RETURN (vbObjectCostId);
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.14                                        * ALL
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  28.03.14                                        * удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  19.09.13                                        * optimize
@@ -408,4 +466,54 @@ SELECT * FROM lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis(
                                      , inObjectId_5 := 23463
                                      , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
                                      )
+*/
+
+/*
+-- !!!!!!!!!!!!!!!!!!!!!
+-- !!!update KeyValue!!!
+-- !!!!!!!!!!!!!!!!!!!!!
+
+select  co, tmp.KeyValue, ContainerObjectCost.KeyValue, ContainerObjectCost.*
+
+-- update ContainerObjectCost set KeyValue = tmp.KeyValue
+from (
+SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
+ || case count(*) when 1 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 3 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 5 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 7 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 9 then ';0,0;0,0;0,0;0,0;0,0;0,0'
+                  when 11 then ';0,0;0,0;0,0;0,0;0,0'
+                  when 13 then ';0,0;0,0;0,0;0,0'
+                  when 15 then ';0,0;0,0;0,0'
+                  when 17 then ';0,0;0,0'
+                  when 19 then ';0,0'
+                          else ''
+    end 
+    as KeyValue
+
+, tmp.ObjectCostId, count(*) as co
+                   FROM (SELECT tmp.Value :: TVarChar AS Value
+                              , tmp.myOrder1
+                              , tmp.ObjectCostId
+                         FROM     (SELECT Value, myOrder1, myOrder2, ObjectCostId FROM (SELECT ObjectCostDescId AS Value, 0 AS myOrder1, -1 AS myOrder2, ObjectCostId FROM ContainerObjectCost group by ObjectCostDescId, ObjectCostId) as tmp
+                         UNION ALL SELECT COALESCE (DescId, 0)                  AS Value, 0 AS myOrder1, DescId AS myOrder2, ObjectCostId FROM ObjectCostLink
+                         UNION ALL SELECT COALESCE (ObjectId, 0)                AS Value, 1 AS myOrder1, DescId AS myOrder2, ObjectCostId FROM ObjectCostLink
+
+                                  ) AS tmp
+--  join ContainerObjectCost on ContainerObjectCost.ObjectCostId = tmp.ObjectCostId and ContainerObjectCost.KeyValue <> ''
+-- where ObjectCostId in (109108 , 141579) --
+                         ORDER BY ObjectCostId, tmp.myOrder2, tmp.myOrder1
+                        ) as tmp
+group by tmp.ObjectCostId
+) as tmp
+
+ where ContainerObjectCost.ObjectCostId = tmp.ObjectCostId 
+
+ left join ContainerObjectCost on ContainerObjectCost.ObjectCostId = tmp.ObjectCostId
+ where ContainerObjectCost.KeyValue <> tmp.KeyValue
+
+-- select * from ContainerObjectCost where coalesce (KeyValue,'') = ''
+-- select KeyValue from (select ObjectCostId, KeyValue from ContainerObjectCost group by ObjectCostId, KeyValue) as tmp group by KeyValue having count (*) > 1
+
 */
