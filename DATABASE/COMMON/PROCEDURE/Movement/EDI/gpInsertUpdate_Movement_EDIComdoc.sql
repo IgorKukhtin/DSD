@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderOperDate       TDateTime , -- Дата заявки контрагента
     IN inPartnerInvNumber    TVarChar  , -- Номер накладной у контрагента
     IN inPartnerOperDate     TDateTime , -- Дата накладной у контрагента
-    IN inInvNumberTax        TVarChar  , -- Номер накладной у контрагента
-    IN inOperDateTax         TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberTax        TVarChar  , -- Номер налоговой накладной у контрагента (привязка возврата)
+    IN inOperDateTax         TDateTime , -- Дата налоговой накладной у контрагента (привязка возврата)
     IN inOKPO                TVarChar  , -- 
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
@@ -64,14 +64,17 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);
      -- сохранили
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, inDesc);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')
+                                                                                             , COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_ReturnIn()), inDesc)
+                                                                                             ));
 
      -- сохранили расчетные параметры
-     vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId    := vbMovementId
-                                                           , inSaleOperDate  := inPartnerOperDate
-                                                           , inOrderInvNumber:= inOrderInvNumber
-                                                           , inOKPO          := inOKPO
-                                                           , inUserId        := vbUserId);
+     vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId       := vbMovementId
+                                                           , inPartnerOperDate  := inPartnerOperDate
+                                                           , inPartnerInvNumber := inPartnerInvNumber
+                                                           , inOrderInvNumber   := inOrderInvNumber
+                                                           , inOKPO             := inOKPO
+                                                           , inUserId           := vbUserId);
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -94,6 +97,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.14                                        * add calc inDesc
+ 07.08.14                                        * add inPartnerInvNumber := inPartnerInvNumber
  20.07.14                                        * ALL
  29.05.14                         *
 */
