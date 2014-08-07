@@ -1,58 +1,28 @@
 unit InfoMoneyTest;
 
 interface
-
-uses dbTest, dbObjectTest, ObjectTest;
+  uses dbTest, dbObjectTest, TestFramework, ObjectTest;
 
 type
-
-  TInfoMoneyTest = class (TdbObjectTestNew)
+  TInfoMoneyTest = class(TdbObjectTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
 
-  TInfoMoney = class(TObjectTest)
-    function InsertDefault: integer; override;
+   TInfoMoney = class(TObjectTest)
+  function InsertDefault: integer; override;
   public
     function InsertUpdateInfoMoney(const Id, Code : integer; Name: string; InfoMoneyGroupId: Integer;
                                      InfoMoneyDestinationId: integer): integer;
     constructor Create; override;
   end;
-
 implementation
+uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
+     InfoMoneyGroupTest, InfoMoneyDestinationTest;
 
-uses DB, UtilConst, dbObjectMeatTest, TestFramework, SysUtils, Authentication, Storage, CommonData;
-
-{ TInfoMoneyTest }
-
-procedure TInfoMoneyTest.ProcedureLoad;
-begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\InfoMoney\';
-  inherited;
-end;
-
-procedure TInfoMoneyTest.Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TInfoMoney;
-begin
-  inherited;
-  ObjectTest := TInfoMoney.Create;
-  // Получим список
-  RecordCount := ObjectTest.GetDataSet.RecordCount;
-  // Вставка
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Управленческие аналитики 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-{TInfoMoneyTest}
+     {TInfoMoneyTest}
  constructor TInfoMoney.Create;
 begin
   inherited;
@@ -66,8 +36,8 @@ var
   InfoMoneyGroupId: Integer;
   InfoMoneyDestinationId: Integer;
 begin
-  InfoMoneyGroupId := TInfoMoneyGroupTest.Create.GetDefault;
-  InfoMoneyDestinationId:= TInfoMoneyDestinationTest.Create.GetDefault;;
+  InfoMoneyGroupId := TInfoMoneyGroup.Create.GetDefault;
+  InfoMoneyDestinationId:= TInfoMoneyDestination.Create.GetDefault;;
   result := InsertUpdateInfoMoney(0, -3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
   inherited;
 end;
@@ -82,6 +52,31 @@ begin
   FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
 
   result := InsertUpdate(FParams);
+end;
+
+procedure TInfoMoneyTest.ProcedureLoad;
+begin
+  ScriptDirectory := ProcedurePath + 'OBJECTS\InfoMoney\';
+  inherited;
+end;
+
+procedure TInfoMoneyTest.Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TInfoMoney;
+begin
+  ObjectTest := TInfoMoney.Create;
+  // Получим список
+  RecordCount := ObjectTest.GetDataSet.RecordCount;
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Управленческие аналитики 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
 end;
 
 initialization
