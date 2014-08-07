@@ -1,6 +1,6 @@
--- Function: lpInsertFind_ReportContainer (Integer, Integer, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Integer)
+-- Function: lpInsertFind_ReportContainer (Integer, Integer, Integer, Integer)
 
--- DROP FUNCTION lpInsertFind_ReportContainer (Integer, Integer, Boolean, Integer, Boolean, Integer, Boolean, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_ReportContainer (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_ReportContainer(
     IN inActiveContainerId   Integer              , -- 

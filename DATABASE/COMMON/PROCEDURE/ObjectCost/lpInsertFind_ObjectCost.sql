@@ -33,6 +33,8 @@ $BODY$
    DECLARE vbIs_tmp1 Boolean;
 
    DECLARE vbKeyValue TVarChar;
+   DECLARE vbMasterKeyValue BigInt;
+   DECLARE vbChildKeyValue BigInt;
 BEGIN
      --
      inObjectCostDescId := COALESCE (inObjectCostDescId, 0);
@@ -93,12 +95,19 @@ BEGIN
                          ORDER BY tmp.myOrder2, tmp.myOrder1
                         ) AS tmp
                   );
+     -- !!!определяется еще первый КЛЮЧ!!!
+     vbMasterKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 1 FOR 8));
+     -- !!!определяется еще второй КЛЮЧ!!!
+     vbChildKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 9 FOR 8));
 
 
      -- находим
      BEGIN
-     -- !!!находим СРАЗУ!!!
-     vbObjectCostId := (SELECT MAX (ContainerObjectCost.ObjectCostId) FROM ContainerObjectCost WHERE ContainerObjectCost.KeyValue = vbKeyValue);
+     -- !!!находим СРАЗУ по ключу!!!
+     -- vbObjectCostId := (SELECT MAX (ObjectCostId) FROM ContainerObjectCost WHERE KeyValue = vbKeyValue);
+
+     -- !!!находим СРАЗУ по ДВУМ ключам!!!
+     vbObjectCostId := (SELECT MAX (ObjectCostId) FROM ContainerObjectCost WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
 
 /*
      -- Если не нашли, находим по старому алгоритму
@@ -417,14 +426,16 @@ BEGIN
      -- Финиш - Связь с Container
 
      -- Устанавливаем новое значение
-     UPDATE ContainerObjectCost SET ObjectCostId = vbObjectCostId
-                                  , KeyValue     = vbKeyValue
+     UPDATE ContainerObjectCost SET ObjectCostId   = vbObjectCostId
+                                  , KeyValue       = vbKeyValue
+                                  , MasterKeyValue = vbMasterKeyValue
+                                  , ChildKeyValue  = vbChildKeyValue
      WHERE ContainerId = inContainerId AND ObjectCostDescId = inObjectCostDescId;
      -- Если не нашли, добавляем
      IF NOT FOUND
      THEN
-         INSERT INTO ContainerObjectCost (ObjectCostDescId, ContainerId, ObjectCostId, KeyValue)
-                                  VALUES (inObjectCostDescId, inContainerId, vbObjectCostId, vbKeyValue);
+         INSERT INTO ContainerObjectCost (ObjectCostDescId, ContainerId, ObjectCostId, KeyValue, MasterKeyValue, ChildKeyValue)
+                                  VALUES (inObjectCostDescId, inContainerId, vbObjectCostId, vbKeyValue, vbMasterKeyValue, vbChildKeyValue);
      END IF;  
 
 -- if vbObjectCostId <> 796 then
@@ -513,10 +524,13 @@ group by tmp.ObjectCostId
  left join ContainerObjectCost on ContainerObjectCost.ObjectCostId = tmp.ObjectCostId
  where ContainerObjectCost.KeyValue <> tmp.KeyValue
 
--- update ContainerObjectCost set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
 
-
--- select * from ContainerObjectCost where coalesce (KeyValue,'') = ''
+-- select * from ContainerObjectCost where coalesce (KeyValue, '') = ''
 -- select KeyValue from (select ObjectCostId, KeyValue from ContainerObjectCost group by ObjectCostId, KeyValue) as tmp group by KeyValue having count (*) > 1
+
+
+-- update ContainerObjectCost set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
+-- select * from ContainerObjectCost where coalesce (MasterKeyValue, 0) = 0 or coalesce (ChildKeyValue, 0) = 0
+-- select MasterKeyValue, ChildKeyValue from (select ObjectCostId, MasterKeyValue, ChildKeyValue from ContainerObjectCost group by ObjectCostId, MasterKeyValue, ChildKeyValue) as tmp group by MasterKeyValue, ChildKeyValue having count (*) > 1
 
 */

@@ -1,6 +1,6 @@
 -- Function: lpInsertFind_Container 
 
--- DROP FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Container(
     IN inContainerDescId         Integer  , -- DescId Остатка
@@ -38,6 +38,8 @@ $BODY$
    DECLARE vbIs_tmp1 Boolean;
 
    DECLARE vbKeyValue TVarChar;
+   DECLARE vbMasterKeyValue BigInt;
+   DECLARE vbChildKeyValue BigInt;
 BEGIN
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
@@ -104,10 +106,18 @@ BEGIN
                          ORDER BY tmp.myOrder2, tmp.myOrder1
                         ) AS tmp
                   );
+     -- !!!определяется еще первый КЛЮЧ!!!
+     vbMasterKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 1 FOR 8));
+     -- !!!определяется еще второй КЛЮЧ!!!
+     vbChildKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 9 FOR 8));
+
 
      BEGIN
-     -- !!!находим СРАЗУ!!!
-     vbContainerId := (SELECT Container.Id FROM Container WHERE Container.KeyValue = vbKeyValue);
+     -- !!!находим СРАЗУ по ключу!!!
+     -- vbContainerId := (SELECT Id FROM Container WHERE KeyValue = vbKeyValue);
+     -- !!!находим СРАЗУ по ДВУМ ключам!!!
+     vbContainerId := (SELECT Id FROM Container WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
+
 
 /*
      -- Если не нашли, находим по старому алгоритму
@@ -509,7 +519,7 @@ BEGIN
           -- !!!Если нашли по старому алгоритму, устанавливаем ключ на будущее!!!
           IF vbContainerId <> 0
           THEN
-              UPDATE Container SET KeyValue = vbKeyValue WHERE Id = vbContainerId;
+              UPDATE Container SET KeyValue = vbKeyValue, MasterKeyValue = vbMasterKeyValue, ChildKeyValue  = vbChildKeyValue WHERE Id = vbContainerId;
           END IF;
 
      END IF; -- if Если не нашли, находим по старому алгоритму
@@ -530,8 +540,8 @@ BEGIN
      IF COALESCE (vbContainerId, 0) = 0
      THEN
          -- добавили Остаток
-         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue)
-                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue)
+         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, MasterKeyValue, ChildKeyValue)
+                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbMasterKeyValue, vbChildKeyValue)
             RETURNING Id INTO vbContainerId;
 
          -- добавили Аналитики
@@ -715,9 +725,13 @@ where Container.Id = tmp.ContainerId
 
  where Container.KeyValue <> tmp.KeyValue
 
--- update Container set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
 
 -- select * from Container where coalesce (KeyValue,'') = ''
 -- select KeyValue from Container group by KeyValue having count (*) > 1
+
+
+-- update Container set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
+-- select * from Container where coalesce (MasterKeyValue, 0) = 0 or coalesce (ChildKeyValue, 0) = 0
+-- select MasterKeyValue, ChildKeyValue from Container group by MasterKeyValue, ChildKeyValue having count (*) > 1
 
 */

@@ -648,7 +648,7 @@ BEGIN
      FROM _tmpItemChild
           JOIN _tmpItemSummChild AS _tmpItemSummChild_find ON _tmpItemSummChild_find.MovementItemId = _tmpItemChild.MovementItemId
           JOIN (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                         , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN _tmpItemChild.UnitId_Item ELSE vbUnitId_To END
+                                                         , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN _tmpItem_group.UnitId_Item ELSE vbUnitId_To END
                                                          , inCarId                  := NULL
                                                          , inMemberId               := vbMemberId_To
                                                          , inBranchId               := vbBranchId_To
@@ -676,6 +676,7 @@ BEGIN
                      , _tmpItem_group.isPartionSumm
                      , _tmpItem_group.PartionGoodsId
                      , _tmpItem_group.AssetId
+                     , _tmpItem_group.UnitId_Item
                 FROM (SELECT _tmpItemChild.BusinessId_To
                            , _tmpItemSummChild.AccountId_To
                            , _tmpItemChild.InfoMoneyDestinationId
