@@ -377,11 +377,9 @@
 			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\GoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyValueTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\PaidKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
@@ -402,9 +400,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\AssetGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AssetTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ReceiptCostTest.pas"/>
-			<DCCReference Include="ReceiptChildTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ReceiptTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

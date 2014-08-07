@@ -22,7 +22,8 @@ type
 
 implementation
 
-uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, JuridicalTest, BankTest;
+uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, JuridicalTest,
+     BankTest, CurrencyTest;
 
 { TdbUnitTest }
 
@@ -67,7 +68,7 @@ var
 begin
   JuridicalId := TJuridical.Create.GetDefault;
   BankId:= TBank.Create.GetDefault;
-  CurrencyId:= TCurrencyTest.Create.GetDefault;
+  CurrencyId:= TCurrency.Create.GetDefault;
 
   result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
   inherited;

@@ -25,7 +25,7 @@ type
 implementation
 
 uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, TestFramework,
-     DBClient, dsdDB, CashTest, dbObjectMeatTest;
+     DBClient, dsdDB, CashTest, dbObjectMeatTest, InfoMoneyTest;
 
 { TIncomeCashJuridical }
 
@@ -70,7 +70,7 @@ begin
   PaidKindId := 0;
   ContractId := 0;
   InfoMoneyId := 0;
-  with TInfoMoneyTest.Create.GetDataSet do begin
+  with TInfoMoney.Create.GetDataSet do begin
      if Locate('Code', '10103', []) then
         InfoMoneyId := FieldByName('Id').AsInteger;
   end;

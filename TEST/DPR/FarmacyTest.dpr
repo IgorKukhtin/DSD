@@ -130,11 +130,9 @@ uses
   CarTest in '..\SOURCE\Objects\All\CarTest.pas',
   ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
   ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
-  GoodsTest in '..\SOURCE\Objects\All\GoodsTest.pas',
   GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
   GoodsKindTest in '..\SOURCE\Objects\All\GoodsKindTest.pas',
   GoodsPropertyTest in '..\SOURCE\Objects\All\GoodsPropertyTest.pas',
-  GoodsPropertyValueTest in '..\SOURCE\Objects\All\GoodsPropertyValueTest.pas',
   JuridicalGroupTest in '..\SOURCE\Objects\All\JuridicalGroupTest.pas',
   PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas',
   PartnerTest in '..\SOURCE\Objects\All\PartnerTest.pas',
@@ -155,9 +153,7 @@ uses
   AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
   AssetTest in '..\SOURCE\Objects\All\AssetTest.pas',
   ReceiptCostTest in '..\SOURCE\Objects\All\ReceiptCostTest.pas',
-  ReceiptChildTest in 'ReceiptChildTest.pas',
-  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
-  ReceiptTest in '..\SOURCE\Objects\All\ReceiptTest.pas';
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

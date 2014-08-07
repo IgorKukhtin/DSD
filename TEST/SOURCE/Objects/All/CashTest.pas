@@ -23,7 +23,7 @@ type
 implementation
 
 uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest, dbObjectMeatTest,
-     BranchTest, BusinessTest;
+     BranchTest, BusinessTest, CurrencyTest;
 
 { TdbUnitTest }
 
@@ -67,7 +67,7 @@ end;
 function TCash.InsertDefault: integer;
 var CurrencyId, BranchId, MainJuridicalId, BusinessId: Integer;
 begin
-  CurrencyId := TCurrencyTest.Create.GetDefault;
+  CurrencyId := TCurrency.Create.GetDefault;
   BranchId := TBranch.Create.GetDefault;
   MainJuridicalId := TJuridical.Create.GetDefault;
   BusinessId := TBusiness.Create.GetDefault;

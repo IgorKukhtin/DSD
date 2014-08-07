@@ -112,7 +112,7 @@ end;
 {==================================}
 
 
-
+(*
  
 procedure TdbObjectTest.Position_Test;
 var Id: integer;
@@ -436,7 +436,7 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
-
+  *)
 initialization
 
   TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);

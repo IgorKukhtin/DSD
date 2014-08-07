@@ -495,7 +495,16 @@ uses
   AccountGroupTest in '..\SOURCE\Objects\All\AccountGroupTest.pas',
   CarTest in '..\SOURCE\Objects\All\CarTest.pas',
   CarModelTest in '..\SOURCE\Objects\All\CarModelTest.pas',
-  PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas';
+  PaidKindTest in '..\SOURCE\Objects\All\PaidKindTest.pas',
+  InfoMoneyDestinationTest in '..\SOURCE\Objects\All\InfoMoneyDestinationTest.pas',
+  InfoMoneyGroupTest in '..\SOURCE\Objects\All\InfoMoneyGroupTest.pas',
+  ProfitLossDirectionTest in '..\SOURCE\Objects\All\ProfitLossDirectionTest.pas',
+  ProfitLossGroupTest in '..\SOURCE\Objects\All\ProfitLossGroupTest.pas',
+  PriceListTest in '..\SOURCE\Objects\All\PriceListTest.pas',
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
+  AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
+  MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
+  PositionTest in '..\SOURCE\Objects\All\PositionTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
