@@ -2,7 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitLeft = -74
   ExplicitWidth = 1072
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -1135,7 +1134,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
-        Name = 'inPartionGoods'
+        Name = 'ioPartionGoods'
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
