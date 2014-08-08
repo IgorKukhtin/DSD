@@ -1,24 +1,19 @@
 inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  ExplicitWidth = 951
-  ExplicitHeight = 767
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 122
-    Height = 252
+    Top = 124
+    Height = 608
     TabOrder = 2
-    ClientRectBottom = 252
+    ExplicitTop = 124
+    ExplicitHeight = 608
+    ClientRectBottom = 604
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 935
-      ExplicitHeight = 228
+      ExplicitHeight = 582
       inherited cxGrid: TcxGrid
-        Width = 935
-        Height = 228
-        ExplicitWidth = 935
-        ExplicitHeight = 228
+        Height = 224
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -77,16 +72,43 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           end
         end
       end
+      inherited cxGridChild: TcxGrid
+        Top = 224
+        ExplicitTop = 224
+        inherited cxGridDBTableViewChild: TcxGridDBTableView
+          object colChildGoodsName: TcxGridDBColumn [1]
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 236
+          end
+          object colChildHeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Width = 60
+          end
+        end
+      end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 935
-      ExplicitHeight = 228
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 929
+      ExplicitHeight = 582
       inherited cxGridEntry: TcxGrid
-        Width = 935
-        Height = 228
-        ExplicitWidth = 935
-        ExplicitHeight = 228
+        Height = 582
+        ExplicitHeight = 582
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -96,101 +118,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
     end
   end
-  inherited cxGridChild: TcxGrid
-    TabOrder = 4
-    inherited cxGridDBTableViewChild: TcxGridDBTableView
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-          Column = ColChildHeadCount
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-          Column = ColChildHeadCount
-        end>
-      object colChildLineNum: TcxGridDBColumn [0]
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'LineNum'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 20
-      end
-      inherited colChildGoodsCode: TcxGridDBColumn
-        Options.Editing = False
-      end
-      inherited colChildGoodsName: TcxGridDBColumn
-        Properties.AutoSelect = False
-      end
-      inherited colChildAmount: TcxGridDBColumn
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      end
-      object ColChildHeadCount: TcxGridDBColumn [8]
-        Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
-        DataBinding.FieldName = 'HeadCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Width = 60
-      end
-      inherited colChildIsErased: TcxGridDBColumn
-        Width = 50
-      end
-    end
-  end
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
+      ExplicitHeight = 24
     end
     object cePartionGoods: TcxTextEdit
       Left = 214
@@ -219,9 +151,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    inherited actGoodsKindChoiceChild: TOpenChoiceForm
-      FormName = 'TGoods_ObjectForm'
-    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionSeparate'
@@ -230,7 +159,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever

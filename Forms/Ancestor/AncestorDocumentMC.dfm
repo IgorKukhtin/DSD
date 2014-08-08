@@ -3,31 +3,32 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 951
-  ExplicitHeight = 767
+  ExplicitWidth = 943
+  ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 120
+    Top = 122
     Width = 935
-    Height = 254
-    ExplicitTop = 120
+    Height = 610
+    ExplicitTop = 122
     ExplicitWidth = 935
-    ExplicitHeight = 254
-    ClientRectBottom = 254
-    ClientRectRight = 935
-    ClientRectTop = 24
+    ExplicitHeight = 610
+    ClientRectBottom = 606
+    ClientRectRight = 931
+    ClientRectTop = 22
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitTop = 24
-      ExplicitWidth = 935
-      ExplicitHeight = 230
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 929
+      ExplicitHeight = 584
       inherited cxGrid: TcxGrid
-        Width = 935
-        Height = 230
-        ExplicitWidth = 935
-        ExplicitHeight = 230
+        Width = 929
+        Height = 226
+        ExplicitWidth = 929
+        ExplicitHeight = 226
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -77,6 +78,127 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           end
         end
       end
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 226
+        Width = 929
+        Height = 358
+        Align = alBottom
+        PopupMenu = PopupMenuChild
+        TabOrder = 1
+        object cxGridDBTableViewChild: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colChildAmount
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colChildGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colChildAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colChildAmountReceipt: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072' 1 '#1082#1091#1090#1077#1088' '
+            DataBinding.FieldName = 'AmountReceipt'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colChildPartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object colChildComment: TcxGridDBColumn
+            Caption = ' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '
+            DataBinding.FieldName = 'Comment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colChildIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'IsErased'
+            Visible = False
+            Width = 60
+          end
+        end
+        object cxGridLevelChild: TcxGridLevel
+          GridView = cxGridDBTableViewChild
+        end
+      end
     end
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
@@ -84,8 +206,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 935
-        Height = 230
+        Width = 929
+        Height = 584
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -254,155 +376,14 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       end
     end
   end
-  object cxGridChild: TcxGrid [1]
-    Left = 0
-    Top = 374
-    Width = 935
-    Height = 358
-    Align = alBottom
-    PopupMenu = PopupMenuChild
-    TabOrder = 5
-    object cxGridDBTableViewChild: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ChildDS
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.Footer = True
-      OptionsView.GroupByBox = False
-      OptionsView.GroupSummaryLayout = gslAlignWithColumns
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.Indicator = True
-      Styles.Inactive = dmMain.cxSelection
-      Styles.Selection = dmMain.cxSelection
-      Styles.Footer = dmMain.cxFooterStyle
-      Styles.Header = dmMain.cxHeaderStyle
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colChildGoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colChildGoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'GoodsName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 236
-      end
-      object colChildGoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsKindName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object colChildAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colChildAmountReceipt: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072' 1 '#1082#1091#1090#1077#1088' '
-        DataBinding.FieldName = 'AmountReceipt'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colChildPartionGoods: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103
-        DataBinding.FieldName = 'PartionGoods'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 103
-      end
-      object colChildComment: TcxGridDBColumn
-        Caption = ' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '
-        DataBinding.FieldName = 'Comment'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-      end
-      object colChildIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'IsErased'
-        Visible = False
-      end
-    end
-    object cxGridLevelChild: TcxGridLevel
-      GridView = cxGridDBTableViewChild
-    end
-  end
-  object DataPanel: TPanel [2]
+  object DataPanel: TPanel [1]
     Left = 0
     Top = 0
     Width = 935
     Height = 94
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 6
+    TabOrder = 5
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -732,6 +713,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     end
     object InsertRecordChild: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       View = cxGridDBTableViewChild
       Action = actGoodsChoiceForm
@@ -740,75 +722,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
-    end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actGoodsKindChoiceChild: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ChildCDS
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ChildCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actGoodsChoiceForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Name = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ChildCDS
-          ComponentItem = 'GoodsId'
-        end
-        item
-          Name = 'Code'
-          Component = ChildCDS
-          ComponentItem = 'GoodsCode'
-        end
-        item
-          Name = 'TextValue'
-          Component = ChildCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
     object actMIChildSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -841,6 +754,33 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actGoodsChoiceForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Name = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'Code'
+          Component = ChildCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'TextValue'
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -892,7 +832,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1627,7 +1567,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   object ChildDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewChild
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
