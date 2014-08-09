@@ -646,8 +646,8 @@ BEGIN
      -- определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSummChild SET ContainerId_To = _tmpItem_byContainer.ContainerId
      FROM _tmpItemChild
-          JOIN _tmpItemSummChild AS _tmpItemSummChild_find ON _tmpItemSummChild_find.MovementItemId = _tmpItemChild.MovementItemId
-          JOIN (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+          -- JOIN _tmpItemSummChild AS _tmpItemSummChild_find ON _tmpItemSummChild_find.MovementItemId = _tmpItemChild.MovementItemId
+             , (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                          , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN _tmpItem_group.UnitId_Item ELSE vbUnitId_To END
                                                          , inCarId                  := NULL
                                                          , inMemberId               := vbMemberId_To
@@ -704,19 +704,20 @@ BEGIN
                              , _tmpItemChild.AssetId
                              , _tmpItemChild.UnitId_Item
                      ) AS _tmpItem_group
-               ) AS _tmpItem_byContainer ON _tmpItem_byContainer.BusinessId_To          = _tmpItemChild.BusinessId_To
-                                        AND _tmpItem_byContainer.AccountId_To           = _tmpItemSummChild_find.AccountId_To
+               ) AS _tmpItem_byContainer -- ON
+     WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
+                                        AND _tmpItem_byContainer.BusinessId_To          = _tmpItemChild.BusinessId_To
+                                        AND _tmpItem_byContainer.AccountId_To           = _tmpItemSummChild.AccountId_To -- _tmpItemSummChild_find.AccountId_To
                                         AND _tmpItem_byContainer.InfoMoneyDestinationId = _tmpItemChild.InfoMoneyDestinationId
                                         AND _tmpItem_byContainer.InfoMoneyId            = _tmpItemChild.InfoMoneyId
-                                        AND _tmpItem_byContainer.InfoMoneyId_Detail_To  = _tmpItemSummChild_find.InfoMoneyId_Detail_To
+                                        AND _tmpItem_byContainer.InfoMoneyId_Detail_To  = _tmpItemSummChild.InfoMoneyId_Detail_To -- _tmpItemSummChild_find.InfoMoneyId_Detail_To
                                         AND _tmpItem_byContainer.ContainerId_GoodsTo    = _tmpItemChild.ContainerId_GoodsTo
                                         AND _tmpItem_byContainer.GoodsId                = _tmpItemChild.GoodsId
                                         AND _tmpItem_byContainer.GoodsKindId            = _tmpItemChild.GoodsKindId
                                         AND _tmpItem_byContainer.isPartionSumm          = _tmpItemChild.isPartionSumm
                                         AND _tmpItem_byContainer.PartionGoodsId         = _tmpItemChild.PartionGoodsId
                                         AND _tmpItem_byContainer.AssetId                = _tmpItemChild.AssetId
-                                        AND _tmpItem_byContainer.UnitId_Item            = _tmpItemChild.UnitId_Item
-     WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
+                                        AND _tmpItem_byContainer.UnitId_Item            = _tmpItemChild.UnitId_Item;
 
 
      -- формируются Проводки для суммового учета - Кому + определяется MIContainer.Id

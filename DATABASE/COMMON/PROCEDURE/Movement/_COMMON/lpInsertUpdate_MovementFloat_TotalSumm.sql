@@ -218,7 +218,7 @@ BEGIN
                              , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
                                -- !!!очень важное кол-во, для него расчет сумм!!!
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI())
+                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                          ELSE MovementItem.Amount
                                     END) AS OperCount_calc
@@ -315,6 +315,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.14                                        * add zc_Movement_SendOnPrice
  19.07.14                                        * add zc_Movement_EDI
  22.05.14                                        * modify - очень важное кол-во, для него расчет сумм
  08.05.14                                        * all
