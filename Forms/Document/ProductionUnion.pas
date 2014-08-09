@@ -18,7 +18,6 @@ type
   TProductionUnionForm = class(TAncestorDocumentMCForm)
     actUpdateChildDS: TdsdUpdateDataSet;
     colCount: TcxGridDBColumn;
-    colChildLineNum: TcxGridDBColumn;
     colLineNum: TcxGridDBColumn;
     colPartionClose: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
@@ -27,7 +26,10 @@ type
     colCuterCount: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colReceiptName: TcxGridDBColumn;
-    colPartionGoodsDate: TcxGridDBColumn;
+    actGoodsKindChoiceChild: TOpenChoiceForm;
+    actGoodsKindChoiceMaster: TOpenChoiceForm;
+    colChildGoodsName: TcxGridDBColumn;
+    colChildGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

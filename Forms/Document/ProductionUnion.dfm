@@ -1,24 +1,26 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1030
-  ExplicitLeft = 3
   ExplicitWidth = 1038
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 124
     Width = 1030
-    Height = 250
+    Height = 608
     TabOrder = 2
     ExplicitTop = 124
-    ExplicitHeight = 250
-    ClientRectBottom = 246
+    ExplicitWidth = 1030
+    ExplicitHeight = 608
+    ClientRectBottom = 604
     ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 224
+      ExplicitWidth = 1024
+      ExplicitHeight = 582
       inherited cxGrid: TcxGrid
         Width = 1024
         Height = 224
+        ExplicitWidth = 1024
         ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -143,13 +145,62 @@ inherited ProductionUnionForm: TProductionUnionForm
           end
         end
       end
+      inherited cxGridChild: TcxGrid
+        Top = 224
+        Width = 1024
+        ExplicitTop = 224
+        ExplicitWidth = 1024
+        inherited cxGridDBTableViewChild: TcxGridDBTableView
+          object colChildGoodsName: TcxGridDBColumn [1]
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 236
+          end
+          inherited colChildAmountReceipt: TcxGridDBColumn
+            Visible = True
+          end
+          inherited colChildPartionGoods: TcxGridDBColumn
+            Visible = True
+          end
+          inherited colChildComment: TcxGridDBColumn
+            Visible = True
+          end
+          object colChildGoodsKindName: TcxGridDBColumn [6]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoiceChild
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+        end
+      end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitHeight = 224
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1024
+      ExplicitHeight = 582
       inherited cxGridEntry: TcxGrid
         Width = 1024
-        Height = 224
-        ExplicitHeight = 224
+        Height = 582
+        ExplicitWidth = 1024
+        ExplicitHeight = 582
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -159,136 +210,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
     end
   end
-  inherited cxGridChild: TcxGrid
-    Width = 1030
-    TabOrder = 4
-    inherited cxGridDBTableViewChild: TcxGridDBTableView
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colChildAmount
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Kind = skSum
-        end
-        item
-          Format = ',0.####;-,0.####; ;'
-          Kind = skSum
-        end>
-      OptionsBehavior.GoToNextCellOnEnter = True
-      OptionsBehavior.FocusCellOnCycle = True
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsCustomize.DataRowSizing = True
-      object colChildLineNum: TcxGridDBColumn [0]
-        Caption = #8470' '#1087'/'#1087
-        DataBinding.FieldName = 'LineNum'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 20
-      end
-      inherited colChildGoodsCode: TcxGridDBColumn
-        Options.Editing = False
-      end
-      inherited colChildGoodsName: TcxGridDBColumn
-        Properties.AutoSelect = False
-        Properties.Buttons = <
-          item
-            Action = actGoodsChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-      end
-      inherited colChildPartionGoods: TcxGridDBColumn [3]
-        Visible = True
-        Width = 60
-      end
-      object colPartionGoodsDate: TcxGridDBColumn [4]
-        Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1076#1072#1090#1072')'
-        DataBinding.FieldName = 'PartionGoodsDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      inherited colChildAmount: TcxGridDBColumn
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      end
-      inherited colChildAmountReceipt: TcxGridDBColumn
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = True
-        Width = 60
-      end
-      inherited colChildComment: TcxGridDBColumn [7]
-      end
-      inherited colChildIsErased: TcxGridDBColumn [8]
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      inherited colChildGoodsKindName: TcxGridDBColumn [9]
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actGoodsKindChoiceChild
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Visible = True
-        Width = 60
-      end
-    end
-  end
   inherited DataPanel: TPanel
     Width = 1030
     Height = 96
+    ExplicitWidth = 1030
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 24
+    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -305,12 +234,47 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    inherited actGoodsKindChoiceChild: TOpenChoiceForm
-      FormNameParam.Name = 'TGoodsKindForm'
-    end
-    inherited actGoodsChoiceForm: TOpenChoiceForm
-      FormName = 'TGoods_ObjectForm'
+    object actGoodsKindChoiceChild: TOpenChoiceForm [21]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited spSelect: TdsdStoredProc

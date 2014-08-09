@@ -21,9 +21,9 @@ type
     cxLabel10: TcxLabel;
     actUpdateChildDS: TdsdUpdateDataSet;
     colHeadCount: TcxGridDBColumn;
-    ColChildHeadCount: TcxGridDBColumn;
-    colChildLineNum: TcxGridDBColumn;
     colLineNum: TcxGridDBColumn;
+    colChildGoodsName: TcxGridDBColumn;
+    colChildHeadCount: TcxGridDBColumn;
   private
     { Private declarations }
   public
