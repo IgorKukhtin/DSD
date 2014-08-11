@@ -51,7 +51,9 @@ BEGIN
          , Object_Personal_View.isErased
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
-     WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
+     WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL
+        OR vbAccessKeyAll = TRUE
+        OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
     ;
   
 END;
@@ -63,6 +65,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.08.14                                        * add 8429 -- Отдел логистики
  21.05.14                         * add Official
  14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View

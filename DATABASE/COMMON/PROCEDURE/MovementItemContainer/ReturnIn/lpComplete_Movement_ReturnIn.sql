@@ -572,6 +572,42 @@ BEGIN
        FROM _tmpItemSumm
        WHERE _tmpItemSumm.OperSumm <> 0;
 
+     -- 1.3.2. !!!Виртуальные контейнеры!!!
+     PERFORM lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                               , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN 0 ELSE vbUnitId_To END
+                                               , inCarId                  := NULL
+                                               , inMemberId               := vbMemberId_To
+                                               , inBranchId               := vbBranchId_To
+                                               , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                               , inBusinessId             := _tmpItem.BusinessId_To
+                                               , inAccountId              := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                                                                        , inAccountDirectionId     := vbAccountDirectionId_To
+                                                                                                        , inInfoMoneyDestinationId := CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                                                                                                                                             OR (vbAccountDirectionId_From = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                                                                                                                             OR (vbAccountDirectionId_From = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
+                                                                                                                                                THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                                                                                                                                           WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                                                THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                                           ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                                                      END
+                                                                                                        , inInfoMoneyId            := NULL
+                                                                                                        , inUserId                 := inUserId
+                                                                                                         )
+                                               , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                               , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                               , inInfoMoneyId_Detail     := _tmpItem.InfoMoneyId
+                                               , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                               , inGoodsId                := _tmpItem.GoodsId
+                                               , inGoodsKindId            := _tmpItem.GoodsKindId
+                                               , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                               , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                               , inAssetId                := _tmpItem.AssetId
+                                                )
+     FROM _tmpItem
+          LEFT JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+     WHERE _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+       AND _tmpItemSumm.MovementItemId IS NULL;
+
 
      -- 2.1. создаем контейнеры для Проводки - Прибыль
      UPDATE _tmpItemSumm SET ContainerId_ProfitLoss_40208 = _tmpItem_byDestination.ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с1 - с/с2)
@@ -1163,6 +1199,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.08.14                                        * add !!!Виртуальные контейнеры!!!
  22.07.14                                        * add ...Price
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
