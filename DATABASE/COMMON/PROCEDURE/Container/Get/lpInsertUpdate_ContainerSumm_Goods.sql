@@ -190,7 +190,7 @@ BEGIN
                                                                 , inDescId_4   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_4 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                                 , inDescId_5   := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_5 := inGoodsKindId
+                                                                , inObjectId_5 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
                                                                 , inDescId_6   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_6 := inInfoMoneyId
                                                                  )
@@ -206,7 +206,7 @@ BEGIN
                                                            , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                            , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                            , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
-                                                           , inObjectId_3 := inGoodsKindId
+                                                           , inObjectId_3 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
                                                            , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                            , inObjectId_4 := inInfoMoneyId_Detail
                                                            , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
