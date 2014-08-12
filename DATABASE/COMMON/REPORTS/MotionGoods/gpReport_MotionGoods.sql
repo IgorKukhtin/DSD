@@ -30,6 +30,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , CountReturnIn TFloat
              , CountLoss TFloat
              , CountInventory TFloat
+             , CountProductionIn TFloat
+             , CountProductionOut TFloat
+             , CountTotalIn TFloat
+             , CountTotalOut TFloat
 
              , SummStart TFloat
              , SummEnd TFloat
@@ -43,6 +47,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , SummReturnIn TFloat
              , SummLoss TFloat
              , SummInventory TFloat
+             , SummProductionIn TFloat
+             , SummProductionOut TFloat
+             , SummTotalIn TFloat
+             , SummTotalOut TFloat
 
              , PriceStart TFloat
              , PriceEnd TFloat
@@ -56,6 +64,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , PriceReturnIn TFloat
              , PriceLoss TFloat
              , PriceInventory TFloat
+             , PriceProductionIn TFloat
+             , PriceProductionOut TFloat
+             , PriceTotalIn TFloat
+             , PriceTotalOut TFloat
 
                )
 AS

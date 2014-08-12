@@ -2,6 +2,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
+  ExplicitLeft = -126
   ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -405,6 +406,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object colIsEDI: TcxGridDBColumn
+            Caption = 'EDI'
+            DataBinding.FieldName = 'isEDI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 30
           end
         end
       end

@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumber_Master TVarChar, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar
+             , isEDI Boolean
+             , isElectron Boolean
               )
 AS
 $BODY$
@@ -89,6 +91,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+
+           , COALESCE(MovementLinkMovement_Tax.MovementId, 0) <> 0           AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
@@ -197,6 +202,13 @@ BEGIN
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                           ON MovementLinkMovement_Tax.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+
            ;
 
 END;
@@ -207,6 +219,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.08.14                                        * add isEDI and isElectron
  03.05.14                                        * add ContractTagName
  01.05.14                                        * InvNumber, InvNumberPartner is Integer
  24.04.14                                                        * add zc_MovementString_InvNumberBranch

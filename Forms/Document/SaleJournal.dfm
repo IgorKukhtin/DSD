@@ -2,8 +2,8 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -401,20 +401,6 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colChecked: TcxGridDBColumn
-            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
-            DataBinding.FieldName = 'Checked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 36
-          end
-          object colCOMDOC: TcxGridDBColumn
-            Caption = 'EDI'
-            DataBinding.FieldName = 'isCOMDOC'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 28
-          end
           object colCurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
             DataBinding.FieldName = 'CurrencyValue'
@@ -432,6 +418,21 @@ inherited SaleJournalForm: TSaleJournalForm
             DataBinding.FieldName = 'CurrencyPartnerName'
             HeaderAlignmentVert = vaCenter
             Width = 54
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 36
+          end
+          object colIsEDI: TcxGridDBColumn
+            Caption = 'EDI'
+            DataBinding.FieldName = 'isEDI'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
           end
         end
       end
