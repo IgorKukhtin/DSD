@@ -190,7 +190,7 @@ BEGIN
                                                                 , inDescId_4   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_4 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                                 , inDescId_5   := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_5 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
+                                                                , inObjectId_5 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                                 , inDescId_6   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_6 := inInfoMoneyId
                                                                  )
@@ -206,7 +206,7 @@ BEGIN
                                                            , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                            , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                            , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
-                                                           , inObjectId_3 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
+                                                           , inObjectId_3 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                            , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                            , inObjectId_4 := inInfoMoneyId_Detail
                                                            , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
@@ -227,7 +227,7 @@ BEGIN
                                              , inDescId_4   := CASE WHEN inMemberId <> 0 THEN zc_ObjectCostLink_Member() ELSE zc_ObjectCostLink_Unit() END
                                              , inObjectId_4 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                              , inDescId_5   := zc_ObjectCostLink_GoodsKind()
-                                             , inObjectId_5 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN inGoodsKindId ELSE 0 END
+                                             , inObjectId_5 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                              , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                              , inObjectId_6 := inInfoMoneyId
                                              , inDescId_7   := zc_ObjectCostLink_Account()
@@ -248,7 +248,7 @@ BEGIN
                                              , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ObjectCostLink_Member() ELSE zc_ObjectCostLink_Unit() END
                                              , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                              , inDescId_3   := zc_ObjectCostLink_GoodsKind()
-                                             , inObjectId_3 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN inGoodsKindId ELSE 0 END
+                                             , inObjectId_3 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                              , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
                                              , inObjectId_4 := inInfoMoneyId_Detail
                                              , inDescId_5   := zc_ObjectCostLink_InfoMoney()

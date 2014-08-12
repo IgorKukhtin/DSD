@@ -19,6 +19,7 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId_From Integer;
   DECLARE vbMemberId_From Integer;
+  DECLARE vbBranchId_From Integer;
   DECLARE vbAccountDirectionId_From Integer;
   DECLARE vbIsPartionDate_Unit_From Boolean;
   DECLARE vbJuridicalId_Basis_From Integer;
@@ -41,6 +42,7 @@ BEGIN
      SELECT Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS vbIsPartionDate_Unit_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_From
@@ -58,7 +60,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
-            INTO vbOperDate, vbUnitId_From, vbMemberId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
+            INTO vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -76,6 +78,10 @@ BEGIN
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
+                               ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                              AND Object_To.DescId = zc_Object_Unit()
           LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
                                ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
@@ -448,6 +454,7 @@ BEGIN
                                                                                          , inIsPartionCount         := _tmpItemChild.isPartionCount
                                                                                          , inPartionGoodsId         := _tmpItemChild.PartionGoodsId
                                                                                          , inAssetId                := _tmpItemChild.AssetId
+                                                                                         , inBranchId               := vbBranchId_From
                                                                                           );
      -- определяется ContainerId_GoodsTo для Master(приход)-элементы количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsTo = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
@@ -460,6 +467,7 @@ BEGIN
                                                                                   , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                   , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                   , inAssetId                := _tmpItem.AssetId
+                                                                                  , inBranchId               := vbBranchId_To
                                                                                    );
 
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках, здесь ObjectCostId только для теста
@@ -692,6 +700,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.14                                        * add inBranchId :=
  05.08.14                                        * add UnitId_Item and ...
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member

@@ -517,6 +517,7 @@ BEGIN
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := vbBranchId_To
                                                                                  );
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -573,7 +574,7 @@ BEGIN
        WHERE _tmpItemSumm.OperSumm <> 0;
 
      -- 1.3.3. !!!Виртуальные контейнеры!!!
-     /*PERFORM lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+     PERFORM lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN 0 ELSE vbUnitId_To END
                                                , inCarId                  := NULL
                                                , inMemberId               := vbMemberId_To
@@ -606,7 +607,7 @@ BEGIN
      FROM _tmpItem
           LEFT JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
      WHERE _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
-       AND _tmpItemSumm.MovementItemId IS NULL;*/
+       AND _tmpItemSumm.MovementItemId IS NULL;
 
 
      -- 2.1. создаем контейнеры для Проводки - Прибыль
@@ -1199,6 +1200,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.08.14                                        * add inBranchId :=
+ 12.08.14                                        * add !!!Виртуальные контейнеры!!!
  22.07.14                                        * add ...Price
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol

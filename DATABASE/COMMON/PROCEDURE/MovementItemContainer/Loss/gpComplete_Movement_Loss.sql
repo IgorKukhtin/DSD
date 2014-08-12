@@ -225,6 +225,7 @@ BEGIN
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := vbBranchId
                                                                                  );
      -- 1.1.2. ôîðìèðóþòñÿ Ïðîâîäêè äëÿ êîëè÷åñòâåííîãî ó÷åòà
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -447,6 +448,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
