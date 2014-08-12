@@ -1122,6 +1122,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1136,6 +1137,19 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'ReportType'
+          Value = '0'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
