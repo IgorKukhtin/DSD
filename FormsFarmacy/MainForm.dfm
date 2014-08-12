@@ -2,8 +2,8 @@ inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
   ClientHeight = 151
   ClientWidth = 689
-  ExplicitWidth = 705
-  ExplicitHeight = 190
+  ExplicitWidth = 697
+  ExplicitHeight = 178
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
@@ -12,7 +12,7 @@ inherited MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -166,8 +166,10 @@ inherited MainForm: TMainForm
       Category = 0
     end
     object bbBranch: TdxBarButton [12]
-      Action = actExtraChargeCategories
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
       Category = 0
+      Hint = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
+      Visible = ivAlways
     end
     object bbIncome: TdxBarButton [13]
       Action = actIncome
@@ -225,8 +227,10 @@ inherited MainForm: TMainForm
         end>
     end
     object bbExtraChargeCategories: TdxBarButton [25]
-      Action = actExtraChargeCategories
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
       Category = 0
+      Hint = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
+      Visible = ivAlways
     end
     object bbLoad: TdxBarSubItem
       Caption = #1047#1072#1075#1088#1091#1079#1082#1080
@@ -364,17 +368,6 @@ inherited MainForm: TMainForm
       Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       FormName = 'TMeasureForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actExtraChargeCategories: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
-      Hint = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
-      FormName = 'TExtraChargeCategoriesForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>
@@ -641,8 +634,8 @@ inherited MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = 'actAlternativeGoodsCode'
-      FormName = 'AlternativeGoodsCodeForm'
-      FormNameParam.Value = 'AlternativeGoodsCodeForm'
+      FormName = 'TAlternativeGoodsCodeForm'
+      FormNameParam.Value = 'TAlternativeGoodsCodeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

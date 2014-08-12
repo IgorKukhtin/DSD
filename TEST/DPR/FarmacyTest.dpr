@@ -153,7 +153,8 @@ uses
   AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
   AssetTest in '..\SOURCE\Objects\All\AssetTest.pas',
   ReceiptCostTest in '..\SOURCE\Objects\All\ReceiptCostTest.pas',
-  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas';
+  CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
+  RetailTest in '..\SOURCE\Objects\All\RetailTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -146,10 +146,16 @@ BEGIN
 
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
 
+           , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
+
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementId = inMovementId
+                                           ON MovementLinkMovement_Sale.MovementId = inMovementId 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
                                    ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId

@@ -74,18 +74,29 @@ BEGIN
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
+             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
              LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
              LEFT JOIN ObjectString AS ObjectString_Article
                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+
+             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -96,6 +107,7 @@ BEGIN
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
+             , tmpObject_GoodsPropertyValue.ArticleGLN
         FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -183,6 +195,8 @@ BEGIN
            , Object_Measure.ValueData                               AS MeasureName
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MovementItem.Amount
@@ -211,8 +225,30 @@ BEGIN
            , COALESCE (MovementString_InvNumberPartner_ReturnIn.ValueData, Movement_ReturnIn.InvNumber) AS InvNumberPartner_ReturnIn
 --           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
 
+           , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
+           , MovementDate_OperDatePartnerEDI.ValueData     AS OperDatePartnerEDI
+           , COALESCE(MovementLinkMovement_ChildEDI.MovementChildId, 0) AS EDIId
+           , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
+
 
        FROM tmpMovement
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                           ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id 
+                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
+                                   ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
+                                  AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartnerEDI
+                                     ON MovementString_InvNumberPartnerEDI.MovementId =  MovementLinkMovement_ChildEDI.MovementChildId
+                                    AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
+
             INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE

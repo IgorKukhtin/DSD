@@ -167,15 +167,16 @@ BEGIN
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))))
 
                  -- âîò òàê "íå ïğîñòî" âûáèğàåì ôèëèàë
-                 LEFT JOIN (SELECT MAX (MovementItemReport.MovementItemId) AS MovementItemId, ReportContainerLink.ContainerId
+                 /*LEFT JOIN (SELECT MAX (MovementItemReport.MovementItemId) AS MovementItemId, ReportContainerLink.ContainerId
                             FROM MovementItemReport
                                  JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MovementItemReport.ReportContainerId
                                                          AND ReportContainerLink.AccountId = zc_Enum_Account_100301()
                             WHERE MovementItemReport.MovementId = inMovementId
                             GROUP BY ReportContainerLink.ContainerId
-                           ) AS MIReport_MI ON MIReport_MI.ContainerId = MovementItemContainer.ContainerId
+                           ) AS MIReport_MI ON MIReport_MI.ContainerId = MovementItemContainer.ContainerId*/
+                 -- âîò òàê "ïğîñòî" âûáèğàåì ôèëèàë
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                  ON MILinkObject_Branch.MovementItemId = MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
+                                                  ON MILinkObject_Branch.MovementItemId = MovementItemContainer.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
                                                  AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
                  LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
 
@@ -283,6 +284,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 10.08.14                                        * add âîò òàê "ïğîñòî" âûáèğàåì ôèëèàë
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  13.01.14                                        * add Branch : âîò òàê "íå ïğîñòî" âûáèğàåì ôèëèàë
  21.12.13                                        * Personal -> Member

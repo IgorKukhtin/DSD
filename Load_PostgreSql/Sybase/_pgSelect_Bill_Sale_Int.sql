@@ -1,4 +1,4 @@
--- Int
+-- Int - BN
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
@@ -88,7 +88,7 @@ begin
         and Bill.BillDate >= zc_def_StartDate_PG() - 2
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and (Bill.MoneyKindId = zc_mkBN())-- or isnull(Bill.Id_Postgres,0) <> 0)
         and BillItems.GoodsPropertyId is null
       group by Bill.Id, Bill.BillDate, isnull (_toolsView_Client_isChangeDate.addDay, 0)
       ) as tmp
@@ -158,7 +158,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(), zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and (Bill.MoneyKindId = zc_mkBN()) -- or isnull(Bill.Id_Postgres,0) <> 0)
         and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
         and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
 --       and Bill.BillNumber = 1635
@@ -182,7 +182,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and (Bill.MoneyKindId = zc_mkBN()) -- or isnull(Bill.Id_Postgres,0) <> 0)
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
       group by Bill.Id
@@ -221,7 +221,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       where Bill.BillDate between @inStartDate and @inEndDate
         -- and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSendUnitToUnit())
-        and (Bill.MoneyKindId = zc_mkBN() /*or isnull(Bill.Id_Postgres,0) <> 0*/)
+        and (Bill.MoneyKindId = zc_mkBN()) --  or isnull(Bill.Id_Postgres,0) <> 0)
         and isUnit.UnitId is null
       group by Bill.Id
      ) as Bill_find

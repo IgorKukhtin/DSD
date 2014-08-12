@@ -15,7 +15,9 @@ $BODY$BEGIN
   DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE MovementId = inId);
   DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE MovementId = inId);
   DELETE FROM MovementItem WHERE MovementId = inId;
+  DELETE FROM MovementLinkMovement WHERE MovementChildId = inId;
   DELETE FROM MovementLinkObject WHERE MovementId = inId;
+  DELETE FROM MovementBLOB WHERE MovementId = inId;
   DELETE FROM MovementString WHERE MovementId = inId;
   DELETE FROM MovementDate WHERE MovementId = inId;
   DELETE FROM MovementFloat WHERE MovementId = inId;

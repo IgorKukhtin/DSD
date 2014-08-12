@@ -1296,6 +1296,18 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inInvNumberSaleLink'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDateSaleLink'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inOKPO'
         Value = Null
         DataType = ftString
@@ -1566,7 +1578,7 @@ inherited EDIJournalForm: TEDIJournalForm
       item
         Name = 'inMovementId'
         Component = MasterCDS
-        ComponentItem = 'MovementId_Tax'
+        ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end
       item

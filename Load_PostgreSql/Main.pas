@@ -1099,25 +1099,21 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_ReturnOutNal;
      if not fStop then pLoadDocumentItem_ReturnOutNal(myRecordCount1);
 
-     if not fStop then myRecordCount1:=pLoadDocument_Sale;
-     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
-     if not fStop then myRecordCount1:=pLoadDocument_SaleNal;
-     if not fStop then pLoadDocumentItem_SaleNal(myRecordCount1);
-
-     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
-     if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
-     if not fStop then myRecordCount1:=pLoadDocument_ReturnInNal;
-     if not fStop then pLoadDocumentItem_ReturnInNal(myRecordCount1);
-
-     if not fStop then myRecordCount1:=pLoadDocument_Tax_Int;
-     if not fStop then pLoadDocumentItem_Tax_Int(myRecordCount1);
-
      if not fStop then myRecordCount1:=pLoadDocument_SendUnit;
      if not fStop then pLoadDocumentItem_SendUnit(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_SendPersonal;
      if not fStop then pLoadDocumentItem_SendPersonal(myRecordCount1);
      if not fStop then myRecordCount1:=pLoadDocument_SendUnitBranch;
      if not fStop then pLoadDocumentItem_SendUnitBranch(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_Sale;
+     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
+     if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_Tax_Int;
+     if not fStop then pLoadDocumentItem_Tax_Int(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ProductionUnion;
      if not fStop then myRecordCount2:=pLoadDocumentItem_ProductionUnionMaster(myRecordCount1);
@@ -1134,6 +1130,12 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Zakaz;
      if not fStop then pLoadDocumentItem_Zakaz(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_SaleNal;
+     if not fStop then pLoadDocumentItem_SaleNal(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnInNal;
+     if not fStop then pLoadDocumentItem_ReturnInNal(myRecordCount1);
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -1184,6 +1186,7 @@ begin
     +'      , tmpAll.MovementItemId'
     +'      , tmpAll.GoodsId'
     +'      , tmpAll.Price'
+    +'      , tmpAll.OperDate'
     +' FROM (SELECT MovementId'
     +'            , InvNumber'
 //    +'            , DATE_TRUNC ('DAY', OperDate) AS OperDate'
@@ -1245,6 +1248,7 @@ begin
     +'        , tmpAll.MovementItemId'
     +'        , tmpAll.GoodsId'
     +'        , tmpAll.Price'
+    +'        , tmpAll.OperDate'
     +' HAVING SUM (tmpAll.AmountPartner) <> SUM (tmpAll.AmountPartnerNew)'
     +') AS tmp'
     );
@@ -10338,7 +10342,7 @@ begin
            +'      from dba.Bill'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSaleToClient())'
-           +'        and Bill.Id_Postgres>0'
+           +'        and Bill.MoneyKindId = zc_mkBN()' // Bill.Id_Postgres>0
            +'     union all'
            +'      select Bill.*'
            +'      from dba.Bill'

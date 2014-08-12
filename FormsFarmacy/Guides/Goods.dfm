@@ -9,11 +9,11 @@ inherited GoodsForm: TGoodsForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 782
-    Height = 395
+    Height = 397
     ExplicitWidth = 782
     ExplicitHeight = 397
-    ClientRectBottom = 391
-    ClientRectRight = 778
+    ClientRectBottom = 397
+    ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
       ExplicitHeight = 397
@@ -71,6 +71,7 @@ inherited GoodsForm: TGoodsForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 177
           end
           object clisErased: TcxGridDBColumn
@@ -87,6 +88,7 @@ inherited GoodsForm: TGoodsForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
@@ -127,6 +129,12 @@ inherited GoodsForm: TGoodsForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        ParamType = ptInput
+      end>
     Left = 144
     Top = 88
   end
@@ -134,7 +142,7 @@ inherited GoodsForm: TGoodsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
 end

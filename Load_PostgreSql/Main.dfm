@@ -1639,7 +1639,7 @@ object MainForm: TMainForm
   object fromADOConnection: TADOConnection
     ConnectionString = 
       'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
-      ';User ID=dba;Data Source=v9ProfiMeatingDS'
+      ';User ID=dba_adm;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 344

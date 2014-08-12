@@ -47,7 +47,7 @@ BEGIN
               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                     AND MovementDate_OperDatePartner.ValueData = inPartnerOperDate
+                                     AND MovementDate_OperDatePartner.ValueData BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
               INNER JOIN Movement ON Movement.Id = MovementString_InvNumberOrder.MovementId
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  AND Movement.DescId = zc_Movement_Sale()
@@ -100,7 +100,7 @@ BEGIN
               INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberPartner.MovementId
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                     AND MovementDate_OperDatePartner.ValueData = inPartnerOperDate
+                                     AND MovementDate_OperDatePartner.ValueData BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
               INNER JOIN Movement ON Movement.Id = MovementString_InvNumberPartner.MovementId
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  AND Movement.DescId = zc_Movement_ReturnIn()
