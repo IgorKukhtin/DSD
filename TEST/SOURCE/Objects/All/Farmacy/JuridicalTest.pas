@@ -34,7 +34,9 @@ uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB;
 
 procedure TJuridicalTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\Juridical\';
+  ScriptDirectory := LocalProcedurePath + 'OBJECTS\Juridical\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTHISTORY\JuridicalDetails\';
   inherited;
 end;
 
