@@ -26,7 +26,7 @@ BEGIN
 
      -- сохранили расчетные параметры
      vbGoodsPropertyId:= (SELECT lpUpdate_Movement_EDIComdoc_Params (inMovementId      := Movement.Id
-                                                                   , inSaleOperDate    := MovementDate_OperDatePartner.ValueData
+                                                                   , inPartnerOperDate := MovementDate_OperDatePartner.ValueData
                                                                    , inPartnerInvNumber:= MovementString_InvNumberPartner.ValueData
                                                                    , inOrderInvNumber  := Movement.InvNumber
                                                                    , inOKPO            := MovementString_OKPO.ValueData

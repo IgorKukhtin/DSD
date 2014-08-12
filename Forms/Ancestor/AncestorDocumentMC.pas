@@ -41,16 +41,6 @@ type
     spGetTotalSumm: TdsdStoredProc;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
-    cxGridChild: TcxGrid;
-    cxGridDBTableViewChild: TcxGridDBTableView;
-    colChildGoodsCode: TcxGridDBColumn;
-    colChildGoodsName: TcxGridDBColumn;
-    colChildGoodsKindName: TcxGridDBColumn;
-    colChildAmount: TcxGridDBColumn;
-    colChildAmountReceipt: TcxGridDBColumn;
-    colChildPartionGoods: TcxGridDBColumn;
-    colChildComment: TcxGridDBColumn;
-    cxGridLevelChild: TcxGridLevel;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
     spInsertMaskMIChild: TdsdStoredProc;
@@ -73,7 +63,6 @@ type
     colAmount: TcxGridDBColumn;
     bbAddChild: TdxBarButton;
     InsertRecordChild: TInsertRecord;
-    actGoodsChoiceForm: TOpenChoiceForm;
     actMIChildSetErased: TdsdUpdateErased;
     actMIChildSetUnErased: TdsdUpdateErased;
     bbErasedChild: TdxBarButton;
@@ -88,9 +77,16 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     ChildDBViewAddOn: TdsdDBViewAddOn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    colChildGoodsCode: TcxGridDBColumn;
+    colChildAmount: TcxGridDBColumn;
+    colChildAmountReceipt: TcxGridDBColumn;
+    colChildPartionGoods: TcxGridDBColumn;
+    colChildComment: TcxGridDBColumn;
     colChildIsErased: TcxGridDBColumn;
-    actGoodsKindChoiceChild: TOpenChoiceForm;
-    actGoodsKindChoiceMaster: TOpenChoiceForm;
+    cxGridLevelChild: TcxGridLevel;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
