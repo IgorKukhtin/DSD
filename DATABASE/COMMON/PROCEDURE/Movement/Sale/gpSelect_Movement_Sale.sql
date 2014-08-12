@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
-             , isCOMDOC Boolean
+             , isEDI Boolean
              , isError Boolean
               )
 AS
@@ -102,7 +102,9 @@ BEGIN
            , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) <> 0 AS isCOMDOC
+
+           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) <> 0 AS isEDI
+
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
@@ -260,7 +262,7 @@ BEGIN
                                                      AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
             ;
 
@@ -272,6 +274,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.08.14                                        * add isEDI
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner

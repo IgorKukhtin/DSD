@@ -81,7 +81,7 @@ type
     colIsError: TcxGridDBColumn;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
-    colCOMDOC: TcxGridDBColumn;
+    colIsEDI: TcxGridDBColumn;
     spChecked: TdsdStoredProc;
     bbspChecked: TdxBarButton;
     actChecked: TdsdExecStoredProc;

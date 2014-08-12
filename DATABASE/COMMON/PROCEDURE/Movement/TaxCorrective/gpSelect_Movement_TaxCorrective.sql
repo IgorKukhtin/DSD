@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar
+             , isEDI Boolean
+             , isElectron Boolean
               )
 AS
 $BODY$
@@ -106,6 +108,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+
+           , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -240,6 +245,12 @@ BEGIN
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                           ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
            ;
 
 END;
@@ -250,6 +261,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.08.14                                        * add isEDI and isElectron
  30.07.14                                        * add DocumentValue
  03.05.14                                        * add ContractTagName
  01.05.14                                        * InvNumber, InvNumberPartner, InvNumberPartner_Child is Integer

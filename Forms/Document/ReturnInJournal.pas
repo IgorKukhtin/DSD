@@ -87,6 +87,7 @@ type
     colCurrencyValue: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
+    colIsEDI: TcxGridDBColumn;
   private
     { Private declarations }
   public

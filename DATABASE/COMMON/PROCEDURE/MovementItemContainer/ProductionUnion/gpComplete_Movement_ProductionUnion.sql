@@ -81,7 +81,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                              AND Object_To.DescId = zc_Object_Unit()
+                              AND Object_From.DescId = zc_Object_Unit()
           LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
                                ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
