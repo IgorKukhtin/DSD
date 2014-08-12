@@ -1,15 +1,14 @@
 -- Function: gpSelect_Object_AlternativeGoodsCode(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_AlternativeGoodsCode(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_AlternativeGoodsCode(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_AlternativeGoodsCode(
     IN inRetailId    Integer,       -- Торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , GoodsMainId Integer, GoodsMainName TVarChar                
-             , GoodsId Integer, GoodsName TVarChar    
-             , isErased boolean
+             , GoodsMainId Integer             
+             , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar    
              ) AS
 $BODY$
 BEGIN
@@ -20,8 +19,7 @@ BEGIN
      SELECT 
            Object_AlternativeGoodsCode.Id        AS Id
                                                         
-         , Object_GoodsMain.Id        AS GoodsMainId
-         , Object_GoodsMain.ValueData AS GoodsMainName
+         , ObjectLink_AlternativeGoodsCode_GoodsMain.ChildObjectId  AS GoodsMainId
 
          , Object_Goods.Id            AS GoodsId
          , Object_Goods.ValueData     AS GoodsName
@@ -30,23 +28,21 @@ BEGIN
          
      FROM Object AS Object_AlternativeGoodsCode
      
-          LEFT JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_GoodsMain
-                               ON ObjectLink_AlternativeGoodsCode_GoodsMain.ObjectId = Object_AlternativeGoodsCode.Id
-                              AND ObjectLink_AlternativeGoodsCode_GoodsMain.DescId = zc_ObjectLink_AlternativeGoodsCode_GoodsMain()
-          LEFT JOIN Object AS Object_GoodsMain ON Object_GoodsMain.Id = ObjectLink_AlternativeGoodsCode_GoodsMain.ChildObjectId
+          JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_GoodsMain
+                          ON ObjectLink_AlternativeGoodsCode_GoodsMain.ObjectId = Object_AlternativeGoodsCode.Id
+                         AND ObjectLink_AlternativeGoodsCode_GoodsMain.DescId = zc_ObjectLink_AlternativeGoodsCode_GoodsMain()
  
-          LEFT JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_Goods
-                               ON ObjectLink_AlternativeGoodsCode_Goods.ObjectId = Object_AlternativeGoodsCode.Id
-                              AND ObjectLink_AlternativeGoodsCode_Goods.DescId = zc_ObjectLink_AlternativeGoodsCode_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_AlternativeGoodsCode_Goods.ChildObjectId
+          JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_Goods
+                          ON ObjectLink_AlternativeGoodsCode_Goods.ObjectId = Object_AlternativeGoodsCode.Id
+                         AND ObjectLink_AlternativeGoodsCode_Goods.DescId = zc_ObjectLink_AlternativeGoodsCode_Goods()
+          JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_AlternativeGoodsCode_Goods.ChildObjectId
           
-          LEFT JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_Retail
-                               ON ObjectLink_AlternativeGoodsCode_Retail.ObjectId = Object_AlternativeGoodsCode.Id
-                              AND ObjectLink_AlternativeGoodsCode_Retail.DescId = zc_ObjectLink_AlternativeGoodsCode_Retail()
+          JOIN ObjectLink AS ObjectLink_AlternativeGoodsCode_Retail
+                          ON ObjectLink_AlternativeGoodsCode_Retail.ObjectId = Object_AlternativeGoodsCode.Id
+                         AND ObjectLink_AlternativeGoodsCode_Retail.DescId = zc_ObjectLink_AlternativeGoodsCode_Retail()
            
      WHERE Object_AlternativeGoodsCode.DescId = zc_Object_AlternativeGoodsCode()
-       AND Object_AlternativeGoodsCode.isErased = FALSE
-    ;
+       AND ObjectLink_AlternativeGoodsCode_Retail.ChildObjectId = inRetailId;
   
 END;
 $BODY$
@@ -57,6 +53,7 @@ ALTER FUNCTION gpSelect_Object_AlternativeGoodsCode (Integer, TVarChar) OWNER TO
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.08.14                        *
  02.07.14         *
 
 */

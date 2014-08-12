@@ -21,7 +21,6 @@ type
     actJuridical: TdsdOpenForm;
     actBusiness: TdsdOpenForm;
     bbBusiness: TdxBarButton;
-    actExtraChargeCategories: TdsdOpenForm;
     bbBranch: TdxBarButton;
     actPartner: TdsdOpenForm;
     actIncome: TdsdOpenForm;

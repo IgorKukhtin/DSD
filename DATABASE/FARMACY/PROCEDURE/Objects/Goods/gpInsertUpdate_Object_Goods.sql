@@ -16,14 +16,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
 )
 RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE vbCode Integer;   
+   DECLARE vbUserId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   UserId := inSession;
+   vbUserId := inSession;
    
-   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, vbNDSKindId, inGoodsMainId, inObjectId, inSession);
+   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inGoodsMainId, inObjectId, vbUserId);
  
 
    -- сохранили протокол

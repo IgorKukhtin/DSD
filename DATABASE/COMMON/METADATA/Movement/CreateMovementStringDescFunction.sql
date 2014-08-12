@@ -42,6 +42,10 @@ CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberMark() RETURNS Integer AS 
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberMark', 'Номер перекресленої зеленої марки зi складу' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberMark');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberSaleLink() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSaleLink'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberSaleLink', 'Номер накладной продажи контрагенту (привязка возврата)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSaleLink');
+
 CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberOrder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberOrder'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberOrder', 'Номер заявки контрагента' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberOrder');

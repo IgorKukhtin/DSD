@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc 
+   (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
     IN inPartnerOperDate     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberTax        TVarChar  , -- Номер налоговой накладной у контрагента (привязка возврата)
     IN inOperDateTax         TDateTime , -- Дата налоговой накладной у контрагента (привязка возврата)
+    IN inInvNumberSaleLink   TVarChar  , -- Номер накладной продажи контрагенту (привязка возврата)
+    IN inOperDateSaleLink    TDateTime , -- Дата накладной продажи контрагенту (привязка возврата)
     IN inOKPO                TVarChar  , -- 
     IN inJurIdicalName       TVarChar  , --
     IN inDesc                TVarChar  , -- тип документа
@@ -103,6 +106,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateTax(), vbMovementId, inOperDateTax);
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberTax(), vbMovementId, inInvNumberTax);
+
+     -- сохранили Дата накладной продажи контрагенту (привязка возврата)
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSaleLink(), vbMovementId, inOperDateSaleLink);
+     -- сохранили  Номер накладной продажи контрагенту (привязка возврата)
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSaleLink(), vbMovementId, inInvNumberSaleLink);
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);

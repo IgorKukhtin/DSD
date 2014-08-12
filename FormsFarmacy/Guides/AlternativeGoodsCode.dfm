@@ -2,7 +2,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
   Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
   ClientWidth = 798
   ExplicitWidth = 806
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,12 +22,14 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
           Styles.Header = nil
           object clObjectCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'ObjectCode'
+            DataBinding.FieldName = 'CodeInt'
+            Options.Editing = False
             Width = 52
           end
           object clValueData: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ValueData'
+            DataBinding.FieldName = 'Name'
+            Options.Editing = False
             Width = 244
           end
         end
@@ -202,6 +203,22 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Height = 282
         AlignSplitter = salRight
       end
+      object cxLabel1: TcxLabel
+        Left = 24
+        Top = 32
+        Caption = #1057#1077#1090#1100': '
+      end
+      object beRetail: TcxButtonEdit
+        Left = 24
+        Top = 55
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 7
+        Width = 201
+      end
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -220,20 +237,34 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Component = cxGrid2
         Properties.Strings = (
           'Width')
+      end
+      item
+        Component = RetailGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited MasterDS: TDataSource
-    Left = 104
-    Top = 72
+    Left = 152
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Left = 200
-    Top = 72
+    Left = 152
+    Top = 48
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Lite'
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     Left = 152
-    Top = 72
+    Top = 136
   end
   inherited BarManager: TdxBarManager
     Left = 264
@@ -246,15 +277,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
     inherited Bar: TdxBar
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -274,11 +296,145 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetailLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetailEdit'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
       Left = 8
       Top = 96
     end
+    inherited bbInsert: TdxBarButton
+      Enabled = False
+      Visible = ivNever
+    end
+    inherited bbEdit: TdxBarButton
+      Enabled = False
+      Visible = ivNever
+    end
+    inherited bbErased: TdxBarButton
+      Enabled = False
+      Visible = ivNever
+    end
+    inherited bbUnErased: TdxBarButton
+      Enabled = False
+      Visible = ivNever
+    end
+    object bbRetailLabel: TdxBarControlContainerItem
+      Caption = 'RetailLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object bbRetailEdit: TdxBarControlContainerItem
+      Caption = 'RetailEdit'
+      Category = 0
+      Visible = ivAlways
+      Control = beRetail
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = ''
+    Left = 248
+    Top = 144
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    Left = 24
+  end
+  object ClientDS: TDataSource
+    DataSet = ClientCDS
+    Left = 408
+    Top = 96
+  end
+  object spAlternativeCode: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_AlternativeGoodsCode'
+    DataSet = ClientCDS
+    DataSets = <
+      item
+        DataSet = ClientCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 408
+    Top = 144
+  end
+  object ClientCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'GoodsMainId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 408
+    Top = 48
+  end
+  object DataSource2: TDataSource
+    DataSet = ClientDataSet2
+    Left = 592
+    Top = 104
+  end
+  object dsdStoredProc2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Goods_Lite'
+    DataSet = ClientDataSet2
+    DataSets = <
+      item
+        DataSet = ClientDataSet2
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 104
+  end
+  object ClientDataSet2: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 688
+    Top = 104
+  end
+  object RetailGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = beRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 48
+    Top = 80
   end
 end

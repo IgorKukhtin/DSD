@@ -21,9 +21,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     InfoMoneyGroupTest, InfoMoneyDestinationTest, AssetGroupTest, GoodsTest,
-     GoodsKindTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB;
 
 { TCurrencyTest }
 

@@ -52,6 +52,7 @@ type
     function Get_НомерЗамовлення: UnicodeString;
     function Get_ДатаЗамовлення: UnicodeString;
     function Get_МісцеСкладання: UnicodeString;
+    function Get_ДокПідстава: IXMLДокПідставаType;
     procedure Set_НомерДокументу(Value: UnicodeString);
     procedure Set_ТипДокументу(Value: UnicodeString);
     procedure Set_КодТипуДокументу(Value: UnicodeString);
@@ -67,7 +68,8 @@ type
     property НомерЗамовлення: UnicodeString read Get_НомерЗамовлення write Set_НомерЗамовлення;
     property ДатаЗамовлення: UnicodeString read Get_ДатаЗамовлення write Set_ДатаЗамовлення;
     property МісцеСкладання: UnicodeString read Get_МісцеСкладання write Set_МісцеСкладання;
-  end;
+    property ДокПідстава: IXMLДокПідставаType read Get_ДокПідстава;
+end;
 
 { IXMLДокПідставаType }
 
@@ -308,6 +310,7 @@ type
     function Get_НомерЗамовлення: UnicodeString;
     function Get_ДатаЗамовлення: UnicodeString;
     function Get_МісцеСкладання: UnicodeString;
+    function Get_ДокПідстава: IXMLДокПідставаType;
     procedure Set_НомерДокументу(Value: UnicodeString);
     procedure Set_ТипДокументу(Value: UnicodeString);
     procedure Set_КодТипуДокументу(Value: UnicodeString);
@@ -606,6 +609,11 @@ end;
 function TXMLЗаголовокType.Get_ДатаЗамовлення: UnicodeString;
 begin
   Result := ChildNodes['ДатаЗамовлення'].Text;
+end;
+
+function TXMLЗаголовокType.Get_ДокПідстава: IXMLДокПідставаType;
+begin
+  Result := ChildNodes['ДокПідстава'] as IXMLДокПідставаType;
 end;
 
 procedure TXMLЗаголовокType.Set_ДатаЗамовлення(Value: UnicodeString);

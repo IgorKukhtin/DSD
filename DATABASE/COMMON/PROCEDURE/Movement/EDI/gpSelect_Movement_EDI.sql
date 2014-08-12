@@ -193,11 +193,14 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TaxCorrective_Tax
                                            ON MovementLinkMovement_TaxCorrective_Tax.MovementId = MovementLinkMovement_ChildEDI.MovementId
                                           AND MovementLinkMovement_TaxCorrective_Tax.DescId = zc_MovementLinkMovement_Child()
+
             LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MovementLinkMovement_ChildEDI.MovementId
                                                         AND Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete()
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
                                      ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
                                     AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()

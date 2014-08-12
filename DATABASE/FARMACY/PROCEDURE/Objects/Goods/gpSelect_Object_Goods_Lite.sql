@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Lite(
     IN inObjectId    INTEGER , 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) AS
+RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, isErased boolean) AS
 $BODY$
 BEGIN
 
@@ -14,16 +14,18 @@ BEGIN
 
    RETURN QUERY 
    SELECT Object_Goods.Id           AS Id 
-        , Object_Goods.ObjectCode   AS Code
-        , Object_Goods.ValueData    AS Name
+        , Object_Goods.GoodsCodeInt AS CodeInt
+        , Object_Goods.GoodsCode    AS Code
+        , Object_Goods.GoodsName    AS Name
+        , Object_Goods.isErased
   
-    FROM Object_MainGoods_View AS Object_Goods
-   WHERE ObjectId = inObjectId;
+    FROM Object_Goods_View AS Object_Goods
+   WHERE (inObjectId = 0 AND Object_Goods.ObjectId IS NULL) OR (Object_Goods.ObjectId = inObjectId AND inObjectId <> 0);
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Lite(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods_Lite(Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

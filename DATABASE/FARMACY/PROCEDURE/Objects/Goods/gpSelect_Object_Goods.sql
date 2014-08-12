@@ -1,8 +1,9 @@
 ﻿-- Function: gpSelect_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
+    IN inObjectId    Integer ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
@@ -16,41 +17,27 @@ BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   SELECT Object_Goods.Id           AS Id 
-        , Object_Goods.ObjectCode   AS Code
-        , Object_Goods.ValueData    AS Name
-        , Object_Goods.isErased     AS isErased
-   
-        , Object_GoodsGroup.Id        AS GoodsGroupId
-        , Object_GoodsGroup.ValueData AS GoodsGroupName
-   
-        , Object_Measure.Id        AS MeasureId
-        , Object_Measure.ValueData AS MeasureName
-   
-        , Object_NDSKind.Id        AS NDSKindId
-        , Object_NDSKind.ValueData AS NDSKindName
-   
-    FROM Object_MainGoods_View AS Object_Goods
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-        
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+   SELECT 
+             Object_Goods_View.Id
+           , Object_Goods_View.GoodsCodeInt
+--           , ObjectString.ValueData                           AS GoodsCode
+           , Object_Goods_View.GoodsName
+           , Object_Goods_View.isErased
+           , Object_Goods_View.GoodsGroupId
+           , Object_Goods_View.GoodsGroupName
+           , Object_Goods_View.MeasureId
+           , Object_Goods_View.MeasureName
+           , Object_Goods_View.NDSKindId
+           , Object_Goods_View.NDSKindName
 
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId;
+    FROM Object_Goods_View 
+   WHERE (inObjectId = 0 AND Object_Goods_View.ObjectId IS NULL) OR (Object_Goods_View.ObjectId = inObjectId AND inObjectId <> 0);
 
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods(Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

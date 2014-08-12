@@ -3,7 +3,7 @@
   ClientHeight = 277
   ClientWidth = 350
   ExplicitWidth = 356
-  ExplicitHeight = 309
+  ExplicitHeight = 302
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -121,6 +121,7 @@
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -150,6 +151,16 @@
         Component = NDSKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsMainId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inObjectId'
+        Value = '0'
+        ParamType = ptInput
       end>
     Left = 280
     Top = 8
@@ -159,7 +170,8 @@
     Params = <
       item
         Name = 'Id'
-        Value = Null
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
