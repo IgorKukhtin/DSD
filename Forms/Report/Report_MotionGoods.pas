@@ -30,8 +30,8 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -43,7 +43,7 @@ type
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     CountIncome: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     LocationName: TcxGridDBColumn;
@@ -112,6 +112,8 @@ type
     SummSendOnPriceIn: TcxGridDBColumn;
     CountSendOnPriceOut: TcxGridDBColumn;
     SummSendOnPriceOut: TcxGridDBColumn;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
   private
   public
   end;
