@@ -478,6 +478,7 @@ BEGIN
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_From
                                                                                     , inAssetId                := _tmpItem.AssetId
+                                                                                    , inBranchId               := vbBranchId_From
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN 0 ELSE vbUnitId_To END
@@ -489,6 +490,7 @@ BEGIN
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                     , inAssetId                := _tmpItem.AssetId
+                                                                                    , inBranchId               := vbBranchId_To
                                                                                      );
      -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
      UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId             := 0
@@ -555,7 +557,7 @@ BEGIN
                         ELSE 0
                    END) AS OperSumm_Partner
               -- 
-            , SUM (CASE WHEN vbBranchId_From = 0
+            , 0 AS OperSumm_Account_60000 /*SUM (CASE WHEN vbBranchId_From = 0
                           OR vbBranchId_From = zc_Branch_Basis()
                              THEN 0 -- -1
                         ELSE 0 -- -1
@@ -565,7 +567,7 @@ BEGIN
                              THEN (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))
                         ELSE 0
                    END
-                 ) AS OperSumm_Account_60000
+                 ) AS OperSumm_Account_60000*/
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
@@ -910,7 +912,8 @@ BEGIN
 
      -- 3.3. формируются Проводки - "Прибыль будущих периодов"
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItemSumm_group.ContainerId, 0 AS ParentId, -1 * _tmpItemSumm_group.OperSumm, vbOperDate, FALSE
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItemSumm_group.ContainerId, 0 AS ParentId, -1 * _tmpItemSumm_group.OperSumm, vbOperDate
+            , CASE WHEN vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis() THEN TRUE ELSE FALSE END
        FROM (SELECT _tmpItemSumm.ContainerId_60000 AS ContainerId, (_tmpItemSumm.OperSumm_Account_60000) AS OperSumm FROM _tmpItemSumm
              WHERE _tmpItemSumm.OperSumm_Account_60000 <> 0
             ) AS _tmpItemSumm_group
@@ -1215,6 +1218,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.14                                        * add inBranchId :=
  08.08.14                                        * add lpInsertFind_Object_PartionGoods
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member

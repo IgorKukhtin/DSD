@@ -666,6 +666,7 @@ BEGIN
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := vbBranchId_To
                                                                                  );
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -685,6 +686,7 @@ BEGIN
                                                                                           , inIsPartionCount         := NULL
                                                                                           , inPartionGoodsId         := NULL
                                                                                           , inAssetId                := NULL
+                                                                                          , inBranchId               := NULL
                                                                                            )
      WHERE vbTicketFuelId_From <> 0;
 
@@ -1152,6 +1154,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.08.14                                        * add inBranchId :=
  01.08.14                                        * zc_Enum_AccountDirection... Сотрудник (заготовитель) -> сотрудники (подотчетные лица)
  29.07.14                                        * change zc_GoodsKind_WorkProgress
  26.07.14                                        * add МНМА

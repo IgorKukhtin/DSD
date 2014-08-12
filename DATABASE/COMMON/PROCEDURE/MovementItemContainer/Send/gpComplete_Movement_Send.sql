@@ -26,7 +26,7 @@ BEGIN
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, BranchId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer
                                , MIContainerId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime
                                , OperCount TFloat
                                , AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -38,7 +38,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, UnitId_To, MemberId_To, BranchId_To
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, BranchId_From, UnitId_To, MemberId_To, BranchId_To
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
                          , OperCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId
@@ -52,6 +52,7 @@ BEGIN
             , _tmp.OperDate
             , _tmp.UnitId_From
             , _tmp.MemberId_From
+            , _tmp.BranchId_From
             , _tmp.UnitId_To
             , _tmp.MemberId_To
             , _tmp.BranchId_To
@@ -103,6 +104,7 @@ BEGIN
                   , Movement.OperDate
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS MemberId_From
+                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS MemberId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
@@ -202,6 +204,10 @@ BEGIN
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
+                                        ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND Object_To.DescId = zc_Object_Unit()
                    LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
                                         ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                                        AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
@@ -313,6 +319,7 @@ BEGIN
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_From
                                                                                     , inAssetId                := _tmpItem.AssetId
+                                                                                    , inBranchId               := _tmpItem.BranchId_From
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Item ELSE _tmpItem.UnitId_To END
@@ -324,6 +331,7 @@ BEGIN
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                     , inAssetId                := _tmpItem.AssetId
+                                                                                    , inBranchId               := _tmpItem.BranchId_To
                                                                                      );
 
      -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
@@ -508,6 +516,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.14                                        * add inBranchId :=
  05.08.14                                        * add UnitId_Item and ...
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member

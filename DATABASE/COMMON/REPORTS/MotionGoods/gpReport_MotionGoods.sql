@@ -218,13 +218,17 @@ BEGIN
                                     , tmpContainer_Count.GoodsKindId
                                     , tmpContainer_Count.PartionGoodsId
                                     , tmpContainer_Count.AssetToId
-                                    , Container.Id AS ContainerId_Summ
+                                    , Container.Id                         AS ContainerId_Summ
+                                    , COALESCE (View_Account.AccountId, 0) AS AccountId
                                     , Container.Amount
                                FROM tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
+                                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
+                                                                                 AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_20000() -- «‡Ô‡Ò˚
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
+                                      , tmpContainer_Summ.AccountId
                                       , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
                                       , tmpContainer_Summ.GoodsKindId
@@ -297,6 +301,7 @@ BEGIN
                                       LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                                         AND MIContainer.OperDate <= inEndDate
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
+                                        , tmpContainer_Summ.AccountId
                                         , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
                                         , tmpContainer_Summ.GoodsKindId
@@ -432,6 +437,7 @@ BEGIN
               , SUM (tmpMIContainer_all.SummInventory)       AS SummInventory
 
         FROM (SELECT tmpMIContainer_Count.ContainerId
+                   , 0 AS AccountId
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
@@ -476,6 +482,7 @@ BEGIN
                  OR tmpMIContainer_Count.Amount_Inventory      <> 0
              UNION ALL
               SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
+                   , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
@@ -520,6 +527,7 @@ BEGIN
                  OR tmpMIContainer_Summ.Amount_Inventory      <> 0
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.ContainerId
+                , tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
@@ -557,14 +565,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.08.14                                        * add ContainerId
  01.06.14                                        * ALL
  31.08.13         *
 */
