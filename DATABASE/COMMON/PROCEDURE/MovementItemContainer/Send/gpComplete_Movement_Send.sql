@@ -8,8 +8,6 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
 RETURNS VOID
--- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime, OperCount TFloat, AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, PartionGoodsId_From Integer, PartionGoodsId_To Integer)
--- RETURNS TABLE (MovementItemId Integer, MIContainerId_To Integer, ContainerId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -17,13 +15,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
 
+     -- Эти параметры нужны для 
+     inIsLastComplete:= TRUE;
 
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
 
      -- таблица - <Проводки>
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementId Integer, MovementDescId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, BranchId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer
@@ -367,10 +365,10 @@ BEGIN
              JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                       ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                      AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-             JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+             /*JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                       ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
+             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id -- ContainerObjectCost_Basis.ObjectCostId
                                   AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
@@ -473,37 +471,60 @@ BEGIN
 
 
      -- 2. формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId := _tmpItem.MovementId
-                                              , inMovementItemId := _tmpItemSumm.MovementItemId
-                                              , inActiveContainerId  := _tmpItemSumm.ContainerId_To
-                                              , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                              , inActiveAccountId    := _tmpItemSumm.AccountId_To
-                                              , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItemSumm.ContainerId_To
-                                                                                                    , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                                                                                    , inActiveAccountId    := _tmpItemSumm.AccountId_To
-                                                                                                    , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                                                                                     )
-                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItemSumm.ContainerId_To
-                                                                                                             , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                                                                                             , inActiveAccountId    := _tmpItemSumm.AccountId_To
-                                                                                                             , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                                                                                             , inAccountKindId_1    := NULL
-                                                                                                             , inContainerId_1      := NULL
-                                                                                                             , inAccountId_1        := NULL
-                                                                                                     )
-                                              , inAmount := _tmpItemSumm.OperSumm
-                                              , inOperDate := _tmpItem.OperDate
-                                               )
-     FROM _tmpItemSumm
-          JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-     ;
-
+     INSERT INTO _tmpMIReport_insert (Id, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+        SELECT 0, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
+        FROM (SELECT tmpMIReport.MovementId
+                   , zc_Movement_Send() AS MovementDescId
+                   , tmpMIReport.MovementItemId
+                   , tmpMIReport.ActiveContainerId
+                   , tmpMIReport.PassiveContainerId
+                   , tmpMIReport.ActiveAccountId
+                   , tmpMIReport.PassiveAccountId
+                   , lpInsertFind_ReportContainer (inActiveContainerId  := tmpMIReport.ActiveContainerId
+                                                 , inPassiveContainerId := tmpMIReport.PassiveContainerId
+                                                 , inActiveAccountId    := tmpMIReport.ActiveAccountId
+                                                 , inPassiveAccountId   := tmpMIReport.PassiveAccountId
+                                                  ) AS ReportContainerId
+                   , lpInsertFind_ChildReportContainer (inActiveContainerId  := tmpMIReport.ActiveContainerId
+                                                      , inPassiveContainerId := tmpMIReport.PassiveContainerId
+                                                      , inActiveAccountId    := tmpMIReport.ActiveAccountId
+                                                      , inPassiveAccountId   := tmpMIReport.PassiveAccountId
+                                                      --, inAccountKindId_1    := NULL
+                                                      --, inContainerId_1      := NULL
+                                                      --, inAccountId_1        := NULL
+                                                       ) AS ChildReportContainerId
+                   , tmpMIReport.OperSumm AS Amount
+                   , tmpMIReport.OperDate
+              FROM (SELECT (tmpCalc.OperSumm)       AS OperSumm
+                         , tmpCalc.ContainerId_To   AS ActiveContainerId
+                         , tmpCalc.ContainerId_From AS PassiveContainerId
+                         , tmpCalc.AccountId_To     AS ActiveAccountId
+                         , tmpCalc.AccountId_From   AS PassiveAccountId
+                         , tmpCalc.OperDate
+                         , tmpCalc.MovementId
+                         , tmpCalc.MovementItemId
+                    FROM (SELECT _tmpItem.OperDate
+                               , _tmpItem.MovementId
+                               , _tmpItemSumm.MovementItemId
+                               , _tmpItemSumm.ContainerId_From
+                               , _tmpItemSumm.AccountId_From
+                               , _tmpItemSumm.ContainerId_To
+                               , _tmpItemSumm.AccountId_To
+                               , (_tmpItemSumm.OperSumm) AS OperSumm
+                          FROM _tmpItemSumm
+                              JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                         ) AS tmpCalc
+                    WHERE tmpCalc.OperSumm <> 0
+                   ) AS tmpMIReport
+             ) AS tmpMIReport
+       ;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
+     PERFORM lpInsertUpdate_MIReport_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     -- 5.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Send()
                                 , inUserId     := vbUserId
@@ -516,6 +537,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * add lpInsertUpdate_MIReport_byTable
  12.08.14                                        * add inBranchId :=
  05.08.14                                        * add UnitId_Item and ...
  25.05.14                                        * add lpComplete_Movement

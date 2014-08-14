@@ -36,6 +36,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
 
+     -- Эти параметры нужны для 
+     inIsLastComplete:= TRUE;
+
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT Movement.OperDate
@@ -167,12 +170,9 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
-
      -- таблица - <Проводки>
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementId Integer, MovementDescId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
      -- таблица - количественные Master(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -497,10 +497,10 @@ BEGIN
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                            ON ContainerLinkObject_InfoMoneyDetail.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                           AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-             INNER JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+             /*INNER JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                             ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
-                                           AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                           AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
+             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
@@ -754,63 +754,83 @@ BEGIN
      -- RETURN;
 
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId             := inMovementId
-                                              , inMovementItemId         := _tmpItemSumm.MovementItemId
-                                              , inActiveContainerId      := _tmpItemSummChild.ContainerId_To
-                                              , inPassiveContainerId     := _tmpItemSumm.ContainerId_From
-                                              , inActiveAccountId        := _tmpItemSummChild.AccountId_To
-                                              , inPassiveAccountId       := _tmpItemSumm.AccountId_From
-                                              , inReportContainerId      := _tmpItem_byReportContainer.ReportContainerId
-                                              , inChildReportContainerId := _tmpItem_byReportContainer.ChildReportContainerId
-                                              , inAmount                 := _tmpItemSummChild.OperSumm
-                                              , inOperDate               := vbOperDate
-                                               )
-     FROM _tmpItem
-          JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
-          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
-                                AND _tmpItemSummChild.ContainerId_From      = _tmpItemSumm.ContainerId_From
+     INSERT INTO _tmpMIReport_insert (Id, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+        SELECT 0, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
+        FROM (SELECT inMovementId AS MovementId
+                   , zc_Movement_ProductionSeparate() AS MovementDescId
+                   , _tmpItemSumm.MovementItemId
+                   , tmpMIReport.ActiveContainerId
+                   , tmpMIReport.PassiveContainerId
+                   , tmpMIReport.ActiveAccountId
+                   , tmpMIReport.PassiveAccountId
+                   , tmpMIReport.ReportContainerId
+                   , tmpMIReport.ChildReportContainerId
+                   , _tmpItemSummChild.OperSumm AS Amount
+                   , vbOperDate AS OperDate
+              FROM _tmpItem
+                   JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+                   JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
+                   JOIN 
+             (SELECT tmpMIReport.ContainerId_To
+                   , tmpMIReport.ContainerId_From
+                   , tmpMIReport.AccountId_To
+                   , tmpMIReport.AccountId_From
 
-          JOIN (SELECT lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem_group.ContainerId_To
-                                                   , inPassiveContainerId := _tmpItem_group.ContainerId_From
-                                                   , inActiveAccountId    := _tmpItem_group.AccountId_To
-                                                   , inPassiveAccountId   := _tmpItem_group.AccountId_From
-                                                    ) AS ReportContainerId
-                     , lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem_group.ContainerId_To
-                                                        , inPassiveContainerId := _tmpItem_group.ContainerId_From
-                                                        , inActiveAccountId    := _tmpItem_group.AccountId_To
-                                                        , inPassiveAccountId   := _tmpItem_group.AccountId_From
-                                                        , inAccountKindId_1    := NULL
-                                                        , inContainerId_1      := NULL
-                                                        , inAccountId_1        := NULL
-                                                         ) AS ChildReportContainerId
-                     , _tmpItem_group.ContainerId_To
-                     , _tmpItem_group.ContainerId_From
-                     , _tmpItem_group.AccountId_To
-                     , _tmpItem_group.AccountId_From
-                FROM (SELECT _tmpItemSummChild.ContainerId_To
-                           , _tmpItemSumm.ContainerId_From
-                           , _tmpItemSummChild.AccountId_To
-                           , _tmpItemSumm.AccountId_From
-                      FROM _tmpItem
-                           JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
-                           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
-                                                 AND _tmpItemSummChild.ContainerId_From      = _tmpItemSumm.ContainerId_From
-                      GROUP BY _tmpItemSummChild.ContainerId_To
-                             , _tmpItemSumm.ContainerId_From
-                             , _tmpItemSummChild.AccountId_To
-                             , _tmpItemSumm.AccountId_From
-                     ) AS _tmpItem_group
-               ) AS _tmpItem_byReportContainer ON _tmpItem_byReportContainer.ContainerId_To   = _tmpItemSummChild.ContainerId_To
-                                              AND _tmpItem_byReportContainer.ContainerId_From = _tmpItemSumm.ContainerId_From
-                                              AND _tmpItem_byReportContainer.AccountId_To     = _tmpItemSummChild.AccountId_To
-                                              AND _tmpItem_byReportContainer.AccountId_From   = _tmpItemSumm.AccountId_From
-     ;
+                   , tmpMIReport.ActiveContainerId
+                   , tmpMIReport.PassiveContainerId
+                   , tmpMIReport.ActiveAccountId
+                   , tmpMIReport.PassiveAccountId
+
+                   , lpInsertFind_ReportContainer (inActiveContainerId  := tmpMIReport.ActiveContainerId
+                                                 , inPassiveContainerId := tmpMIReport.PassiveContainerId
+                                                 , inActiveAccountId    := tmpMIReport.ActiveAccountId
+                                                 , inPassiveAccountId   := tmpMIReport.PassiveAccountId
+                                                  ) AS ReportContainerId
+                   , lpInsertFind_ChildReportContainer (inActiveContainerId  := tmpMIReport.ActiveContainerId
+                                                      , inPassiveContainerId := tmpMIReport.PassiveContainerId
+                                                      , inActiveAccountId    := tmpMIReport.ActiveAccountId
+                                                      , inPassiveAccountId   := tmpMIReport.PassiveAccountId
+                                                      --, inAccountKindId_1    := NULL
+                                                      --, inContainerId_1      := NULL
+                                                      --, inAccountId_1        := NULL
+                                                       ) AS ChildReportContainerId
+              FROM (SELECT tmpCalc.ContainerId_To   AS ActiveContainerId
+                         , tmpCalc.ContainerId_From AS PassiveContainerId
+                         , tmpCalc.AccountId_To     AS ActiveAccountId
+                         , tmpCalc.AccountId_From   AS PassiveAccountId
+
+                         , tmpCalc.ContainerId_To
+                         , tmpCalc.ContainerId_From
+                         , tmpCalc.AccountId_To
+                         , tmpCalc.AccountId_From
+                    FROM (SELECT _tmpItemSummChild.ContainerId_To
+                               , _tmpItemSumm.ContainerId_From
+                               , _tmpItemSummChild.AccountId_To
+                               , _tmpItemSumm.AccountId_From
+                          FROM _tmpItem
+                               JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+                               JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
+                                                     AND _tmpItemSummChild.ContainerId_From      = _tmpItemSumm.ContainerId_From
+                          GROUP BY _tmpItemSummChild.ContainerId_To
+                                 , _tmpItemSumm.ContainerId_From
+                                 , _tmpItemSummChild.AccountId_To
+                                 , _tmpItemSumm.AccountId_From
+                         ) AS tmpCalc
+                   ) AS tmpMIReport
+             ) AS tmpMIReport ON tmpMIReport.ContainerId_To   = _tmpItemSummChild.ContainerId_To
+                             AND tmpMIReport.ContainerId_From = _tmpItemSumm.ContainerId_From
+                             AND tmpMIReport.AccountId_To     = _tmpItemSummChild.AccountId_To
+                             AND tmpMIReport.AccountId_From   = _tmpItemSumm.AccountId_From
+             ) AS tmpMIReport
+       ;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
+     PERFORM lpInsertUpdate_MIReport_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     -- 5.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_ProductionSeparate()
                                 , inUserId     := vbUserId
@@ -823,6 +843,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * add lpInsertUpdate_MIReport_byTable
  12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member

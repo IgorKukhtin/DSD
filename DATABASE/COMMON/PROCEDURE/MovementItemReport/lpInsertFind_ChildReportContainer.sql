@@ -238,7 +238,7 @@ BEGIN
      -- ≈сли не нашли, добавл€ем
      IF COALESCE (vbChildReportContainerId, 0) = 0
      THEN
-         -- определ€ем новый ReportContainerId
+         -- определ€ем новый ChildReportContainerId
          SELECT NEXTVAL ('childreportcontainer_id_seq') INTO vbChildReportContainerId;
 
          -- добавили јналитики
@@ -328,8 +328,8 @@ group by tmp.ChildReportContainerId
    and ChildReportContainerLink.AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive()) -- !!!update
 
  left join ChildReportContainerLink on ChildReportContainerLink.ChildReportContainerId = tmp.ChildReportContainerId
-                                   and ChildReportContainerLink.AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive()
- where isnull (ChildReportContainerLink.KeyValue, '') <> tmp.KeyValue
+                                   and ChildReportContainerLink.AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive())
+ where coalesce (ChildReportContainerLink.KeyValue, '') <> tmp.KeyValue
 
 
 -- select * from ChildReportContainerLink where coalesce (KeyValue, '') = ''
