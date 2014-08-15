@@ -125,6 +125,7 @@ type
     clIsUnique: TcxGridDBColumn;
     clDocumentCount: TcxGridDBColumn;
     clDateDocument: TcxGridDBColumn;
+    PersonalChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

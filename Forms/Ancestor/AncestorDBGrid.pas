@@ -9,7 +9,8 @@ uses
   Vcl.Menus, dsdAddOn, dsdAction, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   Vcl.Controls, dxBarExtItems, dxBar, dsdDB, Datasnap.DBClient, System.Classes,
-  Vcl.ActnList, cxPropertiesStore, dxSkinsCore, dxSkinsDefaultPainters;
+  Vcl.ActnList, cxPropertiesStore, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinsdxBarPainter, dxSkinscxPCPainter;
 
 type
   TAncestorDBGridForm = class(TAncestorDataForm)

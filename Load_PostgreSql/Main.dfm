@@ -205,7 +205,7 @@ object MainForm: TMainForm
       Top = 181
       Width = 225
       Height = 17
-      Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094' '
+      Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088'. '#1083#1080#1094
       Enabled = False
       TabOrder = 6
     end
@@ -222,31 +222,29 @@ object MainForm: TMainForm
     object cbContractFl: TCheckBox
       Tag = 10
       Left = 15
-      Top = 154
+      Top = 151
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
       Enabled = False
       TabOrder = 8
     end
-    object cbJuridicalFl: TCheckBox
+    object cbJuridicalBranchNal: TCheckBox
       Tag = 10
       Left = 15
       Top = 201
       Width = 225
       Height = 17
-      Caption = '3.2. '#1070#1088'.'#1083#1080#1094#1072' Fl'
-      Enabled = False
+      Caption = '3.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1040#1051
       TabOrder = 9
     end
-    object cbPartnerFl: TCheckBox
+    object cbPartnerBranchNal: TCheckBox
       Tag = 10
       Left = 15
       Top = 221
-      Width = 119
+      Width = 194
       Height = 17
-      Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Fl'
-      Enabled = False
+      Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1060#1080#1083#1072#1083'-'#1053#1072#1083
       TabOrder = 10
     end
     object cbBusiness: TCheckBox
@@ -444,8 +442,8 @@ object MainForm: TMainForm
     end
     object cbRouteSorting: TCheckBox
       Tag = 10
-      Left = 151
-      Top = 221
+      Left = 150
+      Top = 181
       Width = 168
       Height = 17
       Caption = '3.4. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
@@ -563,7 +561,7 @@ object MainForm: TMainForm
     end
     object cbData1CLink: TCheckBox
       Tag = 10
-      Left = 151
+      Left = 184
       Top = 201
       Width = 172
       Height = 17
@@ -573,7 +571,7 @@ object MainForm: TMainForm
     end
     object cbContractInt: TCheckBox
       Tag = 10
-      Left = 159
+      Left = 151
       Top = 131
       Width = 138
       Height = 17
@@ -582,7 +580,7 @@ object MainForm: TMainForm
     end
     object cbJuridicalInt: TCheckBox
       Tag = 10
-      Left = 159
+      Left = 151
       Top = 111
       Width = 225
       Height = 17
@@ -591,7 +589,7 @@ object MainForm: TMainForm
     end
     object cbPartnerInt: TCheckBox
       Tag = 10
-      Left = 159
+      Left = 151
       Top = 151
       Width = 146
       Height = 17
@@ -1734,5 +1732,15 @@ object MainForm: TMainForm
     Params = <>
     Left = 120
     Top = 112
+  end
+  object toSqlQuery_two: TZQuery
+    Connection = toZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 168
+    Top = 464
   end
 end

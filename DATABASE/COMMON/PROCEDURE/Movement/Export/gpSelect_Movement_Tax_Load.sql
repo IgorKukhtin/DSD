@@ -49,9 +49,15 @@ BEGIN
            , 0::TFloat AS NREZ
            , 0::TFloat AS KOR
            , NULL::TFloat AS WMDTYPE
-           , CASE WHEN Movement.DescId = zc_Movement_Tax()
-                  THEN 'œÕœ'
-                  ELSE '– œ'
+           , CASE WHEN Movement.DescId = zc_Movement_Tax() AND MovementBoolean_Electron.ValueData = TRUE
+                       THEN 'œÕ≈'
+                  WHEN Movement.DescId = zc_Movement_Tax()
+                       THEN 'œÕœ'
+                  WHEN Movement.DescId = zc_Movement_TaxCorrective() AND MovementBoolean_Electron.ValueData = TRUE
+                       THEN '– ≈'
+                  WHEN Movement.DescId = zc_Movement_TaxCorrective()
+                       THEN '– œ'
+                  ELSE ''
              END ::TVarChar AS WMDTYPESTR
        FROM Movement
             INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -77,6 +83,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
                    ON ObjectHistory_JuridicalDetails.ObjectId = MovementLinkObject_To.ObjectId
@@ -116,6 +126,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Intege
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.08.14                                        * add MovementBoolean_Electron
  27.06.14                         * add inInfoMoneyId, inPaidKindId
  19.05.14                                        * add BAZOP0
  16.05.14                                        * all

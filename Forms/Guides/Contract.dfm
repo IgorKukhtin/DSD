@@ -115,6 +115,7 @@ object ContractForm: TContractForm
         Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 79
       end
       object clJuridicalCode: TcxGridDBColumn
@@ -284,10 +285,17 @@ object ContractForm: TContractForm
       object clPersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 55
       end
       object clPersonalTradeName: TcxGridDBColumn
@@ -363,6 +371,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object clBankAccountExternal: TcxGridDBColumn
@@ -439,6 +448,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'isPersonal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object clIsDefault: TcxGridDBColumn
@@ -456,6 +466,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object clDocumentCount: TcxGridDBColumn
@@ -480,6 +491,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object clContractStateKindName_Key: TcxGridDBColumn
@@ -1134,27 +1146,6 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
-    object PersonalCollationChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PersonalCollationChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -1206,27 +1197,6 @@ object ContractForm: TContractForm
           Name = 'TextValue'
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object PersonalTradeChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PersonalTradeChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1283,6 +1253,69 @@ object ContractForm: TContractForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object PersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PersonalChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object PersonalTradeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PersonalTradeChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalTradeId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalTradeName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object PersonalCollationChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PersonalCollationChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalCollationId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalCollationName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1433,6 +1466,12 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPersonalId'
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
       end
       item
         Name = 'inPersonalTradeId'

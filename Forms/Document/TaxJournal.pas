@@ -69,9 +69,13 @@ type
     bbMovementCheck: TdxBarButton;
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
-    bbactChecked: TdxBarButton;
+    bbChecked: TdxBarButton;
     colIsEDI: TcxGridDBColumn;
     colIsElectron: TcxGridDBColumn;
+    actElectron: TdsdExecStoredProc;
+    dsdStoredProc1: TdsdStoredProc;
+    spCheckedElectron: TdsdStoredProc;
+    bbElectron: TdxBarButton;
   private
     { Private declarations }
   public
