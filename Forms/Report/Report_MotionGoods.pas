@@ -101,7 +101,6 @@ type
     Weight: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
-    dxBarStatic1: TdxBarStatic;
     LocationDescName: TcxGridDBColumn;
     LocationCode: TcxGridDBColumn;
     CarCode: TcxGridDBColumn;
@@ -112,8 +111,18 @@ type
     SummSendOnPriceIn: TcxGridDBColumn;
     CountSendOnPriceOut: TcxGridDBColumn;
     SummSendOnPriceOut: TcxGridDBColumn;
-    actPrintNoGroup: TdsdPrintAction;
-    bbPrintNoGroup: TdxBarButton;
+    actPrintBy_Goods: TdsdPrintAction;
+    bbPrintBy_Goods: TdxBarButton;
+    actPrintBy_Goods_Partion: TdsdPrintAction;
+    actPrintBy_Goods_Type: TdsdPrintAction;
+    bbPrintBy_Goods_Partion: TdxBarButton;
+    bbPrintBy_Goods_Partion_Type: TdxBarButton;
+    SummProductionIn: TcxGridDBColumn;
+    CountProductionIn: TcxGridDBColumn;
+    PriceProductionIn: TcxGridDBColumn;
+    CountProductionOut: TcxGridDBColumn;
+    PriceProductionOut: TcxGridDBColumn;
+    SummProductionOut: TcxGridDBColumn;
   private
   public
   end;
