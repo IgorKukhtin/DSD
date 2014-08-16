@@ -51,7 +51,7 @@ BEGIN
                                                   );
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)!Партии товара! 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)!Партии товара! 7)Статьи назначения 8)Статьи назначения(детализация с/с)
-          PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
+          /*PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
                                          , inObjectCostDescId:= zc_ObjectCost_Basis()
                                          , inDescId_1   := zc_ObjectCostLink_Goods()
                                          , inObjectId_1 := inGoodsId
@@ -71,7 +71,7 @@ BEGIN
                                          , inObjectId_8 := inBusinessId
                                          , inDescId_9   := zc_ObjectCostLink_Branch()
                                          , inObjectId_9 := inBranchId
-                                          );
+                                          );*/
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
@@ -97,7 +97,7 @@ BEGIN
                                                   );
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
-          PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
+          /*PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
                                          , inObjectCostDescId:= zc_ObjectCost_Basis()
                                          , inDescId_1   := zc_ObjectCostLink_Goods()
                                          , inObjectId_1 := inGoodsId
@@ -117,7 +117,7 @@ BEGIN
                                          , inObjectId_8 := inBranchId
                                          , inDescId_9   := zc_ObjectCostLink_AssetTo()
                                          , inObjectId_9 := inAssetId
-                                          );
+                                          );*/
      ELSE
      -- 20200 Прочие ТМЦ + 20300 МНМА
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300())
@@ -145,7 +145,7 @@ BEGIN
                                                   );
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
-          PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
+          /*PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
                                          , inObjectCostDescId:= zc_ObjectCost_Basis()
                                          , inDescId_1   := zc_ObjectCostLink_Goods()
                                          , inObjectId_1 := inGoodsId
@@ -167,7 +167,7 @@ BEGIN
                                          , inObjectId_9 := inBranchId
                                          , inDescId_10  := zc_ObjectCostLink_PartionGoods()
                                          , inObjectId_10:= inPartionGoodsId
-                                          );
+                                          );*/
      ELSE
      -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
@@ -190,7 +190,7 @@ BEGIN
                                                                 , inDescId_4   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_4 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                                 , inDescId_5   := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_5 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
+                                                                , inObjectId_5 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                                 , inDescId_6   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_6 := inInfoMoneyId
                                                                  )
@@ -206,14 +206,14 @@ BEGIN
                                                            , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                            , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                            , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
-                                                           , inObjectId_3 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN 0 ELSE inGoodsKindId END
+                                                           , inObjectId_3 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                            , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                            , inObjectId_4 := inInfoMoneyId_Detail
                                                            , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                            , inObjectId_5 := inInfoMoneyId
                                                             )
                            END;
-         IF inPartionGoodsId <> 0
+         /*IF inPartionGoodsId <> 0
          THEN         -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Подразделение 5)Товар 6)!!!Партии товара!!! 7)Виды товаров 8)Статьи назначения 9)Статьи назначения(детализация с/с)
                       -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)!!!Партии товара!!! 7)Виды товаров 8)Статьи назначения 9)Статьи назначения(детализация с/с)
               PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
@@ -227,7 +227,7 @@ BEGIN
                                              , inDescId_4   := CASE WHEN inMemberId <> 0 THEN zc_ObjectCostLink_Member() ELSE zc_ObjectCostLink_Unit() END
                                              , inObjectId_4 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                              , inDescId_5   := zc_ObjectCostLink_GoodsKind()
-                                             , inObjectId_5 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN inGoodsKindId ELSE 0 END
+                                             , inObjectId_5 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                              , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                              , inObjectId_6 := inInfoMoneyId
                                              , inDescId_7   := zc_ObjectCostLink_Account()
@@ -248,7 +248,7 @@ BEGIN
                                              , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ObjectCostLink_Member() ELSE zc_ObjectCostLink_Unit() END
                                              , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                              , inDescId_3   := zc_ObjectCostLink_GoodsKind()
-                                             , inObjectId_3 := CASE WHEN inBranchId = zc_Branch_Basis() OR inBranchId = 0 THEN inGoodsKindId ELSE 0 END
+                                             , inObjectId_3 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                              , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
                                              , inObjectId_4 := inInfoMoneyId_Detail
                                              , inDescId_5   := zc_ObjectCostLink_InfoMoney()
@@ -262,7 +262,7 @@ BEGIN
                                              , inDescId_9   := zc_ObjectCostLink_Branch()
                                              , inObjectId_9 := inBranchId
                                               );
-         END IF;
+         END IF;*/
 
      ELSE
      -- 20500 Оборотная тара
@@ -286,7 +286,7 @@ BEGIN
                                                   );
 
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Товар 4)Статьи назначения 5)Статьи назначения(детализация с/с)
-          PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
+          /*PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
                                          , inObjectCostDescId:= zc_ObjectCost_Basis()
                                          , inDescId_1   := zc_ObjectCostLink_Goods()
                                          , inObjectId_1 := inGoodsId
@@ -304,7 +304,7 @@ BEGIN
                                          , inObjectId_7 := 0
                                          , inDescId_8   := zc_ObjectCostLink_Branch()
                                          , inObjectId_8 := 0
-                                          );
+                                          );*/
 
      -- !!!Other!!!
      ELSE                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
@@ -327,7 +327,7 @@ BEGIN
                                                   );
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Статьи назначения 7)Статьи назначения(детализация с/с)
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Статьи назначения 7)Статьи назначения(детализация с/с)
-          PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
+          /*PERFORM lpInsertFind_ObjectCost (inContainerId     := vbContainerId
                                          , inObjectCostDescId:= zc_ObjectCost_Basis()
                                          , inDescId_1   := zc_ObjectCostLink_Goods()
                                          , inObjectId_1 := inGoodsId
@@ -345,7 +345,7 @@ BEGIN
                                          , inObjectId_7 := inBusinessId
                                          , inDescId_8   := zc_ObjectCostLink_Branch()
                                          , inObjectId_8 := inBranchId
-                                          );
+                                          );*/
      END IF;
      END IF;
      END IF;
@@ -364,6 +364,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * DELETE lpInsertFind_ObjectCost
  27.07.14                                        * add МНМА
  05.04.14                                        * порядок аналитик ДЛЯ ОПТИМИЗАЦИИ
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200

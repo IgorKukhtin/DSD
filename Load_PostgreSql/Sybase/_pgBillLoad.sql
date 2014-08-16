@@ -8,16 +8,17 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-select '179307' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-171483
+select BillNumber, FromId, 0 from Bill where fromId in (zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis(), zc_UnitId_StoreSalePF()) 
+                                         and ToId in (select Id from dba.Unit where UnitCode in (11944))
+                                         and BillDate between '2014-06-01' and '2014-06-30'
 
-union select '181006' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '179668' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '180602' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '181017' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '180412' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '180813' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
-union select '180421' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации мясо
+select '180201' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '179502' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+
+union select '179002' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '178547' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+union select '178071' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
+
 
 
 -- !!!!!!
@@ -28,8 +29,8 @@ union select '444' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as 
 -- !!!!!!
 
 select BillNumber, FromId, 0 from Bill where fromId in (zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis(), zc_UnitId_StoreSalePF()) 
-                                         -- and ToId in (select Id from dba.Unit where UnitCode in (11793, 11468))
-                                         and BillDate between '2014-05-01' and '2014-06-30'
+                                         and ToId in (select Id from dba.Unit where UnitCode in (11944))
+                                         and BillDate between '2014-06-01' and '2014-06-30'
                                          and BillNumber  = '164724'
 
 

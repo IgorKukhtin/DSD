@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inOperDate               TDateTime, 
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inGoodsKindId            Integer , 
     IN inIsPartionCount         Boolean , 
     IN inPartionGoodsId         Integer , 
-    IN inAssetId                Integer
+    IN inAssetId                Integer , 
+    IN inBranchId               Integer
 )
   RETURNS Integer
 AS
@@ -90,7 +92,7 @@ BEGIN
                                                                 , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                                 , inDescId_3          := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_3        := inGoodsKindId
+                                                                , inObjectId_3        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                                  )
                                 ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                            , inParentId          := NULL
@@ -102,7 +104,7 @@ BEGIN
                                                            , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                            , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                            , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                           , inObjectId_2        := inGoodsKindId
+                                                           , inObjectId_2        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                             )
                            END ;
      -- !!!Other!!!
@@ -129,7 +131,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

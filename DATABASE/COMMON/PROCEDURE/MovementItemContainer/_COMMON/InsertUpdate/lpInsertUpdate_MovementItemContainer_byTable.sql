@@ -9,7 +9,7 @@ $BODY$
    DECLARE vbCount Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     PERFORM * FROM Container WHERE Id IN (SELECT ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+     -- PERFORM * FROM Container WHERE Id IN (SELECT ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount
@@ -29,6 +29,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable () OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * del так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
  14.04.14                                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
  02.09.13                                        *
 */

@@ -36,7 +36,9 @@ $BODY$
    DECLARE vbMasterKeyValue BigInt;
    DECLARE vbChildKeyValue BigInt;
 BEGIN
+     RAISE EXCEPTION 'lpInsertFind_ObjectCost';
      --
+
      inObjectCostDescId := COALESCE (inObjectCostDescId, 0);
      inObjectId_1       := COALESCE (inObjectId_1, 0);
      inObjectId_2       := COALESCE (inObjectId_2, 0);
@@ -107,7 +109,10 @@ BEGIN
      -- vbObjectCostId := (SELECT MAX (ObjectCostId) FROM ContainerObjectCost WHERE KeyValue = vbKeyValue);
 
      -- !!!находим СРАЗУ по ДВУМ ключам!!!
-     vbObjectCostId := (SELECT MAX (ObjectCostId) FROM ContainerObjectCost WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
+     -- vbObjectCostId := (SELECT MAX (ObjectCostId) FROM ContainerObjectCost WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
+
+     -- !!!находим СРАЗУ по ContainerId!!!
+     vbObjectCostId := (SELECT ObjectCostId FROM ContainerObjectCost WHERE ContainerId = inContainerId AND ObjectCostDescId = inObjectCostDescId);
 
 /*
      -- Если не нашли, находим по старому алгоритму
@@ -455,6 +460,7 @@ ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Inte
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * add RAISE EXCEPTION 'lpInsertFind_ObjectCost'
  07.08.14                                        * ALL
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  28.03.14                                        * удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!

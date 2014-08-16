@@ -302,6 +302,7 @@ BEGIN
                                                                                           , inIsPartionCount         := FALSE
                                                                                           , inPartionGoodsId         := 0
                                                                                           , inAssetId                := _tmpItem_Transport.AssetId
+                                                                                          , inBranchId               := 0
                                                                                            );
      -- 1.1.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -450,6 +451,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  11.03.14                                        * err on zc_MIFloat_StartAmountFuel

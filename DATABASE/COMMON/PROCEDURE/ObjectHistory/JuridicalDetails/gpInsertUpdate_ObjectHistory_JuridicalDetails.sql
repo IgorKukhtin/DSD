@@ -28,7 +28,7 @@ BEGIN
 
 
    -- проверка уникальность <ОКПО>, кроме "виртуальных"
-   IF inOKPO <> '' AND NOT (LENGTH (inOKPO) = 5 AND SUBSTRING (inOKPO, 3, 1) = '-')
+   IF inOKPO <> '' AND NOT (LENGTH (inOKPO) = 5 AND (SUBSTRING (inOKPO, 3, 1) = '-' OR SUBSTRING (inOKPO, 3, 1) = '*'))
    THEN
        -- находим Юр. лицо
        SELECT MAX (ObjectHistory.ObjectId) INTO vbJuridicalId_find

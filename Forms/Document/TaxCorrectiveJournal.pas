@@ -64,6 +64,11 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbactChecked: TdxBarButton;
+    colIsEDI: TcxGridDBColumn;
+    colIsElectron: TcxGridDBColumn;
+    spCheckedElectron: TdsdStoredProc;
+    actElectron: TdsdExecStoredProc;
+    bbElectron: TdxBarButton;
   private
     { Private declarations }
   public

@@ -30,6 +30,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , CountReturnIn TFloat
              , CountLoss TFloat
              , CountInventory TFloat
+             , CountProductionIn TFloat
+             , CountProductionOut TFloat
+             , CountTotalIn TFloat
+             , CountTotalOut TFloat
 
              , SummStart TFloat
              , SummEnd TFloat
@@ -43,6 +47,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , SummReturnIn TFloat
              , SummLoss TFloat
              , SummInventory TFloat
+             , SummProductionIn TFloat
+             , SummProductionOut TFloat
+             , SummTotalIn TFloat
+             , SummTotalOut TFloat
 
              , PriceStart TFloat
              , PriceEnd TFloat
@@ -56,6 +64,10 @@ RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVa
              , PriceReturnIn TFloat
              , PriceLoss TFloat
              , PriceInventory TFloat
+             , PriceProductionIn TFloat
+             , PriceProductionOut TFloat
+             , PriceTotalIn TFloat
+             , PriceTotalOut TFloat
 
                )
 AS
@@ -196,6 +208,18 @@ BEGIN
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Inventory
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                    AND MIContainer.isActive = TRUE
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ProductionIn
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                    AND MIContainer.isActive = FALSE
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ProductionOut
 
                                        , tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Start
                                        , tmpContainer_Count.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) AS Amount_End
@@ -218,13 +242,17 @@ BEGIN
                                     , tmpContainer_Count.GoodsKindId
                                     , tmpContainer_Count.PartionGoodsId
                                     , tmpContainer_Count.AssetToId
-                                    , Container.Id AS ContainerId_Summ
+                                    , Container.Id                         AS ContainerId_Summ
+                                    , COALESCE (View_Account.AccountId, 0) AS AccountId
                                     , Container.Amount
                                FROM tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
+                                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
+                                                                                 AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_20000() -- «‡Ô‡Ò˚
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
+                                      , tmpContainer_Summ.AccountId
                                       , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
                                       , tmpContainer_Summ.GoodsKindId
@@ -288,6 +316,18 @@ BEGIN
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Inventory
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                    AND MIContainer.isActive = TRUE
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ProductionIn
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                    AND MIContainer.isActive = FALSE
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ProductionOut
 
                                        , tmpContainer_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Start
                                        , tmpContainer_Summ.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) AS Amount_End
@@ -297,6 +337,7 @@ BEGIN
                                       LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                                         AND MIContainer.OperDate <= inEndDate
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
+                                        , tmpContainer_Summ.AccountId
                                         , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
                                         , tmpContainer_Summ.GoodsKindId
@@ -332,6 +373,10 @@ BEGIN
         , CAST (tmpMIContainer_group.CountReturnIn       AS TFloat) AS CountReturnIn
         , CAST (tmpMIContainer_group.CountLoss           AS TFloat) AS CountLoss
         , CAST (tmpMIContainer_group.CountInventory      AS TFloat) AS CountInventory
+        , CAST (tmpMIContainer_group.CountProductionIn   AS TFloat) AS CountProductionIn
+        , CAST (tmpMIContainer_group.CountProductionOut  AS TFloat) AS CountProductionOut
+        , CAST (tmpMIContainer_group.CountTotalIn        AS TFloat) AS CountTotalIn
+        , CAST (tmpMIContainer_group.CountTotalOut       AS TFloat) AS CountTotalOut
 
         , CAST (tmpMIContainer_group.SummStart            AS TFloat) AS SummStart
         , CAST (tmpMIContainer_group.SummEnd              AS TFloat) AS SummEnd
@@ -345,6 +390,10 @@ BEGIN
         , CAST (tmpMIContainer_group.SummReturnIn         AS TFloat) AS SummReturnIn
         , CAST (tmpMIContainer_group.SummLoss             AS TFloat) AS SummLoss
         , CAST (tmpMIContainer_group.SummInventory        AS TFloat) AS SummInventory
+        , CAST (tmpMIContainer_group.SummProductionIn     AS TFloat) AS SummProductionIn
+        , CAST (tmpMIContainer_group.SummProductionOut    AS TFloat) AS SummProductionOut
+        , CAST (tmpMIContainer_group.SummTotalIn          AS TFloat) AS SummTotalIn
+        , CAST (tmpMIContainer_group.SummTotalOut         AS TFloat) AS SummTotalOut
 
         , CAST (CASE WHEN tmpMIContainer_group.CountStart <> 0
                           THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.CountStart
@@ -399,6 +448,23 @@ BEGIN
                           THEN tmpMIContainer_group.SummInventory / tmpMIContainer_group.CountInventory
                      ELSE 0
                 END AS TFloat) AS PriceInventory
+        , CAST (CASE WHEN tmpMIContainer_group.CountProductionIn <> 0
+                          THEN tmpMIContainer_group.SummProductionIn / tmpMIContainer_group.CountProductionIn
+                     ELSE 0
+                END AS TFloat) AS PriceProductionIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountProductionOut <> 0
+                          THEN tmpMIContainer_group.SummProductionOut / tmpMIContainer_group.CountProductionOut
+                     ELSE 0
+                END AS TFloat) AS PriceProductionOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountTotalIn <> 0
+                          THEN tmpMIContainer_group.SummTotalIn / tmpMIContainer_group.CountTotalIn
+                     ELSE 0
+                END AS TFloat) AS PriceTotalIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountTotalOut <> 0
+                          THEN tmpMIContainer_group.SummTotalOut / tmpMIContainer_group.CountTotalOut
+                     ELSE 0
+                END AS TFloat) AS PriceTotalOut
       FROM 
         (SELECT tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
@@ -417,6 +483,20 @@ BEGIN
               , SUM (tmpMIContainer_all.CountReturnIn)       AS CountReturnIn
               , SUM (tmpMIContainer_all.CountLoss)           AS CountLoss
               , SUM (tmpMIContainer_all.CountInventory)      AS CountInventory
+              , SUM (tmpMIContainer_all.CountProductionIn)   AS CountProductionIn
+              , SUM (tmpMIContainer_all.CountProductionOut)  AS CountProductionOut
+
+              , SUM (tmpMIContainer_all.CountIncome
+                   + tmpMIContainer_all.CountSendIn
+                   + tmpMIContainer_all.CountSendOnPriceIn
+                   + tmpMIContainer_all.CountReturnIn
+                   + tmpMIContainer_all.CountProductionIn)   AS CountTotalIn
+              , SUM (tmpMIContainer_all.CountReturnOut
+                   + tmpMIContainer_all.CountSendOut
+                   + tmpMIContainer_all.CountSendOnPriceOut
+                   + tmpMIContainer_all.CountSale
+                   + tmpMIContainer_all.CountLoss
+                   + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
               , SUM (tmpMIContainer_all.SummStart)           AS SummStart
               , SUM (tmpMIContainer_all.SummEnd)             AS SummEnd
@@ -430,8 +510,23 @@ BEGIN
               , SUM (tmpMIContainer_all.SummReturnIn)        AS SummReturnIn
               , SUM (tmpMIContainer_all.SummLoss)            AS SummLoss
               , SUM (tmpMIContainer_all.SummInventory)       AS SummInventory
+              , SUM (tmpMIContainer_all.SummProductionIn)    AS SummProductionIn
+              , SUM (tmpMIContainer_all.SummProductionOut)   AS SummProductionOut
+
+              , SUM (tmpMIContainer_all.SummIncome
+                   + tmpMIContainer_all.SummSendIn
+                   + tmpMIContainer_all.SummSendOnPriceIn
+                   + tmpMIContainer_all.SummReturnIn
+                   + tmpMIContainer_all.SummProductionIn)    AS SummTotalIn
+              , SUM (tmpMIContainer_all.SummReturnOut
+                   + tmpMIContainer_all.SummSendOut
+                   + tmpMIContainer_all.SummSendOnPriceOut
+                   + tmpMIContainer_all.SummSale
+                   + tmpMIContainer_all.SummLoss
+                   + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
         FROM (SELECT tmpMIContainer_Count.ContainerId
+                   , 0 AS AccountId
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
@@ -449,6 +544,8 @@ BEGIN
                    , tmpMIContainer_Count.Amount_ReturnIn       AS CountReturnIn
                    , tmpMIContainer_Count.Amount_Loss           AS CountLoss
                    , tmpMIContainer_Count.Amount_Inventory      AS CountInventory
+                   , tmpMIContainer_Count.Amount_ProductionIn   AS CountProductionIn
+                   , tmpMIContainer_Count.Amount_ProductionOut  AS CountProductionOut
                    , 0 AS SummStart
                    , 0 AS SummEnd
                    , 0 AS SummIncome
@@ -461,6 +558,8 @@ BEGIN
                    , 0 AS SummReturnIn
                    , 0 AS SummLoss
                    , 0 AS SummInventory
+                   , 0 AS SummProductionIn
+                   , 0 AS SummProductionOut
               FROM tmpMIContainer_Count
               WHERE tmpMIContainer_Count.Amount_Start          <> 0
                  OR tmpMIContainer_Count.Amount_End            <> 0
@@ -474,8 +573,11 @@ BEGIN
                  OR tmpMIContainer_Count.Amount_ReturnIn       <> 0
                  OR tmpMIContainer_Count.Amount_Loss           <> 0
                  OR tmpMIContainer_Count.Amount_Inventory      <> 0
+                 OR tmpMIContainer_Count.Amount_ProductionIn   <> 0
+                 OR tmpMIContainer_Count.Amount_ProductionOut  <> 0
              UNION ALL
               SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
+                   , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
@@ -493,6 +595,8 @@ BEGIN
                    , 0 AS CountReturnIn
                    , 0 AS CountLoss
                    , 0 AS CountInventory
+                   , 0 AS CountProductionIn
+                   , 0 AS CountProductionOut
                    , tmpMIContainer_Summ.Amount_Start          AS SummStart
                    , tmpMIContainer_Summ.Amount_End            AS SummEnd
                    , tmpMIContainer_Summ.Amount_Income         AS SummIncome
@@ -505,6 +609,8 @@ BEGIN
                    , tmpMIContainer_Summ.Amount_ReturnIn       AS SummReturnIn
                    , tmpMIContainer_Summ.Amount_Loss           AS SummLoss
                    , tmpMIContainer_Summ.Amount_Inventory      AS SummInventory
+                   , tmpMIContainer_Summ.Amount_ProductionIn   AS SummProductionIn
+                   , tmpMIContainer_Summ.Amount_ProductionOut  AS SummProductionOut
               FROM tmpMIContainer_Summ
               WHERE tmpMIContainer_Summ.Amount_Start          <> 0
                  OR tmpMIContainer_Summ.Amount_End            <> 0
@@ -518,8 +624,11 @@ BEGIN
                  OR tmpMIContainer_Summ.Amount_ReturnIn       <> 0
                  OR tmpMIContainer_Summ.Amount_Loss           <> 0
                  OR tmpMIContainer_Summ.Amount_Inventory      <> 0
+                 OR tmpMIContainer_Summ.Amount_ProductionIn   <> 0
+                 OR tmpMIContainer_Summ.Amount_ProductionOut  <> 0
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.ContainerId
+                , tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
@@ -557,14 +666,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.08.14                                        * add ContainerId
  01.06.14                                        * ALL
  31.08.13         *
 */

@@ -11,9 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inSession         TVarChar    -- сессия пользователя
 )                              
 --  RETURNS VOID
-  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, FromObjectCostId Integer, ObjectCostId Integer, isInfoMoney_80401 Boolean, CalcSummCurrent TFloat, CalcSummNext TFloat, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
---  RETURNS TABLE (ObjectCostId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
---  RETURNS TABLE (MasterObjectCostId Integer, ObjectCostId Integer, OperCount TFloat)
+  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, FromContainerId Integer, ContainerId Integer, isInfoMoney_80401 Boolean, CalcSummCurrent TFloat, CalcSummNext TFloat, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
+--  RETURNS TABLE (ContainerId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
+--  RETURNS TABLE (MasterContainerId Integer, ContainerId Integer, OperCount TFloat)
 AS
 $BODY$
    DECLARE vbItearation Integer;
@@ -25,13 +25,13 @@ BEGIN
 
 
      -- таблица - Список сущностей которые являются элементами с/с.
-     CREATE TEMP TABLE _tmpMaster (ObjectCostId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMaster (ContainerId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      -- таблица - расходы для Master
-     CREATE TEMP TABLE _tmpChild (MasterObjectCostId Integer, ObjectCostId Integer, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, OperCount TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
-     INSERT INTO _tmpMaster (ObjectCostId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
-        SELECT COALESCE (ContainerObjectCost.ObjectCostId, 0) AS ObjectCostId
+     INSERT INTO _tmpMaster (ContainerId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
+        SELECT COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) AS ContainerId
              , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                          THEN TRUE
                     ELSE FALSE
@@ -64,8 +64,8 @@ BEGIN
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
                      -- Income
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
                      -- SendOnPrice
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountIn
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummIn
@@ -81,8 +81,8 @@ BEGIN
                      AS CalcCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS CalcSumm
                      -- Out
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId <> zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
-                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId <> zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutSumm
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutSumm
               FROM Container
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.ContainerId = Container.Id
@@ -120,8 +120,8 @@ BEGIN
                                                                                  AND lfContainerSumm_20901.BusinessId = COALESCE (ContainerLinkObject_Business.ObjectId, 0)
                                                                                  AND tmpContainer.DescId = zc_Container_Count()
 
-             LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId))
-                                          AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
+             /*LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ObjectCostId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId))
+                                          AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()*/
 
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                            ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
@@ -129,17 +129,17 @@ BEGIN
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                            ON ContainerLinkObject_InfoMoneyDetail.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
                                           AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        GROUP BY ContainerObjectCost.ObjectCostId
-             , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
-                         THEN TRUE
-                    ELSE FALSE
-               END
+        GROUP BY COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) -- ContainerObjectCost.ObjectCostId
+               , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
+                           THEN TRUE
+                      ELSE FALSE
+                 END
        ;
 
      -- расходы для Master
-     INSERT INTO _tmpChild (MasterObjectCostId, ObjectCostId, OperCount)
-        SELECT COALESCE (ContainerObjectCost_In.ObjectCostId, 0) AS MasterObjectCostId
-             , COALESCE (ContainerObjectCost_Out.ObjectCostId, 0) AS ObjectCostId
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, OperCount)
+        SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)  AS MasterContainerId
+             , COALESCE (MIContainer_Summ_Out.ContainerId, 0) AS ContainerId
              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ProductionSeparate())
                              THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
                          WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion())
@@ -155,12 +155,12 @@ BEGIN
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
              JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
-             LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
+             /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.ContainerId = MIContainer_Summ_Out.ContainerId
                                           AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_In
                                            ON ContainerObjectCost_In.ContainerId = MIContainer_Summ_In.ContainerId
-                                          AND ContainerObjectCost_In.ObjectCostDescId = zc_ObjectCost_Basis()
+                                          AND ContainerObjectCost_In.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN
              (SELECT Movement.Id AS  MovementId
                    , COALESCE (SUM (-MIContainer_Summ_Out.Amount), 0) AS Summ
@@ -178,27 +178,27 @@ BEGIN
         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
           -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
           AND Movement.StatusId = zc_Enum_Status_Complete()
-        GROUP BY ContainerObjectCost_In.ObjectCostId
-               , ContainerObjectCost_Out.ObjectCostId
+        GROUP BY MIContainer_Summ_In.ContainerId
+               , MIContainer_Summ_Out.ContainerId
         ;
 
 
      -- проверка1
-     IF EXISTS (SELECT _tmpMaster.ObjectCostId FROM _tmpMaster GROUP BY _tmpMaster.ObjectCostId HAVING COUNT(*) > 1)
+     IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'проверка1 - SELECT ObjectCostId FROM _tmpMaster GROUP BY ObjectCostId HAVING COUNT(*) > 1';
+         RAISE EXCEPTION 'проверка1 - SELECT ContainerId FROM _tmpMaster GROUP BY ContainerId HAVING COUNT(*) > 1';
      END IF;
      -- проверка2
-     IF EXISTS (SELECT _tmpChild.MasterObjectCostId, _tmpChild.ObjectCostId FROM _tmpChild GROUP BY _tmpChild.MasterObjectCostId, _tmpChild.ObjectCostId HAVING COUNT(*) > 1)
+     IF EXISTS (SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'проверка2 - SELECT MasterObjectCostId, ObjectCostId FROM _tmpChild GROUP BY MasterObjectCostId, ObjectCostId HAVING COUNT(*) > 1';
+         RAISE EXCEPTION 'проверка2 - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1';
      END IF;
 
 
      -- tmp - test
      /*RETURN QUERY
-      SELECT _tmpMaster.ObjectCostId, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
-      -- SELECT _tmpChild.MasterObjectCostId, _tmpChild.ObjectCostId, _tmpChild.OperCount FROM _tmpChild;
+      SELECT _tmpMaster.ContainerId, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
+      -- SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId, _tmpChild.OperCount FROM _tmpChild;
      RETURN;*/
 
 
@@ -213,11 +213,11 @@ BEGIN
      LOOP
          UPDATE _tmpMaster SET CalcSumm = _tmpSumm.CalcSumm
                -- Расчет суммы всех составляющих
-         FROM (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
+         FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
                FROM 
                     -- Расчет цены
-                    (SELECT _tmpMaster.ObjectCostId
+                    (SELECT _tmpMaster.ContainerId
                           , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
@@ -230,13 +230,13 @@ BEGIN
                             END AS OperPrice
                      FROM _tmpMaster
                     ) AS _tmpPrice 
-                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                    JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- Отбрасываем в том случае если сам в себя
-                                  -- AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
+                                  -- AND _tmpChild.MasterContainerId <> _tmpChild.ContainerId
 
-               GROUP BY _tmpChild.MasterObjectCostId
+               GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
-         WHERE _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId;
+         WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId;
 
          -- увеличивам итерации
          vbItearation:= vbItearation + 1;
@@ -244,11 +244,11 @@ BEGIN
          SELECT Count(*) INTO vbCountDiff
          FROM _tmpMaster
                -- Расчет суммы всех составляющих
-            , (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
+            , (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
                FROM 
                     -- Расчет цены
-                    (SELECT _tmpMaster.ObjectCostId
+                    (SELECT _tmpMaster.ContainerId
                           , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
@@ -261,12 +261,12 @@ BEGIN
                             END AS OperPrice
                      FROM _tmpMaster
                     ) AS _tmpPrice 
-                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                    JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- Отбрасываем в том случае если сам в себя
-                                  -- AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
-               GROUP BY _tmpChild.MasterObjectCostId
+                                  -- AND _tmpChild.MasterContainerId <> _tmpChild.ContainerId
+               GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
-         WHERE _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
+         WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm;
 
      END LOOP;
@@ -278,8 +278,8 @@ BEGIN
      DELETE FROM HistoryCost WHERE (inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate);
 
      -- Сохраняем что насчитали
-     INSERT INTO HistoryCost (ObjectCostId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, OutCount, OutSumm)
-        SELECT _tmpMaster.ObjectCostId, inStartDate AS StartDate, inEndDate AS EndDate
+     INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, OutCount, OutSumm)
+        SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
              , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                          THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0
                                         THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
@@ -321,20 +321,20 @@ BEGIN
                                THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
                           ELSE 0
                      END AS TFloat) AS PriceNext
-             , _tmpSumm.FromObjectCostId
-             , _tmpMaster.ObjectCostId
+             , _tmpSumm.FromContainerId
+             , _tmpMaster.ContainerId
              , _tmpMaster.isInfoMoney_80401
              , _tmpMaster.CalcSumm AS CalcSummCurrent, CAST (COALESCE (_tmpSumm.CalcSumm, 0) AS TFloat) AS CalcSummNext
              , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm
          FROM _tmpMaster LEFT JOIN
                -- Расчет суммы всех составляющих
-              (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
---                    , _tmpChild.ObjectCostId AS FromObjectCostId
-                    , 0 AS FromObjectCostId
+              (SELECT _tmpChild.MasterContainerId AS ContainerId
+--                    , _tmpChild.ContainerId AS FromContainerId
+                    , 0 AS FromContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
                FROM 
                     -- Расчет цены
-                    (SELECT _tmpMaster.ObjectCostId
+                    (SELECT _tmpMaster.ContainerId
                           , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                                       THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0
                                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
@@ -347,12 +347,12 @@ BEGIN
                             END AS OperPrice
                      FROM _tmpMaster
                     ) AS _tmpPrice 
-                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                    JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- Отбрасываем в том случае если сам в себя
-                                  -- AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
-               GROUP BY _tmpChild.MasterObjectCostId
---                      , _tmpChild.ObjectCostId
-              ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
+                                  -- AND _tmpChild.MasterContainerId <> _tmpChild.ContainerId
+               GROUP BY _tmpChild.MasterContainerId
+--                      , _tmpChild.ContainerId
+              ) AS _tmpSumm ON _tmpMaster.ContainerId = _tmpSumm.ContainerId
         ;
      END IF; -- if inInsert <> 12345
 
@@ -361,58 +361,58 @@ $BODY$
 LANGUAGE PLPGSQL VOLATILE;
 
 /*
-     INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
-        SELECT CAST (1 AS Integer) AS ObjectCostId, CAST (30 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+     INSERT INTO _tmpMaster (ContainerId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
+        SELECT CAST (1 AS Integer) AS ContainerId, CAST (30 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
        UNION ALL
-        SELECT CAST (2 AS Integer) AS ObjectCostId, CAST (50 AS TFloat) AS StartCount, CAST (340 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+        SELECT CAST (2 AS Integer) AS ContainerId, CAST (50 AS TFloat) AS StartCount, CAST (340 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
        UNION ALL
-        SELECT CAST (3 AS Integer) AS ObjectCostId, CAST (20 AS TFloat) AS StartCount, CAST (0 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+        SELECT CAST (3 AS Integer) AS ContainerId, CAST (20 AS TFloat) AS StartCount, CAST (0 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
        UNION ALL
-        SELECT CAST (4 AS Integer) AS ObjectCostId, CAST (13 AS TFloat) AS StartCount, CAST (14 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+        SELECT CAST (4 AS Integer) AS ContainerId, CAST (13 AS TFloat) AS StartCount, CAST (14 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
        UNION ALL
-        SELECT CAST (5 AS Integer) AS ObjectCostId, CAST (20 AS TFloat) AS StartCount, CAST (20 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+        SELECT CAST (5 AS Integer) AS ContainerId, CAST (20 AS TFloat) AS StartCount, CAST (20 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
        ;
      -- таблица - Все расходы
-     INSERT INTO _tmpChild (MasterObjectCostId, ObjectCostId, OperCount)
-        SELECT 3 AS MasterObjectCostId, 1 AS ObjectCostId, 5 AS OperCount
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, OperCount)
+        SELECT 3 AS MasterContainerId, 1 AS ContainerId, 5 AS OperCount
        UNION ALL
-        SELECT 3 AS MasterObjectCostId, 2 AS ObjectCostId, 7 AS OperCount
+        SELECT 3 AS MasterContainerId, 2 AS ContainerId, 7 AS OperCount
        UNION ALL
-        SELECT 3 AS MasterObjectCostId, 5 AS ObjectCostId, 2 AS OperCount
+        SELECT 3 AS MasterContainerId, 5 AS ContainerId, 2 AS OperCount
        UNION ALL
-        SELECT 5 AS MasterObjectCostId, 1 AS ObjectCostId, 4 AS OperCount
+        SELECT 5 AS MasterContainerId, 1 AS ContainerId, 4 AS OperCount
        UNION ALL
-        SELECT 5 AS MasterObjectCostId, 2 AS ObjectCostId, 6 AS OperCount
+        SELECT 5 AS MasterContainerId, 2 AS ContainerId, 6 AS OperCount
        UNION ALL
-        SELECT 5 AS MasterObjectCostId, 3 AS ObjectCostId, 2 AS OperCount
+        SELECT 5 AS MasterContainerId, 3 AS ContainerId, 2 AS OperCount
        UNION ALL
-        SELECT 5 AS MasterObjectCostId, 4 AS ObjectCostId, 1 AS OperCount
+        SELECT 5 AS MasterContainerId, 4 AS ContainerId, 1 AS OperCount
        UNION ALL
-        SELECT 4 AS MasterObjectCostId, 3 AS ObjectCostId, 10 AS OperCount
+        SELECT 4 AS MasterContainerId, 3 AS ContainerId, 10 AS OperCount
        ;
 
 
-     INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
-     INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
-        SELECT CAST (1 AS Integer) AS ObjectCostId, CAST (60 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
+     INSERT INTO _tmpMaster (ContainerId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
+     INSERT INTO _tmpMaster (ContainerId, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
+        SELECT CAST (1 AS Integer) AS ContainerId, CAST (60 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
        UNION ALL
-        SELECT CAST (2 AS Integer) AS ObjectCostId, CAST (60 AS TFloat) AS StartCount, CAST (0 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
+        SELECT CAST (2 AS Integer) AS ContainerId, CAST (60 AS TFloat) AS StartCount, CAST (0 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
        UNION ALL
-        SELECT CAST (3 AS Integer) AS ObjectCostId, CAST (4 AS TFloat) AS StartCount, CAST (14 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
+        SELECT CAST (3 AS Integer) AS ContainerId, CAST (4 AS TFloat) AS StartCount, CAST (14 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
        UNION ALL
-        SELECT CAST (4 AS Integer) AS ObjectCostId, CAST (5 AS TFloat) AS StartCount, CAST (20 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
+        SELECT CAST (4 AS Integer) AS ContainerId, CAST (5 AS TFloat) AS StartCount, CAST (20 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm, CAST (0 AS TFloat) AS OutCount, CAST (0 AS TFloat) AS OutSumm
        ;
      -- таблица - Все расходы
-     INSERT INTO _tmpChild (MasterObjectCostId, ObjectCostId, OperCount)
-        SELECT 2 AS MasterObjectCostId, 1 AS ObjectCostId, 30 AS OperCount
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, OperCount)
+        SELECT 2 AS MasterContainerId, 1 AS ContainerId, 30 AS OperCount
        UNION ALL
-        SELECT 2 AS MasterObjectCostId, 3 AS ObjectCostId, 1 AS OperCount
+        SELECT 2 AS MasterContainerId, 3 AS ContainerId, 1 AS OperCount
        UNION ALL
-        SELECT 2 AS MasterObjectCostId, 4 AS ObjectCostId, 1 AS OperCount
+        SELECT 2 AS MasterContainerId, 4 AS ContainerId, 1 AS OperCount
        UNION ALL
-        SELECT 2 AS MasterObjectCostId, 2 AS ObjectCostId, 30 AS OperCount
+        SELECT 2 AS MasterContainerId, 2 AS ContainerId, 30 AS OperCount
        UNION ALL
-        SELECT 1 AS MasterObjectCostId, 2 AS ObjectCostId, 30 AS OperCount
+        SELECT 1 AS MasterContainerId, 2 AS ContainerId, 30 AS OperCount
        ;
 
 */
@@ -420,6 +420,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.14                                        * ObjectCostId -> ContainerId
  10.08.14                                        * add SendOnPrice
  15.09.13                                        * add zc_Container_CountSupplier and zc_Enum_Account_20901
  13.07.13                                        * add JOIN Container
