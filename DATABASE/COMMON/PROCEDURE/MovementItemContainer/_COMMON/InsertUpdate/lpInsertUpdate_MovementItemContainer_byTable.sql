@@ -9,7 +9,7 @@ $BODY$
    DECLARE vbCount Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     -- PERFORM * FROM Container WHERE Id IN (SELECT ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+     PERFORM Container.* FROM Container INNER JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.Id FOR UPDATE;
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount

@@ -17,7 +17,7 @@ AS
 $BODY$
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     -- PERFORM 1 FROM Container WHERE Id = inContainerId FOR UPDATE;
+     PERFORM Container.* FROM Container WHERE Id = inContainerId FOR UPDATE;
 
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;

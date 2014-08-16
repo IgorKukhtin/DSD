@@ -2519,6 +2519,7 @@ end;
 procedure TMainForm.pLoadGuide_FindPartner_BranchNal;
 var ParentId_pg:String;
 begin
+exit;
      if (not cbJuridicalBranchNal.Checked)or(not cbJuridicalBranchNal.Enabled) then exit;
      //
      myEnabledCB(cbJuridicalBranchNal);
@@ -2534,8 +2535,9 @@ begin
                   Add('     , trim(_pgAdr.OKPO) as inOKPO');
                   Add('     , zf_isOKPO_Virtual_PG(OKPO) as isOKPO_Virtual');
                   Add('from dba._pgAdr');
-                  Add('where BranchId_pg<>8379'); // покупатели Киев
+                  Add('where BranchId_pg not in (8379,257162)'); // покупатели Киев
                   Add('  and isnull(PartnerId_pg,0)=0');
+
                   Add('order by ObjectName, ObjectId');
         Open;
         cbJuridicalBranchNal.Caption:='3.2. ('+IntToStr(RecordCount)+') Поиск покупатели-НАЛ';
@@ -2642,7 +2644,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-                  Add('select _pgAdr.Id as ObjectId');
+                  Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
                   Add('     , trim(_pgAdr.JurName1) as ObjectName');
                   Add('     , trim(_pgAdr.JurName2) as inFullName');
@@ -2724,6 +2726,10 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+
+             JuridicalId_pg:=0;
+             JuridicalDetailsId_pg:=0;
+             JuridicalId_pg_update:=0;
 
              // Пытаемся найти группу
              fOpenSqToQuery (' select Object_JuridicalGroup.Id as ParentId'
@@ -2813,6 +2819,145 @@ begin
      end;
      //
      myDisabledCB(cbJuridicalBranchNal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Partner_BranchNal;
+var PartnerId_pg:Integer;
+begin
+exit;
+     if (not cbPartnerBranchNal.Checked)or(not cbPartnerBranchNal.Enabled) then exit;
+     //
+     myEnabledCB(cbPartnerBranchNal);
+
+     // пересчитали адреса
+     fExecSqFromQuery(' update dba._pgAdr set adrAll1=trim( trim(ObjectName)'
+                     +'               || case when trim(adr2) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr2) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr3) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr3) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr6) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr6) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr7) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr7) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr8) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr8) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr9) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr9) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr10) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr10) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr11) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr11) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'                                   )'
+                     +'                    , adrAll2=trim( trim(adr1)'
+                     +'               || case when trim(adr2) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr2) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr3) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr3) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr4) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr4) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr5) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr5) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr6) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr6) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr7) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr7) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr8) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr8) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr9) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr9) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr10) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr10) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'               || case when trim(adr11) <>'+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL(' ') + ' trim(adr11) else '+FormatToVarCharServer_notNULL('')+' end'
+                     +'                                   )'
+                     );
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+                  Add('select 0 as ObjectId');
+                  Add('     , 0 as ObjectCode');
+                  Add('     , cast (trim(_pgAdr.Code1C) as integer) as Code1C');
+                  Add('     , trim(_pgAdr.adrAll1) as ObjectName');
+                  Add('     , trim(_pgAdr.adrAll2) as inAddress');
+                  Add('     , '+FormatToVarCharServer_notNULL('')+' as inGLNCode');
+                  Add('     , trim (_pgAdr.OKPO)as OKPO');
+                  Add('     , zf_isOKPO_Virtual_PG(OKPO) as isOKPO_Virtual');
+                  Add('     , null AS inPrepareDayCount');
+                  Add('     , null AS inDocumentDayCount');
+                  Add('     , _pgAdr.JuridicalId_pg as inJuridicalId');
+                  Add('     , null AS inRouteId');
+                  Add('     , null AS inRouteSortingId');
+                  Add('     , null AS inPersonalTakeId');
+                  Add('     , _pgPartner_find.PartnerId_pg as Id_Postgres');
+
+                  Add('from (select max (_pgAdr.Id) as Id'
+                    + '           , adrAll2'
+                    + '           , JuridicalId_pg'
+                    + '      from dba._pgAdr'
+                    + '      where trim (_pgAdr.OKPO)<>' + FormatToVarCharServer_notNULL('')
+                    + '        and isnull(_pgAdr.JuridicalId_pg,0)<>0'
+                    + '        and isnull(_pgAdr.PartnerId_pg,0)=0'
+                    + '      group by _pgAdr.BranchId,adrAll2,JuridicalId_pg'
+                    + '     ) as _pgAdr_find'
+                    + '     left join dba._pgAdr on _pgAdr.Id = _pgAdr_find.Id');
+                  //Add('where Unit.OKPO is not null and isnull(Id_Postgres,0) = 0');
+                  Add('order by inJuridicalId, ObjectName, ObjectId');
+
+        Open;
+        cbPartnerBranchNal.Caption:='3.3. ('+IntToStr(RecordCount)+') Контрагенты Филиал-НАЛ';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             if (FieldByName('Id_Postgres').AsInteger=0)
+             then begin
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inAddress').Value:=FieldByName('inAddress').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('inGLNCode').AsString;
+             toStoredProc.Params.ParamByName('inPrepareDayCount').Value:=FieldByName('inPrepareDayCount').AsFloat;
+             toStoredProc.Params.ParamByName('inDocumentDayCount').Value:=FieldByName('inDocumentDayCount').AsFloat;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('inJuridicalId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('inRouteId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('inRouteSortingId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalTakeId').Value:=FieldByName('inPersonalTakeId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+
+
+                 PartnerId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
+             end// if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('pgPartnerId').AsInteger<10000)
+             else
+                 PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
+             //
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
+                                   + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
+                                   + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
+                                    +'                                                    then ' + FormatToVarCharServer_notNULL('0')
+                                    +'                                               else '+IntToStr(PartnerId_pg)
+                                    +'                                          end'
+                                    +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
+                                    +'   and Main = '+FieldByName('Main').AsString
+                                    );
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPartnerBranchNal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Contract_Int;
@@ -3197,166 +3342,6 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_Fl(isBill:Boolean);
 begin
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_Partner_BranchNal;
-var PartnerId_pg:Integer;
-begin
-exit;
-     if (not cbPartnerBranchNal.Checked)or(not cbPartnerBranchNal.Enabled) then exit;
-     //
-     myEnabledCB(cbPartnerBranchNal);
-     //
-     with fromQuery,Sql do begin
-        Close;
-        Clear;
-                  Add('select 0 as ObjectId');
-                  Add('     , 0 as ObjectCode');
-                  Add('     , case when trim(_pgPartner.UnitName) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.UnitName)');
-                  Add('            else trim(_pgPartner.UnitName)'); // trim(isnull(Unit.UnitName,_pgPartner.UnitName))
-                  Add('       end as ObjectName');
-                  //Add('     , case when Unit.AddressFirm is not null then Unit.AddressFirm');
-                  Add('     , case when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
-                  Add('            else ObjectName');
-                  Add('       end as inAddress');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as inGLNCode');
-                  Add('     , null AS inPrepareDayCount');
-                  Add('     , null AS inDocumentDayCount');
-                  //Add('     , Unit.Id_byLoad, Unit.Id');
-                  Add('     , _pgPartner.OKPO');
-                  Add('     , _pgPartner.UnitId');
-                  Add('     , _pgPartner_find.Main');
-                  Add('     , _pgPartner_find.Id as pgPartnerId, _pgPartner_find_two.Id as pgPartnerId_two');
-                  Add('     , _pgPartner_find.JuridicalId_pg as inJuridicalId');
-                  Add('     , null AS inRouteId');
-                  Add('     , null AS inRouteSortingId');
-                  Add('     , null AS inPersonalTakeId');
-                  Add('     , _pgPartner_find.PartnerId_pg as Id_Postgres');
-                  Add('from (select min (_pgPartner.Id) as Id'
-                    + '           , max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg'
-                    + '           , JuridicalId_pg'
-                    + '           , OKPO'
-                    + '           , Main'
-                    + '      from dba._pgPartner'
-                    + '      where JuridicalId_pg<>0'
-                    + '        and trim (UnitId) <> '+FormatToVarCharServer_notNULL('')
-                    + '        and trim (UnitId) <> '+FormatToVarCharServer_notNULL('0')
-                    + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('')
-                    + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
-                    + '        and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
-//                    + '        and _pgPartner.Id = 938'
-                    + '      group by JuridicalId_pg'
-                    + '             , OKPO'
-                    + '             , Main'
-                    + '     ) as _pgPartner_find'
-                    + '     left join (select min (_pgPartner.Id) as Id'
-                    + '                     , JuridicalId_pg'
-                    + '                     , OKPO'
-                    + '                     , Main'
-                    + '                from dba._pgPartner'
-                    + '                where JuridicalId_pg<>0'
-                    + '                  and trim (UnitId) <> '+FormatToVarCharServer_notNULL('')
-                    + '                  and trim (UnitId) <> '+FormatToVarCharServer_notNULL('0')
-                    + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('')
-                    + '                  and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
-                    + '                  and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
-                    + '                  and trim (AdrUnit) <> '+FormatToVarCharServer_notNULL('')
-                    + '                group by JuridicalId_pg'
-                    + '                       , OKPO'
-                    + '                       , Main'
-                    + '               ) as _pgPartner_find_two on _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
-                    + '                                       and _pgPartner_find_two.Main = _pgPartner_find.Main'
-                    + '                                       and _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
-                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
-
-                  Add('     left join (select trim(isnull(ClientInformation_child.OKPO,isnull(ClientInformation_find.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO'
-                     +'                from dba.Unit'
-                     +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
-                     +'                                                                                    and trim(ClientInformation_find.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id'
-                     +'                                                                                    and trim(ClientInformation_child.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                where Unit.isFindBill = zc_rvYes()'
-                     +'                  and OKPO <> ' + FormatToVarCharServer_notNULL('')
-                     +'                group by OKPO'
-                     +'               ) as Unit on Unit.OKPO = _pgPartner_find.OKPO');
-
-
-                  //Add('where Unit.OKPO is not null or isnull(Id_Postgres,0) <> 0');
-                  //Add('where Unit.OKPO is not null and isnull(Id_Postgres,0) = 0');
-                  Add('order by inJuridicalId, ObjectName, ObjectId');
-
-        Open;
-        cbPartnerBranchNal.Caption:='3.3. ('+IntToStr(RecordCount)+') Контрагенты Филиал-НАЛ';
-        //
-        fStop:=cbOnlyOpen.Checked;
-        if cbOnlyOpen.Checked then exit;
-        //
-        Gauge.Progress:=0;
-        Gauge.MaxValue:=RecordCount;
-        //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
-        toStoredProc.OutputType := otResult;
-        toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
-        //
-        while not EOF do
-        begin
-             //!!!
-             if fStop then begin exit;end;
-
-             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('pgPartnerId').AsInteger<10000)
-             then begin
-             //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inAddress').Value:=FieldByName('inAddress').AsString;
-             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('inGLNCode').AsString;
-             toStoredProc.Params.ParamByName('inPrepareDayCount').Value:=FieldByName('inPrepareDayCount').AsFloat;
-             toStoredProc.Params.ParamByName('inDocumentDayCount').Value:=FieldByName('inDocumentDayCount').AsFloat;
-             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('inJuridicalId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('inRouteId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('inRouteSortingId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalTakeId').Value:=FieldByName('inPersonalTakeId').AsInteger;
-
-             if not myExecToStoredProc then ;//exit;
-
-
-                 PartnerId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
-             end// if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('pgPartnerId').AsInteger<10000)
-             else
-                 PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
-             //
-             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
-                                   + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
-                                   + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
-                                    +'                                                    then ' + FormatToVarCharServer_notNULL('0')
-                                    +'                                               else '+IntToStr(PartnerId_pg)
-                                    +'                                          end'
-                                    +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
-                                    +'   and Main = '+FieldByName('Main').AsString
-                                    );
-
-             //
-             Next;
-             Application.ProcessMessages;
-             Gauge.Progress:=Gauge.Progress+1;
-             Application.ProcessMessages;
-        end;
-     end;
-     //
-     myDisabledCB(cbPartnerBranchNal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_Int (isBill:Boolean);
