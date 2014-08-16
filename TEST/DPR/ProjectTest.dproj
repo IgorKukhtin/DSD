@@ -1472,6 +1472,11 @@
 			<DCCReference Include="..\SOURCE\Objects\All\AssetGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\MemberTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\PositionTest.pas"/>
+			<DCCReference Include="..\..\FormsMeat\Guides\BranchLink.pas">
+				<Form>BranchLinkForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

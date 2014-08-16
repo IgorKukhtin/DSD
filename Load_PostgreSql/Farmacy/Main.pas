@@ -50,6 +50,7 @@ type
     OKDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
     toTwoStoredProc: TdsdStoredProc;
+    CheckBox4: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private

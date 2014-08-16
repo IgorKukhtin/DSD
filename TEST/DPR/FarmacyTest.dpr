@@ -154,7 +154,8 @@ uses
   AssetTest in '..\SOURCE\Objects\All\AssetTest.pas',
   ReceiptCostTest in '..\SOURCE\Objects\All\ReceiptCostTest.pas',
   CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
-  RetailTest in '..\SOURCE\Objects\All\RetailTest.pas';
+  RetailTest in '..\SOURCE\Objects\All\RetailTest.pas',
+  ParentFormTest in '..\SOURCE\Form\ParentFormTest.pas' {TestForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

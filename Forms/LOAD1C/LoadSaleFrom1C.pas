@@ -58,6 +58,7 @@ type
     actMoveDoc: TMultiAction;
     actMoveAllDoc: TMultiAction;
     actBeforeMove: TdsdExecStoredProc;
+    colPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

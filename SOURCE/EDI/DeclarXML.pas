@@ -100,7 +100,9 @@ type
     function Get_HNSPDVSEL: UnicodeString;
     function Get_HNSPDVBUY: UnicodeString;
     function Get_H01G1S: UnicodeString;
+    function Get_H01G1D: UnicodeString;
     function Get_H01G2D: UnicodeString;
+    function Get_H01G2S: UnicodeString;
     function Get_H01G3S: UnicodeString;
     function Get_H02G1S: UnicodeString;
     function Get_H02G2D: UnicodeString;
@@ -147,7 +149,9 @@ type
     procedure Set_HNSPDVSEL(Value: UnicodeString);
     procedure Set_HNSPDVBUY(Value: UnicodeString);
     procedure Set_H01G1S(Value: UnicodeString);
+    procedure Set_H01G1D(Value: UnicodeString);
     procedure Set_H01G2D(Value: UnicodeString);
+    procedure Set_H01G2S(Value: UnicodeString);
     procedure Set_H01G3S(Value: UnicodeString);
     procedure Set_H02G1S(Value: UnicodeString);
     procedure Set_H02G2D(Value: UnicodeString);
@@ -182,7 +186,9 @@ type
     property HNSPDVSEL: UnicodeString read Get_HNSPDVSEL write Set_HNSPDVSEL;
     property HNSPDVBUY: UnicodeString read Get_HNSPDVBUY write Set_HNSPDVBUY;
     property H01G1S: UnicodeString read Get_H01G1S write Set_H01G1S;
+    property H01G1D: UnicodeString read Get_H01G1D write Set_H01G1D;
     property H01G2D: UnicodeString read Get_H01G2D write Set_H01G2D;
+    property H01G2S: UnicodeString read Get_H01G2S write Set_H01G2S;
     property H01G3S: UnicodeString read Get_H01G3S write Set_H01G3S;
     property H02G1S: UnicodeString read Get_H02G1S write Set_H02G1S;
     property H02G2D: UnicodeString read Get_H02G2D write Set_H02G2D;
@@ -312,10 +318,6 @@ type
     FRXXXXG7: IXMLRXXXXTypeList;
     FRXXXXG8: IXMLRXXXXTypeList;
     FRXXXXG9: IXMLRXXXXTypeList;
-    function Get_H01G1S: UnicodeString;
-    function Get_H01G2D: UnicodeString;
-    function Get_H01G3S: UnicodeString;
-    function Get_H02G1S: UnicodeString;
   protected
     { IXMLDECLARBODYType }
     function Get_HORIG: UnicodeString;
@@ -333,6 +335,12 @@ type
     function Get_HTELBUY: UnicodeString;
     function Get_HNSPDVSEL: UnicodeString;
     function Get_HNSPDVBUY: UnicodeString;
+    function Get_H01G1S: UnicodeString;
+    function Get_H01G2D: UnicodeString;
+    function Get_H01G3S: UnicodeString;
+    function Get_H02G1S: UnicodeString;
+    function Get_H01G1D: UnicodeString;
+    function Get_H01G2S: UnicodeString;
     function Get_H02G2D: UnicodeString;
     function Get_H02G3S: UnicodeString;
     function Get_H03G1S: UnicodeString;
@@ -377,7 +385,9 @@ type
     procedure Set_HNSPDVSEL(Value: UnicodeString);
     procedure Set_HNSPDVBUY(Value: UnicodeString);
     procedure Set_H01G1S(Value: UnicodeString);
+    procedure Set_H01G1D(Value: UnicodeString);
     procedure Set_H01G2D(Value: UnicodeString);
+    procedure Set_H01G2S(Value: UnicodeString);
     procedure Set_H01G3S(Value: UnicodeString);
     procedure Set_H02G1S(Value: UnicodeString);
     procedure Set_H02G2D(Value: UnicodeString);
@@ -803,9 +813,19 @@ begin
   ChildNodes['HNSPDVBUY'].NodeValue := Value;
 end;
 
+function TXMLDECLARBODYType.Get_H01G1D: UnicodeString;
+begin
+  Result := ChildNodes['H01G1D'].Text;
+end;
+
 function TXMLDECLARBODYType.Get_H01G1S: UnicodeString;
 begin
   Result := ChildNodes['H01G1S'].Text;
+end;
+
+procedure TXMLDECLARBODYType.Set_H01G1D(Value: UnicodeString);
+begin
+  ChildNodes['H01G1D'].NodeValue := Value;
 end;
 
 procedure TXMLDECLARBODYType.Set_H01G1S(Value: UnicodeString);
@@ -818,9 +838,19 @@ begin
   Result := ChildNodes['H01G2D'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_H01G2S: UnicodeString;
+begin
+  Result := ChildNodes['H01G2S'].Text;
+end;
+
 procedure TXMLDECLARBODYType.Set_H01G2D(Value: UnicodeString);
 begin
   ChildNodes['H01G2D'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_H01G2S(Value: UnicodeString);
+begin
+  ChildNodes['H01G2S'].NodeValue := Value;
 end;
 
 function TXMLDECLARBODYType.Get_H01G3S: UnicodeString;

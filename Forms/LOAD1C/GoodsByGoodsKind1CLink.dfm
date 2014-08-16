@@ -2,8 +2,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 851
-  ExplicitHeight = 436
+  ExplicitWidth = 843
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -159,8 +159,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoiceBranchForm'
-      FormName = 'TBranchForm'
-      FormNameParam.Value = 'TBranchForm'
+      FormName = 'TBranchLinkForm'
+      FormNameParam.Value = 'TBranchLinkForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -265,25 +265,25 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       Control = cxLabel1
     end
   end
-  object BranchGuides: TdsdGuides
+  object BranchLinkGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranchLinkForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TBranchLinkForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -336,7 +336,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       item
         Name = 'inBranchTopId'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end

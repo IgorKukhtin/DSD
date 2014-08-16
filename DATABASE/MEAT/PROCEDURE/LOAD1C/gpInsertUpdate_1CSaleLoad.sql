@@ -43,15 +43,12 @@ BEGIN
         RAISE EXCEPTION 'Филиал в файле не соответсвует выбранному филиалу';
      END IF;
     
-     IF inVidDoc = '1' or inVidDoc = '4' THEN
-
         INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
                             GoodsName, OperCount, OperPrice, Tax, 
                             Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog)
              VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
                     inGoodsName, inOperCount, inOperPrice, inTax, 
                     inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog);
-    END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -63,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.08.14                        * новая связь с филиалами
  10.04.14                          *
  30.01.14                          *
 */

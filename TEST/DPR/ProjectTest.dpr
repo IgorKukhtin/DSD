@@ -504,7 +504,8 @@ uses
   CurrencyTest in '..\SOURCE\Objects\All\CurrencyTest.pas',
   AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
-  PositionTest in '..\SOURCE\Objects\All\PositionTest.pas';
+  PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
+  BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -23,17 +23,11 @@ inherited GoodsForm: TGoodsForm
         ExplicitWidth = 782
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
+          OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
@@ -124,7 +118,6 @@ inherited GoodsForm: TGoodsForm
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    AfterInsert = nil
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
@@ -144,5 +137,24 @@ inherited GoodsForm: TGoodsForm
       0
       26
       0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SearchAsFilter = False
   end
 end

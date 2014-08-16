@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumber_Master TVarChar, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar
+             , isElectron Boolean
               )
 AS
 $BODY$
@@ -89,8 +90,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
 
-       FROM (SELECT Movement.id FROM  tmpStatus
+    FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
                WHERE inIsRegisterDate = FALSE
 
@@ -103,6 +105,10 @@ BEGIN
 
             JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id

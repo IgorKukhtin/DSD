@@ -64,6 +64,8 @@ type
     procedure LoadMemberFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadOrderInternalFormTest;
+    procedure LoadOrderExternalFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPersonalAccountFormTest;
@@ -89,9 +91,6 @@ type
     procedure LoadRateFuelKindFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
-    procedure LoadOrderInternalFormTest;
-    procedure LoadOrderExternalFormTest;
-
     procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadServiceDocumentFormTest;
@@ -919,8 +918,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
 end;
 
-
-
 procedure TLoadFormTest.Load1CLinkFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkForm'));
@@ -929,6 +926,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranchLinkForm');
 end;
 
 procedure TLoadFormTest.LoadAccountFormTest;

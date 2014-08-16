@@ -19,9 +19,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 82
+    Top = 80
     Width = 1329
-    Height = 364
+    Height = 366
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -760,7 +760,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 1329
     Height = 54
     Align = alTop
@@ -941,7 +941,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -1120,8 +1120,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item

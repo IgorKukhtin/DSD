@@ -16,7 +16,7 @@ RETURNS TABLE (UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
              , ContractTagName TVarChar, ContractStateKindCode Integer
-             , Synchronize Boolean)
+             , Synchronize Boolean, PaidKindName TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -39,6 +39,8 @@ BEGIN
       Object_Branch.ValueData AS BranchName,
       CASE Sale1C.VidDoc
         WHEN '1' THEN 'Расход'
+        WHEN '2' THEN 'Расход'
+        WHEN '3' THEN 'Возврат'
         WHEN '4' THEN 'Возврат'
       END::TVarChar AS DocType, 
       Object_Partner.ObjectCode,
@@ -49,6 +51,7 @@ BEGIN
             , Object_Contract_View.ContractTagName
             , Object_Contract_View.ContractStateKindCode 
             , (Count (tmpGoodsByGoodsKind1CLink.ObjectId) <> Count (*)) AS Synchronize      
+      , (SELECT ValueData FROM Object WHERE Id = zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS PaidKindName
       
       FROM Sale1C
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -66,7 +69,7 @@ BEGIN
 
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                         AND Object_Partner1CLink.ObjectCode <> 0
-                     ) AS tmpPartner1CLink ON tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                     ) AS tmpPartner1CLink ON tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                           AND tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
 
            LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
@@ -85,7 +88,7 @@ BEGIN
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                         AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
-                     ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                     ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 
    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -121,6 +124,7 @@ ALTER FUNCTION gpSelect_1CSaleLoadMaster (TDateTime, TDateTime, Integer, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.08.14                        * новая связь с филиалами
  22.05.14                                        * add ObjectCode <> 0
  24.04.14                         * 
 */

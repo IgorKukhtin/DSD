@@ -59,7 +59,7 @@ BEGIN
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                         AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
-                     ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                     ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 
            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
@@ -82,6 +82,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad (TDateTime, TDateTime, Integer, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.08.14                        * новая связь с филиалами
  22.05.14                                        * add ObjectCode <> 0
  24.04.14                         * 
  24.04.14                                        * add Contract...

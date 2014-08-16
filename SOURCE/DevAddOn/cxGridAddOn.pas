@@ -28,6 +28,7 @@ begin
       begin
         for i := 0 to ColumnCount - 1 do
             with TField.Create(MemData) do
+              if Assigned(TcxGridDBColumn(Columns[i]).DataBinding.Field) then
               begin
                 AField              := DefaultFieldClasses[TcxGridDBColumn(Columns[i]).DataBinding.Field.DataType].Create(MemData);
                 AField.Name         := TcxGridDBColumn(Columns[i]).DataBinding.Field.FieldName;
@@ -54,9 +55,10 @@ begin
       begin
         MemData.Append;
         for j := 0 to ColumnCount - 1 do
-          if MemData.FindField(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName) <> nil then
-             MemData.FieldByName(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName).Value :=
-                  DataController.Values[DataController.FilteredRecordIndex[i], columns[j].Index];
+          if Assigned(TcxGridDBColumn(columns[j]).DataBinding.Field) then
+             if MemData.FindField(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName) <> nil then
+                MemData.FieldByName(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName).Value :=
+                    DataController.Values[DataController.FilteredRecordIndex[i], columns[j].Index];
         MemData.post;
       end;//for I := 0 to fGrid.DataController.FilteredRecordCount - 1 do
 end;

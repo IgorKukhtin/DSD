@@ -1,17 +1,20 @@
 inherited AncestorReportForm: TAncestorReportForm
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
-    Height = 249
+    Top = 57
+    Height = 251
     ExplicitTop = 59
     ExplicitHeight = 249
-    ClientRectBottom = 245
+    ClientRectBottom = 251
     inherited tsMain: TcxTabSheet
       ExplicitHeight = 241
       inherited cxGrid: TcxGrid
         Width = 567
         Height = 241
+        ExplicitWidth = 567
         ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -102,7 +105,7 @@ inherited AncestorReportForm: TAncestorReportForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   object PeriodChoice: TPeriodChoice
