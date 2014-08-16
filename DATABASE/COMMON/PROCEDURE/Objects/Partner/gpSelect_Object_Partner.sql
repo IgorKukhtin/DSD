@@ -12,8 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
-               JuridicalGroupId Integer, JuridicalGroupCode Integer, JuridicalGroupName TVarChar,
-               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, 
+               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, 
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
                PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
@@ -49,15 +48,12 @@ BEGIN
        
          , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
          , Partner_DocumentDayCount.ValueData AS DocumentDayCount
-         
-         , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
-         , CAST (0 as Integer)           AS JuridicalGroupCode
-         , CAST('' AS TVarChar)          AS JuridicalGroupName
-         
-         , Object_Juridical.Id           AS JuridicalId
-         , Object_Juridical.ObjectCode   AS JuridicalCode
-         , Object_Juridical.ValueData    AS JuridicalName
 
+         , Object_Juridical.Id             AS JuridicalId
+         , Object_Juridical.ObjectCode     AS JuridicalCode
+         , Object_Juridical.ValueData      AS JuridicalName
+         , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+         
          , Object_Route.Id           AS RouteId
          , Object_Route.ObjectCode   AS RouteCode
          , Object_Route.ValueData    AS RouteName
@@ -133,9 +129,10 @@ BEGIN
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
          
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
-                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+        LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
@@ -175,6 +172,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.08.14                                        * add JuridicalGroupName
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street
                         

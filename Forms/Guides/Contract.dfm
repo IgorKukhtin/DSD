@@ -118,6 +118,14 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 79
       end
+      object clJuridicalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+        DataBinding.FieldName = 'JuridicalGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'

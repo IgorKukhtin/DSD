@@ -3,7 +3,7 @@ object PartnerForm: TPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 464
-  ClientWidth = 834
+  ClientWidth = 883
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 834
+    Width = 883
     Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -63,6 +64,13 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
+      end
+      object clJuridicalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+        DataBinding.FieldName = 'JuridicalGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -179,8 +187,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

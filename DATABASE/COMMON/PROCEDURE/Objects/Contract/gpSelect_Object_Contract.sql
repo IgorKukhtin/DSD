@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              
              , PaidKindId Integer, PaidKindName TVarChar
@@ -71,11 +71,12 @@ BEGIN
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
        
-       , Object_ContractKind.Id        AS ContractKindId
-       , Object_ContractKind.ValueData AS ContractKindName
-       , Object_Juridical.Id           AS JuridicalId
-       , Object_Juridical.ObjectCode   AS JuridicalCode
-       , Object_Juridical.ValueData    AS JuridicalName
+       , Object_ContractKind.Id          AS ContractKindId
+       , Object_ContractKind.ValueData   AS ContractKindName
+       , Object_Juridical.Id             AS JuridicalId
+       , Object_Juridical.ObjectCode     AS JuridicalCode
+       , Object_Juridical.ValueData      AS JuridicalName
+       , Object_JuridicalGroup.ValueData AS JuridicalGroupName
 
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
@@ -186,6 +187,11 @@ BEGIN
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
         
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Contract_View.JuridicalId
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+        LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                              ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
@@ -252,6 +258,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.08.14                                        * add JuridicalGroupName
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!!ContractKindName - ‚ÒÂ„‰‡!!!
