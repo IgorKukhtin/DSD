@@ -1,66 +1,65 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 512
-  ClientWidth = 394
-  ExplicitWidth = 400
-  ExplicitHeight = 537
+  ClientHeight = 499
+  ClientWidth = 364
+  ExplicitWidth = 370
+  ExplicitHeight = 524
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 69
-    Top = 480
+    Top = 468
     TabOrder = 2
     ExplicitLeft = 69
-    ExplicitTop = 480
+    ExplicitTop = 468
   end
   inherited bbCancel: TcxButton
-    Top = 477
-    ExplicitTop = 477
+    Top = 468
+    ExplicitTop = 468
   end
   object edAddress: TcxTextEdit [2]
-    Left = 40
-    Top = 107
-    Enabled = False
+    Left = 85
+    Top = 82
     TabOrder = 0
-    Width = 312
+    Width = 269
   end
   object cxLabel1: TcxLabel [3]
-    Left = 40
-    Top = 91
+    Left = 16
+    Top = 84
     Caption = #1040#1076#1088#1077#1089
   end
   object Код: TcxLabel [4]
-    Left = 40
+    Left = 16
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit [5]
-    Left = 40
-    Top = 26
+    Left = 16
+    Top = 21
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 3
-    Width = 107
+    Width = 102
   end
   object cxLabel2: TcxLabel [6]
-    Left = 192
+    Left = 136
     Top = 3
     Caption = #1050#1086#1076' GLN'
   end
   object edGLNCode: TcxTextEdit [7]
-    Left = 192
-    Top = 26
+    Left = 136
+    Top = 21
     TabOrder = 5
-    Width = 160
+    Width = 218
   end
   object cxLabel3: TcxLabel [8]
-    Left = 40
-    Top = 183
+    Left = 16
+    Top = 53
     Caption = #1070#1088'. '#1083#1080#1094#1086
   end
   object edJuridical: TcxButtonEdit [9]
-    Left = 97
-    Top = 181
+    Left = 85
+    Top = 51
     Properties.Buttons = <
       item
         Default = True
@@ -68,26 +67,26 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 255
+    Width = 269
   end
   object cxLabel4: TcxLabel [10]
-    Left = 40
-    Top = 213
+    Left = 16
+    Top = 214
     Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
   end
   object cxLabel5: TcxLabel [11]
-    Left = 13
-    Top = 239
+    Left = 16
+    Top = 241
     Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084#1083#1103#1077#1090#1089#1103' '#1076#1086#1082'-'#1085#1086
   end
   object cxLabel6: TcxLabel [12]
-    Left = 40
-    Top = 275
+    Left = 16
+    Top = 271
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object ceRoute: TcxButtonEdit [13]
-    Left = 116
-    Top = 274
+    Left = 160
+    Top = 269
     Properties.Buttons = <
       item
         Default = True
@@ -95,16 +94,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 236
+    Width = 194
   end
   object cxLabel7: TcxLabel [14]
-    Left = 40
-    Top = 303
+    Left = 16
+    Top = 301
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteSorting: TcxButtonEdit [15]
-    Left = 176
-    Top = 301
+    Left = 160
+    Top = 299
     Properties.Buttons = <
       item
         Default = True
@@ -112,16 +111,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 176
+    Width = 194
   end
   object cxLabel8: TcxLabel [16]
-    Left = 40
-    Top = 330
+    Left = 16
+    Top = 331
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
   end
   object cePersonalTake: TcxButtonEdit [17]
-    Left = 176
-    Top = 328
+    Left = 160
+    Top = 329
     Properties.Buttons = <
       item
         Default = True
@@ -129,10 +128,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 176
+    Width = 194
   end
   object cePrepareDayCount: TcxCurrencyEdit [18]
-    Left = 233
+    Left = 254
     Top = 212
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -140,10 +139,10 @@
     Properties.DisplayFormat = '0'
     Properties.EditFormat = '0'
     TabOrder = 16
-    Width = 121
+    Width = 100
   end
   object ceDocumentDayCount: TcxCurrencyEdit [19]
-    Left = 233
+    Left = 254
     Top = 239
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -151,21 +150,21 @@
     Properties.DisplayFormat = '0'
     Properties.EditFormat = '0'
     TabOrder = 17
-    Width = 121
+    Width = 100
   end
   object cxLabel9: TcxLabel [20]
-    Left = 13
-    Top = 359
+    Left = 16
+    Top = 361
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
-    Left = 15
-    Top = 394
+    Left = 16
+    Top = 391
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceList: TcxButtonEdit [22]
-    Left = 81
-    Top = 358
+    Left = 160
+    Top = 359
     Properties.Buttons = <
       item
         Default = True
@@ -173,11 +172,11 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 22
-    Width = 271
+    Width = 194
   end
   object cePriceListPromo: TcxButtonEdit [23]
-    Left = 150
-    Top = 393
+    Left = 160
+    Top = 389
     Properties.Buttons = <
       item
         Default = True
@@ -185,21 +184,21 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 23
-    Width = 202
+    Width = 194
   end
   object cxLabel11: TcxLabel [24]
-    Left = 16
-    Top = 418
+    Left = 54
+    Top = 414
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel12: TcxLabel [25]
-    Left = 160
-    Top = 418
+    Left = 198
+    Top = 414
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edStartPromo: TcxDateEdit [26]
-    Left = 18
-    Top = 441
+    Left = 56
+    Top = 432
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -208,8 +207,8 @@
     Width = 100
   end
   object edEndPromo: TcxDateEdit [27]
-    Left = 160
-    Top = 441
+    Left = 198
+    Top = 432
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -218,39 +217,41 @@
     Width = 100
   end
   object cxLabel13: TcxLabel [28]
-    Left = 40
-    Top = 53
-    Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Left = 16
+    Top = 113
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edShortName: TcxTextEdit [29]
-    Left = 40
-    Top = 70
+    Left = 85
+    Top = 111
+    Enabled = False
     TabOrder = 29
-    Width = 312
+    Width = 269
   end
   object cxLabel14: TcxLabel [30]
-    Left = 8
-    Top = 134
+    Left = 16
+    Top = 142
     Caption = #1059#1083#1080#1094#1072
   end
   object cxLabel15: TcxLabel [31]
-    Left = 145
-    Top = 134
+    Left = 16
+    Top = 165
     Caption = #1044#1086#1084
   end
   object cxLabel16: TcxLabel [32]
-    Left = 219
-    Top = 134
+    Left = 140
+    Top = 165
     Caption = #1050#1086#1088#1087#1091#1089
   end
   object cxLabel17: TcxLabel [33]
-    Left = 293
-    Top = 134
+    Left = 254
+    Top = 165
     Caption = #1050#1074#1072#1088#1090#1080#1088#1072
   end
   object ceStreet: TcxButtonEdit [34]
-    Left = 8
-    Top = 151
+    Left = 85
+    Top = 140
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -258,37 +259,39 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 34
-    Width = 124
+    Width = 269
   end
   object edHouseNumber: TcxTextEdit [35]
-    Left = 145
-    Top = 151
+    Left = 16
+    Top = 182
+    Enabled = False
     TabOrder = 35
-    Width = 59
+    Width = 100
   end
   object edCaseNumber: TcxTextEdit [36]
-    Left = 219
-    Top = 151
+    Left = 140
+    Top = 182
+    Enabled = False
     TabOrder = 36
-    Width = 59
+    Width = 100
   end
   object edRoomNumber: TcxTextEdit [37]
-    Left = 293
-    Top = 151
+    Left = 254
+    Top = 182
+    Enabled = False
     TabOrder = 37
-    Width = 59
+    Width = 100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 11
-    Top = 195
+    Left = 99
+    Top = 65531
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 0
-    Top = 283
+    Top = 443
   end
   inherited ActionList: TActionList
-    Left = 135
-    Top = 290
+    Left = 79
+    Top = 130
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -319,8 +322,8 @@
         Value = Null
         DataType = ftString
       end>
-    Left = 8
-    Top = 64
+    Left = 256
+    Top = 72
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Partner'
@@ -331,6 +334,13 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inAddress'
+        Value = ''
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'outPartnerName'
@@ -452,8 +462,8 @@
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 8
-    Top = 243
+    Left = 168
+    Top = 443
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -631,7 +641,7 @@
         Component = edEndPromo
         DataType = ftDateTime
       end>
-    Left = 8
+    Left = 240
     Top = 16
   end
   object dsdJuridicalGuides: TdsdGuides
@@ -658,8 +668,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 176
+    Left = 160
+    Top = 40
   end
   object dsdPersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -685,8 +695,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 315
+    Left = 256
+    Top = 299
   end
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
@@ -712,8 +722,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 291
+    Left = 240
+    Top = 267
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -739,8 +749,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 251
+    Left = 184
+    Top = 243
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -766,8 +776,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 144
-    Top = 355
+    Left = 192
+    Top = 331
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -793,8 +803,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 232
-    Top = 387
+    Left = 248
+    Top = 363
   end
   object StreetGuides: TdsdGuides
     KeyField = 'Id'
@@ -819,7 +829,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 48
-    Top = 139
+    Left = 176
+    Top = 115
   end
 end

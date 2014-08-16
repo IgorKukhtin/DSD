@@ -2,8 +2,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 428
+  ExplicitWidth = 1036
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,6 +29,15 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clJuridicalGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+            DataBinding.FieldName = 'JuridicalGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -97,6 +106,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object clContractStateKindName: TcxGridDBColumn

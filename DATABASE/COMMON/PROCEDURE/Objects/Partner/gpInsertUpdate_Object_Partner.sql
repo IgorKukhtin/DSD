@@ -5,11 +5,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                              Integer, TFloat, TFloat, 
                              Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                             Integer, TFloat, TFloat, 
+                             Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
-   OUT outPartnerName        TVarChar  ,    -- ключ объекта <Контрагент> 
+   OUT outPartnerName        TVarChar  ,    -- 
+    IN inAddress             TVarChar  ,    -- 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
@@ -35,7 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
-   DECLARE vbAddress TVarChar;
+   -- DECLARE vbAddress TVarChar;
    
 BEGIN
    
@@ -52,15 +56,17 @@ BEGIN
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
    IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
 
-   vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
+   /*vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
                         COALESCE(name, '')||', '
                    FROM Object_Street_View  WHERE Id = inStreetId);
-   vbAddress := vbAddress||inHouseNumber;
+   vbAddress := vbAddress||inHouseNumber;*/
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
    SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
+
    -- !!!в название добавляем <Адрес точки доставки>!!!
-   outPartnerName:= COALESCE(outPartnerName || ', ' || vbAddress, '');
+   outPartnerName:= COALESCE (outPartnerName || ' ' || inAddress, '');
+   -- outPartnerName:= COALESCE(outPartnerName || ', ' || vbAddress, '');
 
 
    -- проверка уникальности <Наименование>
@@ -76,7 +82,9 @@ BEGIN
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <Адрес точки доставки>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
+   -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
+
    -- сохранили свойство <дом>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
    -- сохранили свойство <корпус>
@@ -117,12 +125,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.08.14                                        * add inAddress
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street
  24.04.14                                        * add outPartnerName

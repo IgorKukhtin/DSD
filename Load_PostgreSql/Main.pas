@@ -2635,7 +2635,7 @@ begin
                                  // добавление Object_Partner1CLink
                                  fExecSqToQuery_two ('select * from gpInsertUpdate_Object_Partner1CLink(0'
                                                     +'                                           , '+FieldByName('Code1C').AsString
-                                                    +'                                           , '+FieldByName('ObjectName').AsString
+                                                    +'                                           , '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
                                                     +'                                           , '+FieldByName('PartnerId_pg').AsString
                                                     +'                                           , '+FieldByName('BranchId_pg').AsString
                                                     +'                                           , NULL'

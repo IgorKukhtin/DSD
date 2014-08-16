@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
