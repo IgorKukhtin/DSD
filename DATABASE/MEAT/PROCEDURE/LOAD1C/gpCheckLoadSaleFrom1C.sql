@@ -41,7 +41,7 @@ BEGIN
                    AND Object_Partner1CLink.ObjectCode <> 0
                    AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
-                                     AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                                     AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
            JOIN (SELECT Object_GoodsByGoodsKind1CLink.ObjectCode
                       , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
@@ -52,7 +52,7 @@ BEGIN
                  WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                    AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
                 ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
-                                              AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                                              AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
      WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
@@ -69,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.08.14                        * новая связь с филиалами
  22.05.14                                        * add ObjectCode <> 0
  24.04.14                         * 
 */

@@ -2,27 +2,28 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 974
-  ExplicitHeight = 451
+  ExplicitWidth = 966
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 958
     Height = 359
     TabOrder = 3
-    ExplicitWidth = 777
+    ExplicitTop = 57
+    ExplicitWidth = 958
     ExplicitHeight = 359
     ClientRectBottom = 359
     ClientRectRight = 958
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 777
+      ExplicitWidth = 958
       ExplicitHeight = 359
       inherited cxGrid: TcxGrid
         Top = 132
         Width = 958
         Height = 227
         ExplicitTop = 132
-        ExplicitWidth = 777
+        ExplicitWidth = 958
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = ChildDS
@@ -98,7 +99,6 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 777
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -149,6 +149,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
@@ -275,13 +282,12 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Height = 3
         AlignSplitter = salTop
         Control = cxMasterGrid
-        ExplicitWidth = 777
       end
     end
   end
   inherited Panel: TPanel
     Width = 958
-    ExplicitWidth = 777
+    ExplicitWidth = 958
     inherited deStart: TcxDateEdit
       EditValue = 41640d
       Properties.SaveTime = False
@@ -339,6 +345,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end>
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spMasterSelect
       StoredProcList = <
@@ -372,16 +379,16 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     object actSale1CLoadAction: TSale1CLoadAction
       Category = 'DSDLib'
       MoveParams = <>
+      Branch.Value = ''
+      Branch.Component = BranchGuides
+      Branch.ComponentItem = 'Key'
+      Branch.ParamType = ptInput
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      Branch.Value = ''
-      Branch.Component = BranchGuides
-      Branch.ComponentItem = 'Key'
-      Branch.ParamType = ptInput
     end
     object actLoad1C: TMultiAction
       Category = 'DSDLib'

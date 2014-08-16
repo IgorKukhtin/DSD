@@ -76,6 +76,8 @@ type
     bbMovementLoad: TdxBarButton;
     actAlternativeGoodsCode: TdsdOpenForm;
     bbAlternativeGoodsCodeForm: TdxBarButton;
+    actTestFormOpen: TdsdOpenForm;
+    bbTest: TdxBarButton;
   private
     { Private declarations }
   public

@@ -13,13 +13,14 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbTaxMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
    -- Задача найти документ EDI по номеру налоговой и дате
-    SELECT Movement.Id INTO vbMovementId
+    SELECT Movement.Id, Movement_Tax.Id INTO vbMovementId, vbTaxMovementId
       FROM Movement
             JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                       ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
@@ -37,6 +38,7 @@ BEGIN
    IF COALESCE(vbMovementId, 0) <> 0 THEN 
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
       PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
+      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
    END IF;
 
 END;

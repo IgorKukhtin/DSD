@@ -82,6 +82,14 @@ inherited MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbUpdateProgramm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTest'
         end>
     end
     inherited bbGuides: TdxBarSubItem
@@ -293,6 +301,10 @@ inherited MainForm: TMainForm
     object bbAlternativeGoodsCodeForm: TdxBarButton
       Action = actAlternativeGoodsCode
       Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
+      Category = 0
+    end
+    object bbTest: TdxBarButton
+      Action = actTestFormOpen
       Category = 0
     end
   end
@@ -636,6 +648,16 @@ inherited MainForm: TMainForm
       Caption = 'actAlternativeGoodsCode'
       FormName = 'TAlternativeGoodsCodeForm'
       FormNameParam.Value = 'TAlternativeGoodsCodeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTestFormOpen: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'actTestFormOpen'
+      FormName = 'TTestForm'
+      FormNameParam.Value = 'TTestForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

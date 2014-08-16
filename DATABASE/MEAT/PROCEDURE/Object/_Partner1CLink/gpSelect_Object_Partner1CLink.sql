@@ -80,7 +80,7 @@ BEGIN
             , Object_Partner1CLink.ObjectCode       AS Code
             , Object_Partner1CLink.ValueData        AS Name
             , Object_Branch.Id                      AS BranchId
-            , Object_Branch.ValueData               AS BranchName
+            , Object_Branch.BranchLinkName          AS BranchName
             , View_Contract_InvNumber.ContractId 
             , View_Contract_InvNumber.InvNumber     AS ContractNumber
             , ObjectDate_End.ValueData              AS EndDate
@@ -107,7 +107,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                  ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                 AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Partner1CLink_Branch.ChildObjectId 
+            LEFT JOIN Object_BranchLink_View AS Object_Branch ON Object_Branch.Id = ObjectLink_Partner1CLink_Branch.ChildObjectId 
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                  ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
@@ -126,7 +126,7 @@ BEGIN
             , Object_Partner1CLink.ObjectCode       AS Code
             , Object_Partner1CLink.ValueData        AS Name
             , Object_Branch.Id                      AS BranchId
-            , Object_Branch.ValueData               AS BranchName
+            , Object_Branch.BranchLinkName          AS BranchName
             , View_Contract_InvNumber.ContractId 
             , View_Contract_InvNumber.InvNumber     AS ContractNumber
             , ObjectDate_End.ValueData              AS EndDate
@@ -156,7 +156,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                  ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                 AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Partner1CLink_Branch.ChildObjectId 
+            LEFT JOIN Object_BranchLink_View AS Object_Branch ON Object_Branch.Id = ObjectLink_Partner1CLink_Branch.ChildObjectId 
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                  ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id

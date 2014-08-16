@@ -2,24 +2,24 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 436
+  ExplicitWidth = 1028
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
     Height = 375
-    ExplicitWidth = 1038
+    ExplicitWidth = 1020
     ExplicitHeight = 375
     ClientRectBottom = 375
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1038
+      ExplicitWidth = 1020
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 375
-        ExplicitWidth = 1038
+        ExplicitWidth = 1020
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -269,8 +269,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoiceBranchForm'
-      FormName = 'TBranchForm'
-      FormNameParam.Value = 'TBranchForm'
+      FormName = 'TBranchLinkForm'
+      FormNameParam.Value = 'TBranchLinkForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -554,25 +554,25 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Left = 224
     Top = 208
   end
-  object BranchGuides: TdsdGuides
+  object BranchLinkGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranchLinkForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TBranchLinkForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -619,7 +619,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       item
         Name = 'inBranchTopId'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -675,7 +675,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       item
         Name = 'inBranchId'
         Value = ''
-        Component = BranchGuides
+        Component = BranchLinkGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>

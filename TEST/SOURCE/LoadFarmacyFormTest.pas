@@ -32,6 +32,7 @@ type
     procedure LoadUnitFormTest;
     procedure LoadUnumFormTest;
     procedure LoadAlternativeGoodsCodeFormTest;
+    procedure FormTest;
   end;
 
 implementation
@@ -40,6 +41,12 @@ uses CommonData, Storage, FormStorage, Classes, Authentication, SysUtils,
      cxPropertiesStore, cxStorage, DBClient, dsdDB, ActionTest, MainForm;
 
 { TLoadFormTest }
+
+procedure TLoadFormTest.FormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTestForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTestForm');
+end;
 
 function TLoadFormTest.GetForm(FormClass: string): TForm;
 begin

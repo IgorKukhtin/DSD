@@ -23,7 +23,7 @@ type
     colDetailBranch: TcxGridDBColumn;
     dxBarControlContainerItem: TdxBarControlContainerItem;
     edBranch: TcxButtonEdit;
-    BranchGuides: TdsdGuides;
+    BranchLinkGuides: TdsdGuides;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actChoiceBranchForm: TOpenChoiceForm;

@@ -80,7 +80,7 @@ BEGIN
                             , Object_GoodsByGoodsKind1CLink.ValueData        AS Name
                             , (COALESCE (ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId, 0) :: TVarChar || '_' || COALESCE (ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId, 0) :: TVarChar) :: TVarChar AS MasterId
                             , Object_Branch.Id                               AS BranchId
-                            , Object_Branch.ValueData                        AS BranchName
+                            , Object_Branch.BranchLinkName                        AS BranchName
                             , Object_Goods.Id AS  GoodsId
                             , Object_Goods.ObjectCode AS  GoodsCode
                             , Object_Goods.ValueData AS GoodsName
@@ -96,7 +96,7 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
                                                  ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                 AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
-                            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId   
+                            LEFT JOIN Object_BranchLink_View AS Object_Branch ON Object_Branch.Id = ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId   
                             LEFT JOIN OBJECT AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId 
                             LEFT JOIN OBJECT AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId 
                        WHERE Object_GoodsByGoodsKind1CLink.DescId = zc_Object_GoodsByGoodsKind1CLink()

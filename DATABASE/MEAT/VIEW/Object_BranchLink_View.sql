@@ -9,7 +9,8 @@ SELECT BranchLink.id,
        BranchLink_Branch.childobjectid AS BranchId,
        Branch.valuedata AS BranchName,
        BranchLink_PaidKind.childobjectid AS PaidKindId,
-       PaidKind.valuedata AS PaidKindName 
+       PaidKind.valuedata AS PaidKindName,
+       (Branch.valuedata||' '||COALESCE(PaidKind.valuedata, ''))::TVarChar AS BranchLinkName
  FROM Object AS BranchLink
       LEFT JOIN ObjectLink AS BranchLink_Branch ON BranchLink_Branch.ObjectId = BranchLink.Id
                           AND BranchLink_Branch.descid = zc_ObjectLink_BranchLink_Branch()

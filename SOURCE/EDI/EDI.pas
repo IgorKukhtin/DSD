@@ -374,7 +374,10 @@ begin
     HeaderDataSet.FieldByName('OperDate_Child').asDateTime);
   DECLAR.DECLARBODY.HPODNUM := trim(HeaderDataSet.FieldByName
     ('InvNumber_Child').asString);
-
+  DECLAR.DECLARBODY.H01G1D := FormatDateTime('ddmmyyyy',
+    HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+  DECLAR.DECLARBODY.H01G2S := HeaderDataSet.FieldByName('ContractName')
+    .asString;
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName
     ('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName
@@ -391,16 +394,16 @@ begin
   DECLAR.DECLARBODY.H02G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName
     ('InvNumberPartnerEDI').asString + ';DATE:' + FormatDateTime('yyyy-mm-dd',
     HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime) + ';';
-  DECLAR.DECLARBODY.H02G2D := FormatDateTime('ddmmyyyy',
-    HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
-  DECLAR.DECLARBODY.H02G3S := HeaderDataSet.FieldByName('ContractName')
-    .asString;
+
+  DECLAR.DECLARBODY.H02G2D := DECLAR.DECLARBODY.H01G1D;
+  DECLAR.DECLARBODY.H02G3S := DECLAR.DECLARBODY.H01G2S;
+
   DECLAR.DECLARBODY.H04G1D := DECLAR.DECLARBODY.HPODFILL;
 
   DECLAR.DECLARBODY.H03G1S := 'Оплата з поточного рахунка';
 
   // DECLAR.DECLARBODY.H01G1D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
-  // DEC1LAR.DECLARBODY.H01G3S := HeaderDataSet.FieldByName('ContractName').AsString;
+  // DEC1LAR.DECLARBODY.H01G2S := HeaderDataSet.FieldByName('ContractName').AsString;
 
   i := 1;
   HeaderDataSet.First;
@@ -531,17 +534,12 @@ begin
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat')
     .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
 
-  { DECLAR.DECLARBODY.R03G7 := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
-    DECLAR.DECLARBODY.R03G11 := DECLAR.DECLARBODY.R03G7;
-    DECLAR.DECLARBODY.R04G7 := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
-    DECLAR.DECLARBODY.R04G11 := DECLAR.DECLARBODY.R04G7;
-  }
   DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
   DECLAR.DECLARBODY.H10G2S := 'Неграш';
 
   // сохранить на диск
-  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + '0024447183' +
+  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + PAD0(HeaderDataSet.FieldByName('OKPO_From').asString, 10) +
     C_DOC + C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
     PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
     7), 7) + '1' + FormatDateTime('mmyyyy',
@@ -754,7 +752,7 @@ begin
   DECLAR.DECLARBODY.H10G1S := 'Неграш';
 
   // сохранить на диск
-  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + '0024447183' +
+  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + PAD0(HeaderDataSet.FieldByName('OKPO_From').asString, 10) +
     C_DOC + C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
     PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
     7), 7) + '1' + FormatDateTime('mmyyyy',
@@ -1100,17 +1098,28 @@ begin
 end;
 
 procedure TEDI.PutFileToFTP(FileName, Directory: string);
+var i: integer;
 begin
-  FTPSetConnection;
-  // загружаем файл на FTP
-  FIdFTP.Connect;
-  if FIdFTP.Connected then
-    try
-      FIdFTP.ChangeDir(Directory);
-      FIdFTP.Put(FileName);
-    finally
-      FIdFTP.Quit;
+  for I := 1 to 10 do
+  try
+    FTPSetConnection;
+    // загружаем файл на FTP
+    FIdFTP.Connect;
+    if FIdFTP.Connected then
+      try
+        FIdFTP.ChangeDir(Directory);
+        FIdFTP.Put(FileName);
+      finally
+        FIdFTP.Quit;
+      end;
+      break;
+  except
+    on E: Exception do begin
+      if i > 9 then
+         raise Exception.Create(E.Message);
     end;
+  end;
+
 end;
 
 procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
@@ -1227,6 +1236,7 @@ end;
 procedure TEDI.SignFile(FileName: string; SignType: TSignType);
 var
   vbSignType: integer;
+  i: integer;
 begin
   if VarIsNull(ComSigner) then
      InitializeComSigner;
@@ -1237,7 +1247,16 @@ begin
     vbSignType := 2;
 
   // Подписание и/или шифрование
-  ComSigner.Process(FileName, vbSignType);
+  for I := 1 to 10 do
+  try
+    ComSigner.Process(FileName, vbSignType);
+    break;
+  except
+    on E: Exception do begin
+      if i > 9 then
+         raise Exception.Create(E.Message);
+    end;
+  end;
 end;
 
 { TEDIActionEDI }

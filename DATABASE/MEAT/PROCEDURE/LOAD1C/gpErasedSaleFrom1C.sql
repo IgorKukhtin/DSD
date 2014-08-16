@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpErasedSaleFrom1C (TDateTime, TDateTime, integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpErasedSaleFrom1C(
     IN inStartDate           TDateTime  , -- Начальная дата переноса
@@ -40,7 +40,7 @@ BEGIN
                         , Sale1C.OperDate
            FROM Sale1C             
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
+            AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
 
@@ -67,7 +67,7 @@ BEGIN
                         , Sale1C.OperDate
            FROM Sale1C             
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
+            AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
      -- сохранили протокол
@@ -80,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.08.14                        * новая связь с филиалами
  24.04.14                        * 
 */
 

@@ -167,6 +167,7 @@ type
     FColumnEnterList: TCollection;
     FSummaryItemList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
+    FSearchAsFilter: boolean;
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
     procedure OnBeforeOpen(ADataSet: TDataSet);
@@ -202,6 +203,7 @@ type
     procedure OnExit(Sender: TObject);
     procedure SetOnlyEditingCellOnEnter(const Value: boolean);
     function GetErasedColumn(Sender: TObject): TcxGridColumn;
+    procedure SetSearchAsFilter(const Value: boolean);
 
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -229,6 +231,8 @@ type
     property ColumnEnterList: TCollection read FColumnEnterList write FColumnEnterList;
     // Отображение элементов на футерах
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
+    // Поиск как фильтр
+    property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -629,6 +633,8 @@ begin
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
   FColumnEnterList := TCollection.Create(TColumnCollectionItem);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
+
+  SearchAsFilter := true;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -673,7 +679,10 @@ var Column: TcxGridColumn;
 begin
   if AViewInfo.Focused then begin
      ACanvas.Brush.Color := clHighlight;
-     ACanvas.Font.Color := clHighlightText;
+     if SearchAsFilter then
+        ACanvas.Font.Color := clHighlightText
+     else
+        ACanvas.Font.Color := clYellow;
   end;
 
   // работаем со свойством Удален
@@ -954,7 +963,7 @@ begin
   if Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) then
      isReadOnly := TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly;
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if (isReadOnly or  (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then begin
+  if SearchAsFilter and (isReadOnly or (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then begin
      lpSetEdFilterPos(Char(Key));
      Key := #0;
   end;
@@ -963,6 +972,13 @@ end;
 procedure TdsdDBViewAddOn.SetOnlyEditingCellOnEnter(const Value: boolean);
 begin
   FOnlyEditingCellOnEnter := Value;
+end;
+
+procedure TdsdDBViewAddOn.SetSearchAsFilter(const Value: boolean);
+begin
+  FSearchAsFilter := Value;
+  if Assigned(FView) then
+     FView.OptionsBehavior.IncSearch := not FSearchAsFilter;
 end;
 
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);

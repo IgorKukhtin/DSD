@@ -195,6 +195,7 @@ begin
           StringStream.Clear;
           MemoryStream.Clear;
         end;
+        break;
       except
         on E: Exception do begin
           FreeAndNil(Result);

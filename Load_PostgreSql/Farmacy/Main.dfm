@@ -64,7 +64,7 @@ object MainForm: TMainForm
     object cbJuridical: TCheckBox
       Tag = 10
       Left = 15
-      Top = 100
+      Top = 110
       Width = 225
       Height = 17
       Caption = '3.2. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
@@ -128,7 +128,7 @@ object MainForm: TMainForm
     object cbBank: TCheckBox
       Tag = 10
       Left = 15
-      Top = 122
+      Top = 132
       Width = 225
       Height = 17
       Caption = '3.2. '#1041#1072#1085#1082#1080
@@ -175,6 +175,17 @@ object MainForm: TMainForm
       Caption = '3.2. '#1041#1072#1085#1082#1080
       Enabled = False
       TabOrder = 14
+    end
+    object CheckBox4: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 82
+      Width = 225
+      Height = 17
+      Caption = '1.4. '#1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
+      Color = clBtnFace
+      ParentColor = False
+      TabOrder = 15
     end
   end
   object DBGrid: TDBGrid

@@ -91,7 +91,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
 
+    FROM (SELECT Movement.id FROM  tmpStatus
            , COALESCE(MovementLinkMovement_Tax.MovementId, 0) <> 0           AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
 
@@ -108,6 +110,10 @@ BEGIN
 
             JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
