@@ -148,6 +148,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = SummSendOnPriceOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PriceProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountProductionOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PriceProductionOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummProductionOut
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -269,6 +299,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = SummSendOnPriceOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PriceProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummProductionIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountProductionOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PriceProductionOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummProductionOut
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1065,6 +1125,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object bbPrintBy_Goods_Partion: TdxBarButton
       Action = actPrintBy_Goods_Partion
       Category = 0
+      Visible = ivNever
     end
     object bbPrintBy_Goods_Partion_Type: TdxBarButton
       Action = actPrintBy_Goods_Type
