@@ -12,6 +12,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
+  DECLARE vbMovementDescId Integer;
+
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId_From Integer;
   DECLARE vbMemberId_From Integer;
@@ -38,7 +40,7 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT Movement.OperDate
+     SELECT Movement.DescId, Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
@@ -59,7 +61,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
-            INTO vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
+            INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -168,8 +170,8 @@ BEGIN
 
 
      -- таблица - <Проводки>
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementId Integer, MovementDescId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementDescId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
      -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -389,9 +391,13 @@ BEGIN
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
+
                                                WHEN vbIsPartionDate_Unit_To = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+                                               WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                   THEN 0
+
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                     THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= _tmpItem.UnitId_Item
@@ -413,9 +419,13 @@ BEGIN
                                                      AND vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                      AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
+
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoodsDate)
+                                                    WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                        THEN 0
+
                                                     WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                          THEN _tmpItemChild.PartionGoodsId_Item
@@ -526,19 +536,20 @@ BEGIN
 
      -- формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
      UPDATE _tmpItem SET MIContainerId_To =
-             lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                 , inDescId:= zc_MIContainer_Count()
-                                                 , inMovementId:= inMovementId
-                                                 , inMovementItemId:= _tmpItem.MovementItemId
-                                                 , inParentId:= NULL
-                                                 , inContainerId:= _tmpItem.ContainerId_GoodsTo -- был опеределен выше
-                                                 , inAmount:= _tmpItem.OperCount
-                                                 , inOperDate:= vbOperDate
-                                                 , inIsActive:= TRUE
+             lpInsertUpdate_MovementItemContainer (ioId             := 0
+                                                 , inDescId         := zc_MIContainer_Count()
+                                                 , inMovementDescId := vbMovementDescId
+                                                 , inMovementId     := inMovementId
+                                                 , inMovementItemId := _tmpItem.MovementItemId
+                                                 , inParentId       := NULL
+                                                 , inContainerId    := _tmpItem.ContainerId_GoodsTo -- был опеределен выше
+                                                 , inAmount         := _tmpItem.OperCount
+                                                 , inOperDate       := vbOperDate
+                                                 , inIsActive       := TRUE
                                                   );
      -- формируются Проводки для количественного учета - От кого
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, _tmpItemChild.MovementItemId, _tmpItemChild.ContainerId_GoodsFrom, _tmpItem.MIContainerId_To AS ParentId, -1 * _tmpItemChild.OperCount, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId, _tmpItemChild.ContainerId_GoodsFrom, _tmpItem.MIContainerId_To AS ParentId, -1 * _tmpItemChild.OperCount, vbOperDate, FALSE
        FROM _tmpItemChild
             JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemChild.MovementItemId_Parent;
 
@@ -622,6 +633,7 @@ BEGIN
      UPDATE _tmpItemSumm SET MIContainerId_To = _tmpItem_group.MIContainerId_To
      FROM (SELECT lpInsertUpdate_MovementItemContainer (ioId             := 0
                                                       , inDescId         := zc_MIContainer_Summ()
+                                                      , inMovementDescId := vbMovementDescId
                                                       , inMovementId     := inMovementId
                                                       , inMovementItemId := _tmpItem.MovementItemId
                                                       , inParentId       := NULL
@@ -640,8 +652,8 @@ BEGIN
        AND _tmpItemSumm.ContainerId_To = _tmpItem_group.ContainerId_To;
 
      -- формируются Проводки для суммового учета - От кого
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemChild.MovementItemId, _tmpItemSummChild.ContainerId_From, _tmpItemSumm.MIContainerId_To AS ParentId, -1 * _tmpItemSummChild.OperSumm, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId, _tmpItemSummChild.ContainerId_From, _tmpItemSumm.MIContainerId_To AS ParentId, -1 * _tmpItemSummChild.OperSumm, vbOperDate, FALSE
        FROM _tmpItemChild
             JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId   = _tmpItemSummChild.MovementItemId_Parent
@@ -650,11 +662,9 @@ BEGIN
 
 
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
-     INSERT INTO _tmpMIReport_insert (Id, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
-        SELECT 0, MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
-        FROM (SELECT inMovementId AS MovementId
-                   , zc_Movement_ProductionUnion() AS MovementDescId
-                   , tmpMIReport.MovementItemId
+     INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+        SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
+        FROM (SELECT tmpMIReport.MovementItemId
                    , tmpMIReport.ActiveContainerId
                    , tmpMIReport.PassiveContainerId
                    , tmpMIReport.ActiveAccountId
@@ -714,6 +724,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.14                                        * add MovementDescId
  13.08.14                                        * add lpInsertUpdate_MIReport_byTable
  12.08.14                                        * add inBranchId :=
  05.08.14                                        * add UnitId_Item and ...

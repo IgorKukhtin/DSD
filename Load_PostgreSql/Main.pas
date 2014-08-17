@@ -230,6 +230,11 @@ type
     function pLoadDocument_IncomePacker:Integer;
     procedure pLoadDocumentItem_IncomePacker(SaveCount:Integer);
 
+    function pLoadDocument_ReturnOut:Integer;
+    procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
+    function pLoadDocument_ReturnOutNal:Integer;
+    procedure pLoadDocumentItem_ReturnOutNal(SaveCount:Integer);
+
     function pLoadDocument_SendUnit:Integer;
     procedure pLoadDocumentItem_SendUnit(SaveCount:Integer);
     function pLoadDocument_SendUnitBranch:Integer;
@@ -243,11 +248,6 @@ type
     procedure pLoadDocumentItem_SaleNal(SaveCount:Integer);
     function pLoadDocument_Sale_Fl:Integer;
     procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
-
-    function pLoadDocument_ReturnOut:Integer;
-    procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
-    function pLoadDocument_ReturnOutNal:Integer;
-    procedure pLoadDocumentItem_ReturnOutNal(SaveCount:Integer);
 
     function pLoadDocument_ReturnIn:Integer;
     procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
@@ -1715,7 +1715,7 @@ begin
                       );
      //
      myEnabledCB(cbGoods);
-
+{
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -1735,6 +1735,7 @@ begin
         Add('group by BillItems.GoodsPropertyId;');
         ExecSql;
      end;
+}
      //
      with fromQuery,Sql do begin
         Close;
@@ -1764,7 +1765,8 @@ begin
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// АЛАН
         Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
+//        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionSumm on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
@@ -2892,7 +2894,9 @@ begin
 
 
              // поиск договора НАЛ
-             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
+             //fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
+             // поиск договора Любого
+             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
              ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
              //
              if ContractId_pg=0
@@ -7786,8 +7790,8 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and Id_Postgres >0'
-           +'  and (UnitFrom.PersonalId_Postgres is not null'
-           +'    or Bill.MoneyKindId = zc_mkBN())'
+           +'  and UnitFrom.PersonalId_Postgres is null'
+           +'  and Bill.MoneyKindId = zc_mkBN()'
            );
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
@@ -8538,7 +8542,9 @@ begin
 
 
              // поиск договора НАЛ
-             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
+             //fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
+             // поиск договора Любого
+             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
              ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
 
              // Если договор не найден - всегда создаем договор + условия
@@ -9009,6 +9015,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is not null'
+           +'  and Bill.MoneyKindId = zc_mkNal()'
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -9148,6 +9155,7 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is not null'
            +'  and BillItems.Id is not null'
+           +'  and Bill.MoneyKindId = zc_mkNal()'
 // +'  and BillItems.BillId =1164656'
            );
         Add('order by Bill.BillDate, ObjectId');
@@ -12260,24 +12268,9 @@ begin
                   end;
              end;
 
-             // !!!не меняем договор!!! если в документе установили "свой" договор, и он не "закрыт" и не "удален"
-             if (not cbUpdateConrtact.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)then
-             begin
-                  fOpenSqToQuery (' select MovementLinkObject.ObjectId as ContractId'
-                                 +' from MovementLinkObject'
-                                 +'      join Object_Contract_View on Object_Contract_View.ContractId = MovementLinkObject.ObjectId'
-                                 +'                               and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'                               and Object_Contract_View.isErased = FALSE'
-                                 +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
-                                 +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
-                                 );
-                  if toSqlQuery.FieldByName('ContractId').AsInteger<>0
-                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger
-                  else //находим договор НАЛ
-                       ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,FieldByName('OperDate').AsDateTime);
-             end
-             else //находим договор НАЛ
-                  ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,FieldByName('OperDate').AsDateTime);
+             //находим договор НАЛ
+             ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,FieldByName('OperDate').AsDateTime);
+
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-кому:'+FieldByName('UnitNameTo').AsString

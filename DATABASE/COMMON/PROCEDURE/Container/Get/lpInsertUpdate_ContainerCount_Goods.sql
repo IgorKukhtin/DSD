@@ -34,7 +34,7 @@ BEGIN
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
-                                                 , inObjectId_1        := CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
+                                                 , inObjectId_1        := inPartionGoodsId -- CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
                                                  , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                   );
@@ -79,34 +79,20 @@ BEGIN
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
           -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
           -- 0)Товар 1)Сотрудник (МО) 2)Вид товара 3)!!!Партия товара!!!
-     THEN vbContainerId := CASE WHEN inPartionGoodsId <> 0
-                                     THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
-                                                                , inParentId          := NULL
-                                                                , inObjectId          := inGoodsId
-                                                                , inJuridicalId_basis := NULL
-                                                                , inBusinessId        := NULL
-                                                                , inObjectCostDescId  := NULL
-                                                                , inObjectCostId      := NULL
-                                                                , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
-                                                                , inObjectId_1        := inPartionGoodsId
-                                                                , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                                , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
-                                                                , inDescId_3          := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_3        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
-                                                                 )
-                                ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
-                                                           , inParentId          := NULL
-                                                           , inObjectId          := inGoodsId
-                                                           , inJuridicalId_basis := NULL
-                                                           , inBusinessId        := NULL
-                                                           , inObjectCostDescId  := NULL
-                                                           , inObjectCostId      := NULL
-                                                           , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                           , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
-                                                           , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                           , inObjectId_2        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
-                                                            )
-                           END ;
+     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                 , inParentId          := NULL
+                                                 , inObjectId          := inGoodsId
+                                                 , inJuridicalId_basis := NULL
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
+                                                 , inObjectId_2        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
+                                                 , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                 , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
+                                                  );
      -- !!!Other!!!
           -- 0)Товар 1)Подразделение
           -- 0)Товар 1)Сотрудник (МО)
@@ -137,6 +123,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.14                                        * add inPartionGoodsId always
  27.07.14                                        * add МНМА
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
  21.12.13                                        * Personal -> Member

@@ -15,6 +15,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
+  DECLARE vbMovementDescId Integer;
+
   DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId Integer;
@@ -35,7 +37,8 @@ BEGIN
 
 
      -- Эти параметры нужны для расчета остатка
-     SELECT Movement.StatusId
+     SELECT Movement.DescId
+          , Movement.StatusId
           , Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS CarId
@@ -54,7 +57,7 @@ BEGIN
 
           , COALESCE (ObjectLink_CarFrom_Unit.ChildObjectId, 0) AS UnitId_Car
 
-            INTO vbStatusId, vbOperDate
+            INTO vbMovementDescId, vbStatusId, vbOperDate
                , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbJuridicalId_Basis, vbBusinessId
                , vbUnitId_Car
      FROM Movement
@@ -115,18 +118,9 @@ BEGIN
      END IF;
 
 
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
-
-     -- таблица - Аналитики остатка
-     CREATE TEMP TABLE tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
-     -- таблица - Аналитики <элемент с/с>
-     CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
-     -- таблица - Аналитики <Проводки для отчета>
-     CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
      -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
      -- таблица - количественный остаток
      CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
@@ -281,9 +275,13 @@ BEGIN
                                                 AND vbAccountDirectionId = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
+
                                                WHEN vbIsPartionDate_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+                                               WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                   THEN 0
+
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                    THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Partion ELSE NULL END
@@ -450,8 +448,8 @@ BEGIN
 
 
      -- формируются Проводки для количественного учета !!!только!!! если есть разница по остатку
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_Goods, 0 AS ParentId, _tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0), vbOperDate, TRUE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_Goods, 0 AS ParentId, _tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0), vbOperDate, TRUE
        FROM _tmpItem
             LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.MovementItemId = _tmpItem.MovementItemId
        WHERE (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) <> 0;
@@ -479,10 +477,10 @@ BEGIN
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND 1=0
-                   LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+                   /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                                  ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                                AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-                   LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                                AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id -- ContainerObjectCost_Basis.ObjectCostId
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
             UNION ALL
               -- это расчетные остатки (их надо вычесть)
@@ -577,8 +575,8 @@ BEGIN
 
 
      -- формируются Проводки для суммового учета !!!только!!! если есть разница по остатку
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, _tmpItemSumm.OperSumm, vbOperDate, TRUE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, _tmpItemSumm.OperSumm, vbOperDate, TRUE
        FROM _tmpItemSumm
        WHERE _tmpItemSumm.OperSumm <> 0;
 
@@ -635,8 +633,8 @@ BEGIN
      WHERE _tmpItemSumm.ContainerId = _tmpItem_byContainer.ContainerId;
 
      -- формируются Проводки - Прибыль !!!только!!! если есть разница по остатку
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0, tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, -1 * tmpItem_group.OperSumm, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0, tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, -1 * tmpItem_group.OperSumm, vbOperDate, FALSE
        FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss
                   , SUM (_tmpItemSumm.OperSumm) AS OperSumm
              FROM _tmpItemSumm
@@ -647,7 +645,8 @@ BEGIN
 
 
      -- формируются Проводки для отчета (Аналитики: Товар и ОПиУ)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem_byProfitLoss.MovementItemId
                                               , inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
                                               , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
@@ -695,6 +694,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member

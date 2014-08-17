@@ -1,6 +1,6 @@
--- Function: lpComplete_Movement_TransferDebt_all (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_TransferDebt_all (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_TransferDebt_all (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_TransferDebt_all (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_TransferDebt_all(
     IN inMovementId        Integer               , -- ключ Документа
@@ -40,6 +40,7 @@ $BODY$
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
@@ -363,11 +364,11 @@ BEGIN
           ) AS tmp;
 
      -- 1.2. формируются Проводки для суммового учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, -1 * OperSumm_Partner, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, -1 * OperSumm_Partner, vbOperDate, FALSE
        FROM _tmpItem
       UNION ALL
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, OperSumm_Partner, vbOperDate, TRUE
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, OperSumm_Partner, vbOperDate, TRUE
        FROM _tmpItem;
 
 
@@ -569,15 +570,15 @@ BEGIN
 
 
      -- 2.3. формируются Проводки - долг Контрагенту
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- Контрагент - От кого
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_From, 0 AS ParentId, -1 * _tmpItem.OperSumm_Partner
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_From, 0 AS ParentId, -1 * _tmpItem.OperSumm_Partner
             , vbOperDate
             , FALSE
        FROM _tmpItem
      UNION ALL
        -- Контрагент - Кому
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_To, 0 AS ParentId, _tmpItem.OperSumm_Partner
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_To, 0 AS ParentId, _tmpItem.OperSumm_Partner
             , vbOperDate
             , TRUE
        FROM _tmpItem
@@ -585,7 +586,8 @@ BEGIN
 
 
      -- 4.1. формируются Проводки для отчета (Счета: Контрагент (От кого) <-> Транзит + виртуальный склад
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := tmpMIReport.MovementItemId
                                               , inActiveContainerId  := tmpMIReport.ActiveContainerId
                                               , inPassiveContainerId := tmpMIReport.PassiveContainerId
@@ -614,7 +616,8 @@ BEGIN
           ) AS tmpMIReport;
 
      -- 4.2. формируются Проводки для отчета (Счета: Контрагент (Кому) <-> Транзит + виртуальный склад
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := tmpMIReport.MovementItemId
                                               , inActiveContainerId  := tmpMIReport.ActiveContainerId
                                               , inPassiveContainerId := tmpMIReport.PassiveContainerId
@@ -679,6 +682,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  11.05.14                                        * all

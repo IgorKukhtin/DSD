@@ -1,6 +1,6 @@
 -- Function: zfCalc_FromHex 
 
--- DROP FUNCTION zfCalc_FromHex  (Text);
+DROP FUNCTION IF EXISTS zfCalc_FromHex  (Text);
 
 CREATE FUNCTION zfCalc_FromHex (inValue Text)
 RETURNS BIGINT AS

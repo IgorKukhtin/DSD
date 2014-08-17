@@ -10,6 +10,8 @@ RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
+  DECLARE vbMovementDescId Integer;
+
   DECLARE vbOperDate TDateTime;
   DECLARE vbMemberDriverId Integer;
   DECLARE vbCarId Integer;
@@ -25,6 +27,8 @@ BEGIN
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
+
      -- !!!обязательно!!! очистили таблицу свойств (остатки) документа/элементов
      DELETE FROM _tmpPropertyRemains;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -44,15 +48,17 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT _tmp.OperDate
+     SELECT _tmp.MovementDescId
+          , _tmp.OperDate
           , _tmp.MemberDriverId, _tmp.CarId, _tmp.UnitId_Forwarding
           , _tmp.JuridicalId_Basis
           -- , _tmp.BusinessId_Car
-            INTO vbOperDate
+            INTO vbMovementDescId, vbOperDate
                , vbMemberDriverId, vbCarId, vbUnitId_Forwarding
                , vbJuridicalId_Basis -- эти аналитики берутся у Подразделение (Место отправки) (и используется только для проводок по прибыли)
                -- , vbBusinessId_Car -- !!!стало ненужным!!! эта аналитика берется у подразделения за которым числится Автомобиль (и используется только для проводок по суммовым остаткам)
-     FROM (SELECT Movement.OperDate
+     FROM (SELECT Movement.DescId AS MovementDescId
+                , Movement.OperDate
                 , COALESCE (ObjectLink_PersonalDriver_Member.ChildObjectId, 0)     AS MemberDriverId
                 , COALESCE (MovementLinkObject_Car.ObjectId, 0)                    AS CarId
                 , COALESCE (MovementLinkObject_UnitForwarding.ObjectId, 0)         AS UnitId_Forwarding
@@ -305,8 +311,8 @@ BEGIN
                                                                                           , inBranchId               := 0
                                                                                            );
      -- 1.1.2. формируются Проводки для количественного учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, -1 * OperCount, vbOperDate, TRUE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, -1 * OperCount, vbOperDate, TRUE
        FROM _tmpItem_Transport;
 
 
@@ -322,10 +328,10 @@ BEGIN
              -- так находим для остальных
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem_Transport.ContainerId_Goods
                                              AND Container_Summ.DescId = zc_Container_Summ()
-             JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+             /*JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                       ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
+             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND _tmpItem_Transport.OperCount * COALESCE (HistoryCost.Price, 0) <> 0 -- здесь нули !!!НЕ НУЖНЫ!!! 
@@ -335,8 +341,8 @@ BEGIN
                , Container_Summ.ObjectId;
 
      -- 1.2.2. формируются Проводки для суммового учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem_TransportSumm_Transport.MovementItemId, _tmpItem_TransportSumm_Transport.ContainerId, 0 AS ParentId, -1 * _tmpItem_TransportSumm_Transport.OperSumm, vbOperDate, TRUE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_TransportSumm_Transport.MovementItemId, _tmpItem_TransportSumm_Transport.ContainerId, 0 AS ParentId, -1 * _tmpItem_TransportSumm_Transport.OperSumm, vbOperDate, TRUE
        FROM _tmpItem_TransportSumm_Transport;
 
 
@@ -386,8 +392,8 @@ BEGIN
      WHERE _tmpItem_TransportSumm_Transport.MovementItemId = _tmpItem_Transport.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_Transport_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_Transport_group.OperSumm, vbOperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_Transport_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_Transport_group.OperSumm, vbOperDate, FALSE
        FROM (SELECT _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
                   , SUM (_tmpItem_TransportSumm_Transport.OperSumm) AS OperSumm
              FROM _tmpItem_TransportSumm_Transport
@@ -396,7 +402,8 @@ BEGIN
 
 
      -- 3. формируются Проводки для отчета (Аналитики: Товар и Прибыль)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem_Transport.MovementItemId
                                               , inActiveContainerId  := _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss
                                               , inPassiveContainerId := _tmpItem_TransportSumm_Transport.ContainerId
@@ -451,6 +458,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol

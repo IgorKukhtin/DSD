@@ -15,11 +15,10 @@ BEGIN
      -- ïğîâåğêà ïğàâ ïîëüçîâàòåëÿ íà âûçîâ ïğîöåäóğû
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalSendCash());
 
-     -- òàáëèöû - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
      -- òàáëèöà - Ïğîâîäêè
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+
      -- òàáëèöà - ıëåìåíòû äîêóìåíòà, ñî âñåìè ñâîéñòâàìè äëÿ ôîğìèğîâàíèÿ Àíàëèòèê â ïğîâîäêàõ
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, OperDate TDateTime, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, UnitId_Route Integer, BranchId_Route Integer
                                , ContainerId_From Integer, AccountId_From Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, AccountId_ProfitLoss Integer, MemberId_To Integer, CarId_To Integer
@@ -41,6 +40,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 17.08.14                                        * add MovementDescId
  05.04.14                                        * add !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * òàáëèöà - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
  21.12.13                                        * Personal -> Member

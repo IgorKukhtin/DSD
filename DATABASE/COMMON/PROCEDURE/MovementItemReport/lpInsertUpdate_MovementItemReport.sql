@@ -1,8 +1,9 @@
 -- Function: lpInsertUpdate_MovementItemReport(Integer, Integer, Integer, TFloat, TDateTime)
 
--- DROP FUNCTION lpInsertUpdate_MovementItemReport(Integer, Integer, Integer, TFloat, TDateTime);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemReport(
+    IN inMovementDescId          Integer               ,
     IN inMovementId              Integer               , -- ключ Документа
     IN inMovementItemId          Integer               ,
     IN inActiveContainerId       Integer               ,
@@ -35,17 +36,18 @@ BEGIN
      END IF;
 
      -- сохранили "Проводка для отчета"
-     INSERT INTO MovementItemReport (MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
-                             VALUES (inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate);
+     INSERT INTO MovementItemReport (MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+                             VALUES (inMovementDescId, inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.14                                        * add inMovementDescId
  03.11.13                                        * add zc_Enum_Account_100301
  29.08.13                                        *
 */

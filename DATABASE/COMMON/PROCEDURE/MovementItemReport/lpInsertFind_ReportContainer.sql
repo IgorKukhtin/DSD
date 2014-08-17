@@ -44,15 +44,9 @@ BEGIN
      vbChildKeyValue:= zfCalc_FromHex (SUBSTRING (md5 (vbKeyValue) FROM 9 FOR 8));
 
 
-     -- Проверка - второй ключ должен быть пустой (т.к. его не учитываем)
-     IF vbChildKeyValue <> 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Второй ключ у проводки для отчета не пустой <%> ', vbChildKeyValue;
-     END IF;
+     -- !!!находим СРАЗУ по ДВУМ ключам!!!
+     vbReportContainerId := (SELECT MAX (ReportContainerId) FROM ReportContainerLink WHERE MasterKeyValue = vbMasterKeyValue AND ChildKeyValue = vbChildKeyValue);
 
-
-     -- !!!находим СРАЗУ по ОДНОМУ ключу!!!
-     vbReportContainerId := (SELECT MAX (ReportContainerId) FROM ReportContainerLink WHERE MasterKeyValue = vbMasterKeyValue);
 /*
      -- Если не нашли, находим по старому алгоритму
      IF COALESCE (vbReportContainerId, 0) = 0
@@ -78,10 +72,10 @@ BEGIN
          SELECT NEXTVAL ('reportcontainer_id_seq') INTO vbReportContainerId;
 
          -- добавили Аналитики
-         INSERT INTO ReportContainerLink (ReportContainerId, ContainerId, AccountId, AccountKindId, KeyValue, MasterKeyValue)
-            SELECT vbReportContainerId, inActiveContainerId, inActiveAccountId, zc_Enum_AccountKind_Active(), vbKeyValue, vbMasterKeyValue
+         INSERT INTO ReportContainerLink (ReportContainerId, ContainerId, AccountId, AccountKindId, KeyValue, MasterKeyValue, ChildKeyValue)
+            SELECT vbReportContainerId, inActiveContainerId, inActiveAccountId, zc_Enum_AccountKind_Active(), vbKeyValue, vbMasterKeyValue, vbChildKeyValue
            UNION ALL
-            SELECT vbReportContainerId, inPassiveContainerId, inPassiveAccountId, zc_Enum_AccountKind_Passive(), vbKeyValue, vbMasterKeyValue
+            SELECT vbReportContainerId, inPassiveContainerId, inPassiveAccountId, zc_Enum_AccountKind_Passive(), vbKeyValue, vbMasterKeyValue, vbChildKeyValue
             ;
 
      END IF;  
@@ -157,5 +151,4 @@ group by tmp.ReportContainerId
 -- update ReportContainerLink set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8)) where AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive())
 -- select * from ReportContainerLink where (coalesce (MasterKeyValue, 0) = 0 or coalesce (ChildKeyValue, 0) = 0) and AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive())
 -- select MasterKeyValue, ChildKeyValue from (select ReportContainerId, MasterKeyValue, ChildKeyValue from ReportContainerLink where AccountKindId IN (zc_Enum_AccountKind_Active(), zc_Enum_AccountKind_Passive()) group by ReportContainerId, MasterKeyValue, ChildKeyValue) as tmp group by MasterKeyValue, ChildKeyValue having count (*) > 1
--- select MasterKeyValue from (select ReportContainerId, MasterKeyValue from ReportContainerLink group by ReportContainerId, MasterKeyValue) as tmp group by MasterKeyValue having count (*) > 1
 */

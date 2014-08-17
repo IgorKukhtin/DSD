@@ -306,8 +306,8 @@ BEGIN
 
 
      -- 3. формируются Проводки 
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId, 0 AS ParentId
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId, 0 AS ParentId
             , _tmpItem.OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
@@ -315,7 +315,8 @@ BEGIN
 
 
      -- 4. формируются Проводки для отчета
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := _tmpItem.MovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ActiveContainerId
                                               , inPassiveContainerId := _tmpItem.PassiveContainerId
@@ -337,7 +338,8 @@ BEGIN
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM (SELECT _tmpItem_Active.MovementItemId
+     FROM (SELECT _tmpItem_Active.MovementDescId
+                , _tmpItem_Active.MovementItemId
                 , _tmpItem_Active.OperSumm, _tmpItem_Active.OperDate
                 , _tmpItem_Active.ContainerId AS ActiveContainerId
                 , _tmpItem_Active.AccountId AS ActiveAccountId
@@ -371,6 +373,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.08.14                                        * add MovementDescId
  19.07.14                                        * modify zc_Enum_Account_40302
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
  04.05.14                                        * add zc_Enum_Account_40302

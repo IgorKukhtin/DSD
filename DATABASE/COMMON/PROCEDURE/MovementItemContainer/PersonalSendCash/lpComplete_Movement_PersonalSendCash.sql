@@ -10,6 +10,8 @@ RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
+  DECLARE vbMovementDescId Integer;
+
   DECLARE vbMemberId_From Integer;
   DECLARE vbUnitId_Forwarding Integer;
 
@@ -19,16 +21,20 @@ BEGIN
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT _tmp.MemberId_From, _tmp.UnitId_Forwarding
+     SELECT _tmp.MovementDescId
+          , _tmp.MemberId_From, _tmp.UnitId_Forwarding
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_PersonalFrom
-            INTO vbMemberId_From, vbUnitId_Forwarding
+            INTO vbMovementDescId
+               , vbMemberId_From, vbUnitId_Forwarding
                , vbJuridicalId_Basis, vbBusinessId_PersonalFrom -- эти аналитики берутся у подразделения за которым числится сотрудник (кто выдавал деньги)
-     FROM (SELECT COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0)   AS MemberId_From
+     FROM (SELECT Movement.DescId AS MovementDescId
+                , COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0)   AS MemberId_From
                 , COALESCE (MovementLinkObject_UnitForwarding.ObjectId, 0) AS UnitId_Forwarding
                 , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0)    AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)     AS BusinessId_PersonalFrom
@@ -293,17 +299,17 @@ BEGIN
         AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer.BusinessId_Route;
 
      -- 1.3. формируются Проводки суммового учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- по счету долг Сотрудника (Водитель)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, OperDate, TRUE AS IsActive FROM _tmpItem
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, OperDate, TRUE AS IsActive FROM _tmpItem
       UNION ALL
        -- тут же списание с него по счету долг Сотрудника (Водитель) (!!!если Прибыль!!!)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
       UNION ALL
        -- по счету Прибыль
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, OperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, OperDate, FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
      ;
@@ -350,8 +356,8 @@ BEGIN
       WHERE _tmpItem.InfoMoneyId = _tmpItem_byContainer.InfoMoneyId;
 
      -- 2.3. формируются Проводки суммового учета по долг Сотрудника (От кого)
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE
        FROM (SELECT _tmpItem.ContainerId_From
                   , _tmpItem.OperDate
                   , SUM (_tmpItem.OperSumm) AS OperSumm
@@ -363,7 +369,8 @@ BEGIN
 
 
      -- 3.1. формируются Проводки для отчета (Аналитики: Сотрудник (От кого) и Сотрудник (Водитель))
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ActiveContainerId
                                               , inPassiveContainerId := _tmpItem.PassiveContainerId
@@ -398,7 +405,8 @@ BEGIN
 
 
      -- 3.2. формируются Проводки для отчета (Аналитики: Сотрудник (Водитель) и ОПиУ)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
+                                              , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ActiveContainerId
                                               , inPassiveContainerId := _tmpItem.PassiveContainerId
@@ -469,6 +477,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  26.01.14                                        * правильные проводки по филиалу
