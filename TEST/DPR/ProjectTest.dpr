@@ -479,7 +479,6 @@ uses
   Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
-  Report_ContractEndDate in '..\..\Forms\Report\Report_ContractEndDate.pas' {Report_ContractEndDateForm: TParentForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',

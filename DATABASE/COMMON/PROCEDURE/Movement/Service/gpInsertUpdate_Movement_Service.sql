@@ -92,13 +92,12 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
      -- 5.1. таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+
      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
                                , MovementItemId Integer, ContainerId Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
@@ -121,6 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  10.05.14                                        * add lpInsert_MovementItemProtocol
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!

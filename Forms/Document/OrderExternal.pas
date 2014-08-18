@@ -29,11 +29,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colAmountSecond: TcxGridDBColumn;
     cxLabel5: TcxLabel;
