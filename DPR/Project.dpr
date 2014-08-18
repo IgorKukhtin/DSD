@@ -67,6 +67,14 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
 
   // Процесс аутентификации
+  if FindCmdLineSwitch('autologin', true) then begin
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+     TUpdater.AutomaticUpdateProgram;
+     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TdmMain, dmMain);
+  end
+  else
+
   with TLoginForm.Create(Application) do
     //Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
