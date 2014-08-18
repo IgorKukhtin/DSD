@@ -27,11 +27,12 @@ BEGIN
      -- таблица - —писок сущностей которые €вл€ютс€ элементами с/с.
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      -- таблица - расходы дл€ Master
-     CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat) ON COMMIT DROP;
 
      -- заполн€ем таблицу  оличество и —умма - ост, приход, расход
      INSERT INTO _tmpMaster (ContainerId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
-        SELECT COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) AS ContainerId
+        --SELECT COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) AS ContainerId
+        SELECT COALESCE (Container_Summ.Id, tmpContainer.ContainerId) AS ContainerId
              , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                          THEN TRUE
                     ELSE FALSE
@@ -114,11 +115,11 @@ BEGIN
                                            ON ContainerLinkObject_Business.ContainerId = tmpContainer.ContainerId
                                           AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
                                           AND tmpContainer.DescId = zc_Container_Count()
-             LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
+             /*LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
                                                                                   ON lfContainerSumm_20901.GoodsId = tmpContainer.ObjectId
                                                                                  AND lfContainerSumm_20901.JuridicalId_basis = COALESCE (ContainerLinkObject_JuridicalBasis.ObjectId, 0)
                                                                                  AND lfContainerSumm_20901.BusinessId = COALESCE (ContainerLinkObject_Business.ObjectId, 0)
-                                                                                 AND tmpContainer.DescId = zc_Container_Count()
+                                                                                 AND tmpContainer.DescId = zc_Container_Count()*/
 
              /*LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ObjectCostId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId))
                                           AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()*/
@@ -129,7 +130,8 @@ BEGIN
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                            ON ContainerLinkObject_InfoMoneyDetail.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
                                           AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        GROUP BY COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) -- ContainerObjectCost.ObjectCostId
+        --GROUP BY COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) -- ContainerObjectCost.ObjectCostId
+        GROUP BY COALESCE (Container_Summ.Id, tmpContainer.ContainerId) -- ContainerObjectCost.ObjectCostId
                , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                            THEN TRUE
                       ELSE FALSE
@@ -137,9 +139,11 @@ BEGIN
        ;
 
      -- расходы дл€ Master
-     INSERT INTO _tmpChild (MasterContainerId, ContainerId, OperCount)
-        SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)  AS MasterContainerId
-             , COALESCE (MIContainer_Summ_Out.ContainerId, 0) AS ContainerId
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
+        SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
+             , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
+             , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
+             , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ProductionSeparate())
                              THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
                          WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion())
@@ -154,7 +158,13 @@ BEGIN
              JOIN MovementItemContainer AS MIContainer_Summ_Out
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
+
              JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+             JOIN MovementItemContainer AS MIContainer_Count_In
+                                        ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
+                                       AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
+                                       AND MIContainer_Count_In.isActive = TRUE
+
              /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.ContainerId = MIContainer_Summ_Out.ContainerId
                                           AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
@@ -180,7 +190,38 @@ BEGIN
           AND Movement.StatusId = zc_Enum_Status_Complete()
         GROUP BY MIContainer_Summ_In.ContainerId
                , MIContainer_Summ_Out.ContainerId
+               , MIContainer_Count_In.ContainerId
+               , MIContainer_Count_Out.ContainerId
         ;
+
+     -- добавл€ютс€ св€зи которых нет (т.к. нулевые проводки не формируютс€)
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
+        SELECT HistoryCostContainerLink.MasterContainerId_Summ
+             , HistoryCostContainerLink.ChildContainerId_Summ
+             , HistoryCostContainerLink.MasterContainerId_Count
+             , HistoryCostContainerLink.ChildContainerId_Count
+             , _tmpChild_group.ContainerId_Count
+        FROM (SELECT MasterContainerId_Count, ContainerId_Count, OperCount FROM _tmpChild GROUP BY MasterContainerId_Count, ContainerId_Count, OperCount) AS _tmpChild_group
+             INNER JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild_group.MasterContainerId_Count
+                                                AND HistoryCostContainerLink.ChildContainerId_Count = _tmpChild_group.ContainerId_Count
+             LEFT JOIN _tmpChild ON _tmpChild.MasterContainerId_Count = HistoryCostContainerLink.MasterContainerId_Count
+                                AND _tmpChild.ContainerId_Count       = HistoryCostContainerLink.ChildContainerId_Count
+                                AND _tmpChild.MasterContainerId       = HistoryCostContainerLink.MasterContainerId_Summ
+                                AND _tmpChild.ContainerId             = HistoryCostContainerLink.ChildContainerId_Summ
+        WHERE _tmpChild.MasterContainerId_Count IS NULL;
+
+     -- сохран€ем св€зи, что б не формировать нулевые проводки
+     INSERT INTO HistoryCostContainerLink (MasterContainerId_Count, ChildContainerId_Count, MasterContainerId_Summ, ChildContainerId_Summ)
+        SELECT _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId
+        FROM _tmpChild
+             LEFT JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild.MasterContainerId_Count
+                                               AND HistoryCostContainerLink.ChildContainerId_Count  = _tmpChild.ContainerId_Count
+                                               AND HistoryCostContainerLink.MasterContainerId_Summ  = _tmpChild.MasterContainerId
+                                               AND HistoryCostContainerLink.ChildContainerId_Summ   = _tmpChild.ContainerId
+        WHERE HistoryCostContainerLink.MasterContainerId_Count IS NULL
+        GROUP BY _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId;
+
+             
 
 
      -- проверка1

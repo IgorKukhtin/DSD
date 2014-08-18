@@ -14,18 +14,19 @@ BEGIN
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate
+     WITH tmpMovement AS (SELECT Movement.DescId, Movement.Id AS MovementId, Movement.OperDate
                           FROM Movement
                           WHERE Movement.Id = inMovementId
                             AND Movement.DescId = zc_Movement_SendDebt()
                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                           )
      -- Расчет
-     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -34,7 +35,8 @@ BEGIN
                          , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
-        SELECT tmpMovement.OperDate
+        SELECT tmpMovement.DescId
+             , tmpMovement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , MovementItem.Amount AS OperSumm
@@ -81,7 +83,8 @@ BEGIN
 
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
        UNION ALL
-        SELECT tmpMovement.OperDate
+        SELECT tmpMovement.DescId
+             , tmpMovement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , -1 * MovementItem.Amount AS OperSumm
@@ -165,6 +168,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  28.01.14                                        * all

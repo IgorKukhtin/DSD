@@ -32,8 +32,8 @@ DO $$
                CREATE INDEX idx_Container_MasterKeyValue_ChildKeyValue ON Container (MasterKeyValue,ChildKeyValue);
         END IF;
         
-        /*
-        -- !!!ContainerObjectCost!!!
+        
+        -- !!!HistoryCost !!!
         IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('HistoryCost') AND Column_Name = lower('ContainerId'))) THEN
             ALTER TABLE HistoryCost ADD COLUMN ContainerId Integer;
             UPDATE HistoryCost SET ContainerId = ContainerObjectCost.ContainerId FROM ContainerObjectCost WHERE ContainerObjectCost.ObjectCostId = HistoryCost.ObjectCostId;
@@ -45,9 +45,12 @@ DO $$
             CREATE UNIQUE INDEX idx_HistoryCost_ContainerId_StartDate_EndDate ON HistoryCost(ContainerId, StartDate, EndDate);
 
             ALTER TABLE HistoryCost DROP COLUMN ObjectCostId;
+            ALTER TABLE HistoryCost ADD CONSTRAINT fk_HistoryCost_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id);
 
-        END IF;*/
+        END IF;
+
         /*
+        -- !!!ContainerObjectCost!!!
         IF NOT (EXISTS(Select Column_Name From INFORMATION_SCHEMA.COLUMNS Where Table_Name = lower('ContainerObjectCost') AND Column_Name = lower('KeyValue'))) THEN
             ALTER TABLE ContainerObjectCost ADD COLUMN KeyValue TVarChar;
             UPDATE ContainerObjectCost SET KeyValue = '';

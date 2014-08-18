@@ -126,6 +126,7 @@ type
     clDocumentCount: TcxGridDBColumn;
     clDateDocument: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
+    clJuridicalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

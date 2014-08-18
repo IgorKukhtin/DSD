@@ -20,8 +20,8 @@ BEGIN
      END IF;
 
      -- сохранили "Проводка для отчета"
-     INSERT INTO MovementItemReport (MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
-        SELECT MovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId/*CASE WHEN ChildReportContainerId = 0 THEN NULL ELSE ChildReportContainerId END*/, COALESCE (Amount, 0), OperDate FROM _tmpMIReport_insert;
+     INSERT INTO MovementItemReport (MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+        SELECT MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId/*CASE WHEN ChildReportContainerId = 0 THEN NULL ELSE ChildReportContainerId END*/, COALESCE (Amount, 0), OperDate FROM _tmpMIReport_insert;
 
 END;
 $BODY$
@@ -36,5 +36,5 @@ ALTER FUNCTION lpInsertUpdate_MIReport_byTable () OWNER TO postgres;
 */
 
 -- тест
--- CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementId Integer, MovementDescId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+-- CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 -- SELECT * FROM lpInsertUpdate_MIReport_byTable (inMovementId  := 1, inMovementItemId := 2, )

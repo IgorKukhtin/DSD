@@ -1,4 +1,4 @@
--- Добавить у проводок тип документа
+ -- Добавить у проводок тип документа
 DO $$ 
     BEGIN
       IF NOT (EXISTS(Select table_name From INFORMATION_SCHEMA.tables Where Table_Name = lower('ContainerKey'))) THEN

@@ -15,6 +15,7 @@ BEGIN
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
@@ -283,7 +284,7 @@ BEGIN
                           AND tmpMovementItem.ObjectId IS NULL
                        )
      -- Расчет
-     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -292,7 +293,8 @@ BEGIN
                          , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
-        SELECT tmpResult.OperDate
+        SELECT zc_Movement_LossDebt() AS MovementDescId
+             , tmpResult.OperDate
              , tmpResult.ObjectId
              , tmpResult.ObjectDescId
              , tmpResult.OperSumm
@@ -315,7 +317,8 @@ BEGIN
              , TRUE AS IsMaster
         FROM tmpResult
        UNION ALL
-        SELECT tmpResult.OperDate
+        SELECT zc_Movement_LossDebt() AS MovementDescId
+             , tmpResult.OperDate
              , CASE WHEN tmpResult.OperDate < '01.01.2014' THEN zc_Enum_ProfitLoss_80301() ELSE 0 END AS ObjectId -- Расходы с прибыли + Списание дебиторской задолженности + Продукция
              , 0 AS ObjectDescId
              , -1 * tmpResult.OperSumm
@@ -390,6 +393,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  20.04.14                                        * add HAVING ...
