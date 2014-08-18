@@ -1437,10 +1437,6 @@
 				<Form>CurrencyJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ContractEndDate.pas">
-				<Form>Report_ContractEndDateForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>

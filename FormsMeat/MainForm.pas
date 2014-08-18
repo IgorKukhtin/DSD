@@ -9,14 +9,11 @@ uses
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, AncestorMain;
+  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TAncestorMainForm)
-    bbExit: TdxBarButton;
     bbGoodsDocuments: TdxBarSubItem;
-    bbGuides: TdxBarSubItem;
-    actExit: TFileExit;
     actMeasure: TdsdOpenForm;
     bbMeasure: TdxBarButton;
     actJuridicalGroup: TdsdOpenForm;
@@ -135,7 +132,6 @@ type
     bbReport_MotionGoods: TdxBarButton;
     actRole: TdsdOpenForm;
     bbRole: TdxBarButton;
-    bbService: TdxBarSubItem;
     actAction: TdsdOpenForm;
     bbAction: TdxBarButton;
     actUser: TdsdOpenForm;
@@ -182,10 +178,8 @@ type
     bbPositionLevel: TdxBarButton;
     actStaffListData: TdsdOpenForm;
     bbStaffListData: TdxBarButton;
-    bbUpdateProgramm: TdxBarButton;
     actModelService: TdsdOpenForm;
     bbModelService: TdxBarButton;
-    bbAbout: TdxBarButton;
     actReport_TransportHoursWork: TdsdOpenForm;
     bbReport_TransportHoursWork: TdxBarButton;
     actProtocol: TdsdOpenForm;
@@ -361,8 +355,6 @@ type
     Action1: TAction;
     actCurrencyMovement: TdsdOpenForm;
     bbCurrencyMovement: TdxBarButton;
-    actReport_ContractEndDate: TdsdOpenForm;
-    bbReport_ContractEndDate: TdxBarButton;
   public
     { Public declarations }
   end;

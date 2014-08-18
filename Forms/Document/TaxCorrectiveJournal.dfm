@@ -390,10 +390,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actElectron: TdsdExecStoredProc [2]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spCheckedElectron
+      StoredProc = spElectron
       StoredProcList = <
         item
-          StoredProc = spCheckedElectron
+          StoredProc = spElectron
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
@@ -411,6 +411,18 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actDocument: TdsdExecStoredProc [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDocument
+      StoredProcList = <
+        item
+          StoredProc = spDocument
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 33
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
@@ -421,7 +433,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    object actMovementCheck: TdsdOpenForm [9]
+    object actMovementCheck: TdsdOpenForm [10]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -713,6 +725,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTaxCorrective_Client'
         end
         item
@@ -775,6 +795,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbElectron: TdxBarButton
       Action = actElectron
+      Category = 0
+    end
+    object bbDocument: TdxBarButton
+      Action = actDocument
       Category = 0
     end
   end
@@ -971,7 +995,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Left = 320
     Top = 435
   end
-  object spCheckedElectron: TdsdStoredProc
+  object spElectron: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Electron'
     DataSets = <>
     OutputType = otResult
@@ -989,7 +1013,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
-    Left = 288
-    Top = 451
+    Left = 248
+    Top = 443
+  end
+  object spDocument: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementBoolean_Document'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocument'
+        Component = MasterCDS
+        ComponentItem = 'Document'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 392
+    Top = 435
   end
 end

@@ -413,14 +413,26 @@ inherited TaxJournalForm: TTaxJournalForm
     object actElectron: TdsdExecStoredProc [3]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spCheckedElectron
+      StoredProc = spElectron
       StoredProcList = <
         item
-          StoredProc = spCheckedElectron
+          StoredProc = spElectron
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
+    end
+    object actDocument: TdsdExecStoredProc [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDocument
+      StoredProcList = <
+        item
+          StoredProc = spDocument
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 33
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
@@ -432,7 +444,7 @@ inherited TaxJournalForm: TTaxJournalForm
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
     end
-    object actMovementCheck: TdsdOpenForm [7]
+    object actMovementCheck: TdsdOpenForm [8]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -755,6 +767,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTax_Client'
         end
         item
@@ -809,6 +829,10 @@ inherited TaxJournalForm: TTaxJournalForm
     end
     object bbElectron: TdxBarButton
       Action = actElectron
+      Category = 0
+    end
+    object bbDocument: TdxBarButton
+      Action = actDocument
       Category = 0
     end
   end
@@ -1071,28 +1095,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Left = 288
     Top = 419
   end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inChecked'
-        Component = MasterCDS
-        ComponentItem = 'Checked'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end>
-    Left = 384
-    Top = 411
-  end
-  object spCheckedElectron: TdsdStoredProc
+  object spElectron: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Electron'
     DataSets = <>
     OutputType = otResult
@@ -1110,7 +1113,28 @@ inherited TaxJournalForm: TTaxJournalForm
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
-    Left = 288
+    Left = 232
+    Top = 435
+  end
+  object spDocument: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementBoolean_Document'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocument'
+        Component = MasterCDS
+        ComponentItem = 'Document'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 328
     Top = 451
   end
 end

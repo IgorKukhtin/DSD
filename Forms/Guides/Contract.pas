@@ -22,7 +22,9 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxButtonEdit, cxImageComboBox;
+  dsdAddOn, dxBarExtItems, cxButtonEdit, cxImageComboBox, cxContainer,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxCheckBox, cxTextEdit, cxDropDownEdit,
+  cxCalendar, cxLabel, ChoicePeriod;
 
 type
   TContractForm = class(TParentForm)
@@ -127,6 +129,18 @@ type
     clDateDocument: TcxGridDBColumn;
     PersonalChoiceForm: TOpenChoiceForm;
     clJuridicalGroupName: TcxGridDBColumn;
+    deStart: TcxDateEdit;
+    cxlEnd: TcxLabel;
+    deEnd: TcxDateEdit;
+    cbPeriod: TcxCheckBox;
+    bbStartDate: TdxBarControlContainerItem;
+    bbEnd: TdxBarControlContainerItem;
+    bbEndDate: TdxBarControlContainerItem;
+    bbIsEndDate: TdxBarControlContainerItem;
+    bbIsPeriod: TdxBarControlContainerItem;
+    cbEndDate: TcxCheckBox;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
