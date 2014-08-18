@@ -2,9 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inPriceListId Integer      , -- ключ Прайс листа
+    IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
@@ -12,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
+             , Price TFloat, CountForPrice TFloat, AmountSumm TFloat
              , isErased Boolean
               )
 AS
@@ -22,6 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderExternal());
      vbUserId := inSession;
+     IF (inPriceListId = 0) THEN inPriceListId := zc_PriceList_Basis();  END IF;
 
      IF inShowAll THEN
 
@@ -35,6 +40,9 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountSecond
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (1 AS TFloat)         AS CountForPrice
+           , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -65,6 +73,9 @@ BEGIN
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
+                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+
 
        WHERE tmpMI.GoodsId IS NULL
 
@@ -78,6 +89,12 @@ BEGIN
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , MIFloat_Price.ValueData            AS Price
+           , MIFloat_CountForPrice.ValueData    AS CountForPrice
+           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                           THEN CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                           ELSE CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                   END AS TFloat)               AS AmountSumm
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -94,6 +111,14 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
 
             ;
 
@@ -109,6 +134,13 @@ BEGIN
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , MIFloat_Price.ValueData            AS Price
+           , MIFloat_CountForPrice.ValueData    AS CountForPrice
+           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                           THEN CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                           ELSE CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                   END AS TFloat)               AS AmountSumm
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -126,6 +158,13 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
             ;
 
      END IF;
@@ -133,13 +172,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 06.06.14                                                       *
+ 18.08.14                                                        *
+ 06.06.14                                                        *
 
 */
 
