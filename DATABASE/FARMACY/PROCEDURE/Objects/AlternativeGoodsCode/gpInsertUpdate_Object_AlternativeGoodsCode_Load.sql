@@ -18,8 +18,11 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AlternativeGoodsCode());
-     SELECT Id from Object_Goods_View
-      WHERE ObjectId = 25603 AND GoodsCode = 24673::TVarChar
+     SELECT Id INTO vbGoodsMainId FROM Object_Goods_View
+      WHERE ObjectId = inRetailId AND GoodsCode = inGoodsMainCode;
+
+     SELECT Id INTO vbGoodsId FROM Object_Goods_View
+      WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode;
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode(
     IN inGoodsMainId   , -- Главный товар
