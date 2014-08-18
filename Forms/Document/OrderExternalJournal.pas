@@ -30,15 +30,11 @@ type
   TOrderExternalJournalForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
-    bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    bbPrintTax_Us: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colOperDatePartner: TcxGridDBColumn;
     colOperDateMark: TcxGridDBColumn;
