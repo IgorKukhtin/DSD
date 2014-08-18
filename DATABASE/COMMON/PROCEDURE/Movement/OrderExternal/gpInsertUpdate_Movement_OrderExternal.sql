@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inOperDateMark        TDateTime , -- Дата маркировки
     IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
     IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
     IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inRouteId             Integer   , -- Маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
@@ -41,6 +42,8 @@ BEGIN
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+     -- сохранили связь с <Кому (в документе)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
      -- сохранили связь с <Сотрудник (экспедитор)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);

@@ -62,6 +62,9 @@ type
     Price: TcxGridDBColumn;
     CountForPrice: TcxGridDBColumn;
     AmountSumm: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public

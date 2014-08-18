@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, OperDateMark TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -44,6 +45,8 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS InvNumberPartner
              , 0                     				            AS FromId
              , CAST ('' AS TVarChar) 				            AS FromName
+             , 0                     	                        AS ToId
+             , CAST ('' as TVarChar) 	                        AS ToName
              , 0                     				            AS PersonalId
              , CAST ('' AS TVarChar) 				            AS PersonalName
              , 0                     				            AS RouteId
@@ -75,6 +78,8 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
+           , Object_To.Id                      	        AS ToId
+           , Object_To.ValueData               	        AS ToName
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
            , Object_Route.Id                            AS RouteId
@@ -115,6 +120,11 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
@@ -139,6 +149,10 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
