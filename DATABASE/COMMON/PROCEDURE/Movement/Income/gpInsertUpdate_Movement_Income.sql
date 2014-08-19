@@ -83,16 +83,15 @@ BEGIN
                                              AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
               WHERE Movement.DescId = zc_Movement_Currency()
                 AND Movement.OperDate <= inOperDate
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()  --zc_Enum_Status_Complete()    
+                AND Movement.StatusId = zc_Enum_Status_Complete()    
               ) as tmpDate
          JOIN Movement ON Movement.DescId = zc_Movement_Currency()
                       AND Movement.OperDate = tmpDate.maxOperDate
-                      AND Movement.StatusId = zc_Enum_Status_UnComplete()  --zc_Enum_Status_Complete()    
+                      AND Movement.StatusId = zc_Enum_Status_Complete()    
          JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                           AND MovementItem.DescId = zc_MI_Master();
      END IF;
      
-     --onCurrencyValue := vbCurrencyValue;
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);   
 
      -- сохранили связь с <От кого (в документе)>

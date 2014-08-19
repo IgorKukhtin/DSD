@@ -1777,10 +1777,24 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
       end
       item
+        Name = 'CurrencyDocumentName'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'CurrencyPartnerId'
         Value = ''
         Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'StatusCode'

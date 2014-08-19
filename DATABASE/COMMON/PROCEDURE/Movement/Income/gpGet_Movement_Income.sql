@@ -94,8 +94,8 @@ BEGIN
              , View_PersonalPacker.PersonalId        AS PersonalPackerId
              , View_PersonalPacker.PersonalName      AS PersonalPackerName
 
-             , Object_CurrencyDocument.Id          AS CurrencyDocumentId
-             , Object_CurrencyDocument.ValueData   AS CurrencyDocumentName
+             , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
+             , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
              , Object_CurrencyPartner.Id             AS CurrencyPartnerId
              , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
 
@@ -158,7 +158,9 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-
+	    
+            LEFT JOIN Object as ObjectCurrencycyDocumentInf on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+                                            and ObjectCurrencycyDocumentInf.id = 14461
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
