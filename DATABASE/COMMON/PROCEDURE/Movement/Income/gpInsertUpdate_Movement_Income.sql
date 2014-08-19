@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
    OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
