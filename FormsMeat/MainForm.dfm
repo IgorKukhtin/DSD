@@ -4,7 +4,7 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1126
-  ExplicitHeight = 208
+  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
@@ -3446,9 +3446,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object Action1: TAction
-      Caption = 'Action1'
-    end
     object actCurrencyMovement: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -3488,7 +3485,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

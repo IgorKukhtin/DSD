@@ -20,12 +20,14 @@ uses UtilConst, TestFramework;
 
 procedure TCommonObjectProcedure.AllProcedureLoad;
 begin
-  DirectoryLoad(ProcedurePath + 'OBJECTS\')
+//  DirectoryLoad(ProcedurePath + 'OBJECTS\')
 end;
 
 procedure TCommonObjectProcedure.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\_Common\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\_Union\';
   inherited;
 end;
 

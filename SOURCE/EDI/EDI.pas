@@ -287,15 +287,12 @@ begin
                   // загружаем в базенку
                   MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
                     spHeader, spList);
-                  if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012' then
-                  begin
-                    FInsertEDIFile.ParamByName('inMovementId').Value :=
+                  FInsertEDIFile.ParamByName('inMovementId').Value :=
                       MovementId;
-                    FInsertEDIFile.ParamByName('inFileName').Value := List[i];
-                    FInsertEDIFile.ParamByName('inFileText').Value :=
+                  FInsertEDIFile.ParamByName('inFileName').Value := List[i];
+                  FInsertEDIFile.ParamByName('inFileText').Value :=
                       ConvertConvert(Stream.DataString);
-                    FInsertEDIFile.Execute;
-                  end;
+                  FInsertEDIFile.Execute;
                 end;
                 // теперь перенесли файл в директроию Archive
                 try

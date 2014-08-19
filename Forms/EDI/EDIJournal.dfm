@@ -864,23 +864,13 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actExecPrintStoredProc
+          Action = EDIReturnComDoc
         end
         item
-          Action = EDIComdoc
+          Action = actRefresh
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
       Caption = 'mactCOMDOC'
-    end
-    object EDIComdoc: TEDIAction
-      Category = 'EDI'
-      MoveParams = <>
-      StartDateParam.Value = Null
-      EndDateParam.Value = Null
-      EDI = EDI
-      EDIDocType = ediComDocSave
-      HeaderDataSet = PrintHeaderCDS
-      ListDataSet = PrintItemsCDS
     end
     object mactDECLAR: TMultiAction
       Category = 'EDI'

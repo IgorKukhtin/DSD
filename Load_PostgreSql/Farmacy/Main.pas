@@ -50,7 +50,7 @@ type
     OKDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
     toTwoStoredProc: TdsdStoredProc;
-    CheckBox4: TCheckBox;
+    cbAlternativeCode: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -59,14 +59,14 @@ type
     procedure pSetNullDocument_Id_Postgres;
     function fExecSqFromQuery(mySql: String): Boolean;
     procedure myEnabledCB(cb: TCheckBox);
-    procedure pLoadGuide_Measure;
-    procedure pLoadGuide_ExtraChargeCategories;
     function myExecToStoredProc: Boolean;
     procedure myDisabledCB(cb: TCheckBox);
     function GetStringValue(aSQL: string): string;
     function GetRetailId: integer;
+    procedure pLoadGuide_Measure;
     procedure pLoadGuide_Goods;
     procedure pLoadGuide_GoodsPartnerCode;
+    procedure pLoadGuide_AlternativeCode;
     procedure pLoadUnit;
   public
     { Public declarations }
@@ -101,11 +101,61 @@ begin
      cb.Font.Color:=clWindowText;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_AlternativeCode;
+var RetailId: integer;
+begin
+     if (not cbAlternativeCode.Checked)or(not cbAlternativeCode.Enabled) then exit;
+     RetailId := GetRetailId;
+     //
+     myEnabledCB(cbAlternativeCode);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+
+        Add('SELECT ParentGoodsProperty.Code AS ParentCode, ChildGoodsProperty.Code AS ChildCode ');
+        Add('FROM "DBA"."GoodsLink" ');
+        Add('       JOIN GoodsProperty AS ParentGoodsProperty ON ParentGoodsProperty.GoodsId = GoodsLink.ParentGoodId ');
+        Add('       JOIN GoodsProperty AS ChildGoodsProperty ON ChildGoodsProperty.GoodsId = GoodsLink.ChildGoodId ');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_AdditionalGoods_Load';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inGoodsMainCode', ftString, ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsCode', ftString, ptInput, '');
+        toStoredProc.Params.AddParam ('inRetailId', ftInteger, ptInput, 0);
+
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('inGoodsMainCode').Value := FieldByName('ParentCode').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsCode').Value := FieldByName('ChildCode').AsString;
+             toStoredProc.Params.ParamByName('inRetailId').Value := RetailId;
+             toStoredProc.Execute;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbAlternativeCode);
+end;
+
 procedure TMainForm.pLoadGuide_Goods;
 var RetailId: integer;
 begin
-//update Object set ObjectCode = null where DescId = zc_Object_Goods()
-//select * from Object where DescId = zc_Object_Goods()
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      RetailId := GetRetailId;
      //
@@ -234,57 +284,6 @@ begin
 end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_ExtraChargeCategories;
-begin
-   (*  if (not cbExtraChargeCategories.Checked)or(not cbExtraChargeCategories.Enabled) then exit;
-     //
-     myEnabledCB(cbExtraChargeCategories);
-     //
-     with fromQuery,Sql do begin
-        Close;
-        Clear;
-        Add('select ExtraChargeCategories.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
-        Add('     , ExtraChargeCategories.Name as ObjectName');
-        Add('     , ExtraChargeCategories.Id_Postgres');
-        Add('from dba.ExtraChargeCategories');
-        Add('order by ObjectId');
-        Open;
-        //
-        fStop:=cbOnlyOpen.Checked;
-        if cbOnlyOpen.Checked then exit;
-        //
-        Gauge.Progress:=0;
-        Gauge.MaxValue:=RecordCount;
-        //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_ExtraChargeCategories';
-        toStoredProc.OutputType := otResult;
-        toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        //
-        while not EOF do
-        begin
-             //!!!
-             if fStop then begin exit;end;
-             //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
-             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             if not myExecToStoredProc then;
-             //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.ExtraChargeCategories set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-             //
-             Next;
-             Application.ProcessMessages;
-             Gauge.Progress:=Gauge.Progress+1;
-             Application.ProcessMessages;
-        end;
-     end;
-     //
-     myDisabledCB(cbExtraChargeCategories);*)
-end;
 
 procedure TMainForm.pLoadGuide_Measure;
 begin
@@ -408,40 +407,24 @@ begin
   //
   Gauge.Visible:=true;
   //
-  if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set СПРАВОЧНИКИ+ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                                             pSetNullGuide_Id_Postgres;
-                                             pSetNullDocument_Id_Postgres;
-                                       end;
-  //
-  if not fStop then pLoadGuide_Measure;
-  if not fStop then pLoadGuide_ExtraChargeCategories;
-  if not fStop then pLoadGuide_Goods;
-  if not fStop then pLoadGuide_GoodsPartnerCode;
-  if not fStop then pLoadUnit;
-(*  if not fStop then pLoadGuide_GoodsGroup;
-  //if not fStop then pLoadGuide_Goods_toZConnection;
-  if not fStop then pLoadGuide_GoodsKind;
-  if not fStop then pLoadPaidKind;
-  if not fStop then pLoadContractKind;
-  if not fStop then pLoadJuridicalGroup;
-  if not fStop then pLoadJuridical;
-  if not fStop then pLoadPartner;
-  if not fStop then pLoadUnitGroup;
-  if not fStop then pLoadPriceList;
-  if not fStop then pLoadGoodsProperty;
-  if not fStop then pLoadGoodsPropertyValue;
+  try
+    if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set СПРАВОЧНИКИ+ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+                                               pSetNullGuide_Id_Postgres;
+                                               pSetNullDocument_Id_Postgres;
+                                         end;
 
-  if not fStop then pLoadInfoMoneyGroup;
-  if not fStop then pLoadInfoMoneyDestination;
-  if not fStop then pLoadInfoMoney;
-  if not fStop then pLoadAccountGroup;
-  if not fStop then pLoadAccountDirection;
-  if not fStop then pLoadAccount;*)
-  //
-  Gauge.Visible:=false;
-  DBGrid.Enabled:=true;
-  OKGuideButton.Enabled:=true;
-  OKDocumentButton.Enabled:=true;
+    //
+    if not fStop then pLoadGuide_Measure;
+    if not fStop then pLoadGuide_Goods;
+    if not fStop then pLoadGuide_GoodsPartnerCode;
+    if not fStop then pLoadGuide_AlternativeCode;
+    if not fStop then pLoadUnit;
+  finally
+    Gauge.Visible:=false;
+    DBGrid.Enabled:=true;
+    OKGuideButton.Enabled:=true;
+    OKDocumentButton.Enabled:=true;
+  end;
   //
   if fStop then ShowMessage('Справочники НЕ загружены.') else ShowMessage('Справочники загружены.');
   //

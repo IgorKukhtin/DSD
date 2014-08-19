@@ -16,6 +16,7 @@ type
   published
     procedure MainFormTest;
     procedure LoadContractFormTest;
+    procedure LoadDefaultFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadImportSettingsFormTest;
@@ -31,7 +32,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnumFormTest;
-    procedure LoadAlternativeGoodsCodeFormTest;
+    procedure LoadAdditionalGoodsFormTest;
     procedure FormTest;
   end;
 
@@ -55,6 +56,14 @@ begin
   Application.CreateForm(TComponentClass(GetClass(FormClass)), Result);
 end;
 
+procedure TLoadFormTest.LoadDefaultFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSetUserDefaultsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSetUserDefaultsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDefaultsKeyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDefaultsKeyForm');
+end;
+
 procedure TLoadFormTest.LoadContractFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
@@ -69,6 +78,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsLiteForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;
@@ -210,10 +221,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
 end;
 
-procedure TLoadFormTest.LoadAlternativeGoodsCodeFormTest;
+procedure TLoadFormTest.LoadAdditionalGoodsFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAlternativeGoodsCodeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAlternativeGoodsCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAdditionalGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAdditionalGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
@@ -226,15 +237,25 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
+
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
@@ -244,14 +265,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));

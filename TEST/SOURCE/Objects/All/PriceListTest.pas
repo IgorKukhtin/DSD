@@ -11,7 +11,7 @@ type
     procedure Test; override;
   end;
 
-    TPriceList = class(TObjectTest)
+  TPriceList = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public
@@ -23,8 +23,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     InfoMoneyGroupTest, InfoMoneyDestinationTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB;
 
 constructor TPriceList.Create;
 begin

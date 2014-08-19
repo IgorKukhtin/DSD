@@ -1,16 +1,19 @@
 ﻿-- Function: gpSelect_Object_Goods_Lite()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Lite(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Lite(TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Lite(
-    IN inObjectId    INTEGER , 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, isErased boolean) AS
 $BODY$
+   DECLARE vbObjectId  Integer;
 BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+
 
    RETURN QUERY 
    SELECT Object_Goods.Id           AS Id 
@@ -20,7 +23,7 @@ BEGIN
         , Object_Goods.isErased
   
     FROM Object_Goods_View AS Object_Goods
-   WHERE (inObjectId = 0 AND Object_Goods.ObjectId IS NULL) OR (Object_Goods.ObjectId = inObjectId AND inObjectId <> 0);
+   WHERE Object_Goods.ObjectId = vbObjectId;
   
 END;
 $BODY$
