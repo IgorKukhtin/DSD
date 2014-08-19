@@ -42,7 +42,7 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outCurrencyValue
             INTO ioId, ioPriceListId, outPriceListName, outCurrencyValue
      FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
                                       , inInvNumber        := inInvNumber

@@ -32,7 +32,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+     SELECT tmp.ioId, tmp.outCurrencyValue
             INTO ioId, outCurrencyValue
      FROM lpInsertUpdate_Movement_ReturnIn
                                        (ioId               := ioId
@@ -52,7 +52,7 @@ BEGIN
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
                                       , inUserId           := vbUserId
-                                       );
+                                       )AS tmp;
 
 
 END;

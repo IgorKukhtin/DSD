@@ -29,7 +29,7 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+     SELECT tmp.ioId, tmp.outCurrencyValue
             INTO ioId, outCurrencyValue
      FROM lpInsertUpdate_Movement_ReturnOut (ioId                 := ioId
                                               , inInvNumber          := inInvNumber
@@ -45,7 +45,7 @@ BEGIN
                                               , inCurrencyDocumentId := inCurrencyDocumentId
                                               , inCurrencyPartnerId  := inCurrencyPartnerId
                                               , inUserId             := vbUserId
-                                               );
+                                               ) AS tmp;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
