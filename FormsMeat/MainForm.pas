@@ -355,6 +355,8 @@ type
     Action1: TAction;
     actCurrencyMovement: TdsdOpenForm;
     bbCurrencyMovement: TdxBarButton;
+    actReport_GoodsMI_OrderExternal: TdsdOpenForm;
+    bbReport_GoodsMI_OrderExternal: TdxBarButton;
   public
     { Public declarations }
   end;
