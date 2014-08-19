@@ -1,29 +1,29 @@
 inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
-  ClientWidth = 918
-  ExplicitWidth = 926
-  ExplicitHeight = 702
+  ClientWidth = 838
+  ExplicitWidth = 854
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 918
+    Width = 838
     Height = 553
     ExplicitTop = 115
-    ExplicitWidth = 918
+    ExplicitWidth = 838
     ExplicitHeight = 553
     ClientRectBottom = 553
-    ClientRectRight = 918
+    ClientRectRight = 838
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 918
+      ExplicitWidth = 838
       ExplicitHeight = 529
       inherited cxGrid: TcxGrid
-        Width = 918
+        Width = 838
         Height = 529
-        ExplicitWidth = 918
+        ExplicitWidth = 838
         ExplicitHeight = 529
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -88,7 +88,7 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 40
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -96,7 +96,7 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 120
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -156,7 +156,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 45
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -174,7 +174,7 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 60
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
@@ -192,17 +192,45 @@ inherited ReturnOutForm: TReturnOutForm
             Options.Editing = False
             Width = 65
           end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 918
+      ExplicitWidth = 838
       ExplicitHeight = 529
       inherited cxGridEntry: TcxGrid
-        Width = 918
+        Width = 838
         Height = 529
-        ExplicitWidth = 918
+        ExplicitWidth = 838
         ExplicitHeight = 529
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -225,10 +253,10 @@ inherited ReturnOutForm: TReturnOutForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 918
+    Width = 838
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 918
+    ExplicitWidth = 838
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -296,7 +324,7 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1050#1086#1084#1091
     end
     object edContract: TcxButtonEdit
-      Left = 641
+      Left = 558
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -308,18 +336,18 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 121
     end
     object cxLabel9: TcxLabel
-      Left = 641
+      Left = 558
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 556
-      Top = 5
+      Left = 558
+      Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 556
-      Top = 23
+      Left = 558
+      Top = 63
       Enabled = False
       Properties.Buttons = <
         item
@@ -327,7 +355,7 @@ inherited ReturnOutForm: TReturnOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 77
+      Width = 121
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 226
@@ -377,52 +405,54 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
     end
     object cxLabel5: TcxLabel
-      Left = 776
-      Top = 45
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+      Left = 689
+      Top = 5
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 776
-      Top = 63
+      Left = 689
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 22
-      Width = 77
+      Width = 127
     end
   end
   object cxLabel14: TcxLabel [2]
-    Left = 776
-    Top = 5
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+    Left = 689
+    Top = 45
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [3]
-    Left = 776
-    Top = 23
+    Left = 689
+    Top = 63
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 77
+    Width = 78
   end
   object cxLabel12: TcxLabel [4]
-    Left = 868
-    Top = 5
+    Left = 772
+    Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [5]
-    Left = 868
-    Top = 23
+    Left = 772
+    Top = 63
+    Enabled = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     TabOrder = 9
-    Width = 40
+    Width = 44
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -720,12 +750,12 @@ inherited ReturnOutForm: TReturnOutForm
         Param.DataType = ftString
         DataSummaryItemIndex = 4
       end>
-    Left = 782
-    Top = 265
+    Left = 662
+    Top = 337
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 632
+    Top = 488
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1165,8 +1195,8 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 808
-    Top = 328
+    Left = 688
+    Top = 400
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ReturnOut_SetErased'
@@ -1274,8 +1304,8 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 368
   end
   inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 848
-    Top = 262
+    Left = 728
+    Top = 334
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Params = <
@@ -1351,8 +1381,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 32
+    Left = 688
+    Top = 144
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
@@ -1538,8 +1568,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 792
-    Top = 8
+    Left = 624
+    Top = 96
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -1565,7 +1595,7 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 800
-    Top = 48
+    Left = 688
+    Top = 88
   end
 end

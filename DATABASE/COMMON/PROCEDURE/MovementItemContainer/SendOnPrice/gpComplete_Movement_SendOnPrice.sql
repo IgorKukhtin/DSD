@@ -1,6 +1,5 @@
 -- Function: gpComplete_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_SendOnPrice (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_SendOnPrice (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_SendOnPrice(
@@ -557,18 +556,18 @@ BEGIN
             , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401()
                      OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401()
                         THEN SUM (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))
-                   ELSE SUM (ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)))
+                   ELSE SUM ((_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) -- ABS
               END AS OperSumm
               -- с/с2 - для количества с учетом % скидки
             , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()
                          AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()
-                             THEN ABS (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0))
+                             THEN (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0)) -- ABS
                         ELSE 0
                    END) AS OperSumm_ChangePercent
               -- с/с3 - для количества контрагента
             , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()
                          AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()
-                             THEN ABS (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0))
+                             THEN (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0)) -- ABS
                         ELSE 0
                    END) AS OperSumm_Partner
               -- 
@@ -1178,7 +1177,7 @@ BEGIN
 
      -- 5.5. формируются Проводки для отчета (Счета: Прибыль будущих периодов <-> Прибыль будущих периодов)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
-        SELECT 0, vbMovementDescId, inMovementId, MovementDescId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
+        SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
         FROM (SELECT tmpMIReport.MovementItemId
                    , tmpMIReport.ActiveContainerId
                    , tmpMIReport.PassiveContainerId

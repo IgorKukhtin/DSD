@@ -1,27 +1,28 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
-  ClientWidth = 1144
-  ExplicitWidth = 1152
-  ExplicitHeight = 702
+  ClientWidth = 1020
+  ExplicitLeft = -38
+  ExplicitWidth = 1036
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1144
+    Width = 1020
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1144
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1144
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
       ExplicitWidth = 1144
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1144
+        Width = 1020
         Height = 518
         ExplicitWidth = 1144
         ExplicitHeight = 518
@@ -201,7 +202,7 @@ inherited ReturnInForm: TReturnInForm
       ExplicitWidth = 1144
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1144
+        Width = 1020
         Height = 518
         ExplicitWidth = 1144
         ExplicitHeight = 518
@@ -226,7 +227,7 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1144
+    Width = 1020
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1144
@@ -442,51 +443,53 @@ inherited ReturnInForm: TReturnInForm
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 999
-    Top = 5
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+    Left = 993
+    Top = 45
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [5]
-    Left = 999
-    Top = 23
+    Left = 993
+    Top = 63
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 77
+    Width = 78
   end
   object cxLabel16: TcxLabel [6]
-    Left = 1092
-    Top = 5
+    Left = 1076
+    Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [7]
-    Left = 1092
-    Top = 23
+    Left = 1076
+    Top = 63
+    Enabled = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     TabOrder = 11
-    Width = 40
+    Width = 44
   end
   object cxLabel17: TcxLabel [8]
-    Left = 999
-    Top = 45
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+    Left = 993
+    Top = 5
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
   end
   object edCurrencyPartner: TcxButtonEdit [9]
-    Left = 999
-    Top = 63
+    Left = 993
+    Top = 23
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 13
-    Width = 77
+    Width = 127
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1876,7 +1879,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end>
     Left = 792
-    Top = 65531
+    Top = 83
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2062,7 +2065,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1024
+    Left = 1080
+    Top = 80
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2089,6 +2093,6 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end>
     Left = 1016
-    Top = 56
+    Top = 80
   end
 end

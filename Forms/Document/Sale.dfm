@@ -1,28 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1258
+  ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1266
-  ExplicitHeight = 702
+  ExplicitLeft = -38
+  ExplicitWidth = 1036
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1258
+    Width = 1020
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1258
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1258
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
       ExplicitWidth = 1258
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1258
+        Width = 1020
         Height = 518
         ExplicitWidth = 1258
         ExplicitHeight = 518
@@ -147,6 +148,13 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object colHeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
@@ -205,13 +213,6 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
@@ -221,17 +222,45 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 65
           end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1258
+      ExplicitWidth = 1248
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1258
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1258
+        ExplicitWidth = 1248
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -254,7 +283,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1258
+    Width = 1020
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1258
@@ -468,7 +497,7 @@ inherited SaleForm: TSaleForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 991
+      Left = 1126
       Top = 63
       Properties.Buttons = <
         item
@@ -479,17 +508,17 @@ inherited SaleForm: TSaleForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 991
+      Left = 1126
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 991
+      Left = 1126
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 991
+      Left = 1126
       Top = 23
       Enabled = False
       TabOrder = 33
@@ -504,52 +533,54 @@ inherited SaleForm: TSaleForm
       Width = 68
     end
     object cxLabel19: TcxLabel
-      Left = 1113
-      Top = 45
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+      Left = 992
+      Top = 5
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 1114
-      Top = 63
+      Left = 992
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 36
-      Width = 77
+      Width = 127
     end
   end
   object cxLabel17: TcxLabel [2]
-    Left = 1113
-    Top = 5
-    Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+    Left = 992
+    Top = 45
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [3]
-    Left = 1114
-    Top = 23
+    Left = 992
+    Top = 63
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 77
+    Width = 78
   end
   object cxLabel18: TcxLabel [4]
-    Left = 1212
-    Top = 5
+    Left = 1075
+    Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [5]
-    Left = 1211
-    Top = 23
+    Left = 1075
+    Top = 63
+    Enabled = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
     TabOrder = 9
-    Width = 40
+    Width = 44
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2428,8 +2459,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1168
-    Top = 65528
+    Left = 842
+    Top = 200
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2455,7 +2486,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1128
-    Top = 64
+    Left = 800
+    Top = 144
   end
 end
