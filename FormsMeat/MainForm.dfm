@@ -1035,11 +1035,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbReport_Goods'
+          ItemName = 'bbReport_GoodsMI_OrderExternal'
         end
         item
           Visible = True
-          ItemName = 'bbReport_GoodsMI_OrderExternal'
+          ItemName = 'bbReport_Goods'
         end
         item
           Visible = True
@@ -1642,16 +1642,16 @@
       Action = actPartnerAddress
       Category = 0
     end
+    object bbReport_GoodsMI_OrderExternal: TdxBarButton
+      Action = actReport_GoodsMI_OrderExternal
+      Category = 0
+    end
     object bbStorage_Object: TdxBarButton
       Action = actStorage_Object
       Category = 0
     end
     object bbCurrencyMovement: TdxBarButton
       Action = actCurrencyMovement
-      Category = 0
-    end
-    object bbReport_GoodsMI_OrderExternal: TdxBarButton
-      Action = actReport_GoodsMI_OrderExternal
       Category = 0
     end
   end
