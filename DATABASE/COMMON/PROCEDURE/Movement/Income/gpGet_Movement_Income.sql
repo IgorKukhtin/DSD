@@ -41,7 +41,7 @@ BEGIN
              , CAST (20 as TFloat)                   AS VATPercent
              , CAST (0 as TFloat)                    AS ChangePercent
              
-             , CAST (0 as TFloat)                    AS CurrencyValue
+             , CAST (1 as TFloat)                    AS CurrencyValue
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -55,12 +55,15 @@ BEGIN
              , 0                     AS PersonalPackerId
              , CAST ('' as TVarChar) AS PersonalPackerName
 
-             , 0                     AS CurrencyDocumentId
-             , CAST ('' as TVarChar) AS CurrencyDocumentName
+             , ObjectCurrency.Id      AS CurrencyDocumentId	-- грн
+             , ObjectCurrency.ValueData  AS CurrencyDocumentName
+           
              , 0                     AS CurrencyPartnerId
              , CAST ('' as TVarChar) AS CurrencyPartnerName
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+              JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
+                                            and ObjectCurrency.id = 14461;	             -- грн
      ELSE
        RETURN QUERY 
          SELECT
@@ -91,8 +94,8 @@ BEGIN
              , View_PersonalPacker.PersonalId        AS PersonalPackerId
              , View_PersonalPacker.PersonalName      AS PersonalPackerName
 
-             , Object_CurrencyDocument.Id            AS CurrencyDocumentId
-             , Object_CurrencyDocument.ValueData     AS CurrencyDocumentName
+             , Object_CurrencyDocument.Id          AS CurrencyDocumentId
+             , Object_CurrencyDocument.ValueData   AS CurrencyDocumentName
              , Object_CurrencyPartner.Id             AS CurrencyPartnerId
              , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
 
