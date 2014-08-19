@@ -20,9 +20,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
+   OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -30,7 +32,9 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_ReturnIn
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+            INTO ioId, outCurrencyValue
+     FROM lpInsertUpdate_Movement_ReturnIn
                                        (ioId               := ioId
                                       , inInvNumber        := inInvNumber
                                       , inInvNumberPartner := inInvNumberPartner

@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
+   OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -42,7 +43,7 @@ BEGIN
 
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
-            INTO ioId, ioPriceListId, outPriceListName
+            INTO ioId, ioPriceListId, outPriceListName, outCurrencyValue
      FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
                                       , inInvNumber        := inInvNumber
                                       , inInvNumberPartner := inInvNumberPartner
