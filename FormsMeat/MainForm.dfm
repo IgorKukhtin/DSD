@@ -3,15 +3,15 @@
   ClientWidth = 1118
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1134
-  ExplicitHeight = 209
+  ExplicitWidth = 1126
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1039,6 +1039,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_OrderExternal'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1644,6 +1648,10 @@
     end
     object bbCurrencyMovement: TdxBarButton
       Action = actCurrencyMovement
+      Category = 0
+    end
+    object bbReport_GoodsMI_OrderExternal: TdxBarButton
+      Action = actReport_GoodsMI_OrderExternal
       Category = 0
     end
   end
@@ -3293,6 +3301,26 @@
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1094#1077#1085#1072#1093')'
       FormName = 'TReport_GoodsMI_byPriceDifForm'
       FormNameParam.Value = 'TReport_GoodsMI_byPriceDifForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_OrderExternal: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      FormName = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
