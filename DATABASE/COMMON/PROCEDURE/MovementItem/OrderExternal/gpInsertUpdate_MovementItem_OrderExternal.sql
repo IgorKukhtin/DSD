@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderExternal()
 
 -- DROP FUNCTION gpInsertUpdate_MovementItem_OrderExternal();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal(integer, integer, integer, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal(integer, integer, integer, tfloat, tfloat, integer, tfloat, tfloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,9 +11,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
     IN inAmount              TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inPrice               TFloat    , -- Цена
+ INOUT ioCountForPrice       TFloat    , -- Цена за количество
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -35,6 +40,20 @@ BEGIN
          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
      END IF;
 
+     -- сохранили свойство <Цена>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+
+     -- сохранили свойство <Цена за количество>
+     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
+
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN ioCountForPrice > 0
+                                THEN CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice AS NUMERIC (16, 2))
+                      END;
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -50,7 +69,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 06.06.14                                                       *
+ 18.08.14                                                        *
+ 06.06.14                                                        *
 */
 
 -- тест

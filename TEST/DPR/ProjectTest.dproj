@@ -630,8 +630,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
-				<Form>Report_GoodsMI_SaleReturnInForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
+				<Form>Report_GoodsMI_OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -1437,10 +1437,6 @@
 				<Form>CurrencyJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ContractEndDate.pas">
-				<Form>Report_ContractEndDateForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1475,6 +1471,10 @@
 			<DCCReference Include="..\..\FormsMeat\Guides\BranchLink.pas">
 				<Form>BranchLinkForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
+				<Form>Report_GoodsMI_SaleReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

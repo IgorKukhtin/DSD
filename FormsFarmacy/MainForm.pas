@@ -32,7 +32,7 @@ type
     actUnitGroup: TdsdOpenForm;
     actUnit: TdsdOpenForm;
     actGoodsGroup: TdsdOpenForm;
-    actGoods: TdsdOpenForm;
+    actGoodsCommon: TdsdOpenForm;
     actGoodsKind: TdsdOpenForm;
     bbPaidKind: TdxBarButton;
     bbContractKind: TdxBarButton;

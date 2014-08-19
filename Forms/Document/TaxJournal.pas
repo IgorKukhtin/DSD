@@ -73,9 +73,11 @@ type
     colIsEDI: TcxGridDBColumn;
     colIsElectron: TcxGridDBColumn;
     actElectron: TdsdExecStoredProc;
-    dsdStoredProc1: TdsdStoredProc;
-    spCheckedElectron: TdsdStoredProc;
+    spElectron: TdsdStoredProc;
     bbElectron: TdxBarButton;
+    spDocument: TdsdStoredProc;
+    actDocument: TdsdExecStoredProc;
+    bbDocument: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,9 +1,14 @@
 -- Function: gpSelect_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inStartDate   TDateTime , --
+    IN inEndDate     TDateTime , --
+    IN inIsPeriod    Boolean   , --
+    IN inIsEndDate   Boolean   , --
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
@@ -247,17 +252,20 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
 
+   WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsPeriod = FALSE)
+     AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate <= inEndDate  AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsEndDate = FALSE)
    ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.08.14                                        * add inParams...
  16.08.14                                        * add JuridicalGroupName
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
@@ -305,4 +313,4 @@ group by MovementLinkObject.ObjectId) as xx
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Contract (inStartDate:= NULL, inEndDate:= NULL, inIsPeriod:= FALSE, inIsEndDate:= FALSE, inSession := zfCalc_UserAdmin())

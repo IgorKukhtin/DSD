@@ -690,6 +690,48 @@ object ContractForm: TContractForm
       GridView = cxGridDBTableViewContractCondition
     end
   end
+  object deStart: TcxDateEdit
+    Left = 373
+    Top = 30
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 6
+    Width = 85
+  end
+  object cxlEnd: TcxLabel
+    Left = 464
+    Top = 30
+    AutoSize = False
+    Caption = #1087#1086
+    Properties.Alignment.Vert = taVCenter
+    Height = 21
+    Width = 21
+    AnchorY = 41
+  end
+  object deEnd: TcxDateEdit
+    Left = 491
+    Top = 30
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 85
+  end
+  object cbPeriod: TcxCheckBox
+    Left = 130
+    Top = 30
+    Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+    TabOrder = 9
+    Width = 218
+  end
+  object cbEndDate: TcxCheckBox
+    Left = 582
+    Top = 30
+    Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
+    TabOrder = 10
+    Width = 278
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -716,6 +758,16 @@ object ContractForm: TContractForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -805,6 +857,30 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'bbIsPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartDate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEnd'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEndDate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbIsEndDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -854,6 +930,41 @@ object ContractForm: TContractForm
     object bbInsertRecCCK: TdxBarButton
       Action = InsertRecordCCK
       Category = 0
+    end
+    object bbIsPeriod: TdxBarControlContainerItem
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Category = 0
+      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Visible = ivAlways
+      Control = cbPeriod
+    end
+    object bbStartDate: TdxBarControlContainerItem
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
+      Category = 0
+      Hint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
+      Visible = ivAlways
+      Control = deStart
+    end
+    object bbEnd: TdxBarControlContainerItem
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+      Category = 0
+      Hint = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+      Visible = ivAlways
+      Control = cxlEnd
+    end
+    object bbEndDate: TdxBarControlContainerItem
+      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
+      Category = 0
+      Hint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
+      Visible = ivAlways
+      Control = deEnd
+    end
+    object bbIsEndDate: TdxBarControlContainerItem
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103
+      Category = 0
+      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1076#1072#1090#1091' '#1086#1082#1086#1085#1095#1072#1085#1080#1103
+      Visible = ivAlways
+      Control = cbEndDate
     end
   end
   object ActionList: TActionList
@@ -1335,7 +1446,32 @@ object ContractForm: TContractForm
       end>
     Params = <
       item
-        Value = Null
+        Name = 'inStartDate'
+        Value = 41852d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41852d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPeriod'
+        Value = 'False'
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsEndDate'
+        Value = 'False'
+        Component = cbEndDate
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 216
     Top = 224
@@ -1461,7 +1597,7 @@ object ContractForm: TContractForm
         DataSet = ContractConditionCDS
       end>
     Params = <>
-    Left = 514
+    Left = 650
     Top = 397
   end
   object spInsertUpdate: TdsdStoredProc
@@ -1535,5 +1671,20 @@ object ContractForm: TContractForm
     SummaryItemList = <>
     Left = 448
     Top = 360
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 480
+    Top = 120
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 536
+    Top = 160
   end
 end

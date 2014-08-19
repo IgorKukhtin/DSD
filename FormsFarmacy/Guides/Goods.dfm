@@ -121,13 +121,7 @@ inherited GoodsForm: TGoodsForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        ParamType = ptInput
-      end>
+    StoredProcName = 'gpSelect_Object_Goods_Retail'
     Left = 144
     Top = 88
   end

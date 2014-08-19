@@ -27,8 +27,8 @@ object IncomeForm: TIncomeForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 8
-      Top = 23
+      Left = 5
+      Top = 28
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
@@ -224,28 +224,30 @@ object IncomeForm: TIncomeForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 900
-      Top = 0
+      Left = 891
+      Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 900
-      Top = 23
+      Left = 891
+      Top = 64
+      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       TabOrder = 26
-      Width = 40
+      Width = 44
     end
     object cxLabel14: TcxLabel
       Left = 807
-      Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
       Left = 808
-      Top = 23
+      Top = 64
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -256,19 +258,19 @@ object IncomeForm: TIncomeForm
     end
     object cxLabel15: TcxLabel
       Left = 808
-      Top = 45
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+      Top = 5
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
       Left = 808
-      Top = 63
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 30
-      Width = 77
+      Width = 127
     end
   end
   object cxPageControl: TcxPageControl
@@ -524,6 +526,7 @@ object IncomeForm: TIncomeForm
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
@@ -544,6 +547,7 @@ object IncomeForm: TIncomeForm
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
@@ -1571,6 +1575,12 @@ object IncomeForm: TIncomeForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
       end>
     Left = 378
     Top = 216
@@ -1761,16 +1771,30 @@ object IncomeForm: TIncomeForm
         DataType = ftString
       end
       item
-        Name = 'CurrencyDocumentOd'
+        Name = 'CurrencyDocumentId'
         Value = ''
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyDocumentName'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'CurrencyPartnerId'
         Value = ''
         Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'StatusCode'
@@ -1866,7 +1890,6 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     Left = 624
-    Top = 16
   end
   object PackerGuides: TdsdGuides
     KeyField = 'Id'
@@ -1892,8 +1915,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 672
-    Top = 64
+    Left = 680
+    Top = 80
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2057,7 +2080,6 @@ object IncomeForm: TIncomeForm
         Value = ''
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -2068,7 +2090,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 840
+    Left = 824
+    Top = 80
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2095,6 +2118,5 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     Left = 840
-    Top = 56
   end
 end

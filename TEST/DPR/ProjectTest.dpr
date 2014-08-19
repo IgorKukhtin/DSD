@@ -246,7 +246,7 @@ uses
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
+  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
@@ -479,7 +479,6 @@ uses
   Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   CurrencyJournal in '..\..\Forms\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
-  Report_ContractEndDate in '..\..\Forms\Report\Report_ContractEndDate.pas' {Report_ContractEndDateForm: TParentForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   BranchTest in '..\SOURCE\Objects\All\BranchTest.pas',
@@ -505,7 +504,8 @@ uses
   AssetGroupTest in '..\SOURCE\Objects\All\AssetGroupTest.pas',
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
-  BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm};
+  BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
+  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

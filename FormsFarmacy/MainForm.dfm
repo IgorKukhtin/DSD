@@ -217,7 +217,7 @@ inherited MainForm: TMainForm
       Category = 0
     end
     object bbGoods: TdxBarButton [21]
-      Action = actGoods
+      Action = actGoodsCommon
       Category = 0
     end
     object bbGoodsKind: TdxBarButton [22]
@@ -470,10 +470,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoods: TdsdOpenForm
+    object actGoodsCommon: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099
+      Caption = #1058#1086#1074#1072#1088#1099' '#1086#1073#1098#1077#1076#1080#1085#1077#1085#1085#1099#1081
       Hint = #1058#1086#1074#1072#1088#1099
       FormName = 'TGoodsForm'
       FormNameParam.Value = ''

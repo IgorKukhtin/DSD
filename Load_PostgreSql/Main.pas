@@ -1614,20 +1614,45 @@ begin
                      +'        left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode'
                      +' = case when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
                      +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
-                     +'        when Goods.Id in (3409) then 20201' // !!!Этикет- пистолет!!! - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
+                     //+'        when Goods.Id in (3409) then 20201' // !!!Этикет- пистолет!!! - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
                      +'        when Goods.Id in (538) then 10102' // !!!П/К!!! - 10102		Основное сырье Мясное сырье Свинина
 
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
 
                      +'        when fCheckGoodsParentID(9323,Goods.ParentId) =zc_rvYes() then 20701' // ТОВАРЫ ПАВИЛЬОНЫ  - 20701	Общефирменные Товары Прочие товары
 
-                     +'        when fCheckGoodsParentID(8778,Goods.ParentId) =zc_rvYes() then 20302' // компьютеры  - 20302	Общефирменные Прочие основные ср-ва Комп. и оргтехника
-                     +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
-                     +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
-                     +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные
+                     +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // 1)Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
+                     +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // 1)РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
+*                     +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // 1)СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные
 
-                     +'        when fCheckGoodsParentID(8414,Goods.ParentId) =zc_rvYes() then 20205' // ДРОВА, ГАЗ  - Общефирменные Прочие ТМЦ Прочие ТМЦ
-                     +'        when fCheckGoodsParentID(7429,Goods.ParentId) =zc_rvYes() then 20301' // МЕБЕЛЬ  - Общефирменные Прочие основные ср-ва Мебель
+                     +'        when fCheckGoodsParentID(10578,Goods.ParentId) =zc_rvYes() then 20303' // 3)СД-БЫТ.ТЕХНИКА  - 20303	Общефирменные МНМА Быт. техника
+                     +'        when fCheckGoodsParentID(8414,Goods.ParentId) =zc_rvYes() then 20205' // 2)ДРОВА, ГАЗ  - Общефирменные Прочие ТМЦ Прочие ТМЦ
+                     +'        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204' // 2)КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
+                     +'        when fCheckGoodsParentID(8778,Goods.ParentId) =zc_rvYes() then 20302' // 3)компьютеры  - 20302	Общефирменные МНМА Комп. и оргтехника
+                     +'        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601' // 0)КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(7429,Goods.ParentId) =zc_rvYes() then 20301' // 3)МЕБЕЛЬ  - Общефирменные МНМА Мебель
+                     +'        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203' // 2)МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
+                     +'        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601' // 0)ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(10580,Goods.ParentId) =zc_rvYes() then 20305' // 3)ПРОЧИЕ МНМА (клише)  - Общефирменные МНМА Прочие МНМА
+                     +'        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205' // 2)РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+                     +'        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202' // 2)СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
+                     +'        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601' // 0)ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601' // 0)ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+
+                     +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // 1)СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные Запчасти и Ремонты	Запчасти и Ремонты
+                     +'        when fCheckGoodsParentID(10579,Goods.ParentId) =zc_rvYes() then 20206' // 2)СД-ИНВЕНТАРЬ - 20206	Общефирменные Прочие ТМЦ Инвентарь
+                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // 2)СД-ИНСТРУМЕНТЫ - 20201	Общефирменные Прочие ТМЦ Инструментырь
+                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // 0)СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // 0)СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
+
+                     +'        when fCheckGoodsParentID(10523,Goods.ParentId) =zc_rvYes() then 0' // СД-Производственное оборудование - !!!ОС!!!
+                     +'        when fCheckGoodsParentID(10576,Goods.ParentId) =zc_rvYes() then 20304' // 3)СД-СПЕЦИНСТРУМЕНТ  - 20304	Общефирменные МНМА Специнструменты
+                     +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // 0)!!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
+                     +'        when fCheckGoodsParentID(10577,Goods.ParentId) =zc_rvYes() then 0' // СД-Торговое оборудование - !!!ОС!!!
+                     +'        when Goods.ParentId in (5857) then 10203' // 0)СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
+                     +'        when Goods.Id in (6041, 7013) then 10201' // 0)СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
+
+                     +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // С-ПРОЧЕЕ - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
                      +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
                      +'        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901' // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
@@ -1639,23 +1664,6 @@ begin
                      +'        when fCheckGoodsParentID(2849,Goods.ParentId) =zc_rvYes() then 30301' // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
                      +'        when fCheckGoodsParentID(1855,Goods.ParentId) =zc_rvYes() then 30101' // ПРОИЗВОДСТВО + УДАЛЕННЫЕ - 30101	Доходы	Продукция	Готовая продукция
 
-                     +'        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204' // КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
-                     +'        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601' // КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203' // МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
-                     +'        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601' // ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205' // РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
-                     +'        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202' // СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
-                     +'        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601' // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601' // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // С-ПРОЧЕЕ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
-
-                     +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные Запчасти и Ремонты	Запчасти и Ремонты
-                     +'        when fCheckGoodsParentID(10194,Goods.ParentId) =zc_rvYes() then 20201' // СД-ИНСТРУМЕНТЫ - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
-
-                     +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
-                     +'        when Goods.Id in (6041, 7013) then 10201' // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
-                     +'        when Goods.ParentId in (5857) then 10203' // СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
 
                      +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
@@ -1671,7 +1679,6 @@ begin
                      +'        when fCheckGoodsParentID(11,Goods.ParentId) =zc_rvYes() then 10202' // СЫРЬЕ ОБОЛОЧКА - 10202		Основное сырье Прочее сырье	Оболочка
                      +'        when Goods.Id = 164 then 10202' // НИТКИ - 10202		Основное сырье Прочее сырье	Оболочка
 
-                     +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // !!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
                      +'        when fCheckGoodsParentID(176,Goods.ParentId) =zc_rvYes() then 10203' // СЫРЬЕ ЭТИКЕТКИ И ТЕРМОЧЕКИ - 10203		Основное сырье Прочее сырье	Упаковка
 
                      +'        when Goods.Id in (3924,8214,6504) then 10101' // !!!Живой вес!!!

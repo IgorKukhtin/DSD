@@ -76,6 +76,8 @@ procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCommonForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsCommonForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));

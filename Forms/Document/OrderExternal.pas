@@ -29,11 +29,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colAmountSecond: TcxGridDBColumn;
     cxLabel5: TcxLabel;
@@ -60,6 +56,15 @@ type
     cxLabel16: TcxLabel;
     edPersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public

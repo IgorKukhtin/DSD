@@ -1,17 +1,17 @@
 ﻿inherited MainForm: TMainForm
   ClientHeight = 174
-  ClientWidth = 1118
+  ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1126
-  ExplicitHeight = 201
+  ExplicitWidth = 1034
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1039,6 +1039,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_OrderExternal'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1198,14 +1202,6 @@
         item
           Visible = True
           ItemName = 'bbAccountReport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReportsFinance_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_ContractEndDate'
         end>
     end
     object bbReportsFinance_Separator: TdxBarSeparator
@@ -1654,9 +1650,8 @@
       Action = actCurrencyMovement
       Category = 0
     end
-    object bbReport_ContractEndDate: TdxBarButton
-      Action = actReport_ContractEndDate
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084
+    object bbReport_GoodsMI_OrderExternal: TdxBarButton
+      Action = dsdOpenForm1
       Category = 0
     end
   end
@@ -1725,6 +1720,26 @@
       FormNameParam.Value = 'TProvinceForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
+      FormName = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 1
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actMaker: TdsdOpenForm
@@ -3453,17 +3468,6 @@
       Hint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
       FormName = 'TCurrencyJournalForm'
       FormNameParam.Value = 'TCurrencyJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_ContractEndDate: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084' "'#1087#1086#1076#1093#1086#1076#1103#1090' '#1089#1088#1086#1082#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103'"'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1072#1084' "'#1087#1086#1076#1093#1086#1076#1103#1090' '#1089#1088#1086#1082#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103'"'
-      FormName = 'TReport_ContractEndDateForm'
-      FormNameParam.Value = 'TReport_ContractEndDateForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

@@ -107,6 +107,14 @@ type
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cbCOMDOC: TcxCheckBox;
+    CurrencyPartnerGuides: TdsdGuides;
+    CurrencyDocumentGuides: TdsdGuides;
+    edCurrencyDocument: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    edCurrencyPartner: TcxButtonEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

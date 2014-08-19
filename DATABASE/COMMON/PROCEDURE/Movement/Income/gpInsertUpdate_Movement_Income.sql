@@ -22,9 +22,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
+   OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
@@ -65,8 +66,33 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
-     -- сохранили свойство <Курс для перевода в валюту баланса>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, 0);   
+     -- рассчитали и сохранили свойство <Курс для перевода в валюту баланса>
+     outCurrencyValue := 1.00;
+     IF inCurrencyDocumentId <> inCurrencyPartnerId
+     THEN
+        SELECT MovementItem.Amount
+       INTO outCurrencyValue  
+        FROM (
+              SELECT max(Movement.OperDate) as maxOperDate
+              FROM Movement 
+                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.ObjectId = inCurrencyDocumentId
+                  JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                                             AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
+              WHERE Movement.DescId = zc_Movement_Currency()
+                AND Movement.OperDate <= inOperDate
+                AND Movement.StatusId = zc_Enum_Status_Complete()    
+              ) as tmpDate
+         JOIN Movement ON Movement.DescId = zc_Movement_Currency()
+                      AND Movement.OperDate = tmpDate.maxOperDate
+                      AND Movement.StatusId = zc_Enum_Status_Complete()    
+         JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                          AND MovementItem.DescId = zc_MI_Master();
+     END IF;
+     
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);   
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);

@@ -1,29 +1,30 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1108
-  ExplicitWidth = 1124
+  ClientWidth = 1020
+  ExplicitLeft = -38
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1108
+    Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1108
+    ExplicitWidth = 1248
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1108
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 1108
+      ExplicitWidth = 1248
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1108
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1108
+        ExplicitWidth = 1248
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -229,12 +230,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1108
+      ExplicitWidth = 1248
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1108
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1108
+        ExplicitWidth = 1248
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -257,10 +258,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1108
+    Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1108
+    ExplicitWidth = 1248
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -471,7 +472,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 991
+      Left = 1126
       Top = 63
       Properties.Buttons = <
         item
@@ -482,17 +483,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 991
+      Left = 1126
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 991
+      Left = 1126
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 991
+      Left = 1126
       Top = 23
       Enabled = False
       TabOrder = 33
@@ -505,6 +506,55 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Enabled = False
       TabOrder = 34
       Width = 68
+    end
+    object edCurrencyDocument: TcxButtonEdit
+      Left = 992
+      Top = 63
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 35
+      Width = 78
+    end
+    object cxLabel17: TcxLabel
+      Left = 992
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 1075
+      Top = 63
+      Enabled = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      TabOrder = 37
+      Width = 44
+    end
+    object cxLabel18: TcxLabel
+      Left = 1075
+      Top = 45
+      Caption = #1050#1091#1088#1089
+    end
+    object edCurrencyPartner: TcxButtonEdit
+      Left = 992
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 39
+      Width = 127
+    end
+    object cxLabel19: TcxLabel
+      Left = 992
+      Top = 5
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1392,6 +1442,20 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
       end
       item
+        Name = 'inCurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
         Component = DocumentTaxKindGuides
@@ -1753,8 +1817,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1024
-    Top = 72
+    Left = 1168
+    Top = 64
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -2103,5 +2167,52 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftFloat
       end>
     Left = 616
+  end
+  object CurrencyPartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1072
+    Top = 88
+  end
+  object CurrencyDocumentGuides: TdsdGuides
+    KeyField = 'Id'
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1032
+    Top = 80
   end
 end
