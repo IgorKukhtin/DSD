@@ -2,29 +2,27 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 703
+  ExplicitWidth = 1072
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1064
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1064
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1064
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitWidth = 1058
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        Width = 1058
+        Height = 514
+        ExplicitWidth = 1058
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -56,6 +54,21 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Price
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountForPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -90,6 +103,21 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Price
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountForPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -160,18 +188,49 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CountForPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object AmountSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1058
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        Width = 1058
+        Height = 514
+        ExplicitWidth = 1058
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -228,7 +287,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 272
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 272
     end
     object cxLabel5: TcxLabel
@@ -367,6 +426,38 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 23
       Width = 146
     end
+    object cxLabel11: TcxLabel
+      Left = 765
+      Top = 45
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 761
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 25
+      Width = 89
+    end
+    object cxLabel8: TcxLabel
+      Left = 882
+      Top = 5
+      Caption = #1050#1086#1084#1091
+    end
+    object edTo: TcxButtonEdit
+      Left = 882
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 27
+      Width = 132
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -483,6 +574,20 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
+        Name = 'inPriceListId'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inShowAll'
         Value = False
         Component = actShowAll
@@ -495,16 +600,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 248
@@ -515,7 +610,7 @@ inherited OrderExternalForm: TOrderExternalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -686,6 +781,19 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
       end
       item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'PersonalId'
         Value = ''
         Component = GuidesPersonal
@@ -751,23 +859,17 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
       end
       item
+        Name = 'PriceListId'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = PriceListGuides
+        ComponentItem = 'Key'
       end
       item
+        Name = 'PriceListName'
         Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -839,6 +941,13 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPersonalId'
         Value = ''
         Component = GuidesPersonal
@@ -874,18 +983,18 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
+        Name = 'ioPriceListId'
         Value = ''
-        ParamType = ptUnknown
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
       end
       item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
+        Name = 'outPriceListName'
         Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -914,31 +1023,43 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edInvNumber
       end
       item
+        Control = edContract
       end
       item
+        Control = edFrom
       end
       item
         Control = edOperDate
       end
       item
+        Control = edInvNumber
       end
       item
+        Control = edInvNumberOrder
       end
       item
+        Control = edOperDateMark
       end
       item
+        Control = edOperDatePartner
       end
       item
+        Control = edPaidKind
       end
       item
+        Control = edPersonal
       end
       item
+        Control = edPriceList
       end
       item
+        Control = edRoute
       end
       item
+        Control = edRouteSorting
       end
       item
+        Control = edTo
       end
       item
       end
@@ -1005,18 +1126,24 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Value = Null
+        Name = 'inPrice'
+        Component = MasterCDS
+        ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
-        Value = Null
-        ParamType = ptUnknown
+        Name = 'ioCountForPrice'
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end
       item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
       end
       item
         Value = Null
@@ -1075,6 +1202,7 @@ inherited OrderExternalForm: TOrderExternalForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = PriceListGuides
       end>
     Left = 512
     Top = 328
@@ -1305,5 +1433,59 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Left = 434
     Top = 59
+  end
+  object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 780
+    Top = 68
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 915
+    Top = 4
   end
 end

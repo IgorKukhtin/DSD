@@ -43,6 +43,7 @@ type
     colRouteSortingName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

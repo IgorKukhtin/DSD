@@ -56,6 +56,15 @@ type
     cxLabel16: TcxLabel;
     edPersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public

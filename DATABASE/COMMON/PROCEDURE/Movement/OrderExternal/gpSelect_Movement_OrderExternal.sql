@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, OperDateMark TDateTime
              , TotalCount TFloat, InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -59,6 +60,9 @@ BEGIN
 
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
+
+           , Object_To.Id                               AS ToId
+           , Object_To.ValueData                        AS ToName
 
            , Object_Personal.Id                         AS PersonalId
            , Object_Personal.ValueData                  AS PersonalName
@@ -110,6 +114,12 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
@@ -147,6 +157,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.08.14                                                        *
  06.06.14                                                        *
 
 */
