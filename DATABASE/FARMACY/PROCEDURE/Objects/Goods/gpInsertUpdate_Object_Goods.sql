@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -9,9 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
-    IN inGoodsMainId         Integer   ,    -- Ссылка на главный товар
-    IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
-
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
@@ -22,8 +20,7 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    vbUserId := inSession;
    
-   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inGoodsMainId, inObjectId, vbUserId);
- 
+   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, vbUserId);
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);

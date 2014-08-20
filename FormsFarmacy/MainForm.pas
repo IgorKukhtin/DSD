@@ -39,7 +39,7 @@ type
     bbUnitGroup: TdxBarButton;
     bbUnit: TdxBarButton;
     bbGoodsGroup: TdxBarButton;
-    bbGoods: TdxBarButton;
+    bbGoodsCommon: TdxBarButton;
     actBank: TdsdOpenForm;
     actBankAccount: TdsdOpenForm;
     actCash: TdsdOpenForm;
@@ -80,6 +80,8 @@ type
     bbTest: TdxBarButton;
     actSetDefault: TdsdOpenForm;
     bbSetDefault: TdxBarButton;
+    actGoods: TdsdOpenForm;
+    bbCommon: TdxBarButton;
   private
     { Private declarations }
   public

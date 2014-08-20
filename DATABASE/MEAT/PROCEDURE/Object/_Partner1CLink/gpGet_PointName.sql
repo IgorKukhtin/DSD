@@ -20,7 +20,7 @@ BEGIN
      IF ioName = '' THEN 
      	SELECT MIN(ClientName) INTO ioName 
      	       FROM Sale1C 
-     	      WHERE Sale1C.ClientCode = inCode AND zfGetBranchFromUnitId(UnitId) = inBranchId;
+     	      WHERE Sale1C.ClientCode = inCode AND zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) = inBranchId;
      END IF;
 
   
@@ -32,6 +32,7 @@ ALTER FUNCTION gpGet_PointName (Integer, TVarChar, Integer, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.08.14                        * 
  15.04.14                        * 
 */
 

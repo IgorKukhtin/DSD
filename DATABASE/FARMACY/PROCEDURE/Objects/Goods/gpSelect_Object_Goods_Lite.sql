@@ -28,7 +28,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Lite(Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods_Lite(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
