@@ -70,6 +70,7 @@ begin
    then
      delete from dba._pgBillLoad_union;
      --
+     -- Объединение ГП
      insert into dba._pgBillLoad_union (BillId, BillId_union)
       select BillId, BillId_union
       from
@@ -141,7 +142,9 @@ begin
      , Bill_find.isOnlyUpdateInt
      , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
-from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
+from
+      -- Сырье - БН
+     (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
       from dba.Bill
@@ -165,6 +168,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
 --       and Bill.Id = 1260716
        group by Bill.Id
      union
+      -- ГП (Сырье) - БН
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
@@ -187,6 +191,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
 --       and Bill.Id = 1260716
       group by Bill.Id
      union
+      -- ГП - БН
       select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres, 30101 as CodeIM -- Готовая продукция
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
@@ -203,6 +208,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
                          and find2.ContractNumber <> ''
       group by BillId_union
      union
+      -- ВСЕ zc_bkSendUnitToUnit - БН and (isUnitTo.UnitId - нет)
       select Bill.Id, 0 as Id_Postgres, 30101 as CodeIM -- Готовая продукция
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt

@@ -29,7 +29,6 @@ type
     cbMeasure: TCheckBox;
     cbGoodsKind: TCheckBox;
     cbPaidKind: TCheckBox;
-    cbJuridicalGroup: TCheckBox;
     cbContractKind: TCheckBox;
     cbContractFl: TCheckBox;
     cbJuridicalBranchNal: TCheckBox;
@@ -156,6 +155,8 @@ type
     toStoredProc_three: TdsdStoredProc;
     cbPartner_Income: TCheckBox;
     toSqlQuery_two: TZQuery;
+    cb1Find2InsertPartner1C_BranchNal: TCheckBox;
+    cbJuridicalGroup: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -210,7 +211,8 @@ type
     procedure pCompleteDocument_ReturnOutNal(isLastComplete:Boolean);
     procedure pCompleteDocument_Send(isLastComplete:Boolean);
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
-    procedure pCompleteDocument_Sale_Int(isLastComplete:Boolean);
+    procedure pCompleteDocument_Sale_IntBN(isLastComplete:Boolean);
+    procedure pCompleteDocument_Sale_IntNAL(isLastComplete:Boolean);
     procedure pCompleteDocument_Sale_Fl(isLastComplete:Boolean);
     procedure pCompleteDocument_ReturnIn_Int(isLastComplete:Boolean);
     procedure pCompleteDocument_ReturnIn_Fl(isLastComplete:Boolean);
@@ -242,10 +244,10 @@ type
     function pLoadDocument_SendPersonal:Integer;
     procedure pLoadDocumentItem_SendPersonal(SaveCount:Integer);
 
-    function pLoadDocument_Sale:Integer;
-    procedure pLoadDocumentItem_Sale(SaveCount:Integer);
-    function pLoadDocument_SaleNal:Integer;
-    procedure pLoadDocumentItem_SaleNal(SaveCount:Integer);
+    function pLoadDocument_Sale_IntBN:Integer;
+    procedure pLoadDocumentItem_Sale_IntBN(SaveCount:Integer);
+    function pLoadDocument_Sale_IntNal:Integer;
+    procedure pLoadDocumentItem_Sale_IntNal(SaveCount:Integer);
     function pLoadDocument_Sale_Fl:Integer;
     procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
 
@@ -306,12 +308,12 @@ type
     procedure pLoadGuide_Goods1CLink_Fl;
     procedure pLoadGuide_GoodsProperty_Detail;
 
+    procedure pLoadGuide_1Find2InsertPartner1C_BranchNal;
     procedure pLoadGuide_Juridical1C_BranchNal;
     procedure pLoadGuide_Partner1C_BranchNal;
 
     procedure pLoadGuide_Partner_IncomeNAL;
     procedure pLoadGuide_Partner_SaleNAL;
-    procedure pLoadGuide_FindPartner1C_BranchNal;
 
     procedure pLoadGuide_Branch;
     procedure pLoadGuide_Business;
@@ -386,6 +388,35 @@ begin
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(OperDate))+' between StartDate and EndDate'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!1.1. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(OperDate))+' between StartDate and EndDate'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!1.1. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(OperDate))+' between StartDate and EndDate'
+                                 )
+                  ;
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+
              end;
              //1.2. если не нашли, находим договор: статья + без условия даты + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
@@ -399,6 +430,32 @@ begin
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  //+'   and '+FormatToVarCharServer_notNULL(OperDate)+' between StartDate and EndDate'
                                  );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  //1.2. !!!для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  //1.2. !!!для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
              //1.3. если не нашли, находим договор: статья + без условия даты + не "удален"
@@ -414,7 +471,32 @@ begin
                                  //+'   and '+FormatToVarCharServer_notNULL(OperDate)+' between StartDate and EndDate'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!1.3. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!1.3. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 )
+                  ;
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
+
 
              //2.1. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "закрыт" + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
@@ -434,6 +516,34 @@ begin
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!2.1. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!2.1. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
              //2.2. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "удален"
@@ -455,6 +565,32 @@ begin
                                  //+'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!2.2. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!2.2. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  ;
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
 
              //3.1. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "закрыт" + не "удален"
@@ -475,6 +611,34 @@ begin
                                  +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!3.1. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!3.1. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 )
+                  ;
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
              //3.2. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "удален"
              if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
@@ -494,6 +658,32 @@ begin
                                  //+'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!3.2. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!3.2. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  ;
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
 
              //4. если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!! + не "удален"
@@ -510,6 +700,34 @@ begin
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  //+'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  // повторно
+                  if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+                  then
+                  // !!!4. для НАЛ поиск среди БН!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_FirstForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  else if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+                  then
+                  // !!!4. для БН поиск среди НАЛ!!!
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 )
+                  ;
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
 end;
@@ -593,6 +811,12 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
+             //
+             // !!!для НАЛ поиск среди БН!!!
+             if (Result=0)and(PaidKindId=zc_Enum_PaidKind_SecondForm)
+             then Result:=fFind_ContractId_pg(PartnerId,IMCode,IMCode_two,zc_Enum_PaidKind_FirstForm,myContractNumber);
+
+             //
              // Во 2-ой раз Пытаемся найти <Договор> !!!по УП статье + не закрыт!!!
              if Result=0 then
              begin
@@ -994,7 +1218,7 @@ begin
      //
 
      //!!!Integer-1C-BranchNal!!!
-     if not fStop then pLoadGuide_FindPartner1C_BranchNal;
+     if not fStop then pLoadGuide_1Find2InsertPartner1C_BranchNal;
      if not fStop then pLoadGuide_Juridical1C_BranchNal;
      if not fStop then pLoadGuide_Partner1C_BranchNal;
      //!!!Integer!!!
@@ -1165,8 +1389,10 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_SendUnitBranch;
      if not fStop then pLoadDocumentItem_SendUnitBranch(myRecordCount1);
 
-     if not fStop then myRecordCount1:=pLoadDocument_Sale;
-     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_Sale_IntBN;
+     if not fStop then pLoadDocumentItem_Sale_IntBN(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_Sale_IntNal;
+     if not fStop then pLoadDocumentItem_Sale_IntNal(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
      if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
@@ -1189,9 +1415,6 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_Zakaz;
      if not fStop then pLoadDocumentItem_Zakaz(myRecordCount1);
-
-     if not fStop then myRecordCount1:=pLoadDocument_SaleNal;
-     if not fStop then pLoadDocumentItem_SaleNal(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnInNal;
      if not fStop then pLoadDocumentItem_ReturnInNal(myRecordCount1);
@@ -1391,7 +1614,8 @@ begin
           if not fStop then pCompleteDocument_ReturnOutNal(FALSE);
           if not fStop then pCompleteDocument_Send(FALSE);
           if not fStop then pCompleteDocument_SendOnPrice(FALSE);
-          if not fStop then pCompleteDocument_Sale_Int(True);
+          if not fStop then pCompleteDocument_Sale_IntBN(True);
+          if not fStop then pCompleteDocument_Sale_IntNAL(True);
           if not fStop then pCompleteDocument_ReturnIn_Int(True);
           if not fStop then pCompleteDocument_ProductionUnion(FALSE);
           if not fStop then pCompleteDocument_ProductionSeparate(FALSE);
@@ -1405,7 +1629,8 @@ begin
      if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Sale_Int(True);
+     if not fStop then pCompleteDocument_Sale_IntBN(True);
+     if not fStop then pCompleteDocument_Sale_IntNAL(True);
      if not fStop then pCompleteDocument_ReturnIn_Int(True);
      if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
@@ -1623,7 +1848,7 @@ begin
 
                      +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // 1)Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // 1)РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
-*                     +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // 1)СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные
+                     +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // 1)СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные
 
                      +'        when fCheckGoodsParentID(10578,Goods.ParentId) =zc_rvYes() then 20303' // 3)СД-БЫТ.ТЕХНИКА  - 20303	Общефирменные МНМА Быт. техника
                      +'        when fCheckGoodsParentID(8414,Goods.ParentId) =zc_rvYes() then 20205' // 2)ДРОВА, ГАЗ  - Общефирменные Прочие ТМЦ Прочие ТМЦ
@@ -2552,14 +2777,13 @@ begin
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_FindPartner1C_BranchNal;
+procedure TMainForm.pLoadGuide_1Find2InsertPartner1C_BranchNal;
 var ParentId_pg:String;
     ContractId_pg:Integer;
 begin
-// exit;
-     if (not cbJuridicalBranchNal.Checked)or(not cbJuridicalBranchNal.Enabled) then exit;
+     if (not cb1Find2InsertPartner1C_BranchNal.Checked)or(not cb1Find2InsertPartner1C_BranchNal.Enabled) then exit;
      //
-     myEnabledCB(cbJuridicalBranchNal);
+     myEnabledCB(cb1Find2InsertPartner1C_BranchNal);
      //
      with fromQuery,Sql do begin
         Close;
@@ -2579,7 +2803,7 @@ begin
 
                   Add('order by ObjectName, ObjectId');
         Open;
-        cbJuridicalBranchNal.Caption:='3.2. ('+IntToStr(RecordCount)+') Поиск покупатели-НАЛ';
+        cb1Find2InsertPartner1C_BranchNal.Caption:='3.2.1. ('+IntToStr(RecordCount)+') 1Find2InsertPartner1C_BranchNal';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2612,7 +2836,7 @@ begin
                             +' where Object_Partner1CLink.ObjectCode='+FieldByName('Code1C').AsString
                             +'   and Object_Partner1CLink.DescId=zc_Object_Partner1CLink()');
 
-             // надо ли добавлять Object_Partner1CLink
+             // если контрагент есть, может быть надо будет добавить Object_Partner1CLink
              if FieldByName('PartnerId_pg').AsInteger <> 0
              then begin
                        //проверка
@@ -2630,8 +2854,8 @@ begin
                        if (toSqlQuery.FieldByName('JuridicalId').AsInteger = 0)
                             and (toSqlQuery.FieldByName('PartnerId').AsInteger = 0)
                        then begin
-                                 // поиск договора НАЛ + НЕ УДАЛЕН
-                                 fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND isErased = FALSE and JuridicalId='+FieldByName('JuridicalId_pg').AsString);
+                                 // поиск договора НАЛ or БН + НЕ УДАЛЕН
+                                 fOpenSqToQuery_two ('select ContractId from Object_Contract_View where isErased = FALSE and JuridicalId='+FieldByName('JuridicalId_pg').AsString);
                                  ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
                                  //проверка ContractId_pg
                                  if ContractId_pg=0
@@ -2656,7 +2880,7 @@ begin
                        end;
 
              end
-             // только получем данные из Object_Partner1CLink
+             // если контрагента нет, то только получем данные из Object_Partner1CLink
              else
              begin
                   // если нашли
@@ -2716,7 +2940,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbJuridicalBranchNal);
+     myDisabledCB(cb1Find2InsertPartner1C_BranchNal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Juridical1C_BranchNal;
@@ -2724,7 +2948,6 @@ var ParentId_pg:String;
     JuridicalId_pg_update, JuridicalId_pg, JuridicalDetailsId_pg :Integer;
     ContractId_pg:Integer;
 begin
-// exit;
      if (not cbJuridicalBranchNal.Checked)or(not cbJuridicalBranchNal.Enabled) then exit;
      //
      myEnabledCB(cbJuridicalBranchNal);
@@ -2769,7 +2992,7 @@ begin
                   Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 30101'); // Готовая продукция
                   Add('order by ObjectName, ObjectId');
         Open;
-        cbJuridicalBranchNal.Caption:='3.2. ('+IntToStr(RecordCount)+') Юр.лица Филиал-НАЛ';
+        cbJuridicalBranchNal.Caption:='3.2.2. ('+IntToStr(RecordCount)+') Юр.лица Филиал-НАЛ';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2900,11 +3123,15 @@ begin
              end;
 
 
-             // поиск договора НАЛ
-             //fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
-             // поиск договора Любого
-             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
+             // поиск договора НАЛ or БН + НЕ УДАЛЕН
+             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where isErased = FALSE and JuridicalId='+IntToStr(JuridicalId_pg));
              ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             if ContractId_pg=0
+             then begin
+                 // поиск договора НАЛ or БН
+                 fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
+                 ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             end;
              //
              if ContractId_pg=0
              then begin
@@ -2954,7 +3181,6 @@ end;
 procedure TMainForm.pLoadGuide_Partner1C_BranchNal;
 var PartnerId_pg:Integer;
 begin
-// exit;
      if (not cbPartnerBranchNal.Checked)or(not cbPartnerBranchNal.Enabled) then exit;
      //
      myEnabledCB(cbPartnerBranchNal);
@@ -3100,7 +3326,7 @@ var ContractKindID_15,ContractKindID_16,ContractKindID_17,ContractKindID_18:Stri
     zc_Enum_ContractConditionKind_DelayDayCalendar,zc_Enum_ContractConditionKind_DelayDayBank,zc_Enum_ContractConditionKind_BonusPercentSaleReturn,zc_Enum_ContractConditionKind_BonusPercentAccount:Integer;
     ContractId_pg:Integer;
 begin
-     if (not cbContractFl.Checked)or(not cbContractFl.Enabled) then exit;
+{     if (not cbContractFl.Checked)or(not cbContractFl.Enabled) then exit;
      //
      myEnabledCB(cbContractFl);
      fExecFlSqFromQuery('call dba.pRecalc_Unit_isFindBill('+FormatToDateServer_notNULL(StrToDate('01.01.2014'))+')');
@@ -3461,7 +3687,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbContractFl);
+     myDisabledCB(cbContractFl);}
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_Fl(isBill:Boolean);
@@ -6200,7 +6426,7 @@ begin
 
              end;
         Open;
-        cbRouteSorting.Caption:='3.4. ('+IntToStr(RecordCount)+') Сортировки Маршрутов';
+        cbRouteSorting.Caption:='2.7. ('+IntToStr(RecordCount)+') Сортировки Маршрутов';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -8329,7 +8555,305 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_SaleNal;
+var ParentId_PG_Dnepr:String;
+    ContractId_pg:Integer;
+    JuridicalId_pg, JuridicalDetailsId_pg :Integer;
+    zc_Enum_ContractConditionKind_DelayDayCalendar,zc_Enum_ContractConditionKind_DelayDayBank:Integer;
 begin
+     if (not cbPartner_Income.Checked)or(not cbPartner_Income.Enabled) then exit;
+     //
+     fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=21');//21-покупатели Днепр
+     ParentId_PG_Dnepr:=toSqlQuery.FieldByName('Id').AsString;
+     //
+     fOpenSqToQuery ('select zc_Enum_ContractConditionKind_DelayDayCalendar() as ContractConditionKindId');
+     zc_Enum_ContractConditionKind_DelayDayCalendar:=toSqlQuery.FieldByName('ContractConditionKindId').AsInteger;
+     fOpenSqToQuery ('select zc_Enum_ContractConditionKind_DelayDayBank() as ContractConditionKindId');
+     zc_Enum_ContractConditionKind_DelayDayBank:=toSqlQuery.FieldByName('ContractConditionKindId').AsInteger;
+
+     //
+     myEnabledCB(cbPartner_Income);
+
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Unit.Id as ObjectId');
+        Add('     , Unit.UnitCode as ObjectCode');
+        Add('     , trim(Unit.UnitName) as ObjectName');
+        Add('     , '+ParentId_PG_Dnepr + ' as ParentId_Postgres');//02-Поставщики
+        Add('     , Information2.AddressFirm as Address');
+        Add('     , _pgInfoMoney.Id3_Postgres AS InfoMoneyId_PG');
+        Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
+        Add('     , zf_isOKPO_Virtual_PG(OKPO) as isOKPO_Virtual');
+        Add('     , ClientSumm.DayCount_Real');
+        Add('     , ClientSumm.DayCount_Bank');
+        Add('     , isnull(Unit.Id3_Postgres,0) as Id_Postgres');
+        Add('from (select ClientId'
+           +'            ,max(InfoMoneyCode) as InfoMoneyCode'
+           +'      from'
+           +'     (select Bill.FromId as ClientId'
+           +'            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'      from dba.Bill'
+           +'           left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId'
+           +'           inner join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.OperPrice<>0'
+           +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'        and Bill.ToId<>4927'//СКЛАД ПЕРЕПАК
+           +'        and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
+           +'        and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+//           +'        and Bill.FromId<>4928'//ФОЗЗИ-ПЕРЕПАК ПРОДУКЦИИ
+           +'        and UnitFrom.PersonalId_Postgres is null'
+           +'        and Bill.MoneyKindId = zc_mkNal()'
+           +'      group by Bill.FromId'
+           +'     union'
+           +'      select Bill.ToId as ClientId'
+           +'            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'      from dba.Bill'
+           +'           left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId'
+           +'           inner join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.OperPrice<>0'
+           +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind=zc_bkReturnToClient()'
+           +'        and Bill.FromId not in (3830, 3304)' //КРОТОН ООО (хранение) + КРОТОН ООО
+           +'        and Bill.ToId not in (3830, 3304)'  // КРОТОН ООО (хранение) + КРОТОН ООО
+           +'        and Bill.MoneyKindId = zc_mkNal()'
+           +'      group by Bill.ToId'
+           +'     )as tmpBill'
+
+           +'      group by ClientId'
+           +'     )as tmpBill');
+        Add('     left outer join dba.Unit on Unit.Id = tmpBill.ClientId'
+           +'     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
+           +'     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = tmpBill.InfoMoneyCode');
+        Add('     left outer join dba.ClientSumm on ClientSumm.ClientId = isnull(zf_ChangeIntToNull(Unit.DolgByUnitID),Unit.Id)');
+
+        Add('where trim(OKPO)<>'+FormatToVarCharServer_notNULL('')
+        //   +'  and zf_isOKPO_Virtual_PG(OKPO) = zc_rvYes()'
+        //   +'  and isnull(Unit.Id3_Postgres,0)=0' // !!!только новые
+           );
+
+        Open;
+        cbPartner_Income.Caption:='1.4. ('+IntToStr(RecordCount)+') !!!новые поставщики/договора НАЛ!!!';
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_juridical';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStartPromo',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inEndPromo',ftDateTime,ptInput, Date);
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectHistory_JuridicalDetails';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inOperDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inBankId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inFullName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inJuridicalAddress',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inOKPO',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inINN',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inNumberVAT',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inAccounterName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inBankAccount',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inPhone',ftString,ptInput, '');
+        //
+        toStoredProc_three.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
+        toStoredProc_three.OutputType := otResult;
+        toStoredProc_three.Params.Clear;
+        toStoredProc_three.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_three.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc_three.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc_three.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc_three.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc_three.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             JuridicalId_pg:=0;
+
+             if FieldByName('Id_Postgres').AsInteger <> 0
+             then begin
+                       //находим юр.лицо по Контрагенту
+                       fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
+                                     +' from ObjectLink'
+                                     +' where ObjectLink.ObjectId='+FieldByName('Id_Postgres').AsString
+                                     +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                     );
+                        JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+                        //проверка JuridicalId_pg
+                        if JuridicalId_pg=0
+                        then begin
+                                  ShowMessage('Ошибка JuridicalId_pg=0');
+                                  fStop:=true;
+                                  exit;
+                             end;
+             end
+             else
+                 if FieldByName('isOKPO_Virtual').AsInteger=zc_rvNo
+                 then begin
+                           // Пытаемся найти по ОКПО - не виртуальному
+                           fOpenSqToQuery ('select JuridicalId, ObjectHistoryId from ObjectHistory_JuridicalDetails_View where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString));
+                           JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+                 end;
+
+             // для НАЛ всегда создаем юр лицо + реквизиты
+             if JuridicalId_pg=0
+             then begin
+                       // Save Juridical
+                       toStoredProc.Params.ParamByName('ioId').Value:=0;
+                       toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+                       toStoredProc.Params.ParamByName('inGLNCode').Value:='';
+                       toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
+                       toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=0;
+                       toStoredProc.Params.ParamByName('inRetailId').Value:=0;
+                       toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+                       if not myExecToStoredProc then ;
+                       JuridicalId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
+
+                       // Save JuridicalDetails
+                       toStoredProc_two.Params.ParamByName('ioId').Value:=0;
+                       toStoredProc_two.Params.ParamByName('inJuridicalId').Value:=JuridicalId_pg;
+                       toStoredProc_two.Params.ParamByName('inOperDate').Value:='01.01.2000';
+                       toStoredProc_two.Params.ParamByName('inBankId').Value:=0;
+                       toStoredProc_two.Params.ParamByName('inFullName').Value:=FieldByName('ObjectName').AsString;
+                       toStoredProc_two.Params.ParamByName('inJuridicalAddress').Value:=FieldByName('Address').AsString;
+                       toStoredProc_two.Params.ParamByName('inOKPO').Value:=FieldByName('OKPO').AsString;
+                       toStoredProc_two.Params.ParamByName('inINN').Value:='';
+                       toStoredProc_two.Params.ParamByName('inNumberVAT').Value:='';
+                       toStoredProc_two.Params.ParamByName('inAccounterName').Value:='';
+                       toStoredProc_two.Params.ParamByName('inBankAccount').Value:='';
+                       if not myExecToStoredProc_two then ;
+             end;
+
+             // Если Виртуальный ОКПО - всегда создаем Partner
+             if (FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes) and (FieldByName('Id_Postgres').AsInteger = 0)
+             then begin
+                      // Save Partner
+                      toStoredProc_three.Params.ParamByName('ioId').Value:=0;
+                      toStoredProc_three.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+                      toStoredProc_three.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+                      toStoredProc_three.Params.ParamByName('inAddress').Value:=FieldByName('Address').AsString;
+                      toStoredProc_three.Params.ParamByName('inJuridicalId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
+                      if not myExecToStoredProc_three then ;
+                      //сохранение в Sybase
+                      fExecSqFromQuery('update dba.Unit set Id3_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc_three.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             end;
+
+
+             // поиск договора НАЛ or БН + НЕ УДАЛЕН
+             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where isErased = FALSE and JuridicalId='+IntToStr(JuridicalId_pg));
+             ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             if ContractId_pg=0
+             then begin
+                 // поиск договора НАЛ or БН
+                 fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
+                 ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             end;
+
+             // Если договор не найден - всегда создаем договор + условия
+             if ContractId_pg=0
+             then begin
+                      // Save Contract НАЛ
+                      fExecSqToQuery ('select * from gpInsertUpdate_Object_Contract(0'
+                                     +'                                           , 0'
+                                     +'                                           , '+FormatToVarCharServer_notNULL('без договора')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
+                                     +'                                           , '+IntToStr(JuridicalId_pg)
+                                     +'                                           , zc_Juridical_Basis()'
+                                     +'                                           , '+IntToStr(FieldByName('InfoMoneyId_PG').AsInteger)
+                                     +'                                           , NULL'
+                                     +'                                           , zc_Enum_PaidKind_SecondForm()'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , NULL'
+                                     +'                                           , TRUE'
+                                     +'                                           , TRUE'
+                                     +'                                           , FALSE'
+                                     +'                                           , TRUE'
+                                     +'                                           , zfCalc_UserAdmin()'
+                                     +'                                           )'
+                                     );
+                      // поиск созданного договора НАЛ
+                      fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
+                      ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+                      // сохранение условий по договору - DayCount_Real
+                      if FieldByName('DayCount_Real').AsFloat<>0
+                      then begin
+                                fExecSqToQuery ('select * from gpInsertUpdate_Object_ContractCondition(0'
+                                               +'                                           , '+FormatToVarCharServer_notNULL('')
+                                               +'                                           , '+IntToStr(FieldByName('DayCount_Real').AsInteger)
+                                               +'                                           , '+IntToStr(ContractId_pg)
+                                               +'                                           , '+IntToStr(zc_Enum_ContractConditionKind_DelayDayCalendar)
+                                               +'                                           , NULL'
+                                               +'                                           , NULL'
+                                               +'                                           , zfCalc_UserAdmin()'
+                                               +'                                           )'
+                                               );
+                      end;
+                      if FieldByName('DayCount_Bank').AsFloat<>0
+                      then begin
+                                fExecSqToQuery ('select * from gpInsertUpdate_Object_ContractCondition(0'
+                                               +'                                           , '+FormatToVarCharServer_notNULL('')
+                                               +'                                           , '+IntToStr(FieldByName('DayCount_Bank').AsInteger)
+                                               +'                                           , '+IntToStr(ContractId_pg)
+                                               +'                                           , '+IntToStr(zc_Enum_ContractConditionKind_DelayDayCalendar)
+                                               +'                                           , NULL'
+                                               +'                                           , NULL'
+                                               +'                                           , zfCalc_UserAdmin()'
+                                               +'                                           )'
+                                               );
+                      end;
+
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPartner_Income);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_IncomeNAL;
@@ -8547,12 +9071,15 @@ begin
              end;
 
 
-
-             // поиск договора НАЛ
-             //fOpenSqToQuery_two ('select ContractId from Object_Contract_View where PaidKindId = zc_Enum_PaidKind_SecondForm() AND JuridicalId='+IntToStr(JuridicalId_pg));
-             // поиск договора Любого
-             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
+             // поиск договора НАЛ or БН + НЕ УДАЛЕН
+             fOpenSqToQuery_two ('select ContractId from Object_Contract_View where isErased = FALSE and JuridicalId='+IntToStr(JuridicalId_pg));
              ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             if ContractId_pg=0
+             then begin
+                 // поиск договора НАЛ or БН
+                 fOpenSqToQuery_two ('select ContractId from Object_Contract_View where JuridicalId='+IntToStr(JuridicalId_pg));
+                 ContractId_pg:=toSqlQuery_two.FieldByName('ContractId').AsInteger;
+             end;
 
              // Если договор не найден - всегда создаем договор + условия
              if ContractId_pg=0
@@ -9859,7 +10386,7 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
-procedure TMainForm.pCompleteDocument_Sale_Int(isLastComplete:Boolean);
+procedure TMainForm.pCompleteDocument_Sale_IntBN(isLastComplete:Boolean);
 begin
      if (not cbCompleteSaleInt.Checked)or(not cbCompleteSaleInt.Enabled) then exit;
      //
@@ -9947,6 +10474,96 @@ begin
      end;
      //
      myDisabledCB(cbCompleteSaleInt);
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Sale_IntNAL(isLastComplete:Boolean);
+begin
+     if (not cbCompleteSaleIntNal.Checked)or(not cbCompleteSaleIntNal.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteSaleIntNal);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.ObjectId');
+        Add('     , Bill.OperDate');
+        Add('     , Bill.InvNumber');
+        Add('     , Bill.FromID');
+        Add('     , Bill.ClientID');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
+        Add('     as Bill');
+
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.InvNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId')
+        else
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('     left outer join dba.Unit as Client on Client.ID = Bill.ClientID');
+             Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
+                +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+             Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Client.Id');
+             Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+             Add('   and Bill.Id_Postgres>0');
+        end
+        else
+            Add('where Bill.Id_Postgres>0');
+
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+
+        cbCompleteSaleIntNal.Caption:='3.3.('+IntToStr(RecordCount)+')Прод.пок.Int - БН';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Sale';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteSaleIntNal);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!FLOAT
@@ -10204,17 +10821,17 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
-function TMainForm.pLoadDocument_SaleNal:Integer;
+function TMainForm.pLoadDocument_Sale_IntNal:Integer;
 begin
 
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_SaleNal(SaveCount:Integer);
+procedure TMainForm.pLoadDocumentItem_Sale_IntNal(SaveCount:Integer);
 begin
 
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
-function TMainForm.pLoadDocument_Sale:Integer;
+function TMainForm.pLoadDocument_Sale_IntBN:Integer;
 var ContractId_pg,PriceListId:Integer;
 begin
      Result:=0;
@@ -10370,7 +10987,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!INTEGER
-procedure TMainForm.pLoadDocumentItem_Sale (SaveCount:Integer);
+procedure TMainForm.pLoadDocumentItem_Sale_IntBN (SaveCount:Integer);
 begin
      if (cbOKPO.Checked)then exit;
      if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;

@@ -8,25 +8,25 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 151
     Width = 1055
-    Height = 305
+    Height = 236
     TabOrder = 3
-    ExplicitTop = 82
+    ExplicitTop = 151
     ExplicitWidth = 1055
-    ExplicitHeight = 305
-    ClientRectBottom = 301
+    ExplicitHeight = 236
+    ClientRectBottom = 232
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1049
-      ExplicitHeight = 299
+      ExplicitHeight = 230
       inherited cxGrid: TcxGrid
         Width = 1049
-        Height = 299
+        Height = 230
         ExplicitWidth = 1049
-        ExplicitHeight = 299
+        ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -357,9 +357,9 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   end
   inherited Panel: TPanel
     Width = 1055
-    Height = 54
+    Height = 123
     ExplicitWidth = 1055
-    ExplicitHeight = 54
+    ExplicitHeight = 123
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
@@ -385,12 +385,12 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 465
-      Top = 6
+      Left = 457
+      Top = 12
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 465
+      Left = 457
       Top = 30
       Properties.Buttons = <
         item
@@ -400,45 +400,45 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       TabOrder = 5
       Width = 240
     end
-    object cxLabel3: TcxLabel
+    object cxLabel13: TcxLabel
       Left = 215
-      Top = 6
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Top = 53
+      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     end
-    object edJuridical: TcxButtonEdit
+    object edRouteSorting: TcxButtonEdit
       Left = 215
-      Top = 30
+      Top = 72
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 240
+      Width = 224
     end
-    object cxLabel5: TcxLabel
-      Left = 965
-      Top = 6
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    object cxLabel7: TcxLabel
+      Left = 457
+      Top = 54
+      Caption = #1052#1072#1088#1096#1088#1091#1090
     end
-    object edPaidKind: TcxButtonEdit
-      Left = 965
-      Top = 30
+    object edRoute: TcxButtonEdit
+      Left = 457
+      Top = 72
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 81
+      Width = 146
     end
-    object cxLabel7: TcxLabel
-      Left = 715
-      Top = 6
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    object cxLabel3: TcxLabel
+      Left = 215
+      Top = 12
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
-    object ceInfoMoney: TcxButtonEdit
-      Left = 715
+    object edFrom: TcxButtonEdit
+      Left = 215
       Top = 30
       Properties.Buttons = <
         item
@@ -446,8 +446,31 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 240
+      Width = 224
     end
+    object edByDoc: TcxCheckBox
+      Left = 615
+      Top = 72
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 12
+      Width = 128
+    end
+  end
+  object edTo: TcxButtonEdit [2]
+    Left = 714
+    Top = 30
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 132
+  end
+  object cxLabel8: TcxLabel [3]
+    Left = 714
+    Top = 12
+    Caption = #1050#1086#1084#1091
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -463,24 +486,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       end
       item
         Component = GoodsGroupGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = InfoMoneyGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = JuridicalGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = PaidKindGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -568,7 +573,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_SaleReturnIn'
+    StoredProcName = 'gpReport_OrderExternal'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -595,8 +600,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       item
         Name = 'inJuridicalId'
         Value = '0'
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -609,15 +612,11 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 176
@@ -692,16 +691,13 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalGuides
       end
       item
         Component = GoodsGroupGuides
       end
       item
-        Component = InfoMoneyGuides
       end
       item
-        Component = PaidKindGuides
       end>
     Left = 184
     Top = 136
@@ -738,82 +734,108 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Left = 328
     Top = 170
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    Key = '0'
-    FormNameParam.Name = 'TJuridical_ObjectForm'
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    LookupControl = edRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 328
-  end
-  object InfoMoneyGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
+    FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesRouteSorting
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesRouteSorting
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 840
-    Top = 5
+    Left = 352
+    Top = 72
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesRoute: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
+    LookupControl = edRoute
+    FormNameParam.Value = 'TRouteForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
+    FormName = 'TRouteForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 488
+    Top = 72
+  end
+  object GuidesFrom: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
         ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
       end>
-    Left = 1064
-    Top = 8
+    Left = 312
   end
 end

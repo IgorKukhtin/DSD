@@ -157,7 +157,7 @@ begin
       delete from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB;
       -- Create List GoodsProperty isPartion
       insert into _tmpList_GoodsProperty_isPartion (GoodsPropertyId)
-        select GoodsPropertyID from dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB;
+        select GoodsPropertyID from dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS _toolsView_GoodsProperty_Obvalka_isPartionStr_MB;
       -- Create List Goods
       insert into _tmpList_GoodsProperty_isPartionStr_calcRemains (GoodsPropertyId)
         select GoodsPropertyID from _tmpList_GoodsProperty_isPartion;
@@ -168,7 +168,7 @@ begin
         select GoodsPropertyID from dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO;
       -- 0.2
       delete from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB;
-      insert into dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB (GoodsPropertyId)
+      /*insert into dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB (GoodsPropertyId)
          select BillItems.GoodsPropertyId
          from dba.Bill
            left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount <> 0
@@ -178,7 +178,7 @@ begin
            and (Bill.FromId in (zc_UnitId_Cex(), zc_UnitId_CexDelikatesy())
              or Bill.ToId in (zc_UnitId_Cex(), zc_UnitId_CexDelikatesy()))
            and _tmpList_GoodsProperty_isPartion_myRecalc.GoodsPropertyId > 0
-         group by BillItems.GoodsPropertyId;
+         group by BillItems.GoodsPropertyId;*/
       -- 0.3
       delete from _tmpList_GoodsProperty_isPartion where GoodsPropertyId in (select tmpReport_RecalcOperation_ListNo_isPartionStr_MB.GoodsPropertyId from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB);
       delete from _tmpList_GoodsProperty_isPartionStr_calcRemains where GoodsPropertyId in (select tmpReport_RecalcOperation_ListNo_isPartionStr_MB.GoodsPropertyId from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB);

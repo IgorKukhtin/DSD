@@ -40,16 +40,16 @@ BEGIN
 
              , SUM (tmpContainer.StartCount)
              , SUM (tmpContainer.StartSumm)
-             , SUM (tmpContainer.IncomeCount)
-             , SUM (tmpContainer.IncomeSumm)
-             , SUM (tmpContainer.calcCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
+             , SUM (tmpContainer.IncomeCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                                                              THEN tmpContainer.SendOnPriceCountIn_Cost
-                                                        ELSE tmpContainer.SendOnPriceCountIn
-                                                   END)
-             , SUM (tmpContainer.calcSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
-                                                            THEN tmpContainer.SendOnPriceSummIn_Cost
-                                                       ELSE tmpContainer.SendOnPriceSummIn
-                                                  END)
+                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                     END)
+             , SUM (tmpContainer.IncomeSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
+                                                              THEN tmpContainer.SendOnPriceSummIn_Cost
+                                                         ELSE tmpContainer.SendOnPriceSummIn
+                                                    END)
+             , SUM (tmpContainer.calcCount)
+             , SUM (tmpContainer.calcSumm)
              , SUM (tmpContainer.OutCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                                                             THEN tmpContainer.SendOnPriceCountOut_Cost
                                                        ELSE tmpContainer.SendOnPriceCountOut
@@ -194,13 +194,14 @@ BEGIN
                , MIContainer_Count_Out.ContainerId
         ;
 
+
      -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
         SELECT HistoryCostContainerLink.MasterContainerId_Summ
              , HistoryCostContainerLink.ChildContainerId_Summ
              , HistoryCostContainerLink.MasterContainerId_Count
              , HistoryCostContainerLink.ChildContainerId_Count
-             , _tmpChild_group.ContainerId_Count
+             , SUM (_tmpChild_group.OperCount) AS OperCount
         FROM (SELECT MasterContainerId_Count, ContainerId_Count, OperCount FROM _tmpChild GROUP BY MasterContainerId_Count, ContainerId_Count, OperCount) AS _tmpChild_group
              INNER JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild_group.MasterContainerId_Count
                                                 AND HistoryCostContainerLink.ChildContainerId_Count = _tmpChild_group.ContainerId_Count
@@ -208,7 +209,12 @@ BEGIN
                                 AND _tmpChild.ContainerId_Count       = HistoryCostContainerLink.ChildContainerId_Count
                                 AND _tmpChild.MasterContainerId       = HistoryCostContainerLink.MasterContainerId_Summ
                                 AND _tmpChild.ContainerId             = HistoryCostContainerLink.ChildContainerId_Summ
-        WHERE _tmpChild.MasterContainerId_Count IS NULL;
+        WHERE _tmpChild.MasterContainerId_Count IS NULL
+        GROUP BY HistoryCostContainerLink.MasterContainerId_Summ
+               , HistoryCostContainerLink.ChildContainerId_Summ
+               , HistoryCostContainerLink.MasterContainerId_Count
+               , HistoryCostContainerLink.ChildContainerId_Count;
+
 
      -- сохраняем связи, что б не формировать нулевые проводки
      INSERT INTO HistoryCostContainerLink (MasterContainerId_Count, ChildContainerId_Count, MasterContainerId_Summ, ChildContainerId_Summ)
@@ -221,8 +227,6 @@ BEGIN
         WHERE HistoryCostContainerLink.MasterContainerId_Count IS NULL
         GROUP BY _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId;
 
-             
-
 
      -- проверка1
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
@@ -232,7 +236,11 @@ BEGIN
      -- проверка2
      IF EXISTS (SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'проверка2 - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1';
+         RAISE EXCEPTION 'проверка2 - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1 :  MasterContainerId = % and ContainerId = %',
+          (SELECT MAX (_tmpChild.MasterContainerId) FROM _tmpChild WHERE MasterContainerId IN (SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
+        , (SELECT MAX (_tmpChild.ContainerId) FROM _tmpChild WHERE _tmpChild.MasterContainerId IN (SELECT MAX (_tmpChild.MasterContainerId) FROM _tmpChild WHERE MasterContainerId IN (SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
+                                                               AND _tmpChild.ContainerId IN (SELECT _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
+         ;
      END IF;
 
 

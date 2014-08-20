@@ -418,6 +418,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       StoredProcList = <
         item
           StoredProc = spDocument
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086#1076#1087#1080#1089#1072#1085' '#1044#1072'/'#1053#1077#1090'"'
@@ -1017,22 +1020,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Top = 443
   end
   object spDocument: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementBoolean_Document'
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_IsDocument'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'inId '
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'inDocument'
+        Name = 'ioIsDocument'
         Component = MasterCDS
         ComponentItem = 'Document'
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsCalculate'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 392
     Top = 435

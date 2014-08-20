@@ -63,8 +63,8 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS ContractName
              , 0                     			    AS RouteSortingId
              , CAST ('' AS TVarChar) 			    AS RouteSortingName
-             , 0                                            AS CurrencyDocumentId
-             , CAST ('' as TVarChar)                        AS CurrencyDocumentName
+             , ObjectCurrency.Id                            AS CurrencyDocumentId	       -- грн
+             , ObjectCurrency.ValueData                     AS CurrencyDocumentName
              , 0                                            AS CurrencyPartnerId
              , CAST ('' as TVarChar)                        AS CurrencyPartnerName
              , CAST ('' AS TVarChar) 			    AS InvNumberOrder
@@ -76,7 +76,9 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS InvNumberPartner_Master
              , false                                        AS isCOMDOC
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+              LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
+                                                AND ObjectCurrency.id = 14461;	                   -- грн
      ELSE
 
      RETURN QUERY
@@ -107,8 +109,8 @@ BEGIN
            , View_Contract_InvNumber.InvNumber     	    AS ContractName
            , Object_RouteSorting.Id        		    AS RouteSortingId
            , Object_RouteSorting.ValueData 		    AS RouteSortingName
-           , Object_CurrencyDocument.Id                     AS CurrencyDocumentId
-           , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
+           , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
+           , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id                      AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
@@ -271,7 +273,8 @@ BEGIN
          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                         ON MovementLinkMovement_Sale.MovementId = Movement.Id 
                                        AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-
+         LEFT JOIN Object as ObjectCurrencycyDocumentInf ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+                                                        AND ObjectCurrencycyDocumentInf.id = 14461
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
      END IF;
