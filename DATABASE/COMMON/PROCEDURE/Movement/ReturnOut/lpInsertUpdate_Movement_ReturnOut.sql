@@ -70,11 +70,11 @@ BEGIN
                                              AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
               WHERE Movement.DescId = zc_Movement_Currency()
                 AND Movement.OperDate <= inOperDate
-                AND Movement.StatusId = zc_Enum_Status_Complete()    
+                AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())    
               ) as tmpDate
          JOIN Movement ON Movement.DescId = zc_Movement_Currency()
                       AND Movement.OperDate = tmpDate.maxOperDate
-                      AND Movement.StatusId = zc_Enum_Status_Complete()    
+                      AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
          JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                           AND MovementItem.DescId = zc_MI_Master();
      END IF;
