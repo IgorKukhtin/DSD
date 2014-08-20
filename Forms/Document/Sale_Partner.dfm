@@ -1,30 +1,30 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitLeft = -38
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ClientWidth = 1252
+  ExplicitLeft = -130
+  ExplicitWidth = 1260
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1252
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1248
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1252
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 1248
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1252
         Height = 518
-        ExplicitWidth = 1248
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -230,12 +230,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1248
+      ExplicitWidth = 1252
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1020
+        Width = 1252
         Height = 518
-        ExplicitWidth = 1248
+        ExplicitWidth = 1252
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -258,10 +258,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1252
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1248
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1222,6 +1222,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftFloat
       end
       item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1283,6 +1289,32 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Name = 'RouteSortingName'
         Value = ''
         Component = GuidesRouteSorting
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyDocumentName'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = ''
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1475,6 +1507,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
       end>
     Left = 162
     Top = 312
@@ -2170,6 +2208,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TCurrency_ObjectForm'
@@ -2178,6 +2217,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'Key'
         Value = ''
+        Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2185,15 +2225,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'TextValue'
         Value = ''
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1072
-    Top = 88
+    Left = 1040
+    Top = 8
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TCurrency_ObjectForm'
@@ -2202,17 +2244,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'Key'
         Value = ''
+        Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = CurrencyDocumentGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1032
-    Top = 80
+    Left = 1008
+    Top = 64
   end
 end

@@ -2,8 +2,8 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
   ClientWidth = 838
-  ExplicitWidth = 854
-  ExplicitHeight = 703
+  ExplicitWidth = 846
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1595,7 +1595,7 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 688
-    Top = 88
+    Left = 728
+    Top = 8
   end
 end

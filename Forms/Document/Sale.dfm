@@ -1,31 +1,31 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
+  ClientWidth = 1250
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -38
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitLeft = -128
+  ExplicitWidth = 1258
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1250
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1258
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1250
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 1258
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1250
         Height = 518
-        ExplicitWidth = 1258
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -255,12 +255,12 @@ inherited SaleForm: TSaleForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1248
+      ExplicitWidth = 1250
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1020
+        Width = 1250
         Height = 518
-        ExplicitWidth = 1248
+        ExplicitWidth = 1250
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -283,10 +283,10 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1250
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1258
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2031,8 +2031,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1024
-    Top = 72
+    Left = 1016
+    Top = 64
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -2394,8 +2394,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 640
-    Top = 72
+    Left = 616
+    Top = 56
   end
   object EDI: TEDI
     ConnectionParams.Host.Component = FormParams
@@ -2407,7 +2407,7 @@ inherited SaleForm: TSaleForm
     ConnectionParams.Password.Component = FormParams
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
-    Left = 592
+    Left = 568
     Top = 64
   end
   object spGetDefaultEDI: TdsdStoredProc
@@ -2459,8 +2459,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 842
-    Top = 200
+    Left = 1026
+    Top = 192
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2486,7 +2486,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 800
-    Top = 144
+    Left = 912
+    Top = 192
   end
 end
