@@ -1,21 +1,28 @@
 -- gpInsertUpdate_Movement_TaxCorrective_IsDocument()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_IsDocument (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_IsDocument (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_IsDocument (
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inIsDocument          Boolean   , -- Есть ли подписанный документ (да/нет)
+    IN inId                  Integer   , -- Ключ объекта <Документ>
+ INOUT ioIsDocument          Boolean   , -- Есть ли подписанный документ (да/нет)
+    IN inIsCalculate         Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TaxCorrective_IsDocument());
 
+     IF inIsCalculate = TRUE
+     THEN -- определили признак
+          ioIsDocument:= NOT ioIsDocument;
+     END IF;
+
      -- сохранили свойство <Есть ли подписанный документ>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), inIsDocument)
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), ioIsDocument)
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -23,11 +30,20 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                          ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
-      WHERE Movement.Id = ioId
+      WHERE Movement.Id = inId
         AND Movement.DescId = zc_Movement_TaxCorrective();
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+     -- сохранили протокол для всех
+     PERFORM lpInsert_MovementProtocol (COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), vbUserId, FALSE)
+     FROM Movement
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
+                                         ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+      WHERE Movement.Id = inId
+        AND Movement.DescId = zc_Movement_TaxCorrective();
 
 END;
 $BODY$
@@ -42,4 +58,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_IsDocument (ioId:= 0, inIsDocument:= FALSE, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_IsDocument (ioId:= 0, ioIsDocument:= FALSE, inIsCalculate:= TRUE, inSession:= '2')

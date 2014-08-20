@@ -192,60 +192,50 @@ object MainForm: TMainForm
     object cbPaidKind: TCheckBox
       Tag = 10
       Left = 15
-      Top = 111
+      Top = 108
       Width = 138
       Height = 17
       Caption = '2.1. '#1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       Enabled = False
       TabOrder = 5
     end
-    object cbJuridicalGroup: TCheckBox
-      Tag = 10
-      Left = 15
-      Top = 181
-      Width = 225
-      Height = 17
-      Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088'. '#1083#1080#1094
-      Enabled = False
-      TabOrder = 6
-    end
     object cbContractKind: TCheckBox
       Tag = 10
       Left = 15
-      Top = 131
+      Top = 128
       Width = 138
       Height = 17
       Caption = '2.2. '#1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       Enabled = False
-      TabOrder = 7
+      TabOrder = 6
     end
     object cbContractFl: TCheckBox
       Tag = 10
       Left = 15
-      Top = 151
+      Top = 148
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
       Enabled = False
-      TabOrder = 8
+      TabOrder = 7
     end
     object cbJuridicalBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 201
+      Top = 206
       Width = 225
       Height = 17
-      Caption = '3.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1040#1051
-      TabOrder = 9
+      Caption = '3.2.2. '#1070#1088'.'#1083#1080#1094#1072' '#1060#1080#1083#1080#1072#1083'-'#1053#1072#1083
+      TabOrder = 8
     end
     object cbPartnerBranchNal: TCheckBox
       Tag = 10
       Left = 15
-      Top = 221
+      Top = 224
       Width = 194
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1060#1080#1083#1072#1083'-'#1053#1072#1083
-      TabOrder = 10
+      TabOrder = 9
     end
     object cbBusiness: TCheckBox
       Tag = 10
@@ -255,7 +245,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.1. '#1041#1080#1079#1085#1077#1089#1099
       Enabled = False
-      TabOrder = 11
+      TabOrder = 10
     end
     object cbBranch: TCheckBox
       Tag = 10
@@ -267,7 +257,7 @@ object MainForm: TMainForm
       Color = clBtnFace
       Enabled = False
       ParentColor = False
-      TabOrder = 12
+      TabOrder = 11
     end
     object cbUnitGroup: TCheckBox
       Tag = 10
@@ -277,7 +267,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' !!! '#1053#1045#1058' !!!'
       Enabled = False
-      TabOrder = 13
+      TabOrder = 12
     end
     object cbUnit: TCheckBox
       Tag = 10
@@ -287,7 +277,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.4. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '
       Enabled = False
-      TabOrder = 14
+      TabOrder = 13
     end
     object cbPriceList: TCheckBox
       Tag = 10
@@ -296,7 +286,7 @@ object MainForm: TMainForm
       Width = 146
       Height = 17
       Caption = '5.1. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
-      TabOrder = 15
+      TabOrder = 14
     end
     object cbPriceListItems: TCheckBox
       Tag = 10
@@ -305,7 +295,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
-      TabOrder = 16
+      TabOrder = 15
     end
     object cbGoodsProperty: TCheckBox
       Tag = 10
@@ -314,7 +304,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '6.1. '#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
-      TabOrder = 17
+      TabOrder = 16
     end
     object cbGoodsPropertyValue: TCheckBox
       Tag = 10
@@ -323,7 +313,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
-      TabOrder = 18
+      TabOrder = 17
     end
     object cbInfoMoneyGroup: TCheckBox
       Tag = 10
@@ -333,7 +323,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '7.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1072#1085#1072#1083#1080#1090#1080#1082
       Enabled = False
-      TabOrder = 19
+      TabOrder = 18
     end
     object cbInfoMoneyDestination: TCheckBox
       Tag = 10
@@ -343,7 +333,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '7.2. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       Enabled = False
-      TabOrder = 20
+      TabOrder = 19
     end
     object cbInfoMoney: TCheckBox
       Tag = 10
@@ -353,7 +343,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '7.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
       Enabled = False
-      TabOrder = 21
+      TabOrder = 20
     end
     object cbAccountGroup: TCheckBox
       Tag = 10
@@ -363,7 +353,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '8.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074
       Enabled = False
-      TabOrder = 22
+      TabOrder = 21
     end
     object cbAccountDirection: TCheckBox
       Tag = 10
@@ -373,7 +363,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '8.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       Enabled = False
-      TabOrder = 23
+      TabOrder = 22
     end
     object cbAccount: TCheckBox
       Tag = 10
@@ -383,7 +373,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '8.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
       Enabled = False
-      TabOrder = 24
+      TabOrder = 23
     end
     object cbProfitLoss: TCheckBox
       Tag = 10
@@ -393,7 +383,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '9.3. '#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' '
       Enabled = False
-      TabOrder = 25
+      TabOrder = 24
     end
     object cbProfitLossDirection: TCheckBox
       Tag = 10
@@ -403,7 +393,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '9.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1048#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '
       Enabled = False
-      TabOrder = 26
+      TabOrder = 25
     end
     object cbProfitLossGroup: TCheckBox
       Tag = 10
@@ -413,7 +403,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '9.1. '#1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       Enabled = False
-      TabOrder = 27
+      TabOrder = 26
     end
     object cbMember_andPersonal: TCheckBox
       Tag = 10
@@ -422,7 +412,7 @@ object MainForm: TMainForm
       Width = 136
       Height = 17
       Caption = '4.5. '#1060#1080#1079' '#1083'. Update'
-      TabOrder = 28
+      TabOrder = 27
     end
     object cbTradeMark: TCheckBox
       Tag = 10
@@ -438,16 +428,16 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 29
+      TabOrder = 28
     end
     object cbRouteSorting: TCheckBox
       Tag = 10
-      Left = 150
-      Top = 181
+      Left = 151
+      Top = 168
       Width = 168
       Height = 17
-      Caption = '3.4. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
-      TabOrder = 30
+      Caption = '2.7. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
+      TabOrder = 29
     end
     object cbFuel: TCheckBox
       Tag = 10
@@ -463,7 +453,7 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 31
+      TabOrder = 30
     end
     object cbCar: TCheckBox
       Tag = 10
@@ -473,7 +463,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.6. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
       Enabled = False
-      TabOrder = 32
+      TabOrder = 31
     end
     object cbRoute: TCheckBox
       Tag = 10
@@ -483,7 +473,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.7. '#1052#1072#1088#1096#1088#1091#1090#1099
       Enabled = False
-      TabOrder = 33
+      TabOrder = 32
     end
     object cbCardFuel: TCheckBox
       Tag = 10
@@ -493,7 +483,7 @@ object MainForm: TMainForm
       Height = 17
       Caption = '4.8. '#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
       Enabled = False
-      TabOrder = 34
+      TabOrder = 33
     end
     object cbTicketFuel: TCheckBox
       Tag = 10
@@ -509,7 +499,7 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 35
+      TabOrder = 34
     end
     object cbModelService: TCheckBox
       Tag = 10
@@ -525,7 +515,7 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 36
+      TabOrder = 35
     end
     object cbStaffList: TCheckBox
       Tag = 10
@@ -541,7 +531,7 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 37
+      TabOrder = 36
     end
     object cbMember_andPersonal_SheetWorkTime: TCheckBox
       Tag = 10
@@ -557,44 +547,44 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 38
+      TabOrder = 37
     end
     object cbData1CLink: TCheckBox
       Tag = 10
-      Left = 184
-      Top = 201
+      Left = 196
+      Top = 224
       Width = 172
       Height = 17
       Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
       Enabled = False
-      TabOrder = 39
+      TabOrder = 38
     end
     object cbContractInt: TCheckBox
       Tag = 10
       Left = 151
-      Top = 131
+      Top = 128
       Width = 138
       Height = 17
       Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
-      TabOrder = 40
+      TabOrder = 39
     end
     object cbJuridicalInt: TCheckBox
       Tag = 10
       Left = 151
-      Top = 111
+      Top = 108
       Width = 225
       Height = 17
       Caption = '2.4. '#1070#1088'.'#1083#1080#1094#1072' Int'
-      TabOrder = 41
+      TabOrder = 40
     end
     object cbPartnerInt: TCheckBox
       Tag = 10
       Left = 151
-      Top = 151
+      Top = 148
       Width = 146
       Height = 17
       Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
-      TabOrder = 42
+      TabOrder = 41
     end
     object cbGoodsProperty_Detail: TCheckBox
       Tag = 10
@@ -603,7 +593,26 @@ object MainForm: TMainForm
       Width = 156
       Height = 17
       Caption = '4.12. GoodsProperty_Detail'
+      TabOrder = 42
+    end
+    object cb1Find2InsertPartner1C_BranchNal: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 188
+      Width = 225
+      Height = 17
+      Caption = '3.2.1. 1Find2InsertPartner1C_BranchNal'
       TabOrder = 43
+    end
+    object cbJuridicalGroup: TCheckBox
+      Tag = 10
+      Left = 196
+      Top = 206
+      Width = 225
+      Height = 17
+      Caption = '3.1. '#1043#1088#1091#1087#1087#1099' '#1102#1088'. '#1083#1080#1094
+      Enabled = False
+      TabOrder = 44
     end
   end
   object DocumentPanel: TPanel

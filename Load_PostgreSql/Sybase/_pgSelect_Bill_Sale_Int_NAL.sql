@@ -83,7 +83,9 @@ begin
 
      , Bill.Id_Postgres as Id_Postgres
 
-from (select Bill.Id
+from
+      -- zc_bkSaleToClient(), zc_bkSendUnitToUnit - НАЛ AND (OKPO <> '') and (isUnitFrom - да) and (isUnitTo - нет) and (UnitTo.PersonalId_Postgres - нет) and (UnitTo.pgUnitId - нет)
+     (select Bill.Id
            , Bill.OKPO
            , max (case when Bill.FromId in (zc_UnitId_StoreSale())
                             then 30101 -- Готовая продукция
@@ -96,6 +98,7 @@ from (select Bill.Id
                  , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) AS OKPO
             from dba.Bill
                  left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId
+                 left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId
                  left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
                  left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
                  left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID
@@ -107,6 +110,7 @@ from (select Bill.Id
               and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
               and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
               and isUnitFrom.UnitId is not null
+              and isUnitTo.UnitId is null
               and isnull (UnitTo.PersonalId_Postgres, 0) = 0
               and isnull (UnitTo.pgUnitId, 0) = 0
               and OKPO <> ''
@@ -166,4 +170,4 @@ from (select Bill.Id
 
 end
 //
--- select * from dba._pgSelect_Bill_Sale_NAL ('2014-05-01', '2014-05-30') as a where Id_Postgres <>0
+-- select * from dba._pgSelect_Bill_Sale_NAL ('2014-06-01', '2014-06-30') as a where Id_Postgres <>0

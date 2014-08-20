@@ -16,6 +16,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     ClientRectBottom = 542
     ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 24
       ExplicitWidth = 1113
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
@@ -133,6 +135,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1113
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -196,6 +199,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -1663,16 +1667,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
-        Name = 'inIsDocument'
+        Name = 'ioIsDocument'
         Value = 'False'
         Component = edIsDocument
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalculate'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
       end>

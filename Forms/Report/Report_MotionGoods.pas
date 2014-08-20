@@ -123,6 +123,14 @@ type
     CountProductionOut: TcxGridDBColumn;
     PriceProductionOut: TcxGridDBColumn;
     SummProductionOut: TcxGridDBColumn;
+    CountTotalIn: TcxGridDBColumn;
+    CountTotalOut: TcxGridDBColumn;
+    SummTotalIn: TcxGridDBColumn;
+    SummTotalOut: TcxGridDBColumn;
+    PriceTotalIn: TcxGridDBColumn;
+    PriceTotalOut: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
   private
   public
   end;
