@@ -1,9 +1,8 @@
 ﻿-- Function: gpSelect_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Common(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
-    IN inObjectId    Integer ,
+CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Common(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
@@ -31,8 +30,7 @@ BEGIN
            , Object_Goods_View.NDSKindName
 
     FROM Object_Goods_View 
-   WHERE (inObjectId = 0 AND Object_Goods_View.ObjectId IS NULL) OR (Object_Goods_View.ObjectId = inObjectId AND inObjectId <> 0);
-
+   WHERE Object_Goods_View.ObjectId IS NULL;
   
 END;
 $BODY$
@@ -44,6 +42,7 @@ ALTER FUNCTION gpSelect_Object_Goods(Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.08.14                         *
  24.06.14         *
  20.06.13                         *
 

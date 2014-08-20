@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
-  cxGridBandedTableView, cxGridTableView, cxTL;
+  cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient;
 
 type
 

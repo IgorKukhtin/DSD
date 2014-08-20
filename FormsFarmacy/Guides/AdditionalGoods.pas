@@ -1,4 +1,4 @@
-unit AlternativeGoodsCode;
+unit AdditionalGoods;
 
 interface
 
@@ -11,40 +11,34 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxContainer, cxLabel, cxTextEdit, cxMaskEdit,
-  dsdGuides;
+  dsdGuides, dsdActionOld, dsdStorageAction;
 
 type
-  TAlternativeGoodsCodeForm = class(TAncestorGuidesForm)
-    cxGridDBTableView1: TcxGridDBTableView;
-    clIName: TcxGridDBColumn;
-    clImportTypeItemsName: TcxGridDBColumn;
-    clIisErased: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
+  TAdditionalGoodsForm = class(TAncestorGuidesForm)
     clObjectCode: TcxGridDBColumn;
     clValueData: TcxGridDBColumn;
     cxGrid1: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
     clValueData1: TcxGridDBColumn;
-    clObjectCode1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     cxGrid2: TcxGrid;
     cxGridDBTableView3: TcxGridDBTableView;
-    clObjectCode2: TcxGridDBColumn;
     clValueData2: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     cxSplitter2: TcxSplitter;
     ClientDS: TDataSource;
-    spAlternativeCode: TdsdStoredProc;
+    spAdditionalGoods: TdsdStoredProc;
     ClientCDS: TClientDataSet;
-    DataSource2: TDataSource;
-    dsdStoredProc2: TdsdStoredProc;
-    ClientDataSet2: TClientDataSet;
-    cxLabel1: TcxLabel;
-    beRetail: TcxButtonEdit;
-    bbRetailLabel: TdxBarControlContainerItem;
-    bbRetailEdit: TdxBarControlContainerItem;
+    ClientMasterDS: TDataSource;
+    spAdditioanlGoodsClient: TdsdStoredProc;
+    ClientMasterCDS: TClientDataSet;
     RetailGuides: TdsdGuides;
+    AdditionalGoodsDBViewAddOn: TdsdDBViewAddOn;
+    AdditionalGoodsClientDBViewAddOn: TdsdDBViewAddOn;
+    actGoodsChoice: TOpenChoiceForm;
+    actInsertUpdateLink: TdsdUpdateDataSet;
+    spInsertUpdateGoodsLink: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -56,6 +50,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TAlternativeGoodsCodeForm);
+  RegisterClass(TAdditionalGoodsForm);
 
 end.

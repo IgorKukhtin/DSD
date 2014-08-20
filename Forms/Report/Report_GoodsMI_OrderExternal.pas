@@ -38,17 +38,8 @@ type
     clSale_AmountPartner_Sh: TcxGridDBColumn;
     clReturn_AmountPartner_Weight: TcxGridDBColumn;
     clReturn_AmountPartner_Sh: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
     clReturnPercent: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
-    cxLabel5: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    cxLabel7: TcxLabel;
-    ceInfoMoney: TcxButtonEdit;
-    InfoMoneyGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
     clMeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
@@ -56,6 +47,17 @@ type
     clOKPO: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
+    cxLabel13: TcxLabel;
+    edRouteSorting: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edRoute: TcxButtonEdit;
+    GuidesRouteSorting: TdsdGuides;
+    GuidesRoute: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edFrom: TcxButtonEdit;
+    GuidesFrom: TdsdGuides;
+    edTo: TcxButtonEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

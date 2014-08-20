@@ -32,7 +32,7 @@ type
     actUnitGroup: TdsdOpenForm;
     actUnit: TdsdOpenForm;
     actGoodsGroup: TdsdOpenForm;
-    actGoods: TdsdOpenForm;
+    actGoodsCommon: TdsdOpenForm;
     actGoodsKind: TdsdOpenForm;
     bbPaidKind: TdxBarButton;
     bbContractKind: TdxBarButton;
@@ -74,10 +74,12 @@ type
     bbImportSettings: TdxBarButton;
     actMovementLoad: TdsdOpenForm;
     bbMovementLoad: TdxBarButton;
-    actAlternativeGoodsCode: TdsdOpenForm;
+    actAdditionalGoods: TdsdOpenForm;
     bbAlternativeGoodsCodeForm: TdxBarButton;
     actTestFormOpen: TdsdOpenForm;
     bbTest: TdxBarButton;
+    actSetDefault: TdsdOpenForm;
+    bbSetDefault: TdxBarButton;
   private
     { Private declarations }
   public

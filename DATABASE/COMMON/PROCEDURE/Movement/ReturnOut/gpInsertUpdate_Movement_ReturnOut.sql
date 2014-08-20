@@ -17,9 +17,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
+   OUT outCurrencyValue      TFloat    , -- курс валюты
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD
+ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -27,7 +29,9 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_ReturnOut (ioId                 := ioId
+     SELECT tmp.ioId, tmp.outCurrencyValue
+            INTO ioId, outCurrencyValue
+     FROM lpInsertUpdate_Movement_ReturnOut (ioId                 := ioId
                                               , inInvNumber          := inInvNumber
                                               , inOperDate           := inOperDate
                                               , inOperDatePartner    := inOperDatePartner
@@ -41,7 +45,7 @@ BEGIN
                                               , inCurrencyDocumentId := inCurrencyDocumentId
                                               , inCurrencyPartnerId  := inCurrencyPartnerId
                                               , inUserId             := vbUserId
-                                               );
+                                               ) AS tmp;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

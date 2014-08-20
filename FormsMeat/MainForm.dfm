@@ -1,9 +1,9 @@
 ﻿inherited MainForm: TMainForm
   ClientHeight = 174
-  ClientWidth = 1118
+  ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1126
+  ExplicitWidth = 1034
   ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
@@ -1651,7 +1651,7 @@
       Category = 0
     end
     object bbReport_GoodsMI_OrderExternal: TdxBarButton
-      Action = actReport_GoodsMI_OrderExternal
+      Action = dsdOpenForm1
       Category = 0
     end
   end
@@ -1720,6 +1720,26 @@
       FormNameParam.Value = 'TProvinceForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
+      FormName = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 1
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actMaker: TdsdOpenForm
@@ -3315,26 +3335,6 @@
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_OrderExternal: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
-      FormName = 'TReport_GoodsMI_OrderExternalForm'
-      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptResult
-      GuiParams = <
-        item
-          Name = 'inDescId'
-          Value = 5
-        end
-        item
-          Name = 'InDescName'
-          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
     object actReport_CheckContractInMovement: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -3461,9 +3461,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object Action1: TAction
-      Caption = 'Action1'
-    end
     object actCurrencyMovement: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -3492,7 +3489,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

@@ -57,8 +57,8 @@ BEGIN
              , CAST ('' as TVarChar)		        AS PaidKindName
              , 0                     		        AS ContractId
              , CAST ('' as TVarChar) 	                AS ContractName
-             , 0                                        AS CurrencyDocumentId
-             , CAST ('' as TVarChar)                    AS CurrencyDocumentName
+             , ObjectCurrency.Id                        AS CurrencyDocumentId	-- грн
+             , ObjectCurrency.ValueData                 AS CurrencyDocumentName
              , 0                                        AS CurrencyPartnerId
              , CAST ('' as TVarChar)                    AS CurrencyPartnerName
              , Object_PriceList.Id                      AS PriceListId
@@ -71,6 +71,8 @@ BEGIN
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
                LEFT JOIN Object AS Object_To ON Object_To.Id = 8461 -- !!!Склад Возвратов!!!
+               LEFT JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
+                                                 and ObjectCurrency.id = 14461	                                      -- грн
          ;
      ELSE
 
@@ -102,8 +104,8 @@ BEGIN
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
            , View_Contract_InvNumber.InvNumber      AS ContractName
-           , Object_CurrencyDocument.Id             AS CurrencyDocumentId
-           , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
+           , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
+           , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id              AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData       AS CurrencyPartnerName
            , Object_PriceList.id                    AS PriceListId
@@ -129,7 +131,7 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
@@ -245,7 +247,9 @@ BEGIN
 
          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis())
 
-
+         LEFT JOIN Object as ObjectCurrencycyDocumentInf 
+                          on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+                         AND ObjectCurrencycyDocumentInf.id = 14461
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();

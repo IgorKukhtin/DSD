@@ -99,7 +99,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     mactCOMDOC: TMultiAction;
-    EDIComdoc: TEDIAction;
     bb_mactComDoc: TdxBarButton;
     actExecPrintStoredProc: TdsdExecStoredProc;
     spSelectTax_Client: TdsdStoredProc;

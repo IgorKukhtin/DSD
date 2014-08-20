@@ -176,7 +176,7 @@ object MainForm: TMainForm
       Enabled = False
       TabOrder = 14
     end
-    object CheckBox4: TCheckBox
+    object cbAlternativeCode: TCheckBox
       Tag = 10
       Left = 15
       Top = 82

@@ -49,6 +49,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSetDefault'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -213,7 +217,7 @@ inherited MainForm: TMainForm
       Category = 0
     end
     object bbGoods: TdxBarButton [21]
-      Action = actGoods
+      Action = actGoodsCommon
       Category = 0
     end
     object bbGoodsKind: TdxBarButton [22]
@@ -299,12 +303,16 @@ inherited MainForm: TMainForm
       Category = 0
     end
     object bbAlternativeGoodsCodeForm: TdxBarButton
-      Action = actAlternativeGoodsCode
+      Action = actAdditionalGoods
       Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
       Category = 0
     end
     object bbTest: TdxBarButton
       Action = actTestFormOpen
+      Category = 0
+    end
+    object bbSetDefault: TdxBarButton
+      Action = actSetDefault
       Category = 0
     end
   end
@@ -342,7 +350,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actImportSettings: TdsdOpenForm [5]
+    object actSetDefault: TdsdOpenForm [4]
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TSetUserDefaultsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actImportSettings: TdsdOpenForm [6]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
@@ -353,7 +372,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [6]
+    object actUser: TdsdOpenForm [7]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -451,10 +470,10 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoods: TdsdOpenForm
+    object actGoodsCommon: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099
+      Caption = #1058#1086#1074#1072#1088#1099' '#1086#1073#1098#1077#1076#1080#1085#1077#1085#1085#1099#1081
       Hint = #1058#1086#1074#1072#1088#1099
       FormName = 'TGoodsForm'
       FormNameParam.Value = ''
@@ -642,12 +661,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actAlternativeGoodsCode: TdsdOpenForm
+    object actAdditionalGoods: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = 'actAlternativeGoodsCode'
-      FormName = 'TAlternativeGoodsCodeForm'
-      FormNameParam.Value = 'TAlternativeGoodsCodeForm'
+      Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+      FormName = 'TAdditionalGoodsForm'
+      FormNameParam.Value = 'TAdditionalGoodsForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

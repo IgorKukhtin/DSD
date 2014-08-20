@@ -52,6 +52,7 @@ end;
 procedure TDefaults.Test;
 var DefaultKey: TDefaultKey;
     RoleId: Integer;
+    KeyId: integer;
 begin
   DefaultKey := TDefaultKey.Create(TForm.Create(nil));
   // Проверяем результат создания ключа и JSON
@@ -63,15 +64,18 @@ begin
   // Мы добавляем новый ключ в базу
   FStoredProc.StoredProcName := 'gpInsertUpdate_DefaultKey';
   FStoredProc.Params.Clear;
+  FStoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
   FStoredProc.Params.AddParam('inKey', ftString, ptInput, DefaultKey.Key);
   FStoredProc.Params.AddParam('inKeyData', ftBlob, ptInput, gfStrToXmlStr(DefaultKey.JSONKey));
   FStoredProc.Execute;
+  KeyId := FStoredProc.ParamByName('ioId').Value;
 
   RoleId := TRole.Create.GetDefault;
   // Потом добавляем значение данного ключа для любой роли
   FStoredProc.StoredProcName := 'gpInsertUpdate_DefaultValue';
   FStoredProc.Params.Clear;
-  FStoredProc.Params.AddParam('inDefaultKey', ftString, ptInput, DefaultKey.Key);
+  FStoredProc.Params.AddParam('ioId', ftInteger, ptInput, 0);
+  FStoredProc.Params.AddParam('inDefaultKeyId', ftInteger, ptInput, KeyId);
   FStoredProc.Params.AddParam('inUserKey', ftInteger, ptInput, RoleId);
   FStoredProc.Params.AddParam('inDefaultValue', ftBlob, ptInput, gfStrToXmlStr(GetDefaultJSON(dtGuides, '1')));
   FStoredProc.Execute;

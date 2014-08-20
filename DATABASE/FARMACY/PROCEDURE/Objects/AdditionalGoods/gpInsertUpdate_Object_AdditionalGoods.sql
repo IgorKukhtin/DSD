@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_AlternativeGoodsCode(Integer, TFloat, Integer, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_AdditionalGoods(Integer, TFloat, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AlternativeGoodsCode (Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AdditionalGoods (Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AdditionalGoods(
  INOUT ioId               Integer   , -- ключ объекта <Условия договора>
     IN inGoodsMainId      Integer   , -- Главный товар
     IN inGoodsId          Integer   , -- Товар для замены
@@ -15,20 +15,21 @@ $BODY$
    DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AlternativeGoodsCode());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AdditionalGoods());
+   vbUserId := lpGetUserBySession(inSession);
    
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_AlternativeGoodsCode(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_AdditionalGoods(), 0, '');
    
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_GoodsMain(), ioId, inGoodsMainId);   
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AdditionalGoods_GoodsMain(), ioId, inGoodsMainId);   
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_Goods(), ioId, inGoodsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AdditionalGoods_Goods(), ioId, inGoodsId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AlternativeGoodsCode_Retail(), ioId, inRetailId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_AdditionalGoods_Retail(), ioId, inRetailId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
@@ -36,7 +37,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode (Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_AdditionalGoods (Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
@@ -47,4 +48,4 @@ ALTER FUNCTION gpInsertUpdate_Object_AlternativeGoodsCode (Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_AlternativeGoodsCode (ioId:=0, inGoodsMainId:=5, inGoodsId:=6, inRetailId:=0, inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_AdditionalGoods (ioId:=0, inGoodsMainId:=5, inGoodsId:=6, inRetailId:=0, inSession:='2')

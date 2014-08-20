@@ -1,5 +1,5 @@
-inherited GoodsForm: TGoodsForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
+inherited GoodsCommonForm: TGoodsCommonForm
+  Caption = #1054#1073#1098#1076#1080#1085#1077#1085#1085#1099#1081' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 423
   ClientWidth = 782
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -121,7 +121,13 @@ inherited GoodsForm: TGoodsForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods_Retail'
+    StoredProcName = 'gpSelect_Object_Goods'
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        ParamType = ptInput
+      end>
     Left = 144
     Top = 88
   end

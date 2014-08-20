@@ -1,11 +1,11 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Align = alLeft
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 482
-  ClientWidth = 867
-  ExplicitLeft = -84
-  ExplicitWidth = 873
-  ExplicitHeight = 511
+  ClientHeight = 312
+  ClientWidth = 890
+  ExplicitLeft = -90
+  ExplicitWidth = 896
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -56,35 +56,35 @@
     Width = 111
   end
   object Panel: TPanel [7]
-    Left = 190
+    Left = 296
     Top = 0
-    Width = 677
-    Height = 482
+    Width = 594
+    Height = 312
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitLeft = 196
-    ExplicitTop = 1
+    ExplicitHeight = 277
     object PageControl: TcxPageControl
-      Left = -2
+      Left = 0
       Top = 0
-      Width = 677
-      Height = 482
-      Align = alRight
+      Width = 592
+      Height = 312
+      Align = alClient
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 478
-      ClientRectLeft = 4
-      ClientRectRight = 673
+      ExplicitWidth = 497
+      ExplicitHeight = 277
+      ClientRectBottom = 312
+      ClientRectRight = 592
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = -23
-        ExplicitTop = 0
+        ExplicitWidth = 677
+        ExplicitHeight = 458
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -212,12 +212,14 @@
           Width = 193
         end
         object JuridicalDetailsGrid: TcxGrid
-          Left = 447
+          Left = 451
           Top = 0
-          Width = 222
-          Height = 454
+          Width = 141
+          Height = 288
           Align = alRight
           TabOrder = 18
+          ExplicitLeft = 536
+          ExplicitHeight = 253
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -250,25 +252,24 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitWidth = 667
-        ExplicitHeight = 282
+        ExplicitWidth = 677
+        ExplicitHeight = 458
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 669
+          Width = 592
           Align = dalTop
           BarManager = dxBarManager
-          ExplicitWidth = 667
+          ExplicitWidth = 677
         end
         object ContractGrid: TcxGrid
           Left = 0
           Top = 3
           Width = 667
-          Height = 451
+          Height = 285
           Align = alLeft
           TabOrder = 0
-          ExplicitLeft = -320
-          ExplicitTop = 27
+          ExplicitHeight = 455
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -700,8 +701,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1002,7 +1003,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 112
-    Top = 104
+    Left = 128
+    Top = 152
   end
 end

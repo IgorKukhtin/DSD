@@ -109,8 +109,8 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsCommon.pas">
+				<Form>GoodsCommonForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
@@ -174,22 +174,6 @@
 				<Form>MeasureEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
-				<Form>MakerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
-				<Form>MakerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Country.pas">
-				<Form>CountryForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
-				<Form>CountryEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\NDSKind.pas">
 				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -249,6 +233,22 @@
 				<Form>AboutBox</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Load\MovementLoad.pas">
 				<Form>MovementLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -332,8 +332,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
 				<Form>Unit_ObjectForm</Form>
@@ -365,46 +363,65 @@
 				<Form>PriceListLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas">
-				<Form>AlternativeGoodsCodeForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\AdditionalGoods.pas">
+				<Form>AdditionalGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\BranchTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\CarModelTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\AdditionalGoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\GoodsKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\GoodsPropertyTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\JuridicalGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\PaidKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\RouteTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\RouteSortingTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossGroupTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossDirectionTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ProfitLossTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyGroupTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyDestinationTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\MemberTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\PositionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\PriceListTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\AssetGroupTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\AssetTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ReceiptCostTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\CurrencyTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RetailTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
 			<DCCReference Include="..\SOURCE\Form\ParentFormTest.pas">
 				<Form>TestForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
+				<Form>GoodsLiteForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
+				<Form>DefaultsKeyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Objects.pas">
+				<Form>ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
+				<Form>SetUserDefaultsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
+				<Form>ObjectDescForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\FormsUnit.pas">
+				<Form>FormsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\UnionDesc.pas">
+				<Form>UnionDescForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\UserKey.pas">
+				<Form>UserKeyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
