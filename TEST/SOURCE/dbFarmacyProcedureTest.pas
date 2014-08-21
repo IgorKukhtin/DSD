@@ -14,6 +14,7 @@ type
     procedure CreateMovementItemContainerProcedure;
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
+    procedure CreatePeriodCloseProcedure;
     procedure CreateReportProcedure;
     procedure CreateSystemProcedure;
   end;
@@ -152,83 +153,13 @@ end;
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
+end;
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpInsertUpdate_Object_User.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpSelect_Object_User.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpGet_Object_User.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Form\gpInsertUpdate_Object_Form.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Form\gpGet_Object_Form.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpSelect_Object_Unit.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\NDSKind\gpSelect_Object_NDSKind.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpGet_Object_GoodsGroup.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpInsertUpdate_Object_Measure.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpInsertUpdate_Object_Maker.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpGet_Object_Maker.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpSelect_Object_Maker.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpInsertUpdate_Object_Country.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpGet_Object_Country.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpSelect_Object_Country.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpSelect_Object_FileTypeKind.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpInsertUpdate_Object_ImportTypeItems.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpSelect_Object_ImportTypeItems.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpInsertUpdate_Object_ImportType.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpSelect_Object_ImportType.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpGet_Object_ImportType.sql', ZQuery);
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\JuridicalGoodsCode\gpInsertUpdate_Object_JuridicalGoodsCode.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\JuridicalGoodsCode\gpSelect_Object_JuridicalGoodsCode.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\JuridicalGoodsCode\gpGet_Object_JuridicalGoodsCode.sql', ZQuery);
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\AlternativeGoodsCode\gpInsertUpdate_Object_AlternativeGoodsCode.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\AlternativeGoodsCode\gpSelect_Object_AlternativeGoodsCode.sql', ZQuery);
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpInsertUpdate_Object_Contract.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpSelect_Object_Contract.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpGet_Object_Contract.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpSelect_Object_ContractJuridical.sql', ZQuery);
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpInsertUpdate_Object_ImportSettings.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpSelect_Object_ImportSettings.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpGet_Object_ImportSettings.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpInsertUpdate_Object_ImportSettingsItems.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpSelect_Object_ImportSettingsItems.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpGet_Object_ImportSettingsItems.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpInsertUpdate_Object_Retail.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpGet_Object_Retail.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpSelect_Object_Retail.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\Contract—onditionKind\gpSelect_Object_Contract—onditionKind.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpSelect_ObjectHistory_JuridicalDetails.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpGet_JuridicalDetails_ClearDefault.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpGet_ObjectHistory_JuridicalDetails.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpInsertUpdate_ObjectHistory_JuridicalDetails.sql', ZQuery);
-
+procedure TdbProcedureTest.CreatePeriodCloseProcedure;
+begin
+  ScriptDirectory := CommonProcedurePath + 'PeriodClose\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

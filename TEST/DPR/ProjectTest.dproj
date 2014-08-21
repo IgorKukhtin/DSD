@@ -95,7 +95,6 @@
 			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Metadata\dbMetadataTest.pas"/>
-			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
@@ -1453,7 +1452,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteSortingTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>

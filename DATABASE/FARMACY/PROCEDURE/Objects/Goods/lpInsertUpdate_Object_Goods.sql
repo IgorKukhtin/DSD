@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
-    IN inGoodsMainId         Integer   ,    -- Ссылка на главный товар
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
     IN inUserId              Integer        -- Пользователь
 )
@@ -40,8 +39,6 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
       -- сохранили свойство <связи чьи товары>
       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
-      -- сохранили связь с <Главным товаром>
-      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), ioId, inGoodsMainId);
    END IF; 
 
    -- сохранили связь с <Группа>
@@ -57,7 +54,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
 /*

@@ -19,6 +19,8 @@ var
   ReportsPath: string = '..\DATABASE\COMMON\Reports\';
   ViewPath: string = '..\DATABASE\COMMON\View\';
   LocalViewPath: string = '..\DATABASE\COMMON\View\';
+  ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
+
 
   FormatSettings: TFormatSettings;
   {константы времени}

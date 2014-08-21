@@ -29,6 +29,10 @@ begin
   inherited;
   ScriptDirectory := ProcedurePath + 'OBJECTS\_Union\';
   inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Form\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\UserFormSettings\';
+  inherited;
 end;
 
 initialization

@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MainGoodsLoad(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                Integer   ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
-    
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDS                 TFloat     ,    -- НДС
 

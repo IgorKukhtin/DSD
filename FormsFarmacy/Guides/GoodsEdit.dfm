@@ -8,12 +8,12 @@
   TextHeight = 13
   inherited bbOk: TcxButton
     Top = 228
-    TabOrder = 2
+    TabOrder = 5
     ExplicitTop = 228
   end
   inherited bbCancel: TcxButton
     Top = 228
-    TabOrder = 3
+    TabOrder = 6
     ExplicitTop = 228
   end
   object edName: TcxTextEdit [2]
@@ -54,7 +54,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 2
     Width = 331
   end
   object cxLabel4: TcxLabel [8]
@@ -71,7 +71,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 3
     Width = 132
   end
   object cxLabel6: TcxLabel [10]
@@ -88,7 +88,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 4
     Width = 187
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -150,16 +150,6 @@
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsMainId'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inObjectId'
-        Value = '0'
         ParamType = ptInput
       end>
     Left = 280
@@ -282,7 +272,7 @@
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TNDSKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

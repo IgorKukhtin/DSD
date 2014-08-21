@@ -6,17 +6,18 @@ uses
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
   dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
+  CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
   dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbFarmacyProcedureTest in '..\SOURCE\dbFarmacyProcedureTest.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
+  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
   LoadFarmacyFormTest in '..\SOURCE\LoadFarmacyFormTest.pas',
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
-  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
   Storage in '..\..\SOURCE\Storage.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
@@ -121,7 +122,7 @@ uses
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AdditionalGoods in '..\..\FormsFarmacy\Guides\AdditionalGoods.pas' {AdditionalGoodsForm: TParentForm},
   AdditionalGoodsTest in '..\SOURCE\Objects\All\AdditionalGoodsTest.pas',
-  ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\Farmacy\ContractTest.pas',
   ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
   GoodsTest in '..\SOURCE\Objects\All\Farmacy\GoodsTest.pas',
   GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
@@ -142,7 +143,6 @@ uses
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
   DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas',
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
-  CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm};
@@ -155,6 +155,8 @@ begin
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
+  ProcessPath := '..\DATABASE\FARMACY\PROCESS\';
+
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

@@ -84,10 +84,12 @@
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
 			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
 			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
@@ -98,7 +100,6 @@
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
@@ -368,7 +369,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\AdditionalGoodsTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
@@ -385,7 +386,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
 				<Form>GoodsLiteForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
@@ -414,7 +414,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\UserKey.pas">
 				<Form>UserKeyForm</Form>
 				<DesignClass>TParentForm</DesignClass>

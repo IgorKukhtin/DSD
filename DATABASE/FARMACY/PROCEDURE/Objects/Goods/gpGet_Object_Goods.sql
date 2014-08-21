@@ -12,17 +12,23 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                isErased boolean
                ) AS
-$BODY$BEGIN
+$BODY$
+  DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
+BEGIN
+       vbUserId := lpGetUserBySession (inSession);
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Goods());
   
    IF COALESCE (inId, 0) = 0
    THEN
+       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object_Goods.ObjectCode), 0) + 1 AS Code
+           , COALESCE(MAX (Object_Goods.GoodsCodeInt), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
               
            , CAST (0 as Integer)    AS GoodsGroupId
@@ -34,8 +40,8 @@ $BODY$BEGIN
 
            , CAST (NULL AS Boolean) AS isErased
 
-       FROM Object AS Object_Goods
-       WHERE Object_Goods.DescId = zc_Object_Goods();
+       FROM Object_Goods_View AS Object_Goods
+       WHERE Object_Goods.ObjectId = vbObjectId;
    ELSE
      RETURN QUERY 
      SELECT Object_Goods.Id             AS Id 
