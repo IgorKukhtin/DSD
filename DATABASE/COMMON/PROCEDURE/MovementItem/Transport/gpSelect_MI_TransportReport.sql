@@ -203,6 +203,7 @@ BEGIN
                         , 0 AS Amount_In
                         , 0 AS Amount_Out
                    FROM MovementItem AS MI
+                        JOIN MovementItem AS MI_Parent ON MI_Parent.Id = MI.ParentId AND MI_Parent.isErased = FALSE
                         LEFT JOIN MovementItemFloat AS MIFloat_StartAmountFuel
                                                     ON MIFloat_StartAmountFuel.MovementItemId = MI.Id
                                                    AND MIFloat_StartAmountFuel.DescId = zc_MIFloat_StartAmountFuel()
@@ -350,6 +351,7 @@ ALTER FUNCTION gpSelect_MI_TransportReport (Integer, Boolean, Boolean, TVarChar)
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.08.14                                        * add MI_Parent
  21.12.13                                        * Personal -> Member
  26.10.13                                        *
 */

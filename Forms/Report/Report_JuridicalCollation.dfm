@@ -240,6 +240,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 60
           end
+          object colContractComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractComment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colInfoMoneyGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
             DataBinding.FieldName = 'InfoMoneyGroupCode'

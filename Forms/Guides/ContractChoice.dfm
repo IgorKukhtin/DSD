@@ -3,8 +3,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientHeight = 496
   ClientWidth = 853
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -167,6 +167,14 @@ inherited ContractChoiceForm: TContractChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object colContractComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractComment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colisErased: TcxGridDBColumn

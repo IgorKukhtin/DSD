@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
+             , ContractComment TVarChar
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -48,6 +49,7 @@ BEGIN
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -72,6 +74,10 @@ BEGIN
                                       AND Object_Contract_View.isErased = FALSE
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
  	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
@@ -113,6 +119,7 @@ BEGIN
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -138,6 +145,10 @@ BEGIN
                                       AND Object_Contract_View.isErased = FALSE
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
  	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
@@ -173,6 +184,7 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.08.14                                        * add ContractComment
  25.04.14                                        * add ContractTagName
  28.02.14         * add inShowAll
  13.02.14                                         * add zc_Enum_ContractStateKind_Close

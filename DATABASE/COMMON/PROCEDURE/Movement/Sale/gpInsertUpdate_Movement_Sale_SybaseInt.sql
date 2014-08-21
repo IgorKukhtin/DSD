@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Sale_SybaseInt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inRouteId             Integer   , -- маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
@@ -90,6 +92,10 @@ BEGIN
 
      END IF;
 
+     -- сохранили связь с <Виды форм оплаты >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -97,6 +103,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.08.14                                        * add inRouteId
  22.05.14                                        * restore find inOperDatePartner
  23.04.14                                        * add COALESCE ...
  05.04.14                                        *
