@@ -22,6 +22,8 @@ RETURNS TABLE (InvNumber TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , MeasureName TVarChar
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat
              , Amount_Weight_Second TFloat, Amount_Sh_Second TFloat
              , AmountSumm TFloat, AmountSumm_Second TFloat, AmountSummTotal TFloat
@@ -126,6 +128,11 @@ BEGIN
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.DescId = zc_Movement_OrderExternal()
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
+         AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
+         AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
+         AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
+         AND (COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) = CASE WHEN inRouteSortingId <> 0 THEN inRouteSortingId ELSE COALESCE (MovementLinkObject_RouteSorting.ObjectId,0) END)
+
        GROUP BY
              CAST (CASE WHEN inIsByDoc THEN Movement.InvNumber ELSE '' END AS TVarChar)
            , CAST (CASE WHEN inIsByDoc THEN MovementString_InvNumberPartner.ValueData ELSE '' END AS TVarChar)
@@ -157,6 +164,9 @@ BEGIN
            , Object_Goods.Id                            AS GoodsId
            , Object_Goods.ObjectCode                    AS GoodsCode
            , Object_Goods.ValueData                     AS GoodsName
+           , Object_Measure.ValueData                   AS MeasureName
+           , Object_GoodsGroup.ValueData                AS GoodsGroupName
+           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , tmpMovement.Amount_Weight                  AS Amount_Weight
            , tmpMovement.Amount_Sh                      AS Amount_Sh
            , tmpMovement.Amount_Weight_Second           AS Amount_Weight_Second
@@ -173,6 +183,17 @@ BEGIN
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement.PaidKindId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovement.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovement.GoodsKindId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
             ;
 
 END;

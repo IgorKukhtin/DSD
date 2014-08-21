@@ -1726,8 +1726,8 @@
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080'  ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
-      FormName = 'TReport_GoodsMI_OrderExternalFormForm'
-      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalFormForm'
+      FormName = 'TReport_GoodsMI_OrderExternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
