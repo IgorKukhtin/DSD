@@ -38,6 +38,7 @@ type
     bbJuridical: TdxBarControlContainerItem;
     JuridicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    colContractComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

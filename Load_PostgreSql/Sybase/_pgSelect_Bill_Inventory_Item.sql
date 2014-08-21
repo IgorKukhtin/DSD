@@ -4,6 +4,19 @@ begin
   --
   declare @saveRemains smallint;
   --
+  -- 
+  declare local temporary table _tmpList_Remains_result(
+  UnitId integer not null,
+  GoodsPropertyId integer not null,
+  KindPackageId integer not null,
+  PartionDate date not null,
+  PartionStr_MB TVarCharMedium not null,
+  StartCount TSumm not null,
+  StartSummIn TSumm not null,
+  EndCount TSumm not null,
+  EndSummIn TSumm not null,
+  ) on commit preserve rows;
+  --
   declare local temporary table _tmpList_Remains_byKindPackage(
   UnitId integer not null,
   GoodsPropertyId integer not null,
@@ -17,6 +30,7 @@ begin
   ) on commit preserve rows;
   --
   declare local temporary table _tmpList_Remains_byPartionStr(
+  Id integer NOT NULL DEFAULT autoincrement,
   UnitId integer not null,
   GoodsPropertyId integer not null,
   KindPackageId integer not null,
@@ -185,8 +199,8 @@ begin
 
 
    -- !!!!!!!!!!!!!
-   -- set @saveRemains = zc_rvYes();
-   set @saveRemains = zc_rvNo();
+   set @saveRemains = zc_rvYes();
+   -- set @saveRemains = zc_rvNo();
    -- !!!!!!!!!!!!!
 
    if @saveRemains = zc_rvYes()
@@ -194,12 +208,60 @@ begin
     print '-----@saveRemains = zc_rvYes()';
     -- calc remains only by PartionStr
     call dba.pInsert_ReportRemainsAll_byKindPackage_onPartionStr (@inEndDate, @inEndDate);
-    -- my delete
-    delete from _tmpList_Remains_byPartionStr where PartionStr_MB = '';
+    -- my delete - 1
+    delete from _tmpList_Remains_byPartionStr where PartionStr_MB = '' or fCheckUnitClientParentID (4178, UnitID) = zc_rvNo(); -- — À¿ƒ Ãﬂ—ÕŒ√Œ —€–‹ﬂ
+
+    -- find Partion on Summ =0
+    update _tmpList_Remains_byPartionStr
+
+       set _tmpList_Remains_byPartionStr.StartCount = _tmpList_Remains_byPartionStr.StartCount   + tmpFind.StartCount
+         , _tmpList_Remains_byPartionStr.StartSummIn = _tmpList_Remains_byPartionStr.StartSummIn + tmpFind.StartSummIn
+         , _tmpList_Remains_byPartionStr.EndCount = _tmpList_Remains_byPartionStr.EndCount       + 0
+         , _tmpList_Remains_byPartionStr.EndSummIn = _tmpList_Remains_byPartionStr.EndSummIn     + tmpFind.EndSummIn
+    from (select max (_tmpList_Remains_byPartionStr.Id) as Id, tmp.GoodsPropertyId, tmp.PartionStr_MB
+          from (select max (_tmpList_Remains_byPartionStr.EndCount) as EndCount, GoodsPropertyId, PartionStr_MB
+                from _tmpList_Remains_byPartionStr
+                where _tmpList_Remains_byPartionStr.EndCount <> 0
+                group by GoodsPropertyId, PartionStr_MB
+               ) as tmp
+               join _tmpList_Remains_byPartionStr on _tmpList_Remains_byPartionStr.GoodsPropertyId = tmp.GoodsPropertyId
+                                                 and _tmpList_Remains_byPartionStr.PartionStr_MB = tmp.PartionStr_MB
+                                                 and _tmpList_Remains_byPartionStr.EndCount = tmp.EndCount
+          group by tmp.GoodsPropertyId, tmp.PartionStr_MB
+         ) as tmp
+         join (select sum (_tmpList_Remains_byPartionStr.EndSummIn) as EndSummIn, sum (_tmpList_Remains_byPartionStr.StartCount) as StartCount, sum (_tmpList_Remains_byPartionStr.StartCount) as StartSummIn
+                    , GoodsPropertyId, PartionStr_MB
+               from _tmpList_Remains_byPartionStr
+               where EndCount = 0
+               group by GoodsPropertyId, PartionStr_MB
+              ) as tmpFind on tmpFind.GoodsPropertyId = tmp.GoodsPropertyId
+                          and tmpFind.PartionStr_MB = tmp.PartionStr_MB
+    where _tmpList_Remains_byPartionStr.Id = tmp.Id;
+
+    -- my delete - 2.1.
+    delete from _tmpList_Remains_byPartionStr where EndCount = 0 and GoodsPropertyId in (select GoodsPropertyId from _tmpList_Remains_byPartionStr where EndCount <> 0)
+                                                                 and PartionStr_MB in (select PartionStr_MB from _tmpList_Remains_byPartionStr where EndCount <> 0);
+    -- my delete - 2.2.
+    delete from _tmpList_Remains_byPartionStr where abs (EndCount) <= 0.01 and abs (EndSummIn) <= 0.1;
+
+    -- my delete - 2 (Total Summ =0 by Partion)
+/*    delete from _tmpList_Remains_byPartionStr where GoodsPropertyId in (select GoodsPropertyId
+                                                                      from _tmpList_Remains_byPartionStr
+                                                                      group by GoodsPropertyId, PartionStr_MB
+                                                                      having abs (sum (EndCount)) <= 0.01 and abs (sum (EndSummIn)) <= 0.1)
+                                                and PartionStr_MB in (select PartionStr_MB
+                                                                      from _tmpList_Remains_byPartionStr
+                                                                      group by GoodsPropertyId, PartionStr_MB
+                                                                      having abs (sum (EndCount)) <= 0.01 and abs (sum (EndSummIn)) <= 0.1);*/
     -- calc remains by all
     call dba.pInsert_ReportRemainsAll_byKindPackage_onSumm (@inEndDate, @inEndDate);
-    -- my delete
-    delete from _tmpList_Remains_byKindPackage where GoodsPropertyId in (select GoodsPropertyID from _tmpList_GoodsProperty_isPartionStr_calcRemains);
+
+    -- ???my delete
+    -- ???delete from _tmpList_Remains_byKindPackage where GoodsPropertyId in (select GoodsPropertyID from _tmpList_GoodsProperty_isPartionStr_calcRemains);
+
+    -- my delete - 3
+    delete from _tmpList_Remains_byKindPackage where GoodsPropertyId = 4165 and UnitId = 1325 ; -- —‚ËÌËÌ‡ Ì/Í (Ú‡ÌÁËÚÌ‡ˇ) + ÷Âı ”Ô‡ÍÓ‚ÍË
+
     -- Minus by PartionStr
     update _tmpList_Remains_byKindPackage join _tmpList_Remains_byPartionStr on _tmpList_Remains_byPartionStr.GoodsPropertyId = _tmpList_Remains_byKindPackage.GoodsPropertyId and _tmpList_Remains_byPartionStr.UnitId = _tmpList_Remains_byKindPackage.UnitId
        set _tmpList_Remains_byKindPackage.StartCount = _tmpList_Remains_byKindPackage.StartCount - _tmpList_Remains_byPartionStr.StartCount
@@ -212,10 +274,10 @@ begin
              _tmpList_Remains_byPartionStr.GoodsPropertyId,
              _tmpList_Remains_byPartionStr.KindPackageId,
              zc_DateStart() as PartionDate,
-             sum (_tmpList_Remains_byPartionStr.StartCount),
-             sum (_tmpList_Remains_byPartionStr.StartSummIn),
-             sum (_tmpList_Remains_byPartionStr.EndCount),
-             sum (_tmpList_Remains_byPartionStr.EndSummIn)
+             -sum (_tmpList_Remains_byPartionStr.StartCount),
+             -sum (_tmpList_Remains_byPartionStr.StartSummIn),
+             -sum (_tmpList_Remains_byPartionStr.EndCount),
+             -sum (_tmpList_Remains_byPartionStr.EndSummIn)
       from _tmpList_Remains_byPartionStr left outer join _tmpList_Remains_byKindPackage on _tmpList_Remains_byKindPackage.GoodsPropertyId =_tmpList_Remains_byPartionStr.GoodsPropertyId and _tmpList_Remains_byKindPackage.UnitId =_tmpList_Remains_byPartionStr.UnitId
       where _tmpList_Remains_byKindPackage.GoodsPropertyId is null
       group by _tmpList_Remains_byPartionStr.UnitId,
@@ -302,6 +364,14 @@ begin
      where _tmp.BillId <>0;
 
     //
+
+    insert into _tmpList_Remains_result (UnitId, GoodsPropertyId, KindPackageId,PartionDate, PartionStr_MB, StartCount,StartSummIn,EndCount,EndSummIn)
+         select UnitId, GoodsPropertyId, KindPackageId,PartionDate, '' as PartionStr_MB, StartCount,StartSummIn,EndCount,EndSummIn
+          from _tmpList_Remains_byKindPackage
+         union all
+          select UnitId, GoodsPropertyId, KindPackageId, zc_DateStart() as PartionDate, PartionStr_MB, StartCount,StartSummIn,EndCount,EndSummIn
+          from _tmpList_Remains_byPartionStr;
+
     print '----------- Start Finish';
     // 
     -- result
@@ -313,7 +383,7 @@ begin
          , GoodsProperty.Id_Postgres as GoodsId
          , sum (EndCount) as Amount
          , _tmpList_Remains_byKindPackage.PartionDate as PartionGoodsDate
-         , case when BI_find.OperCount > 0 then BI_find.SummIn / BI_find.OperCount else 0 end as Price
+         , 0 as Price -- case when BI_find.OperCount > 0 then BI_find.SummIn / BI_find.OperCount else 0 end as Price
          , sum (case when (Goods.ParentId=686 and @inEndDate>='2013-01-01')
                         or GoodsProperty.InfoMoneyCode not in (10101 -- ÃˇÒÌÓÂ Ò˚¸Â
                                                               ,10102 -- 
@@ -333,22 +403,22 @@ begin
                           then 0 else EndSummIn end) as Summ
          , 0 as HeadCount
          , 0 as myCount
-         , '' as PartionGoods
+         , _tmpList_Remains_byKindPackage.PartionStr_MB as PartionGoods
          , KindPackage.Id_Postgres as GoodsKindId
          , 0 as AssetId
          , zc_rvNo() as isCar
          , GoodsProperty.InfoMoneyCode
          , 0 as Id_Postgres
-    from _tmpList_Remains_byKindPackage
-         left outer join  _tmpList_Bill as _tmp on _tmp.UnitId = _tmpList_Remains_byKindPackage.UnitId
+    from _tmpList_Remains_result as _tmpList_Remains_byKindPackage
 
+         left outer join  _tmpList_Bill as _tmp on _tmp.UnitId = _tmpList_Remains_byKindPackage.UnitId
 
          left outer join dba.Bill on Bill.Id = _tmp.BillId
          left outer join dba.GoodsProperty on GoodsProperty.Id = _tmpList_Remains_byKindPackage.GoodsPropertyId
          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId
          left outer join dba.KindPackage on KindPackage.Id = _tmpList_Remains_byKindPackage.KindPackageId
                                         and Goods.ParentId not in(686,1670,2387,2849,5874) --  “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
-         left outer join (select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (BillItems.Id) as BillItemsId
+         /*left outer join (select GoodsProperty.GoodsPropertyId, GoodsProperty.UnitId, max (BillItems.Id) as BillItemsId
                           from (select GoodsProperty.Id as GoodsPropertyId, _tmpList_Remains_byKindPackage.UnitId, max (isnull(_tmpList_Remains_byKindPackage.PartionDate,zc_DateEnd())) as PartionDate
                                 from dba.GoodsProperty
                                      inner join _tmpList_Remains_byKindPackage on _tmpList_Remains_byKindPackage.GoodsPropertyId = GoodsProperty.Id
@@ -365,7 +435,7 @@ begin
                          ) as GoodsProperty_find on GoodsProperty_find.GoodsPropertyId = _tmpList_Remains_byKindPackage.GoodsPropertyId
                                                 and GoodsProperty_find.UnitId = _tmpList_Remains_byKindPackage.UnitId
 
-         left outer join dba.BillItems as BI_find on BI_find.Id = GoodsProperty_find.BillItemsId
+         left outer join dba.BillItems as BI_find on BI_find.Id = GoodsProperty_find.BillItemsId*/
          -- left outer join dba.Bill as Bill_find on Bill_find.Id = BI_find.BillId
 
     where MovementId <> 0 
@@ -375,12 +445,14 @@ begin
            , _tmpList_Remains_byKindPackage.UnitId
            , GoodsProperty.Id_Postgres
            , _tmpList_Remains_byKindPackage.PartionDate
+           , _tmpList_Remains_byKindPackage.PartionStr_MB
            , KindPackage.Id_Postgres
            , GoodsProperty.InfoMoneyCode
-           , BI_find.SummIn
-           , BI_find.OperCount
+           --, BI_find.SummIn
+           --, BI_find.OperCount
     order by 4, 3, 5
    ;
+    print '----------- end Finish';
 
 end
 go

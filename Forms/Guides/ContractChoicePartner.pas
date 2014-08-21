@@ -43,6 +43,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     colContractCode: TcxGridDBColumn;
+    colContractComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

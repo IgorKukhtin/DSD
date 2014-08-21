@@ -72,6 +72,7 @@ type
     colSumm: TcxGridDBColumn;
     colOperationSort: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
+    colContractComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

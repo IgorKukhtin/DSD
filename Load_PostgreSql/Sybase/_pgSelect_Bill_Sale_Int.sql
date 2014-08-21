@@ -2,7 +2,7 @@
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
-     , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
+     , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
      , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_Scale(
@@ -35,8 +35,8 @@ begin
      , CarId Integer
      , PersonalDriverId Integer
 
-     , RouteId  Integer
-     , RouteSortingId_Postgres  Integer
+     , RouteId_pg  Integer
+     , RouteSortingId_pg Integer
      , PersonalId_Postgres  Integer
      , isOnlyUpdateInt smallint
      , Id_Postgres integer
@@ -99,7 +99,7 @@ begin
    //
    --
    insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId
-                       , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isOnlyUpdateInt, Id_Postgres)
+                       , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, isOnlyUpdateInt, Id_Postgres)
    select Bill.Id as ObjectId
 
      , cast (Bill.BillNumber as TVarCharMedium) ||
@@ -131,8 +131,8 @@ begin
      , null as CarId
      , null as PersonalDriverId
 
-     , null as RouteId
-     , null as RouteSortingId_Postgres
+     , _pgRoute.RouteId_pg as RouteId_pg
+     , UnitRoute.Id_Postgres_RouteSorting as RouteSortingId_pg
      , null as PersonalId_Postgres
 
 --     , null as RouteId
@@ -261,6 +261,9 @@ from
                                     and _pgPartner.Main = _pgPartner_find.Main
 */
      left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
+     left outer join dba.Unit AS UnitRoute on UnitRoute.Id = Bill.RouteUnitID
+     left outer join dba.Unit AS UnitRouteGroup on UnitRouteGroup.Id = UnitRoute.RouteGroupId
+     left outer join dba._pgRoute on _pgRoute.Id = UnitRouteGroup.RouteId_pg
 
      -- left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId
      left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
@@ -309,15 +312,15 @@ from
         , isnull (_tmpList.ContractNumber, '') as ContractNumber
         , isnull(_tmpList2.CarId, _tmpList.CarId)as CarId
         , isnull(_tmpList2.PersonalDriverId, _tmpList.PersonalDriverId) as PersonalDriverId
-        , isnull(_tmpList2.RouteId, _tmpList.RouteId) as RouteId
-        , isnull(_tmpList2.RouteSortingId_Postgres, _tmpList.RouteSortingId_Postgres) as RouteSortingId_Postgres
+        , _tmpList.RouteId_pg as RouteId_pg
+        , _tmpList.RouteSortingId_pg as RouteSortingId_pg
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
         , _tmpList.isOnlyUpdateInt
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
-          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
+          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
    order by 3, 4, CodeIM, 1
    ;
 

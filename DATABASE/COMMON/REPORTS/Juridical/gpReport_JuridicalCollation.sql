@@ -25,7 +25,7 @@ RETURNS TABLE (MovementSumm TFloat,
                ContractCode Integer, 
                ContractName TVarChar,
                ContractTagName TVarChar,
-               ContractStateKindCode Integer,
+               ContractStateKindCode Integer, ContractComment TVarChar,
                PaidKindId Integer, PaidKindName TVarChar,
                InfoMoneyGroupCode Integer,
                InfoMoneyGroupName TVarChar,
@@ -76,10 +76,13 @@ BEGIN
           MovementString_InvNumberPartner.ValueData AS InvNumberPartner,
           Object_Account_View.AccountCode,
           Object_Account_View.AccountName_all AS AccountName,
+
           View_Contract_InvNumber.ContractCode,
           View_Contract_InvNumber.InvNumber AS ContractName,
           View_Contract_InvNumber.ContractTagName,
           View_Contract_InvNumber.ContractStateKindCode,
+          ObjectString_Comment.ValueData AS ContractComment,
+
           Object_PaidKind.Id AS PaidKindId,
           Object_PaidKind.ValueData AS PaidKindName,
           Object_InfoMoney_View.InfoMoneyGroupCode,
@@ -219,6 +222,9 @@ BEGIN
         ) AS Operation
 
       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Operation.ContractId
+      LEFT JOIN ObjectString AS ObjectString_Comment
+                             ON ObjectString_Comment.ObjectId = Operation.ContractId
+                            AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
       LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
@@ -272,6 +278,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.08.14                                        * add ContractComment
  03.07.14                                        * add InvNumberPartner
  16.05.14                                        * add Operation.OperDate
  10.05.14                                        * add inInfoMoneyId
