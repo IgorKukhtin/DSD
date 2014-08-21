@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_OrderExternalForm = class(TAncestorReportForm)
@@ -58,6 +58,7 @@ type
     GuidesFrom: TdsdGuides;
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
+    edByDoc: TcxCheckBox;
   private
     { Private declarations }
   public

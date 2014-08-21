@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1042
-  ExplicitHeight = 209
+  ExplicitWidth = 1034
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1651,7 +1651,7 @@
       Category = 0
     end
     object bbReport_GoodsMI_OrderExternal: TdxBarButton
-      Action = actReport_GoodsMI_OrderExternal
+      Action = dsdOpenForm1
       Category = 0
     end
   end
@@ -1722,12 +1722,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_OrderExternal: TdsdOpenForm
+    object dsdOpenForm1: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080' * ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
-      FormName = 'T2Report_GoodsMI_OrderExternalFormForm'
-      FormNameParam.Value = 'T2Report_GoodsMI_OrderExternalFormForm'
+      Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080'  ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
+      FormName = 'TReport_GoodsMI_OrderExternalFormForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternalFormForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
