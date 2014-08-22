@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Sale_SybaseInt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
@@ -48,6 +47,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inCurrencyDocumentId  := 14461
+                                           , inCurrencyPartnerId   := NULL
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
@@ -78,6 +79,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inCurrencyDocumentId  := 14461
+                                           , inCurrencyPartnerId   := NULL
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
