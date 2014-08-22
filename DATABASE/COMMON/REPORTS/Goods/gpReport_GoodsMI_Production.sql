@@ -20,6 +20,7 @@ RETURNS TABLE (GoodsGroupName TVarChar
              )   
 AS
 $BODY$
+    DECLARE vbDescId Integer;
 BEGIN
 
     -- Ограничения по товару
@@ -33,6 +34,13 @@ BEGIN
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
          
+    END IF;
+
+    IF (inDescId = 8 and inisActive = True) OR (inDescId = 9 and inisActive = False)
+    THEN 
+	vbDescId:= zc_MI_Master();
+    ELSE
+	vbDescId:= zc_MI_Child();
     END IF;
 
    -- Результат
@@ -81,7 +89,7 @@ BEGIN
                            ) AS tmpAccount on tmpAccount.AccountID = Container.ObjectId
 
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId =  CASE WHEN  inisActive = True THEN zc_MI_Master() ELSE zc_MI_Child() END
+                                       AND MovementItem.DescId = vbDescId
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -105,7 +113,7 @@ BEGIN
                       LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
                                          
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId =  CASE WHEN  inisActive = True THEN zc_MI_Master() ELSE zc_MI_Child() END
+                                       AND MovementItem.DescId =  vbDescId
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -166,7 +174,11 @@ ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boole
 */
 
 -- тест
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2013', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='True' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='True' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='False' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
 
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2013', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='False' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2014', inEndDate:= '01.09.2014',  inDescId:= 9, inisActive:='True' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2014', inEndDate:= '01.09.2014',  inDescId:= 9, inisActive:='False' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+
+
 -- inDescId:= 9 - разделение
