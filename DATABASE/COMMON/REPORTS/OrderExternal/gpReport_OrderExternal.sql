@@ -129,14 +129,7 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-/*
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
 
-           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                 ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
-                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-*/
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.DescId = zc_Movement_OrderExternal()
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
@@ -157,9 +150,8 @@ BEGIN
            , MILinkObject_GoodsKind.ObjectId
            , MovementItem.ObjectId
          ),
-         --********************************
-       tmpMovement AS (
 
+       tmpMovement AS (
        SELECT
              tmpMovement2.InvNumber          AS InvNumber
            , tmpMovement2.InvNumberPartner   AS InvNumberPartner
@@ -175,7 +167,6 @@ BEGIN
            , tmpMovement2.AmountSummTotal    AS AmountSummTotal
            , tmpMovement2.AmountSumm_Dozakaz AS AmountSumm_Dozakaz
 
-
            , CAST ((Amount1 * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)            AS Amount_Weight1
            , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END) AS TFloat)                                              AS Amount_Sh1
 
@@ -188,8 +179,6 @@ BEGIN
            , CAST ((Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
            , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
 
-
-
        FROM tmpMovement2 AS tmpMovement2
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -197,10 +186,7 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                  ON ObjectFloat_Weight.ObjectId = tmpMovement2.GoodsId
                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
          )
-         --********************************
-
 
        SELECT
              tmpMovement.InvNumber                      AS InvNumber
@@ -270,6 +256,7 @@ ALTER FUNCTION gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, I
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.08.14                                                        *
  21.08.14                                                        *
 
 */
