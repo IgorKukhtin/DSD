@@ -88,6 +88,7 @@ type
     colCurrencyValue: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
+    clRouteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

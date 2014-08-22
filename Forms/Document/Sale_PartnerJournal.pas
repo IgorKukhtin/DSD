@@ -95,6 +95,7 @@ type
     bbactChecked: TdxBarButton;
     actChecked: TdsdExecStoredProc;
     colIsEDI: TcxGridDBColumn;
+    clRouteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

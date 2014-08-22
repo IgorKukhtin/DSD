@@ -134,8 +134,8 @@ from
 
      left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
      left outer join dba.Unit AS UnitRoute on UnitRoute.Id = Bill.RouteUnitID
-     left outer join dba.Unit AS UnitRouteGroup on UnitRouteGroup.Id = UnitRoute.RouteGroupId
-     left outer join dba._pgRoute on _pgRoute.Id = UnitRouteGroup.RouteId_pg
+     left outer join dba.RouteGroup on RouteGroup.Id = UnitRoute.RouteGroupId
+     left outer join dba._pgRoute on _pgRoute.Id = RouteGroup.RouteId_pg
 
      left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId
 
