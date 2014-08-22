@@ -17,34 +17,29 @@ uses
 
 type
   TReport_GoodsMI_OrderExternalForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clSale_Summ: TcxGridDBColumn;
-    clSale_Amount_Weight: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clSale_Amount_Sh: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    clReturn_Amount_Sh: TcxGridDBColumn;
-    clReturn_Amount_Weight: TcxGridDBColumn;
-    clReturn_Summ: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clSale_AmountPartner_Weight: TcxGridDBColumn;
-    clSale_AmountPartner_Sh: TcxGridDBColumn;
-    clReturn_AmountPartner_Weight: TcxGridDBColumn;
-    clReturn_AmountPartner_Sh: TcxGridDBColumn;
-    clReturnPercent: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    Amount_Sh: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    AmountSummTotal: TcxGridDBColumn;
+    AmountSumm_Second: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount_Weight_Second: TcxGridDBColumn;
+    Amount_Sh_Second: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    clRetailName: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
     cxLabel13: TcxLabel;
@@ -59,6 +54,7 @@ type
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     edByDoc: TcxCheckBox;
+    GuidesTo: TdsdGuides;
   private
     { Private declarations }
   public
