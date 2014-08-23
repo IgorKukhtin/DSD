@@ -96,6 +96,9 @@ type
     actChecked: TdsdExecStoredProc;
     colIsEDI: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
+    colCurrencyValue: TcxGridDBColumn;
+    colCurrencyDocumentName: TcxGridDBColumn;
+    colCurrencyPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

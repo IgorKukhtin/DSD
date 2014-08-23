@@ -20,20 +20,20 @@ type
     GoodsGroupName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
-    Amount_Weight: TcxGridDBColumn;
+    AmountSumm1: TcxGridDBColumn;
+    Amount_Weight1: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    Amount_Sh: TcxGridDBColumn;
+    Amount_Sh1: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
     AmountSummTotal: TcxGridDBColumn;
-    AmountSumm_Second: TcxGridDBColumn;
+    AmountSumm2: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    Amount_Weight_Second: TcxGridDBColumn;
-    Amount_Sh_Second: TcxGridDBColumn;
+    Amount_Weight2: TcxGridDBColumn;
+    Amount_Sh2: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
@@ -55,6 +55,11 @@ type
     cxLabel8: TcxLabel;
     edByDoc: TcxCheckBox;
     GuidesTo: TdsdGuides;
+    Amount_Weight_Itog: TcxGridDBColumn;
+    Amount_Sh_Itog: TcxGridDBColumn;
+    Amount_Weight_Dozakaz: TcxGridDBColumn;
+    Amount_Sh_Dozakaz: TcxGridDBColumn;
+    AmountSumm_Dozakaz: TcxGridDBColumn;
   private
     { Private declarations }
   public
