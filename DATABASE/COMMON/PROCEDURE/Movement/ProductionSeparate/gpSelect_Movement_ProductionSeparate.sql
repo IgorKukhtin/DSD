@@ -1,9 +1,6 @@
 -- Function: gpSelect_Movement_ProductionSeparate()
 
--- DROP FUNCTION gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate(
     IN inStartDate   TDateTime,

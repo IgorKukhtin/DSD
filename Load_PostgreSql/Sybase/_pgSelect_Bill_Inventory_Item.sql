@@ -79,6 +79,8 @@ begin
   ) on commit delete rows;
   //
   //
+  -- !!!!!!
+  set @inIsGlobalLoad=zc_rvNo();
   //
   -- !!!start @inIsGlobalLoad!!!
   if @inIsGlobalLoad=zc_rvYes()
@@ -439,6 +441,7 @@ begin
          -- left outer join dba.Bill as Bill_find on Bill_find.Id = BI_find.BillId
 
     where MovementId <> 0 
+      and GoodsProperty.InfoMoneyCode <> 0
     group by Bill.Id_Postgres
            , Bill.BillNumber
            , Bill.BillDate
@@ -457,4 +460,4 @@ begin
 end
 go
 //
--- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2014-05-01', '2014-05-31')
+-- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2014-05-31', '2014-05-31')

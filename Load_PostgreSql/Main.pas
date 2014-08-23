@@ -1886,12 +1886,13 @@ begin
 
                      +'        when fCheckGoodsParentID(10523,Goods.ParentId) =zc_rvYes() then 0' // СД-Производственное оборудование - !!!ОС!!!
                      +'        when fCheckGoodsParentID(10576,Goods.ParentId) =zc_rvYes() then 20304' // 3)СД-СПЕЦИНСТРУМЕНТ  - 20304	Общефирменные МНМА Специнструменты
-                     +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // 0)!!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
                      +'        when fCheckGoodsParentID(10577,Goods.ParentId) =zc_rvYes() then 0' // СД-Торговое оборудование - !!!ОС!!!
                      +'        when Goods.ParentId in (5857) then 10203' // 0)СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
                      +'        when Goods.Id in (6041, 7013) then 10201' // 0)СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
 
                      +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // С-ПРОЧЕЕ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+
+                     +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
                      +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
                      +'        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901' // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
@@ -1902,9 +1903,6 @@ begin
                      +'        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103' // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
                      +'        when fCheckGoodsParentID(2849,Goods.ParentId) =zc_rvYes() then 30301' // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
                      +'        when fCheckGoodsParentID(1855,Goods.ParentId) =zc_rvYes() then 30101' // ПРОИЗВОДСТВО + УДАЛЕННЫЕ - 30101	Доходы	Продукция	Готовая продукция
-
-
-                     +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
 
                      +'        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201' // для проработок-новые специи - 10201		Основное сырье Прочее сырье	Специи
                      +'        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201' // ДОБАВКИ - 10201		Основное сырье Прочее сырье	Специи
@@ -1955,6 +1953,8 @@ begin
 
                      +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 20701' // СЫР - 20701		Общефирменные Товары Прочие товары
                      +'        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501' // Тара - 20501		Общефирменные Оборотная тара	Оборотная тара
+
+                     +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // 0)!!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
 
                      +'                                                                      end'
                      +' set InfoMoneyCode = _pgInfoMoney.ObjectCode'
@@ -2938,7 +2938,7 @@ begin
                        fOpenSqToQuery_two (' select Object_JuridicalGroup.Id as ParentId'
                                           +' from Object join Object as Object_JuridicalGroup '
                                           +'               on Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup() and Object_JuridicalGroup.ObjectCode = 20+Object.ObjectCode'
-                                          +' where Object.DescId=zc_Object_Branch() and Object.Id = '+FieldByName('BranchId_pg').AsString);
+                                          +' where Object.DescId in (zc_Object_Branch(), zc_Object_BranchLink()) and Object.Id = '+FieldByName('BranchId_pg').AsString);
                        ParentId_pg:=toSqlQuery_two.FieldByName('ParentId').AsString;
 
                        // меняем в PG группу у юр лица
@@ -3061,7 +3061,7 @@ begin
              fOpenSqToQuery (' select Object_JuridicalGroup.Id as ParentId'
                             +' from Object join Object as Object_JuridicalGroup '
                             +'               on Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup() and Object_JuridicalGroup.ObjectCode = 20+Object.ObjectCode'
-                            +' where Object.DescId=zc_Object_Branch() and Object.Id = '+FieldByName('BranchId_pg').AsString);
+                            +' where Object.DescId in (zc_Object_Branch(), zc_Object_BranchLink()) and Object.Id = '+FieldByName('BranchId_pg').AsString);
              ParentId_pg:=toSqlQuery.FieldByName('ParentId').AsString;
 
              //

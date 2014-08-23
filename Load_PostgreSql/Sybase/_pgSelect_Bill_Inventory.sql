@@ -12,6 +12,8 @@ begin
      , UnitId Integer
   ) on commit preserve rows;
   //
+  -- !!!!!!
+  set @inIsGlobalLoad=zc_rvNo();
   //
   //
   -- !!!start @inIsGlobalLoad!!!

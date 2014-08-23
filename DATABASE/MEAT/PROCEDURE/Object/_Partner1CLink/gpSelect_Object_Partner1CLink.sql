@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner1CLink(
     IN inSession     TVarChar       -- сессия пользователя
 )                                                                	
 RETURNS TABLE (PartnerId integer, PartnerCode Integer, PartnerName TVarChar
-             , Id Integer, Code Integer, Name TVarChar
+             , Id Integer, Code Integer, Name TVarChar, Name_find1C TVarChar, OKPO_find1C TVarChar
              , BranchId Integer, BranchName TVarChar
              , ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
              , ContractTagName TVarChar, ContractStateKindCode Integer
@@ -36,6 +36,13 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
+          , tmpSale1C  AS (SELECT Sale1C.ClientCode, Sale1C.ClientName, Sale1C.ClientOKPO
+                                , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
+                           FROM Sale1C
+                           WHERE Sale1C.ClientCode <> 0
+                           GROUP BY Sale1C.ClientCode, Sale1C.ClientName, Sale1C.ClientOKPO
+                               , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+                          )
        /*WITH tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                   , ObjectLink_Partner_Juridical.ObjectId       AS PartnerId
                              FROM Movement
@@ -74,7 +81,7 @@ BEGIN
                             GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                    , ObjectLink_Partner_Juridical.ObjectId
                            )*/
-       SELECT Object_Partner.Id                     AS PartnerId
+       /*SELECT Object_Partner.Id                     AS PartnerId
             , Object_Partner.ObjectCode             AS PartnerCode
             , Object_Partner.ValueData              AS PartnerName
             , Object_Partner1CLink.Id               AS Id
@@ -127,13 +134,15 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = View_Contract_InvNumber.ContractId
                                 AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
-      UNION ALL
+      UNION ALL*/
        SELECT Object_Partner.Id                     AS PartnerId
             , Object_Partner.ObjectCode             AS PartnerCode
             , Object_Partner.ValueData              AS PartnerName
             , Object_Partner1CLink.Id               AS Id
             , Object_Partner1CLink.ObjectCode       AS Code
             , Object_Partner1CLink.ValueData        AS Name
+            , tmpSale1C.ClientName                  AS Name_find1C
+            , tmpSale1C.ClientOKPO                  AS OKPO_find1C
             , Object_Branch.Id                      AS BranchId
             , Object_Branch.BranchLinkName          AS BranchName
             , View_Contract_InvNumber.ContractId 
@@ -184,8 +193,12 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = View_Contract_InvNumber.ContractId
                                 AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
+
+            LEFT JOIN tmpSale1C ON tmpSale1C.ClientCode = Object_Partner1CLink.ObjectCode
+                               AND tmpSale1C.BranchTopId = ObjectLink_Partner1CLink_Branch.ChildObjectId 
+
        WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()
-         AND tmpJuridical.PartnerId IS NULL
+         -- AND tmpJuridical.PartnerId IS NULL
        ;
 
 END;
@@ -197,6 +210,8 @@ ALTER FUNCTION gpSelect_Object_Partner1CLink (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.08.14                                        * add tmpSale1C
+ 22.08.14                                        * show only exists
  16.08.14                                        * add JuridicalGroupName and PaidKindName
  05.05.14                                        * add tmpJuridical
  29.04.14                                        * add UNION ALL 

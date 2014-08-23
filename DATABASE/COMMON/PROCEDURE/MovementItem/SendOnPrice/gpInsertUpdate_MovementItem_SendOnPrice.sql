@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_SendOnPrice();
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(

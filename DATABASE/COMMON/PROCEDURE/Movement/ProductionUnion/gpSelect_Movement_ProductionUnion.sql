@@ -1,9 +1,6 @@
 -- Function: gpSelect_Movement_ProductionUnion()
 
--- DROP FUNCTION gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inStartDate   TDateTime,

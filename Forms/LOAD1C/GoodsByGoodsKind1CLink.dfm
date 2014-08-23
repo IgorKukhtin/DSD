@@ -1,23 +1,23 @@
 inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
-  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
+  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' 1'#1057
   ClientHeight = 401
-  ClientWidth = 835
-  ExplicitWidth = 843
-  ExplicitHeight = 428
+  ClientWidth = 1019
+  ExplicitWidth = 1035
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 835
+    Width = 1019
     Height = 375
     ExplicitWidth = 835
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 835
+    ClientRectRight = 1019
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 835
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 835
+        Width = 1019
         Height = 375
         ExplicitWidth = 835
         ExplicitHeight = 375
@@ -29,14 +29,18 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 37
+            Width = 35
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 232
+            Width = 120
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -49,23 +53,45 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Width = 134
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
-            Width = 56
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colDetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057
             DataBinding.FieldName = 'Name'
-            Width = 119
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colName_find1C: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Name_find1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object colDetailBranch: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
@@ -77,7 +103,9 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 121
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -90,7 +118,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
             Kind = bkEllipsis
           end>
         TabOrder = 1
-        Width = 177
+        Width = 250
       end
       object cxLabel1: TcxLabel
         Left = 224
@@ -197,6 +225,32 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         end>
       isShowModal = False
     end
+    object actInsertGoodsByGoodsKind1CLink: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGoodsByGoodsKind1CLink
+      StoredProcList = <
+        item
+          StoredProc = spGoodsByGoodsKind1CLink
+        end>
+      Caption = 'actInsertGoodsByGoodsKind1CLink'
+    end
+    object actInsertGoodsByGoodsKind1CLinkAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertGoodsByGoodsKind1CLink
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1080#1079' 1'#1057' ?'
+      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1080#1079' 1'#1057' '#1076#1086#1073#1072#1074#1083#1077#1085#1099'.'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1080#1079' 1'#1057
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1080#1079' 1'#1057
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -227,11 +281,15 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -244,6 +302,18 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         item
           Visible = True
           ItemName = 'dxBarControlContainerItem'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarControlContainerItem: TdxBarControlContainerItem
@@ -263,6 +333,10 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actInsertGoodsByGoodsKind1CLinkAll
+      Category = 0
     end
   end
   object BranchLinkGuides: TdsdGuides
@@ -364,5 +438,20 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       end>
     Left = 624
     Top = 216
+  end
+  object spGoodsByGoodsKind1CLink: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_GoodsByGoodsKind1CLink'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBranchTopId'
+        Value = ''
+        Component = BranchLinkGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 296
+    Top = 256
   end
 end

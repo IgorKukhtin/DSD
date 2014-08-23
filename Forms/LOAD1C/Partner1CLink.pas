@@ -41,6 +41,12 @@ type
     actGetPointName: TdsdExecStoredProc;
     actInsertRecordEmpty: TInsertRecord;
     bbInsertEmptyRecord: TdxBarButton;
+    actInsertPartner1CLink: TdsdExecStoredProc;
+    spInsertPartner1CLink: TdsdStoredProc;
+    bbInsertPartner1CLink: TdxBarButton;
+    actInsertPartner1CLinkAll: TMultiAction;
+    colName_find1C: TcxGridDBColumn;
+    colOKPO_find1C: TcxGridDBColumn;
   private
     { Private declarations }
   public
