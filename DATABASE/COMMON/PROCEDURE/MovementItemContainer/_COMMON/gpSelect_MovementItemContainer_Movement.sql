@@ -23,9 +23,16 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItemContainer_Movement());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MIContainer_Movement());
+     vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- !!!проводки только у Админа!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
 
      RETURN QUERY 
        SELECT
@@ -274,6 +281,7 @@ BEGIN
                                 ON ObjectLink_AccountKind.ObjectId = tmpMovementItemContainer.ObjectId
                                AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
      ;
+     END IF;
      
 END;
 $BODY$
@@ -284,6 +292,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.08.14                                        * add !!!проводки только у Админа!!!
  10.08.14                                        * add вот так "просто" выбираем филиал
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  13.01.14                                        * add Branch : вот так "не просто" выбираем филиал

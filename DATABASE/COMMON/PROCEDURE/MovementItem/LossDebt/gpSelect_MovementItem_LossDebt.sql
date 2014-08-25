@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , UnitId Integer, UnitName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
@@ -48,6 +48,7 @@ BEGIN
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
+            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , 0 :: Integer   AS UnitId
@@ -63,6 +64,11 @@ BEGIN
             , FALSE  AS isErased
                   
        FROM Object AS Object_Juridical
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id
                                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                            AND View_Contract.isErased = FALSE
@@ -112,6 +118,7 @@ BEGIN
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
+            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , Object_Unit.Id              AS UnitId
@@ -146,6 +153,11 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Summ 
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
@@ -194,6 +206,7 @@ BEGIN
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
+            , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , Object_Unit.Id              AS UnitId
@@ -228,6 +241,11 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id =MovementItem.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Summ 
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
@@ -267,6 +285,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 25.08.14                                        * add JuridicalGroupName
  06.03.14                                        * add zc_Enum_ContractStateKind_Close
  16.01.14                                        *
 */

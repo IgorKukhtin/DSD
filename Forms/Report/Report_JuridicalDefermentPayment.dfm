@@ -11,6 +11,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Width = 1020
     Height = 337
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 337
     ClientRectBottom = 337
@@ -146,6 +147,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 70
           end
+          object clJuridicalGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'JuridicalGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -160,6 +170,24 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object clPartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -196,6 +224,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
                 ImageIndex = 66
                 Value = 4
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

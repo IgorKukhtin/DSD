@@ -115,7 +115,7 @@ from
               and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
               and isUnitFrom.UnitId is not null
               and isUnitTo.UnitId is null
-              and isnull (UnitTo.PersonalId_Postgres, 0) = 0
+              and (isnull (UnitTo.PersonalId_Postgres, 0) = 0 OR Bill.FromId = zc_UnitId_StoreSale())
               and isnull (UnitTo.pgUnitId, 0) = 0
               and OKPO <> ''
            ) as Bill

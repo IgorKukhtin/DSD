@@ -57,8 +57,9 @@ BEGIN
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
            LEFT JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                            , Object_Partner1CLink.ObjectCode
-                           , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
+                           , ObjectLink_Partner1CLink_Branch.ChildObjectId   AS BranchId
                            , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
+                           , ObjectLink_Partner1CLink_Partner.ChildObjectId  AS PartnerId
                        FROM Object AS Object_Partner1CLink
                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
@@ -66,18 +67,17 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                                 ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                                                AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
-
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                                ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                               AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                         AND Object_Partner1CLink.ObjectCode <> 0
+                        AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0
                      ) AS tmpPartner1CLink ON tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                           AND tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
 
            LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
-
-           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-                                ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
-                               AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
 
            LEFT JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                            , Object_GoodsByGoodsKind1CLink.ObjectCode
@@ -86,8 +86,12 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
                                                 ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
+                                                ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                               AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                         AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
+                        AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 

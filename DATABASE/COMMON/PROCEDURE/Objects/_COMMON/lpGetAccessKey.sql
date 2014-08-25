@@ -1,6 +1,5 @@
 -- Function: lpGetAccessKey()
 
-DROP FUNCTION IF EXISTS lpGetAccess (Integer, Integer);
 DROP FUNCTION IF EXISTS lpGetAccessKey (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetAccessKey(
@@ -37,6 +36,8 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_ReturnIn()
                        , zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn()
                        , zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut()
+                       , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
+                       , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
                         )
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)
@@ -150,6 +151,7 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.08.14                                        * add zc_Enum_Process_InsertUpdate_Movement_OrderExternal() and zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
  08.05.14                                        * add 1101 -- Бухг
  06.03.14                                        * add RoleCode
  10.02.14                                        * add Document...

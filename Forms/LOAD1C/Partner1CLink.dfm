@@ -1,23 +1,23 @@
 inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
-  ClientWidth = 1106
-  ExplicitWidth = 1122
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1106
+    Width = 1020
     Height = 375
     ExplicitWidth = 1020
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 1106
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 1106
+        Width = 1020
         Height = 375
         ExplicitWidth = 1020
         ExplicitHeight = 375
@@ -428,8 +428,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoicePartnerForm'
-      FormName = 'TPartnerForm'
-      FormNameParam.Value = 'TPartnerForm'
+      FormName = 'TPartner1CLinkPlaceForm'
+      FormNameParam.Value = 'TPartner1CLinkPlaceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -506,6 +506,32 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057
       ImageIndex = 41
     end
+    object actUpdatePartner1CLink_Partner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertPartner1CLink
+      StoredProcList = <
+        item
+          StoredProc = spInsertPartner1CLink
+        end>
+      Caption = 'actUpdatePartner1CLink_Partner'
+    end
+    object actUpdatePartner1CLink_PartnerAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdatePartner1CLink_Partner
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080'?'
+      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089#1086#1079#1076#1072#1085#1099'.'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -549,6 +575,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
           Visible = True
           ItemName = 'bbInsertPartner1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePartner1CLink_Partner'
         end
         item
           Visible = True
@@ -615,6 +649,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     end
     object bbInsertPartner1CLink: TdxBarButton
       Action = actInsertPartner1CLinkAll
+      Category = 0
+    end
+    object bbUpdatePartner1CLink_Partner: TdxBarButton
+      Action = actUpdatePartner1CLink_PartnerAll
       Category = 0
     end
   end
@@ -771,5 +809,20 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       end>
     Left = 296
     Top = 256
+  end
+  object spUpdatePartner1CLink_Partner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner1CLink_Partner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBranchTopId'
+        Value = ''
+        Component = BranchLinkGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 296
+    Top = 312
   end
 end

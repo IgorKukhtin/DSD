@@ -326,7 +326,7 @@ from
 
 end
 //
--- call dba._pgSelect_Bill_Sale ('2014-03-01', '2014-03-01')
+-- select * from dba._pgSelect_Bill_Sale ('2014-08-01', '2014-08-21') as a where ObjectId = 
 /*
 create table dba._pgBillLoad_union (BillId Integer, BillId_union Integer);
 */

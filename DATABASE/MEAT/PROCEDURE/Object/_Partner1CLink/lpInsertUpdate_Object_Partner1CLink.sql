@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner1CLink(
     IN ioId                     Integer,    -- ключ объекта
@@ -8,28 +8,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner1CLink(
     IN inName                   TVarChar,   -- Название объекта
     IN inPartnerId              Integer,    -- 
     IN inBranchId               Integer,    -- 
-    IN inBranchTopId            Integer,    -- 
     IN inContractId             Integer,    -- 
     IN inUserId                 Integer     -- Пользователь
 )
   RETURNS Integer
 AS
 $BODY$
-  DECLARE vbBranchId Integer;
 BEGIN
 
-   -- что-то
-   IF COALESCE(inBranchId, 0) = 0 THEN
-      vbBranchId := inBranchTopId;
-   ELSE
-      vbBranchId := inBranchId;
-   END IF;
-
-
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner1CLink(), inCode, inName);
-
-   
+   -- проверка
    -- IF COALESCE (inCode, 0) = 0 AND COALESCE (inName, '') = '' THEN
    --     RAISE EXCEPTION 'Ошибка.Не установлен <Код>.';
    -- END IF;
@@ -39,10 +26,9 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не установлено <Название>.';
    END IF;
    -- проверка
-   IF COALESCE (vbBranchId, 0) = 0 THEN
+   IF COALESCE (inBranchId, 0) = 0 THEN
        RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
    END IF;
-   
 
    -- проверка уникальность inCode для !!!одного!! Филиала
    IF inCode <> 0 
@@ -50,29 +36,41 @@ BEGIN
               FROM ObjectLink
                    JOIN Object ON Object.Id = ObjectLink.ObjectId
                               AND Object.ObjectCode = inCode
-              WHERE ObjectLink.ChildObjectId = vbBranchId
+              WHERE ObjectLink.ChildObjectId = inBranchId
                 AND ObjectLink.ObjectId <> COALESCE (ioId, 0)
                 AND ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Branch())
    THEN
-       RAISE EXCEPTION 'Ошибка. Код 1С <%> уже установлен у <%>. ', inCode, lfGet_Object_ValueData (vbBranchId);
+       RAISE EXCEPTION 'Ошибка. Код 1С <%> уже установлен у <%>. ', inCode, lfGet_Object_ValueData (inBranchId);
    END IF;
 
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner1CLink(), inCode, inName);
 
+   -- сохранили
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Partner(), ioId, inPartnerId);
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Branch(), ioId, vbBranchId);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Branch(), ioId, inBranchId);
+   -- сохранили
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Contract(), ioId, inContractId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
 
+   --
+   RETURN ioId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer)  OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 22.08.14                                        *
+ 22.08.14                                        * set lp
+ 15.05.14                        * add lpInsert_ObjectProtocol
+ 07.04.14                        * add zc_ObjectBoolean_Partner1CLink_Contract
+ 15.02.14                                        * add zc_ObjectBoolean_Partner1CLink_Sybase
+ 11.02.14                        *
 */

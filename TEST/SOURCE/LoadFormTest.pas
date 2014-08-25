@@ -923,6 +923,9 @@ procedure TLoadFormTest.Load1CLinkFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkPlaceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkPlaceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));

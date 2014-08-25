@@ -75,6 +75,9 @@ type
     cxLabel7: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    clJuridicalGroupName: TcxGridDBColumn;
+    clPartnerCode: TcxGridDBColumn;
+    clPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

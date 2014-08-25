@@ -38,6 +38,7 @@ type
     actInsertGoodsByGoodsKind1CLinkAll: TMultiAction;
     dxBarButton1: TdxBarButton;
     colName_find1C: TcxGridDBColumn;
+    actChoiceGoodsForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
@@ -36,7 +38,9 @@ BEGIN
 
   RETURN QUERY  
 
- select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.PaidKindId, a.PaidKindName
+ select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
+             , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
+             , a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagName TVarChar, a.ContractStateKindCode
              , a.PersonalName
@@ -55,6 +59,10 @@ from (
    , Object_Juridical.Valuedata AS JuridicalName
    , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName
    , ObjectHistory_JuridicalDetails_View.OKPO
+   , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+   , Object_Partner.Id          AS PartnerId
+   , Object_Partner.ObjectCode  AS PartnerCode
+   , Object_Partner.ValueData   AS PartnerName
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
    , View_Contract.ContractId
@@ -152,6 +160,7 @@ from (
              , RESULT_all.ContractDate
              , CLO_InfoMoney.ObjectId AS InfoMoneyId
              , CLO_PaidKind.ObjectId  AS PaidKindId
+             , CLO_Partner.ObjectId   AS PartnerId
         FROM
        (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -217,6 +226,9 @@ from (
            LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                          ON CLO_InfoMoney.ContainerId = RESULT_all.Id
                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+           LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                         ON CLO_Partner.ContainerId = RESULT_all.Id
+                                        AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
          WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
          GROUP BY RESULT_all.AccountId
                 , RESULT_all.ContractId
@@ -227,6 +239,7 @@ from (
                 , RESULT_all.ContractDate
                 , CLO_InfoMoney.ObjectId
                 , CLO_PaidKind.ObjectId
+                , CLO_Partner.ObjectId
        ) AS RESULT
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
@@ -259,6 +272,13 @@ from (
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = RESULT.PartnerId
+
 ) as a
 where a.DebetRemains <> 0 or a.KreditRemains <> 0
              or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
@@ -276,6 +296,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.08.14                                        * add Partner...
  11.07.14                                        * add RetailName
  05.07.14                                        * add zc_Movement_TransferDebtOut
  02.06.14                                        * change DefermentPaymentRemains

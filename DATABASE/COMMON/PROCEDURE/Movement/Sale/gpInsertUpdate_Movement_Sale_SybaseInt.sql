@@ -26,7 +26,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
 )
 RETURNS RECORD AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
+
+
      IF inIsOnlyUpdateInt = TRUE AND ioId <> 0
      THEN
           -- сохранили <Документ>
@@ -95,9 +104,11 @@ BEGIN
 
      END IF;
 
-     -- сохранили связь с <Виды форм оплаты >
+     -- сохранили связь с
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
 
+     -- испраляю ошибку
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId AND AccessKeyId IS NULL;
 
 END;
 $BODY$

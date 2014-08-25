@@ -198,16 +198,18 @@ BEGIN
                          END AS OperCount_Sh
                        , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                    THEN 0
+                              WHEN tmpMI.Price = 0
+                                   THEN 0
                               WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   -- AND tmpMI.Price <> 0
-                                        THEN 0 -- tmpMI.OperCount_calc * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                                   ELSE tmpMI.OperCount_calc
+                                   THEN tmpMI.OperCount_calc * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                              ELSE tmpMI.OperCount_calc
                          END AS OperCount_Kg
 
                         -- сумма ввода остатка
                       , tmpMI.OperSumm_Inventory
 
-                  FROM (SELECT MovementItem.ObjectId AS GoodsId
+                  FROM (SELECT MovementItem.DescId
+                             , MovementItem.ObjectId AS GoodsId
                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                              , CASE WHEN vbDiscountPercent <> 0
                                          THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -220,10 +222,10 @@ BEGIN
                                -- !!!очень важное кол-во, для него расчет сумм!!!
                              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                         ELSE MovementItem.Amount
+                                         ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                     END) AS OperCount_calc
 
-                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Master
+                             , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS OperCount_Master
                              , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Child
                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
                              , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer
@@ -242,6 +244,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
                                                          ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                                        AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal()) 
 
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -254,16 +260,17 @@ BEGIN
                                                          ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
                         WHERE Movement.Id = inMovementId
-                        GROUP BY MovementItem.ObjectId
+                        GROUP BY MovementItem.DescId
+                               , MovementItem.ObjectId
                                , MILinkObject_GoodsKind.ObjectId
                                , MIFloat_Price.ValueData
                                , MIFloat_CountForPrice.ValueData
                        ) AS tmpMI
 
-                       /*LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                              ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                             AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                            AND MovementItem.DescId = zc_MI_Master()*/
+                                            AND tmpMI.DescId = zc_MI_Master()
                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                             ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -284,11 +291,11 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
          -- Сохранили свойство <Итого количество("подчиненные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountChild(), inMovementId, vbOperCount_Child);
          -- Сохранили свойство <Итого количество у контрагента>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountPartner(), inMovementId, vbOperCount_Partner + vbOperCount_Packer);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountPartner(), inMovementId, vbOperCount_Partner);
          -- Сохранили свойство <Итого количество, тары>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountTare(), inMovementId, vbOperCount_Tare);
          -- Сохранили свойство <Итого количество, шт>

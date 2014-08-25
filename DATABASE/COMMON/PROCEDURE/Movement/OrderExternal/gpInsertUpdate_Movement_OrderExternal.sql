@@ -1,21 +1,24 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
 
--- DROP FUNCTION gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inOperDatePartner     TDateTime , -- ДДата принятия заказа от контрагента
-    IN inOperDateMark        TDateTime , -- Дата маркировки
     IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inOperDatePartner     TDateTime , -- Дата принятия заказа от контрагента
+    IN inOperDateMark        TDateTime , -- Дата маркировки
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
-    IN inRouteId             Integer   , -- Маршрут
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inRouteId             Integer   , -- Маршрут
+    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inSession             TVarChar    -- сессия пользователя
@@ -23,39 +26,64 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-BEGIN
 
+   DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
+BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+
+     -- проверка
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) OR inOperDateMark <> DATE_TRUNC ('DAY', inOperDateMark) 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
+     END IF;
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderExternal(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderExternal(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
-     -- сохранили свойство <Дата принятия заказа от контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
      -- сохранили свойство <Дата маркировки>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateMark(), ioId, inOperDateMark);
-
+     -- сохранили свойство <Дата отгрузки контрагенту>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+
+     -- сохранили свойство <Цена с НДС (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+     -- сохранили свойство <% НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+     -- сохранили свойство <(-)% Скидки (+)% Наценки >
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-     -- сохранили связь с <Сотрудник (экспедитор)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
-
-     -- сохранили связь с <Маршруты>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
-     -- сохранили связь с <Сортировки маршрутов>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
      -- сохранили связь с <Виды форм оплаты >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+     -- сохранили связь с <Маршруты>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
+     -- сохранили связь с <Сортировки маршрутов>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
+
+     -- сохранили связь с <Сотрудник (экспедитор)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
+
 
      -- определяем инфу для Прайса
      IF COALESCE (ioPriceListId, 0) = 0
@@ -114,16 +142,17 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.08.14                                        * all
  18.08.14                                                        *
  06.06.14                                                        *
  01.08.13         *

@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
+RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
@@ -40,6 +41,10 @@ BEGIN
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
+        Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
+        Object_Partner.Id AS PartnerId,
+        Object_Partner.ObjectCode AS PartnerCode,
+        Object_Partner.ValueData AS PartnerName,
         View_Contract.ContractId,
         View_Contract.ContractCode,
         View_Contract.InvNumber AS ContractNumber,
@@ -82,8 +87,9 @@ BEGIN
 
      FROM
          (SELECT Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
-                , Operation_all.PaidKindId
-                , View_Contract_ContractKey.ContractId_Key AS ContractId,
+               , Operation_all.PaidKindId
+               , CLO_Partner.ObjectId AS PartnerId
+               , View_Contract_ContractKey.ContractId_Key AS ContractId,
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
@@ -105,8 +111,10 @@ BEGIN
 
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_Income() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnOutSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END
+                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
+                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm,
@@ -117,7 +125,11 @@ BEGIN
                                                                                                            , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
                                                                                                            , zc_Movement_SendDebt()
                                                                                                             )
-                                                                                     THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OtherSumm,
+                                                                                     THEN MIContainer.Amount ELSE 0 END ELSE 0 END
+                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
+                                                                                 AND COALESCE (CLO_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_FirstForm()
+                                                                                     THEN MIContainer.Amount ELSE 0 END ELSE 0 END
+                        ) AS OtherSumm,
                      Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                 FROM ContainerLinkObject AS CLO_Juridical 
                      INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -140,6 +152,9 @@ BEGIN
             GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId, CLO_PaidKind.ObjectId
            ) AS Operation_all
 
+           LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                         ON CLO_Partner.ContainerId = Operation_all.ContainerId
+                                        AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
            LEFT JOIN ContainerLinkObject AS CLO_Contract
                                          ON CLO_Contract.ContainerId = Operation_all.ContainerId
                                         AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
@@ -147,6 +162,7 @@ BEGIN
 
           GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, Operation_all.PaidKindId
                  , View_Contract_ContractKey.ContractId_Key
+                 , CLO_Partner.ObjectId
 
            ) AS Operation
 
@@ -174,6 +190,13 @@ BEGIN
            
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId
+
            WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.SaleSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.ServiceSumm <> 0 OR Operation.OtherSumm <> 0);
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -186,6 +209,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.08.14                                        * add Partner...
  20.05.14                                        * add Object_Contract_View
  05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View

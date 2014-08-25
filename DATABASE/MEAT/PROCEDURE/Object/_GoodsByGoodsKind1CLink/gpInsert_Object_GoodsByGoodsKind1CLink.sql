@@ -15,6 +15,12 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Object_GoodsByGoodsKind1CLink());
    vbUserId := lpGetUserBySession (inSession);
 
+   -- проверка
+   IF COALESCE (inBranchTopId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
+   END IF;
+
    -- сохраняем всех
    PERFORM gpInsertUpdate_Object_GoodsByGoodsKind1CLink (inId         := 0
                                                        , inCode       := Sale1C.GoodsCode
