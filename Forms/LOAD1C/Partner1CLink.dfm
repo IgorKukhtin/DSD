@@ -509,10 +509,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actUpdatePartner1CLink_Partner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spInsertPartner1CLink
+      StoredProc = spUpdatePartner1CLink_Partner
       StoredProcList = <
         item
-          StoredProc = spInsertPartner1CLink
+          StoredProc = spUpdatePartner1CLink_Partner
         end>
       Caption = 'actUpdatePartner1CLink_Partner'
     end

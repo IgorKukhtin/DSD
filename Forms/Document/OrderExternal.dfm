@@ -2,33 +2,35 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ExplicitWidth = 1080
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1064
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -53,7 +55,7 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
+              Column = AmountSecond
             end
             item
               Format = ',0.####'
@@ -69,12 +71,17 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm_Partner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = Amount
             end
             item
               Format = ',0.####'
@@ -102,7 +109,7 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
+              Column = AmountSecond
             end
             item
               Format = ',0.####'
@@ -118,6 +125,11 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSumm_Partner
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -129,7 +141,7 @@ inherited OrderExternalForm: TOrderExternalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object Code: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -137,7 +149,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object Name: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -145,7 +157,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 150
           end
-          object colGoodsKindName: TcxGridDBColumn
+          object GoodsKindName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -158,17 +170,15 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
+          object MeasureName: TcxGridDBColumn [3]
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Width = 40
           end
-          object colAmount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -178,7 +188,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountSecond: TcxGridDBColumn
+          object AmountSecond: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +198,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price: TcxGridDBColumn
+          object Price: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -198,17 +208,18 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object CountForPrice: TcxGridDBColumn
+          object CountForPrice: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSumm: TcxGridDBColumn
+          object AmountSumm: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -216,21 +227,33 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
+          end
+          object AmountSumm_Partner: TcxGridDBColumn [9]
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'AmountSumm_Partner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -287,7 +310,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 272
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 272
     end
     object cxLabel5: TcxLabel
@@ -610,7 +633,7 @@ inherited OrderExternalForm: TOrderExternalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -906,6 +929,13 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberOrder
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -927,10 +957,21 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inInvNumberPartner'
+        Name = 'inPriceWithVAT'
         Value = ''
-        Component = edInvNumberOrder
-        DataType = ftString
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inVATPercent'
+        Value = ''
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -944,27 +985,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'inToId'
         Value = ''
         Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPersonalId'
-        Value = ''
-        Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRouteId'
-        Value = ''
-        Component = GuidesRoute
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRouteSortingId'
-        Value = ''
-        Component = GuidesRouteSorting
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -983,6 +1003,27 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -995,15 +1036,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312

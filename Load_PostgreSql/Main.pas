@@ -747,7 +747,7 @@ end;
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two,PaidKindId:Integer;myContractNumber:String):Integer;
 var where_ContractNumber:string;
 begin
-     if PaidKindId=zc_Enum_PaidKind_FirstForm
+     if (PaidKindId=zc_Enum_PaidKind_FirstForm)and (myContractNumber<>'myContractNumber is null')
      then where_ContractNumber:=' and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
      else where_ContractNumber:='';
 
@@ -17134,7 +17134,7 @@ begin
         Add('from dba.Bill');
         Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and Bill.Id_Postgres>0'
            +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
@@ -17276,10 +17276,13 @@ begin
         Add('     left outer join dba._pgRoute on _pgRoute.Id = RouteGroup.RouteId_pg');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                          ) as _pgPartner on _pgPartner.UnitId = Bill.FromId');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-// +' and Bill.Id_Postgres=22081'
-           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+
+        if OKPOEdit.Text <> '' then Add('  and Bill.BillNumber='+OKPOEdit.Text);
+
+        Add('  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
+// +' and Bill.Id_Postgres=22081'
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -17348,12 +17351,12 @@ begin
                   end
              else ContractId_pg:=0;
              //находим договор
-             if (ContractId_pg=0)and (FieldByName('isBranch').AsInteger=zc_rvNo)
-             then ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('PaidKindId_Postgres').AsInteger,'');
+             if (ContractId_pg=0)and (FieldByName('isBranch').AsInteger=zc_rvNo)and(FieldByName('FromId_Postgres').AsInteger>0)
+             then ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('PaidKindId_Postgres').AsInteger,'myContractNumber is null');
              //
              //сохранение
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             if (ContractId_pg=0)and (FieldByName('isBranch').AsInteger=zc_rvNo)
+             if (ContractId_pg=0)and (FieldByName('isBranch').AsInteger=zc_rvNo)and(FieldByName('FromId_Postgres').AsInteger>0)
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('BillNumberClient1').AsString;
@@ -17437,6 +17440,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
+           +'  and BillItems.Id is not null'
            +'  and Bill.Id_Postgres>0'
            );
         if cbOnlyInsertDocument.Checked

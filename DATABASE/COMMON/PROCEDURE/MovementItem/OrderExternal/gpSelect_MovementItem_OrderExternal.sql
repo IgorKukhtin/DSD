@@ -1,7 +1,5 @@
 -- Function: gpSelect_MovementItem_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
@@ -15,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , Price TFloat, CountForPrice TFloat, AmountSumm TFloat
+             , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
              , isErased Boolean
               )
 AS
@@ -43,6 +41,7 @@ BEGIN
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
            , CAST (NULL AS TFloat)      AS AmountSumm
+           , CAST (NULL AS TFloat)      AS AmountSumm_Partner
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -95,6 +94,7 @@ BEGIN
                            THEN CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)               AS AmountSumm
+           , MIFloat_Summ.ValueData             AS AmountSumm_Partner
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -118,8 +118,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-
+            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
             ;
 
      ELSE
@@ -140,6 +141,7 @@ BEGIN
                            THEN CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( ( COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)               AS AmountSumm
+           , MIFloat_Summ.ValueData             AS AmountSumm_Partner
 
            , MovementItem.isErased              AS isErased
 
@@ -164,7 +166,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
+            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
             ;
 
      END IF;
@@ -172,7 +176,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*

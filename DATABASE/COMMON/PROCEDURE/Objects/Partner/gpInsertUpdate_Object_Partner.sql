@@ -56,33 +56,32 @@ BEGIN
 
 
    -- сохранили
-   ioId := lpInsertUpdate_Object_Partner (ioId          :=ioId
-                                        , inPartnerName         TVarChar  ,    -- 
-                                        , inAddress             TVarChar  ,    -- 
-                                        , inCode                Integer   ,    -- код объекта <Контрагент> 
-                                        , inShortName           TVarChar  ,    -- краткое наименование
-                                        , inGLNCode             TVarChar  ,    -- Код GLN
-                                        , inHouseNumber         TVarChar  ,    -- Номер дома
-                                        , inCaseNumber          TVarChar  ,    -- Номер корпуса
-                                        , inRoomNumber          TVarChar  ,    -- Номер квартиры
-                                        , inStreetId            Integer   ,    -- Улица/проспект  
-                                        , inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
-                                        , inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
-                                        , inJuridicalId         Integer   ,    -- Юридическое лицо
-                                        , inRouteId             Integer   ,    -- Маршрут
-                                        , inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-                                        , inPersonalTakeId      Integer   ,    -- Сотрудник (экспедитор) 
+   ioId := lpInsertUpdate_Object_Partner (ioId              := ioId
+                                        , inPartnerName     := outPartnerName
+                                        , inAddress         := inAddress -- vbAddress
+                                        , inCode            := inCode
+                                        , inShortName       := inShortName
+                                        , inGLNCode         := inGLNCode
+                                        , inHouseNumber     := inHouseNumber
+                                        , inCaseNumber      := inCaseNumber
+                                        , inRoomNumber      := inRoomNumber
+                                        , inStreetId        := inStreetId
+                                        , inPrepareDayCount := inPrepareDayCount
+                                        , inDocumentDayCount:= inDocumentDayCount
+                                        , inJuridicalId     := inJuridicalId
+                                        , inRouteId         := inRouteId
+                                        , inRouteSortingId  := inRouteSortingId
+                                        , inPersonalTakeId  := inPersonalTakeId
     
-                                        , inPriceListId         Integer   ,    -- Прайс-лист
-                                        , inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
-                                        , inStartPromo          TDateTime ,    -- Дата начала акции
-                                        , inEndPromo            TDateTime ,    -- Дата окончания акции     
+                                        , inPriceListId     := inPriceListId
+                                        , inPriceListPromoId:= inPriceListPromoId
+                                        , inStartPromo      := inStartPromo
+                                        , inEndPromo        := inEndPromo
 
-                                        , inUserId
+                                        , inUserId          := vbUserId
+                                         );
    
    
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$

@@ -32,6 +32,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
 )
   RETURNS Integer AS
 $BODY$
+   DECLARE vbCode Integer;
 BEGIN
 
    -- ѕроверка дл€ TPartner1CLinkPlaceForm
@@ -62,7 +63,6 @@ BEGIN
    -- сохранили свойство < од GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <јдрес точки доставки>
-   -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
 
    -- сохранили свойство <дом>
@@ -100,11 +100,8 @@ BEGIN
    
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
 
-   -- 
-   RETURN ioId;
-   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

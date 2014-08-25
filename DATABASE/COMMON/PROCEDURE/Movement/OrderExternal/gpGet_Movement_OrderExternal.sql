@@ -1,9 +1,6 @@
 -- Function: gpGet_Movement_OrderExternal()
 
--- DROP FUNCTION gpGet_Movement_OrderExternal (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
     IN inMovementId        Integer  , -- ключ Документа
