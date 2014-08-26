@@ -356,6 +356,9 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           StoredProc = spSelect
         end>
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = cxMasterGrid
+    end
     object actMoveToDoc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
