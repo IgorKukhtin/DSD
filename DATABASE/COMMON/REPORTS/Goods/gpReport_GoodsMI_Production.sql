@@ -36,13 +36,6 @@ BEGIN
          
     END IF;
 
-    IF (inDescId = 8 and inisActive = True) OR (inDescId = 9 and inisActive = False)
-    THEN 
-	vbDescId:= zc_MI_Master();
-    ELSE
-	vbDescId:= zc_MI_Child();
-    END IF;
-
    -- Результат
     RETURN QUERY
     
@@ -89,7 +82,7 @@ BEGIN
                            ) AS tmpAccount on tmpAccount.AccountID = Container.ObjectId
 
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId = vbDescId
+                                       
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -113,7 +106,7 @@ BEGIN
                       LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
                                          
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId =  vbDescId
+                                       
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -123,7 +116,7 @@ BEGIN
                       LEFT JOIN MovementLinkObject AS MovementLO_From
                                                    ON MovementLO_From.MovementId = tmpMovement.MovementId
                                                   AND MovementLO_From.DescId = zc_MovementLinkObject_From()   
-                       -- WHERE Object.Id IS NUll
+                      
                       GROUP BY MovementItem.ObjectId    
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
                              , COALESCE (Container.ObjectId, 0) 

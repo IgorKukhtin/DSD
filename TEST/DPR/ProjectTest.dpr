@@ -506,7 +506,8 @@ uses
   PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm};
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
