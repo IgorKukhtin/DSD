@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 276
-  ClientWidth = 300
+  ClientHeight = 173
+  ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,19 +17,19 @@
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 32
-    Top = 82
+    Left = 255
+    Top = 26
     TabOrder = 0
-    Width = 241
+    Width = 209
   end
   object cxLabel1: TcxLabel
-    Left = 32
-    Top = 59
+    Left = 255
+    Top = 3
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 32
-    Top = 241
+    Left = 100
+    Top = 123
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 198
-    Top = 241
+    Left = 294
+    Top = 123
     Width = 75
     Height = 25
     Action = FormClose
@@ -47,53 +47,53 @@
     TabOrder = 3
   end
   object Код: TcxLabel
-    Left = 32
+    Left = 15
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 32
+    Left = 15
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 241
+    Width = 209
   end
   object cxLabel3: TcxLabel
-    Left = 32
-    Top = 111
+    Left = 15
+    Top = 50
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit
-    Left = 32
-    Top = 132
+    Left = 15
+    Top = 73
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 241
+    Width = 209
   end
   object cxLabel5: TcxLabel
-    Left = 32
-    Top = 169
+    Left = 255
+    Top = 49
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
-    Left = 32
-    Top = 192
+    Left = 255
+    Top = 72
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 241
+    Width = 209
   end
   object ActionList: TActionList
-    Left = 256
-    Top = 24
+    Left = 88
+    Top = 144
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -165,8 +165,8 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 160
+    Left = 96
+    Top = 120
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -175,8 +175,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 192
-    Top = 56
+    Left = 24
+    Top = 112
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -227,8 +227,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 248
-    Top = 104
+    Left = 24
+    Top = 152
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -253,8 +253,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 123
+    Left = 160
+    Top = 64
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -279,7 +279,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 136
-    Top = 168
+    Left = 384
+    Top = 48
   end
 end

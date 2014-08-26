@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inEndDate             TDateTime  , --  онечна€ дата переноса
     IN inOperDate            TDateTime  ,
     IN inInvNumber           TVarChar   ,
+    IN inClientCode          TVarChar   ,
     IN inBranchId            Integer    , -- ‘илиал
     IN inSession             TVarChar    -- сесси€ пользовател€
 )                              
@@ -88,10 +89,13 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate FROM Movement  
+               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_To.ObjectId AS PartnerId FROM Movement  
           JOIN MovementLinkObject AS MLO_From
                                   ON MLO_From.MovementId = Movement.Id
                                  AND MLO_From.DescId = zc_MovementLinkObject_From() 
+          JOIN MovementLinkObject AS MLO_To
+                                  ON MLO_To.MovementId = Movement.Id
+                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
           JOIN ObjectLink AS ObjectLink_Unit_Branch 
                           ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
                          AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
@@ -104,9 +108,9 @@ BEGIN
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()) AS Sale
                           ON Sale.InvNumber = Sale1C.InvNumber AND Sale.OperDate = Sale1C.OperDate
+                         AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Sale.PartnerId
             
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate
+          WHERE Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
@@ -161,6 +165,7 @@ BEGIN
                WHERE Sale1C.InvNumber = vbInvNumber
                  AND Sale1C.OperDate = vbOperDate
                  AND Sale1C.UnitId = vbUnitId_1C
+                 AND Sale1C.ClientCode = inClientCode
                  AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2'));
           -- начало цикла по курсору
           LOOP
@@ -241,8 +246,11 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate 
+               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_From.ObjectId AS PartnerId 
                                 FROM Movement  
+          JOIN MovementLinkObject AS MLO_From
+                                  ON MLO_From.MovementId = Movement.Id
+                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
           JOIN MovementLinkObject AS MLO_To
                                   ON MLO_To.MovementId = Movement.Id
                                  AND MLO_To.DescId = zc_MovementLinkObject_To() 
@@ -258,10 +266,9 @@ BEGIN
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()) AS MovementReturn
                           ON MovementReturn.InvNumber = Sale1C.InvNumber AND MovementReturn.OperDate = Sale1C.OperDate
+                         AND MovementReturn.PartnerId = ObjectLink_Partner1CLink_Partner.ChildObjectId
 
-
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate
+          WHERE  Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
@@ -280,10 +287,16 @@ BEGIN
           END IF;
 
           -- сохранили ƒокумент
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
-                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                                          , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
-                                                          , inContractId := vbContractId, inUserId := vbUserId);
+         SELECT tmp.ioId INTO vbMovementId
+           FROM lpInsertUpdate_Movement_ReturnIn (ioId                := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
+                                               , inOperDate          := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
+                                               , inChangePercent     := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
+                                               , inContractId        := vbContractId
+                                               , inCurrencyDocumentId:= 14461 -- грн
+                                               , inCurrencyPartnerId := NULL
+                                               , inCurrencyValue     := NULL
+                                               , inUserId            := vbUserId) AS tmp
+
           -- сохранили свойство <«агружен из 1—>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
@@ -315,6 +328,7 @@ BEGIN
                WHERE Sale1C.InvNumber = vbInvNumber
                  AND Sale1C.OperDate = vbOperDate
                  AND Sale1C.UnitId = vbUnitId_1C
+                 AND Sale1C.ClientCode = inClientCode
                  AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4'));
 
           -- начало цикла по курсору

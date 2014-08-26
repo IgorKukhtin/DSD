@@ -37,7 +37,7 @@ uses
   AuthenticationTest in '..\SOURCE\AuthenticationTest.pas',
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
-  UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
+  UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
   CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas',
   dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas',
   LoadFormTest in '..\SOURCE\LoadFormTest.pas',

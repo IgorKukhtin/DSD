@@ -229,7 +229,7 @@ inherited MainForm: TMainForm
       Category = 0
     end
     object bbGoodsCommon: TdxBarButton [23]
-      Action = actGoodsCommon
+      Action = actGoodsMain
       Category = 0
     end
     object bbReports: TdxBarSubItem [24]
@@ -308,7 +308,6 @@ inherited MainForm: TMainForm
     end
     object bbAlternativeGoodsCodeForm: TdxBarButton
       Action = actAdditionalGoods
-      Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
       Category = 0
     end
     object bbTest: TdxBarButton
@@ -472,8 +471,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-      FormName = 'TUnitForm'
-      FormNameParam.Value = ''
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -489,13 +488,13 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsCommon: TdsdOpenForm
+    object actGoodsMain: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1086#1073#1098#1077#1076#1080#1085#1077#1085#1085#1099#1081
       Hint = #1058#1086#1074#1072#1088#1099
-      FormName = 'TGoodsCommonForm'
-      FormNameParam.Value = 'TGoodsCommonForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

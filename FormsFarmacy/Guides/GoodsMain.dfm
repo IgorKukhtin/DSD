@@ -1,4 +1,4 @@
-inherited GoodsCommonForm: TGoodsCommonForm
+inherited GoodsMainForm: TGoodsMainForm
   Caption = #1054#1073#1098#1076#1080#1085#1077#1085#1085#1099#1081' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 423
   ClientWidth = 782
@@ -82,14 +82,13 @@ inherited GoodsCommonForm: TGoodsCommonForm
     end
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = 'TGoodsEditForm'
+      FormName = 'TGoodsMainEditForm'
+      FormNameParam.Value = 'TGoodsMainEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = 'TGoodsEditForm'
+      FormName = 'TGoodsMainEditForm'
+      FormNameParam.Value = 'TGoodsMainEditForm'
       isShowModal = True
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides

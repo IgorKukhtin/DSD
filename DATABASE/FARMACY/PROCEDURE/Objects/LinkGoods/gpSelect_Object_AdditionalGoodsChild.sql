@@ -1,9 +1,8 @@
 -- Function: gpSelect_Object_AlternativeGoodsCode(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_AdditionalGoodsChild(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_AdditionalGoodsChild(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_AdditionalGoodsChild(
-    IN inRetailId    Integer,       -- Торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -11,9 +10,13 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer    
              ) AS
 $BODY$
+   DECLARE vbUserId   Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_AdditionalGoods());
+   vbUserId := lpGetUserBySession (inSession);
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
    RETURN QUERY 
      SELECT 
@@ -22,14 +25,14 @@ BEGIN
          , Object_AdditionalGoods_View.GoodsMainName
          , Object_AdditionalGoods_View.GoodsId
          
-     FROM Object_AdditionalGoods_View
+     FROM Object_LinkGoods_View AS Object_AdditionalGoods_View
            
-     WHERE Object_AdditionalGoods_View.RetailId = inRetailId;
+     WHERE Object_AdditionalGoods_View.RetailId = vbObjectId;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_AdditionalGoodsChild (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_AdditionalGoodsChild (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

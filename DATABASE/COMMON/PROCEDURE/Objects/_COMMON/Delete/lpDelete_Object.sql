@@ -16,6 +16,7 @@ BEGIN
   DELETE FROM ObjectHistoryLink WHERE ObjectHistoryLink.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistory  WHERE ObjectId = inId;
+  DELETE FROM DefaultValue  WHERE UserKeyId = inId;
   DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);

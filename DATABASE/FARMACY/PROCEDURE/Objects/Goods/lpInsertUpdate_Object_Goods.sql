@@ -20,14 +20,26 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    
    -- !!! проверка уникальности <Наименование>
-   IF EXISTS (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = inObjectId AND GoodsName = inName AND Id <> COALESCE(ioId, 0) ) THEN
+   IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
+           WHERE ((inObjectId = 0 AND ObjectId IS NULL) OR (ObjectId = inObjectId AND inObjectId <> 0))
+             AND GoodsName = inName AND Id <> COALESCE(ioId, 0) ) THEN
       RAISE EXCEPTION 'Значение "%" не уникально для справочника "Товары"', inName;
    END IF; 
 
    -- !!! проверка уникальности <Код>
-   IF EXISTS (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = inObjectId AND GoodsCode = inCode AND Id <> COALESCE(ioId, 0)  ) THEN
-      RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
-   END IF; 
+   IF inObjectId = 0 THEN
+      IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
+               WHERE ObjectId IS NULL 
+                 AND GoodsCodeInt = inCode::Integer AND Id <> COALESCE(ioId, 0)  ) THEN
+         RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
+      END IF; 
+   ELSE
+      IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
+               WHERE ObjectId = inObjectId 
+                 AND GoodsCode = inCode AND Id <> COALESCE(ioId, 0)  ) THEN
+         RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
+      END IF; 
+   END IF;
 
    vbCode := inCode::Integer;
 

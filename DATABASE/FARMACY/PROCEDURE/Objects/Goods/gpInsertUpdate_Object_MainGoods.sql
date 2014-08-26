@@ -1,9 +1,9 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MainGoods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MainGoods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                TVarChar  ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
@@ -21,19 +21,12 @@ BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    vbUserId := lpGetUserBySession (inSession);
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+   vbObjectId := 0;
 
-   IF COALESCE(vbObjectId, 0) = 0 THEN
-      SELECT ValueData INTO vbUserName FROM Object WHERE Id = vbUserId;
-      RAISE EXCEPTION 'У пользователя "%" не установлена торговая сеть', vbUserName;
-   END IF;
-
-   -- !!! проверка уникальности <Код>
    IF COALESCE(inMeasureId, 0) = 0 THEN
       RAISE EXCEPTION 'Единица измерения должна быть определена';
    END IF; 
 
-   -- !!! проверка уникальности <Код>
    IF COALESCE(inNDSKindId, 0) = 0 THEN
       RAISE EXCEPTION 'Тип НДС должен быть определен';
    END IF; 
@@ -47,7 +40,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MainGoods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*

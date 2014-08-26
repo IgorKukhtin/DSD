@@ -8,6 +8,7 @@ type
   published
     procedure CreateFunction;
     procedure CreateContainerProcedure;
+    procedure CreateDefaultProcedure;
     procedure CreateHistoryProcedure;
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
@@ -45,6 +46,12 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container4.sql');
   ZQuery.ExecSQL;}
+end;
+
+procedure TdbProcedureTest.CreateDefaultProcedure;
+begin
+  ScriptDirectory := CommonProcedurePath + 'Default\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateFunction;
@@ -154,6 +161,7 @@ procedure TdbProcedureTest.CreateObjectProcedure;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;

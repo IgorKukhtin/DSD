@@ -7,10 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
-  Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
-  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction, dxSkinsCore, cxButtonEdit;
+  Vcl.StdActns, cxCurrencyEdit, cxCheckBox, ParentForm, dsdGuides, dsdDB,
+  dsdAction, cxMaskEdit, cxButtonEdit;
 
 type
   TUnitEditForm = class(TParentForm)

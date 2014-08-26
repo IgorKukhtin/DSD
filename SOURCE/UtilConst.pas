@@ -18,7 +18,7 @@ var
   FunctionPath: string = '..\DATABASE\COMMON\Function\';
   ReportsPath: string = '..\DATABASE\COMMON\Reports\';
   ViewPath: string = '..\DATABASE\COMMON\View\';
-  LocalViewPath: string = '..\DATABASE\COMMON\View\';
+  LocalViewPath: string = '..\DATABASE\MEAT\View\';
   ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
 
 

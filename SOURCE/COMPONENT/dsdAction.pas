@@ -909,6 +909,7 @@ begin
         if DataSource.DataSet.RecordCount = 0 then
            Enabled := false
         else
+        if Assigned(DataSource.DataSet.FindField(ErasedFieldName)) then
            if FisSetErased then
               Enabled := not DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
            else

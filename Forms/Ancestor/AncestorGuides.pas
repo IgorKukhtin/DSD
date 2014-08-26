@@ -15,6 +15,12 @@ uses
 type
   TAncestorGuidesForm = class(TAncestorDBGridForm)
     spErasedUnErased: TdsdStoredProc;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
   private
     { Private declarations }
   public

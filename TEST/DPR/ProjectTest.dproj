@@ -101,7 +101,7 @@
 			<DCCReference Include="..\SOURCE\AuthenticationTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\UnitsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFormTest.pas"/>

@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MainGoodsLoad(Integer, Integer, TVarChar, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MainGoodsLoad(
- INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                Integer   ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
@@ -11,10 +10,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MainGoodsLoad(
 
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS integer AS
+RETURNS void AS
 $BODY$
+  DECLARE vbId        Integer;
   DECLARE vbNDSKindId Integer;
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId    Integer;
 BEGIN
 
     vbUserId := inSession;
@@ -25,19 +25,17 @@ BEGIN
        vbNDSKindId  := zc_Enum_NDSKind_Medical();
     END IF; 
 
-    IF COALESCE(ioId, 0) = 0 THEN
-       SELECT Object_Goods_View.Id INTO ioId
-         FROM Object_Goods_View 
-        WHERE Object_Goods_View.ObjectId IS NULL
-          AND Object_Goods_View.GoodsCode = inCode::TVarChar;   
-    END IF; 
+    SELECT Object_Goods_View.Id INTO vbId
+      FROM Object_Goods_View 
+     WHERE Object_Goods_View.ObjectId IS NULL
+       AND Object_Goods_View.GoodsCodeInt = inCode;   
 
-    ioId := lpInsertUpdate_Object_Goods(ioId, inCode::TVarChar, inName, 0, inMeasureId, vbNDSKindId, 0, 0, vbUserId);
+    PERFORM lpInsertUpdate_Object_Goods(vbId, inCode::TVarChar, inName, 0, inMeasureId, vbNDSKindId, 0, vbUserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_MainGoodsLoad(Integer, Integer, TVarChar, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MainGoodsLoad(Integer, TVarChar, Integer, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*
