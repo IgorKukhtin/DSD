@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
-
+DROP FUNCTION IF EXISTS public.gpinsertupdate_movement_orderinternal(inout ioid integer, ininvnumber public.tvarchar, inoperdate public.tdatetime, infromid integer, intoid integer, insession public.tvarchar);
+DROP FUNCTION IF EXISTS public.gpinsertupdate_movement_orderexternal(inout ioid integer, ininvnumber public.tvarchar, inoperdate public.tdatetime, inoperdatepartner public.tdatetime, inoperdatemark public.tdatetime, ininvnumberpartner public.tvarchar, infromid integer, intoid integer, inpersonalid integer, inrouteid integer, inroutesortingid integer, inpaidkindid integer, incontractid integer, inout iopricelistid integer, out outpricelistname public.tvarchar, insession public.tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
@@ -34,7 +35,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
 
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) OR inOperDateMark <> DATE_TRUNC ('DAY', inOperDateMark) 
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) OR inOperDateMark <> DATE_TRUNC ('DAY', inOperDateMark)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
@@ -83,7 +84,6 @@ BEGIN
 
      -- сохранили связь с <Сотрудник (экспедитор)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
-
 
      -- определяем инфу для Прайса
      IF COALESCE (ioPriceListId, 0) = 0
@@ -152,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.14                                                        *
  25.08.14                                        * all
  18.08.14                                                        *
  06.06.14                                                        *

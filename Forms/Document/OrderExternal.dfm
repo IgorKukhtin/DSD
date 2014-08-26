@@ -1,30 +1,29 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103'>'
   ClientHeight = 668
-  ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 703
+  ClientWidth = 1240
+  ExplicitLeft = 0
+  ExplicitWidth = 1248
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
-    Width = 1064
-    Height = 542
-    ExplicitTop = 126
+    Top = 128
+    Width = 1240
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1064
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1064
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1236
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitWidth = 1058
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        Width = 1234
+        Height = 514
+        ExplicitWidth = 1058
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -76,6 +75,10 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm_Partner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -130,6 +133,10 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm_Partner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -141,7 +148,7 @@ inherited OrderExternalForm: TOrderExternalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object Code: TcxGridDBColumn [0]
+          object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -149,7 +156,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object Name: TcxGridDBColumn [1]
+          object Name: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -157,7 +164,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 150
           end
-          object GoodsKindName: TcxGridDBColumn [2]
+          object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -173,12 +180,14 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 80
           end
-          object MeasureName: TcxGridDBColumn [3]
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object Amount: TcxGridDBColumn [4]
+          object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -188,7 +197,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSecond: TcxGridDBColumn [5]
+          object AmountSecond: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -198,7 +207,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price: TcxGridDBColumn [6]
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -208,7 +217,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object CountForPrice: TcxGridDBColumn [7]
+          object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +228,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AmountSumm: TcxGridDBColumn [8]
+          object AmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -230,30 +239,62 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 60
           end
-          object AmountSumm_Partner: TcxGridDBColumn [9]
+          object AmountSumm_Partner: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
           end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1058
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        Width = 1234
+        Height = 514
+        ExplicitWidth = 1058
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -275,7 +316,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 1240
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1064
@@ -310,7 +351,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 272
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 272
     end
     object cxLabel5: TcxLabel
@@ -367,13 +408,13 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 224
     end
     object cxLabel6: TcxLabel
-      Left = 767
-      Top = 45
+      Left = 1115
+      Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 767
-      Top = 64
+      Left = 1115
+      Top = 23
       Enabled = False
       Properties.Buttons = <
         item
@@ -450,13 +491,13 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 146
     end
     object cxLabel11: TcxLabel
-      Left = 765
-      Top = 45
+      Left = 1018
+      Top = 5
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 761
-      Top = 63
+      Left = 1020
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -480,6 +521,40 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       TabOrder = 27
       Width = 132
+    end
+    object edPriceWithVAT: TcxCheckBox
+      Left = 767
+      Top = 63
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 28
+      Width = 128
+    end
+    object cxLabel12: TcxLabel
+      Left = 896
+      Top = 45
+      Caption = '% '#1053#1044#1057
+    end
+    object edVATPercent: TcxCurrencyEdit
+      Left = 896
+      Top = 63
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      TabOrder = 30
+      Width = 40
+    end
+    object cxLabel14: TcxLabel
+      Left = 943
+      Top = 45
+      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+    end
+    object edChangePercent: TcxCurrencyEdit
+      Left = 943
+      Top = 63
+      Enabled = False
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      TabOrder = 32
+      Width = 144
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -633,7 +708,7 @@ inherited OrderExternalForm: TOrderExternalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -895,18 +970,22 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
       end
       item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'PriceWithVAT'
+        Value = 'False'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
       end
       item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
       end
       item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -958,19 +1037,22 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = ''
+        Value = 'False'
+        Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inVATPercent'
-        Value = ''
+        Value = 0.000000000000000000
+        Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inChangePercent'
-        Value = Null
+        Value = 0.000000000000000000
+        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1094,6 +1176,10 @@ inherited OrderExternalForm: TOrderExternalForm
         Control = edTo
       end
       item
+        Control = edVATPercent
+      end
+      item
+        Control = edPriceWithVAT
       end
       item
       end>
@@ -1303,7 +1389,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 656
+    Left = 1136
+    Top = 8
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1408,6 +1495,7 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
+        Component = edChangePercent
         DataType = ftFloat
       end>
     Left = 456
@@ -1490,8 +1578,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 780
-    Top = 68
+    Left = 1052
+    Top = 4
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

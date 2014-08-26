@@ -1,26 +1,26 @@
 inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1080' '#1089#1090#1086#1088#1086#1085#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 1073
-  ExplicitWidth = 1081
+  ClientWidth = 1118
+  ExplicitWidth = 1126
   ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1073
+    Width = 1118
     Height = 476
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 1118
     ExplicitHeight = 476
     ClientRectBottom = 472
-    ClientRectRight = 1069
+    ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1067
+      ExplicitWidth = 1112
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1067
+        Width = 1112
         Height = 470
-        ExplicitWidth = 1067
+        ExplicitWidth = 1112
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -64,6 +64,36 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +132,36 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -203,13 +263,132 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object TotalCountSh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
+            DataBinding.FieldName = 'TotalCountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object TotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object TotalSummVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object TotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object TotalSummPVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummPVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1073
-    ExplicitWidth = 1073
+    Width = 1118
+    ExplicitWidth = 1118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

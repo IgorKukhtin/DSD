@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountSecond TFloat
-             , GoodsKindId Integer, GoodsKindName  TVarChar
+             , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
              , isErased Boolean
               )
@@ -38,6 +38,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountSecond
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
            , CAST (NULL AS TFloat)      AS AmountSumm
@@ -74,6 +75,10 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
 
        WHERE tmpMI.GoodsId IS NULL
@@ -88,6 +93,7 @@ BEGIN
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
            , MIFloat_Price.ValueData            AS Price
            , MIFloat_CountForPrice.ValueData    AS CountForPrice
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
@@ -102,6 +108,11 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -135,6 +146,7 @@ BEGIN
            , MIFloat_AmountSecond.ValueData     AS AmountSecond
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
            , MIFloat_Price.ValueData            AS Price
            , MIFloat_CountForPrice.ValueData    AS CountForPrice
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
@@ -151,6 +163,11 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
@@ -182,6 +199,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.14                                                        *
  18.08.14                                                        *
  06.06.14                                                        *
 
