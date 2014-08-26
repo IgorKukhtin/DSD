@@ -11,7 +11,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1107,6 +1107,26 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_Production'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionUnionReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparateIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparateReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_CheckContractInMovement'
         end>
     end
@@ -1652,6 +1672,22 @@
     end
     object bbReport_GoodsMI_OrderExternal: TdxBarButton
       Action = dsdOpenForm1
+      Category = 0
+    end
+    object bbReport_GoodsMI_Production: TdxBarButton
+      Action = actReport_GoodsMI_ProductionUnionIncome
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionUnionReturn: TdxBarButton
+      Action = actReport_GoodsMI_ProductionUnionReturn
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionSeparateIncome: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparateIncome
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionSeparateReturn: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
   end
@@ -3472,6 +3508,110 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsMI_ProductionUnionIncome: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1055#1088#1080#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      FormName = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 8
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+          DataType = ftString
+        end
+        item
+          Name = 'inisActive'
+          Value = True
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionUnionReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1056#1072#1089#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      FormName = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 8
+        end
+        item
+          Name = 'InDescName'
+          Value = #1056#1072#1089#1093#1086#1076' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+          DataType = ftString
+        end
+        item
+          Name = 'inisActive'
+          Value = False
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparateIncome: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1055#1088#1080#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      FormName = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 9
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataType = ftString
+        end
+        item
+          Name = 'inisActive'
+          Value = True
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparateReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1056#1072#1089#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      FormName = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 9
+        end
+        item
+          Name = 'InDescName'
+          Value = #1056#1072#1089#1093#1086#1076' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          DataType = ftString
+        end
+        item
+          Name = 'inisActive'
+          Value = False
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+    end
+  end
+  inherited ClientDataSet: TClientDataSet
+    Left = 136
+    Top = 112
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

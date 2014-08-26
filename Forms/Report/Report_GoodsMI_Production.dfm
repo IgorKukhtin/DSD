@@ -1,5 +1,5 @@
-inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
+inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
   ClientHeight = 344
   ClientWidth = 973
   AddOnFormData.isSingle = False
@@ -49,12 +49,10 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,12 +77,10 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -130,28 +126,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clFuelKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-            DataBinding.FieldName = 'FuelKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 40
-          end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 20
-          end
           object clAmount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -159,27 +139,6 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountPartner_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'AmountPartner_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountPartner_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -209,10 +168,8 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      Left = 316
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 316
     end
     object cxLabel4: TcxLabel
       Left = 413
@@ -258,7 +215,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_Income '
+    StoredProcName = 'gpReport_GoodsMI_Production'
     Params = <
       item
         Name = 'inStartDate'
@@ -279,6 +236,14 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inDescId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisActive'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inisActive'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -316,7 +281,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       item
         Component = GoodsGroupGuides
       end>
-    Left = 184
+    Left = 224
     Top = 136
   end
   object GoodsGroupGuides: TdsdGuides
@@ -357,6 +322,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         Value = ''
         Component = edInDescName
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisActive'
+        Value = Null
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 328
