@@ -34,12 +34,16 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                            ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                            ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                           ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                  WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                    AND Object_Partner1CLink.ObjectCode <> 0
                    AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
+                   AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
@@ -49,8 +53,12 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
                                            ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                           AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
+                                           ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                          AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
                  WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                    AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
+                   AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0  -- еще проверка что есть объект
                 ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
                                               AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
@@ -69,6 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.08.14                                        * add еще проверка что есть объект
  14.08.14                        * новая связь с филиалами
  22.05.14                                        * add ObjectCode <> 0
  24.04.14                         * 

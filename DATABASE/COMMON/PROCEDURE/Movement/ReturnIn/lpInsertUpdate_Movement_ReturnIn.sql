@@ -1,7 +1,6 @@
 -- Function: lpInsertUpdate_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -20,10 +19,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-   OUT outCurrencyValue      TFloat    , -- курс валюты
+    IN inCurrencyValue       TFloat    , -- курс валюты
     IN inUserId              Integer     -- Пользователь
 )
-RETURNS RECORD
+RETURNS Integer
  AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
@@ -65,37 +64,9 @@ BEGIN
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-
-     -- рассчитали и сохранили свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
-     THEN
-        SELECT MovementItem.Amount
-       INTO outCurrencyValue  
-        FROM (
-              SELECT max(Movement.OperDate) as maxOperDate
-              FROM Movement 
-                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.ObjectId = inCurrencyDocumentId
-                  JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                             AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-              WHERE Movement.DescId = zc_Movement_Currency()
-                AND Movement.OperDate <= inOperDate
-                AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete()) 
-              ) as tmpDate
-         JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                      AND Movement.OperDate = tmpDate.maxOperDate
-                      AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())    
-         JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                          AND MovementItem.DescId = zc_MI_Master();
-     END IF;
-     
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);   
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_ChangePercent(), ioId, inChangePercent);
 
 
      -- сохранили связь с <От кого (в документе)>
@@ -112,9 +83,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
      -- сохранили связь с <Валюта (контрагента) >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
+     -- сохранили свойство <Курс для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_CurrencyValue(), ioId, inCurrencyValue);   
+
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
+
 
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
@@ -129,6 +104,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId
  23.04.14                                        * add inInvNumberMark

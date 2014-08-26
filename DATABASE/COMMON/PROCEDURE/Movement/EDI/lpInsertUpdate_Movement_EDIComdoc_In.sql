@@ -92,6 +92,7 @@ BEGIN
                                       , inContractId        := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Contract())
                                       , inCurrencyDocumentId:= 14461 -- грн
                                       , inCurrencyPartnerId := NULL
+                                      , inCurrencyValue     := NULL
                                       , inUserId            := inUserId
                                        ) INTO vbMovementId_ReturnIn
      FROM Movement
