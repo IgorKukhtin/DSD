@@ -146,6 +146,9 @@ type
     cxLabel7: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    clPartnerName: TcxGridDBColumn;
+    PartnerChoiceForm: TOpenChoiceForm;
+    clContractTagName: TcxGridDBColumn;
   private
   public
   end;

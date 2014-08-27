@@ -1192,12 +1192,11 @@ object MainForm: TMainForm
       TabOrder = 37
     end
     object cbLossDebt: TCheckBox
-      Left = 143
+      Left = 133
       Top = 570
-      Width = 63
+      Width = 107
       Height = 17
-      Caption = #1044#1086#1083#1075#1080
-      Enabled = False
+      Caption = #1044#1086#1083#1075#1080' Int-'#1053#1040#1051
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1205,7 +1204,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 38
-      Visible = False
     end
   end
   object CompleteDocumentPanel: TPanel

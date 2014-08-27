@@ -8138,8 +8138,185 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocument_LossDebt;
+var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
+    MovementId_pg:Integer;
 begin
+     if (not cbLossDebt.Checked)or(not cbLossDebt.Enabled) then exit;
+     //
+     myEnabledCB(cbLossDebt);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('call dba._pgSelect_Bill_LossDebt('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+')');
+        Open;
 
+        cbLossDebt.Caption:='('+IntToStr(RecordCount)+') Долги Int-НАЛ';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_LossDebt';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioAmountDebet',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioAmountKredit',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioSummDebet',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioSummKredit',ftFloat,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('ioIsCalculated',ftBoolean,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
+        //
+        //
+        //!!!находим документ
+        fOpenSqToQuery ('select Id as RetV from Movement where OperDate='+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1) + ' and DescId = zc_Movement_LossDebt() and StatusId =zc_Enum_Status_UnComplete()');
+        if toSqlQuery.RecordCount <> 1 then begin ShowMessage('not find Movement');exit;end;
+        MovementId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+        //
+        //!!!удаление ФИЗ. всех элементов
+        fExecSqToQuery ('select lpDelete_MovementItem(Id, zfCalc_UserAdmin()) from MovementItem where MovementId='+IntToStr(MovementId_pg));
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             //
+             ContractId_pg:=0;
+             PartnerId_pg:=0;
+             JuridicalId_pg:=0;
+             //
+             //
+             //!!!ДЛЯ ПОСТАВЩИКА!!!
+             if (FieldByName('isSale').AsInteger = zc_rvNo) and (trim (FieldByName('OKPO').AsString)<>'') then
+             begin
+
+             if FieldByName('isOKPO_Virtual').AsInteger=zc_rvYes
+             then begin
+                       //находим юр.лицо по Контрагенту
+                       fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
+                                     +' from ObjectLink'
+                                     +' where ObjectLink.ObjectId='+FieldByName('ClientId_pg').AsString
+                                     +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                     );
+                        PartnerId_pg:=FieldByName('ClientId_pg').AsInteger;
+                        JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             end
+             else begin
+                  //Сначала находим контрагента и юр.лицо по ОКПО
+                  fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, Object_Partner.ObjectCode as PartnerCode, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                                +' from ObjectHistory_JuridicalDetails_View'
+                                +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                                +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                +'      left join Object as Object_Partner on Object_Partner.Id = ObjectLink.ObjectId'
+                                +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                                +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
+                                );
+                  PartnerId_pg:=toSqlQuery.FieldByName('PartnerId').AsInteger;
+                  JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+                  //
+                  //создаем контрагента !!!если надо!!!
+                  if (PartnerId_pg=0)and(JuridicalId_pg<>0) then
+                  begin
+                       toStoredProc_two.Params.ParamByName('ioId').Value:=0;
+                       toStoredProc_two.Params.ParamByName('inCode').Value:=FieldByName('ClientCode').AsString;
+                       toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ClientName').AsString;
+                       toStoredProc_two.Params.ParamByName('inJuridicalId').Value:=JuridicalId_pg;
+                       //
+                       if not myExecToStoredProc_two then ;//exit;
+                       //
+                       PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
+                  end
+                  else if (toSqlQuery.FieldByName('PartnerCode').AsInteger=0)  // <> FieldByName('UnitCodeFrom').AsString
+                          and (FieldByName('ClientCode').AsInteger > 0)
+                            //меняем код контрагента !!!если надо!!!
+                       then fExecSqToQuery ('update Object set ObjectCode ='+FieldByName('ClientCode').AsString+' where Id = '+IntToStr(PartnerId_pg));
+             end;
+             //
+             end; //!!!ДЛЯ ПОСТАВЩИКА!!!
+             //
+             //!!!ДЛЯ ПОКУПАТЕЛЯ!!!
+             if (FieldByName('isSale').AsInteger = zc_rvYes) and (FieldByName('ClientId_pg').AsInteger<>0) then
+             begin
+                       //находим юр.лицо по Контрагенту
+                       fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
+                                     +' from ObjectLink'
+                                     +' where ObjectLink.ObjectId='+FieldByName('ClientId_pg').AsString
+                                     +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                                     );
+                        PartnerId_pg:=FieldByName('ClientId_pg').AsInteger;
+                        JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             end;
+
+
+             //находим договор НАЛ - !!!ДЛЯ ПОСТАВЩИКА!!!
+             if (JuridicalId_pg <> 0)and(FieldByName('isSale').AsInteger = zc_rvNo)
+             then ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('InfoMoneyCode').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,zc_Enum_PaidKind_SecondForm,StrToDate(StartDateEdit.Text)-1);
+             //
+             //находим договор НАЛ - !!!ДЛЯ ПОКУПАТЕЛЯ!!!
+             if (JuridicalId_pg <> 0)and(FieldByName('isSale').AsInteger = zc_rvYes)
+             then ContractId_pg:=fFind_ContractId_pg(PartnerId_pg,FieldByName('InfoMoneyCode').AsInteger,30101,zc_Enum_PaidKind_SecondForm,'');
+             //
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=0;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=MovementId_pg;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=JuridicalId_pg;
+             toStoredProc.Params.ParamByName('inPartnerId').Value:=PartnerId_pg;
+             toStoredProc.Params.ParamByName('ioAmountDebet').Value:=0;
+             toStoredProc.Params.ParamByName('ioAmountKredit').Value:=0;
+             if FieldByName('Summa').AsFloat > 0
+             then toStoredProc.Params.ParamByName('ioSummDebet').Value:=FieldByName('Summa').AsFloat
+             else toStoredProc.Params.ParamByName('ioSummDebet').Value:=0;
+             if FieldByName('Summa').AsFloat < 0
+             then toStoredProc.Params.ParamByName('ioSummKredit').Value:=-1 * FieldByName('Summa').AsFloat
+             else toStoredProc.Params.ParamByName('ioSummKredit').Value:=0;
+             toStoredProc.Params.ParamByName('ioIsCalculated').Value:=true;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=zc_Enum_PaidKind_SecondForm;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             // !!!ЭТО НЕ НАДО!!!
+             // if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             // then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbLossDebt);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Income(isLastComplete:Boolean);
@@ -8740,7 +8917,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select * from dba._pgSelect_Partner_SaleNal ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+','+IntToStr(ParentId_PG_Dnepr)+') as tmp');
+        Add('call dba._pgSelect_Partner_SaleNal ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+','+IntToStr(ParentId_PG_Dnepr)+')');
         Open;
         cbPartner_Sale.Caption:='1.4. ('+IntToStr(RecordCount)+') !!!новые покупатели/договора НАЛ!!!';
         fStop:=cbOnlyOpen.Checked;

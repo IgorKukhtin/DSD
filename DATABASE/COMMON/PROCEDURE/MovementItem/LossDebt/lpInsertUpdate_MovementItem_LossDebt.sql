@@ -1,11 +1,12 @@
 -- Function: lpInsertUpdate_MovementItem_LossDebt ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
     IN inJuridicalId         Integer   , -- Юр.лицо
+    IN inPartnerId           Integer   , -- Контрагент
     IN inAmount              TFloat    , -- Сумма
     IN inSumm                TFloat    , -- Сумма остатка (долг)
     IN inIsCalculated        Boolean   , -- Сумма рассчитывается по остатку (да/нет)
@@ -20,11 +21,11 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF COALESCE (inJuridicalId, 0) = 0
+     IF COALESCE (inJuridicalId, 0) = 0 AND inPaidKindId <> zc_Enum_PaidKind_SecondForm()
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
      END IF;
-     IF COALESCE (inContractId, 0) = 0
+     IF COALESCE (inContractId, 0) = 0 AND inPaidKindId <> zc_Enum_PaidKind_SecondForm()
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен <№ дог.>.';
      END IF;
@@ -52,12 +53,16 @@ BEGIN
                                                  ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
                                                 AND MILinkObject_PaidKind.ObjectId = inPaidKindId
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                 ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.ObjectId = inJuridicalId
                   AND MovementItem.DescId = zc_MI_Master()
+                  AND COALESCE (MILinkObject_Partner.ObjectId, 0) = COALESCE (inPartnerId, 0) -- AND inPartnerId <> 0
                   AND MovementItem.Id <> COALESCE (ioId, 0))
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
      END IF;
 
      -- определяется признак Создание/Корректировка
@@ -72,6 +77,9 @@ BEGIN
      -- сохранили свойство <Сумма остатка (долг)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
+     -- сохранили связь с <Контрагенты>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
+
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
 
@@ -83,6 +91,7 @@ BEGIN
 
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
      -- пересчитали Итоговые суммы по документу
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -96,6 +105,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.08.14                                        * add inPartnerId
  16.05.14                                        * add lpInsert_MovementItemProtocol
  10.03.14                                        *
 */

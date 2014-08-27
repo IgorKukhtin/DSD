@@ -20,10 +20,12 @@ begin
            (select ClientId
                   ,InfoMoneyCode
             from
-           (select ObjectId as ClientId, case when isSale=zc_rvYes() then 30101 else 0 end as InfoMoneyCode
-            from _pgSelect_Bill_LossDebt
-            where ClientId_pg = 0 and trim (OKPO) <> ''
+            -- !!! remains
+           (select ObjectId as ClientId, InfoMoneyCode
+            from _pgSelect_Bill_LossDebt (@inStartDate - 1)
+            where ClientId_pg = 0 and trim (OKPO) <> '' and 1 =0 
            union all
+            -- !!! Sale
            select Bill.ToId as ClientId
                   ,case when Bill.FromId in (zc_UnitId_StoreSale())
                              then 30101 -- Готовая продукция
@@ -51,6 +53,7 @@ begin
               and Bill.MoneyKindId = zc_mkNal()
             group by Bill.FromId,Bill.ToId, GoodsProperty.InfoMoneyCode
            union all
+            -- !!! ReturnIn
             select Bill.FromId as ClientId
                   ,case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())
                              then 30101 -- Готовая продукция
