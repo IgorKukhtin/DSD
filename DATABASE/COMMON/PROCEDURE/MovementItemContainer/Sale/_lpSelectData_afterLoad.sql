@@ -2,11 +2,14 @@
 -- SELECT * FROM _testMI_afterLoad WHERE MovementItemId = 2439838
 -- update _testMI_afterLoad set StatusId = zc_Enum_Status_Complete() WHERE MovementId in (327959, 328502) and SessionId = 13 and StatusId = zc_Enum_Status_UnComplete()
 
+   WITH tmpDate AS (SELECT '01.06.2014' :: TDateTime AS StartDate, '30.06.2014' :: TDateTime AS EndDate)
        SELECT MAX (SessionId) AS SessionId
             , MAX (SessionId_min) AS SessionId_min
             , tmpAll.MovementId
             , tmpAll.InvNumber
             , tmpAll.OperDate
+            , tmpAll.OperDatePartner
+            , tmpAll.PaidKindId
             , tmpAll.MovementItemId
             , tmpAll.GoodsId
             , SUM (tmpAll.AmountPartner) AS AmountPartner
@@ -21,6 +24,8 @@
                   , MovementId
                   , InvNumber
                   , DATE_TRUNC ('DAY', OperDate) AS OperDate
+                  , DATE_TRUNC ('DAY', OperDatePartner) AS OperDatePartner
+                  , PaidKindId
                   , MovementItemId
                   , GoodsId
                   , AmountPartner
@@ -28,12 +33,14 @@
                   , Amount
                   , 0 AS AmountNew
                   , Price
-             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDate BETWEEN '01.06.2014' AND '01.07.2014') as tmpSession
+             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDatePartner /*OperDate*/ BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)) as tmpSession
                   INNER JOIN _testMI_afterLoad ON _testMI_afterLoad.SessionId = tmpSession.Id
-             WHERE _testMI_afterLoad.OperDate BETWEEN '01.06.2014' AND '01.07.2014'
+             WHERE _testMI_afterLoad.OperDatePartner BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)
+               -- AND _testMI_afterLoad.OperDate BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)
                AND _testMI_afterLoad.DescId = zc_Movement_Sale()
                AND _testMI_afterLoad.StatusId = zc_Enum_Status_Complete()
                AND _testMI_afterLoad.isErased = FALSE
+               AND _testMI_afterLoad.PaidKindId = zc_Enum_PaidKind_FirstForm()
                AND _testMI_afterLoad.FromId = 8459 -- Склад Реализации
 --               AND _testMI_afterLoad.MovementItemId = 2439838
             UNION ALL
@@ -42,6 +49,8 @@
                   , Movement.Id AS MovementId
                   , Movement.InvNumber
                   , DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate
+                  , DATE_TRUNC ('DAY', CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END) AS OperDatePartner
+                  , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
                   , MovementItem.Id AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
                   , 0 AS AmountPartner
@@ -59,6 +68,9 @@
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                   LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                          ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -73,7 +85,10 @@
 
              WHERE Movement.DescId = zc_Movement_Sale() -- IN (zc_Movement_Tax(), zc_Movement_Sale()) zc_Movement_ReturnIn())
                AND Movement.StatusId = zc_Enum_Status_Complete()
-               AND Movement.OperDate BETWEEN '01.06.2014' AND '01.07.2014'
+               -- AND Movement.OperDate BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)
+               -- AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)
+               AND MovementDate_OperDatePartner.ValueData BETWEEN (SELECT StartDate FROM tmpDate) AND (SELECT EndDate FROM tmpDate)
+               AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
 --               AND MovementItem.Id = 2439838
 
@@ -81,6 +96,8 @@
        GROUP BY tmpAll.MovementId
               , tmpAll.InvNumber
               , tmpAll.OperDate
+              , tmpAll.OperDatePartner
+              , tmpAll.PaidKindId
               , tmpAll.MovementItemId
               , tmpAll.GoodsId
               , tmpAll.Price

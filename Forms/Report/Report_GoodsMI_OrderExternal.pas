@@ -17,34 +17,29 @@ uses
 
 type
   TReport_GoodsMI_OrderExternalForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clSale_Summ: TcxGridDBColumn;
-    clSale_Amount_Weight: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    AmountSumm1: TcxGridDBColumn;
+    Amount_Weight1: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clSale_Amount_Sh: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    clReturn_Amount_Sh: TcxGridDBColumn;
-    clReturn_Amount_Weight: TcxGridDBColumn;
-    clReturn_Summ: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    clSale_AmountPartner_Weight: TcxGridDBColumn;
-    clSale_AmountPartner_Sh: TcxGridDBColumn;
-    clReturn_AmountPartner_Weight: TcxGridDBColumn;
-    clReturn_AmountPartner_Sh: TcxGridDBColumn;
-    clReturnPercent: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    Amount_Sh1: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
+    AmountSummTotal: TcxGridDBColumn;
+    AmountSumm2: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount_Weight2: TcxGridDBColumn;
+    Amount_Sh2: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    clRetailName: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
     cxLabel13: TcxLabel;
@@ -59,6 +54,12 @@ type
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     edByDoc: TcxCheckBox;
+    GuidesTo: TdsdGuides;
+    Amount_Weight_Itog: TcxGridDBColumn;
+    Amount_Sh_Itog: TcxGridDBColumn;
+    Amount_Weight_Dozakaz: TcxGridDBColumn;
+    Amount_Sh_Dozakaz: TcxGridDBColumn;
+    AmountSumm_Dozakaz: TcxGridDBColumn;
   private
     { Private declarations }
   public

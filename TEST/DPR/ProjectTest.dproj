@@ -1211,8 +1211,8 @@
 				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
-				<Form>PartnerForm</Form>
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLinkPlace.pas">
+				<Form>Partner1CLinkPlaceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TransferDebtIn.pas">
@@ -1474,6 +1474,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
 				<Form>Report_GoodsMI_SaleReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
+				<Form>PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Production.pas">
+				<Form>Report_GoodsMI_ProductionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

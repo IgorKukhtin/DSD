@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractStateKindCode Integer
+             , ContractComment TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
@@ -69,6 +70,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
 
        , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
 
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
@@ -86,6 +88,10 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
@@ -138,6 +144,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
 
        , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
 
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
@@ -157,6 +164,10 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
@@ -193,6 +204,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.08.14                                        * add ContractComment
  20.05.14                                        * !!!ContractKindName - ‚ÒÂ„‰‡!!!
  06.05.14                                        * add ChangePercent TFloat
  25.04.14                                        * add ContractTagName

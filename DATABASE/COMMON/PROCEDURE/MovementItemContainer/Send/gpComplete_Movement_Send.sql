@@ -135,7 +135,7 @@ BEGIN
                                                                                                   , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
                                                                                                   , zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
                                                                                                    )
-                                                     THEN 0 -- !!!по идее их здесь не может быть!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
+                                                     THEN 0 -- !!!всё в сотрудники (МО), а здесь ошибка!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
                                                  ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                                             END
                               END, 0) AS AccountDirectionId_From
@@ -150,7 +150,7 @@ BEGIN
                                                                                                   , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
                                                                                                   , zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
                                                                                                    )
-                                                     THEN 0 -- !!!по идее их здесь не может быть!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
+                                                     THEN 0 -- !!!всё в сотрудники (МО), а здесь ошибка!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
                                                  ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                                             END
                               END, 0) AS AccountDirectionId_To
@@ -276,6 +276,7 @@ BEGIN
 
                                                     WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                         THEN _tmpItem.PartionGoodsId_Item
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
@@ -292,6 +293,7 @@ BEGIN
 
                                                     WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                         THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Partion ELSE NULL END
                                                                                              , inGoodsId       := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.GoodsId ELSE NULL END
                                                                                              , inStorageId     := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.StorageId_Item ELSE NULL END
@@ -305,6 +307,7 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
      ;
 
 
@@ -399,17 +402,23 @@ BEGIN
 
 
      -- 1.3.1. определяется Счет для проводок по суммовому учету - Кому
-     UPDATE _tmpItemSumm SET AccountId_To = _tmpItem_byAccount.AccountId
+     UPDATE _tmpItemSumm SET AccountId_To = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                     THEN _tmpItemSumm.AccountId_From -- !!!т.е. счет не меняется!!!
+                                                  ELSE _tmpItem_byAccount.AccountId
+                                            END
      FROM _tmpItem
-          JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                  , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
-                                                                                          THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
-                                                                                     ELSE _tmpItem_group.AccountDirectionId_To
-                                                                                END
-                                                  , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
-                                                  , inInfoMoneyId            := NULL
-                                                  , inUserId                 := vbUserId
-                                                   ) AS AccountId
+          JOIN (SELECT CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                 THEN 0
+                            ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                            , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                                                                                                    THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
+                                                                                               ELSE _tmpItem_group.AccountDirectionId_To
+                                                                                          END
+                                                            , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
+                                                            , inInfoMoneyId            := NULL
+                                                            , inUserId                 := vbUserId
+                                                             )
+                        END AS AccountId
                      , _tmpItem_group.AccountDirectionId_To
                      , _tmpItem_group.InfoMoneyDestinationId
                 FROM (SELECT _tmpItem.AccountDirectionId_To

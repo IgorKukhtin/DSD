@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
-             , Id Integer, Code Integer, Name TVarChar, BranchId Integer, BranchName TVarChar
+             , Id Integer, Code Integer, Name TVarChar, Name_find1C TVarChar
+             , BranchId Integer, BranchName TVarChar
              , Price TFloat
               )
 AS
@@ -17,6 +18,14 @@ BEGIN
    
      -- Результат
      RETURN QUERY 
+       WITH tmpSale1C  AS (SELECT Sale1C.GoodsCode, Sale1C.GoodsName
+                                , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
+                           FROM Sale1C
+                           WHERE Sale1C.GoodsCode <> 0
+                           GROUP BY Sale1C.GoodsCode, Sale1C.GoodsName
+                                 , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+                          )
+
        SELECT 
            tmpResult.GoodsId
         ,  tmpResult.GoodsCode
@@ -26,22 +35,28 @@ BEGIN
         ,  tmpResult.Id
         ,  tmpResult.Code
         ,  tmpResult.Name
+        ,  tmpSale1C.GoodsName AS Name_find1C
         ,  tmpResult.BranchId
         ,  tmpResult.BranchName
         ,  lfObjectHistory_PriceListItem.ValuePrice AS Price
        FROM
        (SELECT 
-           COALESCE(GoodsByGoodsKind.GoodsId, GoodsByGoodsKind1CLink.GoodsId) AS GoodsId
+           /*COALESCE(GoodsByGoodsKind.GoodsId, GoodsByGoodsKind1CLink.GoodsId) AS GoodsId
         ,  COALESCE(GoodsByGoodsKind.GoodsCode, GoodsByGoodsKind1CLink.GoodsCode) AS GoodsCode
         ,  COALESCE(GoodsByGoodsKind.GoodsName, GoodsByGoodsKind1CLink.GoodsName) AS GoodsName
         ,  COALESCE(GoodsByGoodsKind.GoodsKindId, GoodsByGoodsKind1CLink.GoodsKindId) AS GoodsKindId
-        ,  COALESCE(GoodsByGoodsKind.GoodsKindName, GoodsByGoodsKind1CLink.GoodsKindName) AS GoodsKindName
+        ,  COALESCE(GoodsByGoodsKind.GoodsKindName, GoodsByGoodsKind1CLink.GoodsKindName) AS GoodsKindName*/
+           GoodsByGoodsKind1CLink.GoodsId AS GoodsId
+        ,  GoodsByGoodsKind1CLink.GoodsCode AS GoodsCode
+        ,  GoodsByGoodsKind1CLink.GoodsName AS GoodsName
+        ,  GoodsByGoodsKind1CLink.GoodsKindId AS GoodsKindId
+        ,  GoodsByGoodsKind1CLink.GoodsKindName AS GoodsKindName
         ,  GoodsByGoodsKind1CLink.Id
         ,  GoodsByGoodsKind1CLink.Code
         ,  GoodsByGoodsKind1CLink.Name
         ,  GoodsByGoodsKind1CLink.BranchId
         ,  GoodsByGoodsKind1CLink.BranchName
-       FROM (SELECT Object_GoodsByGoodsKind_View.GoodsId
+       FROM /*(SELECT Object_GoodsByGoodsKind_View.GoodsId
                   , Object_GoodsByGoodsKind_View.GoodsCode
                   , Object_GoodsByGoodsKind_View.GoodsName
                   , (COALESCE (Object_GoodsByGoodsKind_View.GoodsId, 0) :: TVarChar || '_' || COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) :: TVarChar) :: TVarChar AS MasterId
@@ -75,7 +90,7 @@ BEGIN
                AND Object.Id IN (7645, 7601, 6779, 6816) -- ТУШЕНКА
             ) AS GoodsByGoodsKind
 
-            FULL JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id               AS Id 
+            FULL JOIN*/ (SELECT Object_GoodsByGoodsKind1CLink.Id               AS Id 
                             , Object_GoodsByGoodsKind1CLink.ObjectCode       AS Code
                             , Object_GoodsByGoodsKind1CLink.ValueData        AS Name
                             , (COALESCE (ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId, 0) :: TVarChar || '_' || COALESCE (ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId, 0) :: TVarChar) :: TVarChar AS MasterId
@@ -101,10 +116,12 @@ BEGIN
                             LEFT JOIN OBJECT AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId 
                        WHERE Object_GoodsByGoodsKind1CLink.DescId = zc_Object_GoodsByGoodsKind1CLink()
                       )  AS GoodsByGoodsKind1CLink
-                         ON GoodsByGoodsKind1CLink.MasterId = GoodsByGoodsKind.MasterId
+                         /*ON GoodsByGoodsKind1CLink.MasterId = GoodsByGoodsKind.MasterId*/
        ) AS tmpResult
        LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= DATE_TRUNC ('DAY', CURRENT_TIMESTAMP))
               AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpResult.GoodsId
+       LEFT JOIN tmpSale1C ON tmpSale1C.GoodsCode = tmpResult.Code
+                          AND tmpSale1C.BranchTopId = tmpResult.BranchId
       ;
 
 END;
@@ -115,6 +132,8 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.08.14                                        * add tmpSale1C
+ 22.08.14                                        * show only exists
  22.04.14                                        * add Price
  11.04.14                        * 
  10.04.14                                        * add Object_InfoMoney_View
@@ -122,6 +141,11 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar) OWNER TO postgr
  15.02.14                                        * all
  28.01.14                        * 
 */
-
+/*
+delete from ObjectBoolean where ObjectId in (select Object_Partner1CLink.Id FROM Object AS Object_Partner1CLink WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink() and ObjectCode = 0 and trim(ValueData) = '');
+delete from ObjectLink where ObjectId in (select Object_Partner1CLink.Id FROM Object AS Object_Partner1CLink WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink() and ObjectCode = 0 and trim(ValueData) = '');
+delete from objectProtocol where ObjectId in (select Object_Partner1CLink.Id FROM Object AS Object_Partner1CLink WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink() and ObjectCode = 0 and trim(ValueData) = '');
+delete from object where Id in (select Object_Partner1CLink.Id FROM Object AS Object_Partner1CLink WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink() and ObjectCode = 0 and trim(ValueData) = '');
+*/
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsByGoodsKind1CLink (zfCalc_UserAdmin()) WHERE Code = 
+-- SELECT * FROM gpSelect_Object_GoodsByGoodsKind1CLink (zfCalc_UserAdmin()) WHERE Code = 1

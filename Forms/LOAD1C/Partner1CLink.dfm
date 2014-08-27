@@ -78,7 +78,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.IncSearch = False
-            Width = 200
+            Width = 120
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
@@ -92,7 +92,28 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
+            Width = 120
+          end
+          object colName_find1C: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' 1'#1057' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Name_find1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colOKPO_find1C: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' 1'#1057' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'OKPO_find1C'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object colBranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
@@ -106,7 +127,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 70
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -253,7 +274,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             Kind = bkEllipsis
           end>
         TabOrder = 1
-        Width = 177
+        Width = 250
       end
       object cxLabel1: TcxLabel
         Left = 224
@@ -407,8 +428,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoicePartnerForm'
-      FormName = 'TPartnerForm'
-      FormNameParam.Value = 'TPartnerForm'
+      FormName = 'TPartner1CLinkPlaceForm'
+      FormNameParam.Value = 'TPartner1CLinkPlaceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -460,6 +481,57 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end>
       Caption = 'actGetPointName'
     end
+    object actInsertPartner1CLink: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertPartner1CLink
+      StoredProcList = <
+        item
+          StoredProc = spInsertPartner1CLink
+        end>
+    end
+    object actInsertPartner1CLinkAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertPartner1CLink
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057'?'
+      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1080#1079' 1'#1057' '#1076#1086#1073#1072#1074#1083#1077#1085#1099'.'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057
+      ImageIndex = 41
+    end
+    object actUpdatePartner1CLink_Partner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdatePartner1CLink_Partner
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePartner1CLink_Partner
+        end>
+      Caption = 'actUpdatePartner1CLink_Partner'
+    end
+    object actUpdatePartner1CLink_PartnerAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdatePartner1CLink_Partner
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080'?'
+      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089#1086#1079#1076#1072#1085#1099'.'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -495,6 +567,22 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
           Visible = True
           ItemName = 'bbInsertPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertPartner1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePartner1CLink_Partner'
         end
         item
           Visible = True
@@ -558,6 +646,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
+    end
+    object bbInsertPartner1CLink: TdxBarButton
+      Action = actInsertPartner1CLinkAll
+      Category = 0
+    end
+    object bbUpdatePartner1CLink_Partner: TdxBarButton
+      Action = actUpdatePartner1CLink_PartnerAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -698,5 +794,35 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       end>
     Left = 344
     Top = 168
+  end
+  object spInsertPartner1CLink: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_Partner1CLink'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBranchTopId'
+        Value = ''
+        Component = BranchLinkGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 296
+    Top = 256
+  end
+  object spUpdatePartner1CLink_Partner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner1CLink_Partner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBranchTopId'
+        Value = ''
+        Component = BranchLinkGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 296
+    Top = 312
   end
 end

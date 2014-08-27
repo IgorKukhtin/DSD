@@ -839,6 +839,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
@@ -923,6 +926,9 @@ procedure TLoadFormTest.Load1CLinkFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkPlaceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkPlaceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));

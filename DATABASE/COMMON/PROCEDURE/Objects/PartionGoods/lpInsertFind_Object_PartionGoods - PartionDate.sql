@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inOperDate  TDateTime -- Дата партии
+    IN inOperDate  TDateTime -- *Дата партии
 )
   RETURNS Integer AS
 $BODY$
@@ -41,7 +41,7 @@ BEGIN
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE Object.ValueData = vbOperDate_str
                            AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL
+                           AND ObjectLink_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         );
      END IF;
 

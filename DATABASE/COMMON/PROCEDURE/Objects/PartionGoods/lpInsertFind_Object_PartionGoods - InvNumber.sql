@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inUnitId_Partion Integer   , -- Подразделение(для цены)
-    IN inGoodsId        Integer   , -- Товар
-    IN inStorageId      Integer   , -- Место хранения
-    IN inInvNumber      TVarChar  , -- Инвентарный номер
-    IN inOperDate       TDateTime , -- Дата перемещения
+    IN inUnitId_Partion Integer   , -- *Подразделение(для цены)
+    IN inGoodsId        Integer   , -- *Товар
+    IN inStorageId      Integer   , -- *Место хранения
+    IN inInvNumber      TVarChar  , -- *Инвентарный номер
+    IN inOperDate       TDateTime , -- *Дата перемещения
     IN inPrice          TFloat      -- Цена
 )
   RETURNS Integer AS

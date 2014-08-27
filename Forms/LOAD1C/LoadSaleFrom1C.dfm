@@ -2,8 +2,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 966
-  ExplicitHeight = 443
+  ExplicitWidth = 974
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -355,6 +355,9 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           StoredProc = spSelect
         end>
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = cxMasterGrid
+    end
     object actMoveToDoc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -664,8 +667,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'InvNumber;OperDate;BranchName'
-    MasterFields = 'InvNumber;OperDate;BranchName'
+    IndexFieldNames = 'InvNumber;OperDate;BranchName;ClientCode'
+    MasterFields = 'InvNumber;OperDate;BranchName;ClientCode'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>

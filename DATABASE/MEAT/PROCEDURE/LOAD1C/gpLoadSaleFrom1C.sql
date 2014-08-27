@@ -1,13 +1,13 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inStartDate           TDateTime  , -- Начальная дата переноса
     IN inEndDate             TDateTime  , -- Конечная дата переноса
     IN inOperDate            TDateTime  ,
     IN inInvNumber           TVarChar   ,
-    IN inClientCode          TVarChar   ,
+    IN inClientCode          Integer   ,
     IN inBranchId            Integer    , -- Филиал
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -132,7 +132,10 @@ BEGIN
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                            , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
-                                           , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0, inUserId:= vbUserId
+                                           , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0
+                                           , inCurrencyDocumentId:= 14461 -- грн
+                                           , inCurrencyPartnerId:= NULL
+                                           , inUserId := vbUserId
                                             ) AS tmp;
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
@@ -287,15 +290,15 @@ BEGIN
           END IF;
 
           -- сохранили Документ
-         SELECT tmp.ioId INTO vbMovementId
-           FROM lpInsertUpdate_Movement_ReturnIn (ioId                := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
-                                               , inOperDate          := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                               , inChangePercent     := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
-                                               , inContractId        := vbContractId
-                                               , inCurrencyDocumentId:= 14461 -- грн
-                                               , inCurrencyPartnerId := NULL
-                                               , inCurrencyValue     := NULL
-                                               , inUserId            := vbUserId) AS tmp
+
+          SELECT tmp.ioId INTO vbMovementId
+          FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
+                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
+                                                          , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
+                                                          , inContractId := vbContractId
+                                                          , inCurrencyDocumentId:= 14461 -- грн
+                                                          , inCurrencyPartnerId:= NULL
+                                                          , inUserId := vbUserId) AS tmp;
 
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);

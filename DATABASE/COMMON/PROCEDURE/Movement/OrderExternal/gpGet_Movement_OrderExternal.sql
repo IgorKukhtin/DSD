@@ -1,9 +1,6 @@
 -- Function: gpGet_Movement_OrderExternal()
 
--- DROP FUNCTION gpGet_Movement_OrderExternal (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
     IN inMovementId        Integer  , -- ключ Документа
@@ -21,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
               )
 AS
 $BODY$
@@ -60,6 +58,10 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS ContractTagName
              , CAST (0  AS INTEGER)                             AS PriceListId
              , CAST ('' AS TVarChar) 			                AS PriceListName
+             , CAST (False AS Boolean)                          AS PriceWithVAT
+             , CAST (20 AS TFloat)                              AS VATPercent
+             , CAST (0 AS TFloat)                               AS ChangePercent
+
 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -93,8 +95,9 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName    AS ContractTagName
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.ValueData                 AS PriceListName
-
-
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, False)  AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -106,6 +109,18 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                   AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -213,6 +228,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.14                                                        *
  18.08.14                                                        *
  06.06.14                                                        *
 */

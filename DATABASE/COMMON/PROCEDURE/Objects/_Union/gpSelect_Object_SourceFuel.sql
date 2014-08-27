@@ -53,7 +53,8 @@ BEGIN
 
      FROM Object_InfoMoney_View
           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
-                                   AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                   -- AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                   AND inOperDate >= Object_Contract_View.StartDate
                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                    AND Object_Contract_View.isErased = FALSE
           JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -110,7 +111,8 @@ BEGIN
                           , Object_Contract_View.PaidKindId
                      FROM Object_InfoMoney_View
                           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
-                                                   AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                                   -- AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                                   AND inOperDate >= Object_Contract_View.StartDate
                                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                    AND Object_Contract_View.isErased = FALSE
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ÃÑÌ
@@ -183,7 +185,8 @@ ALTER FUNCTION gpSelect_Object_SourceFuel (TDateTime, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
- 13.02.13                                        * add zc_Enum_ContractStateKind_Close
+ 22.08.14                                        * add inOperDate >= ...
+ 13.02.14                                        * add zc_Enum_ContractStateKind_Close
  14.12.13                                        * add vbAccessKeyAll
  12.11.13                                        * rename to gpSelect_Object_SourceFuel
  20.10.13                                        * union

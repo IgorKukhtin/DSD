@@ -17,7 +17,7 @@ BEGIN
      vbSessiondDate:= current_timestamp;
 
      --
-     INSERT INTO _testMI_afterLoad (SessionId, SessiondDate, MovementId, DescId, StatusId, InvNumber, OperDate, OperDatePartner, FromId, ToId, ContractId
+     INSERT INTO _testMI_afterLoad (SessionId, SessiondDate, MovementId, DescId, StatusId, InvNumber, OperDate, OperDatePartner, FromId, ToId, ContractId, PaidKindId
                                   , MovementItemId, GoodsId, Amount, AmountPartner, Price, isErased)
         SELECT vbSessionId
              , vbSessiondDate
@@ -26,10 +26,11 @@ BEGIN
              , Movement.StatusId
              , Movement.InvNumber
              , Movement.OperDate
-             , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
+             , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MovementDate_OperDatePartner.ValueData ELSE Movement.OperDate END AS OperDatePartner
              , COALESCE (MovementLinkObject_From.ObjectId, 0) AS FromId
              , COALESCE (MovementLinkObject_To.ObjectId, 0) AS ToId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
 
              , MovementItem.Id AS MovementItemId
              , MovementItem.ObjectId AS GoodsId
@@ -47,6 +48,9 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
              LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                     ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -62,7 +66,8 @@ BEGIN
 
         WHERE Movement.DescId IN (zc_Movement_Tax(), zc_Movement_Sale(), zc_Movement_ReturnIn())
           AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+          -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        ;
 
 END;
@@ -87,6 +92,7 @@ CREATE TABLE _testMI_afterLoad(
    FromId                Integer NOT NULL, 
    ToId                  Integer NOT NULL, 
    ContractId            Integer NOT NULL, 
+   PaidKindId            Integer NOT NULL, 
 
    MovementItemId        Integer NOT NULL, 
    GoodsId               Integer NOT NULL,  

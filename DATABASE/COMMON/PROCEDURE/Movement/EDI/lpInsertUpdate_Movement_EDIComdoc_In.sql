@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_EDIComdoc_In()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_In (Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_In (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_In(
@@ -77,23 +76,24 @@ BEGIN
 
      -- сохранили <Возврат от покупателя>
      SELECT lpInsertUpdate_Movement_ReturnIn
-                                       (ioId               := vbMovementId_ReturnIn
-                                      , inInvNumber        := CASE WHEN vbMovementId_ReturnIn <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_ReturnIn) ELSE CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) END :: TVarChar
-                                      , inInvNumberPartner := MovementString_InvNumberPartner.ValueData
-                                      , inInvNumberMark    := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementString_InvNumberMark()) :: TVarChar
-                                      , inOperDate         := MovementDate_OperDatePartner.ValueData
-                                      , inOperDatePartner  := MovementDate_OperDatePartner.ValueData
-                                      , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked()) :: Boolean
-                                      , inPriceWithVAT     := MovementBoolean_PriceWithVAT.ValueData
-                                      , inVATPercent       := MovementFloat_VATPercent.ValueData
-                                      , inChangePercent    := (SELECT ValueData FROM MovementFloat WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementFloat_ChangePercent())
-                                      , inFromId           := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Partner())
-                                      , inToId             := 8461 -- !!!Склад Возвратов!!!
-                                      , inPaidKindId       := zc_Enum_PaidKind_FirstForm() 
-                                      , inContractId       := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Contract())
-                                      , inCurrencyDocumentId := NULL
-                                      , inCurrencyPartnerId  := NULL
-                                      , inUserId           := inUserId
+                                       (ioId                := vbMovementId_ReturnIn
+                                      , inInvNumber         := CASE WHEN vbMovementId_ReturnIn <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_ReturnIn) ELSE CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) END :: TVarChar
+                                      , inInvNumberPartner  := MovementString_InvNumberPartner.ValueData
+                                      , inInvNumberMark     := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementString_InvNumberMark()) :: TVarChar
+                                      , inOperDate          := MovementDate_OperDatePartner.ValueData
+                                      , inOperDatePartner   := MovementDate_OperDatePartner.ValueData
+                                      , inChecked           := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked()) :: Boolean
+                                      , inPriceWithVAT      := MovementBoolean_PriceWithVAT.ValueData
+                                      , inVATPercent        := MovementFloat_VATPercent.ValueData
+                                      , inChangePercent     := (SELECT ValueData FROM MovementFloat WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementFloat_ChangePercent())
+                                      , inFromId            := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Partner())
+                                      , inToId              := 8461 -- !!!Склад Возвратов!!!
+                                      , inPaidKindId        := zc_Enum_PaidKind_FirstForm() 
+                                      , inContractId        := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Contract())
+                                      , inCurrencyDocumentId:= 14461 -- грн
+                                      , inCurrencyPartnerId := NULL
+                                      , inCurrencyValue     := NULL
+                                      , inUserId            := inUserId
                                        ) INTO vbMovementId_ReturnIn
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner

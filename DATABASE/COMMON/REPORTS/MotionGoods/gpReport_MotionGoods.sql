@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inGoodsId      Integer,    -- товар
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
+RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
+             , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
@@ -346,7 +347,10 @@ BEGIN
                                         , tmpContainer_Summ.Amount
                                 )
 
-   SELECT ObjectDesc.ItemName            AS LocationDescName
+   SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
+        , View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
+
+        , ObjectDesc.ItemName            AS LocationDescName
         , Object_Location.ObjectCode     AS LocationCode
         , Object_Location.ValueData      AS LocationName
         , Object_Car.ObjectCode          AS CarCode
@@ -466,7 +470,8 @@ BEGIN
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
       FROM 
-        (SELECT tmpMIContainer_all.LocationId
+        (SELECT tmpMIContainer_all.AccountId
+              , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
               , tmpMIContainer_all.PartionGoodsId
@@ -662,6 +667,8 @@ BEGIN
 
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+
+        LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
       ;
 
 END;
@@ -673,6 +680,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.08.14                                        * add Account...
  12.08.14                                        * add ContainerId
  01.06.14                                        * ALL
  31.08.13         *

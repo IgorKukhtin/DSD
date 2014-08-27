@@ -76,7 +76,7 @@ BEGIN
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+          , 0 AS MemberId_From -- COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
@@ -91,7 +91,7 @@ BEGIN
                  ELSE 0
             END AS InfoMoneyId_CorporateTo
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END, 0) AS PartnerId_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
+          , 0 AS MemberId_To -- COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
 
             -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
           , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_To -- COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_To
@@ -446,9 +446,7 @@ BEGIN
 
 
      -- проверка
-     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE)
-                                         -- OR !!! НАЛ !!!
-                                           )
+     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE))
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
      END IF;
@@ -944,7 +942,7 @@ BEGIN
                       , CASE WHEN vbIsCorporate_To = TRUE
                                   THEN vbInfoMoneyDestinationId_To -- zc_Enum_InfoMoneyDestination_30100() -- Продукция
                              WHEN vbInfoMoneyDestinationId_To <> 0
-                                  THEN vbInfoMoneyDestinationId_To -- -- УП: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
+                                  THEN vbInfoMoneyDestinationId_To -- УП: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
                              ELSE _tmpItem.InfoMoneyDestinationId -- иначе берем по товару
                         END AS InfoMoneyDestinationId_calc
 
@@ -990,6 +988,8 @@ BEGIN
                                                        , inObjectId_3        := vbContractId
                                                        , inDescId_4          := CASE WHEN vbMemberId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
                                                        , inObjectId_4        := vbPaidKindId
+                                                       , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_5        := NULL
                                                         )
 
                             -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -1008,6 +1008,8 @@ BEGIN
                                                   , inObjectId_3        := vbContractId
                                                   , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                   , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                  , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_To ELSE NULL END
                                                    )
                   END AS ContainerId
                 , CASE WHEN _tmpItem_group.AccountId_Transit = 0
@@ -1646,6 +1648,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.08.14                                        * add vbPartnerId_To
  17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  12.08.14                                        * add !!!Виртуальные контейнеры!!!

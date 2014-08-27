@@ -17,11 +17,10 @@ uses
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -31,7 +30,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    colAmountSecond: TcxGridDBColumn;
+    AmountSecond: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxTextEdit;
     cxLabel3: TcxLabel;
@@ -65,6 +64,17 @@ type
     cxLabel8: TcxLabel;
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    AmountSumm_Partner: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel12: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

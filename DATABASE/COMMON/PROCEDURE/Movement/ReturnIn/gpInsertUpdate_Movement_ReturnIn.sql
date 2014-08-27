@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -33,9 +30,39 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
+
+     -- рассчитали и свойство <Курс для перевода в валюту баланса>
+     outCurrencyValue := 1.00;
+     IF inCurrencyDocumentId <> inCurrencyPartnerId -- AND inCurrencyDocumentId > 0 AND inCurrencyPartnerId > 0
+     THEN
+        outCurrencyValue := (SELECT MovementItem.Amount
+                             FROM (SELECT MAX (Movement.OperDate) AS maxOperDate
+                                   FROM Movement 
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                              AND MovementItem.DescId = zc_MI_Master()
+                                                              AND MovementItem.ObjectId = inCurrencyDocumentId
+                                                              AND MovementItem.isErased = FALSE
+                                       INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                         ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                                        AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                                                                        AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
+                                   WHERE Movement.DescId = zc_Movement_Currency()
+                                     AND Movement.OperDate <= inOperDate
+                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   ) AS tmpCurrency
+                                   INNER JOIN Movement ON Movement.OperDate = tmpCurrency.maxOperDate
+                                                      AND Movement.DescId = zc_Movement_Currency()
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                          AND MovementItem.DescId = zc_MI_Master()
+                                                          AND MovementItem.isErased = FALSE
+                            );
+     END IF;
+
+
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.outCurrencyValue
-            INTO ioId, outCurrencyValue
+     SELECT tmp.ioId
+            INTO ioId
      FROM lpInsertUpdate_Movement_ReturnIn
                                        (ioId               := ioId
                                       , inInvNumber        := inInvNumber
@@ -53,6 +80,7 @@ BEGIN
                                       , inContractId       := inContractId
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
+                                      , inCurrencyValue    := outCurrencyValue
                                       , inUserId           := vbUserId
                                        )AS tmp;
 
@@ -64,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId
  23.04.14                                        * add inInvNumberMark

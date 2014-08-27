@@ -1,8 +1,5 @@
 -- Function: gpSelect_Movement_OrderExternal()
 
--- DROP FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, TVarChar);
-
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
@@ -13,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateMark TDateTime
-             , TotalCount TFloat, InvNumberPartner TVarChar
+             , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
@@ -21,6 +18,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
+
+
               )
 
 AS
@@ -46,42 +49,43 @@ BEGIN
                               )
 
        SELECT
-             Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
-           , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-
-           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , MovementDate_OperDateMark.ValueData        AS OperDateMark
-
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-
-           , Object_From.Id                             AS FromId
-           , Object_From.ValueData                      AS FromName
-
-           , Object_To.Id                               AS ToId
-           , Object_To.ValueData                        AS ToName
-
-           , Object_Personal.Id                         AS PersonalId
-           , Object_Personal.ValueData                  AS PersonalName
-
-           , Object_Route.Id                            AS RouteId
-           , Object_Route.ValueData                     AS RouteName
-
-           , Object_RouteSorting.Id                     AS RouteSortingId
-           , Object_RouteSorting.ValueData              AS RouteSortingName
-
-
-           , Object_PaidKind.Id                         AS PaidKindId
-           , Object_PaidKind.ValueData                  AS PaidKindName
-           , View_Contract_InvNumber.ContractId         AS ContractId
-           , View_Contract_InvNumber.InvNumber          AS ContractName
-           , View_Contract_InvNumber.ContractTagName    AS ContractTagName
-
-
-
+             Movement.Id                                    AS Id
+           , Movement.InvNumber                             AS InvNumber
+           , Movement.OperDate                              AS OperDate
+           , Object_Status.ObjectCode                       AS StatusCode
+           , Object_Status.ValueData                        AS StatusName
+           , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+           , MovementDate_OperDateMark.ValueData            AS OperDateMark
+           , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
+           , Object_From.Id                                 AS FromId
+           , Object_From.ValueData                          AS FromName
+           , Object_To.Id                                   AS ToId
+           , Object_To.ValueData                            AS ToName
+           , Object_Personal.Id                             AS PersonalId
+           , Object_Personal.ValueData                      AS PersonalName
+           , Object_Route.Id                                AS RouteId
+           , Object_Route.ValueData                         AS RouteName
+           , Object_RouteSorting.Id                         AS RouteSortingId
+           , Object_RouteSorting.ValueData                  AS RouteSortingName
+           , Object_PaidKind.Id                             AS PaidKindId
+           , Object_PaidKind.ValueData                      AS PaidKindName
+           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
+           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+           , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData             AS VATPercent
+           , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
+           , MovementFloat_TotalCount.ValueData             AS TotalCount
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -144,6 +148,35 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+
+
 
 
             ;
@@ -157,10 +190,11 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.08.14                                                        *
  18.08.14                                                        *
  06.06.14                                                        *
 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inSession:= '2')

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_1CSaleLoad(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
-               OperDate TDateTime,  
+               OperDate TDateTime, ClientCode Integer,
                GoodsCode Integer, GoodsName TVarChar, OperCount TFloat, OperPrice TFloat,
                Tax TFloat, Suma TFloat, PDV TFloat, SumaPDV TFloat, 
                InvNalog TVarChar, BranchName TVarChar, DocType TVarChar, 
@@ -30,6 +30,7 @@ BEGIN
       Sale1C.VidDoc      ,
       Sale1C.InvNumber   ,
       Sale1C.OperDate    ,
+      Sale1C.ClientCode  ,   
       Sale1C.GoodsCode   ,   
       Sale1C.GoodsName   ,   
       Sale1C.OperCount   ,
@@ -53,19 +54,21 @@ BEGIN
            LEFT JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                            , Object_GoodsByGoodsKind1CLink.ObjectCode
                            , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
+                           , ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId
                       FROM Object AS Object_GoodsByGoodsKind1CLink
                            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
                                                 ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
+                                                ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                               AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
                         AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
+                        AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0 -- еще проверка что есть объект
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
-                                ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
-                               AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
-           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsByGoodsKind1CLink.GoodsId
 
            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsKind
                                 ON ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId

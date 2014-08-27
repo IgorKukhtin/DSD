@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar, RouteName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
@@ -96,6 +96,7 @@ BEGIN
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
+           , Object_Route.ValueData                         AS RouteName
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
@@ -150,8 +151,7 @@ BEGIN
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -219,6 +219,11 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -274,6 +279,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.08.14                                        * add RouteName
  12.08.14                                        * add isEDI
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument

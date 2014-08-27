@@ -1,10 +1,5 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                             Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                              Integer, TFloat, TFloat, 
                              Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
@@ -38,24 +33,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
   RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode Integer;   
+
    -- DECLARE vbAddress TVarChar;
-   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := inSession;
+   -- vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
+   vbUserId := lpGetUserBySession (inSession);
 
-   -- Проверка установки значений
-   IF COALESCE (inJuridicalId, 0) = 0  THEN
-      RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
-   END IF;
-   
-   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
 
+   -- !!!такой адрес!!!
    /*vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
                         COALESCE(name, '')||', '
                    FROM Object_Street_View  WHERE Id = inStreetId);
@@ -69,58 +55,33 @@ BEGIN
    -- outPartnerName:= COALESCE(outPartnerName || ', ' || vbAddress, '');
 
 
-   -- проверка уникальности <Наименование>
---   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), outPartnerName);
-   -- проверка уникальности <Код>
-   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
+   -- сохранили
+   ioId := lpInsertUpdate_Object_Partner (ioId              := ioId
+                                        , inPartnerName     := outPartnerName
+                                        , inAddress         := inAddress -- vbAddress
+                                        , inCode            := inCode
+                                        , inShortName       := inShortName
+                                        , inGLNCode         := inGLNCode
+                                        , inHouseNumber     := inHouseNumber
+                                        , inCaseNumber      := inCaseNumber
+                                        , inRoomNumber      := inRoomNumber
+                                        , inStreetId        := inStreetId
+                                        , inPrepareDayCount := inPrepareDayCount
+                                        , inDocumentDayCount:= inDocumentDayCount
+                                        , inJuridicalId     := inJuridicalId
+                                        , inRouteId         := inRouteId
+                                        , inRouteSortingId  := inRouteSortingId
+                                        , inPersonalTakeId  := inPersonalTakeId
+    
+                                        , inPriceListId     := inPriceListId
+                                        , inPriceListPromoId:= inPriceListPromoId
+                                        , inStartPromo      := inStartPromo
+                                        , inEndPromo        := inEndPromo
 
-
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, outPartnerName);
-   -- сохранили свойство <краткое наименование>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_ShortName(), ioId, inShortName);
-   -- сохранили свойство <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
-   -- сохранили свойство <Адрес точки доставки>
-   -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
-
-   -- сохранили свойство <дом>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
-   -- сохранили свойство <корпус>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_CaseNumber(), ioId, inCaseNumber);
-   -- сохранили свойство <квартира>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_RoomNumber(), ioId, inRoomNumber);
-
-   -- сохранили свойство <За сколько дней принимается заказ>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
-   -- сохранили свойство <Через сколько дней оформляется документально>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
-   
-   -- сохранили связь с <Юридические лица>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
-   -- сохранили связь с <Маршруты>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
-   -- сохранили связь с <Сортировки маршрутов>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
-   -- сохранили связь с <Сотрудник (экспедитор)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTake(), ioId, inPersonalTakeId);
-   -- сохранили связь с <Улица>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Street(), ioId, inStreetId);
-
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
-      -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
+                                        , inUserId          := vbUserId
+                                         );
    
    
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$
@@ -131,6 +92,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarCh
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.08.14                                        * add lp
+ 24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm
  16.08.14                                        * add inAddress
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street

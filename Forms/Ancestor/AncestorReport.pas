@@ -12,7 +12,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   Vcl.ExtCtrls, ChoicePeriod, dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus,
-  cxPC, cxPCdxBarPopupMenu;
+  cxPC, cxPCdxBarPopupMenu, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TAncestorReportForm = class(TAncestorDBGridForm)

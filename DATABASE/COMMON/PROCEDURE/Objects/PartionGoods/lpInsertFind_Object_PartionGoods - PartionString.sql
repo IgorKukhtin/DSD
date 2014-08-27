@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inValue  TVarChar -- Полное значение партии
+    IN inValue  TVarChar -- *Полное значение партии
 )
 RETURNS Integer AS
 $BODY$
@@ -36,7 +36,7 @@ BEGIN
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL
+                           AND ObjectLink_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         );
      END IF;
 

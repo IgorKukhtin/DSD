@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement (Integer, Integer, tvarchar, tdatetime, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, tvarchar, tdatetime, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, tvarchar, tdatetime, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (INOUT ioId Integer, IN inDescId Integer, IN inInvNumber tvarchar, IN inOperDate tdatetime, IN inParentId Integer, IN inAccessKeyId Integer DEFAULT NULL)
   RETURNS Integer AS
@@ -13,7 +13,7 @@ BEGIN
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
   ELSE
      --
-     UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId/*, AccessKeyId = inAccessKeyId*/ WHERE Id = ioId
+     UPDATE Movement SET DescId = inDescId, InvNumber = inInvNumber, OperDate = inOperDate, ParentId = inParentId/*, AccessKeyId = inAccessKeyId*/ WHERE Id = ioId
             RETURNING StatusId INTO vbStatusId;
 
      --
@@ -44,6 +44,7 @@ ALTER FUNCTION lpInsertUpdate_Movement(Integer, Integer, tvarchar, tdatetime, In
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.08.14                                        * add inAccessKeyId
  07.12.13                                        * add inAccessKeyId
  07.12.13                                        * !!! add UPDATE Movement SET ... ParentId = inParentId ...
  31.10.13                                        * AND COALESCE (inParentId, 0) = 0

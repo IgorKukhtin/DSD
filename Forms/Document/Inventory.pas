@@ -51,6 +51,7 @@ type
     actUnitChoice: TOpenChoiceForm;
     actStorageChoice: TOpenChoiceForm;
     actAssetChoice: TOpenChoiceForm;
+    colPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

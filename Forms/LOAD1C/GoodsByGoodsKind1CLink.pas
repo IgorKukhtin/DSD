@@ -33,6 +33,12 @@ type
     bbJuridicalLabel: TdxBarControlContainerItem;
     actChoiceGoodsKindForm: TOpenChoiceForm;
     colPrice: TcxGridDBColumn;
+    spGoodsByGoodsKind1CLink: TdsdStoredProc;
+    actInsertGoodsByGoodsKind1CLink: TdsdExecStoredProc;
+    actInsertGoodsByGoodsKind1CLinkAll: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    colName_find1C: TcxGridDBColumn;
+    actChoiceGoodsForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

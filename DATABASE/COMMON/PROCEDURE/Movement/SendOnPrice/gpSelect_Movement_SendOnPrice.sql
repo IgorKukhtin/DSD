@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(

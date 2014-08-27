@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Sale_SybaseInt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_SybaseInt (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inRouteId             Integer   , -- маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
@@ -25,7 +26,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_SybaseInt(
 )
 RETURNS RECORD AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
+
+
      IF inIsOnlyUpdateInt = TRUE AND ioId <> 0
      THEN
           -- сохранили <Документ>
@@ -46,6 +56,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inCurrencyDocumentId  := 14461
+                                           , inCurrencyPartnerId   := NULL
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
@@ -76,6 +88,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inCurrencyDocumentId  := 14461
+                                           , inCurrencyPartnerId   := NULL
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
@@ -90,6 +104,12 @@ BEGIN
 
      END IF;
 
+     -- сохранили связь с
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
+
+     -- испраляю ошибку
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId AND AccessKeyId IS NULL;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -97,6 +117,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.08.14                                        * add inRouteId
  22.05.14                                        * restore find inOperDatePartner
  23.04.14                                        * add COALESCE ...
  05.04.14                                        *

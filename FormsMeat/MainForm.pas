@@ -356,6 +356,14 @@ type
     bbCurrencyMovement: TdxBarButton;
     bbReport_GoodsMI_OrderExternal: TdxBarButton;
     actReport_OrderExternal: TdsdOpenForm;
+    actReport_GoodsMI_ProductionUnionIncome: TdsdOpenForm;
+    bbReport_GoodsMI_Production: TdxBarButton;
+    actReport_GoodsMI_ProductionUnionReturn: TdsdOpenForm;
+    actReport_GoodsMI_ProductionSeparateIncome: TdsdOpenForm;
+    actReport_GoodsMI_ProductionSeparateReturn: TdsdOpenForm;
+    bbReport_GoodsMI_ProductionUnionReturn: TdxBarButton;
+    bbReport_GoodsMI_ProductionSeparateIncome: TdxBarButton;
+    bbReport_GoodsMI_ProductionSeparateReturn: TdxBarButton;
   public
     { Public declarations }
   end;

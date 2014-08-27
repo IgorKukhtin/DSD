@@ -367,6 +367,21 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object AccountCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1089#1095'.'
+        DataBinding.FieldName = 'AccountCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountName_All: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090
+        DataBinding.FieldName = 'AccountName_All'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object LocationDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
         DataBinding.FieldName = 'LocationDescName'

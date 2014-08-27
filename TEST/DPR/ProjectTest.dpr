@@ -411,7 +411,7 @@ uses
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  Partner1CLinkPlace in '..\..\Forms\LOAD1C\Partner1CLinkPlace.pas' {Partner1CLinkPlaceForm: TParentForm},
   TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
@@ -504,7 +504,9 @@ uses
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
-  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm};
+  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

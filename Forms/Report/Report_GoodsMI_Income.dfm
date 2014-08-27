@@ -4,14 +4,15 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
-  ExplicitHeight = 379
+  ExplicitWidth = 981
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 973
     Height = 287
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 973
     ExplicitHeight = 287
     ClientRectBottom = 287
@@ -208,8 +209,10 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
+      Left = 316
       EditValue = 41640d
       Properties.SaveTime = False
+      ExplicitLeft = 316
     end
     object cxLabel4: TcxLabel
       Left = 413
