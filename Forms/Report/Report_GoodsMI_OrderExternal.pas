@@ -36,7 +36,7 @@ type
     Amount_Sh2: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
+    actPrint_byByer: TdsdPrintAction;
     bbPrint: TdxBarButton;
     RouteName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
@@ -60,6 +60,9 @@ type
     Amount_Weight_Dozakaz: TcxGridDBColumn;
     Amount_Sh_Dozakaz: TcxGridDBColumn;
     AmountSumm_Dozakaz: TcxGridDBColumn;
+    dsdPrintAction1: TdsdPrintAction;
+    InvNumberContract: TcxGridDBColumn;
+    Amount12: TcxGridDBColumn;
   private
     { Private declarations }
   public

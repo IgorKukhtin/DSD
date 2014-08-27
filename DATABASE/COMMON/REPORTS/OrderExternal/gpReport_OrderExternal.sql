@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
 )
 RETURNS TABLE (InvNumber TVarChar
              , InvNumberPartner TVarChar
+             , InvNumberContract TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -29,6 +30,7 @@ RETURNS TABLE (InvNumber TVarChar
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
+             , Amount12 TFloat
               )
 
 AS
@@ -54,6 +56,7 @@ BEGIN
        SELECT
              CAST (CASE WHEN inIsByDoc THEN Movement.InvNumber ELSE '' END AS TVarChar)                                                         AS InvNumber
            , CAST (CASE WHEN inIsByDoc THEN MovementString_InvNumberPartner.ValueData ELSE '' END AS TVarChar)                                  AS InvNumberPartner
+           , CAST (CASE WHEN inIsByDoc THEN View_Contract_InvNumber.InvNumber ELSE '' END AS TVarChar)                                          AS InvNumberContract
            , MovementLinkObject_From.ObjectId                                                                                                   AS FromId
            , MovementLinkObject_To.ObjectId                                                                                                     AS ToId
            , MovementLinkObject_Route.ObjectId                                                                                                  AS RouteId
@@ -88,6 +91,10 @@ BEGIN
                            ELSE CAST (  COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                    END) AS TFloat)                      AS AmountSummTotal
        FROM Movement
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.Id
@@ -141,6 +148,7 @@ BEGIN
        GROUP BY
              CAST (CASE WHEN inIsByDoc THEN Movement.InvNumber ELSE '' END AS TVarChar)
            , CAST (CASE WHEN inIsByDoc THEN MovementString_InvNumberPartner.ValueData ELSE '' END AS TVarChar)
+           , CAST (CASE WHEN inIsByDoc THEN View_Contract_InvNumber.InvNumber ELSE '' END AS TVarChar)
            , MovementString_InvNumberPartner.ValueData
            , MovementLinkObject_From.ObjectId
            , MovementLinkObject_To.ObjectId
@@ -155,6 +163,7 @@ BEGIN
        SELECT
              tmpMovement2.InvNumber          AS InvNumber
            , tmpMovement2.InvNumberPartner   AS InvNumberPartner
+           , tmpMovement2.InvNumberContract  AS InvNumberContract
            , tmpMovement2.FromId             AS FromId
            , tmpMovement2.ToId               AS ToId
            , tmpMovement2.RouteId            AS RouteId
@@ -179,6 +188,9 @@ BEGIN
            , CAST ((Amount_Dozakaz * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat)     AS Amount_Weight_Dozakaz
            , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
 
+           , CAST ((Amount1 + Amount2) AS TFloat)                                                                                                                       AS Amount12
+
+
        FROM tmpMovement2 AS tmpMovement2
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -191,6 +203,7 @@ BEGIN
        SELECT
              tmpMovement.InvNumber                      AS InvNumber
            , tmpMovement.InvNumberPartner               AS InvNumberPartner
+           , tmpMovement.InvNumberContract              AS InvNumberContract
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                               AS ToId
@@ -224,6 +237,7 @@ BEGIN
 
            , tmpMovement.Amount_Weight_Dozakaz          AS Amount_Weight_Dozakaz
            , tmpMovement.Amount_Sh_Dozakaz              AS Amount_Sh_Dozakaz
+           , tmpMovement.Amount12                       AS Amount12
 
 
        FROM tmpMovement
