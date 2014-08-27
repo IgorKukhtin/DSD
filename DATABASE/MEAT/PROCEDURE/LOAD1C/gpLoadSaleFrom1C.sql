@@ -293,11 +293,12 @@ BEGIN
 
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
-                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                                          , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
-                                                          , inContractId := vbContractId
+                                                          , inOperDate          := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
+                                                          , inChangePercent     := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
+                                                          , inContractId        := vbContractId
                                                           , inCurrencyDocumentId:= 14461 -- грн
-                                                          , inCurrencyPartnerId:= NULL
+                                                          , inCurrencyPartnerId := NULL
+                                                          , inCurrencyValue     := NULL
                                                           , inUserId := vbUserId) AS tmp;
 
           -- сохранили свойство <Загружен из 1С>
