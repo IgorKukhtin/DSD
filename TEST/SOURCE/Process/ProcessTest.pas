@@ -13,8 +13,7 @@ type
 
 implementation
 
-const
-  ProcessPath = '..\DATABASE\COMMON\PROCESS\';
+uses UtilConst;
 
 { TdbProcessTest }
 

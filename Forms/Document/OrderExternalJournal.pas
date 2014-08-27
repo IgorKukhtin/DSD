@@ -44,6 +44,19 @@ type
     colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
+    TotalCountSh: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    VATPercent: TcxGridDBColumn;
+    TotalSummVAT: TcxGridDBColumn;
+    TotalSummMVAT: TcxGridDBColumn;
+    TotalSummPVAT: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

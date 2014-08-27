@@ -1,9 +1,9 @@
 ﻿-- Function: gpSelect_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods(Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
@@ -12,9 +12,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                NDSKindId Integer, NDSKindName TVarChar
               ) AS
 $BODY$
+  DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   vbUserId := lpGetUserBySession (inSession);
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
    RETURN QUERY 
    SELECT 
@@ -31,13 +35,13 @@ BEGIN
            , Object_Goods_View.NDSKindName
 
     FROM Object_Goods_View 
-   WHERE (inObjectId = 0 AND Object_Goods_View.ObjectId IS NULL) OR (Object_Goods_View.ObjectId = inObjectId AND inObjectId <> 0);
+   WHERE Object_Goods_View.ObjectId = vbObjectId;
 
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods(Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

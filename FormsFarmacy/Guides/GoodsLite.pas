@@ -15,9 +15,6 @@ uses
 
 type
   TGoodsLiteForm = class(TAncestorEnumForm)
-    cxLabel1: TcxLabel;
-    beRetail: TcxButtonEdit;
-    RetailGuides: TdsdGuides;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
   private

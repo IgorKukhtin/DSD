@@ -1,4 +1,4 @@
-unit GoodsCommon;
+unit GoodsMain;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TGoodsCommonForm = class(TAncestorGuidesForm)
+  TGoodsMainForm = class(TAncestorGuidesForm)
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
@@ -31,6 +31,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsCommonForm);
+  RegisterClass(TGoodsMainForm);
 
 end.

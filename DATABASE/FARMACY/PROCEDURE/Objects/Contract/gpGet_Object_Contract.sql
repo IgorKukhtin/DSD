@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
     IN inId          Integer,       -- Подразделение 
     IN inSession     TVarChar       -- сессия пользователя 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
+RETURNS TABLE (Id Integer, Code Integer, InvNumber TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                Comment TVarChar,
@@ -22,7 +22,7 @@ BEGIN
        SELECT
              CAST (0 as Integer)   AS Id
            , lfGet_ObjectCode(0, zc_Object_Contract()) AS Code
-           , CAST ('' as TVarChar) AS Name
+           , CAST ('' as TVarChar) AS InvNumber
            
            , CAST (0 as Integer)   AS JuridicalBasisId
            , CAST ('' as TVarChar) AS JuridicalBasisName 
@@ -39,7 +39,7 @@ BEGIN
        SELECT 
              Object_Contract.Id           AS Id
            , Object_Contract.ObjectCode   AS Code
-           , Object_Contract.ValueData    AS Name
+           , Object_Contract.ValueData    AS InvNumber
          
            , Object_JuridicalBasis.Id         AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName 

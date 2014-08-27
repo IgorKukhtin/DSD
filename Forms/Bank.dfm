@@ -108,8 +108,8 @@ object BankForm: TBankForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -226,6 +226,7 @@ object BankForm: TBankForm
     Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -239,6 +240,7 @@ object BankForm: TBankForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
@@ -254,9 +256,11 @@ object BankForm: TBankForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
@@ -275,9 +279,11 @@ object BankForm: TBankForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -292,6 +298,7 @@ object BankForm: TBankForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -307,6 +314,7 @@ object BankForm: TBankForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -315,6 +323,7 @@ object BankForm: TBankForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -366,6 +375,9 @@ object BankForm: TBankForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 328
     Top = 264
   end

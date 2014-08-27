@@ -1,23 +1,15 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 591
-  ExplicitHeight = 347
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    ExplicitTop = 28
-    ExplicitHeight = 280
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 567
-      ExplicitHeight = 272
+      ExplicitWidth = 575
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 567
-        Height = 272
-        ExplicitWidth = 567
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -96,7 +88,7 @@ inherited JuridicalForm: TJuridicalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBarStatic: TdxBarStatic
       Left = 24

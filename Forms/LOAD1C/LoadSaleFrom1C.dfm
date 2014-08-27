@@ -345,7 +345,6 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end>
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spMasterSelect
       StoredProcList = <
@@ -592,6 +591,12 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inClientCode'
+        Component = MasterCDS
+        ComponentItem = 'ClientCode'
         ParamType = ptInput
       end
       item

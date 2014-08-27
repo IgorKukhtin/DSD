@@ -1,9 +1,8 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
-  Align = alLeft
+  BorderStyle = bsSingle
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 312
   ClientWidth = 890
-  ExplicitLeft = -90
   ExplicitWidth = 896
   ExplicitHeight = 337
   PixelsPerInch = 96
@@ -65,7 +64,8 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitHeight = 277
+    ExplicitLeft = 294
+    ExplicitHeight = 310
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -75,16 +75,14 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitWidth = 497
-      ExplicitHeight = 277
+      ExplicitHeight = 310
       ClientRectBottom = 312
       ClientRectRight = 592
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitWidth = 677
-        ExplicitHeight = 458
+        ExplicitHeight = 286
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -218,8 +216,7 @@
           Height = 288
           Align = alRight
           TabOrder = 18
-          ExplicitLeft = 536
-          ExplicitHeight = 253
+          ExplicitHeight = 286
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -252,15 +249,13 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitWidth = 677
-        ExplicitHeight = 458
+        ExplicitHeight = 286
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
           Width = 592
           Align = dalTop
           BarManager = dxBarManager
-          ExplicitWidth = 677
         end
         object ContractGrid: TcxGrid
           Left = 0
@@ -269,7 +264,6 @@
           Height = 285
           Align = alLeft
           TabOrder = 0
-          ExplicitHeight = 455
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -889,13 +883,15 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inBankId'
-        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'BankId'
         ParamType = ptInput
       end
       item

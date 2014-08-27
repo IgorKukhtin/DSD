@@ -77,7 +77,6 @@ begin
     OutputType := otDataSet;
     Params.Clear;
     Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
-    Params.AddParam('inName', ftString, ptInput, '');
     Execute;
     result := DataSets[0].DataSet;
   end;

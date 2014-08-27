@@ -1,5 +1,5 @@
 inherited AdditionalGoodsForm: TAdditionalGoodsForm
-  Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
+  Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 806
@@ -45,6 +45,8 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitLeft = 289
+        ExplicitTop = -3
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ClientDS
@@ -179,6 +181,20 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           StoredProc = spAdditioanlGoodsClient
         end>
     end
+    inherited actInsert: TdsdInsertUpdateAction
+      ShortCut = 0
+      DataSource = ClientDS
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      ShortCut = 0
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      ShortCut = 0
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      ShortCut = 0
+      DataSource = ClientDS
+    end
     object actGoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -186,7 +202,18 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actInsertUpdateLink: TdsdUpdateDataSet
@@ -195,6 +222,30 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       StoredProcList = <>
       Caption = 'actInsertUpdateLink'
       DataSource = ClientMasterDS
+    end
+    object mactInsert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = InsertRecord
+        end
+        item
+          Action = actGoodsChoice
+        end
+        item
+          Action = actInsertUpdateLink
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+      ShortCut = 45
+    end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView2
+      Params = <>
+      Caption = 'InsertRecord'
     end
   end
   inherited MasterDS: TDataSource
@@ -207,14 +258,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Lite'
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = RetailGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
     Left = 152
     Top = 136
   end
@@ -228,6 +271,14 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -259,8 +310,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       Top = 96
     end
     inherited bbInsert: TdxBarButton
-      Enabled = False
-      Visible = ivNever
+      Action = mactInsert
     end
     inherited bbEdit: TdxBarButton
       Enabled = False
@@ -323,14 +373,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       item
         DataSet = ClientMasterCDS
       end>
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = RetailGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
+    Params = <>
     Left = 640
     Top = 104
   end
@@ -398,7 +441,11 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
   end
   object spInsertUpdateGoodsLink: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_AdditionalGoods'
-    DataSets = <>
+    DataSet = ClientCDS
+    DataSets = <
+      item
+        DataSet = ClientCDS
+      end>
     OutputType = otResult
     Params = <
       item

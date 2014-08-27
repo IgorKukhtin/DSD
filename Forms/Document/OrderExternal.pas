@@ -66,6 +66,15 @@ type
     GuidesTo: TdsdGuides;
     AmountSumm_Partner: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel12: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
