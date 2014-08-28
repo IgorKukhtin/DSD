@@ -294,10 +294,10 @@
 			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Member.pas">
-				<Form>MemberForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
+				<Form>Member_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MemberEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\CarModel.pas">
@@ -693,8 +693,8 @@
 				<Form>ContractConditionByContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
-				<Form>MoneyPlace_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlaceCash_Object.pas">
+				<Form>MoneyPlaceCash_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossService.pas">
@@ -1482,6 +1482,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Production.pas">
 				<Form>Report_GoodsMI_ProductionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member.pas">
+				<Form>MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
+				<Form>MoneyPlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

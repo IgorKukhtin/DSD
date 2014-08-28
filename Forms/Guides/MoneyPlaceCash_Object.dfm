@@ -1,20 +1,26 @@
-inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
+inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
-  ClientWidth = 961
-  ExplicitWidth = 977
-  ExplicitHeight = 343
+  ClientHeight = 411
+  ClientWidth = 693
+  ExplicitWidth = 709
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 961
-    ExplicitWidth = 961
-    ClientRectRight = 961
+    Width = 693
+    Height = 385
+    ExplicitWidth = 693
+    ExplicitHeight = 385
+    ClientRectBottom = 385
+    ClientRectRight = 693
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 961
-      ExplicitHeight = 282
+      ExplicitWidth = 693
+      ExplicitHeight = 385
       inherited cxGrid: TcxGrid
-        Width = 961
-        ExplicitWidth = 961
+        Width = 693
+        Height = 385
+        ExplicitWidth = 693
+        ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -24,6 +30,23 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 33
+          end
+          object clName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 151
+          end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
@@ -50,6 +73,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
                 ImageIndex = 66
                 Value = 4
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -73,6 +97,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clContractKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -80,6 +105,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -93,36 +119,12 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 33
-          end
-          object clName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'Name'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 151
-          end
-          object clOKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 40
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -146,7 +148,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object clInfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -154,15 +156,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 70
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -170,7 +164,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 96
+            Width = 70
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

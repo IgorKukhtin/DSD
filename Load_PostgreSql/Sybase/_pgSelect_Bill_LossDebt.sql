@@ -235,6 +235,11 @@ begin
 
     -- Киев-Борисполь ***общ.долг
    delete from _tmpResult where UnitId in (select 4846 union select Id from dba.Unit where DolgByUnitID = 4846);
+    -- ЧУМАК заготовитель
+   delete from _tmpResult where UnitId = 4695;
+    -- ГЕЙСМАН заготовитель
+   delete from _tmpResult where UnitId = 10101;
+
    //
    //
    -- !!! save !!!
@@ -271,7 +276,7 @@ begin
          from _tmpResult
               left outer join dba.Unit on Unit.Id = _tmpResult.UnitId
               left outer join dba.Unit as Unit_dolg on Unit_dolg.Id = Unit.DolgByUnitID
-                                                   and 1=0
+                                                   -- and 1=0
               left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, OKPO, UnitId, Main from dba._pgPartner where trim(OKPO) <> '' and _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by OKPO, UnitId, Main
                               ) as _pgPartner on _pgPartner.UnitId = _tmpResult.UnitId
               left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID

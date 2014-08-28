@@ -1,7 +1,5 @@
 -- Function: gpSelect_MI_ProductionUnion()
 
---DROP FUNCTION gpSelect_MI_ProductionUnion();
-DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion(

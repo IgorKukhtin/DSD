@@ -19,14 +19,12 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 457
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -145,7 +143,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -159,6 +157,10 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
         item
           Visible = True
           ItemName = 'bbRefresh'

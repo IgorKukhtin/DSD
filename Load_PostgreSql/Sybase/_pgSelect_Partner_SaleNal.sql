@@ -7,7 +7,7 @@ begin
             select Unit.Id as ObjectId
                  , Unit.UnitCode as ObjectCode
                  , trim(Unit.UnitName) as ObjectName
-                 , @inParentId_PG_Dnepr  as ParentId_Postgres --  Dnepr
+                 , @inParentId_PG_Dnepr  as ParentId_Postgres -- Dnepr
                  , Information2.AddressFirm as Address
                  , tmpBill.InfoMoneyCode
                  , _pgInfoMoney.Id3_Postgres AS InfoMoneyId_PG
@@ -20,10 +20,12 @@ begin
            (select ClientId
                   ,InfoMoneyCode
             from
+
             -- !!! remains
            (select ObjectId as ClientId, InfoMoneyCode
             from _pgSelect_Bill_LossDebt (@inStartDate - 1)
-            where ClientId_pg = 0 and trim (OKPO) <> '' and 1 =0 
+            where ClientId_pg = 0 and trim (OKPO) <> '' and isSale=zc_rvYes() and 1 =0 
+
            union all
             -- !!! Sale
            select Bill.ToId as ClientId
@@ -100,5 +102,5 @@ end
 go
 //
 -- call dba._pgSelect_Partner_SaleNal ('2014-05-31', '2014-05-31', 1) 
- select * from dba._pgSelect_Partner_SaleNal ('2014-05-31', '2014-05-31', 1) as a
+-- select * from dba._pgSelect_Partner_SaleNal ('2014-05-31', '2014-05-31', 1) as a
 -- commit
