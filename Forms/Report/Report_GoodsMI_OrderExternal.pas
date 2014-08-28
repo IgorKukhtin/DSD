@@ -60,9 +60,9 @@ type
     Amount_Weight_Dozakaz: TcxGridDBColumn;
     Amount_Sh_Dozakaz: TcxGridDBColumn;
     AmountSumm_Dozakaz: TcxGridDBColumn;
-    dsdPrintAction1: TdsdPrintAction;
     InvNumberContract: TcxGridDBColumn;
     Amount12: TcxGridDBColumn;
+    dsdPrintAction1: TdsdPrintAction;
   private
     { Private declarations }
   public
