@@ -2,6 +2,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   Caption = #1054#1090#1095#1077#1090' < '#1047#1072#1103#1074#1082#1072' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')> '
   ClientHeight = 387
   ClientWidth = 1055
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1063
   ExplicitHeight = 421
   PixelsPerInch = 96
