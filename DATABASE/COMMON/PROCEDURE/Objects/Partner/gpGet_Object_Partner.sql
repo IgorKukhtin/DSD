@@ -31,7 +31,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode (0, zc_Object_Partner()) AS Code
+           , 0 AS Code -- lfGet_ObjectCode (0, zc_Object_Partner()) AS Code
            , CAST ('' as TVarChar)  AS Name
            
            , CAST ('' as TVarChar)  AS ShortName

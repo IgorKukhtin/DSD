@@ -3,7 +3,7 @@ alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale_NAL" (in @inStartDate date, in @inEn
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, OKPO TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
-     , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
+     , isOnlyUpdateInt smallint, isTare smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   //
   declare local temporary table _tmpList(
@@ -34,6 +34,7 @@ begin
      , RouteId_pg  Integer
      , RouteSortingId_pg Integer
      , PersonalId_Postgres  Integer
+     , isTare smallint
      , Id_Postgres integer
   ) on commit preserve rows;
    //
@@ -41,7 +42,7 @@ begin
    //
    --
    insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId
-                       , MoneyKindId, PaidKindId_Postgres, CodeIM, OKPO, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, Id_Postgres)
+                       , MoneyKindId, PaidKindId_Postgres, CodeIM, OKPO, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, isTare, Id_Postgres)
    select Bill.Id as ObjectId
 
      , cast (Bill.BillNumber as TVarCharMedium) ||
@@ -81,6 +82,7 @@ begin
 --     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres
 --     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
 
+     , (case when Bill_find.findId<>0 then zc_rvNo() else zc_rvYes() end) as isTare
      , Bill.Id_Postgres as Id_Postgres
 
 from
@@ -97,6 +99,7 @@ from
                             then 30502 -- Прочие товары
                        else 30501 -- Прочие доходы
                   end )as CodeIM
+           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
       from (select Bill.Id
                  , Bill.FromId
                  , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) AS OKPO
@@ -168,11 +171,12 @@ from
         , _tmpList.RouteSortingId_pg as RouteSortingId_pg
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
         , zc_rvNo()  as isOnlyUpdateInt
+        , _tmpList.isTare
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
-          , CodeIM, OKPO, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, Id_Postgres
+          , CodeIM, OKPO, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, Id_Postgres
    order by 3, 4, CodeIM, 1
    ;
 

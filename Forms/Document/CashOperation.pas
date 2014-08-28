@@ -38,6 +38,12 @@ type
     cxLabel3: TcxLabel;
     ceAmountOut: TcxCurrencyEdit;
     edInvNumber: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    cxButtonEdit2: TcxButtonEdit;
+    ceServiceDate: TcxDateEdit;
+    cxLabel12: TcxLabel;
   private
     { Private declarations }
   public

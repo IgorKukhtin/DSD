@@ -3,7 +3,7 @@ alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDat
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
-     , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
+     , isOnlyUpdateInt smallint, isTare smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_Scale(
        BillId Integer
@@ -39,6 +39,7 @@ begin
      , RouteSortingId_pg Integer
      , PersonalId_Postgres  Integer
      , isOnlyUpdateInt smallint
+     , isTare smallint
      , Id_Postgres integer
   ) on commit preserve rows;
    //
@@ -71,11 +72,12 @@ begin
      delete from dba._pgBillLoad_union;
      --
      -- Объединение ГП
-     insert into dba._pgBillLoad_union (BillId, BillId_union)
-      select BillId, BillId_union
+     insert into dba._pgBillLoad_union (BillId, BillId_union, findId)
+      select BillId, BillId_union, isnull(findId,0) as findId
       from
       (select Bill.Id as BillId, min (Bill_find.Id) as BillId_union
             , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
+            , max (isnull(case when BillItems.OperPrice<>0 and BillItems.OperCount<>0 then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
            left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
@@ -99,7 +101,7 @@ begin
    //
    --
    insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId
-                       , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, isOnlyUpdateInt, Id_Postgres)
+                       , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, isOnlyUpdateInt, isTare, Id_Postgres)
    select Bill.Id as ObjectId
 
      , cast (Bill.BillNumber as TVarCharMedium) ||
@@ -140,6 +142,7 @@ begin
 --     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
 
      , Bill_find.isOnlyUpdateInt
+     , (case when Bill_find.findId<>0 then zc_rvNo() else zc_rvYes() end) as isTare
      , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
 from
@@ -147,6 +150,7 @@ from
      (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
+           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
                       left outer join dba.Unit on Unit.Id = Bill.ToId
@@ -172,6 +176,7 @@ from
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
+           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
                       left outer join dba.Unit on Unit.Id = Bill.ToId
@@ -195,6 +200,7 @@ from
       select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres, 30101 as CodeIM -- Готовая продукция
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
+           , max (_pgBillLoad_union.findId) as findId
       from dba._pgBillLoad_union
             join dba.Bill on Bill.Id = _pgBillLoad_union.BillId
                       left outer join dba.Unit on Unit.Id = Bill.ToId
@@ -212,6 +218,7 @@ from
       select Bill.Id, 0 as Id_Postgres, 30101 as CodeIM -- Готовая продукция
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
+           , max(isnull(case when BillItems.OperPrice<>0 then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            left join dba.isUnit on isUnit.UnitId = Bill.ToId
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
@@ -316,11 +323,12 @@ from
         , _tmpList.RouteSortingId_pg as RouteSortingId_pg
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
         , _tmpList.isOnlyUpdateInt
+        , _tmpList.isTare
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
-          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
+          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, _tmpList.isOnlyUpdateInt, Id_Postgres
    order by 3, 4, CodeIM, 1
    ;
 

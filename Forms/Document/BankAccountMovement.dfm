@@ -161,6 +161,7 @@
   object ceCurrency: TcxButtonEdit [22]
     Left = 8
     Top = 159
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
