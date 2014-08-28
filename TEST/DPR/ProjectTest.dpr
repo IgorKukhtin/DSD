@@ -120,8 +120,8 @@ uses
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
   RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm},
   RouteSortingEdit in '..\..\Forms\Guides\RouteSortingEdit.pas' {RouteSortingEditForm},
-  Member in '..\..\Forms\Member.pas' {MemberForm},
-  MemberEdit in '..\..\Forms\MemberEdit.pas' {MemberEditForm},
+  Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm},
+  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm},
   CarModel in '..\..\Forms\CarModel.pas' {CarModelForm},
   CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
   Car in '..\..\Forms\Car.pas' {CarForm},
@@ -262,7 +262,7 @@ uses
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   ContractConditionByContract in '..\..\Forms\Guides\ContractConditionByContract.pas' {ContractConditionByContractForm: TParentForm},
-  MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
+  MoneyPlaceCash_Object in '..\..\Forms\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
@@ -506,7 +506,9 @@ uses
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
-  Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm};
+  Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
+  Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
+  MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-unit MoneyPlace_Object;
+unit MoneyPlaceCash_Object;
 
 interface
 
@@ -14,7 +14,7 @@ uses
   cxImageComboBox, Vcl.Menus;
 
 type
-  TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
+  TMoneyPlaceCash_ObjectForm = class(TAncestorEnumForm)
     clItemName: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
@@ -22,14 +22,12 @@ type
     clContractNumber: TcxGridDBColumn;
     clStartDate: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
-    clOKPO: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clContractStateKindName: TcxGridDBColumn;
     clEndDate: TcxGridDBColumn;
     clContractKindName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
     clInfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
@@ -42,6 +40,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMoneyPlace_ObjectForm);
+  RegisterClass(TMoneyPlaceCash_ObjectForm);
 
 end.

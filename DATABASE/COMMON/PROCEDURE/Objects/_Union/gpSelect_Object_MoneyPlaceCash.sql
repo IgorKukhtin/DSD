@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlaceCash(
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
-             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
               )
@@ -30,6 +30,7 @@ BEGIN
           , ''::TVarChar AS InfoMoneyGroupName
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
           , NULL::Integer AS ContractId
           , ''::TVarChar AS ContractNumber
           , NULL::Integer AS ContractStateKindCode
@@ -51,6 +52,7 @@ BEGIN
           , ''::TVarChar AS InfoMoneyGroupName
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
           , NULL::Integer
           , ''::TVarChar
           , NULL::Integer AS ContractStateKindCode
@@ -73,6 +75,7 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyGroupName
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
           , View_Contract.ContractId 
           , View_Contract.InvNumber
           , View_Contract.ContractStateKindCode
