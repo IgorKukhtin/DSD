@@ -40,8 +40,13 @@ BEGIN
          RAISE EXCEPTION 'Код "%" не уникально для справочника "Товары"', inCode;
       END IF; 
    END IF;
-
-   vbCode := inCode::Integer;
+   
+   BEGIN
+     vbCode := inCode::Integer;
+   EXCEPTION           
+     WHEN data_exception THEN
+         vbCode := 0;
+   END;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), vbCode, inName);

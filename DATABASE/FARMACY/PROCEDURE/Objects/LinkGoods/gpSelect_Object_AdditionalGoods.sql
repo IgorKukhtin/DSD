@@ -19,7 +19,7 @@ BEGIN
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
    RETURN QUERY 
-     SELECT 
+     SELECT                                          	
            Object_AdditionalGoods_View.Id               
          , Object_AdditionalGoods_View.GoodsMainId
          , Object_AdditionalGoods_View.GoodsId
@@ -27,7 +27,7 @@ BEGIN
          
      FROM Object_LinkGoods_View AS Object_AdditionalGoods_View
            
-     WHERE Object_AdditionalGoods_View.RetailId = vbObjectId;
+     WHERE Object_AdditionalGoods_View.ObjectId = vbObjectId;
   
 END;
 $BODY$

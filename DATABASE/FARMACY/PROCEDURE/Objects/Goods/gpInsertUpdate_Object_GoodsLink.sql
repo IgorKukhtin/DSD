@@ -30,7 +30,7 @@ BEGIN
       vbGoodsId := ioId;
     END IF;
    
-    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inGoodsMainId, inObjectId, UserId);
+    ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inObjectId, UserId);
   
 
    -- сохранили протокол

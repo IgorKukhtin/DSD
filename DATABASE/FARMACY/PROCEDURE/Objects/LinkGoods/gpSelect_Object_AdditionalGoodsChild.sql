@@ -27,7 +27,7 @@ BEGIN
          
      FROM Object_LinkGoods_View AS Object_AdditionalGoods_View
            
-     WHERE Object_AdditionalGoods_View.RetailId = vbObjectId;
+     WHERE Object_AdditionalGoods_View.ObjectId = vbObjectId AND Object_AdditionalGoods_View.ObjectMainId = vbObjectId;
   
 END;
 $BODY$

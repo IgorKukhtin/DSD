@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , Object_Goods.GoodsName                        AS GoodsName
 
          , Object_Goods.ObjectId                         AS ObjectId
+         , Object_MainGoods.ObjectId                     AS ObjectMainId
          , Object_LinkGoods.isErased                     AS isErased
          
      FROM Object AS Object_LinkGoods
