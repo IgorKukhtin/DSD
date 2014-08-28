@@ -2,6 +2,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   Caption = #1054#1090#1095#1077#1090' < '#1047#1072#1103#1074#1082#1072' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')> '
   ClientHeight = 387
   ClientWidth = 1055
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1063
   ExplicitHeight = 421
   PixelsPerInch = 96
@@ -494,8 +495,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edFrom: TcxButtonEdit
-      Left = 215
-      Top = 30
+      Left = 271
+      Top = 26
       Properties.Buttons = <
         item
           Default = True
@@ -553,7 +554,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
     end
-    object actPrint_byJuridical: TdsdPrintAction
+    object actPrint_byPack: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -561,15 +562,15 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
       ImageIndex = 19
       ShortCut = 16464
       DataSets = <
         item
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'juridicalname;partnername'
+          IndexFieldNames = 'routesortingname;GoodsGroupNameFull;goodsname;goodskindname'
         end>
       Params = <
         item
@@ -584,8 +585,43 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1102#1088#1083#1080#1094#1072#1084
-      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1102#1088#1083#1080#1094#1072#1084
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1076#1083#1103' '#1059#1087#1072#1082#1086#1074#1082#1080')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint_byProduction: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1085#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
+      ImageIndex = 20
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1085#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1085#1072' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
       ReportNameParam.DataType = ftString
     end
     object actPrint_byByer: TdsdPrintAction
@@ -605,8 +641,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'FromName;RouteSortingName;RouteName;GoodsGroupName;GoodsName;Goo' +
-            'dsKindName'
+            'FromName;RouteSortingName;RouteName;GoodsGroupNameFull;GoodsName' +
+            ';GoodsKindName'
         end>
       Params = <
         item
@@ -623,51 +659,6 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end>
       ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
-      ReportNameParam.DataType = ftString
-    end
-    object dsdPrintAction1: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupName;GoodsName;GoodsKindName'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'ReportType'
-          Value = '0'
-          ParamType = ptInput
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
       ReportNameParam.DataType = ftString
     end
   end
@@ -777,7 +768,11 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_byJuridical'
+          ItemName = 'bbPrint_byPack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byProduction'
         end
         item
           Visible = True
@@ -796,10 +791,13 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Action = actPrint_byByer
       Category = 0
     end
-    object bbPrint_byJuridical: TdxBarButton
-      Action = actPrint_byJuridical
+    object bbPrint_byPack: TdxBarButton
+      Action = actPrint_byPack
       Category = 0
-      Visible = ivNever
+    end
+    object bbPrint_byProduction: TdxBarButton
+      Action = actPrint_byProduction
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
