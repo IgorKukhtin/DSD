@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxLocalization, dsdAddOn, dsdDB,
   Data.DB, Datasnap.DBClient, frxExportXML, frxExportXLS, frxClass, frxExportRTF,
   Vcl.ActnList, dxBar, cxClasses, Vcl.StdActns, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, dxSkinsdxBarPainter;
 
 type
   TAncestorMainForm = class(TForm)

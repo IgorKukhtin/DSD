@@ -300,7 +300,8 @@ BEGIN
                                                           , inChangePercent := - vbDiscount, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
                                                           , inContractId := vbContractId
                                                           , inCurrencyDocumentId:= 14461 -- грн
-                                                          , inCurrencyPartnerId:= NULL
+                                                          , inCurrencyPartnerId := NULL
+                                                          , inCurrencyValue     := NULL
                                                           , inUserId := vbUserId) AS tmp;
 
           -- сохранили свойство <Загружен из 1С>

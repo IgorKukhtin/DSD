@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_MovementItem_LossDebt ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
     IN inJuridicalId         Integer   , -- Юр.лицо
+    IN inPartnerId           Integer   , -- Контрагент
  INOUT ioAmountDebet         TFloat    , -- Сумма
  INOUT ioAmountKredit        TFloat    , -- Сумма
  INOUT ioSummDebet           TFloat    , -- Сумма остатка (долг)
@@ -25,24 +26,6 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
-
-     -- проверка
-     IF COALESCE (inJuridicalId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
-     END IF;
-     IF COALESCE (inContractId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен <№ дог.>.';
-     END IF;
-     IF COALESCE (inPaidKindId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлена <Форма оплаты>.';
-     END IF;
-     IF COALESCE (inInfoMoneyId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлена <УП статья назначения>.';
-     END IF;
 
      -- проверка
      IF (COALESCE (ioAmountDebet, 0) <> 0) AND (COALESCE (ioAmountKredit, 0) <> 0) THEN
@@ -76,6 +59,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_LossDebt (ioId                 := ioId
                                                  , inMovementId         := inMovementId
                                                  , inJuridicalId        := inJuridicalId
+                                                 , inPartnerId          := inPartnerId
                                                  , inAmount             := vbAmount
                                                  , inSumm               := vbSumm
                                                  , inIsCalculated       := ioIsCalculated
@@ -93,6 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.08.14                                        * add inPartnerId
  10.03.14                                        * add lpInsertUpdate_MovementItem_LossDebt
  14.01.14                                        *
 */

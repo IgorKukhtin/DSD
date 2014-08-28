@@ -293,6 +293,21 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PartnerChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -328,6 +343,14 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
+          end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -415,6 +438,7 @@ object LossDebtForm: TLossDebtForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.UseDisplayFormatWhenEditing = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -425,6 +449,7 @@ object LossDebtForm: TLossDebtForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -447,9 +472,6 @@ object LossDebtForm: TLossDebtForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1226,6 +1248,49 @@ object LossDebtForm: TLossDebtForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object PartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1324,6 +1389,12 @@ object LossDebtForm: TLossDebtForm
         Name = 'inJuridicalId'
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
       end
       item

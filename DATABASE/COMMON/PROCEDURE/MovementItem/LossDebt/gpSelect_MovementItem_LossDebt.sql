@@ -12,8 +12,9 @@ RETURNS TABLE (Id Integer
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , UnitId Integer, UnitName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
@@ -44,11 +45,14 @@ BEGIN
 
             , View_Contract.ContractId
             , View_Contract.InvNumber AS ContractName
+            , View_Contract_InvNumber.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+            , 0 :: Integer                AS PartnerId
+            , '' :: TVarChar              AS PartnerName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , 0 :: Integer   AS UnitId
@@ -114,11 +118,15 @@ BEGIN
 
             , View_Contract_InvNumber.ContractId
             , View_Contract_InvNumber.InvNumber AS ContractName
+            , View_Contract_InvNumber.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+            , Object_Partner.Id          AS PartnerId
+            , Object_Partner.ValueData   AS PartnerName
+
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , Object_Unit.Id              AS UnitId
@@ -177,6 +185,11 @@ BEGIN
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -202,11 +215,14 @@ BEGIN
 
             , View_Contract_InvNumber.ContractId
             , View_Contract_InvNumber.InvNumber AS ContractName
+            , View_Contract_InvNumber.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+            , Object_Partner.Id          AS PartnerId
+            , Object_Partner.ValueData   AS PartnerName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , Object_Unit.Id              AS UnitId
@@ -265,6 +281,11 @@ BEGIN
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -285,6 +306,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 27.08.14                                        * add Partner...
  25.08.14                                        * add JuridicalGroupName
  06.03.14                                        * add zc_Enum_ContractStateKind_Close
  16.01.14                                        *

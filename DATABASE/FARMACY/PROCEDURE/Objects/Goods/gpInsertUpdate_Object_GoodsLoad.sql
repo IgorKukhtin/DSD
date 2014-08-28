@@ -59,7 +59,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, TVarChar, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*

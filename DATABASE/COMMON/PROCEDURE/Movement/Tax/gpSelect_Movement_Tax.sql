@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Tax()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax(
     IN inStartDate      TDateTime , --
