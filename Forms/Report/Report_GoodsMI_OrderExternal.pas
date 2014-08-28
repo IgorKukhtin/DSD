@@ -40,7 +40,7 @@ type
     bbPrint: TdxBarButton;
     RouteName: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
-    bbPrint_byJuridical: TdxBarButton;
+    bbPrint_byPack: TdxBarButton;
     cxLabel13: TcxLabel;
     edRouteSorting: TcxButtonEdit;
     cxLabel7: TcxLabel;
@@ -62,6 +62,8 @@ type
     InvNumberContract: TcxGridDBColumn;
     Amount12: TcxGridDBColumn;
     actPrint_byPack: TdsdPrintAction;
+    actPrint_byProduction: TdsdPrintAction;
+    bbPrint_byProduction: TdxBarButton;
   private
     { Private declarations }
   public
