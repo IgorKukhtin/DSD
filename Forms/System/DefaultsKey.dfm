@@ -62,8 +62,11 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     end
     object OpenFormsForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'OpenFormsForm'
       FormName = 'TFormsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'TextValue'
@@ -76,6 +79,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     end
     object InsertUpdateKey: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateKey
       StoredProcList = <
         item
@@ -85,8 +89,11 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     end
     object OpenUnionDescForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'OpenUnionDescForm'
       FormName = 'TUnionDescForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -148,7 +155,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
       end
       item
         Name = 'inkeydata'
-        Value = ''
+        Value = '{}'
         Component = DefaultKey
         ComponentItem = 'JSONKey'
         DataType = ftBlob

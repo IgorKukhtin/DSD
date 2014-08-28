@@ -84,6 +84,7 @@ type
     FInfoAfterExecute: string;
     FQuestionBeforeExecute: string;
     FMoveParams: TCollection;
+    FCancelAction: TAction;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
     property QuestionBeforeExecute: string read FQuestionBeforeExecute write FQuestionBeforeExecute;
@@ -101,6 +102,8 @@ type
     // При установке данного свойства Action будет активирован только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
     property MoveParams: TCollection read FMoveParams write FMoveParams;
+    // действие вызывается если результат вызова основного действия false
+    property CancelAction: TAction read FCancelAction write FCancelAction;
   end;
 
   TDataSetDataLink = class(TDataLink)
@@ -721,10 +724,13 @@ begin
 end;
 
 function TdsdOpenForm.LocalExecute: boolean;
+var ModalResult: TModalResult;
 begin
   inherited;
   result := true;
-  ShowForm
+  ModalResult := ShowForm.ModalResult;
+  if isShowModal then
+     result := ModalResult = mrOk;
 end;
 
 procedure TdsdOpenForm.Notification(AComponent: TComponent;
@@ -1500,6 +1506,9 @@ begin
   for I := 0 to MoveParams.Count - 1 do
       TParamMoveItem(MoveParams.Items[i]).ToParam.Value := TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
+  if not result then
+     if Assigned(CancelAction) then
+        CancelAction.Execute;
   if result and (InfoAfterExecute <> '') then begin
      Application.ProcessMessages;
      ShowMessage(InfoAfterExecute);
@@ -1585,7 +1594,9 @@ procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams; Form: TForm);
 begin
   // Расставляем параметры по местам
   Self.GuiParams.AssignParams(Params);
-  Form.Close
+  Form.Close;
+  if isShowModal then
+     Form.ModalResult := mrOk;
 end;
 
 { TDataSetAction }

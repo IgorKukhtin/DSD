@@ -45,8 +45,6 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitLeft = 289
-        ExplicitTop = -3
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ClientDS
@@ -198,6 +196,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     object actGoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      CancelAction = DataSetCancel
       Caption = 'actGoodsChoice'
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
@@ -214,14 +213,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           ComponentItem = 'GoodsName'
           DataType = ftString
         end>
-      isShowModal = False
-    end
-    object actInsertUpdateLink: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = 'actInsertUpdateLink'
-      DataSource = ClientMasterDS
+      isShowModal = True
     end
     object mactInsert: TMultiAction
       Category = 'DSDLib'
@@ -234,11 +226,22 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
           Action = actGoodsChoice
         end
         item
-          Action = actInsertUpdateLink
+          Action = DataSetPost
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
       ShortCut = 45
+    end
+    object actInsertUpdateLink: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateGoodsLink
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateGoodsLink
+        end>
+      Caption = 'actInsertUpdateLink'
+      DataSource = ClientDS
     end
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
@@ -246,6 +249,47 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       View = cxGridDBTableView2
       Params = <>
       Caption = 'InsertRecord'
+    end
+    object DataSetPost: TDataSetPost
+      Category = 'Dataset'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      DataSource = ClientDS
+    end
+    object DataSetCancel: TDataSetCancel
+      Category = 'Dataset'
+      Caption = '&Cancel'
+      Hint = 'Cancel'
+      DataSource = ClientDS
+    end
+    object actDeleteLink: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDeleteLink
+      StoredProcList = <
+        item
+          StoredProc = spDeleteLink
+        end>
+    end
+    object mactDeleteLink: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteLink
+        end
+        item
+          Action = DataSetDelete
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1103#1079#1080'?'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ImageIndex = 2
+    end
+    object DataSetDelete: TDataSetDelete
+      Category = 'Dataset'
+      Caption = '&Delete'
+      Hint = 'Delete'
     end
   end
   inherited MasterDS: TDataSource
@@ -440,12 +484,8 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     Top = 160
   end
   object spInsertUpdateGoodsLink: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_AdditionalGoods'
-    DataSet = ClientCDS
-    DataSets = <
-      item
-        DataSet = ClientCDS
-      end>
+    StoredProcName = 'gpInsertUpdate_Object_LinkGoods'
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -468,5 +508,19 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       end>
     Left = 408
     Top = 184
+  end
+  object spDeleteLink: TdsdStoredProc
+    StoredProcName = 'lpDelete_Object'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = ClientCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end>
+    Left = 472
+    Top = 64
   end
 end

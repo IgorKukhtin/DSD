@@ -59,6 +59,7 @@ type
     actMoveAllDoc: TMultiAction;
     actBeforeMove: TdsdExecStoredProc;
     colPaidKindName: TcxGridDBColumn;
+    DBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

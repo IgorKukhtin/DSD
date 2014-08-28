@@ -16,6 +16,16 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
    vbUserId := lpGetUserBySession(inSession);
+
+   IF EXISTS(SELECT Object_LinkGoods_View.Id               
+               FROM Object_LinkGoods_View
+              WHERE Object_LinkGoods_View.GoodsMainId = inGoodsMainId
+                AND Object_LinkGoods_View.GoodsId = inGoodsId
+                AND Object_LinkGoods_View.Id <> COALESCE (ioId, 0)) THEN
+
+      RAISE EXCEPTION 'Связь между данными товарами уже установлена';
+   END IF;
+
    
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;

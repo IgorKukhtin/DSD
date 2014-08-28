@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, Integer, TVarChar, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLoad(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                TVarChar  ,    -- Код объекта <Товар>
+    IN inMainCode            INTEGER   ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
     IN inObjectId            Integer   ,    -- Торговая сеть
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
@@ -16,6 +17,8 @@ RETURNS integer AS
 $BODY$
   DECLARE vbNDSKindId Integer;
   DECLARE vbUserId Integer;
+  DECLARE vbGoodsMainId Integer;
+  DECLARE vbLinkId Integer;
 BEGIN
 
     vbUserId := inSession;
@@ -34,6 +37,24 @@ BEGIN
     END IF; 
 
     ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, 0, inMeasureId, vbNDSKindId, inObjectId, vbUserId);
+
+     SELECT Id INTO vbGoodsMainId FROM Object_Goods_View
+      WHERE ObjectId IS NULL AND GoodsCodeInt = inMainCode;
+
+     SELECT Id INTO vbLinkId 
+       FROM Object_LinkGoods_View
+      WHERE Object_LinkGoods_View.GoodsMainId = vbGoodsMainId 
+        AND Object_LinkGoods_View.GoodsId = ioId;
+
+     IF COALESCE(vbLinkId, 0) = 0 THEN
+                 PERFORM gpInsertUpdate_Object_LinkGoods(
+                                   ioId := 0                     ,  
+                                   inGoodsMainId := vbGoodsMainId, -- Главный товар
+                                   inGoodsId  := ioId            , -- Товар сети
+                                   inSession  := inSession         -- сессия пользователя
+                                   );
+     END IF;  
+
 
 END;$BODY$
 

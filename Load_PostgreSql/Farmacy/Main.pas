@@ -196,6 +196,7 @@ begin
 
         toTwoStoredProc.Params.AddParam ('ioId', ftInteger, ptInputOutput, 0);
         toTwoStoredProc.Params.AddParam ('inCode', ftString, ptInput, 0);
+        toTwoStoredProc.Params.AddParam ('inMainCode', ftInteger, ptInput, 0);
         toTwoStoredProc.Params.AddParam ('inName', ftString, ptInput, '');
         toTwoStoredProc.Params.AddParam ('inObjectId', ftInteger, ptInput, RetailId);
         toTwoStoredProc.Params.AddParam ('inMeasureId', ftInteger, ptInput, 0);
@@ -214,6 +215,7 @@ begin
 
              toTwoStoredProc.Params.ParamByName('ioId').Value := FieldByName('Id_Postgres').AsInteger;
              toTwoStoredProc.Params.ParamByName('inCode').Value := FieldByName('ObjectCode').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inMainCode').Value := FieldByName('ObjectCode').AsInteger;
              toTwoStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
              toTwoStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
              toTwoStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;

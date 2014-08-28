@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbGoodsId Integer; 
    DECLARE vbGoodsKindId Integer;
    DECLARE vbPaidKindId Integer;
+   DECLARE vbDiscount TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
@@ -68,6 +69,7 @@ BEGIN
                         , tmpPartner1CLink.ContractId
                         , Sale.Id AS MovementId
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
+                        , round(Sale1C.Tax)
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -116,7 +118,7 @@ BEGIN
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -131,7 +133,7 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                           , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
+                                           , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
                                            , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0
                                            , inCurrencyDocumentId:= 14461 -- грн
                                            , inCurrencyPartnerId:= NULL
@@ -228,6 +230,7 @@ BEGIN
                         , tmpPartner1CLink.ContractId
                         , MovementReturn.Id
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
+                        , round(Sale1C.Tax)
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -277,7 +280,7 @@ BEGIN
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -294,7 +297,7 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                                          , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
+                                                          , inChangePercent := - vbDiscount, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
                                                           , inContractId := vbContractId
                                                           , inCurrencyDocumentId:= 14461 -- грн
                                                           , inCurrencyPartnerId:= NULL
