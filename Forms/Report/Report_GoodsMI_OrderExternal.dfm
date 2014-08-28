@@ -495,8 +495,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edFrom: TcxButtonEdit
-      Left = 215
-      Top = 30
+      Left = 271
+      Top = 26
       Properties.Buttons = <
         item
           Default = True
