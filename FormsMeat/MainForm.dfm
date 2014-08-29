@@ -1123,6 +1123,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparate'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1690,6 +1694,10 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
+    object bbReport_GoodsMI_ProductionSeparate: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparate
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actAssetGroup: TdsdOpenForm
@@ -1851,6 +1859,17 @@
       FormName = 'TCityKindForm'
       FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
+      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
       GuiParams = <>
       isShowModal = False
     end

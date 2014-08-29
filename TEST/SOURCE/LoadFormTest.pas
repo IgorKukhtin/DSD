@@ -842,6 +842,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
