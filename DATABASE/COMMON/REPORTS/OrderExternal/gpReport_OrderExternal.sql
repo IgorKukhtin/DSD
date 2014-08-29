@@ -16,10 +16,10 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
 RETURNS TABLE (InvNumber TVarChar
              , InvNumberPartner TVarChar
              , InvNumberContract TVarChar
-             , FromId Integer, FromName TVarChar
+             , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , RouteId Integer, RouteName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
+             , RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -30,7 +30,8 @@ RETURNS TABLE (InvNumber TVarChar
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
-             , Amount12 TFloat
+             , Amount12 TFloat, Amount_WeightSK TFloat
+             , InfoMoneyName TVarChar
               )
 
 AS
@@ -205,12 +206,14 @@ BEGIN
            , tmpMovement.InvNumberPartner               AS InvNumberPartner
            , tmpMovement.InvNumberContract              AS InvNumberContract
            , Object_From.Id                             AS FromId
+           , Object_From.ObjectCode                     AS FromCode
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                               AS ToId
            , Object_To.ValueData                        AS ToName
            , Object_Route.Id                            AS RouteId
            , Object_Route.ValueData                     AS RouteName
            , Object_RouteSorting.Id                     AS RouteSortingId
+           , Object_RouteSorting.ObjectCode             AS RouteSortingCode
            , Object_RouteSorting.ValueData              AS RouteSortingName
            , Object_PaidKind.Id                         AS PaidKindId
            , Object_PaidKind.ValueData                  AS PaidKindName
@@ -238,7 +241,8 @@ BEGIN
            , tmpMovement.Amount_Weight_Dozakaz          AS Amount_Weight_Dozakaz
            , tmpMovement.Amount_Sh_Dozakaz              AS Amount_Sh_Dozakaz
            , tmpMovement.Amount12                       AS Amount12
-
+           , CAST (0 AS TFloat)                         AS Amount_WeightSK
+           , Object_InfoMoney_View.InfoMoneyName        AS InfoMoneyName
 
        FROM tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
@@ -259,6 +263,15 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovement.GoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
+          LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View
+                                          ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+
+
             ;
 
 END;
@@ -270,10 +283,11 @@ ALTER FUNCTION gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, I
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.08.14                                                        *
  22.08.14                                                        *
  21.08.14                                                        *
 
 */
 
 -- ÚÂÒÚ
- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.01.2014', inEndDate:= '12.12.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.01.2014', inEndDate:= '12.12.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
