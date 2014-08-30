@@ -39,11 +39,13 @@ type
     ceAmountOut: TcxCurrencyEdit;
     edInvNumber: TcxTextEdit;
     cxLabel9: TcxLabel;
-    cxButtonEdit1: TcxButtonEdit;
+    ceMember: TcxButtonEdit;
     cxLabel11: TcxLabel;
-    cxButtonEdit2: TcxButtonEdit;
+    cePosition: TcxButtonEdit;
     ceServiceDate: TcxDateEdit;
     cxLabel12: TcxLabel;
+    PersonalGuides: TdsdGuides;
+    MemberGuides: TdsdGuides;
   private
     { Private declarations }
   public

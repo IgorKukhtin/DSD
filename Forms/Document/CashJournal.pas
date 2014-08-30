@@ -13,7 +13,8 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit, dsdGuides,
+  cxButtonEdit;
 
 type
   TCashJournalForm = class(TAncestorJournalForm)
@@ -24,6 +25,14 @@ type
     clComment: TcxGridDBColumn;
     clContractInvNumber: TcxGridDBColumn;
     clMoneyPlaceCode: TcxGridDBColumn;
+    ceCash: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    CashGuides: TdsdGuides;
+    clInfoMoneyName_all: TcxGridDBColumn;
+    clMemberName: TcxGridDBColumn;
+    clPositionName: TcxGridDBColumn;
+    edInDescName: TcxTextEdit;
+    clItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -225,6 +225,15 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Value = 0
+        end
+        item
+          Name = 'PositionName'
+          Value = ''
+          DataType = ftString
         end>
     end
   end
@@ -235,7 +244,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MoneyPlace'
+    StoredProcName = 'gpSelect_Object_MoneyPlaceCash'
     Top = 80
   end
   inherited BarManager: TdxBarManager

@@ -34,7 +34,7 @@ BEGIN
                 --  ÓÂÍÚËÓ‚ÍË
                (SELECT Movement.Id                                       AS MovementId_TaxCorrective
                      , MovementLO_DocumentTaxKind.ObjectId               AS DocumentTaxKindId
-                     , MovementLinkObject_From.ObjectId                  AS FromId
+                     , MovementLinkObject_From.ObjectId                  AS JuridicalId
                      , COALESCE (MovementLinkObject_Partner.ObjectId, 0) AS PartnerId
                      , MovementLinkObject_Contract.ObjectId              AS ContractId
                 FROM Movement
@@ -56,19 +56,44 @@ BEGIN
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
                   AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
                )
-       , tmpPartner_Corrective AS
-               (SELECT PartnerId, ContractId FROM tmpMovement_TaxCorrective GROUP BY PartnerId, ContractId
-               UNION
-                SELECT ObjectLink_Partner_Juridical.ObjectId AS PartnerId, tmpMovement_TaxCorrective.ContractId
+       , tmpUnit_Corrective AS
+               (SELECT tmpMovement_TaxCorrective.DocumentTaxKindId
+                     , tmpMovement_TaxCorrective.JuridicalId
+                     , tmpMovement_TaxCorrective.PartnerId
+                     , tmpMovement_TaxCorrective.ContractId
+                     , CASE WHEN tmpMovement_TaxCorrective.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_Corrective())
+                                 THEN COALESCE (MovementLinkObject_To.ObjectId, -1)
+                            ELSE 0
+                       END AS UnitId
                 FROM tmpMovement_TaxCorrective
+                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                     ON MovementLinkMovement_Master.MovementId = tmpMovement_TaxCorrective.MovementId_TaxCorrective
+                                                    AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                GROUP BY tmpMovement_TaxCorrective.DocumentTaxKindId
+                       , tmpMovement_TaxCorrective.JuridicalId
+                       , tmpMovement_TaxCorrective.PartnerId
+                       , tmpMovement_TaxCorrective.ContractId
+                       , MovementLinkObject_To.ObjectId
+               )
+       , tmpPartner_Corrective AS
+               (SELECT PartnerId, ContractId, UnitId FROM tmpUnit_Corrective GROUP BY PartnerId, ContractId, UnitId
+               UNION
+                SELECT ObjectLink_Partner_Juridical.ObjectId AS PartnerId, tmpUnit_Corrective.ContractId, tmpUnit_Corrective.UnitId
+                FROM tmpUnit_Corrective
                      INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                           ON ObjectLink_Partner_Juridical.ChildObjectId = tmpMovement_TaxCorrective.FromId
+                                           ON ObjectLink_Partner_Juridical.ChildObjectId = tmpUnit_Corrective.JuridicalId
                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                WHERE tmpMovement_TaxCorrective.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR())
-                GROUP BY ObjectLink_Partner_Juridical.ObjectId, tmpMovement_TaxCorrective.ContractId
+                WHERE tmpUnit_Corrective.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR())
+                GROUP BY ObjectLink_Partner_Juridical.ObjectId, tmpUnit_Corrective.ContractId, tmpUnit_Corrective.UnitId
+               )
+       , tmpPartner_Corrective_two AS
+               (SELECT PartnerId, ContractId FROM tmpPartner_Corrective GROUP BY PartnerId, ContractId
                )
        , tmpJuridical_Corrective AS
-               (SELECT FromId AS JuridicalId, ContractId FROM tmpMovement_TaxCorrective GROUP BY FromId, ContractId
+               (SELECT JuridicalId, ContractId FROM tmpUnit_Corrective GROUP BY JuridicalId, ContractId
                )
 
     SELECT Movement_ReturnIn.InvNumber AS InvNumber_ReturnIn
@@ -274,11 +299,15 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                      LEFT JOIN tmpPartner_Corrective ON tmpPartner_Corrective.PartnerId = MovementLinkObject_From.ObjectId
                                                     AND tmpPartner_Corrective.ContractId = MovementLinkObject_Contract.ObjectId
+                                                    AND (tmpPartner_Corrective.UnitId = MovementLinkObject_To.ObjectId OR tmpPartner_Corrective.UnitId = 0)
 
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.isErased = FALSE
@@ -453,8 +482,9 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_ContractFrom()
-                     LEFT JOIN tmpPartner_Corrective ON tmpPartner_Corrective.PartnerId = MovementLinkObject_Partner.ObjectId
-                                                    AND tmpPartner_Corrective.ContractId = MovementLinkObject_Contract.ObjectId
+                     LEFT JOIN tmpPartner_Corrective_two AS tmpPartner_Corrective
+                                                         ON tmpPartner_Corrective.PartnerId = MovementLinkObject_Partner.ObjectId
+                                                        AND tmpPartner_Corrective.ContractId = MovementLinkObject_Contract.ObjectId
                      LEFT JOIN tmpJuridical_Corrective ON tmpJuridical_Corrective.JuridicalId = MovementLinkObject_From.ObjectId
                                                       AND tmpJuridical_Corrective.ContractId = MovementLinkObject_Contract.ObjectId
 
@@ -706,6 +736,7 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.08.14                                        * add tmpUnit_Corrective
  12.07.14                                        * add Summ_... 
  03.05.14                                        * all
  18.02.14         *  

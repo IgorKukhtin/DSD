@@ -1,0 +1,94 @@
+-- Function: lpInsertUpdate_Movement_Cash()
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inServiceDate         TDateTime , -- Дата начисления
+    IN inAmountIn            TFloat    , -- Сумма прихода
+    IN inAmountOut           TFloat    , -- Сумма расхода
+    IN inComment             TVarChar  , -- Комментарий
+    IN inCashId              Integer   , -- Касса
+    IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
+    IN inPositionId          Integer   , -- Должность
+    IN inContractId          Integer   , -- Договора
+    IN inInfoMoneyId         Integer   , -- Управленческие статьи
+    IN inMemberId            Integer   , -- Физ лицо (через кого)
+    IN inUnitId              Integer   , -- Подразделения
+    IN inUserId              Integer     -- Пользователь
+)                              
+RETURNS Integer AS
+$BODY$
+   DECLARE vbAccessKeyId Integer;
+   DECLARE vbMovementItemId Integer;
+   DECLARE vbAmount TFloat;
+   DECLARE vbIsInsert Boolean;
+BEGIN
+     -- проверка
+     IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) THEN
+        RAISE EXCEPTION 'Введите сумму.';
+     END IF;
+     -- проверка
+     IF (COALESCE (inAmountIn, 0) <> 0) AND (COALESCE (inAmountOut, 0) <> 0) THEN
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
+     END IF;
+
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('Month', inServiceDate);
+
+     -- расчет
+     IF inAmountIn <> 0 THEN
+        vbAmount := inAmountIn;
+     ELSE
+        vbAmount := -1 * inAmountOut;
+     END IF;
+
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Cash());
+     -- сохранили <Документ>
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+
+
+     -- поиск <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL);
+
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
+    
+     -- сохранили связь с <Дата начисления>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+
+     -- сохранили связь с <Должность>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemId, inPositionId);
+     -- сохранили связь с <Управленческие статьи>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+     -- сохранили связь с <Договора>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
+     -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.08.14                                        *
+*/
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_Movement_Cash (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

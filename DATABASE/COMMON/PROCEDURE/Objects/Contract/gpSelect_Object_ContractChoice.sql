@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
              , OKPO TVarChar
@@ -68,6 +68,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
@@ -142,6 +143,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
@@ -204,6 +206,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.08.14                                        * add InfoMoneyName_all
  21.08.14                                        * add ContractComment
  20.05.14                                        * !!!ContractKindName - всегда!!!
  06.05.14                                        * add ChangePercent TFloat
