@@ -68,6 +68,8 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
+     -- сохранили связь с <Физ лицо (через кого)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Member(), vbMovementItemId, inMemberId);
      -- сохранили связь с <Должность>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemId, inPositionId);
      -- сохранили связь с <Управленческие статьи>

@@ -31,7 +31,6 @@ type
     clInfoMoneyName_all: TcxGridDBColumn;
     clMemberName: TcxGridDBColumn;
     clPositionName: TcxGridDBColumn;
-    edInDescName: TcxTextEdit;
     clItemName: TcxGridDBColumn;
   private
     { Private declarations }

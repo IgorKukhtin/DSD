@@ -68,11 +68,16 @@ BEGIN
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
-     -- 5.3. проводим Документ
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Cash())
+
+     -- это временно
+     IF (inMoneyPlaceId <> 0 AND inContractId <> 0) OR NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-          PERFORM lpComplete_Movement_Cash (inMovementId := ioId
-                                          , inUserId     := vbUserId);
+         -- 5.3. проводим Документ
+         IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Cash())
+         THEN
+              PERFORM lpComplete_Movement_Cash (inMovementId := ioId
+                                              , inUserId     := vbUserId);
+         END IF;
      END IF;
 
 END;
@@ -82,6 +87,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.08.14                                        * это временно
  29.08.14                                        * all
  17.08.14                                        * add MovementDescId
  10.05.14                                        * add lpInsert_MovementItemProtocol

@@ -619,13 +619,13 @@
         Name = 'PositionId'
         Value = ''
         Component = PersonalGuides
-        ComponentItem = 'PositionId'
+        ComponentItem = 'Key'
       end
       item
         Name = 'PositionName'
         Value = ''
         Component = PersonalGuides
-        ComponentItem = 'PositionName'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 368
@@ -768,8 +768,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 128
-    Top = 93
+    Left = 152
+    Top = 125
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'

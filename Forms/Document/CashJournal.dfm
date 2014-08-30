@@ -246,24 +246,6 @@ inherited CashJournalForm: TCashJournalForm
       Top = 7
       Caption = #1050#1072#1089#1089#1072':'
     end
-    object edInDescName: TcxTextEdit
-      AlignWithMargins = True
-      Left = 767
-      Top = 5
-      ParentCustomHint = False
-      BeepOnEnter = False
-      Enabled = False
-      ParentFont = False
-      Properties.HideSelection = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-      TabOrder = 6
-      Width = 215
-    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -475,7 +457,8 @@ inherited CashJournalForm: TCashJournalForm
       item
         Name = 'CashName_top'
         Value = ''
-        Component = edInDescName
+        Component = CashGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>

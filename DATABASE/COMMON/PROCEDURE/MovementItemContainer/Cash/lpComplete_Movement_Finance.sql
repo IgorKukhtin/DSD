@@ -82,15 +82,19 @@ BEGIN
                                                           THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  END
      FROM Object
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object.Id
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              AND Object.DescId = zc_Object_Partner()
           LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                                ON ObjectLink_Cash_Branch.ObjectId = Object.Id
                               AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                               AND ObjectLink_Cash_Branch.ChildObjectId <> zc_Branch_Basis()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                                  ON ObjectBoolean_isCorporate.ObjectId = Object.Id
+                                  ON ObjectBoolean_isCorporate.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object.Id)
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                               ON ObjectLink_Juridical_InfoMoney.ObjectId = Object.Id
+                               ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object.Id)
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
           LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
           -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
@@ -111,15 +115,24 @@ BEGIN
                                                THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
-                                               THEN CASE WHEN zc_Enum_InfoMoney_20801() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                               THEN CASE (SELECT ObjectLink.ChildObjectId AS InfoMoneyId
+                                                          FROM ObjectLink
+                                                          WHERE ObjectLink.ObjectId = (SELECT ObjectLink.ChildObjectId AS JuridicalId FROM ObjectLink WHERE ObjectLink.ObjectId = (SELECT Object.Id FROM Object WHERE Object.Id = _tmpItem.ObjectId AND Object.DescId = zc_Object_Partner())
+                                                                                                                                                        AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                                      UNION
+                                                                                       SELECT Object.Id AS JuridicalId FROM Object WHERE Object.Id = _tmpItem.ObjectId AND Object.DescId = zc_Object_Juridical()
+                                                                                      )
+                                                            AND ObjectLink.DescId = zc_ObjectLink_Juridical_InfoMoney()
+                                                         )
+                                                         WHEN zc_Enum_InfoMoney_20801()
                                                               THEN zc_Enum_Account_30201() -- Алан
-                                                         WHEN zc_Enum_InfoMoney_20901() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                         WHEN zc_Enum_InfoMoney_20901()
                                                               THEN zc_Enum_Account_30202() -- Ирна
-                                                         WHEN zc_Enum_InfoMoney_21001() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                         WHEN zc_Enum_InfoMoney_21001()
                                                               THEN zc_Enum_Account_30203() -- Чапли
-                                                         WHEN zc_Enum_InfoMoney_21101() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                         WHEN zc_Enum_InfoMoney_21101()
                                                               THEN zc_Enum_Account_30204() -- Дворкин
-                                                         WHEN zc_Enum_InfoMoney_21151() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                         WHEN zc_Enum_InfoMoney_21151()
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.ObjectId = 76977 -- рассчетный счет AND 26009000250571 ПУАТ "ФІДОБАНК"
@@ -283,8 +296,8 @@ BEGIN
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
                                                                             , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                             , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
-                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN _tmpItem.ObjectId ELSE NULL END
+                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                       -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -303,8 +316,8 @@ BEGIN
                                                                             , inObjectId_3        := _tmpItem.InfoMoneyId
                                                                             , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
-                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN _tmpItem.ObjectId ELSE NULL END
+                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
                                                                              )
                                        END;
 
