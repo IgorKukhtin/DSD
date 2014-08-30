@@ -1,18 +1,22 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
+    IN inServiceDate         TDateTime , -- Дата начисления
     IN inAmountIn            TFloat    , -- Сумма прихода
     IN inAmountOut           TFloat    , -- Сумма расхода
     IN inComment             TVarChar  , -- Комментарий
     IN inCashId              Integer   , -- Касса
-    IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами 
+    IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
+    IN inPositionId          Integer   , -- Должность
     IN inContractId          Integer   , -- Договора
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
+    IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inUnitId              Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -30,12 +34,12 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Cash());
    
      -- проверка
-     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+     IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) THEN
         RAISE EXCEPTION 'Введите сумму.';
      END IF;
 
      -- проверка
-     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
+     IF (COALESCE (inAmountIn, 0) <> 0) AND (COALESCE (inAmountOut, 0) <> 0) THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
      END IF;
 
@@ -69,9 +73,13 @@ BEGIN
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
     
+     -- сохранили связь с <Дата начисления>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
+     -- сохранили связь с <Должность>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemId, inPositionId);
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Договора>

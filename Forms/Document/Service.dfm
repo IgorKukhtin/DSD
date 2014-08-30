@@ -580,19 +580,6 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 88
     Top = 119
@@ -673,7 +660,7 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'

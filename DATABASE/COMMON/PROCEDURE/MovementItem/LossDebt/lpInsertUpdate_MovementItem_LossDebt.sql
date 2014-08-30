@@ -62,7 +62,7 @@ BEGIN
                   AND COALESCE (MILinkObject_Partner.ObjectId, 0) = COALESCE (inPartnerId, 0) -- AND inPartnerId <> 0
                   AND MovementItem.Id <> COALESCE (ioId, 0))
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%>% <%> <%> <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), CASE WHEN inPartnerId <> 0 THEN ' <' || lfGet_Object_ValueData (inPartnerId) || '>' ELSE '' END, lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId), inJuridicalId, inPartnerId;
      END IF;
 
      -- определяется признак Создание/Корректировка

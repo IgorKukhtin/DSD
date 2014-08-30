@@ -33,6 +33,7 @@ BEGIN
           , ''::TVarChar AS InfoMoneyGroupName
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
           , NULL::Integer   AS PaidKindId
           , ''::TVarChar AS PaidKindName
           , NULL::Integer AS ContractId
@@ -57,6 +58,7 @@ BEGIN
           , ''::TVarChar AS InfoMoneyGroupName
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
           , NULL::Integer   AS PaidKindId
           , ''::TVarChar AS PaidKindName
           , NULL::Integer
@@ -80,6 +82,7 @@ BEGIN
           , ''::TVarChar AS InfoMoneyGroupName
           , ''::TVarChar AS InfoMoneyDestinationName
           , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
           , NULL::Integer   AS PaidKindId
           , ''::TVarChar AS PaidKindName
           , NULL::Integer
@@ -105,6 +108,7 @@ BEGIN
           , Object_InfoMoney_View.InfoMoneyGroupName
           , Object_InfoMoney_View.InfoMoneyDestinationName
           , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
           , Object_PaidKind.Id            AS PaidKindId
           , Object_PaidKind.ValueData     AS PaidKindName
           , View_Contract.ContractId 
@@ -140,6 +144,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.08.14                                        * add InfoMoneyName_all
  20.05.14                                        * change ContractKindName
  25.04.14                                        * add ContractTagName
  18.04.14                                        * rem View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()

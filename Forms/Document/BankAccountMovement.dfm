@@ -496,7 +496,7 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
@@ -583,7 +583,7 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
