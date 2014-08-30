@@ -26,7 +26,7 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm},
+  GoodsPartnerCodeMaster in '..\..\FormsFarmacy\Guides\GoodsPartnerCodeMaster.pas' {GoodsPartnerCodeMasterForm},
   GoodsMainEdit in '..\..\FormsFarmacy\Guides\GoodsMainEdit.pas' {GoodsMainEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
@@ -149,7 +149,9 @@ uses
   Bank in '..\..\Forms\Bank.pas' {BankForm: TParentForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm: TParentForm},
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
-  GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm};
+  GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
+  GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
+  ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

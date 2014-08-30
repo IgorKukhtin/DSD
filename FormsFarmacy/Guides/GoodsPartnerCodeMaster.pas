@@ -1,4 +1,4 @@
-unit GoodsPartnerCode;
+unit GoodsPartnerCodeMaster;
 
 interface
 
@@ -14,7 +14,7 @@ uses
   cxButtonEdit, cxLabel, dsdGuides, cxSplitter;
 
 type
-  TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
+  TGoodsPartnerCodeMasterForm = class(TAncestorGuidesForm)
     clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     edJuridical: TcxButtonEdit;
@@ -32,6 +32,7 @@ type
     cxSplitter: TcxSplitter;
     GoodsLinkCDS: TClientDataSet;
     GoodsLinkDS: TDataSource;
+    clJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -43,6 +44,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsPartnerCodeForm);
+  RegisterClass(TGoodsPartnerCodeMasterForm);
 
 end.

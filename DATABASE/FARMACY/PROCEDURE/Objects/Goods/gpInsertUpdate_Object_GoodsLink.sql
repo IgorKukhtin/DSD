@@ -15,6 +15,7 @@ RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE vbGoodsId Integer;
+   DECLARE vbId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
@@ -31,7 +32,20 @@ BEGIN
     END IF;
    
     ioId := lpInsertUpdate_Object_Goods(vbGoodsId, inCode, inName, 0, 0, 0, inObjectId, UserId);
-  
+
+    SELECT Id INTO vbId 
+       FROM Object_LinkGoods_View
+      WHERE Object_LinkGoods_View.GoodsMainId = inGoodsMainId 
+        AND Object_LinkGoods_View.GoodsId = vbGoodsId;
+
+     IF COALESCE(vbId, 0) = 0 THEN
+                 PERFORM gpInsertUpdate_Object_LinkGoods(
+                                   ioId := 0                     ,  
+                                   inGoodsMainId := inGoodsMainId, -- Главный товар
+                                   inGoodsId  := vbGoodsId       , -- Товар для замены
+                                   inSession  := inSession         -- сессия пользователя
+                                   );
+     END IF;    
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);

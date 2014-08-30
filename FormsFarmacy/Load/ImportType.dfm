@@ -4,30 +4,26 @@ inherited ImportTypeForm: TImportTypeForm
   ClientWidth = 743
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 759
-  ExplicitHeight = 378
+  ExplicitWidth = 751
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 311
-    ExplicitTop = 28
+    Height = 313
     ExplicitWidth = 743
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 739
+    ExplicitHeight = 313
+    ClientRectBottom = 313
+    ClientRectRight = 743
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 735
-      ExplicitHeight = 303
+      ExplicitWidth = 743
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 465
-        Height = 303
+        Height = 313
         Align = alLeft
-        ExplicitLeft = -3
         ExplicitWidth = 465
-        ExplicitHeight = 303
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -65,8 +61,8 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 468
         Top = 0
-        Width = 267
-        Height = 303
+        Width = 275
+        Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -97,13 +93,6 @@ inherited ImportTypeForm: TImportTypeForm
             DataBinding.FieldName = 'ParamNumber'
             HeaderAlignmentVert = vaCenter
             Width = 39
-          end
-          object clICode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 30
           end
           object clIName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
@@ -139,7 +128,7 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 465
         Top = 0
         Width = 3
-        Height = 303
+        Height = 313
         Control = cxGrid
       end
     end
@@ -257,11 +246,7 @@ inherited ImportTypeForm: TImportTypeForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Component = MasterCDS
-          ToParam.Value = Null
-        end>
+      MoveParams = <>
       Params = <
         item
           Name = 'key'
@@ -307,7 +292,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -465,9 +450,9 @@ inherited ImportTypeForm: TImportTypeForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
+        Name = 'inParamNumber'
         Component = ChildCDS
-        ComponentItem = 'Code'
+        ComponentItem = 'ParamNumber'
         ParamType = ptInput
       end
       item
@@ -482,12 +467,6 @@ inherited ImportTypeForm: TImportTypeForm
         Component = ChildCDS
         ComponentItem = 'ParamType'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inParamNumber'
-        Component = ChildCDS
-        ComponentItem = 'ParamNumber'
         ParamType = ptInput
       end
       item
