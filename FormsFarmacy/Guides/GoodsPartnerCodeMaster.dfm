@@ -1,4 +1,4 @@
-inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
+inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
   ClientWidth = 782
@@ -18,12 +18,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       ExplicitWidth = 782
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 377
+        Left = 356
+        Width = 426
         Height = 397
-        Align = alLeft
+        ExplicitLeft = 405
         ExplicitWidth = 377
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.DataSource = GoodsLinkDS
           OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -35,20 +37,25 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 36
           end
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1089#1090#1088#1086#1082')'
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
-            Width = 67
+            Width = 57
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 254
+            Width = 183
+          end
+          object clJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            Width = 87
           end
         end
       end
@@ -69,16 +76,16 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
       end
       object cxGridGoodsLink: TcxGrid
-        Left = 380
+        Left = 0
         Top = 0
-        Width = 402
+        Width = 353
         Height = 397
-        Align = alClient
+        Align = alLeft
         PopupMenu = PopupMenu
         TabOrder = 3
         object cxGridDBTableViewGoodsLink: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = GoodsLinkDS
+          DataController.DataSource = MasterDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
@@ -101,7 +108,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object cxGridDBColumn1: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCodeInt'
+            DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -109,7 +116,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           end
           object cxGridDBColumn3: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsMainName'
+            DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 254
@@ -120,11 +127,12 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
       end
       object cxSplitter: TcxSplitter
-        Left = 377
+        Left = 353
         Top = 0
         Width = 3
         Height = 397
         Control = cxGrid
+        ExplicitLeft = 402
       end
     end
   end
@@ -176,15 +184,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods_Juridical'
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
+    StoredProcName = 'gpSelect_Object_Goods_Common'
     Left = 144
     Top = 88
   end
@@ -310,7 +310,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Top = 108
   end
   object spGoodsLink: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_LinkGoodsMain'
+    StoredProcName = 'gpSelect_Object_PartnerGoods'
     DataSet = GoodsLinkCDS
     DataSets = <
       item
@@ -329,7 +329,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   end
   object GoodsLinkCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'GoodsId'
+    IndexFieldNames = 'GoodsMainId'
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0

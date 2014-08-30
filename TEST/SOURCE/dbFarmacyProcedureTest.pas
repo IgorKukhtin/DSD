@@ -160,6 +160,9 @@ end;
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\FileTypeKind\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettings\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
 end;

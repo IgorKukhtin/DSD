@@ -4,31 +4,29 @@ DROP VIEW IF EXISTS Object_LinkGoods_View;
 
 CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          SELECT 
-           Object_LinkGoods.Id                           AS Id
+           ObjectLink_LinkGoods_GoodsMain.ObjectId       AS Id
                                                         
          , ObjectLink_LinkGoods_GoodsMain.ChildObjectId  AS GoodsMainId
+         , Object_MainGoods.GoodsCodeInt                 AS GoodsCodeInt
          , Object_MainGoods.GoodsName                    AS GoodsMainName
 
          , ObjectLink_LinkGoods_Goods.ChildObjectId      AS GoodsId
+         , Object_Goods.GoodsCode                        AS GoodsCode
          , Object_Goods.GoodsName                        AS GoodsName
 
          , Object_Goods.ObjectId                         AS ObjectId
          , Object_MainGoods.ObjectId                     AS ObjectMainId
-         , Object_LinkGoods.isErased                     AS isErased
+         , false                                         AS isErased
          
-     FROM Object AS Object_LinkGoods
-     
-          JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                          ON ObjectLink_LinkGoods_GoodsMain.ObjectId = Object_LinkGoods.Id
-                         AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+     FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
           JOIN Object_Goods_View AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
  
           JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                          ON ObjectLink_LinkGoods_Goods.ObjectId = Object_LinkGoods.Id
+                          ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
                          AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
           JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
           
-     WHERE Object_LinkGoods.DescId = zc_Object_LinkGoods();
+     WHERE ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain();
 
 ALTER TABLE Object_Goods_View  OWNER TO postgres;
 

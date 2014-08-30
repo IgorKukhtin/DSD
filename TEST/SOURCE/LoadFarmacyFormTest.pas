@@ -89,6 +89,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
+
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;

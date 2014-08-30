@@ -17,7 +17,6 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
-    clICode: TcxGridDBColumn;
     clIName: TcxGridDBColumn;
     clIisErased: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
