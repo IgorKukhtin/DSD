@@ -10,16 +10,28 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
+               InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                DateIn TDateTime, DateOut TDateTime, Official Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
+
+   DECLARE vbInfoMoneyId Integer;
+   DECLARE vbInfoMoneyName TVarChar;
+   DECLARE vbInfoMoneyName_all TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
    vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+   -- определяется Дефолт
+   SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
+          INTO vbInfoMoneyId, vbInfoMoneyName, vbInfoMoneyName_all
+   FROM Object_InfoMoney_View AS View_InfoMoney
+   WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101(); -- 60101 Заработная плата + Заработная плата
+
 
    -- Результат
    RETURN QUERY 
@@ -43,6 +55,10 @@ BEGIN
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
+
+         , vbInfoMoneyId       AS InfoMoneyId
+         , vbInfoMoneyName     AS InfoMoneyName
+         , vbInfoMoneyName_all AS InfoMoneyName_all
  
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut
@@ -65,6 +81,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.08.14                                        * add InfoMoney...
  11.08.14                                        * add 8429 -- Отдел логистики
  21.05.14                         * add Official
  14.12.13                                        * add vbAccessKeyAll

@@ -35,6 +35,9 @@ BEGIN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
      END IF;
 
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('Month', inServiceDate);
+
      -- расчет
      IF inAmountIn <> 0 THEN
         vbAmount := inAmountIn;

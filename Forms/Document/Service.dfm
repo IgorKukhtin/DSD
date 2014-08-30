@@ -57,6 +57,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 97
   end
@@ -68,6 +69,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 304
   end
@@ -79,6 +81,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 304
   end
@@ -111,6 +114,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -127,6 +131,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 273
   end

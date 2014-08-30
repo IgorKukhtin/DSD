@@ -53,6 +53,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 120
   end
@@ -64,6 +65,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 215
   end
@@ -75,6 +77,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 305
   end
@@ -107,6 +110,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 305
   end
@@ -140,6 +144,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 120
   end
@@ -178,6 +183,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 23
     Width = 170
   end
@@ -194,12 +200,14 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 215
   end
   object ceServiceDate: TcxDateEdit [26]
     Left = 245
     Top = 25
+    Properties.ReadOnly = True
     TabOrder = 26
     Width = 170
   end
@@ -227,17 +235,6 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '4'
-        ParamType = ptInput
-      end>
     Left = 128
     Top = 230
   end
@@ -252,35 +249,42 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inamountin'
+        Name = 'inServiceDate'
+        Value = 0d
+        Component = ceServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inamountout'
+        Name = 'inAmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'incomment'
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
@@ -301,21 +305,35 @@
         ParamType = ptInput
       end
       item
-        Name = 'incontactid'
+        Name = 'inPositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'ininfomoneyid'
+        Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inunitid'
+        Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
@@ -342,95 +360,134 @@
         ParamType = ptInput
       end
       item
-        Name = 'invnumber'
+        Name = 'inCashId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inCashId_top'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
       end
       item
-        Name = 'operdate'
+        Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
       end
       item
-        Name = 'amountin'
+        Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
       end
       item
-        Name = 'amountout'
+        Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
       end
       item
-        Name = 'comment'
+        Name = 'ServiceDate'
+        Value = 0d
+        Component = ceServiceDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
       end
       item
-        Name = 'cashid'
+        Name = 'CashId'
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'cashname'
+        Name = 'CashName'
         Value = ''
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'moneyplaceid'
+        Name = 'MoneyPlaceId'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'moneyplacename'
+        Name = 'MoneyPlaceName'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'infomoneyid'
+        Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'infomoneyname'
+        Name = 'InfoMoneyName'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'contractid'
+        Name = 'MemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionId'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionName'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'contractinvnumber'
+        Name = 'ContractInvNumber'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'unitid'
+        Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'unitname'
+        Name = 'UnitName'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
@@ -557,6 +614,19 @@
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionId'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionName'
+        DataType = ftString
       end>
     Left = 368
     Top = 93
@@ -671,6 +741,32 @@
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 128
     Top = 93

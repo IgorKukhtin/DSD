@@ -14,41 +14,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inCashId              Integer   , -- Касса
     IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
     IN inPositionId          Integer   , -- Должность
+    IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inContractId          Integer   , -- Договора
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
-    IN inMemberId            Integer   , -- Физ лицо (через кого)
     IN inUnitId              Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
-   DECLARE vbMovementItemId Integer;
-   DECLARE vbAmount TFloat;
-   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Cash());
-   
-     -- проверка
-     IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму.';
-     END IF;
-
-     -- проверка
-     IF (COALESCE (inAmountIn, 0) <> 0) AND (COALESCE (inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
-     END IF;
-
-     -- расчет
-     IF inAmountIn <> 0 THEN
-        vbAmount := inAmountIn;
-     ELSE
-        vbAmount := -1 * inAmountOut;
-     END IF;
 
 
      -- 1. Распроводим Документ
@@ -58,37 +35,23 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-
-     -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
-
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
-
-     -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL);
-
-     -- сохранили связь с <Объект>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
-    
-     -- сохранили связь с <Дата начисления>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
-     -- Комментарий
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
-
-     -- сохранили связь с <Должность>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemId, inPositionId);
-     -- сохранили связь с <Управленческие статьи>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
-     -- сохранили связь с <Подразделением>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+     -- сохранили
+     ioId := lpInsertUpdate_Movement_Cash (ioId          := ioId
+                                         , inInvNumber   := inInvNumber
+                                         , inOperDate    := inOperDate
+                                         , inServiceDate := inServiceDate
+                                         , inAmountIn    := inAmountIn
+                                         , inAmountOut   := inAmountOut
+                                         , inComment     := inComment
+                                         , inCashId      := inCashId
+                                         , inMoneyPlaceId:= inMoneyPlaceId
+                                         , inPositionId  := inPositionId
+                                         , inContractId  := inContractId
+                                         , inInfoMoneyId := inInfoMoneyId
+                                         , inMemberId    := inMemberId
+                                         , inUnitId      := inUnitId
+                                         , inUserId      := vbUserId
+                                          );
 
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -119,6 +82,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.08.14                                        * all
  17.08.14                                        * add MovementDescId
  10.05.14                                        * add lpInsert_MovementItemProtocol
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
