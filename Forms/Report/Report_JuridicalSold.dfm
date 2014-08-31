@@ -2162,6 +2162,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Action = OtherJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colSaleRealSumm
+        Action = SaleRealJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colReturnInRealSumm
+        Action = ReturnInRealJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colTransferDebtSumm
+        Action = TransferDebtJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end>
   end
   inherited PeriodChoice: TPeriodChoice

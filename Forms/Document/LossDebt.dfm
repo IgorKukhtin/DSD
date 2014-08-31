@@ -347,7 +347,6 @@ object LossDebtForm: TLossDebtForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 50
           end
           object clContractTagName: TcxGridDBColumn
@@ -478,9 +477,6 @@ object LossDebtForm: TLossDebtForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1149,40 +1145,51 @@ object LossDebtForm: TLossDebtForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalId'
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalName'
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyId'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
-          Name = 'inPaidKindId'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'inPaidKindId'
+          Name = 'MasterJuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
         end>
       isShowModal = True
     end

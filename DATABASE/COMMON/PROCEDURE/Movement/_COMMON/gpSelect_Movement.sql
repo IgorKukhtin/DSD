@@ -1,7 +1,5 @@
 -- Function: gpSelect_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement(

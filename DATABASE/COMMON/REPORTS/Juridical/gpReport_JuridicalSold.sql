@@ -25,7 +25,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, ReturnInSumm TFloat, ReturnRealInSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
+             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
               )
 AS
@@ -139,9 +139,6 @@ BEGIN
                                                                                                            , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
                                                                                                            , zc_Movement_SendDebt()
                                                                                                             )
-                                                                                     THEN MIContainer.Amount ELSE 0 END ELSE 0 END
-                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
-                                                                                 AND COALESCE (CLO_PaidKind.ObjectId, 0) <> zc_Enum_PaidKind_FirstForm()
                                                                                      THEN MIContainer.Amount ELSE 0 END ELSE 0 END
                         ) AS OtherSumm,
                      Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount

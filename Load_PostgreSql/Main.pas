@@ -10508,7 +10508,7 @@ begin
         Add('     , Bill.BillDate');
         Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-        Add('     , -BillItems.OperCount as Amount');
+        Add('     , -1 * BillItems.OperCount as Amount');
         Add('     , BillItems.OperCount_Upakovka as inCount');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
@@ -14198,8 +14198,8 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
         Add('     , zc_rvYes() as IsChangeAmount');
-        Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , BillItems.OperCount as Amount');
+        Add('     , abs (BillItems.OperCount) as AmountPartner');
+        Add('     , abs (BillItems.OperCount) as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
