@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
              , isErased Boolean
@@ -58,6 +58,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
@@ -128,6 +129,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent

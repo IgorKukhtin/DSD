@@ -278,6 +278,15 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisName'
           DataType = ftString
+        end
+        item
+          Name = 'PartnerId'
+          Value = 0
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          DataType = ftString
         end>
     end
     object actShowAll: TBooleanStoredProcAction

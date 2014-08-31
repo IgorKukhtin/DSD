@@ -78,6 +78,14 @@ type
     clJuridicalGroupName: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
+    colSaleRealSumm: TcxGridDBColumn;
+    colReturnInRealSumm: TcxGridDBColumn;
+    colTransferDebtSumm: TcxGridDBColumn;
+    SaleRealJournal: TdsdOpenForm;
+    ReturnInRealJournal: TdsdOpenForm;
+    TransferDebtJournal: TdsdOpenForm;
+    dsdPrintRealAction: TdsdPrintAction;
+    bbPrintReal: TdxBarButton;
   private
     { Private declarations }
   public

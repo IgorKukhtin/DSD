@@ -12,40 +12,38 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
+RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , PartnerCode Integer, PartnerName TVarChar
+             , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , PaidKindId Integer, PaidKindName TVarChar, AccountName TVarChar
+             , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
+             , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, ReturnInSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
+             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, ReturnInSumm TFloat, ReturnRealInSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
 
-     -- Один запрос, который считает остаток и движение. 
+     -- Результат
   RETURN QUERY  
      SELECT 
-        Object_Juridical.Id AS JuridicalId,   
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
-        Object_Partner.Id AS PartnerId,
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData AS PartnerName,
-        View_Contract.ContractId,
         View_Contract.ContractCode,
         View_Contract.InvNumber AS ContractNumber,
         View_Contract.ContractTagName,
@@ -54,7 +52,6 @@ BEGIN
         Object_PersonalCollation.PersonalName  AS PersonalCollationName,
         View_Contract.StartDate,
         View_Contract.EndDate,
-        Object_PaidKind.Id AS PaidKindId,
         Object_PaidKind.ValueData AS PaidKindName,
         Object_Account_View.AccountName_all AS AccountName,
         Object_InfoMoney_View.InfoMoneyGroupName,
@@ -62,6 +59,13 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName,
         Object_Area.ValueData AS AreaName,
+
+        Operation.ObjectId  AS AccountId,
+        Object_Juridical.Id AS JuridicalId,
+        Object_Partner.Id   AS PartnerId,
+        Object_InfoMoney_View.InfoMoneyId,
+        View_Contract.ContractId,
+        Object_PaidKind.Id  AS PaidKindId,
 
         Operation.StartAmount ::TFloat AS StartAmount_A,
         (-1 * Operation.StartAmount) ::TFloat AS StartAmount_P,
@@ -74,9 +78,12 @@ BEGIN
         Operation.IncomeSumm::TFloat,
         Operation.ReturnOutSumm::TFloat,
         Operation.SaleSumm::TFloat,
+        Operation.SaleRealSumm::TFloat,
         Operation.ReturnInSumm::TFloat,
+        Operation.ReturnInRealSumm::TFloat,
         Operation.MoneySumm::TFloat,
         Operation.ServiceSumm::TFloat,
+        Operation.TransferDebtSumm::TFloat,
         Operation.SendDebtSumm::TFloat,
         Operation.OtherSumm::TFloat,
 
@@ -97,9 +104,12 @@ BEGIN
                      SUM (Operation_all.IncomeSumm)    AS IncomeSumm,
                      SUM (Operation_all.ReturnOutSumm) AS ReturnOutSumm,
                      SUM (Operation_all.SaleSumm)      AS SaleSumm,
+                     SUM (Operation_all.SaleRealSumm)  AS SaleRealSumm,
                      SUM (Operation_all.ReturnInSumm)  AS ReturnInSumm,
+                     SUM (Operation_all.ReturnInRealSumm)  AS ReturnInRealSumm,
                      SUM (Operation_all.MoneySumm)     AS MoneySumm,
                      SUM (Operation_all.ServiceSumm)   AS ServiceSumm,
+                     SUM (Operation_all.TransferDebtSumm)  AS TransferDebtSumm,
                      SUM (Operation_all.SendDebtSumm)  AS SendDebtSumm,
                      SUM (Operation_all.OtherSumm)     AS OtherSumm,
                      SUM (Operation_all.EndAmount)     AS EndAmount
@@ -111,10 +121,14 @@ BEGIN
 
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_Income() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnOutSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END
-                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
-                        + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm,
+
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleRealSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS TransferDebtSumm,
+
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInRealSumm,
+
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm,
@@ -131,7 +145,7 @@ BEGIN
                                                                                      THEN MIContainer.Amount ELSE 0 END ELSE 0 END
                         ) AS OtherSumm,
                      Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
-                FROM ContainerLinkObject AS CLO_Juridical 
+                FROM ContainerLinkObject AS CLO_Juridical
                      INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
                                                    ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()

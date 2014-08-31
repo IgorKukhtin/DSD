@@ -13,18 +13,35 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdGuides, cxButtonEdit;
 
 type
   TMovementJournalForm = class(TAncestorJournalForm)
     colDescName: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     actOpenDocument: TMultiAction;
     actOpenForm: TdsdOpenForm;
     actMovementForm: TdsdExecStoredProc;
     bbOpenDocument: TdxBarButton;
     getMovementForm: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edPartner: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    cxLabel4: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    edAccount: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel8: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    ceContract: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    PartnerGuides: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    AccountGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public
