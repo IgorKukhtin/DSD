@@ -231,6 +231,7 @@ BEGIN
                              , lpInsertUpdate_MovementItem_LossDebt (ioId                 := 0
                                                                    , inMovementId         := tmpMovement.MovementId
                                                                    , inJuridicalId        := tmpContainerSumm.JuridicalId
+                                                                   , inPartnerId          := tmpContainerSumm.JuridicalId***
                                                                    , inAmount             := 0
                                                                    , inSumm               := 0
                                                                    , inIsCalculated       := TRUE
