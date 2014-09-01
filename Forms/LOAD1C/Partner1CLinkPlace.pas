@@ -72,6 +72,7 @@ type
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
+    clItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

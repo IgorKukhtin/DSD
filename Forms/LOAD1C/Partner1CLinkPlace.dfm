@@ -65,7 +65,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         Width = 150
       end
       object clJuridicalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -84,6 +84,13 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 52
+      end
+      object clItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

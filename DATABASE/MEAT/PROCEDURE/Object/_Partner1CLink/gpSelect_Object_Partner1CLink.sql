@@ -14,6 +14,7 @@ RETURNS TABLE (PartnerId integer, PartnerCode Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, OKPO TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , ItemName TVarChar
               )
 AS
 $BODY$
@@ -36,11 +37,11 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
-          , tmpSale1C  AS (SELECT Sale1C.ClientCode, Sale1C.ClientName, Sale1C.ClientOKPO
+          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName), MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS ClientOKPO
                                 , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
                            FROM Sale1C
                            WHERE Sale1C.ClientCode <> 0
-                           GROUP BY Sale1C.ClientCode, Sale1C.ClientName, Sale1C.ClientOKPO
+                           GROUP BY Sale1C.ClientCode -- , Sale1C.ClientName, Sale1C.ClientOKPO, Sale1C.ClientINN
                                , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                           )
        /*WITH tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
@@ -154,11 +155,12 @@ BEGIN
             , Object_Juridical.Id                   AS JuridicalId
             , Object_Juridical.ValueData            AS JuridicalName
             , Object_JuridicalGroup.ValueData       AS JuridicalGroupName
-            , ObjectHistory_JuridicalDetails_View.OKPO
+            , COALESCE (ObjectString_INN.ValueData, ObjectHistory_JuridicalDetails_View.OKPO) :: TVarChar AS OKPO
             , View_InfoMoney.InfoMoneyGroupName
             , View_InfoMoney.InfoMoneyDestinationName
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
+            , ObjectDesc.ItemName
        FROM Object AS Object_Partner1CLink
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                  ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
@@ -197,6 +199,11 @@ BEGIN
             LEFT JOIN tmpSale1C ON tmpSale1C.ClientCode = Object_Partner1CLink.ObjectCode
                                AND tmpSale1C.BranchTopId = ObjectLink_Partner1CLink_Branch.ChildObjectId 
 
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = Object_Partner.Id
+                                  AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+
        WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()
          -- AND tmpJuridical.PartnerId IS NULL
        ;
@@ -210,6 +217,7 @@ ALTER FUNCTION gpSelect_Object_Partner1CLink (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.09.14                                        * add ItemName
  22.08.14                                        * add tmpSale1C
  22.08.14                                        * show only exists
  16.08.14                                        * add JuridicalGroupName and PaidKindName

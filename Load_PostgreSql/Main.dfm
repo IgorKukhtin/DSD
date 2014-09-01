@@ -821,10 +821,9 @@ object MainForm: TMainForm
       Tag = 20
       Left = 3
       Top = 344
-      Width = 235
+      Width = 93
       Height = 17
-      Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
-      Enabled = False
+      Caption = '5.2. '#1057#1087#1080#1089#1072#1085#1080#1077
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1219,6 +1218,22 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 39
+    end
+    object cbLossGuide: TCheckBox
+      Tag = 20
+      Left = 126
+      Top = 341
+      Width = 126
+      Height = 24
+      Caption = '5.1. !!!'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1089#1087#1080#1089#1072#1085#1080#1103'!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 40
+      WordWrap = True
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1736,6 +1751,7 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '8. '#1050#1072#1089#1089#1072' Int - '#1053#1040#1051
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1743,6 +1759,22 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 32
+      OnClick = cbCompleteIncomeBNClick
+    end
+    object cbCompleteLoss: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 344
+      Width = 194
+      Height = 17
+      Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 33
       OnClick = cbCompleteIncomeBNClick
     end
   end
