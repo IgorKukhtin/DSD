@@ -111,8 +111,8 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas">
-				<Form>GoodsPartnerCodeForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPartnerCodeMaster.pas">
+				<Form>GoodsPartnerCodeMasterForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsMainEdit.pas">
 				<Form>GoodsMainEditForm</Form>
@@ -437,6 +437,11 @@
 				<Form>GoodsMainForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas">
+				<Form>GoodsPartnerCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportSettingsTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

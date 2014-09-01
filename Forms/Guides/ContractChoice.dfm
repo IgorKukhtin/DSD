@@ -257,6 +257,12 @@ inherited ContractChoiceForm: TContractChoiceForm
           ComponentItem = 'InfoMoneyName'
         end
         item
+          Name = 'InfoMoneyName_all'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
           Name = 'ChangePercent'
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
@@ -271,6 +277,15 @@ inherited ContractChoiceForm: TContractChoiceForm
           Name = 'JuridicalBasisName'
           Component = MasterCDS
           ComponentItem = 'JuridicalBasisName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerId'
+          Value = 0
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
           DataType = ftString
         end>
     end
@@ -342,6 +357,10 @@ inherited ContractChoiceForm: TContractChoiceForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

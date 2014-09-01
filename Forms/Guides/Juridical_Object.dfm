@@ -305,6 +305,12 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
           DataType = ftString
         end
         item
+          Name = 'InfoMoneyName_all'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
           Name = 'OKPO'
           Component = ClientDataSet
           ComponentItem = 'OKPO'

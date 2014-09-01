@@ -64,6 +64,8 @@ type
     actPrint_byPack: TdsdPrintAction;
     actPrint_byProduction: TdsdPrintAction;
     bbPrint_byProduction: TdxBarButton;
+    actPrint_byType: TdsdPrintAction;
+    bbPrint_byType: TdxBarButton;
   private
     { Private declarations }
   public

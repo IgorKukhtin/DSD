@@ -3,7 +3,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 358
-  ClientWidth = 864
+  ClientWidth = 605
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 864
+    Width = 605
     Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 864
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,14 +55,14 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 30
       end
       object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 100
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -73,6 +74,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
         DataBinding.FieldName = 'PositionLevelName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -80,6 +82,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       object clPersonalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
         DataBinding.FieldName = 'PersonalGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -273,6 +276,48 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'MemberName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionName'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = 0
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

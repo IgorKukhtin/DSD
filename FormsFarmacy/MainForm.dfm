@@ -65,6 +65,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbMeasure'
+        end
+        item
+          Visible = True
           ItemName = 'bbNDSKind'
         end
         item
@@ -116,7 +120,7 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbMeasure'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
@@ -321,6 +325,29 @@ inherited MainForm: TMainForm
     object bbCommon: TdxBarButton
       Action = actGoods
       Category = 0
+    end
+    object bbGoodsPartnerCode: TdxBarButton
+      Action = actGoodsPartnerCode
+      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'  '
+      Category = 0
+    end
+    object bbGoodsPartnerCodeMaster: TdxBarButton
+      Action = actGoodsPartnerCodeMaster
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbGoodsPartnerCode'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsPartnerCodeMaster'
+        end>
     end
   end
   inherited ActionList: TActionList
@@ -695,6 +722,26 @@ inherited MainForm: TMainForm
       Caption = 'actTestFormOpen'
       FormName = 'TTestForm'
       FormNameParam.Value = 'TTestForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsPartnerCode: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '
+      FormName = 'TGoodsPartnerCodeForm'
+      FormNameParam.Value = 'TGoodsPartnerCodeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsPartnerCodeMaster: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      FormName = 'TGoodsPartnerCodeMasterForm'
+      FormNameParam.Value = 'TGoodsPartnerCodeMasterForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

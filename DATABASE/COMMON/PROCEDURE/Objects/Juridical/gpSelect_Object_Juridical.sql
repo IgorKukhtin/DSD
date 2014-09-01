@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RetailId Integer, RetailName TVarChar,
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                OKPO TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
@@ -51,6 +51,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -123,6 +124,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.08.14                                        * add InfoMoneyName_all
  23.05.14         * add Retail
  12.01.14         * add PriceList,
                         PriceListPromo,
