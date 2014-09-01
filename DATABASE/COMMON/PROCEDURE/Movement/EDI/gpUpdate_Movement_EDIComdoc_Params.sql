@@ -19,10 +19,10 @@ BEGIN
 
 
      -- !!!только для продажи!!!
-     IF NOT EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+     /*IF NOT EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
      THEN
          RAISE EXCEPTION 'Ошибка.Данные перенести можно только для документа <Продажа покупателю>.';
-     END IF;
+     END IF;*/
 
      -- сохранили расчетные параметры
      vbGoodsPropertyId:= (SELECT lpUpdate_Movement_EDIComdoc_Params (inMovementId      := Movement.Id
@@ -42,6 +42,34 @@ BEGIN
                                                         ON MovementString_OKPO.MovementId =  Movement.Id
                                                        AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
                           WHERE Movement.Id = inMovementId);
+
+
+     -- проверка ошибки - 2 связи должны быть установлены
+     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+         -- так для продажи
+         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Sale())
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale());
+         END IF;
+         -- так для налоговой
+         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Tax())
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
+         END IF;
+     ELSE
+         -- так для возврата
+         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_MasterEDI())
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ReturnIn());
+         END IF;
+         -- так для корректировки
+         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_ChildEDI())
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+         END IF;
+     END IF;
+
 
      -- сохранили элементы
      PERFORM lpInsertUpdate_MovementItem (ioId         := MovementItem.Id
@@ -79,14 +107,14 @@ BEGIN
 
 
      -- !!!только для возврата!!!
-     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+     /*IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
      THEN
           -- !!!создаются док-ты <Возврат от покупателя> и <Корректировка к налоговой накладной>!!!
           PERFORM lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId
                                                       , inUserId        := vbUserId
                                                       , inSession       := inSession
                                                        );
-     END IF;
+     END IF;*/
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -107,6 +135,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.14                                        * del !!!только для продажи!!!
  07.08.14                                        * add !!!только для продажи!!!
  07.08.14                                        * add zc_MovementString_InvNumberPartner
  31.07.14                                        * add lpInsertUpdate_Movement_EDIComdoc_In

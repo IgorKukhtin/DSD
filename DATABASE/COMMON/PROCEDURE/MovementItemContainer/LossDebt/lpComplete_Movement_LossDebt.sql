@@ -276,7 +276,7 @@ BEGIN
                                     ELSE tmpMovementItem.OperSumm
                                END AS OperSumm
                              , tmpMovementItem.MovementItemId
-                             , tmpMovementItem.ContainerId
+                             , COALESCE (tmpContainerSumm.ContainerId, tmpMovementItem.ContainerId) AS ContainerId
                              , tmpMovementItem.AccountGroupId, tmpMovementItem.AccountDirectionId, tmpMovementItem.AccountId
 
                              , tmpMovementItem.ProfitLossGroupId
@@ -412,7 +412,7 @@ BEGIN
              , 0 AS ObjectDescId
              , -1 * tmpResult.OperSumm
              , tmpResult.MovementItemId
-             , tmpResult.ContainerId
+             , 0 AS ContainerId -- tmpResult.ContainerId
              , tmpResult.AccountGroupId, tmpResult.AccountDirectionId, 0 AccountId /*AS tmpResult.AccountId*/
 
              , tmpResult.ProfitLossGroupId

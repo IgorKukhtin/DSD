@@ -228,7 +228,9 @@ BEGIN
     ;
 
      -- 2. определяется ContainerId для проводок суммового учета
-     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
+     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
+                                                 THEN _tmpItem.ContainerId
+                                            WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
