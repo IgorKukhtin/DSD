@@ -174,6 +174,26 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       Category = 0
     end
   end
+  inherited PopupMenu: TPopupMenu
+    object N2: TMenuItem [0]
+      Action = actInsert
+    end
+    object N3: TMenuItem [1]
+      Action = actUpdate
+    end
+    object N4: TMenuItem [2]
+      Action = dsdSetErased
+    end
+    object N5: TMenuItem [3]
+      Action = dsdSetUnErased
+    end
+    object N6: TMenuItem [4]
+      Caption = '-'
+    end
+    object N7: TMenuItem [5]
+      Action = dsdChoiceGuides
+    end
+  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>

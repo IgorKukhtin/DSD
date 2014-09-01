@@ -50,9 +50,10 @@ type
     OKDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
     toTwoStoredProc: TdsdStoredProc;
-    cbAlternativeCode: TCheckBox;
+    cbLinkGoods: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure CloseButtonClick(Sender: TObject);
   private
     fStop:Boolean;
     procedure pSetNullGuide_Id_Postgres;
@@ -66,7 +67,7 @@ type
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_Goods;
     procedure pLoadGuide_GoodsPartnerCode;
-    procedure pLoadGuide_AlternativeCode;
+    procedure pLoadGuide_LinkGoods;
     procedure pLoadUnit;
   public
     { Public declarations }
@@ -101,13 +102,13 @@ begin
      cb.Font.Color:=clWindowText;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_AlternativeCode;
+procedure TMainForm.pLoadGuide_LinkGoods;
 var RetailId: integer;
 begin
-     if (not cbAlternativeCode.Checked)or(not cbAlternativeCode.Enabled) then exit;
+     if (not cbLinkGoods.Checked)or(not cbLinkGoods.Enabled) then exit;
      RetailId := GetRetailId;
      //
-     myEnabledCB(cbAlternativeCode);
+     myEnabledCB(cbLinkGoods);
      //
      with fromQuery,Sql do begin
         Close;
@@ -125,7 +126,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_AdditionalGoods_Load';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_LinkGoods_Load';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inGoodsMainCode', ftString, ptInput, '');
@@ -150,7 +151,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbAlternativeCode);
+     myDisabledCB(cbLinkGoods);
 end;
 
 procedure TMainForm.pLoadGuide_Goods;
@@ -184,7 +185,6 @@ begin
         toStoredProc.StoredProcName:='gpInsertUpdate_Object_MainGoodsLoad';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
@@ -195,34 +195,35 @@ begin
         toTwoStoredProc.Params.Clear;
 
         toTwoStoredProc.Params.AddParam ('ioId', ftInteger, ptInputOutput, 0);
-        toTwoStoredProc.Params.AddParam ('inOKPO', ftString, ptInput, '');
-        toTwoStoredProc.Params.AddParam ('inObjectId', ftInteger, ptInput, RetailId);
+        toTwoStoredProc.Params.AddParam ('inCode', ftString, ptInput, 0);
         toTwoStoredProc.Params.AddParam ('inMainCode', ftInteger, ptInput, 0);
-        toTwoStoredProc.Params.AddParam ('inGoodsCode', ftString, ptInput, '');
-        toTwoStoredProc.Params.AddParam ('inGoodsName', ftString, ptInput, '');
+        toTwoStoredProc.Params.AddParam ('inName', ftString, ptInput, '');
+        toTwoStoredProc.Params.AddParam ('inObjectId', ftInteger, ptInput, RetailId);
+        toTwoStoredProc.Params.AddParam ('inMeasureId', ftInteger, ptInput, 0);
+        toTwoStoredProc.Params.AddParam ('inNDS', ftFloat, ptInput, 0);
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value := FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value := FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;
-
              myExecToStoredProc;
 
              toTwoStoredProc.Params.ParamByName('ioId').Value := FieldByName('Id_Postgres').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inCode').Value := FieldByName('ObjectCode').AsInteger;
              toTwoStoredProc.Params.ParamByName('inMainCode').Value := FieldByName('ObjectCode').AsInteger;
-             toTwoStoredProc.Params.ParamByName('inGoodsCode').Value := FieldByName('ObjectCode').AsInteger;
-             toTwoStoredProc.Params.ParamByName('inGoodsName').Value := FieldByName('ObjectName').AsString;
+             toTwoStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
+             toTwoStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;
              toTwoStoredProc.Execute;
-             //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toTwoStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-             //
+
+            if FieldByName('Id_Postgres').AsInteger = 0 then
+               fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toTwoStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -417,7 +418,7 @@ begin
     if not fStop then pLoadGuide_Measure;
     if not fStop then pLoadGuide_Goods;
     if not fStop then pLoadGuide_GoodsPartnerCode;
-    if not fStop then pLoadGuide_AlternativeCode;
+    if not fStop then pLoadGuide_LinkGoods;
     if not fStop then pLoadUnit;
   finally
     Gauge.Visible:=false;
@@ -429,6 +430,11 @@ begin
   if fStop then ShowMessage('Справочники НЕ загружены.') else ShowMessage('Справочники загружены.');
   //
   fStop:=true;
+end;
+
+procedure TMainForm.CloseButtonClick(Sender: TObject);
+begin
+  Close
 end;
 
 function TMainForm.fExecSqFromQuery(mySql:String):Boolean;

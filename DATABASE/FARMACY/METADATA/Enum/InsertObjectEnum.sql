@@ -38,8 +38,11 @@ BEGIN
 END $$;
 */
 DO $$
-DECLARE ioId integer;
-DECLARE UserId integer;
+  DECLARE ioId integer;
+  DECLARE UserId integer;
+  DECLARE DefaultKeyId Integer;
+  DECLARE vbKey TVarChar;
+  DECLARE vbRetailId Integer;
 BEGIN
    -- Нельзя вставить штатными средствами потому что не сработает проверка прав!!!
    SELECT Id INTO UserId FROM Object WHERE DescId = zc_Object_User() AND ValueData = 'Админ';
@@ -49,6 +52,28 @@ BEGIN
      UserId := lpInsertUpdate_Object(0, zc_Object_User(), 0, 'Админ');
 
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), UserId, 'Админ');
+   END IF;
+
+   vbKey := 'zc_Object_Retail';
+
+   -- Добавляем ключ дефолта
+   SELECT Id INTO DefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
+
+   IF COALESCE(DefaultKeyId, 0) = 0 THEN 
+      INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"DescName":"zc_Object_Retail"}') RETURNING Id INTO DefaultKeyId;
+   END IF;
+
+   -- Добавляем сеть "Не болей"
+
+   SELECT Id INTO vbRetailId FROM Object WHERE DescId = zc_Object_Retail() AND ValueData = 'Не болей';
+
+   IF COALESCE(vbRetailId, 0) = 0 THEN 
+      vbRetailId := lpInsertUpdate_Object( 0, zc_Object_Retail(), 1, 'Не болей');
+   END IF;
+
+   IF COALESCE(lpGet_DefaultValue('zc_Object_Retail', zc_Enum_Role_Admin()), '') = '0' THEN
+      INSERT INTO DefaultValue(DefaultKeyId, UserKeyId, DefaultValue) 
+                VALUES(DefaultKeyId, zc_Enum_Role_Admin(), vbRetailId);
    END IF;
 
    IF NOT EXISTS(SELECT * FROM OBJECT

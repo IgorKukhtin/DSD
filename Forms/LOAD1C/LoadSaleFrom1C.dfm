@@ -2,8 +2,10 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 974
-  ExplicitHeight = 451
+  ExplicitLeft = -176
+  ExplicitTop = -60
+  ExplicitWidth = 966
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -345,7 +347,6 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end>
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spMasterSelect
       StoredProcList = <
@@ -595,6 +596,12 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ParamType = ptInput
       end
       item
+        Name = 'inClientCode'
+        Component = MasterCDS
+        ComponentItem = 'ClientCode'
+        ParamType = ptInput
+      end
+      item
         Name = 'inBranchId'
         Value = ''
         Component = BranchGuides
@@ -764,5 +771,19 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end>
     Left = 296
     Top = 216
+  end
+  object DBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 592
+    Top = 240
   end
 end

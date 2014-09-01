@@ -6,17 +6,19 @@ uses
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
   dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
+  CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
   dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbFarmacyProcedureTest in '..\SOURCE\dbFarmacyProcedureTest.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
+  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
+  DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas',
   LoadFarmacyFormTest in '..\SOURCE\LoadFarmacyFormTest.pas',
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
-  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
   Storage in '..\..\SOURCE\Storage.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
@@ -24,9 +26,8 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  GoodsCommon in '..\..\FormsFarmacy\Guides\GoodsCommon.pas' {GoodsCommonForm},
-  GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm},
-  Units in '..\..\FormsFarmacy\Guides\Units.pas' {UnitForm},
+  GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm},
+  GoodsMainEdit in '..\..\FormsFarmacy\Guides\GoodsMainEdit.pas' {GoodsMainEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
@@ -110,7 +111,6 @@ uses
   RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm: TParentForm},
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
   JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
@@ -120,8 +120,8 @@ uses
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AdditionalGoods in '..\..\FormsFarmacy\Guides\AdditionalGoods.pas' {AdditionalGoodsForm: TParentForm},
-  AdditionalGoodsTest in '..\SOURCE\Objects\All\AdditionalGoodsTest.pas',
-  ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
+  LinkGoodsTest in '..\SOURCE\Objects\All\LinkGoodsTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\Farmacy\ContractTest.pas',
   ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
   GoodsTest in '..\SOURCE\Objects\All\Farmacy\GoodsTest.pas',
   GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
@@ -140,12 +140,16 @@ uses
   ObjectDesc in '..\..\Forms\System\ObjectDesc.pas' {ObjectDescForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
-  DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas',
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
-  CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
-  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm};
+  Goods in '..\..\FormsFarmacy\Guides\Goods.pas' {GoodsForm: TParentForm},
+  UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
+  UnitTree in '..\..\FormsFarmacy\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
+  Bank in '..\..\Forms\Bank.pas' {BankForm: TParentForm},
+  BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm: TParentForm},
+  GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -155,6 +159,8 @@ begin
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
+  ProcessPath := '..\DATABASE\FARMACY\PROCESS\';
+
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

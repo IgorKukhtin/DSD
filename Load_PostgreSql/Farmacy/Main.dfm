@@ -176,7 +176,7 @@ object MainForm: TMainForm
       Enabled = False
       TabOrder = 14
     end
-    object cbAlternativeCode: TCheckBox
+    object cbLinkGoods: TCheckBox
       Tag = 10
       Left = 15
       Top = 82
@@ -308,6 +308,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1042#1099#1093#1086#1076
       TabOrder = 2
+      OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
       Left = 775

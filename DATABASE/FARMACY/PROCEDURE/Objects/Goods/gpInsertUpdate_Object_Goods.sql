@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -9,21 +10,36 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
-    IN inGoodsMainId         Integer   ,    -- Ссылка на главный товар
-    IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
-
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUserName TVarChar;
+   DECLARE vbObjectId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   vbUserId := inSession;
+   vbUserId := lpGetUserBySession (inSession);
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+   IF COALESCE(vbObjectId, 0) = 0 THEN
+      SELECT ValueData INTO vbUserName FROM Object WHERE Id = vbUserId;
+      RAISE EXCEPTION 'У пользователя "%" не установлена торговая сеть', vbUserName;
+   END IF;
+
+   -- !!! проверка уникальности <Код>
+   IF COALESCE(inMeasureId, 0) = 0 THEN
+      RAISE EXCEPTION 'Единица измерения должна быть определена';
+   END IF; 
+
+   -- !!! проверка уникальности <Код>
+   IF COALESCE(inNDSKindId, 0) = 0 THEN
+      RAISE EXCEPTION 'Тип НДС должен быть определен';
+   END IF; 
+
    
-   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inGoodsMainId, inObjectId, vbUserId);
- 
+   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId);
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -31,7 +47,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*

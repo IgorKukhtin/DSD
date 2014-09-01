@@ -4,14 +4,14 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1034
-  ExplicitHeight = 208
+  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1675,7 +1675,7 @@
       Category = 0
     end
     object bbReport_GoodsMI_OrderExternal: TdxBarButton
-      Action = dsdOpenForm1
+      Action = actReport_OrderExternal
       Category = 0
     end
     object bbReport_GoodsMI_Production: TdxBarButton
@@ -1766,7 +1766,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object actReport_OrderExternal: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1079#1072#1103#1074#1082#1080'  ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081')'
@@ -3648,7 +3648,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

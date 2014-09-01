@@ -11,7 +11,7 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxContainer, cxLabel, cxTextEdit, cxMaskEdit,
-  dsdGuides, dsdActionOld, dsdStorageAction;
+  dsdGuides, Vcl.DBActns;
 
 type
   TAdditionalGoodsForm = class(TAncestorGuidesForm)
@@ -39,6 +39,14 @@ type
     actGoodsChoice: TOpenChoiceForm;
     actInsertUpdateLink: TdsdUpdateDataSet;
     spInsertUpdateGoodsLink: TdsdStoredProc;
+    mactInsert: TMultiAction;
+    InsertRecord: TInsertRecord;
+    DataSetPost: TDataSetPost;
+    DataSetCancel: TDataSetCancel;
+    actDeleteLink: TdsdExecStoredProc;
+    mactDeleteLink: TMultiAction;
+    DataSetDelete: TDataSetDelete;
+    spDeleteLink: TdsdStoredProc;
   private
     { Private declarations }
   public

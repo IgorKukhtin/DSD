@@ -74,6 +74,26 @@ BEGIN
      FROM Object_InfoMoney_View
 
    UNION ALL
+     -- Подразделения
+     SELECT 
+           Object_Unit_View.Id        AS Id
+         , Object_Unit_View.Code      AS Code
+         , Object_Unit_View.Name      AS Name
+         
+         , NULL :: TVarChar           AS Address
+
+         , 0 :: Integer               AS JuridicalId
+         , NULL :: Integer            AS JuridicalCode
+         , NULL :: TVarChar           AS JuridicalName
+         , NULL :: TVarChar           AS JuridicalGroupName
+         , NULL :: TVarChar           AS OKPO
+
+         , Object_Unit_View.isErased
+
+     FROM Object_Unit_View
+
+
+   UNION ALL
      -- Сотрудники Филиалов
      SELECT 
            Object_Member.Id         AS Id
@@ -121,6 +141,7 @@ ALTER FUNCTION gpSelect_Object_Partner1CLinkPlace (integer, TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.08.14                                        * add Object_Unit_View
  24.08.14                                        *
 */
 

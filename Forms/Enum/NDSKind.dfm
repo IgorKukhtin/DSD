@@ -8,7 +8,7 @@ inherited NDSKindForm: TNDSKindForm
   inherited PageControl: TcxPageControl
     Width = 261
     ExplicitWidth = 261
-    ClientRectRight = 257
+    ClientRectRight = 261
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
@@ -42,7 +42,7 @@ inherited NDSKindForm: TNDSKindForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
 end

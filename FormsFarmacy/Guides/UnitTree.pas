@@ -1,4 +1,4 @@
-unit Units;
+unit UnitTree;
 
 interface
 
@@ -8,15 +8,15 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
-  cxSplitter, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
+  ParentForm, cxTL, cxMaskEdit, cxTLdxBarBuiltInMenu, cxImageComboBox,
+  cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar,
+  cxPropertiesStore, Datasnap.DBClient, cxGrid, cxSplitter, cxInplaceContainer,
+  cxDBTL, cxTLData;
 
 type
-  TUnitForm = class(TParentForm)
+  TUnitTreeForm = class(TParentForm)
     TreeDS: TDataSource;
-    ClientTreeDataSet: TClientDataSet;
+    TreeDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -33,23 +33,28 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
+    ceParentName: TcxDBTreeListColumn;
     cxSplitter1: TcxSplitter;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     GridDS: TDataSource;
-    ClientGridDataSet: TClientDataSet;
+    ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clParentName: TcxGridDBColumn;
-    clisErased: TcxGridDBColumn;
+    ceCode: TcxGridDBColumn;
+    ceName: TcxGridDBColumn;
+    ceBranchName: TcxGridDBColumn;
+    ceisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
-    clJuridicalName: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dxBarStatic: TdxBarStatic;
+    ceTreeState: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    bbUnitChoiceForm: TdxBarButton;
+    dsdOpenUnitForm: TdsdOpenForm;
   private
     { Private declarations }
   public
@@ -61,6 +66,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnitForm);
+  RegisterClass(TUnitTreeForm);
 
 end.

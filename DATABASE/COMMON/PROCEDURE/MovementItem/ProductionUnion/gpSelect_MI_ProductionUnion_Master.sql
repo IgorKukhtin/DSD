@@ -1,7 +1,8 @@
 -- Function: gpSelect_MI_ProductionUnion_Master()
 
---DROP FUNCTION gpSelect_MI_ProductionUnion_Master();
+DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion_Master (Integer, Boolean, TVarChar);
 
+/*
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Master(
     IN inMovementId          Integer,       
     IN inShowAll             Boolean,
@@ -88,7 +89,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-
+*/
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

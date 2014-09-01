@@ -1,4 +1,4 @@
-unit GoodsCommon;
+unit GoodsPartnerCode;
 
 interface
 
@@ -10,16 +10,18 @@ uses
   dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel, dsdGuides;
 
 type
-  TGoodsCommonForm = class(TAncestorGuidesForm)
+  TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    clNDSKindName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clisErased: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
+    edJuridical: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    bbLabel: TdxBarControlContainerItem;
+    bbJuridical: TdxBarControlContainerItem;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -31,6 +33,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsCommonForm);
+  RegisterClass(TGoodsPartnerCodeForm);
 
 end.

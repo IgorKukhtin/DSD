@@ -76,12 +76,19 @@ procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCommonForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsCommonForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsMainEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsLiteForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;
@@ -145,13 +152,10 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadUnumFormTest;

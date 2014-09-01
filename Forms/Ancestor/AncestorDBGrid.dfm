@@ -57,6 +57,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>

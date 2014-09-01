@@ -931,35 +931,73 @@ procedure TEDI.InitializeComSigner;
 var
   privateKey: string;
 begin
-  ComSigner := CreateOleObject('ComSigner.ComSigner');
-  privateKey := '<RSAKeyValue>' +
-    '<Modulus>0vCnV3tJx2QhZl6KoCpyskW2Q4EB4lUspJVmvaqGIhWujFpaNESHmIKlbc47JCIFY+VtYenKJVPnfZN+xlw7QsfRiKX7AdOmUm+No+X2U3eDkq0+byeMvT9m1zo3MaX6yCWlicvpYDPO29iJn8RfGYmVIO0p54ERXdZg6GuD4Nc=</Modulus>'
-    + '<Exponent>AQAB</Exponent>' +
-    '<P>77+YBsrKezqaqOaQV0LFfP+c9J+N2qzmOlm04MD4TzbXC9huCQjaywzqadcdfNWERtQT1Dc0iOhHpR4xLSVgmw==</P>  '
-    + '<Q>4T0kYYkrJIZdBwaewETHk52yHIIu2jr4WFEKiwCSYI++WcocVVoRKabx96v3NDmTzQUIhmH0xFOYJY+BzzbOdQ==</Q>  '
-    + '<DP>CkEEjI3R2TFpef3agJDvh2gbW28Tjx3D/wzlKpO2SxUKX4xTMHm7eeHEiOBVd4heTvU1H+d4jL56ifpfmhG2Lw==</DP>  '
-    + '<DQ>N7CyahtMO3+tSKtuXQOkhO8ctsfJZdPmy49eF/hQOOfRnMnIL6JRVAcfFKnEOXly/eIctX1K07AHkmHlKqLWcQ==</DQ>  '
-    + '<InverseQ>01ZjPqfM69PA0hsYb6/5O38XT7IITGQPt1hMkTpVjhlDc3r3isPV8mgoTY/iKmTWx66Exjn+IlT6qB/X1FwDsw==</InverseQ> '
-    + '<D>YN9/YpgusmDkS+CYNmU4JnIIeejZxilKps0sEWeqUSX28uMdsQpV4W8CbTK8i2QKaK25NbHKEal+Uvf1TUCXP8b7xE5+FIcSykHd/Ta+veQM1Ljxnuwylkbq3N4GvyYro7D1z3trt6AxlGgDu8QjRoBc2Ba9XXRtlAToiN4i8y0=</D>'
-    + '</RSAKeyValue>';
-  ComSigner.Initialize('ifin.ua', privateKey);
-  ComSigner.ResetPrivateKey;
-  ComSigner.ResetCryptToCert;
-  // Установка сетификатов
-  ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) +
-     'Exite_Для Шифрования.cer');
+    ComSigner := CreateOleObject('ComSigner.ComSigner');
+    privateKey := '<RSAKeyValue>' +
+      '<Modulus>0vCnV3tJx2QhZl6KoCpyskW2Q4EB4lUspJVmvaqGIhWujFpaNESHmIKlbc47JCIFY+VtYenKJVPnfZN+xlw7QsfRiKX7AdOmUm+No+X2U3eDkq0+byeMvT9m1zo3MaX6yCWlicvpYDPO29iJn8RfGYmVIO0p54ERXdZg6GuD4Nc=</Modulus>'
+      + '<Exponent>AQAB</Exponent>' +
+      '<P>77+YBsrKezqaqOaQV0LFfP+c9J+N2qzmOlm04MD4TzbXC9huCQjaywzqadcdfNWERtQT1Dc0iOhHpR4xLSVgmw==</P>  '
+      + '<Q>4T0kYYkrJIZdBwaewETHk52yHIIu2jr4WFEKiwCSYI++WcocVVoRKabx96v3NDmTzQUIhmH0xFOYJY+BzzbOdQ==</Q>  '
+      + '<DP>CkEEjI3R2TFpef3agJDvh2gbW28Tjx3D/wzlKpO2SxUKX4xTMHm7eeHEiOBVd4heTvU1H+d4jL56ifpfmhG2Lw==</DP>  '
+      + '<DQ>N7CyahtMO3+tSKtuXQOkhO8ctsfJZdPmy49eF/hQOOfRnMnIL6JRVAcfFKnEOXly/eIctX1K07AHkmHlKqLWcQ==</DQ>  '
+      + '<InverseQ>01ZjPqfM69PA0hsYb6/5O38XT7IITGQPt1hMkTpVjhlDc3r3isPV8mgoTY/iKmTWx66Exjn+IlT6qB/X1FwDsw==</InverseQ> '
+      + '<D>YN9/YpgusmDkS+CYNmU4JnIIeejZxilKps0sEWeqUSX28uMdsQpV4W8CbTK8i2QKaK25NbHKEal+Uvf1TUCXP8b7xE5+FIcSykHd/Ta+veQM1Ljxnuwylkbq3N4GvyYro7D1z3trt6AxlGgDu8QjRoBc2Ba9XXRtlAToiN4i8y0=</D>'
+      + '</RSAKeyValue>';
+  try
+    ComSigner.Initialize('ifin.ua', privateKey);
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.Initialize'#10#13 + E.Message);
+  end;
+  try
+    ComSigner.ResetPrivateKey;
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.ResetPrivateKey'#10#13 + E.Message);
+  end;
+  try
+    ComSigner.ResetCryptToCert;
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.ResetCryptToCert'#10#13 + E.Message);
+  end;
 
+    // Установка сетификатов
+  try
+    ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) +
+     'Exite_Для Шифрования.cer');
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert'#10#13 + E.Message);
+  end;
+
+  try
     // Установка ключей
     ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
       'Ключ - Неграш О.В..ZS2', '24447183', 1); // бухгалтер
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+  end;
+
+  try
     // Установка ключей
     ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
       'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2',
       '24447183', 3); // Печать
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+  end;
+
+  try
     // Установка ключей
     ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
       'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2',
       '24447183', 4); // Шифр
+  except
+    on E: Exception do
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+  end;
 end;
 
 function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
@@ -1251,7 +1289,7 @@ begin
   except
     on E: Exception do begin
       if i > 9 then
-         raise Exception.Create(E.Message);
+         raise Exception.Create('Ошибка библиотеки Exite. ComSigner.Process'#10#13 + E.Message);
     end;
   end;
 end;

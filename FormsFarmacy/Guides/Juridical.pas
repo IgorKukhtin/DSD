@@ -10,7 +10,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, Vcl.Menus,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxPCdxBarPopupMenu;
 
 type
   TJuridicalForm = class(TAncestorGuidesForm)

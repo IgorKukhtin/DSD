@@ -95,14 +95,13 @@
 			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Metadata\dbMetadataTest.pas"/>
-			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\AuthenticationTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\UnitsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFormTest.pas"/>
@@ -295,10 +294,10 @@
 			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Member.pas">
-				<Form>MemberForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
+				<Form>Member_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MemberEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\CarModel.pas">
@@ -694,8 +693,8 @@
 				<Form>ContractConditionByContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
-				<Form>MoneyPlace_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlaceCash_Object.pas">
+				<Form>MoneyPlaceCash_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossService.pas">
@@ -1453,7 +1452,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteSortingTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>
@@ -1487,6 +1486,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas">
 				<Form>Report_GoodsMI_ProductionSeparateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member.pas">
+				<Form>MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
+				<Form>MoneyPlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

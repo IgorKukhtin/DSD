@@ -355,7 +355,7 @@ type
     actCurrencyMovement: TdsdOpenForm;
     bbCurrencyMovement: TdxBarButton;
     bbReport_GoodsMI_OrderExternal: TdxBarButton;
-    dsdOpenForm1: TdsdOpenForm;
+    actReport_OrderExternal: TdsdOpenForm;
     actReport_GoodsMI_ProductionUnionIncome: TdsdOpenForm;
     bbReport_GoodsMI_Production: TdxBarButton;
     actReport_GoodsMI_ProductionUnionReturn: TdsdOpenForm;

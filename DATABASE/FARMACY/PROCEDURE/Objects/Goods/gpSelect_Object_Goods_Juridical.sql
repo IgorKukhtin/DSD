@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
     IN inObjectId    INTEGER , 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
+RETURNS TABLE (Id Integer, Code Integer, GoodsCode TVarChar, Name TVarChar, isErased boolean, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar
@@ -20,7 +20,7 @@ BEGIN
    SELECT 
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
---           , ObjectString.ValueData                           AS GoodsCode
+           , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -31,7 +31,7 @@ BEGIN
            , Object_Goods_View.NDSKindName
 
     FROM Object_Goods_View 
-   WHERE (inObjectId = 0 AND Object_Goods_View.ObjectId IS NULL) OR (Object_Goods_View.ObjectId = inObjectId AND inObjectId <> 0);
+   WHERE Object_Goods_View.ObjectId = inObjectId;
 
   
 END;

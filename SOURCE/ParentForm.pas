@@ -54,7 +54,8 @@ uses
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid;
+  cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid,
+  Vcl.DBActns;
 
 {$R *.dfm}
 
@@ -238,6 +239,9 @@ initialization
   // Стандартные компоненты
   RegisterClass (TActionList);
   RegisterClass (TClientDataSet);
+  RegisterClass (TDataSetCancel);
+  RegisterClass (TDataSetDelete);
+  RegisterClass (TDataSetPost);
   RegisterClass (TDataSource);
   RegisterClass (TDBGrid);
   RegisterClass (TFileExit);

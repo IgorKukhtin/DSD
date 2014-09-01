@@ -30,6 +30,7 @@ type
     clEndDate: TcxGridDBColumn;
     clContractKindName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
+    clInfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

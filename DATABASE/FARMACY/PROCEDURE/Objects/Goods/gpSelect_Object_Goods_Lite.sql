@@ -9,10 +9,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Lite(
 )
 RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, isErased boolean) AS
 $BODY$
-   DECLARE vbObjectId  Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   vbUserId := lpGetUserBySession (inSession);
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
 
 
    RETURN QUERY 
@@ -28,7 +32,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Lite(Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods_Lite(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

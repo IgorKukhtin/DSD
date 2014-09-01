@@ -11,6 +11,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     ClientRectRight = 961
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 961
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 961
         ExplicitWidth = 961
@@ -49,12 +50,14 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
                 ImageIndex = 66
                 Value = 4
               end>
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object clContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -62,6 +65,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
@@ -69,12 +73,14 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clContractKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractKindName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object clStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -83,6 +89,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'EndDate'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -90,6 +97,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 33
@@ -97,6 +105,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 151
@@ -104,12 +113,14 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -117,6 +128,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -124,26 +136,38 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clInfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 96
@@ -152,6 +176,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 20
@@ -199,6 +224,12 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
         end>
     end
