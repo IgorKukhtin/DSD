@@ -21,7 +21,7 @@ BEGIN
 
      -- Определяются параметры
      SELECT MovementLinkMovement_MasterEDI.MovementId, MovementLinkMovement_ChildEDI.MovementId
-          , MovementString_InvNumberTax.ValueData, MovementDate_OperDateTax.ValueData, MovementLinkObject_Juridical.ObjectId
+          , TRIM (MovementString_InvNumberTax.ValueData), MovementDate_OperDateTax.ValueData, MovementLinkObject_Juridical.ObjectId
             INTO vbMovementId_ReturnIn, vbMovementId_TaxCorrective
                , vbInvNumberPartner_Tax, vbOperDate_Tax, vbJuridicalId_Tax
      FROM Movement
@@ -32,10 +32,10 @@ BEGIN
                                          ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id
                                         AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
           LEFT JOIN MovementString AS MovementString_InvNumberTax
-                                   ON MovementString_InvNumberTax.MovementChildId =  Movement.Id
+                                   ON MovementString_InvNumberTax.MovementId =  Movement.Id
                                   AND MovementString_InvNumberTax.DescId = zc_MovementString_InvNumberTax()
           LEFT JOIN MovementDate AS MovementDate_OperDateTax
-                                 ON MovementDate_OperDateTax.MovementChildId =  Movement.Id
+                                 ON MovementDate_OperDateTax.MovementId =  Movement.Id
                                 AND MovementDate_OperDateTax.DescId = zc_MovementDate_OperDateTax()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                        ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -60,7 +60,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MovementString_InvNumberPartner.MovementId
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                                  AND Movement.DescId = zc_Movement_Tax()
-                                                 AND Movement.OperDate = vbOperDate_Tax
+                                                 AND Movement.OperDate BETWEEN (vbOperDate_Tax - (INTERVAL '7 DAY')) AND (vbOperDate_Tax + (INTERVAL '7 DAY'))
                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -71,7 +71,7 @@ BEGIN
      -- Проверка
      IF COALESCE (vbMovementId_Tax, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ <Налоговая накладная> не найден.';
+         RAISE EXCEPTION 'Ошибка.Документ <Налоговая накладная> № <%>  от <%> не найден.', vbInvNumberPartner_Tax, DATE (vbOperDate_Tax);
      END IF;
 
      -- сохранили <Возврат от покупателя>
@@ -197,6 +197,8 @@ BEGIN
      PERFORM gpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_ReturnIn
                                          , inIsLastComplete := TRUE
                                          , inSession        := inSession);
+     -- сохранили протокол
+     PERFORM lpInsert_Movement_EDIEvents (inMovementId, 'Завершен перенос данных из ComDoc в документ (' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ReturnIn()) || ').', inUserId);
 
 END;
 $BODY$
@@ -205,6 +207,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.14                                        *
  31.07.14                                        *
 */
 

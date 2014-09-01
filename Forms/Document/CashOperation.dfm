@@ -48,6 +48,7 @@
   object ceCash: TcxButtonEdit [7]
     Left = 430
     Top = 25
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
