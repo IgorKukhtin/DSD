@@ -11,17 +11,27 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel, dsdGuides;
+  cxButtonEdit, cxLabel, dsdGuides, cxSplitter;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
-    clCode: TcxGridDBColumn;
+    clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     edJuridical: TcxButtonEdit;
     cxLabel1: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
     JuridicalGuides: TdsdGuides;
+    clCode: TcxGridDBColumn;
+    cxGridGoodsLink: TcxGrid;
+    cxGridDBTableViewGoodsLink: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    spGoodsLink: TdsdStoredProc;
+    cxSplitter: TcxSplitter;
+    GoodsLinkCDS: TClientDataSet;
+    GoodsLinkDS: TDataSource;
   private
     { Private declarations }
   public

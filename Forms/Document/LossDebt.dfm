@@ -311,8 +311,14 @@ object LossDebtForm: TLossDebtForm
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object clPaidKindName: TcxGridDBColumn
@@ -341,7 +347,6 @@ object LossDebtForm: TLossDebtForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 50
           end
           object clContractTagName: TcxGridDBColumn
@@ -1140,40 +1145,51 @@ object LossDebtForm: TLossDebtForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalId'
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalName'
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyId'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
-          Name = 'inPaidKindId'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'inPaidKindId'
+          Name = 'MasterJuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
         end>
       isShowModal = True
     end

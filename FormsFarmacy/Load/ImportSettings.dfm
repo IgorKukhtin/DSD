@@ -2,7 +2,6 @@ inherited ImportSettingsForm: TImportSettingsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 969
-  ExplicitLeft = -171
   ExplicitWidth = 977
   ExplicitHeight = 366
   PixelsPerInch = 96
@@ -103,7 +102,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Caption = 'ImportTypeItemsChoiceForm'
+                Action = ImportType
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -413,6 +412,27 @@ inherited ImportSettingsForm: TImportSettingsForm
       Param.Component = MasterCDS
       Param.ComponentItem = 'Directory'
       Param.DataType = ftString
+    end
+    object ImportType: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ImportType'
+      FormName = 'TImportTypeForm'
+      FormNameParam.Value = 'TImportTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ImportTypeId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ImportTypeName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource

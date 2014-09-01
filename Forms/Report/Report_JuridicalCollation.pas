@@ -44,8 +44,8 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     spJuridicalBalance: TdsdStoredProc;
     cxLabel3: TcxLabel;
-    edMainJuridical: TcxButtonEdit;
-    MainJuridicalGuides: TdsdGuides;
+    edPartner: TcxButtonEdit;
+    PartnerGuides: TdsdGuides;
     gpGetDefault: TdsdStoredProc;
     gpGetJuridical: TdsdStoredProc;
     actPrint: TdsdPrintAction;

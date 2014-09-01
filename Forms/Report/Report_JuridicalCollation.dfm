@@ -343,18 +343,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     inherited cxLabel2: TcxLabel
       Left = 6
-      Top = 31
+      Top = 30
       ExplicitLeft = 6
-      ExplicitTop = 31
+      ExplicitTop = 30
     end
     object cxLabel6: TcxLabel
       Left = 207
-      Top = 31
+      Top = 6
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
       Left = 314
-      Top = 29
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -364,21 +364,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 210
     end
     object cxLabel3: TcxLabel
-      Left = 216
-      Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086':'
+      Left = 244
+      Top = 30
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
-    object edMainJuridical: TcxButtonEdit
+    object edPartner: TcxButtonEdit
       Left = 314
-      Top = 5
-      Enabled = False
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Text = #1054#1054#1054' '#1040#1051#1040#1053
       Width = 210
     end
     object cxLabel4: TcxLabel
@@ -415,7 +413,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object cxLabel5: TcxLabel
       Left = 840
-      Top = 31
+      Top = 30
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
@@ -431,7 +429,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object cxLabel7: TcxLabel
       Left = 529
-      Top = 31
+      Top = 30
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoney: TcxButtonEdit
@@ -555,8 +553,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'OurFirm'
-          Value = #1054#1054#1054' '#1040#1051#1040#1053
-          Component = MainJuridicalGuides
+          Value = ''
+          Component = PartnerGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -694,8 +692,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'OurFirm'
-          Value = #1054#1054#1054' '#1040#1051#1040#1053
-          Component = MainJuridicalGuides
+          Value = ''
+          Component = PartnerGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -769,8 +767,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'OurFirm'
-          Value = #1054#1054#1054' '#1040#1051#1040#1053
-          Component = MainJuridicalGuides
+          Value = ''
+          Component = PartnerGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -963,10 +961,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PeriodChoice
       end
       item
-        Component = MainJuridicalGuides
+        Component = JuridicalGuides
       end
       item
-        Component = JuridicalGuides
+        Component = PartnerGuides
       end
       item
         Component = AccountGuides
@@ -1007,7 +1005,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
       end>
     Left = 392
-    Top = 24
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1102,31 +1099,44 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 112
     Top = 200
   end
-  object MainJuridicalGuides: TdsdGuides
+  object PartnerGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edMainJuridical
-    TextValue = #1054#1054#1054' '#1040#1051#1040#1053
-    FormNameParam.Value = 'TJuridical_ObjectForm'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = MainJuridicalGuides
+        Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
-        Value = #1054#1054#1054' '#1040#1051#1040#1053
-        Component = MainJuridicalGuides
+        Value = ''
+        Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 440
+    Top = 24
   end
   object gpGetDefault: TdsdStoredProc
     StoredProcName = 'gpGetJuridicalCollation'
@@ -1143,13 +1153,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'MainJuridicalId'
         Value = ''
-        Component = MainJuridicalGuides
+        Component = PartnerGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MainJuridicalName'
-        Value = #1054#1054#1054' '#1040#1051#1040#1053
-        Component = MainJuridicalGuides
+        Value = ''
+        Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1164,7 +1174,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = MainJuridicalGuides
+        Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1288,6 +1298,20 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
       end>
     Left = 944
     Top = 65534

@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , StartDate TDateTime, EndDate TDateTime
              , ContractTagName TVarChar, ContractKindName TVarChar
              , PaidKindName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , PersonalName TVarChar
              , AreaName TVarChar
              , ContractArticleName TVarChar
@@ -48,6 +48,7 @@ BEGIN
 
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
        , Object_Personal_View.PersonalName  AS PersonalName
        , Object_Area.ValueData              AS AreaName

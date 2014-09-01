@@ -32,7 +32,7 @@ BEGIN
      IF COALESCE(vbId, 0) = 0 THEN
                  PERFORM gpInsertUpdate_Object_LinkGoods(
                                    ioId := 0                     ,  
-                                   inGoodsMainId := vbGoodsMainId, -- Главный товар
+                                   inGoodsMainId := inGoodsMainId, -- Главный товар
                                    inGoodsId  := vbGoodsId       , -- Товар для замены
                                    inSession  := inSession         -- сессия пользователя
                                    );

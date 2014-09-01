@@ -272,11 +272,20 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         end
         item
           Name = 'InfoMoneyId'
-          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
-          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
         end
         item
           Name = 'ChangePercent'
@@ -342,6 +351,10 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

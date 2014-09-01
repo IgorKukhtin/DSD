@@ -206,6 +206,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
@@ -841,6 +842,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
 
 end;
 

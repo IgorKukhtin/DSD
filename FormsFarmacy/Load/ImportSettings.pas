@@ -55,6 +55,7 @@ type
     cxSplitter1: TcxSplitter;
     colParamNumber: TcxGridDBColumn;
     FileDialogAction: TFileDialogAction;
+    ImportType: TOpenChoiceForm;
   private
     { Private declarations }
   public

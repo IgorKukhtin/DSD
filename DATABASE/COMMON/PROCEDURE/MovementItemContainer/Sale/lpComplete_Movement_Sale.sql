@@ -988,8 +988,6 @@ BEGIN
                                                        , inObjectId_3        := vbContractId
                                                        , inDescId_4          := CASE WHEN vbMemberId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
                                                        , inObjectId_4        := vbPaidKindId
-                                                       , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                       , inObjectId_5        := NULL
                                                         )
 
                             -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -1030,6 +1028,8 @@ BEGIN
                                                   , inObjectId_3        := vbContractId
                                                   , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                   , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                  , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_To = FALSE THEN vbPartnerId_To ELSE NULL END
                                                    )
                   END AS ContainerId_Transit
                 , _tmpItem_group.InfoMoneyId

@@ -67,8 +67,8 @@ BEGIN
            , Object_PaidKind.Id           AS PaidKindId
            , Object_PaidKind.ValueData    AS PaidKindName
    
-           , COALESCE(Object_InfoMoney_View.InfoMoneyId,0) AS InfoMoneyId          
-           , Object_InfoMoney_View.InfoMoneyName
+           , View_InfoMoney.InfoMoneyId AS InfoMoneyId          
+           , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
 
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
@@ -95,7 +95,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id

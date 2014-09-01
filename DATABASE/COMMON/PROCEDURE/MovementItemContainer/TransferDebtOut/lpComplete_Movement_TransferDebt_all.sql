@@ -14,6 +14,8 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbPartnerId_From Integer;
+  DECLARE vbPartnerId_To Integer;
   DECLARE vbFromId Integer;
   DECLARE vbToId Integer;
   DECLARE vbIsCorporate_From Boolean;
@@ -48,6 +50,18 @@ BEGIN
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и для формирования Аналитик в проводках
      SELECT Movement.DescId
           , Movement.OperDate
+          , CASE WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+                      THEN MovementLinkObject_Partner.ObjectId
+                 WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
+                      THEN MovementLinkObject_Partner.ObjectId
+                 ELSE 0
+            END AS PartnerId_From
+          , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                      THEN MovementLinkObject_Partner.ObjectId
+                 WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
+                      THEN MovementLinkObject_Partner.ObjectId
+                 ELSE 0
+            END AS PartnerId_To
           , COALESCE (MovementLinkObject_From.ObjectId, 0)                      AS FromId
           , COALESCE (MovementLinkObject_To.ObjectId, 0)                        AS ToId
           , CASE WHEN View_Constant_isCorporate_From.InfoMoneyId IS NOT NULL
@@ -77,7 +91,7 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
             INTO vbMovementDescId, vbOperDate
-               , vbFromId, vbToId, vbIsCorporate_From, vbIsCorporate_To, vbInfoMoneyId_Corporate_From, vbInfoMoneyId_Corporate_To
+               , vbPartnerId_From, vbPartnerId_To, vbFromId, vbToId, vbIsCorporate_From, vbIsCorporate_To, vbInfoMoneyId_Corporate_From, vbInfoMoneyId_Corporate_To
                , vbContractId_From, vbContractId_To
                , vbInfoMoneyDestinationId_From, vbInfoMoneyId_From
                , vbInfoMoneyDestinationId_To, vbInfoMoneyId_To
@@ -86,6 +100,10 @@ BEGIN
                , vbBusinessId_From, vbBusinessId_To
                , vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
      FROM Movement
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                       ON MovementLinkObject_Partner.MovementId = inMovementId
+                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = inMovementId
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -473,6 +491,8 @@ BEGIN
                                                        , inObjectId_4        := tmp.InfoMoneyId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := tmp.PartionMovementId
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN tmp.PartnerId ELSE NULL END
                                                         )
                                   -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                             ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -490,11 +510,14 @@ BEGIN
                                                        , inObjectId_2        := tmp.PaidKindId
                                                        , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                        , inObjectId_4        := tmp.InfoMoneyId
+                                                       , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN tmp.PartnerId ELSE NULL END
                                                         )
                   END AS ContainerId
                 , tmp.AccountId
            FROM (SELECT _tmpItem.AccountId_From  AS AccountId
                       , vbFromId                 AS JuridicalId
+                      , vbPartnerId_From         AS PartnerId
                       , vbContractId_From        AS ContractId
                       , vbInfoMoneyId_From       AS InfoMoneyId
                       , vbPaidKindId_From        AS PaidKindId
@@ -532,6 +555,8 @@ BEGIN
                                                        , inObjectId_4        := tmp.InfoMoneyId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := tmp.PartionMovementId
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN tmp.PartnerId ELSE NULL END
                                                         )
                                   -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                             ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -549,11 +574,14 @@ BEGIN
                                                        , inObjectId_2        := tmp.PaidKindId
                                                        , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
                                                        , inObjectId_4        := tmp.InfoMoneyId
+                                                       , inDescId_5          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_5        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.IsCorporate = FALSE THEN tmp.PartnerId ELSE NULL END
                                                         )
                   END AS ContainerId
                 , tmp.AccountId
            FROM (SELECT _tmpItem.AccountId_To  AS AccountId
                       , vbToId                 AS JuridicalId
+                      , vbPartnerId_To         AS PartnerId
                       , vbContractId_To        AS ContractId
                       , vbInfoMoneyId_To       AS InfoMoneyId
                       , vbPaidKindId_To        AS PaidKindId

@@ -364,6 +364,12 @@ type
     bbReport_GoodsMI_ProductionUnionReturn: TdxBarButton;
     bbReport_GoodsMI_ProductionSeparateIncome: TdxBarButton;
     bbReport_GoodsMI_ProductionSeparateReturn: TdxBarButton;
+    actReport_GoodsMI_ProductionSeparate: TdsdOpenForm;
+    bbReport_GoodsMI_ProductionSeparate: TdxBarButton;
+    actCashOperationOld: TdsdOpenForm;
+    bbIncomeCashOld: TdxBarButton;
+    actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm;
+    bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton;
   public
     { Public declarations }
   end;

@@ -4,14 +4,14 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1034
-  ExplicitHeight = 201
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      45
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -483,6 +483,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbIncomeCashOld'
+        end
+        item
+          Visible = True
           ItemName = 'bbFinanceDocuments_Separator'
         end
         item
@@ -527,6 +531,10 @@
     end
     object bbIncomeCash: TdxBarButton
       Action = actCashOperation
+      Category = 0
+    end
+    object bbIncomeCashOld: TdxBarButton
+      Action = actCashOperationOld
       Category = 0
     end
     object bbJuridicalService: TdxBarButton
@@ -1123,6 +1131,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparatePart'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1690,8 +1706,77 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
+    object bbReport_GoodsMI_ProductionSeparate: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparate
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparatePart
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
+    object actCashOperation: TdsdOpenForm [0]
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      Hint = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      FormName = 'TCashJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'CashId_top'
+          Value = 14462
+        end
+        item
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' '#1044#1085#1077#1087#1088
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actCashOperationOld: TdsdOpenForm [2]
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' (Integer)'
+      Hint = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' (Integer)'
+      FormName = 'TCashJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'CashId_top'
+          Value = 14462
+        end
+        item
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' Integer'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm [3]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inGroupMovement'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object actAssetGroup: TdsdOpenForm
       Category = #1054#1057
       MoveParams = <>
@@ -1852,6 +1937,27 @@
       FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inGroupMovement'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actReport_JuridicalDefermentPayment: TdsdOpenForm
@@ -2691,17 +2797,6 @@
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCashOperation: TdsdOpenForm
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-      Hint = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
-      FormName = 'TCashJournalForm'
-      FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3629,7 +3724,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

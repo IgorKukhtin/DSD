@@ -48,11 +48,13 @@
   object ceCash: TcxButtonEdit [7]
     Left = 430
     Top = 25
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 120
   end
@@ -64,6 +66,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 215
   end
@@ -75,6 +78,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 305
   end
@@ -107,6 +111,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 305
   end
@@ -140,6 +145,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 120
   end
@@ -170,7 +176,7 @@
     Top = 50
     Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
   end
-  object cxButtonEdit1: TcxButtonEdit [23]
+  object ceMember: TcxButtonEdit [23]
     Left = 245
     Top = 70
     Properties.Buttons = <
@@ -178,6 +184,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 23
     Width = 170
   end
@@ -186,7 +193,7 @@
     Top = 95
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1079'/'#1087')'
   end
-  object cxButtonEdit2: TcxButtonEdit [25]
+  object cePosition: TcxButtonEdit [25]
     Left = 15
     Top = 115
     Properties.Buttons = <
@@ -194,12 +201,14 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 215
   end
   object ceServiceDate: TcxDateEdit [26]
     Left = 245
     Top = 25
+    Properties.ReadOnly = True
     TabOrder = 26
     Width = 170
   end
@@ -227,17 +236,6 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '4'
-        ParamType = ptInput
-      end>
     Left = 128
     Top = 230
   end
@@ -252,35 +250,42 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inamountin'
+        Name = 'inServiceDate'
+        Value = 0d
+        Component = ceServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inamountout'
+        Name = 'inAmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'incomment'
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
@@ -301,21 +306,35 @@
         ParamType = ptInput
       end
       item
-        Name = 'incontactid'
+        Name = 'inPositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'ininfomoneyid'
+        Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inunitid'
+        Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
@@ -342,95 +361,134 @@
         ParamType = ptInput
       end
       item
-        Name = 'invnumber'
+        Name = 'inCashId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inCashId_top'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
       end
       item
-        Name = 'operdate'
+        Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
       end
       item
-        Name = 'amountin'
+        Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
       end
       item
-        Name = 'amountout'
+        Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
       end
       item
-        Name = 'comment'
+        Name = 'ServiceDate'
+        Value = 0d
+        Component = ceServiceDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
       end
       item
-        Name = 'cashid'
+        Name = 'CashId'
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'cashname'
+        Name = 'CashName'
         Value = ''
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'moneyplaceid'
+        Name = 'MoneyPlaceId'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'moneyplacename'
+        Name = 'MoneyPlaceName'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'infomoneyid'
+        Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'infomoneyname'
+        Name = 'InfoMoneyName'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'contractid'
+        Name = 'MemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionId'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'PositionName'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'contractinvnumber'
+        Name = 'ContractInvNumber'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'unitid'
+        Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'unitname'
+        Name = 'UnitName'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
@@ -508,8 +566,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 368
-    Top = 141
+    Left = 376
+    Top = 157
   end
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
@@ -539,7 +597,7 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
@@ -555,6 +613,19 @@
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -618,19 +689,111 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName'
+        Name = 'InfoMoneyName_all'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '4'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
       end>
     Left = 480
     Top = 54
+  end
+  object PersonalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ObjectlGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ObjectlGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName_all'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 152
+    Top = 125
+  end
+  object MemberGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 344
+    Top = 45
   end
 end

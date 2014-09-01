@@ -3,6 +3,7 @@ alter PROCEDURE "DBA"."_pgSelect_Bill_LossDebt" (in @inEndDate date)
 result (ObjectId Integer, InfoMoneyCode integer, InfoMoneyId_PG integer, isSale smallint, Summa  TSumm, ClientId_pg Integer, ClientCode Integer, ClientName TVarCharMedium, ClientName_Dolg  TVarCharMedium, OKPO TVarCharMedium, isOKPO_Virtual smallint, minId Integer, maxId Integer)
 begin
    //
+  declare @isLoadObject smallint;
   declare @saveRemains smallint;
    //
   declare local temporary table _tmpResult(
@@ -13,9 +14,15 @@ begin
   ) on commit preserve rows;
    //
    //
+
    -- !!!!!!!!!!!!!
-   set @saveRemains = zc_rvYes();
-   -- set @saveRemains = zc_rvNo();
+   -- set @saveRemains = zc_rvYes();
+   set @saveRemains = zc_rvNo();
+   -- !!!!!!!!!!!!!
+
+   -- !!!!!!!!!!!!!
+   -- set @isLoadObject = zc_rvYes();
+   set @isLoadObject = zc_rvNo();
    -- !!!!!!!!!!!!!
 
    if @saveRemains = zc_rvNo()
@@ -238,7 +245,7 @@ begin
     -- ЧУМАК заготовитель
    delete from _tmpResult where UnitId = 4695;
     -- ГЕЙСМАН заготовитель
-   delete from _tmpResult where UnitId = 10101;
+   delete from _tmpResult where UnitId = 7577;
 
    //
    //
@@ -260,35 +267,60 @@ begin
         , Unit.UnitCode as ClientCode
         , Unit.UnitName as ClientName
         , isnull (Unit_Dolg.UnitName, Unit.UnitName) as ClientName_Dolg
-        , _tmpResult.OKPO
-        , zf_isOKPO_Virtual_PG (_tmpResult.OKPO) as isOKPO_Virtual
-        , _tmpResult.minId
-        , _tmpResult.maxId
-   from (select isnull (Unit_dolg.Id, Unit.Id) as UnitId
+        , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) AS OKPO
+        , zf_isOKPO_Virtual_PG (OKPO) as isOKPO_Virtual
+        , _tmpResult.minId as minId
+        , _tmpResult.maxId as maxId
+   from
+  (select _tmpResult.UnitId
+        , _tmpResult.DolgByUnitID
+        , _tmpResult.InfoMoneyCode
+        , _tmpResult.isSale
+        , SUM (_tmpResult.Summa) as Summa
+        , _tmpResult.ClientId_pg
+        , min (_tmpResult.minId) as minId
+        , max (_tmpResult.maxId) as maxId
+   from (select case when ClientId_pg <> 0 and @isLoadObject = zc_rvNo() and _tmpResult.isSale = zc_rvYes() then 0 else _tmpResult.UnitId end as UnitId
+              , case when ClientId_pg <> 0 and @isLoadObject = zc_rvNo() and _tmpResult.isSale = zc_rvYes() then 0 else _tmpResult.DolgByUnitID end as DolgByUnitID
+              , _tmpResult.InfoMoneyCode
+              , _tmpResult.isSale
+              , _tmpResult.Summa
+              , _tmpResult.minId
+              , _tmpResult.maxId
+              , _tmpResult.ClientId_pg
+         from
+        (select isnull (Unit_dolg.Id, Unit.Id) as UnitId
               , isnull (Unit.DolgByUnitID, Unit.Id) as DolgByUnitID
               , _tmpResult.InfoMoneyCode
               , _tmpResult.isSale
               , sum (_tmpResult.Summa) as Summa
               , min (Unit.Id) as minId
               , max (Unit.Id) as maxId
-              , max (isnull (_pgPartner.PartnerId_pg, isnull (Unit.Id3_Postgres, 0))) as ClientId_pg
-              , max (isnull (Information1.OKPO, isnull (Information2.OKPO, ''))) AS OKPO
+              , max (isnull (_pgPartner.PartnerId_pg, case when Unit_dolg.Id3_Postgres <> 0 then Unit_dolg.Id3_Postgres else isnull (Unit.Id3_Postgres, 0) end)) as ClientId_pg
          from _tmpResult
               left outer join dba.Unit on Unit.Id = _tmpResult.UnitId
               left outer join dba.Unit as Unit_dolg on Unit_dolg.Id = Unit.DolgByUnitID
                                                    -- and 1=0
               left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, OKPO, UnitId, Main from dba._pgPartner where trim(OKPO) <> '' and _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by OKPO, UnitId, Main
                               ) as _pgPartner on _pgPartner.UnitId = _tmpResult.UnitId
-              left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                                   and Information1.OKPO <> ''
-              left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-
-         group by UnitId, DolgByUnitID, _tmpResult.InfoMoneyCode, _tmpResult.isSale -- , OKPO
+         group by UnitId, DolgByUnitID, _tmpResult.InfoMoneyCode, _tmpResult.isSale
          having sum (_tmpResult.Summa) <> 0
+        ) as _tmpResult
+        ) as _tmpResult
+         group by _tmpResult.UnitId
+                , _tmpResult.DolgByUnitID
+                , _tmpResult.InfoMoneyCode
+                , _tmpResult.isSale
+                , _tmpResult.ClientId_pg
         ) as _tmpResult
         left outer join dba.Unit on Unit.Id = _tmpResult.UnitId
         left outer join dba.Unit as Unit_Dolg on Unit_Dolg.Id = _tmpResult.DolgByUnitID
         left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _tmpResult.InfoMoneyCode
+
+              left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                                   and Information1.OKPO <> ''
+              left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+
    order by isSale, isnull (Unit_Dolg.UnitName, Unit.UnitName), ClientName
    ;
 

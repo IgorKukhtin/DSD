@@ -12,9 +12,9 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectLink_Goods_Object.ChildObjectId            AS ObjectId
            , ObjectLink_Goods_GoodsGroup.ChildObjectId        AS GoodsGroupId
            , Object_GoodsGroup.ValueData                      AS GoodsGroupName
-           , Object_Measure.Id                                AS MeasureId
+           , ObjectLink_Goods_Measure.ChildObjectId           AS MeasureId
            , Object_Measure.ValueData                         AS MeasureName
-           , Object_NDSKind.Id                                AS NDSKindId
+           , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
            , Object_NDSKind.ValueData                         AS NDSKindName
 
        FROM Object AS Object_Goods
