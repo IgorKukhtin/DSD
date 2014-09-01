@@ -1,13 +1,15 @@
 -- Function: gpReport_GoodsMI_ProductionSeparate ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
-    IN inStartDate    TDateTime ,  
-    IN inEndDate      TDateTime ,
-    IN inGoodsGroupId Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate     TDateTime ,  
+    IN inEndDate       TDateTime ,
+    IN inGoodsGroupId  Integer   ,
+    IN inGroupMovement Boolean   ,
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar 
              , GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
@@ -55,8 +57,8 @@ BEGIN
                          )
 
 
-      SELECT tmpOperationGroup.InvNumber
-         , tmpOperationGroup.OperDate
+      SELECT CAST (tmpOperationGroup.InvNumber AS TVarChar) AS InvNumber
+         , CAST (tmpOperationGroup.OperDate AS TDateTime)  AS OperDate
          , tmpOperationGroup.PartionGoods 
 
          , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -79,8 +81,8 @@ BEGIN
          , tmpOperationGroup.ChildSumm :: TFloat AS ChildSumm
          
 
-     FROM (SELECT  tmpMI.InvNumber
-                      , tmpMI.OperDate
+     FROM (SELECT   CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
+                      , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
                       , tmpMI.PartionGoods 
                       
                       , tmpMI.GoodsId       
@@ -223,8 +225,8 @@ BEGIN
                              , tmpMovement.MovementId
                       ) AS tmpMIChild on tmpMIMaster.MovementId = tmpMIChild.MovementId
                  ) AS tmpMI 
-		Group by tmpMI.InvNumber
-                      , tmpMI.OperDate
+		Group by CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END
+                      , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
                       , tmpMI.PartionGoods 
                       , tmpMI.GoodsId       
                       , tmpMI.ChildGoodsId   
@@ -273,7 +275,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -285,4 +287,6 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Intege
 
 -- тест
 
---SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '19.06.2014', inEndDate:= '19.06.2014',  inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '19.06.2014', inEndDate:= '19.06.2014',  inGoodsGroupId:= 0, inGroupMovement:= True, inSession:= zfCalc_UserAdmin());
+--	пр-4218-8992-17.06.2014	20.06.2014		 	 
+--SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '19.06.2014', inEndDate:= '25.06.2014',  inGoodsGroupId:= 0, inGroupMovement:= False, inSession:= zfCalc_UserAdmin());
