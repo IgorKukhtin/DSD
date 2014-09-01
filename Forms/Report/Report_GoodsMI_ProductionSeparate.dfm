@@ -124,6 +124,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           object clInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
@@ -131,6 +132,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 49
@@ -293,7 +295,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Text = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Width = 231
     end
   end
@@ -330,11 +331,12 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
       end
       item
-        Name = 'inDescId'
-        Value = '0'
+        Name = 'inGroupMovement'
+        Value = Null
         Component = FormParams
-        ComponentItem = 'inDescId'
-        ParamType = ptUnknown
+        ComponentItem = 'inGroupMovement'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 112
     Top = 208
@@ -397,10 +399,16 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     Params = <
       item
         Name = 'InDescName'
-        Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+        Value = ''
         Component = edInDescName
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGroupMovement'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 328
     Top = 170
