@@ -66,6 +66,14 @@ type
     bbPrint_byProduction: TdxBarButton;
     actPrint_byType: TdsdPrintAction;
     bbPrint_byType: TdxBarButton;
+    actPrint_byRoute: TdsdPrintAction;
+    bbPrint_byRoute: TdxBarButton;
+    Amount_WeightSK: TcxGridDBColumn;
+    FromCode: TcxGridDBColumn;
+    RouteSortingCode: TcxGridDBColumn;
+    actPrint_byRouteItog: TdsdPrintAction;
+    bbPrint_byRouteItog: TdxBarButton;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

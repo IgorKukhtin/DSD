@@ -87,10 +87,10 @@ BEGIN
                  , tmpMI.PartionGoods 
                  , tmpMI.GoodsId       
                  , ABS (SUM(tmpMI.Summ)) as Summ
-                 , ABS (SUM(tmpMI.Amount) as Amount
+                 , ABS (SUM(tmpMI.Amount)) as Amount
                  , tmpMI.ChildGoodsId     
                  , ABS (SUM(tmpMI.ChildSumm)) as ChildSumm
-                 , ABS (SUM(tmpMI.ChildAmount) as ChildAmount
+                 , ABS (SUM(tmpMI.ChildAmount)) as ChildAmount
             FROM( 
                   SELECT  tmpMIMaster.InvNumber
                         , tmpMIMaster.OperDate
