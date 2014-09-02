@@ -245,7 +245,7 @@ uses
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
+  Report_GoodsMI_OrderExternal_Sale in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas' {Report_GoodsMI_OrderExternal_SaleForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
@@ -513,7 +513,8 @@ uses
   Founder in '..\..\Forms\Guides\Founder.pas' {FounderForm: TParentForm},
   FounderEdit in '..\..\Forms\Guides\FounderEdit.pas' {FounderEditForm: TParentForm},
   ArticleLoss in '..\..\Forms\Guides\ArticleLoss.pas' {ArticleLossForm: TParentForm},
-  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm};
+  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm},
+  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -27,7 +27,8 @@ RETURNS TABLE (
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Itog TFloat, Amount_Sh_Itog TFloat
              , Amount_Weight_Dozakaz TFloat, Amount_Sh_Dozakaz TFloat
-             , Amount12 TFloat, Amount_WeightSK TFloat, AmountSale TFloat
+             , Amount12 TFloat, Amount_WeightSK TFloat
+             , AmountSale_Weight TFloat, AmountSale_Sh TFloat
              , InfoMoneyName TVarChar
               )
 
@@ -167,7 +168,8 @@ BEGIN
            , CAST ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount_Dozakaz ELSE 0 END) AS TFloat)                                       AS Amount_Sh_Dozakaz
 
            , CAST ((Amount1 + Amount2) AS TFloat)                                                                                                                       AS Amount12
-           , CAST (0 AS TFloat)               AS AmountSale
+           , CAST (0 AS TFloat)               AS AmountSale_Weight
+           , CAST (0 AS TFloat)               AS AmountSale_Sh
 
 
        FROM tmpMovement2 AS tmpMovement2
@@ -208,8 +210,9 @@ BEGIN
            , CAST (0 AS TFloat)                         AS Amount_Sh_Dozakaz
            , CAST (0 AS TFloat)                         AS Amount12
 
+           , CAST (SUM((MIFloat_AmountPartner.ValueData * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat) AS AmountSale_Weight
+           , CAST (SUM((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MIFloat_AmountPartner.ValueData ELSE 0 END)) AS TFloat)                                   AS AmountSale_Sh
 
-           , CAST (SUM((MIFloat_AmountPartner.ValueData )) AS TFloat) AS AmountSale
        FROM Movement
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -241,6 +244,11 @@ BEGIN
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                 ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
 
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -279,7 +287,8 @@ BEGIN
            , tmpMovementOrder.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
            , tmpMovementOrder.Amount_Sh_Dozakaz  AS Amount_Sh_Dozakaz
            , tmpMovementOrder.Amount12           AS Amount12
-           , tmpMovementOrder.AmountSale         AS AmountSale
+           , tmpMovementOrder.AmountSale_Weight  AS AmountSale_Weight
+           , tmpMovementOrder.AmountSale_Sh      AS AmountSale_Sh
        FROM tmpMovementOrder
        UNION ALL
        SELECT
@@ -302,8 +311,9 @@ BEGIN
            , tmpMovementSale.Amount_Weight_Dozakaz AS Amount_Weight_Dozakaz
            , tmpMovementSale.Amount_Sh_Dozakaz  AS Amount_Sh_Dozakaz
            , tmpMovementSale.Amount12           AS Amount12
+           , tmpMovementSale.AmountSale_Weight  AS AmountSale_Weight
+           , tmpMovementSale.AmountSale_Sh      AS AmountSale_Sh
 
-           , tmpMovementSale.AmountSale         AS AmountSale
        FROM tmpMovementSale),
        tmpMovement AS (
        SELECT
@@ -328,7 +338,8 @@ BEGIN
            , CAST (SUM((tmpMovementAll.Amount_Weight_Dozakaz)) AS TFloat)  AS Amount_Weight_Dozakaz
            , CAST (SUM((tmpMovementAll.Amount_Sh_Dozakaz)) AS TFloat)   AS Amount_Sh_Dozakaz
            , CAST (SUM((tmpMovementAll.Amount12)) AS TFloat)            AS Amount12
-           , CAST (SUM((tmpMovementAll.AmountSale)) AS TFloat)          AS AmountSale
+           , CAST (SUM((tmpMovementAll.AmountSale_Weight)) AS TFloat)   AS AmountSale_Weight
+           , CAST (SUM((tmpMovementAll.AmountSale_Sh)) AS TFloat)       AS AmountSale_Sh
 
        FROM tmpMovementAll
        GROUP BY
@@ -376,7 +387,8 @@ BEGIN
            , tmpMovement.Amount_Sh_Dozakaz              AS Amount_Sh_Dozakaz
            , tmpMovement.Amount12                       AS Amount12
            , CAST (0 AS TFloat)                         AS Amount_WeightSK
-           , tmpMovement.AmountSale                     AS AmountSale
+           , tmpMovement.AmountSale_Weight              AS AmountSale_Weight
+           , tmpMovement.AmountSale_Sh                  AS AmountSale_Sh
            , Object_InfoMoney_View.InfoMoneyName        AS InfoMoneyName
 
        FROM tmpMovement
@@ -421,4 +433,4 @@ ALTER FUNCTION gpReport_OrderExternal_Sale (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '01.06.2014', inEndDate:= '07.06.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '01.06.2014', inEndDate:= '07.06.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := True, inSession:= '2')
