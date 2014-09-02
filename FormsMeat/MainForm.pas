@@ -370,6 +370,8 @@ type
     bbIncomeCashOld: TdxBarButton;
     actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm;
     bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton;
+    actFounder: TdsdOpenForm;
+    bbFounder: TdxBarButton;
   public
     { Public declarations }
   end;

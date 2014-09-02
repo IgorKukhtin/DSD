@@ -195,6 +195,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbFounder'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1714,6 +1718,10 @@
       Action = actReport_GoodsMI_ProductionSeparatePart
       Category = 0
     end
+    object bbFounder: TdxBarButton
+      Action = actFounder
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actCashOperation: TdsdOpenForm [0]
@@ -1775,6 +1783,17 @@
           Value = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
           DataType = ftString
         end>
+      isShowModal = False
+    end
+    object actFounder: TdsdOpenForm [5]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
+      Hint = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
+      FormName = 'TFounderForm'
+      FormNameParam.Value = 'TFounderForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
       isShowModal = False
     end
     object actAssetGroup: TdsdOpenForm
