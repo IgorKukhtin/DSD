@@ -16,8 +16,6 @@ inherited LossForm: TLossForm
     ClientRectBottom = 536
     ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
       ExplicitWidth = 1058
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
@@ -141,6 +139,13 @@ inherited LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object PartionGoodsDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -997,6 +1002,13 @@ inherited LossForm: TLossForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartionGoodsDate'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inPartionGoods'
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
@@ -1014,11 +1026,6 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
         Value = Null

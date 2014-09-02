@@ -40,14 +40,16 @@ BEGIN
    -- эта табл - "не используется"
    CREATE TEMP TABLE _tmp (Id Integer) ON COMMIT DROP;
 
-   -- сохраняем всех
-   WITH tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName, MAX (TRIM (Sale1C.ClientOKPO)) AS OKPO, CASE WHEN LENGTH (MAX (TRIM (Sale1C.ClientOKPO))) <= 6 THEN TRUE ELSE FALSE END isOKPO_Virtual
+   -- 1. сохранение новых
+   WITH tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
+                            , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS OKPO
+                            , CASE WHEN LENGTH (MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END)) <= 5 THEN TRUE ELSE FALSE END isOKPO_Virtual
                        FROM Sale1C
-                       WHERE zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
+                       WHERE zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
                          AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
                          AND Sale1C.ClientCode <> 0
-                         AND TRIM (Sale1C.ClientOKPO) <> ''
-                         AND LENGTH (TRIM (Sale1C.ClientOKPO)) > 6
+                         AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
+                         -- AND LENGTH (TRIM (Sale1C.ClientOKPO)) > 5
                        GROUP BY Sale1C.ClientCode
                       )
       , tmpPartner1CLink AS (SELECT MAX (Object_Partner1CLink.Id) AS Id
@@ -68,12 +70,13 @@ BEGIN
       , tmpAll AS (SELECT tmpPartner1CLink.Id AS Partner1CLinkId, tmpPartner1CLink.ClientCode
                         , tmpSale1C.ClientName, tmpSale1C.OKPO, tmpSale1C.isOKPO_Virtual
                    FROM tmpPartner1CLink
-                              INNER JOIN tmpSale1C ON tmpSale1C.ClientCode = tmpPartner1CLink.ClientCode
+                        INNER JOIN tmpSale1C ON tmpSale1C.ClientCode = tmpPartner1CLink.ClientCode
                   )
       , tmpJuridical AS (SELECT tmpAll.OKPO, tmpAll.isOKPO_Virtual, MAX (tmpAll.ClientName) AS JuridicalName FROM tmpAll GROUP BY tmpAll.OKPO, tmpAll.isOKPO_Virtual)
 
    INSERT INTO _tmp (Id)
-   SELECT lpInsertUpdate_Object_Partner1CLink (ioId         := tmpPartner.Partner1CLinkId
+   SELECT -- сохранение связи с 1С
+          lpInsertUpdate_Object_Partner1CLink (ioId         := tmpPartner.Partner1CLinkId
                                              , inCode       := tmpPartner.ClientCode
                                              , inName       := tmpPartner.ClientName
                                              , inPartnerId  := tmpPartner.PartnerId
@@ -81,7 +84,7 @@ BEGIN
                                              , inContractId := tmpPartner.ContractId
                                              , inUserId     := vbUserId)
    FROM 
-         -- Контрагент
+         -- сохранение Контрагента
         (SELECT lpInsertUpdate_Object_Partner (ioId              := 0
                                              , inPartnerName     := tmpAll.ClientName
                                              , inAddress         := ''
@@ -110,7 +113,7 @@ BEGIN
               , tmpAll.ClientCode
               , tmpAll.ClientName
          FROM
-         -- Договор
+         -- сохранение Договора
         (SELECT CASE WHEN COALESCE (Contract_noClose.ContractId, COALESCE (Contract_Close.ContractId, COALESCE (Contract_Erased.ContractId, 0))) = 0
                           THEN gpInsertUpdate_Object_Contract (ioId                 := 0
                                                              , inCode               := 0
@@ -152,7 +155,7 @@ BEGIN
               , tmpJuridical.OKPO
               , tmpJuridical.JuridicalId
          FROM
-         -- Юр.Лицо
+         -- сохранение Юр.Лица
         (SELECT CASE WHEN ViewHistory_JuridicalDetails.OKPO IS NULL
                           THEN gpInsertUpdate_Object_Juridical (ioId              := 0
                                                               , inCode            := 0
@@ -214,6 +217,43 @@ BEGIN
   ;
                                           
 
+   -- 2. сохранение
+   WITH tmpSale1C  AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                            , MAX (TRIM (Sale1C.ClientOKPO)) AS OKPO
+                            , MAX (TRIM (Sale1C.ClientINN))  AS INN
+                       FROM _tmp
+                            INNER JOIN Object AS Object_Partner1CLink ON Object_Partner1CLink.Id = _tmp.Id
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                 ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            INNER JOIN Sale1C ON Sale1C.ClientCode = Object_Partner1CLink.ObjectCode
+                                             AND zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
+                                             AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
+                       GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                      )
+   INSERT INTO _tmp (Id)
+   SELECT -- сохранение реквизитов
+          gpInsertUpdate_ObjectHistory_JuridicalDetails (ioId         := 0
+                                                       , inJuridicalId      := tmpSale1C.JuridicalId
+                                                       , inOperDate         := zc_DateStart()
+                                                       , inBankId           := NULL
+                                                       , inFullName         := NULL
+                                                       , inJuridicalAddress := NULL
+                                                       , inOKPO             := tmpSale1C.OKPO
+                                                       , inINN	            := tmpSale1C.INN
+                                                       , inNumberVAT	    := NULL
+                                                       , inAccounterName    := NULL
+                                                       , inBankAccount	    := NULL
+                                                       , inPhone      	    := NULL
+                                                       , inSession          := inSession)
+   FROM tmpSale1C
+        LEFT JOIN ObjectHistory ON ObjectHistory.ObjectId = tmpSale1C.JuridicalId
+                               AND ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
+   WHERE ObjectHistory.ObjectId IS NULL;
+
 
 END;
 $BODY$
@@ -224,6 +264,7 @@ ALTER FUNCTION gpUpdate_Object_Partner1CLink_Partner (Integer, TVarChar)  OWNER 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.09.14                                        * add gpInsertUpdate_ObjectHistory_JuridicalDetails
  22.08.14                                        *
 */
 

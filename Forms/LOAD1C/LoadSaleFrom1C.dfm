@@ -2,10 +2,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitLeft = -176
-  ExplicitTop = -60
-  ExplicitWidth = 966
-  ExplicitHeight = 443
+  ExplicitWidth = 974
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -263,6 +261,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 38
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object colisSync: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088

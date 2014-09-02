@@ -51,6 +51,7 @@ type
     actUpdatePartner1CLink_PartnerAll: TMultiAction;
     spUpdatePartner1CLink_Partner: TdsdStoredProc;
     bbUpdatePartner1CLink_Partner: TdxBarButton;
+    clItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

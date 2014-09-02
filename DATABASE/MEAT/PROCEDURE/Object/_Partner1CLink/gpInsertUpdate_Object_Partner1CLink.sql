@@ -43,7 +43,7 @@ BEGIN
 
    -- результат
    RETURN QUERY
-      SELECT inId, Object.Id, Object.ValueData FROM Object WHERE Object.Id = vbBranchId;
+      SELECT inId, Object.Id, Object.BranchLinkName FROM Object_BranchLink_View AS Object WHERE Object.Id = vbBranchId;
 
 END;
 $BODY$

@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inPhone      	        TVarChar,   -- телефон
     IN inSession                TVarChar    -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
 DECLARE
   vbJuridicalId_find Integer;

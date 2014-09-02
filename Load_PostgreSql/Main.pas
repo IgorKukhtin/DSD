@@ -164,6 +164,8 @@ type
     cbLossDebt: TCheckBox;
     cbCash: TCheckBox;
     cbCompleteCash: TCheckBox;
+    cbCompleteLoss: TCheckBox;
+    cbLossGuide: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -286,6 +288,7 @@ type
     function pLoadDocumentItem_ProductionSeparateMaster(SaveCount:Integer):Integer;
     procedure pLoadDocumentItem_ProductionSeparateChild(SaveCount1,SaveCount2:Integer);
 
+    procedure pLoadDocument_LossGuide;
     function pLoadDocument_Loss:Integer;
     procedure pLoadDocumentItem_Loss(SaveCount:Integer);
 
@@ -1444,7 +1447,7 @@ begin
      if not fStop then myRecordCount2:=pLoadDocumentItem_ProductionSeparateMaster(myRecordCount1);
      if not fStop then pLoadDocumentItem_ProductionSeparateChild(myRecordCount1,myRecordCount2);
 
-
+     if not fStop then pLoadDocument_LossGuide;
      if not fStop then myRecordCount1:=pLoadDocument_Loss;
      if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
 
@@ -17082,12 +17085,260 @@ begin
      myDisabledCB(cbDeleteFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocument_LossGuide;
+var InfoMoneyId_pg:Integer;
+begin
+     if (not cbLossGuide.Checked)or(not cbLossGuide.Enabled) then exit;
+     //
+     myEnabledCB(cbLossGuide);
+
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select UnitTo.Id as ObjectId');
+        Add('     , UnitTo.UnitCode as UnitCodeTo');
+        Add('     , UnitTo.UnitName as UnitNameTo');
+        Add('     , UnitTo.LossId_pg as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     inner join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind=zc_bkOut()'
+           +'  and isnull(Bill.isAuto,0) = 0'
+           +'  and Bill.FromId <> Bill.ToId'
+           +'  and Bill.ToId > 0');
+        Add('group by UnitTo.Id');
+        Add('       , UnitTo.UnitCode');
+        Add('       , UnitTo.UnitName');
+        Add('       , UnitTo.LossId_pg');
+        Open;
+        cbLossGuide.Caption:='5.1. ('+IntToStr(RecordCount)+') !!!Справочник списания!!!';
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_ArticleLoss';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             // Статьи назначения не должен измениться
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                  fOpenSqToQuery ('select ChildObjectId AS RetV from ObjectLink where ObjectId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_ObjectLink_ArticleLoss_InfoMoney()');
+                  InfoMoneyId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else InfoMoneyId_pg:=0;
+             // Save
+             toStoredProc.Params.ParamByName('ioId').Value:=0;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=InfoMoneyId_pg;
+             if not myExecToStoredProc then ;
+
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set LossId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbLossGuide);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Loss:Integer;
 begin
+     if (not cbLossGuide.Checked)or(not cbLossGuide.Enabled) then exit;
+     //
+     myEnabledCB(cbLossGuide);
+
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , cast (Bill.BillNumber as TVarCharMedium)'
+           +'    || case when FromId_Postgres is null or (ToId_Postgres is null and Bill.ToId <> 0) '
+           +'                 then '+FormatToVarCharServer_notNULL('-ошибка')
+           +'                   || case when FromId_Postgres is null then '+FormatToVarCharServer_notNULL('-от кого:')+' || UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
+           +'                   || case when ToId_Postgres is null and Bill.ToId <> 0 then '+FormatToVarCharServer_notNULL('-кому:')+' || UnitTo.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
+           +'            else '+FormatToVarCharServer_notNULL('')
+           +'       end as InvNumber_all');
+        Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
+        Add('     , UnitTo.LossId_pg as ToId_Postgres');
+
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     inner join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind=zc_bkOut()'
+           +'  and isnull(Bill.isAuto,0) = 0');
+        Add('group by UnitTo.Id');
+        Add('       , UnitTo.UnitCode');
+        Add('       , UnitTo.UnitName');
+        Add('       , UnitTo.LossId_pg');
+        Open;
+        cbLossGuide.Caption:='5.2. ('+IntToStr(RecordCount)+') Списание';
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Loss';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+            // Save
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbLossGuide);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Loss(SaveCount:Integer);
 begin
+     if (not cbLossGuide.Checked)or(not cbLossGuide.Enabled) then exit;
+     //
+     myEnabledCB(cbLossGuide);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+        Add('     , -1 * BillItems.OperCount as Amount');
+        Add('     , BillItems.OperCount_Upakovka as inCount');
+        Add('     , BillItems.OperCount_sh as HeadCount');
+        Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , zc_DateStart() AS PartionGoodsDate');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , 0 as AssetId_Postgres');
+
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from (select Bill.Id as BillId'
+           +'      from dba.Bill'
+           + '          inner join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind in zc_bkOut()'
+           +'        and Bill.Id_Postgres>0');
+        Add('      group by Bill.Id'
+           +'      ) as Bill_find');
+
+        Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+
+        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+
+        Add('order by 2,3,1');
+        Open;
+
+        cbLossGuide.Caption:='5.2.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Списание';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Loss';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             if FieldByName('PartionGoodsDate').AsDateTime <= StrToDate('01.01.1900')
+             then toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=StrToDate('01.01.1900')
+             else toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=FieldByName('PartionGoodsDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('inCount').AsFloat;
+             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
+             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
+             then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbLossGuide);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Inventory(isLastComplete:Boolean);
