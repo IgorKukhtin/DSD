@@ -16,7 +16,8 @@ RETURNS TABLE (UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
              , ContractTagName TVarChar, ContractStateKindCode Integer
-             , Synchronize Boolean, PaidKindName TVarChar)
+             , Synchronize Boolean, PaidKindName TVarChar
+             , ItemName TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -52,6 +53,7 @@ BEGIN
             , Object_Contract_View.ContractStateKindCode 
             , (Count (tmpGoodsByGoodsKind1CLink.ObjectId) <> Count (*)) AS Synchronize      
       , (SELECT ValueData FROM Object WHERE Id = zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS PaidKindName
+      , ObjectDesc.ItemName
       
       FROM Sale1C
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -78,6 +80,7 @@ BEGIN
 
            LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
+           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 
            LEFT JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                            , Object_GoodsByGoodsKind1CLink.ObjectCode
@@ -94,6 +97,7 @@ BEGIN
                         AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0 -- еще проверка что есть объект
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
+
 
    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
    GROUP BY       Sale1C.UnitId      ,
@@ -117,6 +121,7 @@ BEGIN
             , Object_Contract_View.EndDate
             , Object_Contract_View.ContractTagName
             , Object_Contract_View.ContractStateKindCode 
+      , ObjectDesc.ItemName
 ;
 
 END;

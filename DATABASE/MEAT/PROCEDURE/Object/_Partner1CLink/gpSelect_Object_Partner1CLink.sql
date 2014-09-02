@@ -37,7 +37,7 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
-          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName), MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS ClientOKPO
+          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName) AS ClientName, MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS ClientOKPO
                                 , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
                            FROM Sale1C
                            WHERE Sale1C.ClientCode <> 0
@@ -142,8 +142,8 @@ BEGIN
             , Object_Partner1CLink.Id               AS Id
             , Object_Partner1CLink.ObjectCode       AS Code
             , Object_Partner1CLink.ValueData        AS Name
-            , tmpSale1C.ClientName                  AS Name_find1C
-            , tmpSale1C.ClientOKPO                  AS OKPO_find1C
+            , tmpSale1C.ClientName :: TVarChar      AS Name_find1C
+            , tmpSale1C.ClientOKPO :: TVarChar      AS OKPO_find1C
             , Object_Branch.Id                      AS BranchId
             , Object_Branch.BranchLinkName          AS BranchName
             , View_Contract_InvNumber.ContractId 
