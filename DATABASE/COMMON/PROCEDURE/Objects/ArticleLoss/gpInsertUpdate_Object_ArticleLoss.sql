@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_ArticleLoss()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ArticleLoss(
- INOUT ioId             Integer   ,     -- ключ объекта <Статьи списания>
-    IN inCode           Integer   ,     -- Код объекта
-    IN inName           TVarChar  ,     -- Название объекта
-    IN inInfoMoneyId    Integer   ,     -- 
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId                       Integer   ,     -- ключ объекта <Статьи списания>
+    IN inCode                     Integer   ,     -- Код объекта
+    IN inName                     TVarChar  ,     -- Название объекта
+    IN inInfoMoneyId              Integer   ,     -- Статьи назначения
+    IN inProfitLossDirectionId    Integer   ,     -- Аналитики статей отчета о прибылях и убытках - направление
+    IN inSession                  TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -16,8 +18,8 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ArticleLoss());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ArticleLoss());
+   --vbUserId := inSession;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -36,13 +38,15 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_InfoMoney(), ioId, inInfoMoneyId);
-   
+    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ArticleLoss_ProfitLossDirection(), ioId, inProfitLossDirectionId);
+  
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ArticleLoss (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

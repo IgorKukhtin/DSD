@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Founder()());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Founder());
 
    RETURN QUERY
    SELECT

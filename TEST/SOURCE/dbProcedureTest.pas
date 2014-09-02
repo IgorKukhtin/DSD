@@ -119,6 +119,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\AccountGroup\gpSelect_Object_AccountGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\AccountGroup\gpGet_Object_AccountGroup.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\ArticleLoss\gpInsertUpdate_Object_ArticleLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\ArticleLoss\gpSelect_Object_ArticleLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\ArticleLoss\gpGet_Object_ArticleLoss.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\Bank\gpInsertUpdate_Object_Bank.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Bank\gpSelect_Object_Bank.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Bank\gpGet_Object_Bank.sql', ZQuery);
@@ -163,6 +167,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Goods\gpSelect_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Goods\gpGet_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Goods\gpInsertUpdate_ObjectBoolean_Goods_Partion.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\Founder\gpInsertUpdate_Object_Founder.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Founder\gpSelect_Object_Founder.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Founder\gpGet_Object_Founder.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);
