@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ArticleLoss(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -25,6 +26,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST ('' as TVarChar)  AS InfoMoneyName
+
+           , CAST (0 as Integer)   AS ProfitLossDirectionId
+           , CAST ('' as TVarChar) AS ProfitLossDirectionName
           
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -33,9 +37,12 @@ BEGIN
              Object_ArticleLoss.Id         AS Id
            , Object_ArticleLoss.ObjectCode AS Code
            , Object_ArticleLoss.ValueData  AS Name
+       
+           , Object_InfoMoney.Id          AS InfoMoneyId
+           , Object_InfoMoney.ValueData   AS InfoMoneyName 
 
-           , Object_InfoMoney.Id            AS InfoMoneyId
-           , Object_InfoMoney.ValueData     AS InfoMoneyName        
+           , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
+           , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName    
 
            , Object_ArticleLoss.isErased   AS isErased
 
@@ -45,6 +52,12 @@ BEGIN
                                  ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
                                 AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+         
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                                 ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                                AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+            LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+
 
        WHERE Object_ArticleLoss.Id = inId;
    END IF;

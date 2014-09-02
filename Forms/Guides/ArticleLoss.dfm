@@ -3,7 +3,7 @@ object ArticleLossForm: TArticleLossForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103'>'
   ClientHeight = 282
-  ClientWidth = 598
+  ClientWidth = 759
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object ArticleLossForm: TArticleLossForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 598
+    Width = 759
     Height = 256
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 598
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,20 +55,56 @@ object ArticleLossForm: TArticleLossForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 77
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 279
+        Width = 133
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object clInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentVert = vaCenter
+        Width = 77
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 53
       end
       object clInfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 136
+      end
+      object clProfitLossGroupName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clProfitLossDirectionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.'
+        DataBinding.FieldName = 'ProfitLossDirectionCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clProfitLossDirectionName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -75,7 +112,7 @@ object ArticleLossForm: TArticleLossForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 37
+        Width = 31
       end
     end
     object cxGridLevel: TcxGridLevel

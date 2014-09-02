@@ -33,6 +33,9 @@ type
     cxLabel4: TcxLabel;
     InfoMoneyGuides: TdsdGuides;
     ceInfoMoney: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceProfitLossDirection: TcxButtonEdit;
+    ProfitLossDirectionGuides: TdsdGuides;
   private
     { Private declarations }
   public

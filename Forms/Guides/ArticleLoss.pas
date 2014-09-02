@@ -46,6 +46,12 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clInfoMoneyName: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clProfitLossDirectionName: TcxGridDBColumn;
+    clProfitLossDirectionCode: TcxGridDBColumn;
+    clProfitLossGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

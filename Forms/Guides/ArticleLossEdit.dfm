@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  '#1057#1090#1072#1090#1100#1102' '#1089#1087#1080#1089#1072#1085#1080#1103
-  ClientHeight = 201
-  ClientWidth = 386
+  ClientHeight = 256
+  ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 71
-    Top = 162
+    Left = 87
+    Top = 219
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 221
-    Top = 162
+    Left = 237
+    Top = 219
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -75,6 +75,22 @@
         Kind = bkEllipsis
       end>
     TabOrder = 7
+    Width = 296
+  end
+  object cxLabel7: TcxLabel
+    Left = 40
+    Top = 157
+    Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+  end
+  object ceProfitLossDirection: TcxButtonEdit
+    Left = 40
+    Top = 180
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
     Width = 296
   end
   object ActionList: TActionList
@@ -134,9 +150,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inCountryId'
+        Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -177,15 +200,28 @@
         Component = ceCode
       end
       item
-        Name = 'CountryId'
+        Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'CountryName'
+        Name = 'InfoMoneyName'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = ''
+        Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -236,5 +272,32 @@
       end>
     Left = 160
     Top = 108
+  end
+  object ProfitLossDirectionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProfitLossDirection
+    FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProfitLossDirection_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 160
   end
 end

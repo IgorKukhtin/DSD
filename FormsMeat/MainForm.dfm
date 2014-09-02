@@ -1437,6 +1437,10 @@
           ItemName = 'bbInfoMoney'
         end
         item
+          Visible = True
+          ItemName = 'bbArticleLoss'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbAccountGroup'
@@ -1722,6 +1726,10 @@
       Action = actFounder
       Category = 0
     end
+    object bbArticleLoss: TdxBarButton
+      Action = actArticleLoss
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actCashOperation: TdsdOpenForm [0]
@@ -1785,7 +1793,18 @@
         end>
       isShowModal = False
     end
-    object actFounder: TdsdOpenForm [5]
+    object actArticleLoss: TdsdOpenForm [4]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
+      Hint = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
+      FormName = 'TArticleLossForm'
+      FormNameParam.Value = 'TArticleLossForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actFounder: TdsdOpenForm [6]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
