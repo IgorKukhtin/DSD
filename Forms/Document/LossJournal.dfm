@@ -10,14 +10,11 @@ inherited LossJournalForm: TLossJournalForm
     Width = 1073
     Height = 476
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1073
     ExplicitHeight = 476
     ClientRectBottom = 472
     ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
       ExplicitWidth = 1067
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
@@ -156,6 +153,13 @@ inherited LossJournalForm: TLossJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object ArticleLossName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
+            DataBinding.FieldName = 'ArticleLossName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
         end
       end

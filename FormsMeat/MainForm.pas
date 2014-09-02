@@ -374,6 +374,8 @@ type
     bbFounder: TdxBarButton;
     actArticleLoss: TdsdOpenForm;
     bbArticleLoss: TdxBarButton;
+    actReport_OrderExternal_Sale: TdsdOpenForm;
+    bbReport_OrderExternal_Sale: TdxBarButton;
   public
     { Public declarations }
   end;
