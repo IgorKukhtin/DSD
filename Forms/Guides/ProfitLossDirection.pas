@@ -55,6 +55,8 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clProfitLossGroupCode: TcxGridDBColumn;
+    clProfitLossGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -88,7 +88,7 @@ BEGIN
    
 
    WHERE Object_CardFuel.DescId = zc_Object_CardFuel()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+     -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
   ;
   
 END;
@@ -100,6 +100,7 @@ ALTER FUNCTION gpSelect_Object_CardFuel (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.14                                        * rem AccessKey...
  14.12.13                                        * add vbAccessKeyAll
  14.12.13                                        * add CardFuelLimit
  18.10.13                                        * add CarModelName

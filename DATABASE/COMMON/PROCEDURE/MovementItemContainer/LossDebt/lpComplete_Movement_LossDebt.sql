@@ -21,6 +21,24 @@ BEGIN
      -- !!!все равно без партий!!!
      vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0);
 
+     -- !!!”ѕ должна соответствовать договору!!!
+     UPDATE MovementItemLinkObject SET ObjectId = tmpUpdate.InfoMoneyId
+     FROM (SELECT MovementItem.Id, View_Contract_InvNumber.InfoMoneyId
+           FROM MovementItem
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                 ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+           WHERE MovementItem.MovementId = inMovementId 
+             AND COALESCE (View_Contract_InvNumber.InfoMoneyId, 0) <> COALESCE (MILinkObject_InfoMoney.ObjectId, 0)
+          ) AS tmpUpdate
+     WHERE MovementItemLinkObject.MovementItemId = tmpUpdate.Id
+       AND MovementItemLinkObject.DescId = zc_MILinkObject_InfoMoney();
+
+
      -- заполн€ем таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate, COALESCE (MovementLinkObject_Account.ObjectId, 0) AS AccountId, COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_FirstForm()) AS PaidKindId
                           FROM Movement

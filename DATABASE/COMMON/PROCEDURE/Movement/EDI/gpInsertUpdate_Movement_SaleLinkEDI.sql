@@ -32,7 +32,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> не связан с документом <EDI>.';
      END IF;
      -- Проверка
-     IF COALESCE (inMovementId_EDI, 0) = 0 <> COALESCE (vbMovementId_EDI, 0)
+     IF COALESCE (inMovementId_EDI, 0) <> COALESCE (vbMovementId_EDI, 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В документе <EDI>.';
      END IF;

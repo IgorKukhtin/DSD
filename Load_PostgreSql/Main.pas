@@ -8356,8 +8356,8 @@ begin
              //
              if PartnerId_pg=0 then addComment:=addComment+' ' +FieldByName('ClientName').AsString;
 
-             // !!!Физ лицо (через кого)!!!
-             if (FieldByName('Id_Postgres').AsInteger<>0)then
+             // !!!не меняем Физ лицо (через кого)!!!
+             if (MemberId_pg=0)and(FieldByName('Id_Postgres').AsInteger<>0)then
              begin
                   fOpenSqToQuery (' select MILO_Member.ObjectId as RetV'
                                  +' from Movement'
@@ -8377,6 +8377,33 @@ begin
              end;
              //if MemberId_pg <> 0 then showmessage('');
 
+
+             // !!!не меняем УП статью и Договор!!! если в документе она есть, а в Integer нет
+             if (InfoMoneyId_pg=0)and(FieldByName('Id_Postgres').AsInteger<>0) then
+             begin
+                  fOpenSqToQuery (' select MILO_MoneyPlace.ObjectId as PartnerId'
+                                 +'       ,MILO_InfoMoney.ObjectId as InfoMoneyId'
+                                 +'       ,MILO_Contract.ObjectId as ContractId'
+                                 +' from Movement'
+                                 +'      left join MovementItem on MovementItem.MovementId = Movement.Id'
+                                 +'                            and MovementItem.DescId=zc_MI_Master()'
+                                 +'      left join MovementItemLinkObject as MILO_MoneyPlace'
+                                 +'                                       on MILO_MoneyPlace.MovementItemId=MovementItem.Id'
+                                 +'                                      and MILO_MoneyPlace.DescId=zc_MILinkObject_MoneyPlace()'
+                                 +'      left join MovementItemLinkObject as MILO_InfoMoney'
+                                 +'                                       on MILO_InfoMoney.MovementItemId=MovementItem.Id'
+                                 +'                                      and MILO_InfoMoney.DescId=zc_MILinkObject_InfoMoney()'
+                                 +'      left join MovementItemLinkObject as MILO_Contract'
+                                 +'                                       on MILO_Contract.MovementItemId=MovementItem.Id'
+                                 +'                                      and MILO_Contract.DescId=zc_MILinkObject_Contract()'
+                                 +' where Movement.Id='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 );
+                  if toSqlQuery.FieldByName('InfoMoneyId').AsInteger<>0
+                  then begin InfoMoneyId_pg:=toSqlQuery.FieldByName('InfoMoneyId').AsInteger;
+                             ContractId_pg :=toSqlQuery.FieldByName('ContractId').AsInteger;
+                             PartnerId_pg  :=toSqlQuery.FieldByName('PartnerId').AsInteger;
+                       end;
+             end;
              //
              //Сохранение
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -17106,8 +17133,10 @@ begin
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkOut()'
-           +'  and isnull(Bill.isAuto,0) = 0'
+           //+'  and isnull(Bill.KindAuto,0) = 0'
            +'  and Bill.FromId <> Bill.ToId'
+           +'  and isnull (UnitTo.PersonalId_Postgres, 0) = 0'
+           +'  and isnull (UnitTo.pgUnitId, 0) = 0'
            +'  and Bill.ToId > 0');
         Add('group by UnitTo.Id');
         Add('       , UnitTo.UnitCode');
@@ -17193,7 +17222,8 @@ begin
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkOut()'
-           +'  and isnull(Bill.isAuto,0) = 0');
+           //+'  and isnull(Bill.KindAuto,0) = 0'
+           );
         Add('group by UnitTo.Id');
         Add('       , UnitTo.UnitCode');
         Add('       , UnitTo.UnitName');
@@ -17268,10 +17298,12 @@ begin
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from (select Bill.Id as BillId'
            +'      from dba.Bill'
-           + '          inner join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
+           +'           inner join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in zc_bkOut()'
-           +'        and Bill.Id_Postgres>0');
+           +'        and Bill.Id_Postgres>0'
+           +'        and isnull(Bill.KindAuto,0) = 0'
+           );
         Add('      group by Bill.Id'
            +'      ) as Bill_find');
 

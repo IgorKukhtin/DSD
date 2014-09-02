@@ -132,7 +132,7 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_CardFuel.DescId
 
      WHERE Object_CardFuel.DescId = zc_Object_CardFuel()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+       -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
 
     UNION ALL
      SELECT Object_TicketFuel.Id           AS Id
@@ -185,6 +185,7 @@ ALTER FUNCTION gpSelect_Object_SourceFuel (TDateTime, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 02.09.14                                        * rem AccessKey...
  22.08.14                                        * add inOperDate >= ...
  13.02.14                                        * add zc_Enum_ContractStateKind_Close
  14.12.13                                        * add vbAccessKeyAll
