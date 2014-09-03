@@ -1,29 +1,29 @@
 inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
-  ClientWidth = 1176
-  ExplicitWidth = 1192
-  ExplicitHeight = 703
+  ClientWidth = 1200
+  ExplicitWidth = 1208
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
-    Width = 1176
+    Width = 1200
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 1176
+    ExplicitWidth = 1200
     ExplicitHeight = 537
     ClientRectBottom = 537
-    ClientRectRight = 1176
+    ClientRectRight = 1200
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 1176
+      ExplicitWidth = 1200
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 1176
+        Width = 1200
         Height = 513
-        ExplicitWidth = 1176
+        ExplicitWidth = 1200
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -151,12 +151,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1176
+      ExplicitWidth = 1200
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 1176
+        Width = 1200
         Height = 513
-        ExplicitWidth = 1176
+        ExplicitWidth = 1200
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -179,10 +179,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1176
+    Width = 1200
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1176
+    ExplicitWidth = 1200
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -419,6 +419,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     TabOrder = 7
     Width = 144
+  end
+  object edIsChecked: TcxCheckBox [4]
+    Left = 1078
+    Top = 63
+    Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 8
+    Width = 120
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1092,6 +1099,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
       end
       item
+        Name = 'Checked'
+        Value = 'False'
+        Component = edIsChecked
+        DataType = ftBoolean
+      end
+      item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
@@ -1267,6 +1280,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ParamType = ptInput
       end
       item
+        Name = 'InChecked'
+        Value = 'False'
+        Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
@@ -1400,6 +1420,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Control = edDocumentTaxKind
+      end
+      item
+        Control = edIsChecked
       end>
     Left = 232
     Top = 193
@@ -1605,7 +1628,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1032
+    Left = 1008
     Top = 48
   end
   object spTax: TdsdStoredProc

@@ -80,6 +80,7 @@ type
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     cxLabel14: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    edIsChecked: TcxCheckBox;
   private
     { Private declarations }
   public

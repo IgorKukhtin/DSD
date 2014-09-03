@@ -94,6 +94,7 @@ type
     bbPrint_DebtOut: TdxBarButton;
     cxLabel13: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    edIsChecked: TcxCheckBox;
   private
     { Private declarations }
   public
