@@ -9,17 +9,7 @@ uses
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -390,16 +380,6 @@ type
     bbReport_OrderExternal_Sale: TdxBarButton;
     actGoodsGroupStat: TdsdOpenForm;
     bbGoodsGroupStat: TdxBarButton;
-    actReport_Personal: TdsdOpenForm;
-    bbReport_Personal: TdxBarButton;
-    actReport_PersonalService: TdsdOpenForm;
-    bbReport_PersonalService: TdxBarButton;
-    actReport_Founders: TdsdOpenForm;
-    bbReport_FoundersForm: TdxBarButton;
-    actReport_Cash: TdsdOpenForm;
-    bbReport_Cash: TdxBarButton;
-    actReport_BankAccount: TdsdOpenForm;
-    bbReport_BankAccount: TdxBarButton;
   public
     { Public declarations }
   end;
