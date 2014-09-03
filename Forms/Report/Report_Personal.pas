@@ -22,8 +22,6 @@ type
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colStartAmount_A: TcxGridDBColumn;
-    colMoneySumm: TcxGridDBColumn;
-    colServiceSumm: TcxGridDBColumn;
     colEndAmount_A: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
@@ -41,13 +39,6 @@ type
     edAccount: TcxButtonEdit;
     AccountGuides: TdsdGuides;
     colInfoMoneyCode: TcxGridDBColumn;
-    colStartAmount_P: TcxGridDBColumn;
-    colStartAmountD: TcxGridDBColumn;
-    colStartAmountK: TcxGridDBColumn;
-    colSendDebtSumm: TcxGridDBColumn;
-    colEndAmount_P: TcxGridDBColumn;
-    colEndAmount_D: TcxGridDBColumn;
-    colEndAmount_K: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
@@ -60,10 +51,6 @@ type
     OtherJournal: TdsdOpenForm;
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    cxLabel7: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
-    colTransferDebtSumm: TcxGridDBColumn;
     SaleRealJournal: TdsdOpenForm;
     ReturnInRealJournal: TdsdOpenForm;
     TransferDebtJournal: TdsdOpenForm;

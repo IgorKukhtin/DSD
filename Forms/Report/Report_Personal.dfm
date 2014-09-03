@@ -45,31 +45,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colMoneySumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmount_P
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmountK
             end
             item
               Format = ',0.00##'
@@ -86,22 +61,38 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
             end
             item
               Format = ',0.00##'
@@ -124,7 +115,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -144,31 +134,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colMoneySumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmount_P
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colStartAmountK
             end
             item
               Format = ',0.00##'
@@ -185,22 +150,38 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
             end
             item
               Format = ',0.00##'
@@ -223,7 +204,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -233,22 +213,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clPersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalName'
+          object MemberName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object clPersonalCollationName: TcxGridDBColumn
-            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalCollationName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -298,96 +269,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object colStartAmount_P: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
-            DataBinding.FieldName = 'StartAmount_P'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colStartAmountD: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'StartAmountD'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colStartAmountK: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'StartAmountK'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colMoneySumm: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1090#1072' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
-            DataBinding.FieldName = 'MoneySumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colServiceSumm: TcxGridDBColumn
-            Caption = #1059#1089#1083#1091#1075#1080'. (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
-            DataBinding.FieldName = 'ServiceSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colTransferDebtSumm: TcxGridDBColumn
-            Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'.'
-            DataBinding.FieldName = 'TransferDebtSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colSendDebtSumm: TcxGridDBColumn
-            Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'.'
-            DataBinding.FieldName = 'SendDebtSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object colDebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
@@ -417,45 +298,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
           object colEndAmount_A: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'EndAmount_A'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colEndAmount_P: TcxGridDBColumn
-            Caption = #1050#1086#1085'.  '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
-            DataBinding.FieldName = 'EndAmount_P'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colEndAmount_D: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'EndAmount_D'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colEndAmount_K: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'EndAmount_K'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
@@ -575,25 +417,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
       TabOrder = 11
       Width = 150
     end
-    object cxLabel7: TcxLabel
-      Left = 869
-      Top = 6
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
-      Visible = False
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 869
-      Top = 29
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Visible = False
-      Width = 81
-    end
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 35
+    Top = 328
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -630,15 +457,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Properties.Strings = (
           'Key'
           'TextValue')
-      end
-      item
-        Component = PaidKindGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end>
   end
   inherited ActionList: TActionList
+    Left = 127
+    Top = 327
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGetDescSets
       StoredProcList = <
@@ -1758,11 +1581,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'JuridicalName'
+    IndexFieldNames = 'MemberName'
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_JuridicalSold'
+    StoredProcName = 'gpReport_Personal'
     Params = <
       item
         Name = 'inStartDate'
@@ -1807,16 +1630,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
+    Left = 112
     Top = 184
   end
   inherited BarManager: TdxBarManager
-    Left = 112
+    Left = 168
     Top = 184
     DockControlHeights = (
       0
@@ -1865,73 +1686,31 @@ inherited Report_PersonalForm: TReport_PersonalForm
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
       Category = 0
+      Visible = ivNever
     end
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
+        Column = colDebetSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
+        Column = colKreditSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Action = SaleJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Action = ReturnInJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colMoneySumm
-        Action = MoneyJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colServiceSumm
-        Action = ServiceJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colSendDebtSumm
-        Action = SendDebtJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Action = OtherJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Action = SaleRealJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Action = ReturnInRealJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colTransferDebtSumm
-        Action = TransferDebtJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
       end>
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 144
@@ -1955,7 +1734,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = InfoMoneyGuides
       end
       item
-        Component = PaidKindGuides
       end>
     Top = 228
   end
@@ -2207,32 +1985,5 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end>
     Left = 240
     Top = 232
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 896
-    Top = 56
   end
 end
