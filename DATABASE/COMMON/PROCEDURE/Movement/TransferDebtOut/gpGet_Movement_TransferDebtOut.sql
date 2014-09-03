@@ -101,9 +101,10 @@ BEGIN
            , Movement.InvNumber				            AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Movement.OperDate				            AS OperDate
-           , MovementBoolean_Checked.ValueData          AS Checked
+          
            , Object_Status.ObjectCode    		        AS StatusCode
            , Object_Status.ValueData     		        AS StatusName
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent

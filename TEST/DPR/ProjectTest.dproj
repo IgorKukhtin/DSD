@@ -1498,6 +1498,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
 			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
 				<Form>LoadSaleFrom1CForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Founder.pas">
 				<Form>FounderForm</Form>
@@ -1517,6 +1518,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
 				<Form>Report_GoodsMI_OrderExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupStat.pas">
+				<Form>GoodsGroupStatForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupStatEdit.pas">
+				<Form>GoodsGroupStatEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal.pas">
+				<Form>Report_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

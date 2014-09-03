@@ -42,10 +42,10 @@ type
     ceMember: TcxButtonEdit;
     cxLabel11: TcxLabel;
     cePosition: TcxButtonEdit;
-    ceServiceDate: TcxDateEdit;
     cxLabel12: TcxLabel;
     PersonalGuides: TdsdGuides;
     MemberGuides: TdsdGuides;
+    ceServiceDate: TcxDateEdit;
   private
     { Private declarations }
   public

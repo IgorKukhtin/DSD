@@ -26,17 +26,36 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbIsInsert Boolean;
 BEGIN
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
      -- проверка
      IF (COALESCE (inAmountIn, 0) = 0) AND (COALESCE (inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму.';
+        RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;
      -- проверка
      IF (COALESCE (inAmountIn, 0) <> 0) AND (COALESCE (inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Приход> или <Расход>.';
      END IF;
-
-     -- расчет - 1-ое число месяца
-     inServiceDate:= DATE_TRUNC ('Month', inServiceDate);
+     -- проверка
+     IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
+     THEN
+         IF inOperDate < '01.09.2014' AND inServiceDate < '01.08.2014'
+         THEN
+             IF inMoneyPlaceId <> 0 THEN
+               RAISE EXCEPTION 'Ошибка.Для данного периода значение <От Кого, Кому> должно быть пустым.';
+             END IF;
+         ELSE
+             IF NOT EXISTS (SELECT PersonalId FROM Object_Personal_View WHERE PersonalId = inMoneyPlaceId)
+             THEN
+               RAISE EXCEPTION 'Ошибка.В значении <От Кого, Кому> должно быть установлено ФИО сотрудника.';
+             END IF;
+             IF COALESCE (inPositionId, 0) = 0
+             THEN
+               RAISE EXCEPTION 'Ошибка.Не установлено значение <Должность>.';
+             END IF;
+         END IF;
+     END IF;
 
      -- расчет
      IF inAmountIn <> 0 THEN

@@ -67,6 +67,10 @@ type
     actPrint_TransferDebtOut: TdsdPrintAction;
     bbPrint_DebtOut: TdxBarButton;
     colInvNumberPartner: TcxGridDBColumn;
+    spChecked: TdsdStoredProc;
+    clChecked: TcxGridDBColumn;
+    actChecked: TdsdExecStoredProc;
+    bbspChecked: TdxBarButton;
   private
     { Private declarations }
   public

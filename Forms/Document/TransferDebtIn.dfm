@@ -1,28 +1,28 @@
 inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
-  ClientHeight = 668
-  ClientWidth = 1146
-  ExplicitWidth = 1162
-  ExplicitHeight = 703
+  ClientHeight = 662
+  ClientWidth = 1174
+  ExplicitWidth = 1182
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
-    Width = 1146
-    Height = 537
+    Width = 1174
+    Height = 531
     ExplicitTop = 131
     ExplicitWidth = 1146
     ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 1146
+    ClientRectBottom = 531
+    ClientRectRight = 1174
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
       ExplicitWidth = 1146
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 1146
-        Height = 513
+        Width = 1174
+        Height = 507
         ExplicitWidth = 1146
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -154,8 +154,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ExplicitWidth = 1146
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 1146
-        Height = 513
+        Width = 1174
+        Height = 507
         ExplicitWidth = 1146
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
@@ -179,7 +179,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1146
+    Width = 1174
     Height = 105
     TabOrder = 3
     ExplicitWidth = 1146
@@ -379,6 +379,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       TabOrder = 26
       Width = 93
+    end
+    object edIsChecked: TcxCheckBox
+      Left = 1055
+      Top = 63
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 27
+      Width = 118
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -961,6 +968,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
       end
       item
+        Name = 'Checked'
+        Value = 'False'
+        Component = edIsChecked
+        DataType = ftBoolean
+      end
+      item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
@@ -1130,6 +1143,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
+        Name = 'inChecked'
+        Value = 'False'
+        Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
@@ -1253,6 +1273,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Control = edChangePercent
+      end
+      item
+        Control = edIsChecked
       end>
     Left = 232
     Top = 193

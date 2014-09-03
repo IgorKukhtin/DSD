@@ -330,6 +330,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
+
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatForm'));
+  TdsdFormStorageFactory.GetStorage.Load('GoodsGroupStatForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupStatEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsKindFormTest;
@@ -851,6 +857,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
+
 
 end;
 

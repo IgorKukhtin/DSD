@@ -39,6 +39,10 @@ type
     bbPrintTaxCorrective_Client: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
     colInvNumberPartner: TcxGridDBColumn;
+    spChecked: TdsdStoredProc;
+    clChecked: TcxGridDBColumn;
+    actChecked: TdsdExecStoredProc;
+    bbspChecked: TdxBarButton;
   private
     { Private declarations }
   public
