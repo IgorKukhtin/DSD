@@ -1722,7 +1722,6 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
-<<<<<<< HEAD
     object bbLoad1CMoney: TdxBarButton
       Action = actLoad1CMoney
       Category = 0

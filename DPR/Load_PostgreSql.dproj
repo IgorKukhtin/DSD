@@ -138,6 +138,7 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>
