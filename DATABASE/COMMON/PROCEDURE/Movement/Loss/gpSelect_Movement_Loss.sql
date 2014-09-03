@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Loss(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
+             , ArticleLossId Integer, ArticleLossName TVarChar
               )
 
 AS
@@ -49,6 +51,9 @@ BEGIN
            , Object_From.ValueData              AS FromName
            , Object_To.Id                       AS ToId
            , Object_To.ValueData                AS ToName
+           , Object_ArticleLoss.Id              AS ArticleLossId
+           , Object_ArticleLoss.ValueData       AS ArticleLossName
+
 
 
        FROM (SELECT Movement.id
@@ -74,6 +79,12 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                         ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                        AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+            LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
+
             ;
 
 END;
@@ -85,6 +96,7 @@ ALTER FUNCTION gpSelect_Movement_Loss (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.09.14                                                        *
  26.05.14                                                        *
 
 

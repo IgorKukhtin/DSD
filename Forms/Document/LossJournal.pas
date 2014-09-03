@@ -41,6 +41,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    ArticleLossName: TcxGridDBColumn;
   private
     { Private declarations }
   public

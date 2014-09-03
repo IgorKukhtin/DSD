@@ -289,6 +289,22 @@ inherited LossForm: TLossForm
       Top = 5
       Caption = #1050#1086#1084#1091
     end
+    object cxLabel5: TcxLabel
+      Left = 232
+      Top = 45
+      Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
+    end
+    object edArticleLoss: TcxButtonEdit
+      Left = 232
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 270
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -707,14 +723,17 @@ inherited LossForm: TLossForm
         DataType = ftString
       end
       item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Name = 'ArticleLossId'
+        Value = ''
+        Component = GuidesArticleLoss
+        ComponentItem = 'Key'
       end
       item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Name = 'ArticleLossName'
+        Value = ''
+        Component = GuidesArticleLoss
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Value = 0.000000000000000000
@@ -833,9 +852,11 @@ inherited LossForm: TLossForm
         ParamType = ptInput
       end
       item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Name = 'inArticleLossId'
+        Value = ''
+        Component = GuidesArticleLoss
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = 'False'
@@ -923,6 +944,7 @@ inherited LossForm: TLossForm
         Control = edTo
       end
       item
+        Control = edArticleLoss
       end
       item
       end
@@ -1174,5 +1196,31 @@ inherited LossForm: TLossForm
       end>
     Left = 536
     Top = 8
+  end
+  object GuidesArticleLoss: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edArticleLoss
+    FormNameParam.Value = 'TArticleLossForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TArticleLossForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesArticleLoss
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesArticleLoss
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 336
+    Top = 56
   end
 end

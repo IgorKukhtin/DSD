@@ -629,8 +629,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
-				<Form>Report_GoodsMI_OrderExternalForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas">
+				<Form>Report_GoodsMI_OrderExternal_SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -1510,6 +1510,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ArticleLossEdit.pas">
 				<Form>ArticleLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
+				<Form>Report_GoodsMI_OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

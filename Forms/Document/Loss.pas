@@ -45,6 +45,9 @@ type
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edArticleLoss: TcxButtonEdit;
+    GuidesArticleLoss: TdsdGuides;
   private
     { Private declarations }
   public

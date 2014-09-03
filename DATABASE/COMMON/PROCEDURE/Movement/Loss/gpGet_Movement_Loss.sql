@@ -1,8 +1,8 @@
 -- Function: gpGet_Movement_Loss()
 
 -- DROP FUNCTION gpGet_Movement_Loss (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_LossOnPrice (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_LossOnPrice (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Loss (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Loss (Integer, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Loss(
@@ -12,7 +12,10 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Loss(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
+             , ArticleLossId Integer, ArticleLossName TVarChar
+
               )
 AS
 $BODY$
@@ -37,6 +40,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS FromName
              , 0                     				            AS ToId
              , CAST ('' AS TVarChar) 				            AS ToName
+             , 0                     				            AS ArticleLossId
+             , CAST ('' AS TVarChar) 				            AS ArticleLossName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -54,6 +59,8 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
+           , Object_ArticleLoss.Id                              AS ArticleLossId
+           , Object_ArticleLoss.ValueData                       AS ArticleLossName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -72,6 +79,10 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                         ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                        AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+            LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Loss();
@@ -87,6 +98,7 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.09.14                                                        *
  26.05.14                                                        *
 */
 
