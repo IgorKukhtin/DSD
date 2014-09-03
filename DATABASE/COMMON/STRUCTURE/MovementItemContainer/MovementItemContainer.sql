@@ -31,6 +31,7 @@ CREATE TABLE MovementItemContainer(
 CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer(MovementId, DescId);
 CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer(ContainerId, DescId, OperDate, Amount);
 CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer(ParentId);
+CREATE INDEX idx_MovementItemContainer_MovementItemId ON MovementItemContainer(MovementItemId);
                                                                          
 
 /*-------------------------------------------------------------------------------*/

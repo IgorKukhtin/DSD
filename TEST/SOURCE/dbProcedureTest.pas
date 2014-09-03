@@ -176,6 +176,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\GoodsGroup\gpGet_Object_GoodsGroup.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\GoodsGroupStat\gpInsertUpdate_Object_GoodsGroupStat.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\GoodsGroupStat\gpSelect_Object_GoodsGroupStat.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\GoodsGroupStat\gpGet_Object_GoodsGroupStat.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\GoodsKind\gpInsertUpdate_Object_GoodsKind.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\GoodsKind\gpSelect_Object_GoodsKind.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\GoodsKind\gpGet_Object_GoodsKind.sql', ZQuery);

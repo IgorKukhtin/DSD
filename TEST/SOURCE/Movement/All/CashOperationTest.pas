@@ -14,6 +14,8 @@ type
   TCashOperation = class(TMovementTest)
   private
     function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
   public
     function InsertUpdateCashOperation(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double; Comment: string;
@@ -105,6 +107,12 @@ begin
 
   result := InsertUpdate(FParams);
 
+end;
+
+procedure TCashOperation.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inCashId', ftInteger, ptInput, 0);
 end;
 
 { TIncomeCashJuridicalTest }

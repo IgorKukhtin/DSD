@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inOperDate            TDateTime , -- Дата документа
+    IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
@@ -53,6 +56,8 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransferDebtOut(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
+     -- сохранили свойство <Проверен>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <% НДС>
@@ -92,6 +97,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
  07.05.14                                        * add vbAccessKeyId
  07.05.14                                        * add inPartnerId

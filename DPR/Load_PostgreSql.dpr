@@ -45,7 +45,8 @@ uses
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
 
 {$R *.res}
 

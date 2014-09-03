@@ -55,7 +55,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
   cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns;
+  Vcl.DBActns, ExternalDocumentLoad;
 
 {$R *.dfm}
 
@@ -236,6 +236,7 @@ begin
 end;
 
 initialization
+
   // Стандартные компоненты
   RegisterClass (TActionList);
   RegisterClass (TClientDataSet);
@@ -329,6 +330,7 @@ initialization
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
+  RegisterClass (TMoney1CLoadAction);
 
 // ДЛЯ ТЕСТА
 

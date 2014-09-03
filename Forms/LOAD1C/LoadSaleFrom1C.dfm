@@ -449,9 +449,6 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       StoredProcList = <
         item
           StoredProc = spCheckLoad
-        end
-        item
-          StoredProc = spErased
         end>
       Caption = 'actBeforeMove'
     end

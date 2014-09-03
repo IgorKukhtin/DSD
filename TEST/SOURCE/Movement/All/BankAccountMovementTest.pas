@@ -24,7 +24,7 @@ type
 implementation
 
 uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework, dsdDB,
-     DBClient, BankAccountTest, BusinessTest, InfoMoneyTest;
+     DBClient, BankAccountTest, BusinessTest, InfoMoneyTest, UnitsTest;
 
 { TBankAccount }
 
@@ -57,7 +57,7 @@ begin
         InfoMoneyId := FieldByName('Id').AsInteger;
   end;
   BusinessId := TBusiness.Create.GetDefault;
-  UnitId := 0;
+  UnitId := TUnit.Create.GetDefault;
   Amount := 265.68;
 
   result := InsertUpdateBankAccount(Id, InvNumber, OperDate, Amount,

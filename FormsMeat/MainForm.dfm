@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1042
-  ExplicitHeight = 209
+  ExplicitWidth = 1034
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -133,6 +133,10 @@
         item
           Visible = True
           ItemName = 'bbLoad1CSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoad1CMoney'
         end
         item
           Visible = True
@@ -284,6 +288,10 @@
         item
           Visible = True
           ItemName = 'bbGoodsGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsGroupStat'
         end
         item
           Visible = True
@@ -1718,6 +1726,10 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
+    object bbLoad1CMoney: TdxBarButton
+      Action = actLoad1CMoney
+      Category = 0
+    end
     object bbReport_GoodsMI_ProductionSeparate: TdxBarButton
       Action = actReport_GoodsMI_ProductionSeparate
       Category = 0
@@ -1736,6 +1748,10 @@
     end
     object bbReport_OrderExternal_Sale: TdxBarButton
       Action = actReport_OrderExternal_Sale
+      Category = 0
+    end
+    object bbGoodsGroupStat: TdxBarButton
+      Action = actGoodsGroupStat
       Category = 0
     end
   end
@@ -2054,6 +2070,17 @@
       Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
       FormName = 'TIncomeFuelJournalForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsGroupStat: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072')'
+      Hint = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072')'
+      FormName = 'TGoodsGroupStatForm'
+      FormNameParam.Value = 'TGoodsGroupStatForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3231,6 +3258,16 @@
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1072#1089#1093#1086#1076#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
       FormName = 'TLoadSaleFrom1CForm'
       FormNameParam.Value = 'TLoadSaleFrom1CForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLoad1CMoney: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1087#1077#1088#1072#1094#1080#1081' '#1087#1086' '#1082#1072#1089#1089#1077
+      FormName = 'TLoadMoneyFrom1CForm'
+      FormNameParam.Value = 'TLoadMoneyFrom1CForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

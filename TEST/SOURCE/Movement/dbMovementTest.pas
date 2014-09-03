@@ -35,8 +35,8 @@ type
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId: Integer
-             ): integer;
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -77,8 +77,8 @@ type
     function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer
-             ): integer;
+             FromId, ToId, PaidKindId, ContractId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -132,7 +132,7 @@ type
 implementation
 
 uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData
-   , Authentication, dbObjectMeatTest, PartnerTest;
+   , Authentication, dbObjectMeatTest, PartnerTest, CurrencyTest;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.DeleteMovement(Id: integer);
@@ -332,6 +332,7 @@ var Id: Integer;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
     FromId, ToId, PaidKindId, ContractId, PersonalPackerId: Integer;
+    CurrencyId: integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -349,18 +350,20 @@ begin
   PaidKindId:=0;
   ContractId:=0;
   PersonalPackerId:=0;
+  CurrencyId := TCurrency.Create.GetDefault;
   //
   result := InsertUpdateMovementIncome(Id, InvNumber, OperDate,
              OperDatePartner, InvNumberPartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId);
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId, CurrencyId, CurrencyId);
   inherited;
 end;
 
 function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -379,6 +382,8 @@ begin
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inPersonalPackerId', ftInteger, ptInput, PersonalPackerId);
+  FParams.AddParam('inCurrencyDocumentId', ftInteger, ptInput, CurrencyDocumentId);
+  FParams.AddParam('inCurrencyPartnerId', ftInteger, ptInput, CurrencyPartnerId);
 
   result := InsertUpdate(FParams);
 end;
@@ -526,7 +531,7 @@ var Id: Integer;
     OperDatePartner: TDateTime;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId: Integer;
+    FromId, ToId, PaidKindId, ContractId, CurrencyId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -542,17 +547,19 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
+  CurrencyId := TCurrency.Create.GetDefault;
   //
   result := InsertUpdateMovementReturnOut(Id, InvNumber, OperDate,
              OperDatePartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId);
+             FromId, ToId, PaidKindId, ContractId, CurrencyId, CurrencyId);
 end;
 
 function TMovementReturnOutTest.InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -569,6 +576,8 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inCurrencyDocumentId', ftInteger, ptInput, CurrencyDocumentId);
+  FParams.AddParam('inCurrencyPartnerId', ftInteger, ptInput, CurrencyPartnerId);
 
   result := InsertUpdate(FParams);
 end;

@@ -50,7 +50,8 @@ uses
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm},
-  Updater in '..\SOURCE\COMPONENT\Updater.pas';
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -67,6 +68,5 @@ begin
 
   Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TMainForm, MainFormInstance);
-
   Application.Run;
 end.

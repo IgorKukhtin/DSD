@@ -330,6 +330,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
+
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatForm'));
+  TdsdFormStorageFactory.GetStorage.Load('GoodsGroupStatForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupStatEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsKindFormTest;
@@ -944,10 +950,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadMoneyFrom1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadMoneyFrom1CForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchLinkForm');
 end;
