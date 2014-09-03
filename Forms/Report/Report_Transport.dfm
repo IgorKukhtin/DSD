@@ -546,6 +546,7 @@ object Report_TransportForm: TReport_TransportForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 138
     end

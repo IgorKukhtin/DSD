@@ -267,6 +267,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 180
     end
@@ -301,6 +302,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 300
     end
@@ -317,6 +319,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 180
     end
@@ -333,6 +336,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 132
     end

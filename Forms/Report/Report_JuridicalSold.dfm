@@ -2,6 +2,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1020
+  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -769,6 +770,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 160
     end
@@ -780,6 +782,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 160
     end
@@ -796,6 +799,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 160
     end
@@ -817,6 +821,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 150
     end
@@ -833,6 +838,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 81
     end

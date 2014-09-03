@@ -4,8 +4,8 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 981
-  ExplicitHeight = 378
+  ExplicitWidth = 989
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -227,6 +227,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 207
     end

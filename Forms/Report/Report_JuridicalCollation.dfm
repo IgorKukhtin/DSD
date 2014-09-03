@@ -360,6 +360,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 210
     end
@@ -376,6 +377,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 210
     end
@@ -392,6 +394,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 180
     end
@@ -408,6 +411,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 90
     end
@@ -424,6 +428,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 90
     end
@@ -440,6 +445,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 15
       Width = 180
     end
