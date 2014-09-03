@@ -515,7 +515,9 @@ uses
   FounderEdit in '..\..\Forms\Guides\FounderEdit.pas' {FounderEditForm: TParentForm},
   ArticleLoss in '..\..\Forms\Guides\ArticleLoss.pas' {ArticleLossForm: TParentForm},
   ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm},
-  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm};
+  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
+  GoodsGroupStat in '..\..\Forms\Guides\GoodsGroupStat.pas' {GoodsGroupStatForm: TParentForm},
+  GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

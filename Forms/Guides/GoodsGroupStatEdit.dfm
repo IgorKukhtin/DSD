@@ -1,7 +1,7 @@
-﻿object FounderEditForm: TFounderEditForm
+﻿object GoodsGroupStatEditForm: TGoodsGroupStatEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1059#1095#1088#1077#1076#1080#1090#1077#1083#1103
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072')'
   ClientHeight = 157
   ClientWidth = 386
   Color = clBtnFace
@@ -93,7 +93,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Founder'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsGroupStat'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -127,11 +127,11 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 272
+    Left = 248
     Top = 72
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Founder'
+    StoredProcName = 'gpGet_Object_GoodsGroupStat'
     DataSets = <>
     OutputType = otResult
     Params = <

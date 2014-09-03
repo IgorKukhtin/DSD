@@ -378,6 +378,8 @@ type
     bbArticleLoss: TdxBarButton;
     actReport_OrderExternal_Sale: TdsdOpenForm;
     bbReport_OrderExternal_Sale: TdxBarButton;
+    actGoodsGroupStat: TdsdOpenForm;
+    bbGoodsGroupStat: TdxBarButton;
   public
     { Public declarations }
   end;

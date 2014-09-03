@@ -4,14 +4,14 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1034
-  ExplicitHeight = 201
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      45
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -288,6 +288,10 @@
         item
           Visible = True
           ItemName = 'bbGoodsGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsGroupStat'
         end
         item
           Visible = True
@@ -1746,6 +1750,10 @@
       Action = actReport_OrderExternal_Sale
       Category = 0
     end
+    object bbGoodsGroupStat: TdxBarButton
+      Action = actGoodsGroupStat
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actCashOperation: TdsdOpenForm [0]
@@ -2062,6 +2070,17 @@
       Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
       FormName = 'TIncomeFuelJournalForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsGroupStat: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072')'
+      Hint = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072')'
+      FormName = 'TGoodsGroupStatForm'
+      FormNameParam.Value = 'TGoodsGroupStatForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3808,7 +3827,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
