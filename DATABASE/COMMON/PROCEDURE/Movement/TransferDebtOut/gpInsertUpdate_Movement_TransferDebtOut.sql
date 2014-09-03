@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inOperDate            TDateTime , -- Дата документа
+    IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
@@ -40,6 +43,7 @@ BEGIN
                                                    , inInvNumber        := inInvNumber
                                                    , inInvNumberPartner := inInvNumberPartner
                                                    , inOperDate         := inOperDate
+                                                   , inChecked          := inChecked
                                                    , inPriceWithVAT     := inPriceWithVAT
                                                    , inVATPercent       := inVATPercent
                                                    , inChangePercent    := inChangePercent
@@ -85,6 +89,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
  17.04.14                                        * add восстановить/удалить Налоговую
  07.05.14                                        * add inPartnerId

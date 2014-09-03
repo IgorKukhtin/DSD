@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -41,6 +42,7 @@ BEGIN
              , Object_Status.Code                   AS StatusCode
              , Object_Status.Name              	    AS StatusName
 
+             , CAST (FALSE AS Boolean)              AS Checked
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 AS TFloat)                   AS ChangePercent
@@ -99,6 +101,7 @@ BEGIN
            , Movement.InvNumber				            AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Movement.OperDate				            AS OperDate
+           , MovementBoolean_Checked.ValueData          AS Checked
            , Object_Status.ObjectCode    		        AS StatusCode
            , Object_Status.ValueData     		        AS StatusName
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
@@ -144,6 +147,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -246,6 +253,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner
  17.05.14                                        * add Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
  07.05.14                                        * add tmpParams
