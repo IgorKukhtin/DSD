@@ -94,6 +94,29 @@ BEGIN
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
        AND View_Contract.isErased = FALSE
+    UNION ALL
+     SELECT Object_Founder.Id
+          , Object_Founder.ObjectCode     
+          , Object_Founder.ValueData
+          , ObjectDesc.ItemName
+          , Object_Founder.isErased
+          , NULL::Integer AS InfoMoneyId
+          , NULL::Integer AS InfoMoneyCode
+          , ''::TVarChar AS InfoMoneyGroupName
+          , ''::TVarChar AS InfoMoneyDestinationName
+          , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
+          , NULL::Integer
+          , ''::TVarChar
+          , NULL::Integer AS ContractStateKindCode
+          , NULL::TDateTime AS StartDate
+          , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
+          , ''::TVarChar AS ContractKindName
+     FROM Object AS Object_Founder
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
+    WHERE Object_Founder.DescId = zc_Object_Founder()
+      AND Object_Founder.isErased = FALSE
     ;
 
 END;
@@ -105,6 +128,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.09.14                                        * add zc_Object_Founder
  28.08.14                                        *
 */
 

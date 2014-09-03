@@ -19,6 +19,9 @@ BEGIN
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
 
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
+                                                           THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
@@ -113,6 +116,9 @@ BEGIN
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
                                                THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
+
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+                                               THEN zc_Enum_Account_100401() -- Расчеты с участниками
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
                                                THEN CASE (SELECT ObjectLink.ChildObjectId AS InfoMoneyId
@@ -265,6 +271,17 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_Founder()
+                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                             )
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Member()
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
@@ -394,6 +411,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.09.14                                        * add zc_Object_Founder
  30.08.14                                        * add zc_ContainerLinkObject_Partner
  17.08.14                                        * add MovementDescId
  19.07.14                                        * modify zc_Enum_Account_40302
