@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1034
-  ExplicitHeight = 208
+  ExplicitWidth = 1042
+  ExplicitHeight = 209
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      28
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1791,7 +1791,7 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = 14462
+          Value = '273734'
         end
         item
           Name = 'CashName_top'
