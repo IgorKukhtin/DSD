@@ -368,6 +368,8 @@ type
     bbReport_GoodsMI_ProductionSeparate: TdxBarButton;
     actCashOperationOld: TdsdOpenForm;
     bbIncomeCashOld: TdxBarButton;
+    actLoad1CMoney: TdsdOpenForm;
+    bbLoad1CMoney: TdxBarButton;
     actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm;
     bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton;
     actFounder: TdsdOpenForm;

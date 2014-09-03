@@ -13,6 +13,7 @@ type
     // подготавливаем данные для тестирования
     procedure SetUp; override;
   published
+    procedure ImportSettingsTest;
     procedure LoadPriceListTest;
   end;
 
@@ -22,6 +23,11 @@ uses Storage, Authentication, ExternalLoad, SysUtils, CommonData, JuridicalTest,
      dsdDB, DB, Variants;
 
 { TExternalLoadTest }
+
+procedure TExternalLoadTest.ImportSettingsTest;
+begin
+
+end;
 
 procedure TExternalLoadTest.LoadPriceListTest;
 var ImportSettings: TImportSettings;

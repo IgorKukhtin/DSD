@@ -15,7 +15,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePartner(const Id: integer; Code: Integer;
-        ShortName, GLNCode: string;
+        Address, ShortName, GLNCode: string;
         HouseNumber, CaseNumber, RoomNumber: string;
         StreetId:Integer;
         PrepareDayCount, DocumentDayCount: Double;
@@ -56,7 +56,7 @@ begin
   StartPromo := Date;
   EndPromo := Date;
 
-  result := InsertUpdatePartner(0, -6, 'ShortName', 'GLNCode',
+  result := InsertUpdatePartner(0, -6, 'Addrress', 'ShortName', 'GLNCode',
      HouseNumber, CaseNumber, RoomNumber, StreetId,
      15, 15,
      JuridicalId, RouteId, RouteSortingId, PersonalTakeId,PriceListId, PriceListPromoId,
@@ -65,7 +65,7 @@ begin
 end;
 
 function TPartner.InsertUpdatePartner(const Id: integer; Code: Integer;
-        ShortName, GLNCode: string;
+        Address, ShortName, GLNCode: string;
         HouseNumber, CaseNumber, RoomNumber: string;
         StreetId:Integer;
         PrepareDayCount, DocumentDayCount: Double;
@@ -74,6 +74,7 @@ function TPartner.InsertUpdatePartner(const Id: integer; Code: Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inAddress', ftString, ptInput, Address);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inShortName', ftString, ptInput, ShortName);
   FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);

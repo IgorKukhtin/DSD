@@ -45,7 +45,8 @@ uses
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
 
 {$R *.res}
 
