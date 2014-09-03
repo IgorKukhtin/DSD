@@ -14,31 +14,16 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  cxImageComboBox;
 
 type
   TReport_PersonalForm = class(TAncestorReportForm)
-    colJuridicalName: TcxGridDBColumn;
-    colContractNumber: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colStartAmount_A: TcxGridDBColumn;
-    colSaleSumm: TcxGridDBColumn;
     colMoneySumm: TcxGridDBColumn;
     colServiceSumm: TcxGridDBColumn;
-    colOtherSumm: TcxGridDBColumn;
     colEndAmount_A: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
@@ -59,18 +44,12 @@ type
     colStartAmount_P: TcxGridDBColumn;
     colStartAmountD: TcxGridDBColumn;
     colStartAmountK: TcxGridDBColumn;
-    colIncomeSumm: TcxGridDBColumn;
-    colReturnOutSumm: TcxGridDBColumn;
-    colReturnInSumm: TcxGridDBColumn;
     colSendDebtSumm: TcxGridDBColumn;
     colEndAmount_P: TcxGridDBColumn;
     colEndAmount_D: TcxGridDBColumn;
     colEndAmount_K: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
-    colContractCode: TcxGridDBColumn;
-    colJuridicalCode: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
     ReturnInJournal: TdsdOpenForm;
     IncomeJournal: TdsdOpenForm;
@@ -81,15 +60,9 @@ type
     OtherJournal: TdsdOpenForm;
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    colAreaName: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
-    clJuridicalGroupName: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    colSaleRealSumm: TcxGridDBColumn;
-    colReturnInRealSumm: TcxGridDBColumn;
     colTransferDebtSumm: TcxGridDBColumn;
     SaleRealJournal: TdsdOpenForm;
     ReturnInRealJournal: TdsdOpenForm;

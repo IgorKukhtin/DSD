@@ -865,8 +865,8 @@
 				<Form>Report_JuridicalCollationForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Personal.pas">
-				<Form>Report_PersonalForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold.pas">
+				<Form>Report_JuridicalSoldForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
@@ -1526,6 +1526,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsGroupStatEdit.pas">
 				<Form>GoodsGroupStatEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal.pas">
+				<Form>Report_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

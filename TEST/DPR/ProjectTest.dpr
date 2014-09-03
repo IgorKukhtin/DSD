@@ -308,7 +308,7 @@ uses
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   ReturnIn in '..\..\Forms\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
   Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
-  Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
+  Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   Report_CheckTaxCorrective in '..\..\Forms\Report\Report_CheckTaxCorrective.pas' {Report_CheckTaxCorrectiveForm: TParentForm},
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
@@ -517,7 +517,8 @@ uses
   ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm},
   Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
   GoodsGroupStat in '..\..\Forms\Guides\GoodsGroupStat.pas' {GoodsGroupStatForm: TParentForm},
-  GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm};
+  GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm},
+  Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
