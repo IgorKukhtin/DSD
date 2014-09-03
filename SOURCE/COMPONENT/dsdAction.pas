@@ -104,6 +104,7 @@ type
     property MoveParams: TCollection read FMoveParams write FMoveParams;
     // действие вызывается если результат вызова основного действия false
     property CancelAction: TAction read FCancelAction write FCancelAction;
+    property Enabled;
   end;
 
   TDataSetDataLink = class(TDataLink)

@@ -346,21 +346,20 @@ begin
   GetStoredProc.Execute;
   {Заполняем параметрами процедуру}
   Result := TImportSettings.Create(TImportSettingsItems);
-  Result.StoredProc := GetStoredProc.Params.ParamByName('ImportTypeName').Value;
   Result.StartRow := GetStoredProc.Params.ParamByName('StartRow').Value;
   Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value;
   Result.FileType := GetFileType(GetStoredProc.Params.ParamByName('FileTypeName').Value);
   Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
   Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
 
+  Result.StoredProc := TdsdStoredProc.Create(nil);
+  Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ImportTypeName').Value;
+
   {Заполняем параметрами параметры процедуры}
-  DataSet := TClientDataSet.Create;
-
-
-  GetStoredProc.OutputType := otResult;
   GetStoredProc.StoredProcName := 'gpSelect_Object_ImportSettingsItems';
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
   GetStoredProc.OutputType := otDataSet;
+  GetStoredProc.DataSet := TClientDataSet.Create(nil);
   GetStoredProc.Execute;
 
 end;
