@@ -8161,6 +8161,7 @@ end;
 procedure TMainForm.pLoadDocument_Cash;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg,InfoMoneyId_pg,MemberId_pg,KassaId_pg:Integer;
     addComment:String;
+    ServiceDate_pg:TDateTime;
 begin
      if (not cbCash.Checked)or(not cbCash.Enabled) then exit;
      //
@@ -8177,6 +8178,7 @@ begin
 
         Add('     , ClientMoney.Id - 197000 as InvNumber');
         Add('     , ClientMoney.OperDate as OperDate');
+        Add('     , MONTHS (ClientMoney.OperDate, -1) as ServiceDate_pg');
 
         Add('     , isnull (_pgPartner.PartnerId_pg, Client.Id3_Postgres) as ClientId_pg');
         Add('     , Client.UnitCode as ClientCode');
@@ -8405,11 +8407,28 @@ begin
                        end;
              end;
              //
+             // !!!не меняем Дату начисления!!!
+             if (FieldByName('Id_Postgres').AsInteger<>0) then
+             begin
+                  fOpenSqToQuery (' select MIDate_ServiceDate.ValueData as ServiceDate'
+                                 +' from Movement'
+                                 +'      left join MovementItem on MovementItem.MovementId = Movement.Id'
+                                 +'                            and MovementItem.DescId=zc_MI_Master()'
+                                 +'      left join MovementItemDate AS MIDate_ServiceDate'
+                                 +'                                 on MIDate_ServiceDate.MovementItemId = MovementItem.Id'
+                                 +'                                and MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()'
+                                 +' where Movement.Id='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 );
+                  ServiceDate_pg:=toSqlQuery.FieldByName('ServiceDate').AsDateTime;
+             end
+             else ServiceDate_pg:=FieldByName('ServiceDate_pg').AsDateTime;
+             //
+
              //Сохранение
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inServiceDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inServiceDate').Value:=ServiceDate_pg;
              if FieldByName('Summa').AsFloat > 0
              then toStoredProc.Params.ParamByName('inAmountIn').Value:=FieldByName('Summa').AsFloat
              else toStoredProc.Params.ParamByName('inAmountIn').Value:=0;

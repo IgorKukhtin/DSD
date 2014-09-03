@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
@@ -106,6 +105,7 @@ BEGIN
                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
                                       AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                      AND MILinkObject_MoneyPlace.ObjectId > 0
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()

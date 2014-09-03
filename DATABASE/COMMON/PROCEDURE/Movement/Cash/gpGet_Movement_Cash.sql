@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
@@ -46,7 +45,7 @@ BEGIN
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
 
-           , inOperDate                                        AS ServiceDate
+           , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') AS ServiceDate
            , ''::TVarChar                                      AS Comment
            , COALESCE (Object_Cash.Id, 0)                      AS CashId
            , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
