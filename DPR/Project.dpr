@@ -57,7 +57,8 @@ uses
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
-  MainForm in '..\FormsMeat\MainForm.pas' {MainForm};
+  MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
+  Report_JuridicalSold in '..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -70,8 +71,8 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainForm, MainFormInstance);
-     Application.CreateForm(TdmMain, dmMain);
+     Application.CreateForm(TMainFormInstance, MainFormInstance);
+  Application.CreateForm(TdmMain, dmMain);
   end
   else
 

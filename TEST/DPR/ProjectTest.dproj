@@ -865,8 +865,8 @@
 				<Form>Report_JuridicalCollationForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold.pas">
-				<Form>Report_JuridicalSoldForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal.pas">
+				<Form>Report_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
