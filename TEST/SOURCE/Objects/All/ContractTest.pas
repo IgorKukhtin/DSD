@@ -2,7 +2,7 @@ unit ContractTest;
 
 interface
 
-uses dbTest, dbObjectTest, TestFramework, ObjectTest ;
+uses dbTest, dbObjectTest, TestFramework, ObjectTest, Data.DB;
 
 type
   TContractTest = class (TdbObjectTestNew)
@@ -14,6 +14,8 @@ type
   TContract = class(TObjectTest)
   private
     function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
   public
     function InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment,BankAccountExternal: string; SigningDate, StartDate, EndDate: TDateTime;
@@ -26,7 +28,7 @@ type
 
 implementation
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, Data.DB;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest;
 
 { TContractTest }
  constructor TContract.Create;
@@ -122,6 +124,15 @@ begin
   FParams.AddParam('inIsPersonal', ftboolean, ptInput, isPersonal);
   FParams.AddParam('inIsUnique', ftboolean, ptInput, isUnique);
   result := InsertUpdate(FParams);
+end;
+
+procedure TContract.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, date);
+  FParams.AddParam('inEndDate',   ftDateTime, ptInput, date);
+  FParams.AddParam('inIsPeriod',  ftBoolean, ptInput, true);
+  FParams.AddParam('inIsEndDate', ftBoolean, ptInput, true);
 end;
 
 procedure TContractTest.ProcedureLoad;

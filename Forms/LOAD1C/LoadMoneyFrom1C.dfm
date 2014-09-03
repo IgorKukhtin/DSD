@@ -1,4 +1,4 @@
-inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
+inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
@@ -19,112 +19,26 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       ExplicitWidth = 958
       ExplicitHeight = 359
       inherited cxGrid: TcxGrid
-        Top = 132
         Width = 958
-        Height = 227
-        ExplicitTop = 132
+        Height = 359
         ExplicitWidth = 958
-        ExplicitHeight = 227
+        ExplicitHeight = 359
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.DataSource = ChildDS
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colSuma
             end>
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'. 1'#1057
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
             Options.Editing = False
-            Width = 40
+            Width = 60
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' 1'#1057
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object colGoodsGoodsKind: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1085#1072#1081#1076#1077#1085')'
-            DataBinding.FieldName = 'GoodsGoodsKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object colOperCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'OperCount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 41
-          end
-          object colOperPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'OperPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 39
-          end
-          object colSuma: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Suma'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 41
-          end
-        end
-      end
-      object cxMasterGrid: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 958
-        Height = 129
-        Align = alTop
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = MasterDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colBranch: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -134,25 +48,10 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             Options.Editing = False
             Width = 55
           end
-          object colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object colDocType: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocType'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
@@ -164,6 +63,24 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
+          end
+          object colSummIn: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1076#1077#1085#1077#1075
+            DataBinding.FieldName = 'SummaIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colSummOut: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075
+            DataBinding.FieldName = 'SummaOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082'. 1'#1057
@@ -183,7 +100,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           end
           object colDeliveryPoint: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1085#1072#1081#1076#1077#1085')'
-            DataBinding.FieldName = 'DeliveryPointName'
+            DataBinding.FieldName = 'ClientFindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -224,7 +141,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           end
           object colContract: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractNumber'
+            DataBinding.FieldName = 'ContactNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -245,43 +162,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             Options.Editing = False
             Width = 70
           end
-          object colClientOKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'ClientOKPO'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object colClientINN: TcxGridDBColumn
-            Caption = #1048#1053#1053
-            DataBinding.FieldName = 'ClientINN'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 38
-          end
-          object colisSync: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'Synchronize'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 129
-        Width = 958
-        Height = 3
-        AlignSplitter = salTop
-        Control = cxMasterGrid
       end
     end
   end
@@ -316,12 +197,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cxGrid
+        Component = BranchGuides
         Properties.Strings = (
-          'Height')
+          'Key'
+          'TextValue')
       end
       item
-        Component = cxMasterGrid
+        Component = cxGrid
         Properties.Strings = (
           'Height')
       end
@@ -346,25 +228,21 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spMasterSelect
+      StoredProc = nil
       StoredProcList = <
         item
-          StoredProc = spMasterSelect
         end
         item
           StoredProc = spSelect
         end>
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Grid = cxMasterGrid
-    end
     object actMoveToDoc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spMoveSale
+      StoredProc = spMoveMoney
       StoredProcList = <
         item
-          StoredProc = spMoveSale
+          StoredProc = spMoveMoney
         end>
       Caption = #1055#1077#1088#1077#1085#1086#1089#1080#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1087#1088#1086#1076#1072#1078#1080
     end
@@ -378,7 +256,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         end>
       Caption = 'actTrancateTable'
     end
-    object actSale1CLoadAction: TSale1CLoadAction
+    object actMoney1CLoadAction: TMoney1CLoadAction
       Category = 'DSDLib'
       MoveParams = <>
       Branch.Value = ''
@@ -400,7 +278,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           Action = actTrancateTable
         end
         item
-          Action = actSale1CLoadAction
+          Action = actMoney1CLoadAction
         end
         item
           Action = actRefresh
@@ -432,7 +310,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         item
           Action = actMoveToDoc
         end>
-      View = cxGridDBTableView1
+      View = cxGridDBTableView
       Caption = 'actMoveAllDoc'
     end
     object actBeforeMove: TdsdExecStoredProc
@@ -455,12 +333,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Top = 112
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_1CSaleLoad'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
+    StoredProcName = 'gpSelect_1CMoneyLoad'
     Params = <
       item
         Name = 'inStartDate'
@@ -557,43 +430,15 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Left = 248
     Top = 8
   end
-  object spMoveSale: TdsdStoredProc
-    StoredProcName = 'gpLoadSaleFrom1C'
+  object spMoveMoney: TdsdStoredProc
+    StoredProcName = 'gpLoadMoneyFrom1C'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
+        Name = 'inId'
         Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInvNumber'
-        Component = MasterCDS
-        ComponentItem = 'InvNumber'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inClientCode'
-        Component = MasterCDS
-        ComponentItem = 'ClientCode'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -607,7 +452,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Top = 264
   end
   object spDelete1CLoad: TdsdStoredProc
-    StoredProcName = 'gpDelete_1CSale'
+    StoredProcName = 'gpDelete_1CMoney'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -661,56 +506,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Left = 576
     Top = 16
   end
-  object ChildCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'InvNumber;OperDate;BranchName;ClientCode'
-    MasterFields = 'InvNumber;OperDate;BranchName;ClientCode'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 72
-    Top = 336
-  end
-  object ChildDS: TDataSource
-    DataSet = ChildCDS
-    Left = 104
-    Top = 336
-  end
-  object spMasterSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_1CSaleLoadMaster'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        Component = BranchGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 192
-    Top = 120
-  end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpErasedSaleFrom1C'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -739,7 +535,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Top = 216
   end
   object spCheckLoad: TdsdStoredProc
-    StoredProcName = 'gpCheckLoadSaleFrom1C'
+    StoredProcName = 'gpCheckLoadMoneyFrom1C'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -766,19 +562,5 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       end>
     Left = 296
     Top = 216
-  end
-  object DBViewAddOn1: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    Left = 592
-    Top = 240
   end
 end

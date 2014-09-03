@@ -10,9 +10,10 @@ type
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
+    procedure LoadDataTest;
   end;
 
-  TImportSettings = class(TObjectTest)
+  TImportSettingsObjectTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
     function InsertUpdateImportSettings(const Id, Code : integer; Name, ProcedureName: string): integer;
@@ -21,9 +22,17 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils;
+uses DB, UtilConst, TestFramework, SysUtils, ExternalLoad;
 
 { TdbUnitTest }
+
+procedure TImportSettingsTest.LoadDataTest;
+var ObjectTest: TImportSettingsObjectTest;
+    ImportSettings: TImportSettings;
+begin
+  ObjectTest := TImportSettingsObjectTest.Create;
+  ImportSettings := TImportSettingsFactory.GetImportSettings(ObjectTest.GetDataSet.FieldByName('Id').asInteger);
+end;
 
 procedure TImportSettingsTest.ProcedureLoad;
 begin
@@ -36,10 +45,9 @@ end;
 procedure TImportSettingsTest.Test;
 var Id: integer;
     RecordCount: Integer;
-    ObjectTest: TImportSettings;
+    ObjectTest: TImportSettingsObjectTest;
 begin
-  exit;
-  ObjectTest := TImportSettings.Create;
+  ObjectTest := TImportSettingsObjectTest.Create;
   // Получим список
   RecordCount := ObjectTest.GetDataSet.RecordCount;
   // Вставка Типа импорта
@@ -57,7 +65,7 @@ end;
 
 { TImportSettingsTest }
 
-constructor TImportSettings.Create;
+constructor TImportSettingsObjectTest.Create;
 begin
   inherited Create;
   spInsertUpdate := 'gpInsertUpdate_Object_ImportSettings';
@@ -65,13 +73,13 @@ begin
   spGet := 'gpGet_Object_ImportSettings';
 end;
 
-function TImportSettings.InsertDefault: integer;
+function TImportSettingsObjectTest.InsertDefault: integer;
 begin
   result := InsertUpdateImportSettings(0, -1, 'Загрузка прихода', 'gpInsertIncome');
   inherited;
 end;
 
-function TImportSettings.InsertUpdateImportSettings(const Id, Code : integer; Name, ProcedureName: string): integer;
+function TImportSettingsObjectTest.InsertUpdateImportSettings(const Id, Code : integer; Name, ProcedureName: string): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);

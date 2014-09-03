@@ -366,6 +366,8 @@ type
     bbReport_GoodsMI_ProductionSeparateReturn: TdxBarButton;
     actCashOperationOld: TdsdOpenForm;
     bbIncomeCashOld: TdxBarButton;
+    actLoad1CMoney: TdsdOpenForm;
+    bbLoad1CMoney: TdxBarButton;
   public
     { Public declarations }
   end;

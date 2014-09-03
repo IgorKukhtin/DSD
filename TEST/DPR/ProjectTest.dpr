@@ -37,7 +37,6 @@ uses
   AuthenticationTest in '..\SOURCE\AuthenticationTest.pas',
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
-  UnitsTest in '..\SOURCE\Objects\All\Farmacy\UnitsTest.pas',
   CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas',
   dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas',
   LoadFormTest in '..\SOURCE\LoadFormTest.pas',
@@ -321,7 +320,7 @@ uses
   GoodsByGoodsKind1CLink in '..\..\Forms\LOAD1C\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm},
   LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas',
   dbMeatTest in '..\SOURCE\dbMeatTest.pas',
-  LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
+  LoadMoneyFrom1C in '..\..\Forms\LOAD1C\LoadMoneyFrom1C.pas' {LoadMoneyFrom1CForm: TParentForm},
   ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
@@ -488,7 +487,6 @@ uses
   PartnerTest in '..\SOURCE\Objects\All\PartnerTest.pas',
   RouteSortingTest in '..\SOURCE\Objects\All\RouteSortingTest.pas',
   RouteTest in '..\SOURCE\Objects\All\RouteTest.pas',
-  ContractTest in '..\SOURCE\Objects\All\Farmacy\ContractTest.pas',
   AccountDirectionTest in '..\SOURCE\Objects\All\AccountDirectionTest.pas',
   AccountGroupTest in '..\SOURCE\Objects\All\AccountGroupTest.pas',
   CarTest in '..\SOURCE\Objects\All\CarTest.pas',
@@ -508,7 +506,10 @@ uses
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
-  MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm};
+  MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
+  UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
+  LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

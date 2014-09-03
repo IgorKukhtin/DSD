@@ -101,7 +101,6 @@
 			<DCCReference Include="..\SOURCE\AuthenticationTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\UnitsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFormTest.pas"/>
@@ -908,8 +907,8 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\LossDebtTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbMeatTest.pas"/>
-			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
-				<Form>LoadSaleFrom1CForm</Form>
+			<DCCReference Include="..\..\Forms\LOAD1C\LoadMoneyFrom1C.pas">
+				<Form>LoadMoneyFrom1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
@@ -1452,7 +1451,6 @@
 			<DCCReference Include="..\SOURCE\Objects\All\PartnerTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteSortingTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\RouteTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountDirectionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CarTest.pas"/>
@@ -1490,6 +1488,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
 				<Form>MoneyPlace_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\UnitsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
+			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
+				<Form>LoadSaleFrom1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

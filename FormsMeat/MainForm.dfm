@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1042
-  ExplicitHeight = 209
+  ExplicitWidth = 1034
+  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -133,6 +133,10 @@
         item
           Visible = True
           ItemName = 'bbLoad1CSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoad1CMoney'
         end
         item
           Visible = True
@@ -1698,6 +1702,10 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
+    object bbLoad1CMoney: TdxBarButton
+      Action = actLoad1CMoney
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actCashOperation: TdsdOpenForm [0]
@@ -3111,6 +3119,16 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actLoad1CMoney: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1086#1087#1077#1088#1072#1094#1080#1081' '#1087#1086' '#1082#1072#1089#1089#1077
+      FormName = 'TLoadMoneyFrom1CForm'
+      FormNameParam.Value = 'TLoadMoneyFrom1CForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_GoodsMI_byMovementSale: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -3666,7 +3684,7 @@
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

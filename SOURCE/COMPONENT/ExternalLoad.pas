@@ -6,7 +6,7 @@ uses dsdAction, dsdDb, Classes, DB, ExternalData, ADODB;
 
 type
 
-  TDataSetType = (dtDBF, dtXLS);
+  TDataSetType = (dtDBF, dtXLS, dtMMO);
 
   TExternalLoad = class(TExternalData)
   protected
@@ -70,6 +70,13 @@ type
     destructor Destroy; override;
   end;
 
+  TImportSettingsFactory = class
+  private
+    function CreateImportSettings(Id: integer): TImportSettings;
+  public
+    class function GetImportSettings(Id: integer): TImportSettings;
+  end;
+
   TExecuteProcedureFromFile = class
   private
     FExternalLoad: TFileExternalLoad;
@@ -86,7 +93,21 @@ type
 
 implementation
 
-uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin;
+uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin, DBClient;
+
+function GetFileType(FileTypeName: string): TDataSetType;
+begin
+  if FileTypeName = '' then
+     result := dtDBF
+  else
+    if FileTypeName = '' then
+       result := dtXLS
+    else
+      if FileTypeName = '' then
+         result := dtMMO
+      else
+        raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+end;
 
 { TFileExternalLoad }
 
@@ -129,19 +150,20 @@ begin
        InitializeDirectory := FExternalLoad.InitializeDirectory;
        FStoredProc := GetStoredProc;
        try
-         with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
-           Start;
-           try
-             while not FExternalLoad.EOF do begin
-               ProcessingOneRow(FExternalLoad, FStoredProc);
-               IncProgress;
-               FExternalLoad.Next;
+         if  FExternalLoad.RecordCount > 0 then
+             with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
+               Start;
+               try
+                 while not FExternalLoad.EOF do begin
+                   ProcessingOneRow(FExternalLoad, FStoredProc);
+                   IncProgress;
+                   FExternalLoad.Next;
+                 end;
+               finally
+                 Finish
+               end;
+               result := true
              end;
-           finally
-             Finish
-           end;
-           result := true
-         end;
        finally
          FStoredProc.Free
        end;
@@ -307,6 +329,46 @@ destructor TImportSettings.Destroy;
 begin
   FreeAndNil(StoredProc);
   inherited;
+end;
+
+{ TImportSettingsFactory }
+
+function TImportSettingsFactory.CreateImportSettings(
+  Id: integer): TImportSettings;
+var
+  GetStoredProc: TdsdStoredProc;
+  DataSet: TDataSet;
+begin
+  GetStoredProc := TdsdStoredProc.Create(nil);
+  GetStoredProc.OutputType := otResult;
+  GetStoredProc.StoredProcName := 'gpGet_Object_ImportSettings';
+  GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
+  GetStoredProc.Execute;
+  {Заполняем параметрами процедуру}
+  Result := TImportSettings.Create(TImportSettingsItems);
+  Result.StoredProc := GetStoredProc.Params.ParamByName('ImportTypeName').Value;
+  Result.StartRow := GetStoredProc.Params.ParamByName('StartRow').Value;
+  Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value;
+  Result.FileType := GetFileType(GetStoredProc.Params.ParamByName('FileTypeName').Value);
+  Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
+  Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
+
+  {Заполняем параметрами параметры процедуры}
+  DataSet := TClientDataSet.Create;
+
+
+  GetStoredProc.OutputType := otResult;
+  GetStoredProc.StoredProcName := 'gpSelect_Object_ImportSettingsItems';
+  GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
+  GetStoredProc.OutputType := otDataSet;
+  GetStoredProc.Execute;
+
+end;
+
+class function TImportSettingsFactory.GetImportSettings(
+  Id: integer): TImportSettings;
+begin
+
 end;
 
 end.

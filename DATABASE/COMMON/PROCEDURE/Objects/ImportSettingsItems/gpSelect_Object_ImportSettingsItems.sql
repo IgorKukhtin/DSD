@@ -1,9 +1,10 @@
 -- Function: gpSelect_Object_ImportSettingsItems()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettingsItems(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettingsItems(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettingsItems(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inImportSettingsId Integer, 
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParamValue TVarChar,
                ImportSettingsId Integer,
@@ -30,13 +31,14 @@ BEGIN
 FROM Object_ImportSettings_View
    LEFT JOIN Object_ImportTypeItems_View ON Object_ImportTypeItems_View.ImportTypeId = Object_ImportSettings_View.ImportTypeId
    LEFT JOIN Object_ImportSettingsItems_View ON Object_ImportSettingsItems_View.ImportSettingsId = Object_ImportSettings_View.Id
-                                            AND Object_ImportSettingsItems_View.ImportTypeItemsId = Object_ImportTypeItems_View.Id;
+                                            AND Object_ImportSettingsItems_View.ImportTypeItemsId = Object_ImportTypeItems_View.Id
+WHERE ((0 = inImportSettingsId) OR (Object_ImportSettings_View.Id = inImportSettingsId));
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettingsItems(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

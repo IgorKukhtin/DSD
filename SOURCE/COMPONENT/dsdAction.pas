@@ -1800,7 +1800,6 @@ begin
        end;
     end;
   end;
-  Application.ProcessMessages;
 end;
 
 procedure TMultiAction.ListExecute;

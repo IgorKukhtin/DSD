@@ -935,10 +935,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadMoneyFrom1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadMoneyFrom1CForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchLinkForm');
 end;

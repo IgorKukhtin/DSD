@@ -1,20 +1,20 @@
 inherited ImportTypeForm: TImportTypeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
-  ClientWidth = 743
+  ClientWidth = 791
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 751
+  ExplicitWidth = 799
   ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 743
+    Width = 791
     Height = 313
     ExplicitWidth = 743
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 743
+    ClientRectRight = 791
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 743
       ExplicitHeight = 313
@@ -61,11 +61,12 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 468
         Top = 0
-        Width = 275
+        Width = 323
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 275
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS

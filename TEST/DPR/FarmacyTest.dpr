@@ -151,7 +151,8 @@ uses
   GoodsEdit in '..\..\FormsFarmacy\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
   GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
-  ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas';
+  ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas',
+  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

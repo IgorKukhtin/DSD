@@ -20,6 +20,7 @@ uses StrUtils, Classes, SysUtils, UtilConst;
 procedure ExecFile(FileName: string; Query: TZQuery);
 begin
   try
+    Query.ParamCheck := false;
     Query.SQL.LoadFromFile(FileName);
     Query.ExecSQL;
   except
