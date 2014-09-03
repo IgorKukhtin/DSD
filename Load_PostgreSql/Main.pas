@@ -17157,6 +17157,7 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin

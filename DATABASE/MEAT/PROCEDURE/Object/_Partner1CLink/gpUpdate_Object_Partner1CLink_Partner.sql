@@ -41,9 +41,18 @@ BEGIN
    CREATE TEMP TABLE _tmp (Id Integer) ON COMMIT DROP;
 
    -- 1. сохранение новых
-   WITH tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
+   WITH tmpSale1C  AS (SELECT ClientCode, ClientName
+                            --, OKPO
+                            --, CASE WHEN LENGTH (OKPO) <= 5 THEN TRUE ELSE FALSE END isOKPO_Virtual
+                            , CASE WHEN LENGTH (OKPO) - LENGTH (OKPO_calc) > 3 THEN OKPO ELSE OKPO_calc END AS OKPO
+                            , CASE WHEN LENGTH (CASE WHEN LENGTH (OKPO) - LENGTH (OKPO_calc) > 3 THEN OKPO ELSE OKPO_calc END) <= 5 THEN TRUE ELSE FALSE END isOKPO_Virtual
+                       FROM
+                      (SELECT ClientCode, ClientName
+                            , OKPO
+                            , (zfConvert_ViewWorkHourToHour (TRIM (OKPO)) :: BIGINT) :: TVarChar  AS OKPO_calc
+                       FROM
+                      (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
                             , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS OKPO
-                            , CASE WHEN LENGTH (MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END)) <= 5 THEN TRUE ELSE FALSE END isOKPO_Virtual
                        FROM Sale1C
                        WHERE zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
                          AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
@@ -51,6 +60,8 @@ BEGIN
                          AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
                          -- AND LENGTH (TRIM (Sale1C.ClientOKPO)) > 5
                        GROUP BY Sale1C.ClientCode
+                      ) AS tmp
+                      ) AS tmp
                       )
       , tmpPartner1CLink AS (SELECT MAX (Object_Partner1CLink.Id) AS Id
                                   , Object_Partner1CLink.ObjectCode AS ClientCode
@@ -89,7 +100,7 @@ BEGIN
                                              , inPartnerName     := tmpAll.ClientName
                                              , inAddress         := ''
                                              , inCode            := 0
-                                             , inShortName       := NULL
+                                             , inShortName      := NULL
                                              , inGLNCode         := NULL
                                              , inHouseNumber     := NULL
                                              , inCaseNumber      := NULL

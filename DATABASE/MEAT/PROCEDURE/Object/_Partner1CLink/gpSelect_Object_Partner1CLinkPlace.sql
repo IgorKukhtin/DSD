@@ -106,9 +106,9 @@ BEGIN
    UNION ALL
      -- —ÓÚÛ‰ÌËÍË ‘ËÎË‡ÎÓ‚
      SELECT 
-           Object_Member.Id         AS Id
-         , Object_Member.ObjectCode AS Code
-         , Object_Member.ValueData  AS Name
+           Object_Personal.Id
+         , Object_Personal.ObjectCode AS Code
+         , Object_Personal.ValueData  AS Name
          
          , Object_Position.ValueData AS Address
 
@@ -120,34 +120,33 @@ BEGIN
          , ObjectString_INN.ValueData AS OKPO
 
          , ObjectDesc.ItemName
-         , Object_Member.isErased   AS isErased
+         , Object_Personal.isErased   AS isErased
 
-     FROM (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
-                , MAX (ObjectLink_Personal_Unit.ChildObjectId)     AS UnitId
-                , MAX (COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0)) AS PositionId
+     FROM (SELECT ObjectLink_Personal_Unit.ObjectId                        AS PersonalId
+                , ObjectLink_Personal_Member.ChildObjectId                 AS MemberId
+                , ObjectLink_Personal_Unit.ChildObjectId                   AS UnitId
+                , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
            FROM ObjectLink AS ObjectLink_Unit_Branch
                 INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                       ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
                                      AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                      ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_Unit.ObjectId
-                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                     ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_Unit.ObjectId
+                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Position()
                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                      ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Unit.ObjectId
                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
            WHERE ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
              AND ObjectLink_Unit_Branch.ChildObjectId <> 0
-           GROUP BY ObjectLink_Personal_Member.ChildObjectId
-          ) AS tmpMember
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
-                                           AND Object_Member.DescId = zc_Object_Member()
-          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+          ) AS tmpPersonal
+          LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpPersonal.PersonalId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal.DescId
           LEFT JOIN ObjectString AS ObjectString_INN
-                                 ON ObjectString_INN.ObjectId = Object_Member.Id 
+                                 ON ObjectString_INN.ObjectId = tmpPersonal.MemberId 
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMember.UnitId
-          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMember.PositionId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
     ;
   
 END;
@@ -159,6 +158,7 @@ ALTER FUNCTION gpSelect_Object_Partner1CLinkPlace (integer, TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.09.14                                        * Member -> Personal
  01.09.14                                        * add ItemName
  27.08.14                                        * add Object_Unit_View
  24.08.14                                        *

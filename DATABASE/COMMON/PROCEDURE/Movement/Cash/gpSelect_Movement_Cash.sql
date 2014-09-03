@@ -70,14 +70,7 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                                                                              AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
- 
-            LEFT JOIN MovementItemDate AS MIDate_ServiceDate
-                                       ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
-                                      AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-            LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MovementItem.Id
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
-            
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                         AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
@@ -108,6 +101,14 @@ BEGIN
                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                       ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                      AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                                      AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
        WHERE Movement.DescId = zc_Movement_Cash()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
