@@ -110,7 +110,6 @@ uses
   Role in '..\..\Forms\Role.pas' {RoleForm: TParentForm},
   RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm: TParentForm},
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
-  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
   JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
@@ -152,7 +151,8 @@ uses
   GoodsMain in '..\..\FormsFarmacy\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
   GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
   ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas',
-  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
