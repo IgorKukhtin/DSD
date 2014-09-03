@@ -401,6 +401,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 180
     end
@@ -435,6 +436,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 210
     end
@@ -451,6 +453,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 210
     end
@@ -467,6 +470,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 180
     end
@@ -483,6 +487,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 14
       Width = 132
     end

@@ -22,6 +22,7 @@ type
     procedure LoadAccountFormTest;
     procedure LoadAddressFormTest;
     procedure LoadAssetFormTest;
+    procedure LoadArticleLossFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountContractFormTest;
@@ -44,6 +45,7 @@ type
     procedure LoadExternalForm;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadFreightFormTest;
+    procedure LoadFounderFormTest;
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
@@ -840,8 +842,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
 
 end;
 
@@ -1037,6 +1046,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
+end;
+
+procedure TLoadFormTest.LoadArticleLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TArticleLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TArticleLossEditForm');
 end;
 
 procedure TLoadFormTest.LoadAddressFormTest;
@@ -1258,7 +1275,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
+  TdsdFormStorageFactory.GetStorage.Load('TFreightEditForm');
+end;
+
+procedure TLoadFormTest.LoadFounderFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderEditForm');
 end;
 
 procedure TLoadFormTest.LoadCityFormTest;

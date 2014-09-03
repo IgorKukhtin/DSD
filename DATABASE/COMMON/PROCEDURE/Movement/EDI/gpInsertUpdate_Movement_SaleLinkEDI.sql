@@ -1,8 +1,9 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SaleLinkEDI (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SaleLinkEDI (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SaleLinkEDI(
+    IN inMovementId_EDI      Integer   , --
     IN inMovementId          Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -18,12 +19,22 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!так для продажи!!!
+     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+
      -- Поиск документа EDI
-     vbMovementId_EDI:= (SELECT MovementChildId  FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Sale());
+     vbMovementId_EDI:= (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Sale());
+
      -- Проверка
      IF COALESCE (vbMovementId_EDI, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> не связан с документом <EDI>.';
+     END IF;
+     -- Проверка
+     IF COALESCE (inMovementId_EDI, 0) <> COALESCE (vbMovementId_EDI, 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе <EDI>.';
      END IF;
 
 
@@ -99,7 +110,20 @@ BEGIN
                                      , inSession        := inSession);
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ "Продажа покупателю".', vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ (' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale()) || ').', vbUserId);
+
+     END IF; -- !!!так для продажи!!!
+
+
+     -- !!!так для возврата!!!
+     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+          -- !!!создаются док-ты <Возврат от покупателя> и <Корректировка к налоговой накладной>!!!
+          PERFORM lpInsertUpdate_Movement_EDIComdoc_In (inMovementId    := inMovementId_EDI
+                                                      , inUserId        := vbUserId
+                                                      , inSession       := inSession
+                                                       );
+     END IF;
 
 
 END;
@@ -109,6 +133,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.14                                        * add lpInsertUpdate_Movement_EDIComdoc_In
  20.07.14                                        * ALL
  13.05.14                         *
 */

@@ -12,7 +12,8 @@ uses
   Vcl.ActnList, dsdAction, ParentForm, DataModul, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_AccountForm = class(TParentForm)

@@ -1004,6 +1004,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 192
     end
@@ -1033,6 +1034,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 1
       Width = 203
     end
@@ -1059,6 +1061,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 192
     end
@@ -1070,6 +1073,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 203
     end

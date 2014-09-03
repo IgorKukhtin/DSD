@@ -3,7 +3,6 @@ inherited MovementJournalForm: TMovementJournalForm
   ClientHeight = 396
   ClientWidth = 1024
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -34
   ExplicitWidth = 1040
   ExplicitHeight = 431
   PixelsPerInch = 96
@@ -14,19 +13,19 @@ inherited MovementJournalForm: TMovementJournalForm
     Height = 316
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 984
+    ExplicitWidth = 1024
     ExplicitHeight = 316
     ClientRectBottom = 316
     ClientRectRight = 1024
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 984
+      ExplicitWidth = 1024
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1024
         Height = 316
-        ExplicitWidth = 984
+        ExplicitWidth = 1024
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -267,7 +266,7 @@ inherited MovementJournalForm: TMovementJournalForm
   inherited Panel: TPanel
     Width = 1024
     Height = 54
-    ExplicitWidth = 984
+    ExplicitWidth = 1024
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -302,6 +301,7 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 210
     end
@@ -318,6 +318,7 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 210
     end
@@ -339,6 +340,7 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 180
     end
@@ -350,6 +352,7 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 180
     end
@@ -371,6 +374,7 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 14
       Width = 90
     end
@@ -382,12 +386,10 @@ inherited MovementJournalForm: TMovementJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 15
       Width = 90
     end
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <>
   end
   inherited ActionList: TActionList
     object actOpenDocument: TMultiAction

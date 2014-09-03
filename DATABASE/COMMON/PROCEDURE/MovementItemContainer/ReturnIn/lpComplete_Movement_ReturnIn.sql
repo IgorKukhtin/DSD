@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnIn(
  RETURNS VOID
 AS
 $BODY$
+  DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
+
   DECLARE vbMovementDescId Integer;
 
   DECLARE vbOperSumm_Partner_byItem TFloat;
@@ -51,6 +53,13 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+        AND inIsLastComplete = FALSE
+     THEN vbIsHistoryCost:= TRUE;
+     ELSE vbIsHistoryCost:= FALSE;
+     END IF;
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
      SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
@@ -570,6 +579,7 @@ BEGIN
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
+          AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
           AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!! 
             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- здесь нули !!!НЕ НУЖНЫ!!! 
         GROUP BY _tmpItem.MovementItemId
@@ -1238,6 +1248,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.09.14                                        * add vbIsHistoryCost
  23.08.14                                        * add vbPartnerId_From
  17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=

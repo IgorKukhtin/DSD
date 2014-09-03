@@ -60,6 +60,7 @@ type
     actBeforeMove: TdsdExecStoredProc;
     colPaidKindName: TcxGridDBColumn;
     DBViewAddOn1: TdsdDBViewAddOn;
+    clItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

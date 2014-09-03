@@ -111,6 +111,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           object colOKPO_find1C: TcxGridDBColumn
             Caption = #1054#1050#1055#1054' 1'#1057' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'OKPO_find1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -125,6 +132,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -262,6 +270,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end

@@ -19,9 +19,9 @@ object Report_AccountForm: TReport_AccountForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 139
+    Top = 137
     Width = 1189
-    Height = 382
+    Height = 384
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -468,7 +468,7 @@ object Report_AccountForm: TReport_AccountForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 1189
     Height = 111
     Align = alTop
@@ -504,6 +504,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 240
     end
@@ -530,6 +531,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 170
     end
@@ -541,6 +543,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 180
     end
@@ -562,6 +565,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 200
     end
@@ -578,6 +582,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 132
     end
@@ -594,6 +599,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 170
     end
@@ -610,6 +616,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 180
     end
@@ -626,6 +633,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 240
     end
@@ -642,6 +650,7 @@ object Report_AccountForm: TReport_AccountForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 200
     end
@@ -733,8 +742,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -752,7 +761,7 @@ object Report_AccountForm: TReport_AccountForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

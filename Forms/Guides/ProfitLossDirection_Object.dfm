@@ -2,8 +2,8 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1054#1055#1080#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
-  ClientHeight = 391
-  ClientWidth = 451
+  ClientHeight = 486
+  ClientWidth = 709
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,15 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 451
-    Height = 365
+    Width = 709
+    Height = 460
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 451
+    ExplicitHeight = 365
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -50,17 +52,33 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clProfitLossGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'ProfitLossGroupCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object clProfitLossGroupName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 25
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 286
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -139,11 +157,11 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -152,6 +170,18 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -184,6 +214,7 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
     Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -197,6 +228,7 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -215,6 +247,7 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -258,6 +291,8 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 216
   end

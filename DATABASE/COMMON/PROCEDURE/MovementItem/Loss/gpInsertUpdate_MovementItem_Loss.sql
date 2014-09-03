@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_Loss()
 
 -- DROP FUNCTION gpInsertUpdate_MovementItem_Loss();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inAmount              TFloat    , -- Количество
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
+    IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
@@ -25,6 +29,11 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+
+     -- меняем параметр
+     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+     -- сохранили свойство <Дата партии/Дата перемещения>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
      -- сохранили свойство <Количество батонов или упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
@@ -62,6 +71,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.09.14                                                       * + PartionGoodsDate
  26.05.14                                                       *
 */
 

@@ -60,6 +60,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 121
   end
@@ -71,6 +72,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 121
   end
@@ -82,6 +84,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 137
   end
@@ -93,6 +96,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 137
   end

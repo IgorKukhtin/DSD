@@ -628,8 +628,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
-				<Form>Report_GoodsMI_OrderExternalForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas">
+				<Form>Report_GoodsMI_OrderExternal_SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -1482,6 +1482,10 @@
 				<Form>Report_GoodsMI_ProductionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas">
+				<Form>Report_GoodsMI_ProductionSeparateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Member.pas">
 				<Form>MemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1494,6 +1498,25 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ContractTest.pas"/>
 			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
 				<Form>LoadSaleFrom1CForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Founder.pas">
+				<Form>FounderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\FounderEdit.pas">
+				<Form>FounderEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLoss.pas">
+				<Form>ArticleLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLossEdit.pas">
+				<Form>ArticleLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
+				<Form>Report_GoodsMI_OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

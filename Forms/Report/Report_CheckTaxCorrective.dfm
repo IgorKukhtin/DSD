@@ -10,6 +10,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
     Width = 990
     Height = 262
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 990
     ExplicitHeight = 262
     ClientRectBottom = 262
@@ -325,6 +326,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 340
     end

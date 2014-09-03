@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Count TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+             , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , isErased Boolean
               )
@@ -35,6 +36,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
+           , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -82,6 +84,7 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
+           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -98,11 +101,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
-
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
 
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -131,6 +136,7 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_HeadCount.ValueData        AS HeadCount
+           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -148,11 +154,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
-
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
 
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -179,6 +187,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.09.14                                                       * + PartionGoodsDate
  26.05.14                                                       *
 
 */

@@ -244,7 +244,7 @@ uses
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
+  Report_GoodsMI_OrderExternal_Sale in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas' {Report_GoodsMI_OrderExternal_SaleForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
@@ -505,11 +505,17 @@ uses
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
+  Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
   ContractTest in '..\SOURCE\Objects\All\ContractTest.pas',
-  LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm};
+  LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
+  Founder in '..\..\Forms\Guides\Founder.pas' {FounderForm: TParentForm},
+  FounderEdit in '..\..\Forms\Guides\FounderEdit.pas' {FounderEditForm: TParentForm},
+  ArticleLoss in '..\..\Forms\Guides\ArticleLoss.pas' {ArticleLossForm: TParentForm},
+  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm},
+  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

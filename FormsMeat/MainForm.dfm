@@ -199,6 +199,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbFounder'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1055,6 +1059,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbReport_OrderExternal_Sale'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1132,6 +1140,14 @@
         item
           Visible = True
           ItemName = 'bbReport_GoodsMI_ProductionSeparateReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_ProductionSeparatePart'
         end
         item
           Visible = True
@@ -1429,6 +1445,10 @@
           ItemName = 'bbInfoMoney'
         end
         item
+          Visible = True
+          ItemName = 'bbArticleLoss'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbAccountGroup'
@@ -1702,8 +1722,29 @@
       Action = actReport_GoodsMI_ProductionSeparateReturn
       Category = 0
     end
+<<<<<<< HEAD
     object bbLoad1CMoney: TdxBarButton
       Action = actLoad1CMoney
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionSeparate: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparate
+      Category = 0
+    end
+    object bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton
+      Action = actReport_GoodsMI_ProductionSeparatePart
+      Category = 0
+    end
+    object bbFounder: TdxBarButton
+      Action = actFounder
+      Category = 0
+    end
+    object bbArticleLoss: TdxBarButton
+      Action = actArticleLoss
+      Category = 0
+    end
+    object bbReport_OrderExternal_Sale: TdxBarButton
+      Action = actReport_OrderExternal_Sale
       Category = 0
     end
   end
@@ -1728,7 +1769,27 @@
         end>
       isShowModal = False
     end
-    object actCashOperationOld: TdsdOpenForm [2]
+    object actReport_OrderExternal_Sale: TdsdOpenForm [1]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' / '#1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      FormName = 'TReport_GoodsMI_OrderExternal_SaleForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternal_SaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 1
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actCashOperationOld: TdsdOpenForm [3]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' (Integer)'
@@ -1739,13 +1800,56 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = 14462
+          Value = '273734'
         end
         item
           Name = 'CashName_top'
           Value = #1050#1072#1089#1089#1072' Integer'
           DataType = ftString
         end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm [4]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inGroupMovement'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actArticleLoss: TdsdOpenForm [5]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
+      Hint = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
+      FormName = 'TArticleLossForm'
+      FormNameParam.Value = 'TArticleLossForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actFounder: TdsdOpenForm [7]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
+      Hint = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
+      FormName = 'TFounderForm'
+      FormNameParam.Value = 'TFounderForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
       isShowModal = False
     end
     object actAssetGroup: TdsdOpenForm
@@ -1908,6 +2012,27 @@
       FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inGroupMovement'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actReport_JuridicalDefermentPayment: TdsdOpenForm

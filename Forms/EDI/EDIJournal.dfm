@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1102
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1110
-  ExplicitHeight = 451
+  ExplicitWidth = 1118
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -666,7 +666,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 184
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Top = 183
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -1242,7 +1241,7 @@ inherited EDIJournalForm: TEDIJournalForm
     ConnectionParams.Password.ComponentItem = 'Password'
     ConnectionParams.Password.DataType = ftString
     Left = 416
-    Top = 32
+    Top = 56
   end
   object spHeaderComDoc: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIComdoc'
@@ -1497,6 +1496,12 @@ inherited EDIJournalForm: TEDIJournalForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inMovementId_EDI'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
       item
         Name = 'inMovementId'
         Component = MasterCDS

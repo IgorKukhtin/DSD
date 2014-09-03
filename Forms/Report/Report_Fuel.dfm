@@ -381,6 +381,7 @@ object Report_FuelForm: TReport_FuelForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 150
     end
@@ -397,6 +398,7 @@ object Report_FuelForm: TReport_FuelForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 120
     end
@@ -423,6 +425,7 @@ object Report_FuelForm: TReport_FuelForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 126
     end
