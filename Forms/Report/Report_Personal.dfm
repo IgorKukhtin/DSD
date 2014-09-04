@@ -213,9 +213,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object MemberName: TcxGridDBColumn
+          object PersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'MemberName'
+            DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1618,7 +1618,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'MemberName'
+    IndexFieldNames = 'PersonalName'
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
