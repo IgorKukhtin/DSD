@@ -1,10 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -46,7 +42,7 @@ BEGIN
                                                   , inPaidKindToId     := inPaidKindToId
                                                   , inContractFromId   := inContractFromId
                                                   , inContractToId     := inContractToId
-                                                 , inPartnerId        := inPartnerId
+                                                  , inPartnerId        := inPartnerId
                                                   , inUserId           := vbUserId
                                                    ) AS tmp;
 

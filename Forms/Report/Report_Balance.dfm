@@ -293,12 +293,24 @@ object Report_BalanceForm: TReport_BalanceForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
         end>
       OneOnRow = True
       Row = 0

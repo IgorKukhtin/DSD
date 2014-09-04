@@ -29,8 +29,6 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NULL
                                                            THEN zc_Enum_AccountDirection_40100() -- касса
 
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Member() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
-                                                           THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Member()
                                                            THEN zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Personal()
@@ -81,8 +79,8 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет*
                                                           THEN zc_Enum_AccountDirection_90400() -- штрафы в бюджет*
 
-                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
-                                                          THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+                                                      -- WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
+                                                      --     THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  END
      FROM Object
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -201,15 +199,20 @@ BEGIN
                                                  END
                        , ObjectId = CASE WHEN _tmpItem.ObjectId <> 0 
                                               THEN _tmpItem.ObjectId -- если уже был определен
+
                                          WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                               THEN zc_Enum_ProfitLoss_10301() -- Результат основной деятельности + Скидка дополнительная + Продукция
+
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                           AND _tmpItem.UnitId = 0
                                               THEN zc_Enum_ProfitLoss_11101() -- Результат основной деятельности + Маркетинг + Продукция
+
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
                                               THEN zc_Enum_ProfitLoss_50101() -- Налоги + Налог на прибыль + Налог на прибыль
+
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
                                               THEN zc_Enum_ProfitLoss_50201() -- Налоги + НДС + НДС
+
                                          ELSE _tmpItem.ObjectId
                                     END
                       , IsActive = FALSE -- !!!всегда по Кредиту!!!

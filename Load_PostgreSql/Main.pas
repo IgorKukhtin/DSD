@@ -2826,6 +2826,7 @@ begin
              then fExecSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(JuridicalId_pg)
                                   +'                         , JuridicalDetailsId_pg='+IntToStr(JuridicalDetailsId_pg)
                                   +' where trim(OKPO) = '+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString)
+                                  +'   and zf_isOKPO_Virtual_PG(trim(OKPO)) = zc_rvNo()'
                                   +'   and Id>10000');
              //
              Next;
@@ -8180,7 +8181,7 @@ begin
         Add('     , ClientMoney.OperDate as OperDate');
         Add('     , MONTHS (ClientMoney.OperDate, -1) as ServiceDate_pg');
 
-        Add('     , isnull (_pgPartner.PartnerId_pg, Client.Id3_Postgres) as ClientId_pg');
+        Add('     , isnull (_pgPartner.PartnerId_pg, case when Client.PersonalId_Postgres <> 0 then Client.PersonalId_Postgres <> else Client.Id3_Postgres end) as ClientId_pg');
         Add('     , Client.UnitCode as ClientCode');
         Add('     , Client.UnitName as ClientName');
 
@@ -11604,7 +11605,7 @@ begin
 
         if (cbBill_List.Checked)
         then
-             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber'
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber_my=tmpSelect.InvNumber'
                 +'                           and _pgBillLoad.FromId=tmpSelect.FromId')
         else
 
@@ -11928,7 +11929,7 @@ begin
 
         if (cbBill_List.Checked)
         then
-             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber'
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber_my=tmpSelect.InvNumber'
                 +'                           and _pgBillLoad.FromId=tmpSelect.FromId')
         else
 

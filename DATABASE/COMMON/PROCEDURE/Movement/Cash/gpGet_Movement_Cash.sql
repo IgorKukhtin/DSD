@@ -45,7 +45,7 @@ BEGIN
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
 
-           , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') AS ServiceDate
+           , DATE_TRUNC ('Month', inOperDate - INTERVAL '1 MONTH') :: TDateTime AS ServiceDate
            , ''::TVarChar                                      AS Comment
            , COALESCE (Object_Cash.Id, 0)                      AS CashId
            , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName

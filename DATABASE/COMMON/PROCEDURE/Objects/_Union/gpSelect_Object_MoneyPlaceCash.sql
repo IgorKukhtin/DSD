@@ -100,12 +100,12 @@ BEGIN
           , Object_Founder.ValueData
           , ObjectDesc.ItemName
           , Object_Founder.isErased
-          , NULL::Integer AS InfoMoneyId
-          , NULL::Integer AS InfoMoneyCode
-          , ''::TVarChar AS InfoMoneyGroupName
-          , ''::TVarChar AS InfoMoneyDestinationName
-          , ''::TVarChar AS InfoMoneyName
-          , ''::TVarChar AS InfoMoneyName_all
+          , Object_InfoMoney_View.InfoMoneyId
+          , Object_InfoMoney_View.InfoMoneyCode
+          , Object_InfoMoney_View.InfoMoneyGroupName
+          , Object_InfoMoney_View.InfoMoneyDestinationName
+          , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
           , NULL::Integer
           , ''::TVarChar
           , NULL::Integer AS ContractStateKindCode
@@ -115,6 +115,7 @@ BEGIN
           , ''::TVarChar AS ContractKindName
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_80301() -- Расчеты с участниками
     WHERE Object_Founder.DescId = zc_Object_Founder()
       AND Object_Founder.isErased = FALSE
     ;

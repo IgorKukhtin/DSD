@@ -87,10 +87,18 @@ inherited Cash_ObjectForm: TCash_ObjectForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TCashEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TCashEditForm'
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Enabled = False
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Enabled = False
     end
   end
   inherited MasterCDS: TClientDataSet
@@ -124,13 +132,12 @@ inherited Cash_ObjectForm: TCash_ObjectForm
           ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           BeginGroup = True
@@ -140,22 +147,30 @@ inherited Cash_ObjectForm: TCash_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbInsert: TdxBarButton
-      Enabled = False
       Visible = ivNever
     end
     inherited bbEdit: TdxBarButton
-      Enabled = False
       Visible = ivNever
     end
     inherited bbErased: TdxBarButton
-      Enabled = False
       Visible = ivNever
     end
     inherited bbUnErased: TdxBarButton
-      Enabled = False
       Visible = ivNever
     end
   end

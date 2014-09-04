@@ -28,13 +28,12 @@ inherited CashJournalForm: TCashJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
-              Column = clAmountOut
+              Column = clAmountIn
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmountIn
+              Column = clAmountOut
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -80,14 +79,6 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object clItemName: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'ItemName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
           end
           object clMoneyPlaceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -215,6 +206,14 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

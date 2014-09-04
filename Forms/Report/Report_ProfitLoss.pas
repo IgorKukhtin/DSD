@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel;
+  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod;
 
 type
   TReport_ProfitLossForm = class(TParentForm)
@@ -65,6 +65,8 @@ type
     dsdExecStoredProc1: TdsdExecStoredProc;
     spGetProfitLostParam: TdsdStoredProc;
     PivotAddOn: TPivotAddOn;
+    PeriodChoice: TPeriodChoice;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

@@ -140,7 +140,7 @@ BEGIN
                                                  , inObjectId_4 := inInfoMoneyId_Detail
                                                  , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                  , inObjectId_5 := inInfoMoneyId
-                                                 , inDescId_6   := zc_ObjectCostLink_PartionGoods()
+                                                 , inDescId_6   := zc_ContainerLinkObject_PartionGoods()
                                                  , inObjectId_6 := inPartionGoodsId
                                                   );
                   -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
