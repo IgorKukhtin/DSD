@@ -1,7 +1,7 @@
-DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Personal(
+CREATE OR REPLACE FUNCTION gpReport_Member(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inAccountId        Integer,    -- —˜ÂÚ
@@ -54,10 +54,10 @@ BEGIN
                      SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId,
-                     tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                                                    AS StartAmount,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)          AS DebetSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm,
-                     tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                         AS EndAmount
+                     tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                                                   AS StartAmount,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)      AS DebetSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm,
+                     tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
             FROM (SELECT CLO_Member.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Member.ObjectId AS MemberId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
                   FROM ContainerLinkObject AS CLO_Member
                   INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -107,15 +107,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 04.09.14                                                        *
-
+ 04.09.14                                                        *  + Branch
+ 03.09.14                                                        *
 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Member (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');

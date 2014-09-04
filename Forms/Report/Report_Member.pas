@@ -1,4 +1,4 @@
-unit Report_Personal;
+unit Report_Member;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   cxImageComboBox;
 
 type
-  TReport_PersonalForm = class(TAncestorReportForm)
+  TReport_MemberForm = class(TAncestorReportForm)
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
@@ -61,7 +61,7 @@ type
     BranchGuides: TdsdGuides;
     BranchName: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
-    ServiceDate: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -75,6 +75,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_PersonalForm)
+  RegisterClass(TReport_MemberForm)
 
 end.

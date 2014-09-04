@@ -861,6 +861,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
+
+
 
 end;
 
