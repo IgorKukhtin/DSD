@@ -148,8 +148,8 @@ object Goods_ObjectForm: TGoods_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -229,6 +229,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
     Top = 96
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -242,6 +243,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -271,6 +273,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
     end
     object dsdGridToExcel1: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -310,6 +313,10 @@ object Goods_ObjectForm: TGoods_ObjectForm
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 184
   end

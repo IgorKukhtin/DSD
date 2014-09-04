@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Weight TFloat
              , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GroupStatId Integer, GroupStatName TVarChar
              , MeasureId Integer,  MeasureName TVarChar
              , TradeMarkId Integer,  TradeMarkName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -33,6 +34,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS GoodsGroupId
            , CAST ('' as TVarChar) AS GoodsGroupName 
+           
+           , CAST (0 as Integer)   AS GroupStatId
+           , CAST ('' as TVarChar) AS GroupStatName 
            
            , CAST (0 as Integer)   AS MeasureId
            , CAST ('' as TVarChar) AS MeasureName
@@ -60,6 +64,9 @@ BEGIN
            , Object_GoodsGroup.Id         AS GoodsGroupId
            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
           
+           , Object_GoodsGroupStat.Id        AS GroupStatId
+           , Object_GoodsGroupStat.ValueData AS GroupStatName 
+            
            , Object_Measure.Id            AS MeasureId
            , Object_Measure.ValueData     AS MeasureName
 
@@ -80,7 +87,12 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                 
+          
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                              ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
+                             AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -125,12 +137,13 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.09.14         * 
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  06.09.13                          *              
- 02.07.13          * + TradeMark             
+ 02.07.13         * + TradeMark             
  02.07.13                                        * 1251Cyr
- 21.06.13          *              
- 11.06.13          *
+ 21.06.13         *              
+ 11.06.13         *
  11.05.13                                        
 
 */

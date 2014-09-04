@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 40
-    Top = 71
+    Top = 63
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 46
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 320
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 192
-    Top = 320
+    Top = 331
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -55,7 +55,7 @@
   end
   object ceCode: TcxCurrencyEdit
     Left = 40
-    Top = 26
+    Top = 21
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -63,22 +63,22 @@
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 98
+    Top = 89
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 214
+    Top = 229
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxLabel2: TcxLabel
     Left = 264
-    Top = 262
+    Top = 274
     Caption = #1042#1077#1089
   end
   object ceWeight: TcxCurrencyEdit
     Left = 264
-    Top = 285
+    Top = 292
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
@@ -86,7 +86,7 @@
   end
   object ceParentGroup: TcxButtonEdit
     Left = 40
-    Top = 127
+    Top = 109
     Properties.Buttons = <
       item
         Default = True
@@ -98,7 +98,7 @@
   end
   object ceMeasure: TcxButtonEdit
     Left = 40
-    Top = 237
+    Top = 249
     Properties.Buttons = <
       item
         Default = True
@@ -110,7 +110,7 @@
   end
   object сеTradeMark: TcxButtonEdit
     Left = 40
-    Top = 183
+    Top = 202
     Properties.Buttons = <
       item
         Default = True
@@ -122,12 +122,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 40
-    Top = 160
+    Top = 182
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 159
-    Top = 183
+    Top = 202
     Properties.Buttons = <
       item
         Default = True
@@ -138,17 +138,17 @@
   end
   object cxLabel6: TcxLabel
     Left = 159
-    Top = 160
+    Top = 182
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cxLabel7: TcxLabel
     Left = 159
-    Top = 214
+    Top = 229
     Caption = #1041#1080#1079#1085#1077#1089
   end
   object ceBusiness: TcxButtonEdit
     Left = 159
-    Top = 237
+    Top = 249
     Properties.Buttons = <
       item
         Default = True
@@ -160,12 +160,12 @@
   end
   object cxLabel8: TcxLabel
     Left = 39
-    Top = 262
+    Top = 274
     Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
   end
   object edFuel: TcxButtonEdit
     Left = 39
-    Top = 285
+    Top = 292
     Properties.Buttons = <
       item
         Default = True
@@ -175,11 +175,29 @@
     TabOrder = 19
     Width = 210
   end
+  object cxLabel9: TcxLabel
+    Left = 40
+    Top = 136
+    Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+  end
+  object ceGroupStat: TcxButtonEdit
+    Left = 40
+    Top = 155
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 304
     Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -196,9 +214,11 @@
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -243,6 +263,13 @@
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGroupStatId'
+        Value = ''
+        Component = GoodsGroupStatGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -327,6 +354,19 @@
         DataType = ftString
       end
       item
+        Name = 'GroupStatId'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GroupStatName'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'MeasureId'
         Value = ''
         Component = dsdMeasureGuides
@@ -397,8 +437,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 192
-    Top = 88
+    Left = 8
+    Top = 64
   end
   object dsdMeasureGuides: TdsdGuides
     KeyField = 'Id'
@@ -421,8 +461,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 40
-    Top = 224
+    Left = 104
+    Top = 240
   end
   object TradeMarkGuides: TdsdGuides
     KeyField = 'Id'
@@ -446,7 +486,7 @@
         DataType = ftString
       end>
     Left = 88
-    Top = 176
+    Top = 194
   end
   object dsdInfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -485,7 +525,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 280
-    Top = 312
+    Top = 323
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 8
@@ -535,8 +575,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 64
-    Top = 272
+    Left = 128
+    Top = 280
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -561,5 +601,29 @@
       end>
     Left = 208
     Top = 112
+  end
+  object GoodsGroupStatGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGroupStat
+    FormNameParam.Value = 'TGoodsGroupStatForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupStatForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 112
+    Top = 144
   end
 end
