@@ -1528,6 +1528,10 @@
 				<Form>GoodsGroupStatEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal.pas">
+				<Form>Report_PersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Member.pas">
 				<Form>Report_MemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>

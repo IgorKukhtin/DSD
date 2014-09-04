@@ -1622,7 +1622,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Member'
+    StoredProcName = 'gpReport_Personal'
     Params = <
       item
         Name = 'inStartDate'
