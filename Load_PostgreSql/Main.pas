@@ -8181,7 +8181,7 @@ begin
         Add('     , ClientMoney.OperDate as OperDate');
         Add('     , MONTHS (ClientMoney.OperDate, -1) as ServiceDate_pg');
 
-        Add('     , isnull (_pgPartner.PartnerId_pg, case when Client.PersonalId_Postgres <> 0 then Client.PersonalId_Postgres <> else Client.Id3_Postgres end) as ClientId_pg');
+        Add('     , case when _pgPersonal_two.Id_Postgres <> 0 and not (_pgInfoMoney.ObjectCode between 30101 and 30502) then _pgPersonal_two.Id_Postgres else isnull (_pgPartner.PartnerId_pg, Client.Id3_Postgres) end as ClientId_pg');
         Add('     , Client.UnitCode as ClientCode');
         Add('     , Client.UnitName as ClientName');
 
@@ -8206,6 +8206,7 @@ begin
         Add('     left outer join dba._pgUnit on _pgUnit.ID=ClientMoney.pgUnitId');
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ID=ClientMoney.pgInfoMoneyId');
         Add('     left outer join dba.Unit as Client on Client.Id = ClientMoney.ClientId');
+        Add('     left outer join dba._pgPersonal as _pgPersonal_two on _pgPersonal_two.Id = Client.PersonalId_Postgres');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                     ) as _pgPartner on _pgPartner.UnitId = ClientMoney.ClientId');
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
@@ -8381,8 +8382,8 @@ begin
              //if MemberId_pg <> 0 then showmessage('');
 
 
-             // !!!не меняем УП статью и Договор!!! если в документе она есть, а в Integer нет
-             if (InfoMoneyId_pg=0)and(FieldByName('Id_Postgres').AsInteger<>0) then
+             // !!!не меняем УП статью и От кого/Кому и Договор!!! если в документе они есть  //, а в Integer нет
+             if (FieldByName('Id_Postgres').AsInteger<>0) then
              begin
                   fOpenSqToQuery (' select MILO_MoneyPlace.ObjectId as PartnerId'
                                  +'       ,MILO_InfoMoney.ObjectId as InfoMoneyId'

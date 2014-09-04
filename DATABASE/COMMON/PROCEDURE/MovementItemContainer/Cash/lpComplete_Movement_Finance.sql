@@ -274,7 +274,7 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
-                                            WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -285,7 +285,7 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_Founder()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
-                                            WHEN _tmpItem.ObjectDescId = zc_Object_Member()
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Member() -- Подотчет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -297,8 +297,10 @@ BEGIN
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                             , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                             , inObjectId_2        := _tmpItem.InfoMoneyId
-                                                                            , inDescId_3          := zc_ContainerLinkObject_Car()
-                                                                            , inObjectId_3        := 0 -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
+                                                                            , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                                                            , inObjectId_3        := CASE WHEN _tmpItem.BranchId <> 0 THEN _tmpItem.BranchId ELSE zc_Branch_Basis() END
+                                                                            , inDescId_4          := zc_ContainerLinkObject_Car()
+                                                                            , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
@@ -414,6 +416,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.09.14                                        * add zc_ContainerLinkObject_Branch
  03.09.14                                        * add zc_Object_Founder
  30.08.14                                        * add zc_ContainerLinkObject_Partner
  17.08.14                                        * add MovementDescId
