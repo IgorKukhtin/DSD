@@ -1,28 +1,28 @@
 inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
   ClientHeight = 555
-  ClientWidth = 1020
-  ExplicitWidth = 1028
+  ClientWidth = 1050
+  ExplicitWidth = 1058
   ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 85
-    Width = 1020
+    Width = 1050
     Height = 470
     TabOrder = 3
     ExplicitTop = 85
     ExplicitWidth = 1020
     ExplicitHeight = 470
     ClientRectBottom = 466
-    ClientRectRight = 1016
+    ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1014
       ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1014
+        Width = 1044
         Height = 464
         ExplicitWidth = 1014
         ExplicitHeight = 464
@@ -221,6 +221,20 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -316,12 +330,18 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 45
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1050
     Height = 57
     ExplicitWidth = 1020
     ExplicitHeight = 57
@@ -416,6 +436,23 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 150
+    end
+    object ceBranch: TcxButtonEdit
+      Left = 863
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 160
+    end
+    object cxLabel7: TcxLabel
+      Left = 863
+      Top = 8
+      Caption = #1060#1080#1083#1080#1072#1083':'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1609,6 +1646,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end
       item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
@@ -1628,10 +1672,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 112
     Top = 184
@@ -1734,6 +1774,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = InfoMoneyGuides
       end
       item
+        Component = BranchGuides
       end>
     Top = 228
   end
@@ -1985,5 +2026,32 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end>
     Left = 240
     Top = 232
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+    Top = 53
   end
 end

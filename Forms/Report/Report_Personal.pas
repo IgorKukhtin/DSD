@@ -56,6 +56,12 @@ type
     TransferDebtJournal: TdsdOpenForm;
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
+    ceBranch: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    BranchGuides: TdsdGuides;
+    BranchName: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
   private
     { Private declarations }
   public
