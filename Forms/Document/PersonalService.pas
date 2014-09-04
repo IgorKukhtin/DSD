@@ -11,7 +11,8 @@ uses
   dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dsdGuides, cxButtonEdit;
+  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dsdGuides, cxButtonEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TPersonalServiceForm = class(TAncestorJournalForm)
@@ -25,6 +26,10 @@ type
     PaidKindGuides: TdsdGuides;
     UpdateDataSet: TdsdUpdateDataSet;
     spGet: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    edInDescName: TcxTextEdit;
   private
     { Private declarations }
   public
