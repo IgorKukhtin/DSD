@@ -60,6 +60,9 @@ type
     edFuel: TcxButtonEdit;
     FuelGuides: TdsdGuides;
     GoodsGroupGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceGroupStat: TcxButtonEdit;
+    GoodsGroupStatGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -72,7 +72,7 @@ type
 
   TImportSettingsFactory = class
   private
-    function CreateImportSettings(Id: integer): TImportSettings;
+    class function CreateImportSettings(Id: integer): TImportSettings;
   public
     class function GetImportSettings(Id: integer): TImportSettings;
   end;
@@ -333,7 +333,7 @@ end;
 
 { TImportSettingsFactory }
 
-function TImportSettingsFactory.CreateImportSettings(
+class function TImportSettingsFactory.CreateImportSettings(
   Id: integer): TImportSettings;
 var
   GetStoredProc: TdsdStoredProc;
@@ -360,14 +360,23 @@ begin
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
   GetStoredProc.OutputType := otDataSet;
   GetStoredProc.DataSet := TClientDataSet.Create(nil);
+  TClientDataSet(GetStoredProc.DataSet).IndexFieldNames := 'ParamNumber';
   GetStoredProc.Execute;
+
+  with GetStoredProc.DataSet do begin
+    while not EOF do begin
+      Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, ftString, ptInput, '');
+      Next;
+    end;
+  end;
+
 
 end;
 
 class function TImportSettingsFactory.GetImportSettings(
   Id: integer): TImportSettings;
 begin
-
+  result := CreateImportSettings(Id);
 end;
 
 end.

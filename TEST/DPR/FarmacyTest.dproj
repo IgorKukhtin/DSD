@@ -331,7 +331,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
-			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Load\ImportType.pas">
 				<Form>ImportTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -443,6 +442,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportSettingsTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
+			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

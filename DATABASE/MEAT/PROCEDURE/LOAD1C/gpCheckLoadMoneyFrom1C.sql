@@ -53,7 +53,7 @@ BEGIN
 
      -- Проверка
      IF vbMoneyCount <> vbCount THEN 
-        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен.'; --  <%> <%> <%>, inBranchId, vbMoneyCount, vbCount; 
+        RAISE EXCEPTION 'Ошибка. Не все записи засинхронизированы. Перенос не возможен.'; --  <%> <%> <%>, inBranchId, vbMoneyCount, vbCount; 
      END IF;
 
 END;

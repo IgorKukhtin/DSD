@@ -11,7 +11,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -3128,12 +3128,31 @@
     object actPersonalService: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1041#1053')'
       Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
       FormName = 'TPersonalServiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'PaidKindId'
+          Value = '3'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = #1041#1053
+          DataType = ftString
+        end
+        item
+          Name = 'InDescName'
+          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1041#1053
+          DataType = ftString
+        end
+        item
+          Name = 'inProcess'
+          Value = 'zc_Enum_Process_PersonalService_BN()'
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object actReport_Account: TdsdOpenForm

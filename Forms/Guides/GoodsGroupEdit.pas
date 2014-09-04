@@ -11,7 +11,8 @@ uses
   cxCurrencyEdit, cxMaskEdit, cxDropDownEdit, cxDBEdit, cxCustomData, cxStyles,
   cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dsdGuides,
-  Vcl.Grids, Vcl.DBGrids, dxSkinsCore, cxButtonEdit, dsdAddOn;
+  Vcl.Grids, Vcl.DBGrids, dxSkinsCore, cxButtonEdit, dsdAddOn,
+  dxSkinsDefaultPainters;
 
 type
   TGoodsGroupEditForm = class(TParentForm)
@@ -33,6 +34,9 @@ type
     ceParentGroup: TcxButtonEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel3: TcxLabel;
+    ceGroupStat: TcxButtonEdit;
+    GoodsGroupStatGuides: TdsdGuides;
   private
     { Private declarations }
   public

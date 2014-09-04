@@ -25,7 +25,6 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 722
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,13 +51,13 @@ object GoodsForm: TGoodsForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 63
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 172
       end
       object clGoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -67,17 +66,23 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object clGroupStatName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+        DataBinding.FieldName = 'GroupStatName'
+        HeaderAlignmentVert = vaCenter
+        Width = 147
+      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 206
       end
       object clMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 61
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
@@ -140,27 +145,27 @@ object GoodsForm: TGoodsForm
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 95
       end
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 138
       end
       object clIsPartionCount: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'isPartionCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 25
+        Width = 43
       end
       object clIsPartionSumm: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'isPartionSumm'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 25
+        Width = 43
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -204,8 +209,8 @@ object GoodsForm: TGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

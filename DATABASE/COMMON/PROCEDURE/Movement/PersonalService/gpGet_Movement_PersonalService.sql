@@ -1,9 +1,12 @@
+
 -- Function: gpGet_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inPaidKindId        Integer  , -- форма оплаты
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -31,23 +34,28 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime)      AS OperDate
-             , 0                                     AS StatusCode
-             , ''::TVarChar                          AS StatusName
+             , Object_Status.Code                    AS StatusCode
+             , Object_Status.Name                    AS StatusName
              , CAST (CURRENT_DATE as TDateTime)      AS ServiceDate
              , CAST (0 as TFloat)                    AS Amount
 
-             , 0                     AS PersonalId
-             , CAST ('' as TVarChar) AS PersonalName
-             , 0                     AS PaidKindId
-             , CAST ('' as TVarChar) AS PaidKindName
-             , 0                     AS InfoMoneyId
-             , CAST ('' as TVarChar) AS InfoMoneyName
-             , 0                     AS UnitId
-             , CAST ('' as TVarChar) AS UnitName
+             , 0                          AS PersonalId
+             , CAST ('' as TVarChar)      AS PersonalName
+             , Object_PaidKind.id         AS PaidKindId
+             , Object_PaidKind.ValueData  AS PaidKindName
+             , 0                          AS InfoMoneyId
+             , CAST ('' as TVarChar)      AS InfoMoneyName
+             , 0                          AS UnitId
+             , CAST ('' as TVarChar)      AS UnitName
 
-             , 0                     AS PositionId
-             , CAST ('' as TVarChar) AS PositionName
-             , CAST ('' as TVarChar) AS COMMENT;
+             , 0                          AS PositionId
+             , CAST ('' as TVarChar)      AS PositionName
+             , CAST ('' as TVarChar)      AS COMMENT
+
+         FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
+             JOIN Object as Object_PaidKind on Object_PaidKind.descid= zc_Object_PaidKind()
+                                                 and Object_PaidKind.id = inPaidKindId	           
+;
 
      ELSE
        RETURN QUERY 
@@ -122,7 +130,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_PersonalService (Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*
