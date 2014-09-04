@@ -11,7 +11,7 @@
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1257,11 +1257,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbReport_Personal'
+          ItemName = 'bbReport_Member'
         end
         item
           Visible = True
-          ItemName = 'bbReport_PersonalService'
+          ItemName = 'bbReport_Personal'
         end
         item
           Visible = True
@@ -1774,12 +1774,12 @@
       Action = actGoodsGroupStat
       Category = 0
     end
-    object bbReport_Personal: TdxBarButton
-      Action = actReport_Personal
+    object bbReport_Member: TdxBarButton
+      Action = actReport_Member
       Category = 0
     end
-    object bbReport_PersonalService: TdxBarButton
-      Action = actReport_PersonalService
+    object bbReport_Personal: TdxBarButton
+      Action = actReport_Personal
       Category = 0
     end
     object bbReport_FoundersForm: TdxBarButton
@@ -1836,12 +1836,12 @@
         end>
       isShowModal = False
     end
-    object actReport_PersonalService: TdsdOpenForm [2]
+    object actReport_Personal: TdsdOpenForm [2]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079#1087
-      FormName = 'TReport_PersonalServiceForm'
-      FormNameParam.Value = 'TReport_PersonalServiceForm'
+      FormName = 'TReport_PersonalForm'
+      FormNameParam.Value = 'TReport_PersonalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -1939,12 +1939,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Personal: TdsdOpenForm [10]
+    object actReport_Member: TdsdOpenForm [10]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
-      FormName = 'TReport_PersonalForm'
-      FormNameParam.Value = 'TReport_PersonalForm'
+      FormName = 'TReport_MemberForm'
+      FormNameParam.Value = 'TReport_MemberForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

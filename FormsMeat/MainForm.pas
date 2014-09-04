@@ -380,10 +380,10 @@ type
     bbReport_OrderExternal_Sale: TdxBarButton;
     actGoodsGroupStat: TdsdOpenForm;
     bbGoodsGroupStat: TdxBarButton;
+    actReport_Member: TdsdOpenForm;
+    bbReport_Member: TdxBarButton;
     actReport_Personal: TdsdOpenForm;
     bbReport_Personal: TdxBarButton;
-    actReport_PersonalService: TdsdOpenForm;
-    bbReport_PersonalService: TdxBarButton;
     actReport_Founders: TdsdOpenForm;
     bbReport_FoundersForm: TdxBarButton;
     actReport_Cash: TdsdOpenForm;

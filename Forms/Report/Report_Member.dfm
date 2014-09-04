@@ -1,5 +1,5 @@
-inherited Report_PersonalForm: TReport_PersonalForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
+inherited Report_MemberForm: TReport_MemberForm
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
   ClientHeight = 555
   ClientWidth = 1050
   ExplicitWidth = 1058
@@ -12,19 +12,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Height = 470
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 470
     ClientRectBottom = 466
     ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
-      ExplicitWidth = 1044
+      ExplicitWidth = 1014
       ExplicitHeight = 464
       inherited cxGrid: TcxGrid
         Width = 1044
         Height = 464
-        ExplicitWidth = 1044
+        ExplicitWidth = 1014
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -228,9 +228,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ServiceDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-            DataBinding.FieldName = 'ServiceDate'
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -343,7 +343,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited Panel: TPanel
     Width = 1050
     Height = 57
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -1622,7 +1622,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Personal'
+    StoredProcName = 'gpReport_Member'
     Params = <
       item
         Name = 'inStartDate'
