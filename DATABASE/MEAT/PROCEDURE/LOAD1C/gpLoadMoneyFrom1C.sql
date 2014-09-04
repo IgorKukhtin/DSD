@@ -11,11 +11,13 @@ RETURNS Void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbInvNumber TVarChar;
+   DECLARE vbCashId Integer;
    DECLARE vbOperDate TDateTime;  
    DECLARE vbMovementId Integer;
    DECLARE vbPartnerId Integer;
    DECLARE vbPartnerCode Integer;
    DECLARE vbContractId Integer;
+   DECLARE vbInfoMoneyId Integer;
    DECLARE vbSummaIn TFloat;
    DECLARE vbSummaOut TFloat;
 BEGIN
@@ -33,81 +35,74 @@ BEGIN
        , Money1C.SummaIn 
        , Money1C.SummaOut INTO vbInvNumber, vbOperDate, vbPartnerCode, vbSummaIn, vbSummaOut
     FROM Money1C WHERE Id = inId;
-     -- Нашли Кассу и Точку доставки
-     
 
-     /*OPEN curMovement FOR 
-          SELECT DISTINCT Money1C.InvNumber
-                        , Money1C.OperDate
-                        , zfGetUnitFromUnitId (Money1C.UnitId) AS UnitId
-                        , Money1C.UnitId AS UnitId_1C
-                        , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
-                        , tmpPartner1CLink.ContractId
-                        , Money.Id AS MovementId
-                        , zfGetPaidKindFrom1CType(Money1C.VidDoc) AS PaidKindId
-                        , round(Money1C.Tax)
-          FROM Money1C
-               JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
-                          , Object_Partner1CLink.ObjectCode
-                          , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
-                          , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
-                     FROM Object AS Object_Partner1CLink
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                           ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
-                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
-                     WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
-                    ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Money1C.ClientCode
-                                         AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Money1C.UnitId), zfGetPaidKindFrom1CType(Money1C.VidDoc))
-               LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-                                    ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
-                                   AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
-                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_To.ObjectId AS PartnerId FROM Movement  
-          JOIN MovementLinkObject AS MLO_From
-                                  ON MLO_From.MovementId = Movement.Id
-                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
-          JOIN MovementLinkObject AS MLO_To
-                                  ON MLO_To.MovementId = Movement.Id
-                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
-          JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
-                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
-                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          JOIN MovementBoolean AS MovementBoolean_isLoad 
-                               ON MovementBoolean_isLoad.MovementId = Movement.Id
-                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-                              AND MovementBoolean_isLoad.ValueData = TRUE
-     WHERE Movement.DescId = zc_Movement_Money()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased()) AS Money
-                          ON Money.InvNumber = Money1C.InvNumber AND Money.OperDate = Money1C.OperDate
-                         AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Money.PartnerId
+     -- Нашли Кассу
+     SELECT  
+          Object.Id INTO vbCashId
+       FROM Object
+           JOIN ObjectLink AS Cash_Currency
+                           ON Cash_Currency.ObjectId = Object.Id
+                          AND Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
+           JOIN ObjectLink AS Cash_Branch
+                           ON Cash_Branch.ObjectId = Object.Id
+                          AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+       WHERE (Cash_Branch.ChildObjectId = inBranchId) AND (Cash_Currency.ChildObjectId = lpGet_DefaultValue('zc_Object_Currency', 0)::integer);
+
+     -- Нашли Точку доставки
+     SELECT ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId 
+          , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId 
+          , ocv.infomoneyid INTO vbContractId, vbPartnerId, vbInfoMoneyId
+       FROM Object AS Object_Partner1CLink
+            JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                            ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                           AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+                           
+            JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                            ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                           AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+            JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                            ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                           AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                           
+       LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId, Object_Contract_View AS ocv   
+
+           WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                           AND Object_Partner1CLink.ObjectCode = vbPartnerCode
+                           AND ObjectLink_Partner1CLink_Branch.ChildObjectId = zfGetBranchLinkFromBranchPaidKind(inBranchId, zc_Enum_PaidKind_SecondForm());
+                    
+    SELECT Movement.Id INTO vbMovementId FROM 
+
+       Movement
+            JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                        ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             
-          WHERE Money1C.InvNumber = inInvNumber AND Money1C.OperDate = inOperDate AND Money1C.ClientCode = inClientCode
-            AND ((Money1C.VIDDOC = '1') OR (Money1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Money1C.UnitId);
-
-          -- сохранили Документ
-          SELECT tmp.ioId INTO vbMovementId
-          FROM lpInsertUpdate_Movement_Money (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
-                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
-                                           , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
-                                           , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0
-                                           , inCurrencyDocumentId:= 14461 -- грн
-                                           , inCurrencyPartnerId:= NULL
-                                           , inUserId := vbUserId
-                                            ) AS tmp;
-          -- сохранили свойство <Загружен из 1С>
-          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
-          -- пометим записи на удаление ПОКА
-          PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
-    */     
+       WHERE Movement.DescId = zc_Movement_Cash()
+         AND Movement.OperDate = vbOperDate
+         AND MovementItem.objectid = vbCashId
+         AND MILinkObject_MoneyPlace.ObjectId = vbPartnerId
+         AND InvNumber = vbInvNumber
+         AND statusid = zc_enum_status_complete();
          
-    
+
+        PERFORM gpInsertUpdate_Movement_Cash(
+              ioId := vbMovementId                , -- Ключ объекта <Документ>
+       inInvNumber := vbInvNumber      , -- Номер документа
+        inOperDate := vbOperDate       , -- Дата документа
+     inServiceDate := NULL             , -- Дата начисления
+        inAmountIn := vbSummaIn        , -- Сумма прихода
+       inAmountOut := vbSummaOut       , -- Сумма расхода
+         inComment := ''               , -- Комментарий
+          inCashId := vbCashId         , -- Касса
+    inMoneyPlaceId := vbPartnerId      , -- Объекты работы с деньгами
+      inPositionId := NULL             , -- Должность
+        inMemberId := NULL             , -- Физ лицо (через кого)
+      inContractId := vbContractId     , -- Договора
+     inInfoMoneyId := vbInfoMoneyId    , -- Управленческие статьи
+          inUnitId := NULL             , -- Подразделения
+         inSession := inSession);          -- сессия пользователя
+   
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

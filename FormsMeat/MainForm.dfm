@@ -11,7 +11,7 @@
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1254,6 +1254,26 @@
         item
           Visible = True
           ItemName = 'bbAccountReport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Personal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_PersonalService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_FoundersForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Cash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_BankAccount'
         end>
     end
     object bbReportsFinance_Separator: TdxBarSeparator
@@ -1754,6 +1774,26 @@
       Action = actGoodsGroupStat
       Category = 0
     end
+    object bbReport_Personal: TdxBarButton
+      Action = actReport_Personal
+      Category = 0
+    end
+    object bbReport_PersonalService: TdxBarButton
+      Action = actReport_PersonalService
+      Category = 0
+    end
+    object bbReport_FoundersForm: TdxBarButton
+      Action = actReport_Founders
+      Category = 0
+    end
+    object bbReport_Cash: TdxBarButton
+      Action = actReport_Cash
+      Category = 0
+    end
+    object bbReport_BankAccount: TdxBarButton
+      Action = actReport_BankAccount
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actCashOperation: TdsdOpenForm [0]
@@ -1794,6 +1834,16 @@
           Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
           DataType = ftString
         end>
+      isShowModal = False
+    end
+    object actReport_PersonalService: TdsdOpenForm [2]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079#1087
+      FormName = 'TReport_PersonalServiceForm'
+      FormNameParam.Value = 'TReport_PersonalServiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
       isShowModal = False
     end
     object actCashOperationOld: TdsdOpenForm [3]
@@ -1848,6 +1898,16 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Founders: TdsdOpenForm [6]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
+      FormName = 'TReport_FoundersForm'
+      FormNameParam.Value = 'TReport_FoundersForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actFounder: TdsdOpenForm [7]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -1855,6 +1915,36 @@
       Hint = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
       FormName = 'TFounderForm'
       FormNameParam.Value = 'TFounderForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_BankAccount: TdsdOpenForm [8]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
+      FormName = 'TReport_BankAccountForm'
+      FormNameParam.Value = 'TReport_BankAccountForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Cash: TdsdOpenForm [9]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      FormName = 'TReport_CashForm'
+      FormNameParam.Value = 'TReport_CashForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Personal: TdsdOpenForm [10]
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
+      FormName = 'TReport_PersonalForm'
+      FormNameParam.Value = 'TReport_PersonalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

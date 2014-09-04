@@ -205,17 +205,20 @@
     TabOrder = 25
     Width = 215
   end
-  object ceServiceDate: TcxDateEdit [26]
-    Left = 245
-    Top = 25
-    Properties.ReadOnly = True
-    TabOrder = 26
-    Width = 170
-  end
-  object cxLabel12: TcxLabel [27]
+  object cxLabel12: TcxLabel [26]
     Left = 245
     Top = 5
     Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+  end
+  object ceServiceDate: TcxDateEdit [27]
+    Left = 245
+    Top = 25
+    EditValue = 41640d
+    Properties.DisplayFormat = 'mmmm yyyy'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 27
+    Width = 170
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -265,7 +268,7 @@
       end
       item
         Name = 'inServiceDate'
-        Value = 0d
+        Value = 41640d
         Component = ceServiceDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -393,7 +396,7 @@
       end
       item
         Name = 'ServiceDate'
-        Value = 0d
+        Value = 41640d
         Component = ceServiceDate
         DataType = ftDateTime
       end
@@ -640,9 +643,6 @@
     GuidesList = <
       item
         Guides = CashGuides
-      end
-      item
-        Guides = InfoMoneyGuides
       end>
     ActionItemList = <>
     Left = 504

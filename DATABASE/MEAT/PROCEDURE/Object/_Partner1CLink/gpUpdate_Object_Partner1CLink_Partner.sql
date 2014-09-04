@@ -229,7 +229,17 @@ BEGIN
                                           
 
    -- 2. сохранение
-   WITH tmpSale1C  AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpSale1C  AS (SELECT JuridicalId
+                            --, OKPO
+                            , CASE WHEN LENGTH (OKPO) - LENGTH (OKPO_calc) > 3 THEN OKPO ELSE OKPO_calc END AS OKPO
+                            , INN
+                       FROM
+                      (SELECT JuridicalId
+                            , OKPO
+                            , (zfConvert_ViewWorkHourToHour (TRIM (OKPO)) :: BIGINT) :: TVarChar  AS OKPO_calc
+                            , INN
+                       FROM
+                      (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                             , MAX (TRIM (Sale1C.ClientOKPO)) AS OKPO
                             , MAX (TRIM (Sale1C.ClientINN))  AS INN
                        FROM _tmp
@@ -244,6 +254,8 @@ BEGIN
                                              AND zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
                                              AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
                        GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                      ) AS tmp
+                      ) AS tmp
                       )
    INSERT INTO _tmp (Id)
    SELECT -- сохранение реквизитов
