@@ -110,11 +110,15 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Branch() RETURNS Integer AS $B
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Branch', ' Филиал', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Branch');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_ServiceDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_ServiceDate', ' Месяц начислений', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate');
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch
+ 04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch and zc_ContainerLinkObject_ServiceDate
  21.12.13                                        * add zc_ContainerLinkObject_Member
  15.09.13                                        * add zc_ContainerLinkObject_BankAccount and zc_ContainerLinkObject_Partner
  13.07.13                                        * restore zc_ContainerLinkObject_Goods

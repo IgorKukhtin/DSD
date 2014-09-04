@@ -721,9 +721,8 @@ SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
 group by tmp.ContainerId
 ) as tmp
 where Container.Id = tmp.ContainerId 
+and Container.KeyValue <> tmp.KeyValue
 -- left join Container on Container.Id = ContainerId 
-
- where Container.KeyValue <> tmp.KeyValue
 
 
 -- select * from Container where coalesce (KeyValue,'') = ''

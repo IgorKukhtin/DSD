@@ -7,7 +7,6 @@ and ObjectId = 0
 and ContainerId in (
 select ContainerId 
 from ContainerLinkObject
-join Object on Object.Id = ObjectId 
 group by ContainerId, ContainerLinkObject.descId having count (*) >1);
 
 

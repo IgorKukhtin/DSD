@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Income(
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
 )                              
 RETURNS VOID
---  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, MemberId_From Integer, UnitId Integer, BranchId_Unit Integer, MemberId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
   DECLARE vbMovementDescId Integer;
@@ -635,9 +634,6 @@ BEGIN
           AND vbCarId <> 0;
 
 
-     -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.MemberId_From, _tmpItem.UnitId, _tmpItem.BranchId_Unit, _tmpItem.MemberId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId                         , _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
-
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
@@ -823,8 +819,26 @@ BEGIN
       WHERE _tmpItem_SummPartner.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
      -- 2.2. определяется ContainerId для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
-     UPDATE _tmpItem_SummPartner SET ContainerId =                 CASE WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                                                         AND vbMemberId_From = 0
+     UPDATE _tmpItem_SummPartner SET ContainerId =                 CASE WHEN vbMemberId_From <> 0
+                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудники(подотчетные лица) 2)NULL 3)NULL 4)Статьи назначения 5)Автомобиль
+                                                                           THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL
+                                                                                                      , inObjectId          := _tmpItem_SummPartner.AccountId
+                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                      , inBusinessId        := _tmpItem_SummPartner.BusinessId
+                                                                                                      , inObjectCostDescId  := NULL
+                                                                                                      , inObjectCostId      := NULL
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Member()
+                                                                                                      , inObjectId_1        := vbMemberId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                                                                                      , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_Car()
+                                                                                                      , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
+                                                                                                       )
+                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
+                                                                        WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                          AND vbIsCorporate_From = FALSE
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -848,8 +862,6 @@ BEGIN
                                                                                                       , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_From ELSE NULL END
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудники(подотчетные лица) 2)NULL 3)NULL 4)Статьи назначения 5)Автомобиль
-                                                                                -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
                                                                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := _tmpItem_SummPartner.AccountId
@@ -857,22 +869,21 @@ BEGIN
                                                                                                       , inBusinessId        := _tmpItem_SummPartner.BusinessId
                                                                                                       , inObjectCostDescId  := NULL
                                                                                                       , inObjectCostId      := NULL
-                                                                                                      , inDescId_1          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Juridical() END
-                                                                                                      , inObjectId_1        := CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbJuridicalId_From END
-                                                                                                      , inDescId_2          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Contract() END
-                                                                                                      , inObjectId_2        := CASE WHEN vbMemberId_From <> 0 THEN 0 ELSE vbContractId END
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
                                                                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_3        := _tmpItem_SummPartner.InfoMoneyId
-                                                                                                      , inDescId_4          := CASE WHEN vbMemberId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                                                       , inObjectId_4        := vbPaidKindId
-                                                                                                      , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbMemberId_From = 0 AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                                                                      , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbMemberId_From = 0 AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
                                                                                                        )
                                                                    END
-                                   , ContainerId_Transit = CASE WHEN _tmpItem_SummPartner.AccountId_Transit = 0 THEN 0
+                                   , ContainerId_Transit = CASE WHEN _tmpItem_SummPartner.AccountId_Transit = 0 OR vbMemberId_From <> 0 THEN 0
                                                                 ELSE
                                                                    CASE WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                                                         AND vbMemberId_From = 0
                                                                          AND vbIsCorporate_From = FALSE
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -896,8 +907,6 @@ BEGIN
                                                                                                       , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_From ELSE NULL END
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудники(подотчетные лица) 2)NULL 3)NULL 4)Статьи назначения 5)Автомобиль
-                                                                                -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
                                                                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := _tmpItem_SummPartner.AccountId_Transit
@@ -905,16 +914,16 @@ BEGIN
                                                                                                       , inBusinessId        := _tmpItem_SummPartner.BusinessId
                                                                                                       , inObjectCostDescId  := NULL
                                                                                                       , inObjectCostId      := NULL
-                                                                                                      , inDescId_1          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Juridical() END
-                                                                                                      , inObjectId_1        := CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbJuridicalId_From END
-                                                                                                      , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
-                                                                                                      , inDescId_3          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Contract() END
-                                                                                                      , inObjectId_3        := CASE WHEN vbMemberId_From <> 0 THEN 0 ELSE vbContractId END
-                                                                                                      , inDescId_4          := CASE WHEN vbMemberId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := _tmpItem_SummPartner.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                                                       , inObjectId_4        := vbPaidKindId
-                                                                                                      , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbMemberId_From = 0 AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
-                                                                                                      , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbMemberId_From = 0 AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
                                                                                                        )
                                                                    END
                                                            END;
@@ -953,9 +962,9 @@ BEGIN
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummPacker.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
-     -- 3.2. определяется ContainerId для проводок по доплата Физ.лицу(заготовитель)
+     -- 3.2. определяется ContainerId для проводок по доплата Физ.лицу (заготовитель)
      UPDATE _tmpItem_SummPacker SET ContainerId = 
-                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо(заготовитель) 3)Статьи назначения
+                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо (заготовитель) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                         , inParentId          := NULL
                                                                         , inObjectId          := _tmpItem_SummPacker.AccountId
@@ -967,6 +976,10 @@ BEGIN
                                                                         , inObjectId_1        := vbMemberId_Packer
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummPacker.InfoMoneyId
+                                                                        , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                                                        , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                        , inDescId_4          := zc_ContainerLinkObject_Car()
+                                                                        , inObjectId_4        := 0 -- для Физ.лица (заготовитель) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                         );
      -- 3.3. формируются Проводки - доплата Физ.лицу(заготовитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -975,7 +988,7 @@ BEGIN
        WHERE OperSumm_Packer <> 0;
 
 
-     -- 4.1. определяется Счет(справочника) для проводок по расчетам с поставщиком - Физ.лицо(Водитель)
+     -- 4.1. определяется Счет(справочника) для проводок по расчетам с поставщиком - Физ.лицом (Водитель)
      UPDATE _tmpItem_SummDriver SET AccountId = _tmpItem_byAccount.AccountId
                                   , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
@@ -1004,12 +1017,14 @@ BEGIN
                                                                         , inObjectId_1        := vbMemberId_Driver
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
-                                                                        , inDescId_3          := zc_ContainerLinkObject_Car()
-                                                                        , inObjectId_3        := vbCarId
+                                                                        , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                                                        , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                        , inDescId_4          := zc_ContainerLinkObject_Car()
+                                                                        , inObjectId_4        := vbCarId
                                                                          )
                                   ,ContainerId_Transit = CASE WHEN _tmpItem_SummDriver.AccountId_Transit = 0 THEN 0
                                                               ELSE
-                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо(Водитель) 3)Статьи назначения
+                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо (Водитель) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                         , inParentId          := NULL
                                                                         , inObjectId          := _tmpItem_SummDriver.AccountId_Transit
@@ -1187,6 +1202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.09.14                                        * add zc_ContainerLinkObject_Branch
  17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  01.08.14                                        * zc_Enum_AccountDirection... Сотрудник (заготовитель) -> сотрудники (подотчетные лица)
