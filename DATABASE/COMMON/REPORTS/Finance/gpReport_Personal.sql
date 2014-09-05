@@ -1,9 +1,11 @@
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Personal(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
+    IN inDateService      TDateTime , --
     IN inAccountId        Integer,    -- Счет
     IN inBranchId         Integer,    -- Счет
     IN inInfoMoneyId      Integer,    -- Управленческая статья
@@ -104,7 +106,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Personal (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -115,4 +117,4 @@ ALTER FUNCTION gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Intege
 */
 
 -- тест
- SELECT * FROM gpReport_Personal (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+ SELECT * FROM gpReport_Personal (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inDateService:= '05.08.2014', inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
