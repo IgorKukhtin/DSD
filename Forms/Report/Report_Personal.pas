@@ -62,6 +62,8 @@ type
     BranchName: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
     ServiceDate: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    deDateService: TcxDateEdit;
   private
     { Private declarations }
   public
