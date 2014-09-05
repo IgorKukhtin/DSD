@@ -7,25 +7,25 @@ inherited Report_PersonalForm: TReport_PersonalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
+    Top = 119
     Width = 1050
-    Height = 470
+    Height = 436
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 137
     ExplicitWidth = 1050
-    ExplicitHeight = 470
-    ClientRectBottom = 466
+    ExplicitHeight = 418
+    ClientRectBottom = 432
     ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1044
-      ExplicitHeight = 464
+      ExplicitHeight = 412
       inherited cxGrid: TcxGrid
         Width = 1044
-        Height = 464
+        Height = 430
         ExplicitWidth = 1044
-        ExplicitHeight = 464
+        ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -342,9 +342,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
   end
   inherited Panel: TPanel
     Width = 1050
-    Height = 57
+    Height = 91
     ExplicitWidth = 1050
-    ExplicitHeight = 57
+    ExplicitHeight = 91
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
@@ -451,8 +451,30 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
     object cxLabel7: TcxLabel
       Left = 863
-      Top = 8
+      Top = 6
       Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object cxLabel8: TcxLabel
+      Left = 50
+      Top = 57
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077':'
+    end
+    object inServDate: TcxCheckBox
+      Left = 209
+      Top = 57
+      Caption = #1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      TabOrder = 15
+      Width = 116
+    end
+    object deServiceDate: TcxDateEdit
+      Left = 117
+      Top = 57
+      EditValue = 41640d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 16
+      Width = 86
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1639,6 +1661,20 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end
       item
+        Name = 'inDateService'
+        Value = 41640d
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisServiceDate'
+        Value = 'False'
+        Component = inServDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
@@ -1753,8 +1789,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 144
-    Top = 8
+    Left = 152
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1775,8 +1811,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end
       item
         Component = BranchGuides
+      end
+      item
+        Component = deServiceDate
+      end
+      item
+        Component = inServDate
       end>
-    Top = 228
+    Top = 236
   end
   object InfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1802,8 +1844,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 53
+    Left = 752
+    Top = 21
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
@@ -1830,7 +1872,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end>
     Left = 584
-    Top = 53
+    Top = 21
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1853,8 +1895,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 440
-    Top = 61
+    Left = 424
+    Top = 21
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -1879,8 +1921,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 288
+    Top = 16
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
@@ -2051,7 +2093,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 912
-    Top = 53
+    Left = 904
+    Top = 21
   end
 end

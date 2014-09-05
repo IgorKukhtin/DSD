@@ -3,9 +3,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ ƒокумента
+    IN inServiceDate       TDateTime, -- мес€ц начислени€
     IN inPaidKindId        Integer  , -- форма оплаты
     IN inSession           TVarChar   -- сесси€ пользовател€
 )
@@ -27,6 +29,9 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalService());
 
+     -- расчет - 1-ое число мес€ца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
        RETURN QUERY 
@@ -36,8 +41,9 @@ BEGIN
              , CAST (CURRENT_DATE as TDateTime)      AS OperDate
              , Object_Status.Code                    AS StatusCode
              , Object_Status.Name                    AS StatusName
-             , CAST (CURRENT_DATE as TDateTime)      AS ServiceDate
-             , CAST (0 as TFloat)                    AS Amount
+             --, CAST (CURRENT_DATE as TDateTime)    AS ServiceDate
+             , inServiceDate              AS ServiceDate
+             , CAST (0 as TFloat)         AS Amount
 
              , 0                          AS PersonalId
              , CAST ('' as TVarChar)      AS PersonalName
@@ -66,7 +72,7 @@ BEGIN
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
            
-           , MIDate_ServiceDate.ValueData AS ServiceDate           
+           , COALESCE (MIDate_ServiceDate.ValueData, inServiceDate) AS ServiceDate           
            , MovementItem.Amount 
 
            , Object_Personal.Id           AS PersonalId
@@ -130,7 +136,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalService (Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
 /*

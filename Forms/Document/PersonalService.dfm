@@ -128,19 +128,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited Panel: TPanel
     Width = 1142
     ExplicitWidth = 1142
-    object cxLabel3: TcxLabel
-      Left = 404
-      Top = 6
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    inherited deStart: TcxDateEdit
+      Left = 94
+      ExplicitLeft = 94
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 293
+      ExplicitLeft = 293
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 4
+      ExplicitLeft = 4
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 183
+      ExplicitLeft = 183
     end
     object deServiceDate: TcxDateEdit
-      Left = 499
+      Left = 496
       Top = 5
       EditValue = 41640d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 5
+      TabOrder = 4
       Width = 86
     end
     object cxLabel4: TcxLabel
@@ -149,14 +160,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object cePaidKind: TcxButtonEdit
-      Left = 664
+      Left = 667
       Top = 5
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 7
+      TabOrder = 6
       Width = 57
     end
     object cxLabel5: TcxLabel
@@ -172,8 +184,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 9
+      TabOrder = 8
       Width = 157
+    end
+    object inServDate: TcxCheckBox
+      Left = 381
+      Top = 5
+      Caption = #1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      TabOrder = 9
+      Width = 116
     end
   end
   object edInDescName: TcxTextEdit [2]
@@ -222,6 +241,34 @@ inherited PersonalServiceForm: TPersonalServiceForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceEditForm'
       FormNameParam.Value = 'TPersonalServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inServiceDate'
+          Value = 41640d
+          Component = deServiceDate
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceEditForm'
@@ -269,6 +316,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Name = 'inisServiceDate'
+        Value = 'False'
+        Component = inServDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
@@ -277,7 +331,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inPaidKindId'
-        Value = ''
+        Value = '0'
         Component = FormParams
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
@@ -315,6 +369,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = deServiceDate
+      end
+      item
+        Component = inServDate
       end>
   end
   inherited FormParams: TdsdFormParams
@@ -344,10 +407,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'PaidKindId'
-        Value = ''
+        Value = '0'
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'PaidKindName'
@@ -355,7 +418,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'InDescName'
@@ -363,6 +426,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = edInDescName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        DataType = ftDateTime
+        ParamType = ptUnknown
       end>
   end
   object spInsertUpdate: TdsdStoredProc
@@ -430,7 +497,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inPaidKindId'
-        Value = ''
+        Value = '0'
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -443,11 +510,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end>
     Left = 336
-    Top = 160
+    Top = 184
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    Key = '0'
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
@@ -455,7 +523,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = '0'
         Component = PaidKindGuides
         ComponentItem = 'Key'
       end
@@ -467,7 +535,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftString
       end>
     Left = 672
-    Top = 5
+    Top = 65533
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'
@@ -531,7 +599,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'StatusName'
         DataType = ftString
       end>
-    Left = 384
+    Left = 408
     Top = 160
   end
   object UnitGuides: TdsdGuides

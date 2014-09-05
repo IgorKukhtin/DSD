@@ -4,16 +4,18 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inServiceDate TDateTime , --
-    IN inUnitId      Integer   , 
-    IN inPaidKindId  Integer   , 
-    IN inProcess     TVarChar  ,
-    IN inIsErased    Boolean   ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inServiceDate   TDateTime , --
+    IN inisServiceDate Boolean , --
+    IN inUnitId        Integer   , 
+    IN inPaidKindId    Integer   , 
+    IN inProcess       TVarChar  ,
+    IN inIsErased      Boolean   ,
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -45,12 +47,12 @@ SELECT
            , PersonalData.OperDate
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
-           , PersonalData.ServiceDate
+           , COALESCE (PersonalData.ServiceDate, inServiceDate) AS ServiceDate 
            , PersonalData.Amount
            , Object_Personal.Id                  AS PersonalId
            , Object_Personal.ValueData           AS PersonalName
-           , Object_PaidKind.Id                  AS PaidKindName
-           , Object_PaidKind.ValueData           AS PaidKindName
+           , COALESCE (Object_PaidKind.Id, Object_PaidKindInf.Id)   AS PaidKindName
+           , COALESCE (Object_PaidKind.ValueData, Object_PaidKindInf.ValueData) AS PaidKindName
            , Object_InfoMoney_View.InfoMoneyId          
            , Object_InfoMoney_View.InfoMoneyName
            , Object_Unit.Id                       AS UnitId
@@ -120,9 +122,9 @@ FROM
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND (MILinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
          AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
-         AND (MIDate_ServiceDate.ValueData = inServiceDate )
-       ) AS Personal_Movement 
-           left JOIN 
+         AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
+          ) AS Personal_Movement 
+           FULL JOIN 
             (SELECT * FROM Object_Personal_View
               WHERE ((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
                        OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm())) ) AS Object_Personal_View
@@ -136,12 +138,13 @@ FROM
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = PersonalData.PositionId
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = PersonalData.PaidKindId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = PersonalData.UnitId
+             LEFT JOIN Object AS Object_PaidKindInf ON Object_PaidKindInf.Id = inPaidKindId
        ;  
 
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -157,3 +160,5 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, TDateTim
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
 
 --select * from gpSelect_Movement_PersonalService(inStartDate := ('04.09.2014')::TDateTime , inEndDate := ('30.09.2014')::TDateTime , inServiceDate := ('09.09.2014')::TDateTime , inUnitId := 0 , inPaidKindId := 0 , InProcess := '' , inIsErased := 'False' ,  inSession := '5');
+--select * from gpSelect_Movement_PersonalService(inStartDate := ('04.09.2014')::TDateTime , inEndDate := ('30.09.2014')::TDateTime  , inServiceDate := ('01.01.2014')::TDateTime , inisServiceDate := 'true', inUnitId := 0 , inPaidKindId := 0, InProcess := 'zc_Enum_Process_PersonalService_BN()' , inIsErased := 'true' ,  inSession := '5');
+--select * from gpSelect_Movement_PersonalService(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('30.09.2014')::TDateTime  , inServiceDate := ('01.09.2014')::TDateTime , inisServiceDate := 'true', inUnitId := 0 , inPaidKindId := 0, InProcess := 'zc_Enum_Process_PersonalService_BN()' , inIsErased := 'False' ,  inSession := '5');
