@@ -11606,7 +11606,7 @@ begin
 
         if (cbBill_List.Checked)
         then
-             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber_my=tmpSelect.InvNumber'
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber_my'
                 +'                           and _pgBillLoad.FromId=tmpSelect.FromId')
         else
 
@@ -11625,6 +11625,7 @@ begin
             then Add('where isnull(Id_Postgres,0)=0');
 // Add('where BillId = 1400794');
         Add('order by OperDate, ObjectId');
+
         Open;
         Result:=RecordCount;
         cbSaleIntNal.Caption:='3.1.('+IntToStr(RecordCount)+')œÓ‰.ÔÓÍ.Int - Õ¿À';
@@ -11821,7 +11822,7 @@ begin
            +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
            +'                                                                           and 1=1');
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        then Add('where isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
 
         try
@@ -11930,7 +11931,7 @@ begin
 
         if (cbBill_List.Checked)
         then
-             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber_my=tmpSelect.InvNumber'
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber_my'
                 +'                           and _pgBillLoad.FromId=tmpSelect.FromId')
         else
 
@@ -12152,7 +12153,7 @@ begin
            +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
            +'                                                                           and 1=1');
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        then Add('where isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
 
         Open;
@@ -14298,7 +14299,7 @@ begin
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
 
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        then Add('where isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
         Open;
 

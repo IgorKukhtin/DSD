@@ -183,4 +183,4 @@ from
 
 end
 //
--- select * from dba._pgSelect_Bill_Sale_NAL ('2014-06-01', '2014-06-30') as a where Id_Postgres <>0
+-- select * from dba._pgSelect_Bill_Sale_NAL ('2014-06-01', '2014-06-01') as a where InvNumber_my = 16576
