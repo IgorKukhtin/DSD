@@ -17,7 +17,6 @@ uses
 type
   TPersonalServiceForm = class(TAncestorJournalForm)
     colPersonalName: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
     deServiceDate: TcxDateEdit;
     spInsertUpdate: TdsdStoredProc;
     colComment: TcxGridDBColumn;
@@ -30,6 +29,7 @@ type
     ceUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
     edInDescName: TcxTextEdit;
+    inServDate: TcxCheckBox;
   private
     { Private declarations }
   public

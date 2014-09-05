@@ -183,11 +183,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'PaidKindId'
+        Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'PaidKindName'
@@ -195,6 +193,11 @@
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Name = 'inServiceDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end>
     Left = 40
@@ -294,10 +297,17 @@
         ParamType = ptInput
       end
       item
+        Name = 'inServiceDate'
+        Component = FormParams
+        ComponentItem = 'inServiceDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inPaidKindId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'PaidKindId'
+        ComponentItem = 'inPaidKindId'
         ParamType = ptInput
       end
       item
@@ -395,8 +405,8 @@
         Component = edComment
         DataType = ftString
       end>
-    Left = 136
-    Top = 200
+    Left = 240
+    Top = 48
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
