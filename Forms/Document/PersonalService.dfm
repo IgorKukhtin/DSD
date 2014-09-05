@@ -162,6 +162,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cePaidKind: TcxButtonEdit
       Left = 667
       Top = 5
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -368,6 +369,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = deServiceDate
+      end
+      item
+        Component = inServDate
       end>
   end
   inherited FormParams: TdsdFormParams
@@ -525,7 +535,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftString
       end>
     Left = 672
-    Top = 5
+    Top = 65533
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'

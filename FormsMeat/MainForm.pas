@@ -161,7 +161,7 @@ type
     actPersonalGroup: TdsdOpenForm;
     actWorkTimeKind: TdsdOpenForm;
     actSheetWorkTime: TdsdOpenForm;
-    actPersonalService: TdsdOpenForm;
+    actPersonalServiceBN: TdsdOpenForm;
     bbPersonalDocuments: TdxBarSubItem;
     bbWorkTimeKind: TdxBarButton;
     bbPersonalGroup: TdxBarButton;
@@ -390,6 +390,16 @@ type
     bbReport_Cash: TdxBarButton;
     actReport_BankAccount: TdsdOpenForm;
     bbReport_BankAccount: TdxBarButton;
+    actPersonalServiceProdN: TdsdOpenForm;
+    actPersonalServiceAdminN: TdsdOpenForm;
+    actPersonalServiceSbN: TdsdOpenForm;
+    actPersonalServiceSecurityN: TdsdOpenForm;
+    bbPersonalServiceSbN: TdxBarButton;
+    bbPersonalServiceSecurityN: TdxBarButton;
+    bbPersonalServiceAdminN: TdxBarButton;
+    bbPersonalServiceProdN: TdxBarButton;
+    actPersonalServiceMarketN: TdsdOpenForm;
+    bbPersonalServiceMarket: TdxBarButton;
   public
     { Public declarations }
   end;

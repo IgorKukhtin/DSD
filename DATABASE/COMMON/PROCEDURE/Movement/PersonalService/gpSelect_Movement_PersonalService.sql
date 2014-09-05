@@ -47,12 +47,12 @@ SELECT
            , PersonalData.OperDate
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
-           , PersonalData.ServiceDate
+           , COALESCE (PersonalData.ServiceDate, inServiceDate) AS ServiceDate 
            , PersonalData.Amount
            , Object_Personal.Id                  AS PersonalId
            , Object_Personal.ValueData           AS PersonalName
-           , Object_PaidKind.Id                  AS PaidKindName
-           , Object_PaidKind.ValueData           AS PaidKindName
+           , COALESCE (Object_PaidKind.Id, Object_PaidKindInf.Id)   AS PaidKindName
+           , COALESCE (Object_PaidKind.ValueData, Object_PaidKindInf.ValueData) AS PaidKindName
            , Object_InfoMoney_View.InfoMoneyId          
            , Object_InfoMoney_View.InfoMoneyName
            , Object_Unit.Id                       AS UnitId
@@ -124,7 +124,7 @@ FROM
          AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
          AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
           ) AS Personal_Movement 
-           left JOIN 
+           FULL JOIN 
             (SELECT * FROM Object_Personal_View
               WHERE ((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
                        OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm())) ) AS Object_Personal_View
@@ -138,6 +138,7 @@ FROM
              LEFT JOIN Object AS Object_Position ON Object_Position.Id = PersonalData.PositionId
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = PersonalData.PaidKindId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = PersonalData.UnitId
+             LEFT JOIN Object AS Object_PaidKindInf ON Object_PaidKindInf.Id = inPaidKindId
        ;  
 
 END;
