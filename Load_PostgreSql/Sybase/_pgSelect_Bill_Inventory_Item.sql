@@ -235,8 +235,8 @@ begin
 
 
    -- !!!!!!!!!!!!!
-   -- set @saveRemains = zc_rvYes();
-   set @saveRemains = zc_rvNo();
+   set @saveRemains = zc_rvYes();
+   -- set @saveRemains = zc_rvNo();
    -- !!!!!!!!!!!!!
 
    if @saveRemains = zc_rvYes()
@@ -568,5 +568,7 @@ begin
 
 end
 go
+//
+-- select gpMovementItem_Inventory_SetErased (inMovementItemId := MovementItem.Id, inSession := '5') from MovementItem where MovementId = 408571;
 //
 -- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2014-05-31', '2014-05-31')

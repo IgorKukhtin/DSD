@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner1CLink(
     IN inSession     TVarChar       -- сессия пользователя
 )                                                                	
 RETURNS TABLE (PartnerId integer, PartnerCode Integer, PartnerName TVarChar
-             , Id Integer, Code Integer, Name TVarChar, Name_find1C TVarChar, OKPO_find1C TVarChar
+             , Id Integer, Code Integer, Name TVarChar, Name_find1C TVarChar, OKPO_find1C TVarChar, INN_find1C TVarChar
              , BranchId Integer, BranchName TVarChar
              , ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PaidKindName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, OKPO TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, OKPO TVarChar, INN TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ItemName TVarChar
@@ -37,7 +37,9 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
-          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName) AS ClientName, MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS ClientOKPO
+          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName) AS ClientName
+                                , MAX (TRIM (Sale1C.ClientOKPO)) AS ClientOKPO
+                                , MAX (TRIM (Sale1C.ClientINN))  AS ClientINN
                                 , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
                            FROM Sale1C
                            WHERE Sale1C.ClientCode <> 0
@@ -144,6 +146,7 @@ BEGIN
             , Object_Partner1CLink.ValueData        AS Name
             , tmpSale1C.ClientName :: TVarChar      AS Name_find1C
             , tmpSale1C.ClientOKPO :: TVarChar      AS OKPO_find1C
+            , tmpSale1C.ClientINN  :: TVarChar      AS INN_find1C
             , Object_Branch.Id                      AS BranchId
             , Object_Branch.BranchLinkName          AS BranchName
             , View_Contract_InvNumber.ContractId 
@@ -155,7 +158,8 @@ BEGIN
             , Object_Juridical.Id                   AS JuridicalId
             , Object_Juridical.ValueData            AS JuridicalName
             , Object_JuridicalGroup.ValueData       AS JuridicalGroupName
-            , COALESCE (ObjectString_INN.ValueData, ObjectHistory_JuridicalDetails_View.OKPO) :: TVarChar AS OKPO
+            , ObjectHistory_JuridicalDetails_View.OKPO AS OKPO
+            , COALESCE (ObjectString_INN.ValueData, ObjectHistoryString_INN.ValueData) :: TVarChar AS INN
             , View_InfoMoney.InfoMoneyGroupName
             , View_InfoMoney.InfoMoneyDestinationName
             , View_InfoMoney.InfoMoneyCode
@@ -174,6 +178,9 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+            LEFT JOIN ObjectHistoryString AS ObjectHistoryString_INN
+                                          ON ObjectHistoryString_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails_View.ObjectHistoryId
+                                         AND ObjectHistoryString_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                  ON ObjectLink_Juridical_JuridicalGroup.ObjectId = tmpJuridical.JuridicalId

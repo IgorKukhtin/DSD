@@ -179,7 +179,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.09.14                                        * !!!del ObjectCost!!! err - zc_ObjectCostLink_Member() and zc_ObjectCostLink_Unit()
+ 05.09.14                                        * !!!del Old Algoritm!!! err - zc_ObjectCostLink_Member() and zc_ObjectCostLink_Unit()
  17.08.14                                        * add inPartionGoodsId always
  13.08.14                                        * DELETE lpInsertFind_ObjectCost
  27.07.14                                        * add МНМА

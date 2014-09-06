@@ -49,7 +49,7 @@ BEGIN
                        FROM
                       (SELECT ClientCode, ClientName
                             , OKPO
-                            , CASE WHEN OKPO <> '' THEN (zfConvert_ViewWorkHourToHour (OKPO) :: BIGINT) :: TVarChar ELSE OKPO AS OKPO_calc
+                            , CASE WHEN OKPO <> '' THEN (zfConvert_ViewWorkHourToHour (OKPO) :: BIGINT) :: TVarChar ELSE OKPO END AS OKPO_calc
                        FROM
                       (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
                             , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS OKPO

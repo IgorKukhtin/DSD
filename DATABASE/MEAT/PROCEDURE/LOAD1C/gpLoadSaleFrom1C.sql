@@ -31,10 +31,13 @@ $BODY$
    DECLARE vbGoodsKindId Integer;
    DECLARE vbPaidKindId Integer;
    DECLARE vbDiscount TFloat;
+   DECLARE vbMovementDescId Integer;
+   DECLARE vbArticleLossId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
+
 
      -- таблица - <Проводки>
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -55,7 +58,7 @@ BEGIN
                                , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
                   
 
-     -- !!!Продажи!!!
+     -- !!!Продажи + Списание!!!
 
      -- Создание Документов                                   
 
@@ -67,58 +70,81 @@ BEGIN
                         , Sale1C.UnitId AS UnitId_1C
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , tmpPartner1CLink.ContractId
+                        , CASE WHEN Object_To.DescId = zc_Object_ArticleLoss()
+                                    THEN Object_To.Id
+                          END AS ArticleLossId
                         , Sale.Id AS MovementId
-                        , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
-                        , round(Sale1C.Tax)
+                        , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId
+                        , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
+                        , round (Sale1C.Tax)
           FROM Sale1C
-               JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
-                          , Object_Partner1CLink.ObjectCode
-                          , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
-                          , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
+               JOIN (SELECT Object_Partner1CLink.Id          AS Partner1CLinkId
+                          , Object_Partner1CLink.ObjectCode  AS ClientCode
+                          , ObjectLink_Partner1CLink_Branch.ChildObjectId                 AS BranchId
+                          , COALESCE (ObjectLink_Partner1CLink_Contract.ChildObjectId, 0) AS ContractId
                      FROM Object AS Object_Partner1CLink
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                           ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
-                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                          INNER JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                                ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                               AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                               ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                              AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
                      WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
-                    ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
+                    ) AS tmpPartner1CLink ON tmpPartner1CLink.ClientCode = Sale1C.ClientCode
                                          AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
                LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-                                    ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
+                                    ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.Partner1CLinkId
                                    AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate, MLO_To.ObjectId AS PartnerId FROM Movement  
-          JOIN MovementLinkObject AS MLO_From
-                                  ON MLO_From.MovementId = Movement.Id
-                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
-          JOIN MovementLinkObject AS MLO_To
-                                  ON MLO_To.MovementId = Movement.Id
-                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
-          JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
-                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
-                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          JOIN MovementBoolean AS MovementBoolean_isLoad 
-                               ON MovementBoolean_isLoad.MovementId = Movement.Id
-                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-                              AND MovementBoolean_isLoad.ValueData = TRUE
-     WHERE Movement.DescId = zc_Movement_Sale()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased()) AS Sale
-                          ON Sale.InvNumber = Sale1C.InvNumber AND Sale.OperDate = Sale1C.OperDate
-                         AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Sale.PartnerId
+               LEFT JOIN Object AS Object_To ON Object_To.Id= ObjectLink_Partner1CLink_Partner.ObjectId
+               LEFT JOIN (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate
+                               , CASE WHEN Movement.DescId = zc_Movement_Sale()
+                                           THEN MLO_To.ObjectId
+                                      WHEN Object_To.DescId = zc_Object_Personal()
+                                           THEN MLO_To.ObjectId
+                                      WHEN Object_To.DescId = zc_Object_Unit()
+                                           THEN MLO_To.ObjectId
+                                      WHEN Movement.DescId = zc_Movement_Loss()
+                                           THEN MLO_ArticleLoss.ObjectId
+                                 END AS PartnerId
+                          FROM Movement  
+                               INNER JOIN MovementLinkObject AS MLO_From
+                                                             ON MLO_From.MovementId = Movement.Id
+                                                            AND MLO_From.DescId = zc_MovementLinkObject_From() 
+                               LEFT JOIN MovementLinkObject AS MLO_To
+                                                            ON MLO_To.MovementId = Movement.Id
+                                                           AND MLO_To.DescId = zc_MovementLinkObject_To() 
+                               LEFT JOIN Object AS Object_To ON Object_To.Id= MovementLinkObject_To.ObjectId
+                               LEFT JOIN MovementLinkObject AS MLO_ArticleLoss
+                                                            ON MLO_ArticleLoss.MovementId = Movement.Id
+                                                           AND MLO_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+                               INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                     ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId
+                                                    AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                                                    AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                               INNER JOIN MovementBoolean AS MovementBoolean_isLoad 
+                                                          ON MovementBoolean_isLoad.MovementId = Movement.Id
+                                                         AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+                                                         AND MovementBoolean_isLoad.ValueData = TRUE
+                           WHERE Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss())
+                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                          ) AS Sale
+                            ON Sale.InvNumber = Sale1C.InvNumber
+                           AND Sale.OperDate = Sale1C.OperDate
+                           AND ObjectLink_Partner1CLink_Partner.ChildObjectId = Sale.PartnerId
             
           WHERE Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
-            AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
+            AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+            AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+         ;
 
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbPaidKindId, vbDiscount;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -129,7 +155,9 @@ BEGIN
                                           , inUserId     := vbUserId);
           END IF;
 
-          -- сохранили Документ
+          IF vbMovementDescId = zc_Movement_Sale()
+          THEN
+          -- сохранили Документ - Sale
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
@@ -139,6 +167,16 @@ BEGIN
                                            , inCurrencyPartnerId:= NULL
                                            , inUserId := vbUserId
                                             ) AS tmp;
+          ELSE
+          -- сохранили Документ - Loss
+          SELECT tmp.ioId INTO vbMovementId
+          FROM lpInsertUpdate_Movement_Loss (ioId := vbMovementId, inInvNumber := vbInvNumber
+                                           , inOperDate := vbOperDate
+                                           , inFromId := vbUnitId, inToId := vbPartnerId, inArticleLossId:= vbArticleLossId
+                                           , inUserId := vbUserId
+                                            ) AS tmp;
+          END IF;
+
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
           -- пометим записи на удаление ПОКА
@@ -181,19 +219,40 @@ BEGIN
                   EXIT;
                END IF;
 
-               -- сохранили Элемент документа
+               IF vbMovementDescId = zc_Movement_Sale()
+               THEN
+               -- сохранили Элемент документа - Sale
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
                                                        , inChangePercentAmount := 0, inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0
                                                        , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
+               ELSE
+               -- сохранили Элемент документа - Loss
+               PERFORM lpInsertUpdate_MovementItem_Loss (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
+                                                       , inAmount := vbOperCount, inCount := 0
+                                                       , inHeadCount := 0
+                                                       , inPartionGoodsDate:= NULL, inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
+               END IF;
+
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
-          -- Провели существующий документ
-          PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
-                                          , inUserId         := vbUserId
-                                          , inIsLastComplete := FALSE);
+
+
+          IF vbMovementDescId = zc_Movement_Sale()
+          THEN
+               -- Провели существующий документ - Sale
+               PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
+                                               , inUserId         := vbUserId
+                                               , inIsLastComplete := FALSE);
+          ELSE
+               -- Провели существующий документ - Loss
+               PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
+                                               , inUserId         := vbUserId
+                                               , inIsLastComplete := FALSE);
         
+          END IF;
+
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
 
@@ -313,7 +372,7 @@ BEGIN
           -- открыли курсор
           OPEN curMovementItem FOR 
                SELECT OperCount, OperPrice, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
-               FROM Sale1C 
+               FROM Sale1C
                     JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
                                , Object_GoodsByGoodsKind1CLink.ObjectCode
                                , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId

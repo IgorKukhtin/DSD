@@ -62,7 +62,12 @@ SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
 group by tmp.ContainerId
 ) as tmp
  where Container.Id = tmp.ContainerId 
-   and Container.KeyValue <> tmp.KeyValue;
+   and Container.KeyValue <> tmp.KeyValue
+-- join Container on Container.Id = tmp.ContainerId 
+--               and Container.KeyValue <> tmp.KeyValue
+
+;
+
 
 if exists (select KeyValue from Container join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Container.Id group by KeyValue having count (*) > 1) 
 then RAISE EXCEPTION ' %  % %',  (select max (Id) from Container where KeyValue in (select KeyValue from Container group by KeyValue having count (*) > 1)) 
@@ -150,4 +155,8 @@ parentid >0 and id in
 ;
 delete from Container where Id in
 (select Id from Container left join (select ContainerId from MovementItemContainer group by ContainerId) as a on ContainerId = Id where ContainerId is null)
+
+delete from Container where Id in
+ (select Container.Id from Container left join ContainerLinkObject on ContainerLinkObject.ContainerId = Container.Id where ContainerLinkObject.ObjectId is null)
+
 */

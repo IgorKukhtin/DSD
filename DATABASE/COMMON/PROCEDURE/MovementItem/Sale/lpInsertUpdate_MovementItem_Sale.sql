@@ -62,7 +62,6 @@ BEGIN
          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
      END IF;
 
-
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -72,12 +71,8 @@ BEGIN
                            ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
 
-
-     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         -- сохранили протокол
-         PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
-     END IF;
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

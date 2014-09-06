@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Loss()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Loss();
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -22,55 +19,33 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Loss());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Loss());
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- меняем параметр
-     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
-     -- сохранили свойство <Дата партии/Дата перемещения>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
-
-     -- сохранили свойство <Количество батонов или упаковок>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
-
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-     END IF;
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     -- сохранили
+     SELECT tmp.ioId
+            INTO ioId
+     FROM lpInsertUpdate_MovementItem_Loss (ioId                 := ioId
+                                          , inMovementId         := inMovementId
+                                          , inGoodsId            := inGoodsId
+                                          , inAmount             := inAmount
+                                          , inCount              := inCount
+                                          , inHeadCount          := inHeadCount
+                                          , inPartionGoodsDate   := inPartionGoodsDate
+                                          , inPartionGoods       := inPartionGoods
+                                          , inGoodsKindId        := inGoodsKindId
+                                          , inAssetId            := inAssetId
+                                          , inUserId             := vbUserId
+                                           ) AS tmp;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.09.14                                        * add lpInsertUpdate_MovementItem_Loss
  01.09.14                                                       * + PartionGoodsDate
  26.05.14                                                       *
 */

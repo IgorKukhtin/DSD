@@ -52,6 +52,8 @@ type
     spUpdatePartner1CLink_Partner: TdsdStoredProc;
     bbUpdatePartner1CLink_Partner: TdxBarButton;
     clItemName: TcxGridDBColumn;
+    clINN: TcxGridDBColumn;
+    clINN_find1C: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,9 +1,6 @@
 -- Function: gpGet_Movement_Loss()
 
--- DROP FUNCTION gpGet_Movement_Loss (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Loss (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Loss (Integer, TDateTime, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Loss(
     IN inMovementId        Integer  , -- ключ Документа
