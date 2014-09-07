@@ -98,7 +98,7 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN Object AS Object_To ON Object_To.Id= ObjectLink_Partner1CLink_Partner.ObjectId
+               LEFT JOIN Object AS Object_To ON Object_To.Id= ObjectLink_Partner1CLink_Partner.ChildObjectId
                LEFT JOIN (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate
                                , CASE WHEN Movement.DescId = zc_Movement_Sale()
                                            THEN MLO_To.ObjectId
@@ -116,7 +116,7 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To() 
-                               LEFT JOIN Object AS Object_To ON Object_To.Id= MovementLinkObject_To.ObjectId
+                               LEFT JOIN Object AS Object_To ON Object_To.Id= MLO_To.ObjectId
                                LEFT JOIN MovementLinkObject AS MLO_ArticleLoss
                                                             ON MLO_ArticleLoss.MovementId = Movement.Id
                                                            AND MLO_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
@@ -172,7 +172,12 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Loss (ioId := vbMovementId, inInvNumber := vbInvNumber
                                            , inOperDate := vbOperDate
-                                           , inFromId := vbUnitId, inToId := vbPartnerId, inArticleLossId:= vbArticleLossId
+                                           , inFromId := vbUnitId, inToId := vbPartnerId
+                                           , inArticleLossId:= CASE WHEN vbArticleLossId <> 0
+                                                                         THEN vbArticleLossId
+                                                                    WHEN zc_Object_Personal() = (SELECT DescId FROM Object WHERE Id = vbPartnerId)
+                                                                         THEN (SELECT Id FROM Object WHERE ObjectCode = 102 AND DescId = zc_Object_ArticleLoss()) -- ОТОВАРКА
+                                                               END
                                            , inUserId := vbUserId
                                             ) AS tmp;
           END IF;
@@ -433,6 +438,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.09.14                                        * add Loss...
  17.08.14                                        * add MovementDescId
  14.08.14                        * новая связь с филиалами
  22.07.14                                        * add ...Price

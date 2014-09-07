@@ -40,9 +40,10 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                            ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+                      LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
                  WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                    AND Object_Partner1CLink.ObjectCode <> 0
-                   AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
+                   AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
                    AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
@@ -77,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.09.14                                        * add проверка Договор только для контрагента
  26.08.14                                        * add еще проверка что есть объект
  14.08.14                        * новая связь с филиалами
  22.05.14                                        * add ObjectCode <> 0
