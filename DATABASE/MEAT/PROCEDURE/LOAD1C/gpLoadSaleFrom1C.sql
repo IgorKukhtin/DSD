@@ -32,6 +32,7 @@ $BODY$
    DECLARE vbPaidKindId Integer;
    DECLARE vbDiscount TFloat;
    DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementDescId_find Integer;
    DECLARE vbArticleLossId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -75,6 +76,7 @@ BEGIN
                           END AS ArticleLossId
                         , Sale.Id AS MovementId
                         , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END AS MovementDescId
+                        , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
                         , round (Sale1C.Tax)
           FROM Sale1C
@@ -99,15 +101,16 @@ BEGIN
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                LEFT JOIN Object AS Object_To ON Object_To.Id= ObjectLink_Partner1CLink_Partner.ChildObjectId
-               LEFT JOIN (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate
+               LEFT JOIN (SELECT Movement.Id, Movement.DescId, Movement.InvNumber, Movement.OperDate
                                , CASE WHEN Movement.DescId = zc_Movement_Sale()
                                            THEN MLO_To.ObjectId
                                       WHEN Object_To.DescId = zc_Object_Personal()
                                            THEN MLO_To.ObjectId
                                       WHEN Object_To.DescId = zc_Object_Unit()
                                            THEN MLO_To.ObjectId
-                                      WHEN Movement.DescId = zc_Movement_Loss()
+                                      WHEN Movement.DescId = zc_Movement_Loss() AND MLO_ArticleLoss.ObjectId > 0
                                            THEN MLO_ArticleLoss.ObjectId
+                                      ELSE MLO_To.ObjectId
                                  END AS PartnerId
                           FROM Movement  
                                INNER JOIN MovementLinkObject AS MLO_From
@@ -144,18 +147,28 @@ BEGIN
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbPaidKindId, vbDiscount;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount;
+
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
           END IF;
+
           -- Распровели существующий документ
-          IF COALESCE(vbMovementId, 0) <> 0 THEN
-             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
-                                          , inUserId     := vbUserId);
+          IF COALESCE (vbMovementId, 0) <> 0 AND vbMovementDescId_find = vbMovementDescId
+          THEN
+              PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
+                                           , inUserId     := vbUserId);
+          ELSE
+              IF vbMovementDescId_find <> vbMovementDescId --  AND COALESCE (vbMovementId, 0) <> 0
+              THEN
+                  -- Удалили документ
+                  PERFORM lpSetErased_Movement (inMovementId     := vbMovementId
+                                              , inUserId         := vbUserId);
+          END IF;
           END IF;
 
-          IF vbMovementDescId = zc_Movement_Sale()
+          IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
           THEN
           -- сохранили Документ - Sale
           SELECT tmp.ioId INTO vbMovementId
@@ -168,6 +181,9 @@ BEGIN
                                            , inUserId := vbUserId
                                             ) AS tmp;
           ELSE
+
+          IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId_find = vbMovementDescId
+          THEN
           -- сохранили Документ - Loss
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Loss (ioId := vbMovementId, inInvNumber := vbInvNumber
@@ -181,11 +197,16 @@ BEGIN
                                            , inUserId := vbUserId
                                             ) AS tmp;
           END IF;
+          END IF;
 
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
-          -- пометим записи на удаление ПОКА
-          PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+
+          IF vbMovementDescId_find = vbMovementDescId
+          THEN
+               -- пометим записи на удаление ПОКА
+               PERFORM gpSetErased_MovementItem (MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+          END IF;
          
          
           -- открыли курсор
@@ -224,7 +245,7 @@ BEGIN
                   EXIT;
                END IF;
 
-               IF vbMovementDescId = zc_Movement_Sale()
+               IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
                THEN
                -- сохранили Элемент документа - Sale
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
@@ -233,29 +254,34 @@ BEGIN
                                                        , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
                ELSE
+               IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
+               THEN
                -- сохранили Элемент документа - Loss
                PERFORM lpInsertUpdate_MovementItem_Loss (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inCount := 0
                                                        , inHeadCount := 0
                                                        , inPartionGoodsDate:= NULL, inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
                END IF;
+               END IF;
 
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
 
 
-          IF vbMovementDescId = zc_Movement_Sale()
+          IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
           THEN
                -- Провели существующий документ - Sale
                PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
                                                , inUserId         := vbUserId
                                                , inIsLastComplete := FALSE);
           ELSE
+          IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
+          THEN
                -- Провели существующий документ - Loss
                PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
                                                , inUserId         := vbUserId
                                                , inIsLastComplete := FALSE);
-        
+          END IF;
           END IF;
 
      END LOOP; -- финиш цикла по курсору
