@@ -8469,11 +8469,14 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocument_LossDebt;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
-    MovementId_pg:Integer;
+    MovementId_pg,zc_Branch_Basis:Integer;
 begin
      if (not cbLossDebt.Checked)or(not cbLossDebt.Enabled) then exit;
      //
      myEnabledCB(cbLossDebt);
+     //
+     fOpenSqToQuery (' select zc_Branch_Basis() as RetV');
+     zc_Branch_Basis:=toSqlQuery.FieldByName('RetV').AsInteger;
      //
      with fromQuery,Sql do begin
         Close;
@@ -8496,6 +8499,7 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('ioAmountDebet',ftFloat,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('ioAmountKredit',ftFloat,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('ioSummDebet',ftFloat,ptInputOutput, 0);
@@ -8617,6 +8621,7 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=MovementId_pg;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=JuridicalId_pg;
              toStoredProc.Params.ParamByName('inPartnerId').Value:=PartnerId_pg;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=zc_Branch_Basis;
              toStoredProc.Params.ParamByName('ioAmountDebet').Value:=0;
              toStoredProc.Params.ParamByName('ioAmountKredit').Value:=0;
              if FieldByName('Summa').AsFloat > 0

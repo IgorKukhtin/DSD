@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerSumm_Goods (
     IN inUnitId                 Integer , 
     IN inCarId                  Integer , 
     IN inMemberId               Integer , 
-    IN inBranchId               Integer , 
+    IN inBranchId               Integer , -- эта аналитика нужна для филиала
     IN inJuridicalId_basis      Integer , 
     IN inBusinessId             Integer , 
     IN inAccountId              Integer , 

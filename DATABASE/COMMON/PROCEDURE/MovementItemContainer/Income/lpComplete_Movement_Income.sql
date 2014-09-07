@@ -40,6 +40,7 @@ $BODY$
   DECLARE vbCarId Integer;
   DECLARE vbMemberId_Driver Integer;
   DECLARE vbBranchId_To Integer;
+  DECLARE vbBranchId_Car Integer;
   DECLARE vbAccountDirectionId_To Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
 
@@ -90,12 +91,12 @@ BEGIN
      SELECT _tmp.PriceWithVAT, _tmp.VATPercent, _tmp.DiscountPercent, _tmp.ExtraChargesPercent, _tmp.ChangePrice
           , _tmp.MovementDescId, _tmp.OperDate, _tmp.OperDatePartner, _tmp.JuridicalId_From, _tmp.isCorporate_From, _tmp.InfoMoneyId_CorporateFrom, _tmp.PartnerId_From, _tmp.MemberId_From, _tmp.CardFuelId_From, _tmp.TicketFuelId_From
           , _tmp.InfoMoneyId_From
-          , _tmp.UnitId, _tmp.CarId, _tmp.MemberDriverId, _tmp.BranchId_To, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
+          , _tmp.UnitId, _tmp.CarId, _tmp.MemberDriverId, _tmp.BranchId_To, _tmp.BranchId_Car, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
           , _tmp.MemberId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
                , vbMovementDescId, vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
                , vbInfoMoneyId_From
-               , vbUnitId, vbCarId, vbMemberId_Driver, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
+               , vbUnitId, vbCarId, vbMemberId_Driver, vbBranchId_To, vbBranchId_Car, vbAccountDirectionId_To, vbIsPartionDate_Unit
                , vbMemberId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
 
      FROM (SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
@@ -128,6 +129,7 @@ BEGIN
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car() THEN Object_To.Id ELSE 0 END, 0) AS CarId
                 , COALESCE (ObjectLink_PersonalDriver_Member.ChildObjectId, 0) AS MemberDriverId
                 , COALESCE (ObjectLink_UnitTo_Branch.ChildObjectId, 0) AS BranchId_To
+                , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0) AS BranchId_Car
                   -- Аналитики счетов - направления
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car()
                                       THEN zc_Enum_AccountDirection_20500() -- 20000; "Запасы"; 20500; "сотрудники (МО)"
@@ -187,9 +189,12 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_CarTo_Unit
                                      ON ObjectLink_CarTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
                                     AND ObjectLink_CarTo_Unit.DescId = zc_ObjectLink_Car_Unit()
+                LEFT JOIN ObjectLink AS ObjectLink_UnitCar_Branch
+                                     ON ObjectLink_UnitCar_Branch.ObjectId = ObjectLink_CarTo_Unit.ChildObjectId
+                                    AND ObjectLink_UnitCar_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
                 LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
-                                     ON ObjectLink_UnitTo_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                     ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
                                     AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
                 LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
                                      ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
@@ -640,7 +645,7 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-     -- 1.1.1. определяется ContainerId_CountSupplier для !!!забалансовой!!! проводки по количественному учету - долги поставщику
+     -- 1.1.1. определяется ContainerId_CountSupplier для !!!забалансовой!!! проводки по количественному учету - долги Поставщику
      UPDATE _tmpItem SET ContainerId_CountSupplier = -- 0)Товар 1)Поставщик
                                                      lpInsertFind_Container (inContainerDescId   := zc_Container_CountSupplier()
                                                                            , inParentId          := NULL
@@ -651,6 +656,8 @@ BEGIN
                                                                            , inObjectCostId      := NULL
                                                                            , inDescId_1          := zc_ContainerLinkObject_Partner()
                                                                            , inObjectId_1        := vbPartnerId_From
+                                                                           , inDescId_2          := zc_ContainerLinkObject_Branch()
+                                                                           , inObjectId_2        := zc_Branch_Basis() -- долг Поставщика всегда на Главном филиале
                                                                             )
      WHERE _tmpItem.isCountSupplier = TRUE AND _tmpItem.OperCount <> 0;
 
@@ -672,7 +679,7 @@ BEGIN
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
-                                                                                , inBranchId               := vbBranchId_To
+                                                                                , inBranchId               := NULL -- эта аналитика нужна для филиала
                                                                                  );
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -692,7 +699,7 @@ BEGIN
                                                                                           , inIsPartionCount         := NULL
                                                                                           , inPartionGoodsId         := NULL
                                                                                           , inAssetId                := NULL
-                                                                                          , inBranchId               := NULL
+                                                                                          , inBranchId               := NULL -- эта аналитика нужна для филиала
                                                                                            )
      WHERE vbTicketFuelId_From <> 0;
 
@@ -751,7 +758,7 @@ BEGIN
                                                                               , inUnitId                 := vbUnitId
                                                                               , inCarId                  := vbCarId
                                                                               , inMemberId               := NULL
-                                                                              , inBranchId               := vbBranchId_To
+                                                                              , inBranchId               := NULL -- эта аналитика нужна для филиала
                                                                               , inJuridicalId_basis      := vbJuridicalId_Basis_To
                                                                               , inBusinessId             := _tmpItem.BusinessId
                                                                               , inAccountId              := _tmpItem.AccountId
@@ -833,7 +840,7 @@ BEGIN
                                                                                                       , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
                                                                                                       , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                                                      , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                                                      , inObjectId_3        := zc_Branch_Basis() -- долг Подотчета всегда на Главном филиале
                                                                                                       , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                                                       , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                                                        )
@@ -860,6 +867,8 @@ BEGIN
                                                                                                       , inObjectId_5        := _tmpItem_SummPartner.PartionMovementId
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале 
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                                                                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -879,6 +888,8 @@ BEGIN
                                                                                                       , inObjectId_4        := vbPaidKindId
                                                                                                       , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале 
                                                                                                        )
                                                                    END
                                    , ContainerId_Transit = CASE WHEN _tmpItem_SummPartner.AccountId_Transit = 0 OR vbMemberId_From <> 0 THEN 0
@@ -905,6 +916,8 @@ BEGIN
                                                                                                       , inObjectId_5        := _tmpItem_SummPartner.PartionMovementId
                                                                                                       , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале 
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                                                                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -924,6 +937,8 @@ BEGIN
                                                                                                       , inObjectId_4        := vbPaidKindId
                                                                                                       , inDescId_5          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
                                                                                                       , inObjectId_5        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END
+                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_6        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале 
                                                                                                        )
                                                                    END
                                                            END;
@@ -977,7 +992,7 @@ BEGIN
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummPacker.InfoMoneyId
                                                                         , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                        , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                        , inObjectId_3        := zc_Branch_Basis() -- долг Подотчета всегда на Главном филиале
                                                                         , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_4        := 0 -- для Физ.лица (заготовитель) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                         );
@@ -1018,7 +1033,7 @@ BEGIN
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
                                                                         , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                        , inObjectId_3        :=  CASE WHEN vbBranchId_To <> 0 THEN vbBranchId_To ELSE zc_Branch_Basis() END
+                                                                        , inObjectId_3        := vbBranchId_Car -- долг Подотчета на филиале Автомобиля
                                                                         , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_4        := vbCarId
                                                                          )
@@ -1202,7 +1217,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 05.09.14                                        * add zc_ContainerLinkObject_Branch
+ 07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_From
+ 05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  17.08.14                                        * add MovementDescId
  12.08.14                                        * add inBranchId :=
  01.08.14                                        * zc_Enum_AccountDirection... Сотрудник (заготовитель) -> сотрудники (подотчетные лица)

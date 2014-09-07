@@ -249,6 +249,7 @@ SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
 select  co, tmp.KeyValue, Container.KeyValue, Container.*
 
 -- update Container set KeyValue = tmp.KeyValue
+-- select *
 from (
 SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
  || case count(*) when 1 then ';0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0;0,0'
@@ -291,9 +292,10 @@ SELECT  STRING_AGG (tmp.Value, CASE WHEN tmp.myOrder1 = 0 THEN ';' ELSE ',' END)
                         ) as tmp
 group by tmp.ContainerId
 ) as tmp
-where Container.Id = tmp.ContainerId 
-and Container.KeyValue <> tmp.KeyValue
--- left join Container on Container.Id = ContainerId 
+-- where Container.Id = tmp.ContainerId 
+-- and Container.KeyValue <> tmp.KeyValue;
+    left join Container on Container.Id = ContainerId 
+ where Container.KeyValue <> tmp.KeyValue;
 
 
 -- select * from Container where coalesce (KeyValue,'') = ''

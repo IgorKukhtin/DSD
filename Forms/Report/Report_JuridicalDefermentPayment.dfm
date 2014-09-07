@@ -1,26 +1,26 @@
 inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
-  ClientWidth = 1020
+  ClientWidth = 1115
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitWidth = 1131
   ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1115
     Height = 337
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 337
     ClientRectBottom = 337
-    ClientRectRight = 1020
+    ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1115
         Height = 337
         ExplicitWidth = 1020
         ExplicitHeight = 337
@@ -143,6 +143,24 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1083'.'
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -442,7 +460,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1115
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 59
@@ -451,10 +469,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
-      Left = 926
+      Left = 991
       Top = 6
       Visible = False
-      ExplicitLeft = 926
+      ExplicitLeft = 991
       ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
@@ -462,11 +480,9 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
-      Left = 880
-      Top = 7
+      Left = 966
       Visible = False
-      ExplicitLeft = 880
-      ExplicitTop = 7
+      ExplicitLeft = 966
     end
     object edAccount: TcxButtonEdit
       Left = 246
@@ -486,12 +502,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object cxLabel6: TcxLabel
-      Left = 666
+      Left = 650
       Top = 6
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 749
+      Left = 733
       Top = 5
       Properties.Buttons = <
         item
@@ -500,7 +516,24 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 89
+      Width = 55
+    end
+    object cxLabel9: TcxLabel
+      Left = 797
+      Top = 6
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 845
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 150
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -512,7 +545,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = BranchGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -526,6 +559,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -1165,6 +1204,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 112
     Top = 187
@@ -1297,6 +1343,9 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = BranchGuides
       end>
   end
   object AccountGuides: TdsdGuides
@@ -1484,7 +1533,34 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 8
+    Left = 800
+    Top = 56
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 888
+    Top = 40
   end
 end

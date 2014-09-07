@@ -131,7 +131,7 @@ BEGIN
         (SELECT CASE WHEN COALESCE (Contract_noClose.ContractId, COALESCE (Contract_Close.ContractId, COALESCE (Contract_Erased.ContractId, 0))) = 0
                           THEN gpInsertUpdate_Object_Contract (ioId                 := 0
                                                              , inCode               := 0
-                                                             , inInvNumber          := 'нет договора'
+                                                             , inInvNumber          := 'без договора'
                                                              , inInvNumberArchive   := ''
                                                              , inComment            := ''
                                                              , inBankAccountExternal:= ''

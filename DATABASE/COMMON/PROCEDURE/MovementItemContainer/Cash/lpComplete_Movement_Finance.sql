@@ -6,10 +6,33 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
-RETURNS void
+RETURNS VOID
 AS
 $BODY$
+  DECLARE vbBranchId_Member Integer;
+  DECLARE vbBranchId_Partner Integer;
 BEGIN
+
+     -- !!!Определяется филиал для Физ.лица (подотчетные лица), потом надо перенести в _tmpItem!!!
+     vbBranchId_Member:= COALESCE ((SELECT ObjectLink_Cash_Branch.ChildObjectId
+                                    FROM _tmpItem
+                                         LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
+                                                              ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
+                                                             AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+                                    WHERE _tmpItem.ObjectDescId = zc_Object_Cash())
+                                 , zc_Branch_Basis());
+     -- !!!Определяется филиал для Контрагента, потом надо перенести в _tmpItem!!!
+     IF EXISTS (SELECT MovementDescId FROM _tmpItem WHERE MovementDescId = zc_Movement_LossDebt())
+     THEN vbBranchId_Partner:= NULL;
+     ELSE
+         vbBranchId_Partner:= COALESCE ((SELECT ObjectLink_Cash_Branch.ChildObjectId
+                                         FROM _tmpItem
+                                              LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
+                                                                   ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
+                                                                  AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+                                         WHERE _tmpItem.ObjectDescId = zc_Object_Cash())
+                                      , zc_Branch_Basis());
+     END IF;
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
@@ -298,7 +321,7 @@ BEGIN
                                                                             , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                             , inObjectId_2        := _tmpItem.InfoMoneyId
                                                                             , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                            , inObjectId_3        := CASE WHEN _tmpItem.BranchId <> 0 THEN _tmpItem.BranchId ELSE zc_Branch_Basis() END
+                                                                            , inObjectId_3        := vbBranchId_Member
                                                                             , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                             , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                              )
@@ -324,6 +347,8 @@ BEGIN
                                                                             , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
+                                                                            , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN COALESCE (vbBranchId_Partner, _tmpItem.BranchId) ELSE NULL END -- and <> наши компании
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                       -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -342,8 +367,10 @@ BEGIN
                                                                             , inObjectId_3        := _tmpItem.InfoMoneyId
                                                                             , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
-                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
+                                                                            , inDescId_5          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_5        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
+                                                                            , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN COALESCE (vbBranchId_Partner, _tmpItem.BranchId) ELSE NULL END -- and <> наши компании
                                                                              )
                                        END;
 
@@ -401,7 +428,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId)
      FROM (SELECT _tmpItem.MovementItemId, _tmpItem.BranchId
            FROM _tmpItem
-           WHERE AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+           WHERE _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+             AND _tmpItem.MovementDescId <> zc_Movement_LossDebt()
           ) AS tmp;
 
 
@@ -416,7 +444,8 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.09.14                                        * add zc_ContainerLinkObject_Branch
+ 07.09.14                                        * add zc_ContainerLinkObject_Branch to PartnerId
+ 05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  03.09.14                                        * add zc_Object_Founder
  30.08.14                                        * add zc_ContainerLinkObject_Partner
  17.08.14                                        * add MovementDescId

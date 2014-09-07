@@ -149,6 +149,8 @@ type
     clPartnerName: TcxGridDBColumn;
     PartnerChoiceForm: TOpenChoiceForm;
     clContractTagName: TcxGridDBColumn;
+    vlBranchName: TcxGridDBColumn;
+    BranchChoiceForm: TOpenChoiceForm;
   private
   public
   end;

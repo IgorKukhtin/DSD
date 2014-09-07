@@ -87,9 +87,15 @@ BEGIN
                                    , 0  AS BusinessId
                                      -- Главное Юр.лицо: всегда из договора
                                    , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+                                     -- Подразделение (затраты): нет
                                    , 0 AS UnitId
-                                     -- Филиал: нет
-                                   , 0 AS BranchId
+                                     -- еще одна аналитика для 2-ой формы и не наши компании
+                                   , CASE WHEN MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                                           AND View_Constant_isCorporate.InfoMoneyId IS NULL
+                                           AND COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = FALSE
+                                               THEN COALESCE (MILinkObject_Branch.ObjectId, 0)
+                                          ELSE 0
+                                     END AS BranchId
                                    , COALESCE (MILinkObject_Contract.ObjectId, 0)  AS ContractId
                                    , COALESCE (MILinkObject_PaidKind.ObjectId, 0)  AS PaidKindId
                                    , MIBoolean_Calculated.ValueData AS isCalculated
@@ -100,6 +106,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_Summ 
                                                                ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                               AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                                                    ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                                     ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
@@ -132,6 +141,7 @@ BEGIN
                                     , Container.Amount
                                     , tmpMovementItem.JuridicalId
                                     , COALESCE (ContainerLO_Partner.ObjectId, 0) AS PartnerId
+                                    , COALESCE (ContainerLO_Branch.ObjectId, 0)  AS BranchId
                                     , tmpMovementItem.InfoMoneyId
                                     , tmpMovementItem.PaidKindId
                                     , tmpMovementItem.JuridicalId_Basis
@@ -165,6 +175,9 @@ BEGIN
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                                   ON ContainerLO_Partner.ContainerId = ContainerLO_Juridical.ContainerId
                                                                  AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                                  ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
+                                                                 AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
                                                                   ON ContainerLO_PartionMovement.ContainerId = Container.Id
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
@@ -176,6 +189,7 @@ BEGIN
                                     , Container.Amount
                                     , ContainerLO_Juridical.ObjectId AS JuridicalId
                                     , COALESCE (ContainerLO_Partner.ObjectId, 0) AS PartnerId
+                                    , COALESCE (ContainerLO_Branch.ObjectId, 0)  AS BranchId
                                     , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
                                     , ContainerLO_PaidKind.ObjectId AS PaidKindId
                                     , ContainerLO_JuridicalBasis.ObjectId AS JuridicalId_Basis
@@ -205,6 +219,9 @@ BEGIN
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                                   ON ContainerLO_Partner.ContainerId = Container.Id
                                                                  AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                                  ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
+                                                                 AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
                                                                   ON ContainerLO_PartionMovement.ContainerId = Container.Id
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
@@ -217,6 +234,7 @@ BEGIN
                                     , Container.Amount
                                     , ContainerLO_Juridical.ObjectId AS JuridicalId
                                     , COALESCE (ContainerLO_Partner.ObjectId, 0) AS PartnerId
+                                    , COALESCE (ContainerLO_Branch.ObjectId, 0)  AS BranchId
                                     , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
                                     , ContainerLO_PaidKind.ObjectId AS PaidKindId
                                     , ContainerLO_JuridicalBasis.ObjectId AS JuridicalId_Basis
@@ -257,7 +275,10 @@ BEGIN
                                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                                   ON ContainerLO_Partner.ContainerId = Container.Id
-                                                                 AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Business()
+                                                                 AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                                  ON ContainerLO_Branch.ContainerId = ContainerLO_Juridical.ContainerId
+                                                                 AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
                                                                   ON ContainerLO_PartionMovement.ContainerId = Container.Id
                                                                  AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
@@ -268,6 +289,7 @@ BEGIN
                                     , tmpListContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummRemainsEnd
                                     , tmpListContainer.JuridicalId
                                     , tmpListContainer.PartnerId
+                                    , tmpListContainer.BranchId
                                     , tmpListContainer.InfoMoneyId
                                     , tmpListContainer.PaidKindId
                                     , tmpListContainer.JuridicalId_Basis
@@ -280,6 +302,7 @@ BEGIN
                                       , tmpListContainer.Amount
                                       , tmpListContainer.JuridicalId
                                       , tmpListContainer.PartnerId
+                                      , tmpListContainer.BranchId
                                       , tmpListContainer.InfoMoneyId
                                       , tmpListContainer.PaidKindId
                                       , tmpListContainer.JuridicalId_Basis
@@ -289,6 +312,7 @@ BEGIN
         , tmpResult AS (SELECT tmpMovementItem.OperDate
                              , tmpMovementItem.ObjectId
                              , tmpMovementItem.PartnerId
+                             , tmpMovementItem.BranchId
                              , CASE WHEN tmpMovementItem.isCalculated = TRUE
                                          THEN tmpMovementItem.OperSumm - COALESCE (tmpContainerSumm.SummRemainsEnd, 0)
                                     ELSE tmpMovementItem.OperSumm
@@ -305,7 +329,6 @@ BEGIN
                              , tmpMovementItem.BusinessId
                              , tmpMovementItem.JuridicalId_Basis
                              , tmpMovementItem.UnitId
-                             , tmpMovementItem.BranchId
                              , tmpMovementItem.ContractId
                              , tmpMovementItem.PaidKindId
                         FROM tmpMovementItem
@@ -316,6 +339,7 @@ BEGIN
                                                                      AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                        ) AS tmpContainerSumm ON tmpContainerSumm.JuridicalId = tmpMovementItem.ObjectId
                                                             AND tmpContainerSumm.PartnerId   = tmpMovementItem.PartnerId
+                                                            AND tmpContainerSumm.BranchId = tmpMovementItem.BranchId
                                                             AND tmpContainerSumm.InfoMoneyId = tmpMovementItem.InfoMoneyId
                                                             AND tmpContainerSumm.PaidKindId  = tmpMovementItem.PaidKindId
                                                             AND tmpContainerSumm.JuridicalId_Basis = tmpMovementItem.JuridicalId_Basis
@@ -325,11 +349,13 @@ BEGIN
                         SELECT tmpMovement.OperDate
                              , tmpContainerSumm.JuridicalId AS ObjectId
                              , tmpContainerSumm.PartnerId
+                             , tmpContainerSumm.BranchId
                              , -1 * tmpContainerSumm.SummRemainsEnd AS OperSumm
                              , lpInsertUpdate_MovementItem_LossDebt (ioId                 := 0
                                                                    , inMovementId         := tmpMovement.MovementId
                                                                    , inJuridicalId        := tmpContainerSumm.JuridicalId
                                                                    , inPartnerId          := tmpContainerSumm.PartnerId
+                                                                   , inBranchId           := tmpContainerSumm.BranchId
                                                                    , inAmount             := 0
                                                                    , inSumm               := 0
                                                                    , inIsCalculated       := TRUE
@@ -360,9 +386,8 @@ BEGIN
                                -- Бизнес: нет
                              , 0  AS BusinessId
                              , tmpContainerSumm.JuridicalId_Basis
+                               -- Подразделение (затраты): нет
                              , 0 AS UnitId
-                               -- Филиал: нет
-                             , 0 AS BranchId
                              , ContainerLO_Contract.ObjectId AS ContractId
                              , tmpContainerSumm.PaidKindId
                         FROM tmpContainerSumm
@@ -374,6 +399,7 @@ BEGIN
                              LEFT JOIN tmpMovementItem
                                     ON tmpMovementItem.ObjectId = tmpContainerSumm.JuridicalId
                                    AND tmpMovementItem.PartnerId = tmpContainerSumm.PartnerId
+                                   AND tmpMovementItem.BranchId = tmpContainerSumm.BranchId
                                    AND tmpMovementItem.InfoMoneyId = tmpContainerSumm.InfoMoneyId
                                    AND tmpMovementItem.PaidKindId = tmpContainerSumm.PaidKindId 
                                    AND tmpMovementItem.JuridicalId_Basis = tmpContainerSumm.JuridicalId_Basis
@@ -500,6 +526,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.09.14                                        * add BranchId
  31.08.14                                        * add PartnerId
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement

@@ -1,29 +1,30 @@
 inherited MovementJournalForm: TMovementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1086#1087#1077#1088#1072#1094#1080#1081
   ClientHeight = 396
-  ClientWidth = 1024
+  ClientWidth = 1164
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1040
+  ExplicitLeft = -52
+  ExplicitWidth = 1180
   ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1024
+    Width = 1164
     Height = 316
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1024
     ExplicitHeight = 316
     ClientRectBottom = 316
-    ClientRectRight = 1024
+    ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 1024
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
-        Width = 1024
+        Width = 1164
         Height = 316
         ExplicitWidth = 1024
         ExplicitHeight = 316
@@ -148,6 +149,21 @@ inherited MovementJournalForm: TMovementJournalForm
             Options.Editing = False
             Width = 80
           end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1083'.'
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 35
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -264,7 +280,7 @@ inherited MovementJournalForm: TMovementJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1024
+    Width = 1164
     Height = 54
     ExplicitWidth = 1024
     ExplicitHeight = 54
@@ -289,12 +305,12 @@ inherited MovementJournalForm: TMovementJournalForm
       ExplicitTop = 30
     end
     object cxLabel3: TcxLabel
-      Left = 244
+      Left = 245
       Top = 30
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
     object edPartner: TcxButtonEdit
-      Left = 314
+      Left = 315
       Top = 29
       Properties.Buttons = <
         item
@@ -303,15 +319,15 @@ inherited MovementJournalForm: TMovementJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 210
+      Width = 190
     end
     object cxLabel6: TcxLabel
-      Left = 207
+      Left = 208
       Top = 6
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 314
+      Left = 315
       Top = 5
       Properties.Buttons = <
         item
@@ -320,20 +336,20 @@ inherited MovementJournalForm: TMovementJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 210
+      Width = 190
     end
     object cxLabel7: TcxLabel
-      Left = 529
+      Left = 509
       Top = 30
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel4: TcxLabel
-      Left = 568
+      Left = 548
       Top = 6
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 653
+      Left = 633
       Top = 30
       Properties.Buttons = <
         item
@@ -345,7 +361,7 @@ inherited MovementJournalForm: TMovementJournalForm
       Width = 180
     end
     object edAccount: TcxButtonEdit
-      Left = 653
+      Left = 633
       Top = 5
       Properties.Buttons = <
         item
@@ -357,17 +373,17 @@ inherited MovementJournalForm: TMovementJournalForm
       Width = 180
     end
     object cxLabel5: TcxLabel
-      Left = 840
+      Left = 820
       Top = 30
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object cxLabel8: TcxLabel
-      Left = 870
+      Left = 850
       Top = 6
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 923
+      Left = 903
       Top = 29
       Properties.Buttons = <
         item
@@ -376,10 +392,10 @@ inherited MovementJournalForm: TMovementJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 14
-      Width = 90
+      Width = 55
     end
     object ceContract: TcxButtonEdit
-      Left = 923
+      Left = 903
       Top = 5
       Properties.Buttons = <
         item
@@ -388,10 +404,57 @@ inherited MovementJournalForm: TMovementJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 90
+      Width = 230
+    end
+    object cxLabel9: TcxLabel
+      Left = 965
+      Top = 30
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 1013
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 120
     end
   end
   inherited ActionList: TActionList
+    inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Enabled = False
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited actUnCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited actSetErasedList: TMultiAction
+      Enabled = False
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      Enabled = False
+    end
     object actOpenDocument: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -480,12 +543,21 @@ inherited MovementJournalForm: TMovementJournalForm
         Name = 'inPartnerId'
         Value = ''
         Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -601,6 +673,9 @@ inherited MovementJournalForm: TMovementJournalForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = BranchGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -705,6 +780,18 @@ inherited MovementJournalForm: TMovementJournalForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BranchName'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
       end>
   end
   object getMovementForm: TdsdStoredProc
@@ -866,7 +953,7 @@ inherited MovementJournalForm: TMovementJournalForm
         ParamType = ptInput
       end>
     Left = 952
-    Top = 40
+    Top = 152
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -964,6 +1051,33 @@ inherited MovementJournalForm: TMovementJournalForm
         ParamType = ptInput
       end>
     Left = 944
-    Top = 65534
+    Top = 110
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1056
+    Top = 80
   end
 end

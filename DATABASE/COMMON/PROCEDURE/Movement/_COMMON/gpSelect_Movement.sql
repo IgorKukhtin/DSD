@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement(
     IN inStartDate   TDateTime , --
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement(
     IN inAccountId   Integer   , 
     IN inJuridicalId Integer   , 
     IN inPartnerId   Integer   , 
+    IN inBranchId    Integer   , 
     IN inInfoMoneyId Integer   ,
     IN inContractId  Integer   , 
     IN inPaidKindId  Integer   , 
@@ -19,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, DescId Intege
              , Comment TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PaidKindName TVarChar, AccountName TVarChar
@@ -64,6 +66,8 @@ BEGIN
            , ObjectHistory_JuridicalDetails_View.OKPO
            , Object_Partner.ObjectCode AS PartnerCode
            , Object_Partner.ValueData AS PartnerName
+           , Object_Branch.ObjectCode AS BranchCode
+           , Object_Branch.ValueData AS BranchName
            , View_Contract.ContractCode
            , View_Contract.InvNumber AS ContractNumber
            , View_Contract.ContractTagName
@@ -83,6 +87,7 @@ BEGIN
                   , tmpContainer.AccountId
                   , tmpContainer.JuridicalId
                   , tmpContainer.PartnerId
+                  , tmpContainer.BranchId
                   , tmpContainer.ContractId
                   , tmpContainer.InfoMoneyId
                   , tmpContainer.PaidKindId
@@ -93,6 +98,7 @@ BEGIN
                   , Container.ObjectId                        AS AccountId
                   , CLO_Juridical.ObjectId                    AS JuridicalId
                   , CLO_Partner.ObjectId                      AS PartnerId
+                  , CLO_Branch.ObjectId                       AS BranchId
                   , CLO_Contract.ObjectId                     AS ContractId
                   , CLO_InfoMoney.ObjectId                    AS InfoMoneyId
                   , CLO_PaidKind.ObjectId                     AS PaidKindId
@@ -103,6 +109,9 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                 ON CLO_Partner.ContainerId = Container.Id
                                                AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                  LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                ON CLO_Branch.ContainerId = Container.Id
+                                               AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                   LEFT JOIN ContainerLinkObject AS CLO_Contract
                                                 ON CLO_Contract.ContainerId = Container.Id
                                                AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
@@ -117,6 +126,7 @@ BEGIN
                AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                AND (CLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
+               AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0)
                AND (View_Contract_ContractKey.ContractId_Key = inContractId OR COALESCE (inContractId, 0) = 0)
                AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
@@ -135,6 +145,7 @@ BEGIN
                     , tmpContainer.AccountId
                     , tmpContainer.JuridicalId
                     , tmpContainer.PartnerId
+                    , tmpContainer.BranchId
                     , tmpContainer.ContractId
                     , tmpContainer.InfoMoneyId
                     , tmpContainer.PaidKindId
@@ -148,6 +159,7 @@ BEGIN
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMIContainer.AccountId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMIContainer.JuridicalId   
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpMIContainer.PartnerId
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMIContainer.BranchId
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpMIContainer.ContractId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpMIContainer.InfoMoneyId         
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMIContainer.PaidKindId
@@ -160,16 +172,17 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.09.14                                        * add Branch...
  31.08.14                                        * ALL
  22.04.14                         *
  11.03.14                         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', 0, 0, 0, 0, 0, 0, '', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', 0, 0, 0, 0, 0, 0, 0, '', inSession:= zfCalc_UserAdmin())
