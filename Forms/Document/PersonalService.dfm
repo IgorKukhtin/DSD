@@ -264,6 +264,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
           DataType = ftDateTime
         end
         item
+          Name = 'inPersonalId'
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'inPersonalName'
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end
+        item
           Name = 'inPaidKindId'
           Value = '0'
           Component = PaidKindGuides
@@ -283,7 +294,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdate
         end
         item
-          StoredProc = spGet
+          StoredProc = spSelect
         end>
       DataSource = MasterDS
     end
@@ -428,6 +439,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Value = Null
         DataType = ftDateTime
         ParamType = ptUnknown
       end>

@@ -4,10 +4,13 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TDateTime, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inServiceDate       TDateTime, -- месяц начисления
+    IN inPersonalId        Integer  , --
     IN inPaidKindId        Integer  , -- форма оплаты
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -45,22 +48,23 @@ BEGIN
              , inServiceDate              AS ServiceDate
              , CAST (0 as TFloat)         AS Amount
 
-             , 0                          AS PersonalId
-             , CAST ('' as TVarChar)      AS PersonalName
+             , COALESCE(inPersonalId, 0)    AS PersonalId
+             , COALESCE(Object_Personal_View.PersonalName, '') :: TVarChar     AS PersonalName
              , Object_PaidKind.id         AS PaidKindId
              , Object_PaidKind.ValueData  AS PaidKindName
              , 0                          AS InfoMoneyId
              , CAST ('' as TVarChar)      AS InfoMoneyName
-             , 0                          AS UnitId
-             , CAST ('' as TVarChar)      AS UnitName
+             , Object_Personal_View.UnitId       AS UnitId
+             , Object_Personal_View.UnitName     AS UnitName
 
-             , 0                          AS PositionId
-             , CAST ('' as TVarChar)      AS PositionName
+             , Object_Personal_View.PositionId   AS PositionId
+             , Object_Personal_View.PositionName AS PositionName
              , CAST ('' as TVarChar)      AS COMMENT
 
          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
              JOIN Object as Object_PaidKind on Object_PaidKind.descid= zc_Object_PaidKind()
-                                                 and Object_PaidKind.id = inPaidKindId	           
+                                                 and Object_PaidKind.id = inPaidKindId	 
+             JOIN Object_Personal_View on Object_Personal_View.PersonalId = inPersonalId
 ;
 
      ELSE
@@ -136,12 +140,13 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14         * add inPersonalId, inPaidKindId
  27.02.14                         *
  12.08.13         *
 

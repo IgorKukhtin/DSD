@@ -197,7 +197,13 @@
       end
       item
         Name = 'inServiceDate'
+        Value = Null
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 40
@@ -298,9 +304,17 @@
       end
       item
         Name = 'inServiceDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inServiceDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPersonalId'
         ParamType = ptInput
       end
       item
