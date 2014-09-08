@@ -27,6 +27,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              )
 AS
 $BODY$
+   DECLARE vbInfoMoneyId Integer;
+   DECLARE vbInfoMoneyName TVarChar;
+   DECLARE vbInfoMoneyName_all TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -34,6 +37,14 @@ BEGIN
 
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
+   -- определяется Дефолт
+   SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
+          INTO vbInfoMoneyId, vbInfoMoneyName, vbInfoMoneyName_all
+   FROM Object_InfoMoney_View AS View_InfoMoney
+   WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101(); -- 60101 Заработная плата + Заработная плата
+
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -52,8 +63,8 @@ BEGIN
              , COALESCE(Object_Personal_View.PersonalName, '') :: TVarChar     AS PersonalName
              , Object_PaidKind.id         AS PaidKindId
              , Object_PaidKind.ValueData  AS PaidKindName
-             , 0                          AS InfoMoneyId
-             , CAST ('' as TVarChar)      AS InfoMoneyName
+             , vbInfoMoneyId              AS InfoMoneyId
+             , vbInfoMoneyName_All        AS InfoMoneyName
              , Object_Personal_View.UnitId       AS UnitId
              , Object_Personal_View.UnitName     AS UnitName
 
@@ -85,8 +96,8 @@ BEGIN
            , Object_PaidKind.Id           AS PaidKindId
            , Object_PaidKind.ValueData    AS PaidKindName
    
-           , View_InfoMoney.InfoMoneyId AS InfoMoneyId          
-           , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyId   AS InfoMoneyId          
+           , View_InfoMoney.InfoMoneyName_All AS InfoMoneyName
 
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName

@@ -1,4 +1,3 @@
---select * from gpSelect_Movement_PersonalService(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('01.01.2014')::TDateTime , inPaidKindId := 1,  inIsErased := 'False' ,  inSession := '5');
 -- Function: gpSelect_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
@@ -30,6 +29,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbInfoMoneyId Integer;
+   DECLARE vbInfoMoneyName TVarChar;
+   DECLARE vbInfoMoneyName_all TVarChar;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -40,6 +42,13 @@ BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
      
+   -- определяется Дефолт
+   SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
+          INTO vbInfoMoneyId, vbInfoMoneyName, vbInfoMoneyName_all
+   FROM Object_InfoMoney_View AS View_InfoMoney
+   WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101(); -- 60101 Заработная плата + Заработная плата
+
+
      RETURN QUERY 
 SELECT 
              PersonalData.Id
@@ -53,8 +62,8 @@ SELECT
            , Object_Personal.ValueData           AS PersonalName
            , COALESCE (Object_PaidKind.Id, Object_PaidKindInf.Id)   AS PaidKindName
            , COALESCE (Object_PaidKind.ValueData, Object_PaidKindInf.ValueData) AS PaidKindName
-           , Object_InfoMoney_View.InfoMoneyId          
-           , Object_InfoMoney_View.InfoMoneyName
+           , COALESCE (Object_InfoMoney_View.InfoMoneyId, vbInfoMoneyId) AS InfoMoneyId      
+           , COALESCE (Object_InfoMoney_View.InfoMoneyName_all, vbInfoMoneyName_all) AS InfoMoneyName
            , Object_Unit.Id                       AS UnitId
            , Object_Unit.ValueData                AS UnitName
            , Object_Position.Id                   AS PositionId

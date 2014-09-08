@@ -9,9 +9,9 @@
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 177
-    Top = 217
+    Top = 224
     ExplicitLeft = 177
-    ExplicitTop = 217
+    ExplicitTop = 224
   end
   inherited bbCancel: TcxButton
     Left = 321
@@ -463,7 +463,7 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'InfoMoneyName_all'
+        Name = 'InfoMoneyName'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
@@ -482,7 +482,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 96
+    Left = 88
     Top = 109
   end
   object PaidKindGuides: TdsdGuides
