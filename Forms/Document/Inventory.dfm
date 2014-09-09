@@ -413,6 +413,9 @@ inherited InventoryForm: TInventoryForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actEntryToExcel: TdsdGridToExcel
+      Grid = cxGridEntry
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <

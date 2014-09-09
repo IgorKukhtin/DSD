@@ -70,6 +70,7 @@ type
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     clFuelName: TcxGridDBColumn;
     cxSplitter: TcxSplitter;
+    clGroupStatName: TcxGridDBColumn;
   private
     { Private declarations }
   public

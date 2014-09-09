@@ -9,10 +9,11 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement_TransferDebtOut(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_TransferDebtOut());
+
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId

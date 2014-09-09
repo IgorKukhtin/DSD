@@ -58,21 +58,17 @@ $BODY$BEGIN
 
    WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss();
 
-END;$BODY$
-
-
-LANGUAGE plpgsql VOLATILE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_ArticleLoss(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
  01.09.14         * 
-
 */
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ArticleLoss('2')
-

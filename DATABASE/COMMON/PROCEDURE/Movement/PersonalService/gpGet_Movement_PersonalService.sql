@@ -1,9 +1,17 @@
+
 -- Function: gpGet_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TDateTime, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inServiceDate       TDateTime, -- месяц начисления
+    IN inPersonalId        Integer  , --
+    IN inPaidKindId        Integer  , -- форма оплаты
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -19,10 +27,24 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              )
 AS
 $BODY$
+   DECLARE vbInfoMoneyId Integer;
+   DECLARE vbInfoMoneyName TVarChar;
+   DECLARE vbInfoMoneyName_all TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalService());
+
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
+   -- определяется Дефолт
+   SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
+          INTO vbInfoMoneyId, vbInfoMoneyName, vbInfoMoneyName_all
+   FROM Object_InfoMoney_View AS View_InfoMoney
+   WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101(); -- 60101 Заработная плата + Заработная плата
+
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -31,23 +53,30 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime)      AS OperDate
-             , 0                                     AS StatusCode
-             , ''::TVarChar                          AS StatusName
-             , CAST (CURRENT_DATE as TDateTime)      AS ServiceDate
-             , CAST (0 as TFloat)                    AS Amount
+             , Object_Status.Code                    AS StatusCode
+             , Object_Status.Name                    AS StatusName
+             --, CAST (CURRENT_DATE as TDateTime)    AS ServiceDate
+             , inServiceDate              AS ServiceDate
+             , CAST (0 as TFloat)         AS Amount
 
-             , 0                     AS PersonalId
-             , CAST ('' as TVarChar) AS PersonalName
-             , 0                     AS PaidKindId
-             , CAST ('' as TVarChar) AS PaidKindName
-             , 0                     AS InfoMoneyId
-             , CAST ('' as TVarChar) AS InfoMoneyName
-             , 0                     AS UnitId
-             , CAST ('' as TVarChar) AS UnitName
+             , COALESCE(inPersonalId, 0)    AS PersonalId
+             , COALESCE(Object_Personal_View.PersonalName, '') :: TVarChar     AS PersonalName
+             , Object_PaidKind.id         AS PaidKindId
+             , Object_PaidKind.ValueData  AS PaidKindName
+             , vbInfoMoneyId              AS InfoMoneyId
+             , vbInfoMoneyName_All        AS InfoMoneyName
+             , Object_Personal_View.UnitId       AS UnitId
+             , Object_Personal_View.UnitName     AS UnitName
 
-             , 0                     AS PositionId
-             , CAST ('' as TVarChar) AS PositionName
-             , CAST ('' as TVarChar) AS COMMENT;
+             , Object_Personal_View.PositionId   AS PositionId
+             , Object_Personal_View.PositionName AS PositionName
+             , CAST ('' as TVarChar)      AS COMMENT
+
+         FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
+             JOIN Object as Object_PaidKind on Object_PaidKind.descid= zc_Object_PaidKind()
+                                                 and Object_PaidKind.id = inPaidKindId	 
+             JOIN Object_Personal_View on Object_Personal_View.PersonalId = inPersonalId
+;
 
      ELSE
        RETURN QUERY 
@@ -58,7 +87,7 @@ BEGIN
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
            
-           , MIDate_ServiceDate.ValueData AS ServiceDate           
+           , COALESCE (MIDate_ServiceDate.ValueData, inServiceDate) AS ServiceDate           
            , MovementItem.Amount 
 
            , Object_Personal.Id           AS PersonalId
@@ -67,8 +96,8 @@ BEGIN
            , Object_PaidKind.Id           AS PaidKindId
            , Object_PaidKind.ValueData    AS PaidKindName
    
-           , View_InfoMoney.InfoMoneyId AS InfoMoneyId          
-           , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyId   AS InfoMoneyId          
+           , View_InfoMoney.InfoMoneyName_All AS InfoMoneyName
 
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
@@ -122,12 +151,13 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14         * add inPersonalId, inPaidKindId
  27.02.14                         *
  12.08.13         *
 

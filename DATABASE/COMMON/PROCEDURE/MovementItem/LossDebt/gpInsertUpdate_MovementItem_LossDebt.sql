@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_LossDebt ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
     IN inJuridicalId         Integer   , -- Юр.лицо
     IN inPartnerId           Integer   , -- Контрагент
+    IN inBranchId            Integer   , -- Филиал
  INOUT ioAmountDebet         TFloat    , -- Сумма
  INOUT ioAmountKredit        TFloat    , -- Сумма
  INOUT ioSummDebet           TFloat    , -- Сумма остатка (долг)
@@ -60,6 +61,7 @@ BEGIN
                                                  , inMovementId         := inMovementId
                                                  , inJuridicalId        := inJuridicalId
                                                  , inPartnerId          := inPartnerId
+                                                 , inBranchId           := inBranchId
                                                  , inAmount             := vbAmount
                                                  , inSumm               := vbSumm
                                                  , inIsCalculated       := ioIsCalculated
@@ -77,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.09.14                                        * add inBranchId
  27.08.14                                        * add inPartnerId
  10.03.14                                        * add lpInsertUpdate_MovementItem_LossDebt
  14.01.14                                        *

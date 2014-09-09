@@ -92,7 +92,7 @@ BEGIN
             , _tmp.ProfitLossDirectionId  -- Аналитики ОПиУ  - направления
             , _tmp.InfoMoneyDestinationId -- Управленческие назначения
             , _tmp.InfoMoneyId            -- Статьи назначения
-              -- Бизнес для долг Сотрудника (Водитель) !!!не используется!!!
+              -- Бизнес для долг Физ.лица (Водитель) !!!не используется!!!
             , _tmp.BusinessId_PersonalTo
               -- Бизнес для Прибыль
             , _tmp.BusinessId_Route
@@ -125,7 +125,7 @@ BEGIN
                    , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                      -- Статьи назначения
                    , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-                     -- Бизнес для долг Сотрудника, эта аналитика берется у подразделения за которым числится сотрудник (кто получил деньги)
+                     -- Бизнес для долг Физ.лица, эта аналитика берется у подразделения за которым числится сотрудник (кто получил деньги)
                    , COALESCE (ObjectLink_UnitPersonal_Business.ChildObjectId, 0) AS BusinessId_PersonalTo
                      -- Бизнес для Прибыль, эта аналитика всегда берется по принадлежности маршрута к подразделению
                    , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId_Route
@@ -201,10 +201,10 @@ BEGIN
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-     -- 1.1.1. определяется Счет для проводок суммового учета по счету долг Сотрудника (Водитель)
+     -- 1.1.1. определяется Счет для проводок суммового учета по счету долг Физ.лица (Водитель)
      UPDATE _tmpItem SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- Физ.лица (подотчетные лица)
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
@@ -222,7 +222,7 @@ BEGIN
      ;
 
 
-     -- 1.2.1. определяется ContainerId_To для проводок суммового учета по счету долг Сотрудника (Водитель)
+     -- 1.2.1. определяется ContainerId_To для проводок суммового учета по счету долг Физ.лица (Водитель)
      UPDATE _tmpItem SET ContainerId_To = _tmpItem_byContainer.ContainerId
      FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                         , inParentId          := NULL
@@ -235,8 +235,10 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_group.MemberId_To
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := _tmpItem_group.InfoMoneyId
-                                        , inDescId_3          := zc_ContainerLinkObject_Car()
-                                        , inObjectId_3        := _tmpItem_group.CarId_To
+                                        , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_3        := zc_Branch_Basis()
+                                        , inDescId_4          := zc_ContainerLinkObject_Car()
+                                        , inObjectId_4        := _tmpItem_group.CarId_To
                                          ) AS ContainerId
                 , _tmpItem_group.MemberId_To
                 , _tmpItem_group.CarId_To
@@ -300,10 +302,10 @@ BEGIN
 
      -- 1.3. формируются Проводки суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       -- по счету долг Сотрудника (Водитель)
+       -- по счету долг Физ.лица (Водитель)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, OperDate, TRUE AS IsActive FROM _tmpItem
       UNION ALL
-       -- тут же списание с него по счету долг Сотрудника (Водитель) (!!!если Прибыль!!!)
+       -- тут же списание с него по счету долг Физ.лица (Водитель) (!!!если Прибыль!!!)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
@@ -315,10 +317,10 @@ BEGIN
      ;
 
 
-     -- 2.1. определяется Счет для проводок суммового учета по долг Сотрудника (От кого)
+     -- 2.1. определяется Счет для проводок суммового учета по долг Физ.лица (От кого)
      UPDATE _tmpItem SET AccountId_From = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- Физ.лица (подотчетные лица)
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
@@ -329,7 +331,7 @@ BEGIN
           ) AS _tmpItem_byAccount
       WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
-     -- 2.2. определяется ContainerId_From для проводок суммового учета по долг Сотрудника (От кого)
+     -- 2.2. определяется ContainerId_From для проводок суммового учета по долг Физ.лица (От кого)
      UPDATE _tmpItem SET ContainerId_From = _tmpItem_byContainer.ContainerId
      FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                         , inParentId          := NULL
@@ -342,8 +344,10 @@ BEGIN
                                         , inObjectId_1        := vbMemberId_From
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := _tmpItem_group.InfoMoneyId
-                                        , inDescId_3          := zc_ContainerLinkObject_Car()
-                                        , inObjectId_3        := 0 -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
+                                        , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                        , inObjectId_3        := zc_Branch_Basis()
+                                        , inDescId_4          := zc_ContainerLinkObject_Car()
+                                        , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                          ) AS ContainerId
                 , _tmpItem_group.InfoMoneyId
            FROM (SELECT _tmpItem.AccountId_From
@@ -355,7 +359,7 @@ BEGIN
           ) AS _tmpItem_byContainer
       WHERE _tmpItem.InfoMoneyId = _tmpItem_byContainer.InfoMoneyId;
 
-     -- 2.3. формируются Проводки суммового учета по долг Сотрудника (От кого)
+     -- 2.3. формируются Проводки суммового учета по долг Физ.лица (От кого)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE
        FROM (SELECT _tmpItem.ContainerId_From
@@ -368,7 +372,7 @@ BEGIN
 
 
 
-     -- 3.1. формируются Проводки для отчета (Аналитики: Сотрудник (От кого) и Сотрудник (Водитель))
+     -- 3.1. формируются Проводки для отчета (Аналитики: Физ.лицо (От кого) и Физ.лицо (Водитель))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
@@ -404,7 +408,7 @@ BEGIN
           ) AS _tmpItem;
 
 
-     -- 3.2. формируются Проводки для отчета (Аналитики: Сотрудник (Водитель) и ОПиУ)
+     -- 3.2. формируются Проводки для отчета (Аналитики: Физ.лицо (Водитель) и ОПиУ)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
@@ -477,6 +481,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.09.14                                        * add zc_ContainerLinkObject_Branch
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol

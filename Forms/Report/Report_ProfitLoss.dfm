@@ -204,6 +204,16 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -254,18 +264,34 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
       WholeRow = False
+    end
+    object dxBarStatic: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
@@ -706,5 +732,11 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end>
     Left = 360
     Top = 184
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 400
+    Top = 48
   end
 end

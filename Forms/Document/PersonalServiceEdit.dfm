@@ -4,14 +4,14 @@
   ClientHeight = 257
   ClientWidth = 586
   ExplicitWidth = 592
-  ExplicitHeight = 282
+  ExplicitHeight = 289
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 177
-    Top = 217
+    Top = 224
     ExplicitLeft = 177
-    ExplicitTop = 217
+    ExplicitTop = 224
   end
   inherited bbCancel: TcxButton
     Left = 321
@@ -64,6 +64,7 @@
   object cePaidKind: TcxButtonEdit [9]
     Left = 144
     Top = 178
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -75,6 +76,7 @@
   object ceUnit: TcxButtonEdit [10]
     Left = 304
     Top = 26
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -127,6 +129,7 @@
   object cePosition: TcxButtonEdit [17]
     Left = 304
     Top = 76
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -169,12 +172,42 @@
     Top = 214
   end
   inherited ActionList: TActionList
-    Left = 87
-    Top = 214
+    Left = 95
+    Top = 182
   end
   inherited FormParams: TdsdFormParams
-    Left = 32
-    Top = 182
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        ParamType = ptInput
+      end>
+    Left = 40
+    Top = 150
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PersonalService'
@@ -256,8 +289,8 @@
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 360
-    Top = 208
+    Left = 464
+    Top = 192
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'
@@ -267,6 +300,28 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inServiceDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
         ParamType = ptInput
       end
       item
@@ -364,8 +419,8 @@
         Component = edComment
         DataType = ftString
       end>
-    Left = 176
-    Top = 200
+    Left = 240
+    Top = 48
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -387,8 +442,47 @@
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 96
+    Left = 88
     Top = 109
   end
   object PaidKindGuides: TdsdGuides
@@ -412,8 +506,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 208
-    Top = 117
+    Left = 200
+    Top = 173
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -460,8 +554,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 472
-    Top = 93
+    Left = 456
+    Top = 117
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'

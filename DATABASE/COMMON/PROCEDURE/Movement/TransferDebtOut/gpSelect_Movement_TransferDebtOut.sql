@@ -53,7 +53,7 @@ BEGIN
            , Object_Status.ObjectCode    		        AS StatusCode
            , Object_Status.ValueData     		        AS StatusName
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , MovementBoolean_Checked.ValueData          AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent

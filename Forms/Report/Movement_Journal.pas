@@ -42,6 +42,11 @@ type
     AccountGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

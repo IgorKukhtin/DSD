@@ -2,7 +2,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1020
-  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -253,6 +252,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1083'.'
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object clJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -772,10 +789,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 160
+      Width = 125
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 531
+      Left = 495
       Top = 30
       Properties.Buttons = <
         item
@@ -784,15 +801,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 160
+      Width = 125
     end
     object cxLabel4: TcxLabel
-      Left = 531
+      Left = 495
       Top = 6
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 697
+      Left = 625
       Top = 30
       Properties.Buttons = <
         item
@@ -801,10 +818,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 160
+      Width = 135
     end
     object cxLabel5: TcxLabel
-      Left = 697
+      Left = 625
       Top = 6
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
@@ -826,13 +843,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Width = 150
     end
     object cxLabel7: TcxLabel
-      Left = 869
+      Left = 765
       Top = 6
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 869
-      Top = 29
+      Left = 765
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -842,11 +859,34 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       TabOrder = 13
       Width = 81
     end
+    object cxLabel8: TcxLabel
+      Left = 851
+      Top = 6
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 851
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 160
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = BranchGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1049,6 +1089,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1144,6 +1195,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1237,6 +1299,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1333,6 +1406,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1427,6 +1511,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1523,6 +1618,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1617,6 +1723,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1713,6 +1830,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1807,6 +1935,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1903,6 +2042,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1998,6 +2148,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2058,6 +2219,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Name = 'inPaidKindId'
         Value = ''
         Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -2211,6 +2379,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = BranchGuides
       end>
     Top = 228
   end
@@ -2238,7 +2409,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
+    Left = 704
     Top = 53
   end
   object InfoMoneyDestinationGuides: TdsdGuides
@@ -2487,7 +2658,34 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 896
+    Left = 800
     Top = 56
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+    Top = 64
   end
 end

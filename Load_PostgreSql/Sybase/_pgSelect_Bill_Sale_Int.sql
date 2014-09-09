@@ -1,6 +1,6 @@
 -- Int - BN
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
+result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber_my Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
      , isOnlyUpdateInt smallint, isTare smallint, zc_rvYes smallint, Id_Postgres integer)
@@ -303,6 +303,7 @@ from
    select isnull(_tmpList2.ObjectId, _tmpList.ObjectId)as ObjectId
         , ifnull(_tmpList2.ObjectId, _tmpList.ObjectId, 0) as BillId
         , isnull(_tmpList2.OperDate, _tmpList.OperDate)as OperDate
+        , isnull(_tmpList2.InvNumber, _tmpList.InvNumber) as InvNumber_my
         , isnull(_tmpList2.InvNumber_all, _tmpList.InvNumber_all) as InvNumber
         , _tmpList.BillNumberClient1 as BillNumberClient1
         , isnull(_tmpList2.OperDatePartner, _tmpList.OperDatePartner)as OperDatePartner
@@ -327,7 +328,7 @@ from
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
+   group by ObjectId, BillId, InvNumber_my, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, _tmpList.isOnlyUpdateInt, Id_Postgres
    order by 3, 4, CodeIM, 1
    ;

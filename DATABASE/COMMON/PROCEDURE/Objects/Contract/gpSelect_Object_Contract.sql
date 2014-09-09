@@ -297,6 +297,7 @@ from (
 select MovementLinkObject.ObjectId, count(*) as Count, max (Movement.OperDate) as OperDate
 from (select zc_MovementLinkObject_Contract() as DescId union select zc_MovementLinkObject_ContractFrom()  union select zc_MovementLinkObject_ContractTo()) as tmpDesc
       inner join MovementLinkObject on MovementLinkObject.DescId = tmpDesc.DescId
+                                   and MovementLinkObject.ObjectId >0
       inner join Movement on Movement.Id = MovementLinkObject.MovementId
                          and Movement.StatusId = zc_Enum_Status_Complete()
 group by MovementLinkObject.ObjectId) as xx

@@ -79,6 +79,7 @@ BEGIN
 
      FROM Object_InfoMoney_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_InfoMoney()
+     WHERE InfoMoneyId = zc_Enum_InfoMoney_21505()
 
    UNION ALL
      -- Подразделения
@@ -102,6 +103,32 @@ BEGIN
      FROM Object_Unit_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Unit()
 
+   UNION ALL
+     -- Статьи списания
+     SELECT 
+           Object_ArticleLoss.Id           AS Id
+         , Object_ArticleLoss.ObjectCode   AS Code
+         , Object_ArticleLoss.ValueData    AS Name
+         
+         , ('(' || View_ProfitLossDirection.ProfitLossDirectionCode :: TVarChar || ') ' || View_ProfitLossDirection.ProfitLossDirectionName) :: TVarChar AS Address
+
+         , 0 :: Integer               AS JuridicalId
+         , NULL :: Integer            AS JuridicalCode
+         , NULL :: TVarChar           AS JuridicalName
+         , View_ProfitLossDirection.ProfitLossGroupCode AS JuridicalGroupCode
+         , View_ProfitLossDirection.ProfitLossGroupName AS JuridicalGroupName
+         , NULL :: TVarChar           AS OKPO
+
+         , ObjectDesc.ItemName
+         , Object_ArticleLoss.isErased
+
+     FROM Object AS Object_ArticleLoss
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
+          LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_ProfitLossDirection
+                               ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = Object_ArticleLoss.Id
+                              AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
+          LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
+     WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
 
    UNION ALL
      -- Сотрудники Филиалов

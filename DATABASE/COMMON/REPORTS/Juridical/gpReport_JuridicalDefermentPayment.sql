@@ -1,16 +1,18 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inOperDate         TDateTime , -- 
     IN inEmptyParam       TDateTime , -- 
     IN inAccountId        Integer   , --
     IN inPaidKindId       Integer   , --
+    IN inBranchId         Integer   , --
     IN inSession          TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
@@ -40,6 +42,7 @@ BEGIN
 
  select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
+             , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagName TVarChar, a.ContractStateKindCode
@@ -63,6 +66,9 @@ from (
    , Object_Partner.Id          AS PartnerId
    , Object_Partner.ObjectCode  AS PartnerCode
    , Object_Partner.ValueData   AS PartnerName
+   , Object_Branch.Id           AS BranchId
+   , Object_Branch.ObjectCode   AS BranchCode
+   , Object_Branch.ValueData    AS BranchName
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
    , View_Contract.ContractId
@@ -161,6 +167,7 @@ from (
              , CLO_InfoMoney.ObjectId AS InfoMoneyId
              , CLO_PaidKind.ObjectId  AS PaidKindId
              , CLO_Partner.ObjectId   AS PartnerId
+             , CLO_Branch.ObjectId    AS BranchId
         FROM
        (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -211,7 +218,7 @@ from (
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
          GROUP BY Container.Id
                 , Container.ObjectId
-                , Container.amount
+                , Container.Amount
                 , View_Contract_ContractKey.ContractId_Key
                 , CLO_Juridical.ObjectId  
                 , ContractConditionKindId
@@ -220,9 +227,12 @@ from (
                 , ContractDate
        ) AS RESULT_all
 
-           INNER JOIN ContainerLinkObject AS CLO_PaidKind
-                                          ON CLO_PaidKind.ContainerId = RESULT_all.Id
-                                         AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                         ON CLO_PaidKind.ContainerId = RESULT_all.Id
+                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+           LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                         ON CLO_Branch.ContainerId = RESULT_all.Id
+                                        AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
            LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                          ON CLO_InfoMoney.ContainerId = RESULT_all.Id
                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -230,6 +240,7 @@ from (
                                          ON CLO_Partner.ContainerId = RESULT_all.Id
                                         AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
          WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+           AND (CLO_Branch.ObjectId = inBranchId OR inBranchId = 0)
          GROUP BY RESULT_all.AccountId
                 , RESULT_all.ContractId
                 , RESULT_all.JuridicalId 
@@ -240,6 +251,7 @@ from (
                 , CLO_InfoMoney.ObjectId
                 , CLO_PaidKind.ObjectId
                 , CLO_Partner.ObjectId
+                , CLO_Branch.ObjectId
        ) AS RESULT
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
@@ -260,8 +272,6 @@ from (
 
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = RESULT.InfoMoneyId
 
-           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
-
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                                 ON ObjectLink_Contract_Area.ObjectId = RESULT.ContractId
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
@@ -277,6 +287,8 @@ from (
                                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
            LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = RESULT.BranchId
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = RESULT.PartnerId
 
 ) as a
@@ -291,11 +303,12 @@ where a.DebetRemains <> 0 or a.KreditRemains <> 0
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 07.09.14                                        * add Branch...
  24.08.14                                        * add Partner...
  11.07.14                                        * add RetailName
  05.07.14                                        * add zc_Movement_TransferDebtOut
@@ -313,4 +326,5 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 */
 
 -- òåñò
--- SELECT * FROM gpReport_JuridicalDefermentPayment ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, inAccountId:= 0, inPaidKindId:= 0, inSession:= '2'::TVarChar); 
+-- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inSession:= zfCalc_UserAdmin());

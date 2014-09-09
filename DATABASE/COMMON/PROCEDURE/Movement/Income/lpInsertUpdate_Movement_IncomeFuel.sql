@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
 RETURNS Integer
 AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -36,6 +37,9 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, inParentId, inAccessKeyId);
@@ -72,7 +76,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, inUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -83,6 +87,7 @@ ALTER FUNCTION lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.09.14                                        * add lpInsert_MovementProtocol
  07.12.13                                        * add inAccessKeyId
  31.10.13                                        * add inOperDatePartner
  19.10.13                                        * add inChangePrice

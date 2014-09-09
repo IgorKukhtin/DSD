@@ -5,7 +5,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072 +
     ')>'
   ClientHeight = 427
-  ClientWidth = 711
+  ClientWidth = 926
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object LossDebtJournalForm: TLossDebtJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 711
+    Width = 926
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -54,11 +55,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 711
+    Width = 926
     Height = 370
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 711
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -170,29 +172,33 @@ object LossDebtJournalForm: TLossDebtJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
       object colJuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
       object clPaidKindName: TcxGridDBColumn
-        Caption = #1060#1054
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -201,12 +207,15 @@ object LossDebtJournalForm: TLossDebtJournalForm
       object colBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
       object colAccountName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 82
       end
@@ -216,7 +225,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 93
       end
@@ -264,8 +273,8 @@ object LossDebtJournalForm: TLossDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -392,6 +401,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -405,6 +415,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TLossDebtForm'
@@ -429,9 +440,11 @@ object LossDebtJournalForm: TLossDebtJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TLossDebtForm'
@@ -459,9 +472,11 @@ object LossDebtJournalForm: TLossDebtJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -475,6 +490,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -488,6 +504,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -501,6 +518,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -509,6 +527,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -619,6 +638,8 @@ object LossDebtJournalForm: TLossDebtJournalForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 216
   end

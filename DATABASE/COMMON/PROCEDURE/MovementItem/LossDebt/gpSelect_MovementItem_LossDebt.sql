@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , UnitId Integer, UnitName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
@@ -53,6 +54,8 @@ BEGIN
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , 0 :: Integer                AS PartnerId
             , '' :: TVarChar              AS PartnerName
+            , 0 :: Integer                AS BranchId
+            , '' :: TVarChar              AS BranchName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , 0 :: Integer   AS UnitId
@@ -124,8 +127,10 @@ BEGIN
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-            , Object_Partner.Id          AS PartnerId
-            , Object_Partner.ValueData   AS PartnerName
+            , Object_Partner.Id           AS PartnerId
+            , Object_Partner.ValueData    AS PartnerName
+            , Object_Branch.Id            AS BranchId
+            , Object_Branch.ValueData     AS BranchName
 
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
@@ -190,6 +195,11 @@ BEGIN
                                             AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -221,8 +231,10 @@ BEGIN
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-            , Object_Partner.Id          AS PartnerId
-            , Object_Partner.ValueData   AS PartnerName
+            , Object_Partner.Id           AS PartnerId
+            , Object_Partner.ValueData    AS PartnerName
+            , Object_Branch.Id            AS BranchId
+            , Object_Branch.ValueData     AS BranchName
             , Object_PaidKind.Id          AS PaidKindId
             , Object_PaidKind.ValueData   AS PaidKindName
             , Object_Unit.Id              AS UnitId
@@ -286,6 +298,11 @@ BEGIN
                                             AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -306,6 +323,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 07.09.14                                        * add Branch...
  27.08.14                                        * add Partner...
  25.08.14                                        * add JuridicalGroupName
  06.03.14                                        * add zc_Enum_ContractStateKind_Close

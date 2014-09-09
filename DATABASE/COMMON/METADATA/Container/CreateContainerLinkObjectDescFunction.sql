@@ -3,7 +3,7 @@
 --   SELECT 'zc_ContainerLinkObject_Account', 'Управленческие счета', zc_Object_Account() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Account');
 
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_ProfitLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ProfitLoss'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)                  
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_ProfitLoss', 'Статьи отчета о прибылях и убытках', zc_Object_ProfitLoss() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ProfitLoss');
 
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_InfoMoney'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -102,10 +102,30 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_BankAccount() RETURNS Integer 
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_BankAccount', 'Расчетные счета', zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_BankAccount');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Founder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Founder'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Founder', 'Учредитель', zc_Object_Founder() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Founder');
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Branch', ' Филиал', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Branch');
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_ServiceDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_ServiceDate', ' Месяц начислений', zc_Object_ServiceDate() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate');
+
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+<<<<<<< HEAD
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.09.14                                                        * + zc_ContainerLinkObject_ServiceDate
+ 04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch
+=======
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch and zc_ContainerLinkObject_ServiceDate
+>>>>>>> origin/master
  21.12.13                                        * add zc_ContainerLinkObject_Member
  15.09.13                                        * add zc_ContainerLinkObject_BankAccount and zc_ContainerLinkObject_Partner
  13.07.13                                        * restore zc_ContainerLinkObject_Goods

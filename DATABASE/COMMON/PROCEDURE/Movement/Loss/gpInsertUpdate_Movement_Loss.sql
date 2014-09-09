@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Loss()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Loss();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,38 +15,29 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Loss());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Loss(), inInvNumber, inOperDate, NULL);
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-     -- сохранили связь с <Статьи списания>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ArticleLoss(), ioId, inArticleLossId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     ioId := lpInsertUpdate_Movement_Loss (ioId               := ioId
+                                         , inInvNumber        := inInvNumber
+                                         , inOperDate         := inOperDate
+                                         , inFromId           := inFromId
+                                         , inToId             := inToId
+                                         , inArticleLossId    := inArticleLossId
+                                         , inUserId           := vbUserId
+                                          );
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.09.14                                        * add lpInsertUpdate_Movement_Loss
  02.09.14                                                        *
  26.05.14                                                        *
-
 */
 
 -- тест

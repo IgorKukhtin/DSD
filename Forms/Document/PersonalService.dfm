@@ -1,25 +1,29 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
   ClientHeight = 381
-  ClientWidth = 982
-  ExplicitWidth = 990
-  ExplicitHeight = 408
+  ClientWidth = 1142
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1150
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 982
+    Width = 1142
     Height = 324
-    ExplicitWidth = 982
+    ExplicitTop = 57
+    ExplicitWidth = 1142
     ExplicitHeight = 324
     ClientRectBottom = 324
-    ClientRectRight = 982
+    ClientRectRight = 1142
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1142
       ExplicitHeight = 324
       inherited cxGrid: TcxGrid
-        Width = 982
+        Width = 1142
         Height = 324
-        ExplicitWidth = 982
+        ExplicitWidth = 1142
         ExplicitHeight = 324
         inherited cxGridDBTableView: TcxGridDBTableView
           OnDblClick = nil
@@ -122,21 +126,32 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited Panel: TPanel
-    Width = 982
-    ExplicitWidth = 982
-    object cxLabel3: TcxLabel
-      Left = 404
-      Top = 6
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    Width = 1142
+    ExplicitWidth = 1142
+    inherited deStart: TcxDateEdit
+      Left = 94
+      ExplicitLeft = 94
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 293
+      ExplicitLeft = 293
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 4
+      ExplicitLeft = 4
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 183
+      ExplicitLeft = 183
     end
     object deServiceDate: TcxDateEdit
-      Left = 499
+      Left = 496
       Top = 5
       EditValue = 41640d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 5
+      TabOrder = 4
       Width = 86
     end
     object cxLabel4: TcxLabel
@@ -145,16 +160,58 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object cePaidKind: TcxButtonEdit
-      Left = 664
+      Left = 667
+      Top = 5
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 57
+    end
+    object cxLabel5: TcxLabel
+      Left = 727
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object ceUnit: TcxButtonEdit
+      Left = 812
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 7
-      Width = 139
+      TabOrder = 8
+      Width = 157
     end
+    object inServDate: TcxCheckBox
+      Left = 381
+      Top = 5
+      Caption = #1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      TabOrder = 9
+      Width = 116
+    end
+  end
+  object edInDescName: TcxTextEdit [2]
+    AlignWithMargins = True
+    Left = 975
+    Top = 4
+    ParentCustomHint = False
+    BeepOnEnter = False
+    Enabled = False
+    ParentFont = False
+    Properties.HideSelection = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 6
+    Width = 163
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -184,6 +241,45 @@ inherited PersonalServiceForm: TPersonalServiceForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceEditForm'
       FormNameParam.Value = 'TPersonalServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inServiceDate'
+          Value = 41640d
+          Component = deServiceDate
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inPersonalId'
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'inPersonalName'
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceEditForm'
@@ -198,7 +294,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdate
         end
         item
-          StoredProc = spGet
+          StoredProc = spSelect
         end>
       DataSource = MasterDS
     end
@@ -224,10 +320,39 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inServiceDate'
+        Value = 41640d
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisServiceDate'
+        Value = 'False'
+        Component = inServDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
         Value = ''
-        Component = PaidKindGuides
+        Component = UnitGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InProcess'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InProcess'
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -255,6 +380,68 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = deServiceDate
+      end
+      item
+        Component = inServDate
+      end>
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'InProcess'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = '0'
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InDescName'
+        Value = ''
+        Component = edInDescName
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptUnknown
       end>
   end
   object spInsertUpdate: TdsdStoredProc
@@ -322,7 +509,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inPaidKindId'
-        Value = ''
+        Value = '0'
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -335,11 +522,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end>
     Left = 336
-    Top = 160
+    Top = 184
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    Key = '0'
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
@@ -347,7 +535,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = '0'
         Component = PaidKindGuides
         ComponentItem = 'Key'
       end
@@ -358,8 +546,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 680
-    Top = 13
+    Left = 672
+    Top = 65533
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'
@@ -423,7 +611,31 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'StatusName'
         DataType = ftString
       end>
-    Left = 384
+    Left = 408
     Top = 160
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 840
+    Top = 65533
   end
 end

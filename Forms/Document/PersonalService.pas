@@ -11,12 +11,12 @@ uses
   dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dsdGuides, cxButtonEdit;
+  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dsdGuides, cxButtonEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TPersonalServiceForm = class(TAncestorJournalForm)
     colPersonalName: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
     deServiceDate: TcxDateEdit;
     spInsertUpdate: TdsdStoredProc;
     colComment: TcxGridDBColumn;
@@ -25,6 +25,11 @@ type
     PaidKindGuides: TdsdGuides;
     UpdateDataSet: TdsdUpdateDataSet;
     spGet: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    edInDescName: TcxTextEdit;
+    inServDate: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -86,6 +86,11 @@ type
     TransferDebtJournal: TdsdOpenForm;
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

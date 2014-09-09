@@ -49,7 +49,7 @@ BEGIN
                        FROM
                       (SELECT ClientCode, ClientName
                             , OKPO
-                            , (zfConvert_ViewWorkHourToHour (TRIM (OKPO)) :: BIGINT) :: TVarChar  AS OKPO_calc
+                            , CASE WHEN OKPO <> '' THEN (zfConvert_ViewWorkHourToHour (OKPO) :: BIGINT) :: TVarChar ELSE OKPO END AS OKPO_calc
                        FROM
                       (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
                             , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS OKPO
@@ -65,6 +65,7 @@ BEGIN
                       )
       , tmpPartner1CLink AS (SELECT MAX (Object_Partner1CLink.Id) AS Id
                                   , Object_Partner1CLink.ObjectCode AS ClientCode
+                                  , MAX (ObjectLink_Partner1CLink_Partner.ChildObjectId) AS PartnerId
                              FROM Object AS Object_Partner1CLink
                                   INNER JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                         ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
@@ -78,13 +79,15 @@ BEGIN
                                AND ObjectLink_Partner1CLink_Partner.ChildObjectId IS NULL
                              GROUP BY Object_Partner1CLink.ObjectCode
                             )
-      , tmpAll AS (SELECT tmpPartner1CLink.Id AS Partner1CLinkId, tmpPartner1CLink.ClientCode
+      , tmpAll AS (SELECT tmpPartner1CLink.Id AS Partner1CLinkId, COALESCE (tmpPartner1CLink.PartnerId, 0) AS PartnerId, tmpPartner1CLink.ClientCode
                         , tmpSale1C.ClientName, tmpSale1C.OKPO, tmpSale1C.isOKPO_Virtual
                    FROM tmpPartner1CLink
                         INNER JOIN tmpSale1C ON tmpSale1C.ClientCode = tmpPartner1CLink.ClientCode
                   )
-      , tmpJuridical AS (SELECT tmpAll.OKPO, tmpAll.isOKPO_Virtual, MAX (tmpAll.ClientName) AS JuridicalName FROM tmpAll GROUP BY tmpAll.OKPO, tmpAll.isOKPO_Virtual)
-
+      , tmpJuridical AS (SELECT tmpAll.OKPO, tmpAll.isOKPO_Virtual, CASE WHEN tmpAll.isOKPO_Virtual = TRUE THEN tmpAll.ClientCode ELSE 0 END AS ClientCode, MAX (tmpAll.ClientName) AS JuridicalName
+                         FROM tmpAll
+                         GROUP BY tmpAll.OKPO, tmpAll.isOKPO_Virtual, CASE WHEN tmpAll.isOKPO_Virtual = TRUE THEN tmpAll.ClientCode ELSE 0 END
+                        )
    INSERT INTO _tmp (Id)
    SELECT -- сохранение связи с 1С
           lpInsertUpdate_Object_Partner1CLink (ioId         := tmpPartner.Partner1CLinkId
@@ -96,7 +99,7 @@ BEGIN
                                              , inUserId     := vbUserId)
    FROM 
          -- сохранение Контрагента
-        (SELECT lpInsertUpdate_Object_Partner (ioId              := 0
+        (SELECT lpInsertUpdate_Object_Partner (ioId              := tmpAll.PartnerId
                                              , inPartnerName     := tmpAll.ClientName
                                              , inAddress         := ''
                                              , inCode            := 0
@@ -128,7 +131,7 @@ BEGIN
         (SELECT CASE WHEN COALESCE (Contract_noClose.ContractId, COALESCE (Contract_Close.ContractId, COALESCE (Contract_Erased.ContractId, 0))) = 0
                           THEN gpInsertUpdate_Object_Contract (ioId                 := 0
                                                              , inCode               := 0
-                                                             , inInvNumber          := 'нет договора'
+                                                             , inInvNumber          := 'без договора'
                                                              , inInvNumberArchive   := ''
                                                              , inComment            := ''
                                                              , inBankAccountExternal:= ''
@@ -164,6 +167,7 @@ BEGIN
                 END AS ContractId
 
               , tmpJuridical.OKPO
+              , tmpJuridical.ClientCode
               , tmpJuridical.JuridicalId
          FROM
          -- сохранение Юр.Лица
@@ -188,6 +192,7 @@ BEGIN
 
               , CASE WHEN ViewHistory_JuridicalDetails.OKPO IS NULL THEN TRUE ELSE FALSE END AS isJuridicalInsert
               , tmpJuridical.OKPO
+              , tmpJuridical.ClientCode
          FROM tmpJuridical
               LEFT JOIN (SELECT MAX (ObjectHistory_JuridicalDetails_View.JuridicalId) AS JuridicalId, ObjectHistory_JuridicalDetails_View.OKPO
                          FROM ObjectHistory_JuridicalDetails_View
@@ -222,7 +227,8 @@ BEGIN
                                       AND Contract_noClose.JuridicalId IS NULL
                                       AND Contract_Close.JuridicalId IS NULL
         ) AS tmpContract -- Договор
-        LEFT JOIN tmpAll ON tmpAll.OKPO = tmpContract.OKPO
+        LEFT JOIN tmpAll ON (tmpAll.OKPO = tmpContract.OKPO AND tmpAll.isOKPO_Virtual = FALSE)
+                         OR (tmpAll.ClientCode = tmpContract.ClientCode AND tmpAll.isOKPO_Virtual = TRUE)
 
         ) AS tmpPartner -- Контрагент
   ;
@@ -236,7 +242,7 @@ BEGIN
                        FROM
                       (SELECT JuridicalId
                             , OKPO
-                            , (zfConvert_ViewWorkHourToHour (TRIM (OKPO)) :: BIGINT) :: TVarChar  AS OKPO_calc
+                            , CASE WHEN OKPO <> '' THEN (zfConvert_ViewWorkHourToHour (OKPO) :: BIGINT) :: TVarChar ELSE OKPO END AS OKPO_calc
                             , INN
                        FROM
                       (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
@@ -259,7 +265,7 @@ BEGIN
                       )
    INSERT INTO _tmp (Id)
    SELECT -- сохранение реквизитов
-          gpInsertUpdate_ObjectHistory_JuridicalDetails (ioId         := 0
+          gpInsertUpdate_ObjectHistory_JuridicalDetails (ioId               := 0
                                                        , inJuridicalId      := tmpSale1C.JuridicalId
                                                        , inOperDate         := zc_DateStart()
                                                        , inBankId           := NULL

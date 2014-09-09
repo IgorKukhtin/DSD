@@ -54,6 +54,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             Options.Editing = False
             Width = 55
           end
+          object clINN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PartnerCode'
@@ -121,6 +128,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object clINN_find1C: TcxGridDBColumn
+            Caption = #1048#1053#1053' 1'#1057' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'INN_find1C'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colBranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083

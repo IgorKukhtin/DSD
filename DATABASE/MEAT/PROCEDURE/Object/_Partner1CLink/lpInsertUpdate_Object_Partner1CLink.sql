@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner1CLink(
-    IN ioId                     Integer,    -- ключ объекта
+ INOUT ioId                     Integer,    -- ключ объекта
     IN inCode                   Integer,    -- Код объекта
     IN inName                   TVarChar,   -- Название объекта
     IN inPartnerId              Integer,    -- 
@@ -57,7 +57,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
 
    --
-   RETURN ioId;
+   -- RETURN ioId;
 
 END;
 $BODY$

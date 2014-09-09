@@ -1,31 +1,31 @@
 inherited Report_PersonalForm: TReport_PersonalForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
-  ClientWidth = 1020
-  ExplicitWidth = 1028
+  ClientWidth = 1050
+  ExplicitWidth = 1058
   ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
-    Width = 1020
-    Height = 470
+    Top = 119
+    Width = 1050
+    Height = 436
     TabOrder = 3
-    ExplicitTop = 85
-    ExplicitWidth = 1020
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1016
+    ExplicitTop = 137
+    ExplicitWidth = 1050
+    ExplicitHeight = 418
+    ClientRectBottom = 432
+    ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 464
+      ExplicitWidth = 1044
+      ExplicitHeight = 412
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 464
-        ExplicitWidth = 1014
-        ExplicitHeight = 464
+        Width = 1044
+        Height = 430
+        ExplicitWidth = 1044
+        ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -213,12 +213,26 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object MemberName: TcxGridDBColumn
+          object PersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'MemberName'
+            DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ServiceDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'ServiceDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colInfoMoneyCode: TcxGridDBColumn
@@ -316,15 +330,21 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 45
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    Height = 57
-    ExplicitWidth = 1020
-    ExplicitHeight = 57
+    Width = 1050
+    Height = 91
+    ExplicitWidth = 1050
+    ExplicitHeight = 91
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
@@ -416,6 +436,45 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 150
+    end
+    object ceBranch: TcxButtonEdit
+      Left = 863
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 160
+    end
+    object cxLabel7: TcxLabel
+      Left = 863
+      Top = 6
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object cxLabel8: TcxLabel
+      Left = 50
+      Top = 57
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077':'
+    end
+    object inServDate: TcxCheckBox
+      Left = 209
+      Top = 57
+      Caption = #1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      TabOrder = 15
+      Width = 116
+    end
+    object deServiceDate: TcxDateEdit
+      Left = 117
+      Top = 57
+      EditValue = 41640d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 16
+      Width = 86
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1581,7 +1640,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'MemberName'
+    IndexFieldNames = 'PersonalName'
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
@@ -1602,9 +1661,30 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end
       item
+        Name = 'inDateService'
+        Value = 41640d
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisServiceDate'
+        Value = 'False'
+        Component = inServDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1628,10 +1708,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 112
     Top = 184
@@ -1713,8 +1789,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 144
-    Top = 8
+    Left = 152
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1734,8 +1810,15 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = InfoMoneyGuides
       end
       item
+        Component = BranchGuides
+      end
+      item
+        Component = deServiceDate
+      end
+      item
+        Component = inServDate
       end>
-    Top = 228
+    Top = 236
   end
   object InfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1761,8 +1844,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 53
+    Left = 752
+    Top = 21
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
@@ -1789,7 +1872,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
       end>
     Left = 584
-    Top = 53
+    Top = 21
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1812,8 +1895,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 440
-    Top = 61
+    Left = 424
+    Top = 21
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -1838,8 +1921,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 288
+    Top = 16
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
@@ -1985,5 +2068,32 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end>
     Left = 240
     Top = 232
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 904
+    Top = 21
   end
 end

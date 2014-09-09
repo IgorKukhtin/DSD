@@ -67,6 +67,11 @@ type
     clRetailName: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

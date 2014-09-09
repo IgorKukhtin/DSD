@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 192
-  ClientWidth = 295
+  ClientHeight = 247
+  ClientWidth = 298
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 156
+    Top = 204
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 156
+    Top = 204
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -74,6 +74,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 8
+    Top = 150
+    Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+  end
+  object ceGroupStat: TcxButtonEdit
+    Left = 8
+    Top = 173
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
     Width = 273
   end
   object ActionList: TActionList
@@ -139,6 +156,13 @@
         Value = ''
         Component = GoodsGroupGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inGroupStatId'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 208
     Top = 8
@@ -188,6 +212,19 @@
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'GroupStatId'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GroupStatName'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 160
     Top = 48
@@ -234,5 +271,29 @@
     StorageType = stStream
     Left = 64
     Top = 8
+  end
+  object GoodsGroupStatGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGroupStat
+    FormNameParam.Value = 'TGoodsGroupStatForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupStatForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupStatGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 136
+    Top = 160
   end
 end

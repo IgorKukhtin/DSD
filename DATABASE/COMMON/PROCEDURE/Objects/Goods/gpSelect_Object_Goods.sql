@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GroupStatId Integer, GroupStatName TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
@@ -35,6 +36,9 @@ BEGIN
             , Object_GoodsGroup.ValueData AS GoodsGroupName 
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
+            , Object_GoodsGroupStat.Id        AS GroupStatId
+            , Object_GoodsGroupStat.ValueData AS GroupStatName 
+            
             , Object_Measure.ValueData     AS MeasureName
 
             , Object_TradeMark.ValueData  AS TradeMarkName
@@ -66,6 +70,12 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                                   AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
+                 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                                  ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+                                                  AND Object_GoodsGroupStat.DescId = zc_Object_GoodsGroupStat()
                  
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -122,6 +132,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 04.09.14         * add zc_ObjectLink_Goods_GoodsGroupStat()
  13.01.14                                        * add GoodsGroupNameFull
  14.12.13                                        * add inAccessKeyId
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View

@@ -9,16 +9,17 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement_Sale(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Sale());
 
      -- проверка - если <Master> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+     -- PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
      -- проверка - если есть <Child> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+     -- PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId

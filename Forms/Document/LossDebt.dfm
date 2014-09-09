@@ -263,6 +263,21 @@ object LossDebtForm: TLossDebtForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object vlBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BranchChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'JuridicalGroupName'
@@ -1063,6 +1078,7 @@ object LossDebtForm: TLossDebtForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
       MoveParams = <>
+      Enabled = False
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1303,6 +1319,27 @@ object LossDebtForm: TLossDebtForm
           Name = 'MasterJuridicalName'
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object BranchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartnerChoiceForm'
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = True

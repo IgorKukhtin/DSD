@@ -36,6 +36,9 @@ BEGIN
         inInvNumber := (NEXTVAL ('Movement_PersonalService_seq'))::TVarChar;
      END IF;
 
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
      -- сохранили <Документ>
      ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
 

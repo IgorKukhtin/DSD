@@ -1,6 +1,5 @@
 -- Function: gpSelect_MovementItem_Loss()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Loss (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(

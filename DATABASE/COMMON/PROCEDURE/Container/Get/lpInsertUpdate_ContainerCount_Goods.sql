@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inIsPartionCount         Boolean , 
     IN inPartionGoodsId         Integer , 
     IN inAssetId                Integer , 
-    IN inBranchId               Integer
+    IN inBranchId               Integer   -- эта аналитика нужна для филиала
 )
   RETURNS Integer
 AS

@@ -23,6 +23,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       inherited cxGrid: TcxGrid
         Width = 973
         Height = 287
+        ExplicitLeft = 520
+        ExplicitTop = 64
         ExplicitWidth = 973
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
