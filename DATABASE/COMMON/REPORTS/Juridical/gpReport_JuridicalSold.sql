@@ -15,11 +15,11 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , JuridicalPersonalName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
-             , JuridicalPersonalName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
