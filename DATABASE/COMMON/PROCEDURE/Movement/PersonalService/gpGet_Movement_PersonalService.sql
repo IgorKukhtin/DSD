@@ -75,7 +75,7 @@ BEGIN
          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
              JOIN Object as Object_PaidKind on Object_PaidKind.descid= zc_Object_PaidKind()
                                                  and Object_PaidKind.id = inPaidKindId	 
-             JOIN Object_Personal_View on Object_Personal_View.PersonalId = inPersonalId
+             LEFT JOIN Object_Personal_View on Object_Personal_View.PersonalId = inPersonalId
 ;
 
      ELSE
