@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ContractId Integer, ContractName TVarChar,
                FileTypeId Integer, FileTypeName TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
-               StartRow TFloat,
+               StartRow Integer,
                Directory TVarChar,
                isErased boolean) AS
 $BODY$

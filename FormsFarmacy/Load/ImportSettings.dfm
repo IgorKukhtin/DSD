@@ -434,6 +434,12 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = False
     end
+    object ExecuteImportSettingsAction: TExecuteImportSettingsAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ImportSettingsId.Component = MasterCDS
+      ImportSettingsId.ComponentItem = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -504,6 +510,10 @@ inherited ImportSettingsForm: TImportSettingsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteImportSettings'
         end>
     end
     object bbSetErased: TdxBarButton
@@ -530,6 +540,11 @@ inherited ImportSettingsForm: TImportSettingsForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbExecuteImportSettings: TdxBarButton
+      Action = ExecuteImportSettingsAction
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 280
@@ -541,7 +556,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -632,7 +647,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'ioId'
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput

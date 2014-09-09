@@ -69,7 +69,7 @@ type
     isArchive: boolean;
     function PrepareStr: AnsiString;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
-    procedure ProcessErrorCode(pData: String);
+    procedure ProcessErrorCode(pData: String; ProcedureParam: String);
     function ProcessMultiDataSet: Variant;
   public
     class function NewInstance: TObject; override;
@@ -147,11 +147,11 @@ begin
      result := Str
 end;
 
-procedure TStorage.ProcessErrorCode(pData: String);
+procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then
-       raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []), GetAttribute(gcErrorCode));
+       raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []) + ' context: ' + ProcedureParam, GetAttribute(gcErrorCode));
 end;
 
 function TStorage.ProcessMultiDataSet: Variant;
@@ -243,7 +243,7 @@ begin
      exit;
   end;
   if ResultType = gcError then
-     ProcessErrorCode(PrepareStr);
+     ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData));
   if ResultType = gcResult then
      Result := PrepareStr;
   if ResultType = gcDataSet then

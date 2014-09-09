@@ -32,6 +32,7 @@ type
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
+    procedure Close;
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
   end;
 
@@ -56,6 +57,8 @@ type
   public
     ItemName: string;
     Param: TdsdParam;
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
   end;
 
   TImportSettings = class (TCollection)
@@ -72,6 +75,7 @@ type
 
   TImportSettingsFactory = class
   private
+    class function GetDefaultByFieldType(FieldType: TFieldType): OleVariant;
     class function CreateImportSettings(Id: integer): TImportSettings;
   public
     class function GetImportSettings(Id: integer): TImportSettings;
@@ -88,19 +92,39 @@ type
   end;
 
   TExecuteImportSettings = class
-    procedure Execute(ImportSettings: TImportSettings);
+    class procedure Execute(ImportSettings: TImportSettings);
   end;
+
+  TExecuteImportSettingsAction = class(TdsdCustomAction)
+  private
+    FImportSettingsId: TdsdParam;
+  protected
+    function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property ImportSettingsId: TdsdParam read FImportSettingsId write FImportSettingsId;
+  end;
+
+  procedure Register;
 
 implementation
 
-uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin, DBClient;
+uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
+     DBClient, TypInfo, Variants, UtilConvert;
+
+procedure Register;
+begin
+  RegisterActions('DSDLib', [TExecuteImportSettingsAction], TExecuteImportSettingsAction);
+end;
 
 function GetFileType(FileTypeName: string): TDataSetType;
 begin
   if FileTypeName = '' then
      result := dtDBF
   else
-    if FileTypeName = '' then
+    if FileTypeName = 'Excel' then
        result := dtXLS
     else
       if FileTypeName = '' then
@@ -173,6 +197,12 @@ begin
   end;
 end;
 
+procedure TFileExternalLoad.Close;
+begin
+  FDataSet.Close;
+  FAdoConnection.Connected := false;
+end;
+
 constructor TFileExternalLoad.Create(DataSetType: TDataSetType; StartRecord: integer; ExtendedProperties: string);
 begin
   inherited Create;
@@ -210,6 +240,7 @@ end;
 procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
+    ListName: string;
 begin
   case FDataSetType of
     dtDBF: begin
@@ -244,7 +275,10 @@ begin
       try
         FAdoConnection.GetTableNames(List, True);
         TADOQuery(FDataSet).ParamCheck := false;
-        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0]  + 'A' + IntToStr(FStartRecord)+ ':Z65000]';
+        ListName := List[0];
+        if Copy(ListName, 1, 1) = chr(39) then
+           ListName := Copy(List[0], 2, length(List[0])-2);
+        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':Z60000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);
@@ -274,6 +308,7 @@ begin
         IncProgress;
         FExternalLoad.Next;
       end;
+      FExternalLoad.Close;
     finally
      Finish
     end;
@@ -283,17 +318,54 @@ end;
 procedure TExecuteProcedureFromFile.ProcessingOneRow(AExternalLoad: TExternalLoad;
   AImportSettings: TImportSettings);
 var i: integer;
+    D: TDateTime;
+    Value: OleVariant;
+    Ft: double;
 begin
   with AImportSettings do begin
-    for i := 0 to Count - 1 do
-        TImportSettingsItems(Items[i]).Param.Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+    for i := 0 to Count - 1 do begin
+        if TImportSettingsItems(Items[i]).ItemName = '%JURIDICAL%' then
+           StoredProc.Params.Items[i].Value := AImportSettings.JuridicalId
+        else begin
+           if TImportSettingsItems(Items[i]).ItemName <> '' then begin
+              case StoredProc.Params[i].DataType of
+                ftDateTime: begin
+                   try
+                     Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                     D := VarToDateTime(Value);
+                     StoredProc.Params.Items[i].Value := D;
+                   except
+                     on E: EVariantTypeCastError do
+                        StoredProc.Params.Items[i].Value := Date;
+                     on E: Exception do
+                        raise E;
+                   end;
+                end;
+                ftFloat: begin
+                   try
+                     Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                     Ft := gfStrToFloat(Value);
+                     StoredProc.Params.Items[i].Value := Ft;
+                   except
+                     on E: EVariantTypeCastError do
+                        StoredProc.Params.Items[i].Value := 0;
+                     on E: Exception do
+                        raise E;
+                   end;
+                end
+                else
+                  StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+              end;
+           end;
+        end;
+    end;
     StoredProc.Execute;
   end;
 end;
 
 { TExecuteImportSettings }
 
-procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings);
+class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings);
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
@@ -301,12 +373,16 @@ begin
   saFound := TStringList.Create;
   try
     if ImportSettings.FileType = dtXLS then
-       FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound);
+       FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
     TStringList(saFound).Sort;
     for I := 0 to saFound.Count - 1 do
         with TExecuteProcedureFromFile.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
           try
+            // Загрузили
             Load;
+            // Перенесли в Archive
+            ForceDirectories(ExtractFilePath(saFound[i]) + 'Archive');
+            RenameFile(saFound[i], ExtractFilePath(saFound[i]) + 'Archive\' + ExtractFileName(saFound[i]));
           finally
             Free;
           end;
@@ -338,11 +414,21 @@ class function TImportSettingsFactory.CreateImportSettings(
 var
   GetStoredProc: TdsdStoredProc;
   DataSet: TDataSet;
+  FieldType: TFieldType;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   GetStoredProc.OutputType := otResult;
   GetStoredProc.StoredProcName := 'gpGet_Object_ImportSettings';
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
+
+  GetStoredProc.Params.AddParam('StartRow', ftInteger, ptOutput, 0);
+  GetStoredProc.Params.AddParam('ContractId', ftInteger, ptOutput, 0);
+  GetStoredProc.Params.AddParam('JuridicalId', ftInteger, ptOutput, 0);
+  GetStoredProc.Params.AddParam('FileTypeName', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('ImportTypeName', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('Directory', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('ProcedureName', ftString, ptOutput, '');
+
   GetStoredProc.Execute;
   {Заполняем параметрами процедуру}
   Result := TImportSettings.Create(TImportSettingsItems);
@@ -353,8 +439,10 @@ begin
   Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
 
   Result.StoredProc := TdsdStoredProc.Create(nil);
-  Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ImportTypeName').Value;
+  Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
+  Result.StoredProc.OutputType := otResult;
 
+  GetStoredProc.Params.Clear;
   {Заполняем параметрами параметры процедуры}
   GetStoredProc.StoredProcName := 'gpSelect_Object_ImportSettingsItems';
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
@@ -364,19 +452,69 @@ begin
   GetStoredProc.Execute;
 
   with GetStoredProc.DataSet do begin
+    Filtered := true;
+    Filter := 'isErased <> true';
     while not EOF do begin
-      Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, ftString, ptInput, '');
+      FieldType := TFieldType(GetEnumValue(TypeInfo(TFieldType), FieldByName('ParamType').asString));
+      with TImportSettingsItems(Result.Add) do begin
+        ItemName := FieldByName('ParamValue').asString;
+        Param.Value := GetDefaultByFieldType(FieldType);
+      end;
+      Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, GetDefaultByFieldType(FieldType));
       Next;
     end;
   end;
 
+end;
 
+class function TImportSettingsFactory.GetDefaultByFieldType(
+  FieldType: TFieldType): OleVariant;
+begin
+  case FieldType of
+    ftString: result := '';
+    ftInteger, ftFloat: result := 0;
+    ftBoolean: result := true;
+    ftDateTime: result := Date;
+  end;
 end;
 
 class function TImportSettingsFactory.GetImportSettings(
   Id: integer): TImportSettings;
 begin
   result := CreateImportSettings(Id);
+end;
+
+{ TExecuteImportSettingsAction }
+
+constructor TExecuteImportSettingsAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FImportSettingsId := TdsdParam.Create(nil);
+end;
+
+destructor TExecuteImportSettingsAction.Destroy;
+begin
+  FreeAndNil(FImportSettingsId);
+  inherited;
+end;
+
+function TExecuteImportSettingsAction.LocalExecute: boolean;
+begin
+  TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value));
+end;
+
+{ TImportSettingsItems }
+
+constructor TImportSettingsItems.Create(Collection: TCollection);
+begin
+  inherited;
+  Param := TdsdParam.Create(nil);
+end;
+
+destructor TImportSettingsItems.Destroy;
+begin
+  FreeAndNil(Param);
+  inherited;
 end;
 
 end.
