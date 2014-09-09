@@ -21,12 +21,23 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
+   vbUserId:= lpGetUserBySession (inSession);
 
-   RETURN QUERY 
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+   -- Результат
+   RETURN QUERY
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
@@ -112,8 +123,11 @@ BEGIN
                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
         LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Juridical_PriceListPromo.ChildObjectId
- 
-   WHERE Object_Juridical.DescId = zc_Object_Juridical();
+
+    WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+           OR vbIsConstraint = FALSE)
+   ;
   
 END;
 $BODY$
@@ -124,6 +138,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  29.08.14                                        * add InfoMoneyName_all
  23.05.14         * add Retail
  12.01.14         * add PriceList,

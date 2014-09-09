@@ -1451,6 +1451,12 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end
       item
+        Name = 'inBranchId'
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioAmountDebet'
         Component = MasterCDS
         ComponentItem = 'AmountDebet'

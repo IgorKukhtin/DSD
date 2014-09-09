@@ -24,9 +24,11 @@ BEGIN
         , Object.ValueData    AS Name
         , Object.isErased     AS isErased
    FROM Object
-        LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object.AccessKeyId
+        LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId
+                  ) AS tmpRoleAccessKey ON vbAccessKeyAll = FALSE
+                   AND tmpRoleAccessKey.AccessKeyId = Object.AccessKeyId
    WHERE Object.DescId = zc_Object_Branch()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE)
   ;
   
 END;

@@ -188,7 +188,8 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+                                                                     AND View_Contract_InvNumber.JuridicalId = Object_Juridical.Id
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                              ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -267,7 +268,18 @@ BEGIN
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id =MovementItem.ObjectId
+
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId AND (ObjectLink_Partner_Juridical.ChildObjectId = MovementItem.ObjectId OR MILinkObject_Partner.ObjectId IS NULL)
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
@@ -291,12 +303,8 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+                                                                     AND View_Contract_InvNumber.JuridicalId = Object_Juridical.Id
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id

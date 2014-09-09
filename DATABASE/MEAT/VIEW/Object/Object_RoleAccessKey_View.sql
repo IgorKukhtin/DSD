@@ -1,7 +1,7 @@
 -- View: Object_RoleAccessKey_View
 
- DROP VIEW IF EXISTS Object_RoleAccess_View;
- DROP VIEW IF EXISTS Object_RoleAccessKey_View;
+DROP VIEW IF EXISTS Object_RoleAccess_View;
+DROP VIEW IF EXISTS Object_RoleAccessKey_View;
 
 CREATE OR REPLACE VIEW Object_RoleAccessKey_View AS
 

@@ -1,6 +1,6 @@
--- Function: gpInsertUpdate_Object_Branch(Integer, Integer, TVarChar, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Branch(Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
  INOUT ioId                  Integer,       -- ключ объекта <Филиал>
@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbCode_calc Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Branch());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Branch());
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -29,10 +29,35 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Branch(), vbCode_calc, inName
-                                , inAccessKeyId:= CASE WHEN vbCode_calc = 1
+                                , inAccessKeyId:= CASE WHEN vbCode_calc = 1 -- филиал Днепр
                                                             THEN zc_Enum_Process_AccessKey_TrasportDnepr()
-                                                       WHEN vbCode_calc = 2
+
+                                                       WHEN vbCode_calc = 2 -- филиал Киев
                                                             THEN zc_Enum_Process_AccessKey_TrasportKiev()
+
+                                                       WHEN vbCode_calc = 3 -- филиал Николаев (Херсон)
+                                                            THEN zc_Enum_Process_AccessKey_TrasportNikolaev()
+
+                                                       -- WHEN vbCode_calc = 4 -- филиал Одесса
+                                                       --      THEN zc_Enum_Process_AccessKey_()
+
+                                                       WHEN vbCode_calc = 5 -- филиал Черкассы ( Кировоград)
+                                                            THEN zc_Enum_Process_AccessKey_TrasportCherkassi()
+
+                                                       -- WHEN vbCode_calc = 6 -- филиал Крым
+                                                       --      THEN zc_Enum_Process_AccessKey_()
+
+                                                       WHEN vbCode_calc = 7 -- филиал Кр.Рог
+                                                            THEN zc_Enum_Process_AccessKey_TrasportKrRog()
+
+                                                       WHEN vbCode_calc = 8 -- филиал Донецк
+                                                            THEN zc_Enum_Process_AccessKey_TrasportDoneck()
+
+                                                       WHEN vbCode_calc = 9 -- филиал Харьков
+                                                            THEN zc_Enum_Process_AccessKey_TrasportKharkov()
+
+                                                       -- WHEN vbCode_calc = 10 -- филиал Никополь
+                                                       --      THEN zc_Enum_Process_AccessKey_()
                                                   END);
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

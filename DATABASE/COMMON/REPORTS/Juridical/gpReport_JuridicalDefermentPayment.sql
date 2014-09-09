@@ -28,19 +28,30 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
               )
 AS
 $BODY$
-   DECLARE vbLenght Integer;
-BEGIN
+   DECLARE vbUserId Integer;
 
+   DECLARE vbLenght Integer;
+
+   DECLARE vbObjectId_Constraint Integer;
+BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- определяется уровень доступа
+     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+     -- !!!меняется параметр!!!
+     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+
 
      -- Выбираем остаток на дату по юр. лицам в разрезе договоров. 
      -- Так же выбираем продажи и возвраты за период 
-  vbLenght := 7;
+      vbLenght := 7;
 
-  RETURN QUERY  
 
- select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
+     -- Результат
+     RETURN QUERY  
+     SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
              , a.PaidKindId, a.PaidKindName

@@ -39,7 +39,7 @@ BEGIN
              , zc_Enum_Status_UnComplete()              AS StatusId
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
-             , CAST (False as Boolean)                  AS Checked
+             , FALSE :: Boolean                         AS Checked
              , inOperDate				AS OperDatePartner
              , CAST (False as Boolean)                  AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
@@ -86,7 +86,7 @@ BEGIN
            , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
-           , MovementBoolean_Checked.ValueData      AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
