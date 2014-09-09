@@ -31,7 +31,8 @@ BEGIN
                                               LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                                                                    ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
                                                                   AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                         WHERE _tmpItem.ObjectDescId = zc_Object_Cash())
+                                         WHERE _tmpItem.ObjectDescId = zc_Object_Cash()
+                                           AND _tmpItem.InfoMoneyId <> zc_Enum_InfoMoney_40801())
                                       , zc_Branch_Basis());
      END IF;
 
