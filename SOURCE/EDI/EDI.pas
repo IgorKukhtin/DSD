@@ -627,8 +627,8 @@ begin
   DECLAR.DECLARBODY.HORIG := '1';
   DECLAR.DECLARBODY.HFILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName
-    ('InvNumberPartner').asString;
+  DECLAR.DECLARBODY.HNUM := trim(HeaderDataSet.FieldByName
+    ('InvNumberPartner').asString);
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName
     ('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName
@@ -930,6 +930,7 @@ end;
 procedure TEDI.InitializeComSigner;
 var
   privateKey: string;
+  FileName: string;
 begin
     ComSigner := CreateOleObject('ComSigner.ComSigner');
     privateKey := '<RSAKeyValue>' +
@@ -945,58 +946,105 @@ begin
   try
     ComSigner.Initialize('ifin.ua', privateKey);
   except
-    on E: Exception do
+    on E: Exception do begin
+       ComSigner := null;
        raise Exception.Create('Ошибка библиотеки Exite. ComSigner.Initialize'#10#13 + E.Message);
+    end;
   end;
   try
     ComSigner.ResetPrivateKey;
   except
-    on E: Exception do
+    on E: Exception do begin
+       ComSigner := null;
        raise Exception.Create('Ошибка библиотеки Exite. ComSigner.ResetPrivateKey'#10#13 + E.Message);
+    end;
   end;
   try
     ComSigner.ResetCryptToCert;
   except
-    on E: Exception do
+    on E: Exception do begin
+       ComSigner := null;
        raise Exception.Create('Ошибка библиотеки Exite. ComSigner.ResetCryptToCert'#10#13 + E.Message);
+    end;
   end;
 
-    // Установка сетификатов
+   // Установка сетификатов
   try
-    ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) +
-     'Exite_Для Шифрования.cer');
+    FileName := ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН.cer';
+    ComSigner.SaveCert(FileName);
   except
-    on E: Exception do
-       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert'#10#13 + E.Message);
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' + FileName + #10#13 + E.Message);
+    end;
+  end;
+
+  // Установка сетификатов
+  try
+    FileName := ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН1.cer';
+    ComSigner.SaveCert(FileName);
+  except
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' + FileName + #10#13 + E.Message);
+    end;
+  end;
+
+  // Установка сетификатов
+  try
+    FileName := ExtractFilePath(ParamStr(0)) + 'Неграш О.В..cer';
+    ComSigner.SaveCert(FileName);
+  except
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' + FileName + #10#13 + E.Message);
+    end;
+  end;
+
+  // Установка сетификатов
+  try
+    FileName := ExtractFilePath(ParamStr(0)) + 'Exite_Для Шифрования.cer';
+    ComSigner.SetCryptToCertCert(FileName);
+  except
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert ' + FileName + #10#13 + E.Message);
+    end;
   end;
 
   try
     // Установка ключей
-    ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
-      'Ключ - Неграш О.В..ZS2', '24447183', 1); // бухгалтер
+    FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
+    ComSigner.SetPrivateKey(FileName, '24447183', 1); // бухгалтер
   except
-    on E: Exception do
-       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey ' + FileName + #10#13 + E.Message);
+    end;
   end;
 
   try
     // Установка ключей
-    ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
-      'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2',
-      '24447183', 3); // Печать
+    FileName := ExtractFilePath(ParamStr(0)) +
+      'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    ComSigner.SetPrivateKey(FileName, '24447183', 3); // Печать
   except
-    on E: Exception do
-       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey ' + FileName + #10#13 + E.Message);
+    end;
   end;
 
   try
     // Установка ключей
-    ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) +
-      'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2',
-      '24447183', 4); // Шифр
+    FileName := ExtractFilePath(ParamStr(0)) +
+      'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    ComSigner.SetPrivateKey(FileName, '24447183', 4); // Печать
   except
-    on E: Exception do
-       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey'#10#13 + E.Message);
+    on E: Exception do begin
+       ComSigner := null;
+       raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey ' + FileName + #10#13 + E.Message);
+    end;
   end;
 end;
 

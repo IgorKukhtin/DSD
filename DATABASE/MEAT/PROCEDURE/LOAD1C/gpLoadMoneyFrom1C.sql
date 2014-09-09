@@ -51,7 +51,7 @@ BEGIN
      -- Нашли Точку доставки
      SELECT ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId 
           , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId 
-          , ocv.infomoneyid INTO vbContractId, vbPartnerId, vbInfoMoneyId
+          , View_Contract_InvNumber.infomoneyid INTO vbContractId, vbPartnerId, vbInfoMoneyId
        FROM Object AS Object_Partner1CLink
             JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                             ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
@@ -64,7 +64,7 @@ BEGIN
                             ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                            AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
                            
-       LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId, Object_Contract_View AS ocv   
+       LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId
 
            WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                            AND Object_Partner1CLink.ObjectCode = vbPartnerCode
