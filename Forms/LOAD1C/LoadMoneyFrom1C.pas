@@ -20,7 +20,7 @@ type
   TLoadMoneyFrom1CForm = class(TAncestorReportForm)
     colOperDate: TcxGridDBColumn;
     colClientName: TcxGridDBColumn;
-    colDeliveryPoint: TcxGridDBColumn;
+    colClientFindName: TcxGridDBColumn;
     colClientCode: TcxGridDBColumn;
     actMoveToDoc: TdsdExecStoredProc;
     spMoveMoney: TdsdStoredProc;

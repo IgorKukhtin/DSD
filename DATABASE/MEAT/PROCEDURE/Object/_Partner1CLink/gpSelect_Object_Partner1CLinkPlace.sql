@@ -79,7 +79,7 @@ BEGIN
 
      FROM Object_InfoMoney_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_InfoMoney()
-     WHERE InfoMoneyId = zc_Enum_InfoMoney_21505()
+     WHERE InfoMoneyId = zc_Enum_InfoMoney_40801() -- Внутренний оборот
 
    UNION ALL
      -- Подразделения
