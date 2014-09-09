@@ -91,6 +91,8 @@ type
     BranchGuides: TdsdGuides;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    dsdPrintReal_byJuridicalPersonal: TdsdPrintAction;
+    bbPrintReal_byJuridicalPersonal: TdxBarButton;
   private
     { Private declarations }
   public

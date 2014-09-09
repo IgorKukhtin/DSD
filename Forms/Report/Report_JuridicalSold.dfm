@@ -2,28 +2,30 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ExplicitWidth = 1028
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
+    Top = 85
     Width = 1020
-    Height = 472
+    Height = 470
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 85
     ExplicitWidth = 1020
-    ExplicitHeight = 472
-    ClientRectBottom = 472
-    ClientRectRight = 1020
+    ExplicitHeight = 470
+    ClientRectBottom = 466
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 472
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 472
-        ExplicitWidth = 1020
-        ExplicitHeight = 472
+        Width = 1014
+        Height = 464
+        ExplicitWidth = 1014
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -927,6 +929,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
   end
   inherited ActionList: TActionList
+    Top = 327
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGetDescSets
       StoredProcList = <
@@ -965,6 +968,37 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
+      ReportNameParam.DataType = ftString
+    end
+    object dsdPrintReal_byJuridicalPersonal: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
+      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'JuridicalPersonalName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
       ReportNameParam.DataType = ftString
     end
     object dsdPrintRealAction: TdsdPrintAction
@@ -2229,15 +2263,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Top = 184
+    Left = 112
+    Top = 192
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 184
+    Left = 176
+    Top = 200
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2271,6 +2306,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReal_byJuridicalPersonal'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2284,6 +2323,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction
+      Category = 0
+    end
+    object bbPrintReal_byJuridicalPersonal: TdxBarButton
+      Action = dsdPrintReal_byJuridicalPersonal
       Category = 0
     end
   end
