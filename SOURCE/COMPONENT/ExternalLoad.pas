@@ -68,6 +68,7 @@ type
     FileType: TDataSetType;
     StoredProc: TdsdStoredProc;
     StartRow: integer;
+    HDR: boolean;
     Directory: string;
     constructor Create(ItemClass: TCollectionItemClass);
     destructor Destroy; override;
@@ -261,7 +262,7 @@ begin
     dtXLS: begin
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
                'Data Source=' + FileName + ';' +
-               'Extended Properties=Excel 8.0' + FExtendedProperties + ';';
+               'Extended Properties="Excel 8.0' + FExtendedProperties + ';"';
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;
@@ -275,7 +276,7 @@ begin
       try
         FAdoConnection.GetTableNames(List, True);
         TADOQuery(FDataSet).ParamCheck := false;
-        ListName := List[0];
+        ListName := '';//List[0];
         if Copy(ListName, 1, 1) = chr(39) then
            ListName := Copy(List[0], 2, length(List[0])-2);
         TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':Z60000]';
@@ -292,9 +293,14 @@ end;
 { TExecuteProcedureFromFile }
 
 constructor TExecuteProcedureFromFile.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+var ExtendedProperties: string;
 begin
+  if ImportSettings.HDR then
+     ExtendedProperties := '; HDR=Yes'
+  else
+     ExtendedProperties := '; HDR=No';
   FImportSettings := ImportSettings;
-  FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow);
+  FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow, ExtendedProperties);
   FExternalLoad.Open(FileName);
 end;
 
@@ -422,6 +428,7 @@ begin
   GetStoredProc.Params.AddParam('inId', ftInteger, ptInput, Id);
 
   GetStoredProc.Params.AddParam('StartRow', ftInteger, ptOutput, 0);
+  GetStoredProc.Params.AddParam('HDR', ftBoolean, ptOutput, true);
   GetStoredProc.Params.AddParam('ContractId', ftInteger, ptOutput, 0);
   GetStoredProc.Params.AddParam('JuridicalId', ftInteger, ptOutput, 0);
   GetStoredProc.Params.AddParam('FileTypeName', ftString, ptOutput, '');
@@ -437,6 +444,7 @@ begin
   Result.FileType := GetFileType(GetStoredProc.Params.ParamByName('FileTypeName').Value);
   Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
   Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
+  Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
 
   Result.StoredProc := TdsdStoredProc.Create(nil);
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;

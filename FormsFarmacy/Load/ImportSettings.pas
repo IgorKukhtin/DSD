@@ -59,6 +59,9 @@ type
     ImportType: TOpenChoiceForm;
     ExecuteImportSettingsAction: TExecuteImportSettingsAction;
     bbExecuteImportSettings: TdxBarButton;
+    clHDR: TcxGridDBColumn;
+    mactLoadPrice: TMultiAction;
+    bbLoadAllPrice: TdxBarButton;
   private
     { Private declarations }
   public

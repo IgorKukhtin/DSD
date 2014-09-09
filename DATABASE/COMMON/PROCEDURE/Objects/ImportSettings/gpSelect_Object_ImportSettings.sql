@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ContractId Integer, ContractName TVarChar,
                FileTypeId Integer, FileTypeName TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
-               StartRow Integer,
+               StartRow Integer, HDR Boolean, 
                Directory TVarChar,
                isErased boolean) AS
 $BODY$
@@ -38,6 +38,7 @@ BEGIN
            , Object_ImportSettings_View.ImportTypeName 
            
            , Object_ImportSettings_View.StartRow
+           , Object_ImportSettings_View.HDR
            , Object_ImportSettings_View.Directory
            
            , Object_ImportSettings_View.isErased

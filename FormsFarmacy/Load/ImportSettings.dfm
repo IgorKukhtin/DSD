@@ -1,26 +1,26 @@
 inherited ImportSettingsForm: TImportSettingsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
-  ClientWidth = 969
-  ExplicitWidth = 977
+  ClientWidth = 1025
+  ExplicitWidth = 1033
   ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 969
+    Width = 1025
     Height = 313
-    ExplicitWidth = 969
+    ExplicitWidth = 1025
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 969
+    ClientRectRight = 1025
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 969
+      ExplicitWidth = 1025
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 633
+        Width = 697
         Height = 313
         Align = alLeft
-        ExplicitWidth = 633
+        ExplicitWidth = 697
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -116,18 +116,24 @@ inherited ImportSettingsForm: TImportSettingsForm
             HeaderAlignmentVert = vaCenter
             Width = 124
           end
+          object clHDR: TcxGridDBColumn
+            DataBinding.FieldName = 'HDR'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 36
+          end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 68
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 636
+        Left = 700
         Top = 0
-        Width = 333
+        Width = 325
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
@@ -191,7 +197,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 633
+        Left = 697
         Top = 0
         Width = 3
         Height = 313
@@ -435,10 +441,22 @@ inherited ImportSettingsForm: TImportSettingsForm
       isShowModal = False
     end
     object ExecuteImportSettingsAction: TExecuteImportSettingsAction
-      Category = 'DSDLib'
+      Category = 'Load'
       MoveParams = <>
       ImportSettingsId.Component = MasterCDS
       ImportSettingsId.ComponentItem = 'Id'
+    end
+    object mactLoadPrice: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteImportSettingsAction
+        end>
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099'? '
+      InfoAfterExecute = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1089#1077#1093' '#1087#1088#1072#1081#1089#1086#1074
     end
   end
   inherited MasterDS: TDataSource
@@ -514,6 +532,10 @@ inherited ImportSettingsForm: TImportSettingsForm
         item
           Visible = True
           ItemName = 'bbExecuteImportSettings'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoadAllPrice'
         end>
     end
     object bbSetErased: TdxBarButton
@@ -543,6 +565,10 @@ inherited ImportSettingsForm: TImportSettingsForm
     object bbExecuteImportSettings: TdxBarButton
       Action = ExecuteImportSettingsAction
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072
+      Category = 0
+    end
+    object bbLoadAllPrice: TdxBarButton
+      Action = mactLoadPrice
       Category = 0
     end
   end
@@ -603,6 +629,13 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'StartRow'
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHDR'
+        Component = MasterCDS
+        ComponentItem = 'HDR'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item

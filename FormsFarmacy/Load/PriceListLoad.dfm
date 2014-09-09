@@ -51,6 +51,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100
+      ShortCut = 13
       ImageIndex = 1
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
@@ -114,5 +115,11 @@ inherited PriceListLoadForm: TPriceListLoadForm
       Action = actOpenPriceList
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenPriceList
+      end>
   end
 end
