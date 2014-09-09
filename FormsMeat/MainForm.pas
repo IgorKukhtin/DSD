@@ -400,6 +400,16 @@ type
     bbPersonalServiceProdN: TdxBarButton;
     actPersonalServiceMarketN: TdsdOpenForm;
     bbPersonalServiceMarket: TdxBarButton;
+    actCashOperationKrRog: TdsdOpenForm;
+    actCashOperationNikolaev: TdsdOpenForm;
+    actCashOperationKharkov: TdsdOpenForm;
+    actCashOperationCherkassi: TdsdOpenForm;
+    actCashOperationKiev: TdsdOpenForm;
+    bbCashKiev: TdxBarButton;
+    bbCashKrRog: TdxBarButton;
+    bbCashNikolaev: TdxBarButton;
+    bbCashKharkov: TdxBarButton;
+    bbCashCherkassi: TdxBarButton;
   public
     { Public declarations }
   end;

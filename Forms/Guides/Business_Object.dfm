@@ -249,8 +249,6 @@ object Business_ObjectForm: TBusiness_ObjectForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
       end>
     ActionItemList = <
       item

@@ -155,4 +155,10 @@ inherited CashForm: TCashForm
         end>
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+  end
 end

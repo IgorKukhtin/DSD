@@ -174,4 +174,10 @@ inherited Cash_ObjectForm: TCash_ObjectForm
       Visible = ivNever
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
+  end
 end

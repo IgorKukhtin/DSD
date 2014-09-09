@@ -19,6 +19,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
+             , JuridicalPersonalName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
@@ -55,6 +56,7 @@ BEGIN
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData  AS PartnerName,
+        CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPersonalName,
         Object_Branch.ObjectCode  AS BranchCode,
         Object_Branch.ValueData   AS BranchName,
         View_Contract.ContractCode,
