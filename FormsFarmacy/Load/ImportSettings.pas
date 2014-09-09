@@ -10,7 +10,8 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit;
+  cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit,
+  ExternalLoad;
 
 type
   TImportSettingsForm = class(TAncestorDBGridForm)
@@ -56,6 +57,8 @@ type
     colParamNumber: TcxGridDBColumn;
     FileDialogAction: TFileDialogAction;
     ImportType: TOpenChoiceForm;
+    ExecuteImportSettingsAction: TExecuteImportSettingsAction;
+    bbExecuteImportSettings: TdxBarButton;
   private
     { Private declarations }
   public

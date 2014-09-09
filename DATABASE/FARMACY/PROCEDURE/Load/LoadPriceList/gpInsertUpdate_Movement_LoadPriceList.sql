@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_LoadPriceList()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
+   (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -10,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inPrice               TFloat    ,  
     IN inRemains             TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
-    IN inPackCount           Integer   ,  
+    IN inPackCount           TVarChar  ,  
     IN inProducerName        TVarChar  , 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -35,19 +36,10 @@ BEGIN
    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
      -- Ищем по коду и inObjectId
-   SELECT ObjectLink_Goods_GoodsMain.ChildObjectId INTO vbGoodsId
-     FROM Object 
-     JOIN ObjectLink AS ObjectLink_Goods_Object ON ObjectLink_Goods_Object.ObjectId = Object.Id
-                    AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
-                    AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-     JOIN ObjectString ON ObjectString.ObjectId = Object.Id
-                      AND ObjectString.DescId = zc_ObjectString_Goods_Code()
-                      AND ObjectString.ValueData = inGoodsCode
-     JOIN ObjectLink AS ObjectLink_Goods_GoodsMain ON ObjectLink_Goods_GoodsMain.ObjectId = Object.Id
-                    AND ObjectLink_Goods_GoodsMain.DescId = zc_ObjectLink_Goods_GoodsMain()
-    WHERE Object.DescId = zc_Object_Goods();   
-
-
+   SELECT GoodsMainId INTO vbGoodsId
+     FROM Object_LinkGoods_View 
+    WHERE ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
+   
   IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
      INSERT INTO LoadPriceListItem (LoadPriceListId, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
              VALUES(vbLoadPriceListId, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
@@ -65,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.09.14                        *
  17.07.14                        *
 
 

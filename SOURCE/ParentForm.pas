@@ -55,7 +55,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
   cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns, ExternalDocumentLoad;
+  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad;
 
 {$R *.dfm}
 
@@ -315,6 +315,7 @@ initialization
   RegisterClass (TEDIAction);
 
   RegisterClass (TExecuteDialog);
+  RegisterClass (TExecuteImportSettingsAction);
   RegisterClass (TExternalSaveAction);
   RegisterClass (TFileDialogAction);
   RegisterClass (TGuidesFiller);

@@ -15,13 +15,13 @@ CREATE TABLE LoadPriceListItem
   Id              serial        NOT NULL PRIMARY KEY,
   GoodsCode       TVarChar , -- Код товара поставщика
   GoodsName	  TVarChar , -- Наименование товара поставщика
-  GoodsNDS	  TVarChar, -- НДС товара
+  GoodsNDS	  TVarChar , -- НДС товара
   GoodsId         Integer  , -- Товары
   LoadPriceListId Integer  , -- Ссылка на прайс-лист
   Price           TFloat   , -- Цена
   ExpirationDate  TDateTime, -- Срок годности
-  ProduсerName    TVarChar , -- Производитель     
-  PackCount       Integer  , -- Количество в упаковке
+  ProducerName    TVarChar , -- Производитель     
+  PackCount       TVarChar , -- Количество в упаковке
   CONSTRAINT fk_LoadPriceListItem_LoadMovementId FOREIGN KEY (LoadPriceListId)  REFERENCES LoadPriceList (id),
   CONSTRAINT fk_LoadPriceListItem_GoodsId        FOREIGN KEY (GoodsId)          REFERENCES Object (id))
 WITH (

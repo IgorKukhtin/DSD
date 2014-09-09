@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
                      
-           , Object_Contract.Id         AS ContractId
+           , COALESCE(ObjectLink_ImportSettings_Contract.ChildObjectId, 0)  AS ContractId
            , Object_Contract.ValueData  AS ContractName 
            
            , Object_FileType.Id         AS FileTypeId
@@ -20,10 +20,11 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_ImportType.Id         AS ImportTypeId
            , Object_ImportType.ValueData  AS ImportTypeName 
            
-           , ObjectFloat_StartRow.ValueData   AS StartRow
+           , ObjectFloat_StartRow.ValueData::Integer AS StartRow
            , ObjectString_Directory.ValueData AS Directory
            
            , Object_ImportSettings.isErased   AS isErased
+           , ObjectString_ProcedureName.ValueData AS ProcedureName
            
        FROM Object AS Object_ImportSettings
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Juridical
@@ -45,6 +46,9 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
                                 ON ObjectLink_ImportSettings_ImportType.ObjectId = Object_ImportSettings.Id
                                AND ObjectLink_ImportSettings_ImportType.DescId = zc_ObjectLink_ImportSettings_ImportType()
            LEFT JOIN Object AS Object_ImportType ON Object_ImportType.Id = ObjectLink_ImportSettings_ImportType.ChildObjectId            
+           LEFT JOIN ObjectString AS ObjectString_ProcedureName 
+                                  ON ObjectString_ProcedureName.ObjectId = Object_ImportType.Id
+                                 AND ObjectString_ProcedureName.DescId = zc_ObjectString_ImportType_ProcedureName()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_StartRow 
                                   ON ObjectFloat_StartRow.ObjectId = Object_ImportSettings.Id
