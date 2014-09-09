@@ -54,6 +54,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
+            Options.Editing = False
             Width = 89
           end
           inherited colOperDate: TcxGridDBColumn
@@ -256,6 +257,50 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'inServiceDate'
+          Value = 41640d
+          Component = deServiceDate
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inPersonalId'
+          Value = '0'
+        end
+        item
+          Name = 'inPersonalName'
+          Value = Null
+          DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+        end>
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TPersonalServiceEditForm'
+      FormNameParam.Value = 'TPersonalServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
         end
         item
           Name = 'inServiceDate'
@@ -281,10 +326,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           ComponentItem = 'Key'
         end>
     end
-    inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TPersonalServiceEditForm'
-      FormNameParam.Value = 'TPersonalServiceEditForm'
-    end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -294,7 +335,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdate
         end
         item
-          StoredProc = spSelect
+          StoredProc = spGet
         end>
       DataSource = MasterDS
     end
@@ -370,8 +411,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       26
       0)
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 240
+  end
   inherited PeriodChoice: TPeriodChoice
-    Top = 96
+    Left = 192
+    Top = 112
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -561,6 +606,26 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Name = 'inServiceDate'
+        Value = 41640d
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'InvNumber'
         Component = MasterCDS
         ComponentItem = 'InvNumber'
@@ -577,6 +642,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'ServiceDate'
         DataType = ftDateTime
+      end
+      item
+        Name = 'Amount'
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'PersonalId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+      end
+      item
+        Name = 'PersonalName'
+        Component = MasterCDS
+        ComponentItem = 'PersonalName'
+        DataType = ftString
       end
       item
         Name = 'PaidKindId'
@@ -601,6 +683,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftString
       end
       item
+        Name = 'UnitId'
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+      end
+      item
+        Name = 'UnitName'
+        Component = MasterCDS
+        ComponentItem = 'UnitName'
+        DataType = ftString
+      end
+      item
+        Name = 'PositionId'
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+      end
+      item
+        Name = 'PositionName'
+        Component = MasterCDS
+        ComponentItem = 'PositionName'
+        DataType = ftString
+      end
+      item
         Name = 'StatusCode'
         Component = MasterCDS
         ComponentItem = 'StatusCode'
@@ -609,6 +713,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Name = 'StatusName'
         Component = MasterCDS
         ComponentItem = 'StatusName'
+        DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Component = MasterCDS
+        ComponentItem = 'Comment'
         DataType = ftString
       end>
     Left = 408
