@@ -1,6 +1,5 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
@@ -16,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , JuridicalPersonalName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
@@ -34,12 +34,21 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- определяется уровень доступа
+     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+     -- !!!меняется параметр!!!
+     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+
 
      -- Результат
-  RETURN QUERY  
+     RETURN QUERY  
      SELECT 
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
@@ -47,6 +56,7 @@ BEGIN
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData  AS PartnerName,
+        CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPersonalName,
         Object_Branch.ObjectCode  AS BranchCode,
         Object_Branch.ValueData   AS BranchName,
         View_Contract.ContractCode,

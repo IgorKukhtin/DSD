@@ -407,13 +407,12 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
  10.04.14         *
 */
 /*
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
-     -- 5.1. таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+      -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+      -- 5.1. таблица - Проводки
+      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+      CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
                                , MovementItemId Integer, ContainerId Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
@@ -422,24 +421,24 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
-   select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
-                                                    , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                    , inOperDate        := '30.06.2014'
-                                                    , inAmountIn        := 0
-                                                    , inAmountOut       := Sum_Bonus
-                                                    , inComment         := ''
-                                                    , inContractId      := ContractId_find
-                                                    , inInfoMoneyId     := InfoMoneyId_find
-                                                    , inJuridicalId     := JuridicalId
-                                                    , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
-                                                    , inUnitId          := 0
-                                                    , inContractConditionKindId   := ConditionKindId
-                                                    , inBonusKindId     := BonusKindId
-                                                    , inisLoad          := TRUE
-                                                    , inUserId          := zfCalc_UserAdmin() :: Integer
-                                                     )
-   from gpReport_CheckBonus (inStartDate:= '01.06.2014', inEndDate:= '31.06.2014', inSession:= '5') as a
-   where Sum_Bonus > 0 and Sum_Bonus =30
+    select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
+                                                     , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
+                                                     , inOperDate        :='31.08.2014'
+                                                     , inAmountIn        := 0
+                                                     , inAmountOut       := Sum_Bonus
+                                                     , inComment         := ''
+                                                     , inContractId      := ContractId_find
+                                                     , inInfoMoneyId     := InfoMoneyId_find
+                                                     , inJuridicalId     := JuridicalId
+                                                     , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
+                                                     , inUnitId          := 0
+                                                     , inContractConditionKindId   := ConditionKindId
+                                                     , inBonusKindId     := BonusKindId
+                                                     , inisLoad          := TRUE
+                                                     , inUserId          := zfCalc_UserAdmin() :: Integer
+                                                      )
+    from gpReport_CheckBonus (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inSession:= '5') as a
+    where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '03.01.2014', inEndDate:= '31.03.2014', inSession:= zfCalc_UserAdmin());

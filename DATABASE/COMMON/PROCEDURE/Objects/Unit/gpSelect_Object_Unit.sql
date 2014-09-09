@@ -17,13 +17,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isErased boolean, isLeaf boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+   -- DECLARE vbAccessKeyAll Boolean;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
    vbUserId:= lpGetUserBySession (inSession);
+
    -- определяется - может ли пользовать видеть весь справочник
-   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+   -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
 
    -- Результат
    RETURN QUERY 
@@ -61,6 +70,8 @@ BEGIN
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
        -- WHERE vbAccessKeyAll = TRUE
+       WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
+              OR vbIsConstraint = FALSE)
       ;
 
 END;
@@ -72,6 +83,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.12.13                                        * ParentId
  21.11.13                       * добавил WITH из-за неправильной оптимизации DISTINCT и GROUP BY в 9.3
  03.11.13                                        * add lfSelect_Object_Unit_byProfitLossDirection and Object_AccountDirection_View

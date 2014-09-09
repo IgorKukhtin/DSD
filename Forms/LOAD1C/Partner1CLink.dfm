@@ -59,6 +59,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             DataBinding.FieldName = 'INN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colPartnerCode: TcxGridDBColumn
@@ -132,6 +133,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           object clINN_find1C: TcxGridDBColumn
             Caption = #1048#1053#1053' 1'#1057' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'INN_find1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55

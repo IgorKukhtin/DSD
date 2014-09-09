@@ -1,9 +1,9 @@
 inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
-  Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
+  Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1082#1072#1089#1089#1099' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 966
-  ExplicitHeight = 443
+  ExplicitWidth = 974
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,7 +98,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
             Options.Editing = False
             Width = 100
           end
-          object colDeliveryPoint: TcxGridDBColumn
+          object colClientFindName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1085#1072#1081#1076#1077#1085')'
             DataBinding.FieldName = 'ClientFindName'
             HeaderAlignmentHorz = taCenter
@@ -161,6 +161,13 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
         end
       end

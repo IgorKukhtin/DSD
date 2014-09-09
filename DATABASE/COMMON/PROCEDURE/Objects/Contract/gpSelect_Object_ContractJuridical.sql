@@ -25,11 +25,21 @@ RETURNS TABLE (Id Integer, Code Integer
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractJuridical());
+   vbUserId:= lpGetUserBySession (inSession);
 
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+   -- Результат
    RETURN QUERY 
    SELECT
          Object_Contract_View.ContractId AS Id
@@ -108,9 +118,15 @@ BEGIN
                             AND ObjectLink_Contract_ContractArticle.DescId = zc_ObjectLink_Contract_ContractArticle()
         LEFT JOIN Object AS Object_ContractArticle ON Object_ContractArticle.Id = ObjectLink_Contract_ContractArticle.ChildObjectId                               
       
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = inJuridicalId
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
 --     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
      AND Object_Contract_View.isErased = FALSE
+     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+          OR vbIsConstraint = FALSE)
   ;
   
 END;
@@ -123,6 +139,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  23.05.14                                        * add ObjectBoolean...
  20.05.14                                        * !!!ContractKindName - всегда!!!
  25.04.14                                        * add ContractTagName
