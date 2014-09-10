@@ -520,7 +520,8 @@ uses
   GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm},
   Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
-  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm};
+  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
+  PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
