@@ -63,8 +63,8 @@ BEGIN
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, PositionId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
@@ -87,6 +87,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  30.08.14                                        * это временно
  29.08.14                                        * all
  17.08.14                                        * add MovementDescId

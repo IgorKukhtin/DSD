@@ -48,7 +48,6 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clGoodsGroupName: TcxGridDBColumn;
     clItemName: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
 
   private
     { Private declarations }

@@ -9,33 +9,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbBranchId_Member Integer;
-  DECLARE vbBranchId_Partner Integer;
 BEGIN
-
-     -- !!!Определяется филиал для Физ.лица (подотчетные лица), потом надо перенести в _tmpItem!!!
-     vbBranchId_Member:= COALESCE ((SELECT ObjectLink_Cash_Branch.ChildObjectId
-                                    FROM _tmpItem
-                                         LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
-                                                              ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
-                                                             AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                    WHERE _tmpItem.ObjectDescId = zc_Object_Cash()
-                                      AND _tmpItem.InfoMoneyId <> zc_Enum_InfoMoney_40801())
-                                 , zc_Branch_Basis());
-     -- !!!Определяется филиал для Контрагента, потом надо перенести в _tmpItem!!!
-     IF EXISTS (SELECT MovementDescId FROM _tmpItem WHERE MovementDescId = zc_Movement_LossDebt())
-     THEN vbBranchId_Partner:= NULL;
-     ELSE
-         vbBranchId_Partner:= COALESCE ((SELECT ObjectLink_Cash_Branch.ChildObjectId
-                                         FROM _tmpItem
-                                              LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
-                                                                   ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
-                                                                  AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                         WHERE _tmpItem.ObjectDescId = zc_Object_Cash()
-                                           AND _tmpItem.InfoMoneyId <> zc_Enum_InfoMoney_40801())
-                                      , zc_Branch_Basis());
-     END IF;
-
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -196,18 +170,21 @@ BEGIN
      UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.ProfitLossDirectionId <> 0
                                                            THEN _tmpItem.ProfitLossDirectionId -- если уже был определен
 
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
                                                        AND _tmpItem.UnitId = 0
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
 
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
-                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Ссуды
-                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Депозиты
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- Доходы + услуги предоставленные
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Финансовая деятельность + Ссуды
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Финансовая деятельность + Депозиты
                                                            THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее
 
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
-                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- Финансовая деятельность + проценты по кредитам
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Финансовая деятельность + Лиол
                                                            THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
+                                                           THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
                                                            THEN zc_Enum_ProfitLossDirection_50400() -- Налоговые платежи по ЗП
@@ -271,7 +248,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_InfoMoney() -- CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
@@ -282,7 +259,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100(), zc_Enum_AccountDirection_40200()) THEN zc_ContainerLinkObject_Cash() ELSE zc_ContainerLinkObject_BankAccount() END
@@ -293,7 +270,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_ProfitLoss
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -304,7 +281,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Founder()
@@ -315,7 +292,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Member()
@@ -323,9 +300,30 @@ BEGIN
                                                                             , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                             , inObjectId_2        := _tmpItem.InfoMoneyId
                                                                             , inDescId_3          := zc_ContainerLinkObject_Branch()
-                                                                            , inObjectId_3        := vbBranchId_Member
+                                                                            , inObjectId_3        := _tmpItem.BranchId_Balance
                                                                             , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                             , inObjectId_4        := 0 -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
+                                                                             )
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Personal() -- ЗП
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_2        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_Branch()
+                                                                            , inObjectId_3        := _tmpItem.BranchId_Balance
+                                                                            , inDescId_4          := zc_ContainerLinkObject_Unit()
+                                                                            , inObjectId_4        := _tmpItem.UnitId
+                                                                            , inDescId_5          := zc_ContainerLinkObject_Position()
+                                                                            , inObjectId_5        := _tmpItem.PositionId
+                                                                            , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
+                                                                            , inObjectId_6        := _tmpItem.ServiceDateId
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
@@ -334,7 +332,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Juridical()
@@ -350,7 +348,7 @@ BEGIN
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN COALESCE (vbBranchId_Partner, _tmpItem.BranchId) ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END -- and <> наши компании
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                       -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -358,7 +356,7 @@ BEGIN
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
                                                                             , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
-                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Juridical()
@@ -372,7 +370,7 @@ BEGIN
                                                                             , inDescId_5          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_5        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN COALESCE (vbBranchId_Partner, _tmpItem.BranchId) ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END -- and <> наши компании
                                                                              )
                                        END;
 
@@ -426,9 +424,9 @@ BEGIN
     ;
 
 
-     -- !!!5. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId)
-     FROM (SELECT _tmpItem.MovementItemId, _tmpItem.BranchId
+     -- !!!5.1. формируются свойства в элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId_ProfitLoss)
+     FROM (SELECT _tmpItem.MovementItemId, _tmpItem.BranchId_ProfitLoss
            FROM _tmpItem
            WHERE _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
              AND _tmpItem.MovementDescId <> zc_Movement_LossDebt()

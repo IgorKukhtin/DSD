@@ -15,7 +15,6 @@ object UnitTreeForm: TUnitTreeForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -177,8 +176,8 @@ object UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -462,23 +461,6 @@ object UnitTreeForm: TUnitTreeForm
     DBTreeList = cxDBTreeList
     Left = 192
     Top = 240
-  end
-  object dsdFormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Key'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        DataType = ftString
-      end
-      item
-        Name = 'TextValue'
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-      end>
-    Left = 344
-    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 336

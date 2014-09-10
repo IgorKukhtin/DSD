@@ -15,7 +15,6 @@ object UnitForm: TUnitForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter1: TcxSplitter
@@ -293,6 +292,7 @@ object UnitForm: TUnitForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <
         item
         end
@@ -306,9 +306,12 @@ object UnitForm: TUnitForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -317,12 +320,16 @@ object UnitForm: TUnitForm
       isShowModal = True
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -334,9 +341,11 @@ object UnitForm: TUnitForm
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -345,6 +354,7 @@ object UnitForm: TUnitForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -371,6 +381,7 @@ object UnitForm: TUnitForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -404,23 +415,6 @@ object UnitForm: TUnitForm
     Left = 416
     Top = 160
   end
-  object dsdFormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Key'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        DataType = ftString
-      end
-      item
-        Name = 'TextValue'
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-      end>
-    Left = 408
-    Top = 296
-  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
     Top = 288
@@ -446,6 +440,10 @@ object UnitForm: TUnitForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 176
     Top = 200
   end

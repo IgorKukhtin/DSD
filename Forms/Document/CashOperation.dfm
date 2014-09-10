@@ -462,13 +462,13 @@
         Name = 'PositionId'
         Value = ''
         Component = PersonalGuides
-        ComponentItem = 'PositionId'
+        ComponentItem = 'Key'
       end
       item
         Name = 'PositionName'
         Value = ''
         Component = PersonalGuides
-        ComponentItem = 'PositionName'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
