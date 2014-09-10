@@ -168,7 +168,7 @@ BEGIN
                                            ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
-                                               AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                                               -- AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Sale
                                    ON MovementDate_OperDatePartner_Sale.MovementId =  Movement_Sale.Id
                                   AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
@@ -199,7 +199,7 @@ BEGIN
                                           AND MovementLinkMovement_TaxCorrective_Tax.DescId = zc_MovementLinkMovement_Child()
 
             LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MovementLinkMovement_ChildEDI.MovementId
-                                                        AND Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete()
+                                                        -- AND Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
                                      ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
@@ -223,6 +223,9 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND MovementString_OKPO.ValueData IN ('36387233', '36387249')
+         AND (Movement_TaxCorrective.Id IS NULL OR Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete())
+         AND (Movement_Sale.Id IS NULL OR Movement_Sale.StatusId = zc_Enum_Status_Complete())
+
        ;
 
 

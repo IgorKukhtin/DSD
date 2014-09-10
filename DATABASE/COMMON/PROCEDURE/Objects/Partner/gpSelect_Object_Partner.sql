@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
@@ -24,11 +23,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
+   vbUserId:= lpGetUserBySession (inSession);
 
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+   -- Результат
    RETURN QUERY 
      SELECT 
            Object_Partner.Id               AS Id
@@ -161,8 +171,11 @@ BEGIN
                              AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
          LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId         
 
-    WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
-  
+    WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
+      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+           OR vbIsConstraint = FALSE)
+   ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -172,6 +185,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  16.08.14                                        * add JuridicalGroupName
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street

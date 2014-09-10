@@ -1,4 +1,4 @@
-unit Report_JuridicalSold;
+unit Report_Cash;
 
 interface
 
@@ -17,50 +17,18 @@ uses
   cxImageComboBox;
 
 type
-  TReport_JuridicalSoldForm = class(TAncestorReportForm)
-    colJuridicalName: TcxGridDBColumn;
-    colContractNumber: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
+  TReport_CashForm = class(TAncestorReportForm)
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colStartAmount_A: TcxGridDBColumn;
-    colSaleSumm: TcxGridDBColumn;
-    colMoneySumm: TcxGridDBColumn;
-    colServiceSumm: TcxGridDBColumn;
-    colOtherSumm: TcxGridDBColumn;
     colEndAmount_A: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    cxLabel3: TcxLabel;
-    ceInfoMoneyGroup: TcxButtonEdit;
-    InfoMoneyGroupGuides: TdsdGuides;
-    InfoMoneyDestinationGuides: TdsdGuides;
-    ceInfoMoneyDestination: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    InfoMoneyGuides: TdsdGuides;
-    ceInfoMoney: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
     colInfoMoneyCode: TcxGridDBColumn;
-    colStartAmount_P: TcxGridDBColumn;
-    colStartAmountD: TcxGridDBColumn;
-    colStartAmountK: TcxGridDBColumn;
-    colIncomeSumm: TcxGridDBColumn;
-    colReturnOutSumm: TcxGridDBColumn;
-    colReturnInSumm: TcxGridDBColumn;
-    colSendDebtSumm: TcxGridDBColumn;
-    colEndAmount_P: TcxGridDBColumn;
-    colEndAmount_D: TcxGridDBColumn;
-    colEndAmount_K: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
-    colContractCode: TcxGridDBColumn;
-    colJuridicalCode: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
     ReturnInJournal: TdsdOpenForm;
     IncomeJournal: TdsdOpenForm;
@@ -71,28 +39,19 @@ type
     OtherJournal: TdsdOpenForm;
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    colAreaName: TcxGridDBColumn;
-    cxLabel7: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
-    clJuridicalGroupName: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
-    colSaleRealSumm: TcxGridDBColumn;
-    colReturnInRealSumm: TcxGridDBColumn;
-    colTransferDebtSumm: TcxGridDBColumn;
     SaleRealJournal: TdsdOpenForm;
     ReturnInRealJournal: TdsdOpenForm;
     TransferDebtJournal: TdsdOpenForm;
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
-    cxLabel8: TcxLabel;
-    edBranch: TcxButtonEdit;
-    BranchGuides: TdsdGuides;
-    colBranchCode: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
-    dsdPrintReal_byJuridicalPersonal: TdsdPrintAction;
-    bbPrintReal_byJuridicalPersonal: TdxBarButton;
+    ContainerId: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    ceObject: TcxButtonEdit;
+    ObjectlGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edAccount: TcxButtonEdit;
+    AccountGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -106,6 +65,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_JuridicalSoldForm)
+  RegisterClass(TReport_CashForm)
 
 end.

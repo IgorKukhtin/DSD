@@ -1,0 +1,143 @@
+DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpReport_Cash(
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inAccountId        Integer,    -- Счет
+    IN inCashId           Integer,    --
+    IN inSession          TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , AccountName TVarChar
+             , UnitName TVarChar
+             , MoneyPlaceName TVarChar
+             , StartAmount_A TFloat
+             , DebetSumm TFloat, KreditSumm TFloat
+             , EndAmount_A TFloat
+              )
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+
+     -- Результат
+  RETURN QUERY
+     SELECT
+        Operation.ContainerId,
+        Object_Cash.ObjectCode                                                                      AS CashCode,
+        Object_Cash.ValueData                                                                       AS CashName,
+        Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
+        Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
+        Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
+        Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
+        Object_Account_View.AccountName_all                                                         AS AccountName,
+        Object_Unit.ValueData                                                                       AS UnitName,
+        Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
+        Operation.StartAmount ::TFloat                                                              AS StartAmount_A,
+        Operation.DebetSumm::TFloat                                                                 AS DebetSumm,
+        Operation.KreditSumm::TFloat                                                                AS KreditSumm,
+        Operation.EndAmount ::TFloat                                                                AS EndAmount_A
+
+     FROM
+         (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.CashId, Operation_all.InfoMoneyId,
+                 Operation_all.UnitId, Operation_all.MoneyPlaceId,
+                     SUM (Operation_all.StartAmount) AS StartAmount,
+                     SUM (Operation_all.DebetSumm)   AS DebetSumm,
+                     SUM (Operation_all.KreditSumm)  AS KreditSumm,
+                     SUM (Operation_all.EndAmount)   AS EndAmount
+          FROM
+           -- остаток
+          (SELECT CLO_Cash.ContainerId      AS ContainerId,
+                  Container.ObjectId        AS ObjectId,
+                  CLO_Cash.ObjectId         AS CashId,
+                  0                         AS InfoMoneyId,
+                  0                         AS UnitId,
+                  0                         AS MoneyPlaceId,
+                  Container.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                             AS StartAmount,
+                  0                         AS DebetSumm,
+                  0                         AS KreditSumm,
+                  Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS EndAmount
+
+           FROM ContainerLinkObject AS CLO_Cash
+                  INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
+
+                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = Container.Id
+                                                                AND MIContainer.OperDate >= inStartDate
+
+           WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
+             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+             AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
+           GROUP BY CLO_Cash.ContainerId , Container.ObjectId, CLO_Cash.ObjectId, Container.Amount
+
+           UNION ALL
+           -- движение
+           SELECT CLO_Cash.ContainerId              AS ContainerId,
+                  Container.ObjectId                AS ObjectId,
+                  CLO_Cash.ObjectId                 AS CashId,
+                  MILO_InfoMoney.ObjectId           AS InfoMoneyId,
+                  MILO_Unit.ObjectId                AS UnitId,
+                  MILO_MoneyPlace.ObjectId          AS MoneyPlaceId,
+                  0                                 AS StartAmount,
+                  SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
+                  SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
+                  0                                 AS EndAmount
+
+           FROM ContainerLinkObject AS CLO_Cash
+                  INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId AND Container.DescId = zc_Container_Summ()
+
+                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = Container.Id
+                                                                AND MIContainer.OperDate >= inStartDate
+
+                  LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
+                                                   ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                  AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                  LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                   ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                  AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                  LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
+                                                   ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
+                                                  AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILO_InfoMoney.ObjectId
+
+           WHERE CLO_Cash.DescId = zc_ContainerLinkObject_Cash()
+             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+             AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
+           GROUP BY CLO_Cash.ContainerId , Container.ObjectId, CLO_Cash.ObjectId, MILO_InfoMoney.ObjectId,
+                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId
+
+           ) AS Operation_all
+
+
+
+          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId
+         ) AS Operation
+
+
+     LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
+     LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = Operation.CashId
+     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+     LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
+     LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
+
+     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.09.14                                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpReport_Cash (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inAccountId:= 0, inCashId:=0, inSession:= '2');

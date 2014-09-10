@@ -23,7 +23,7 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner1CLink());
    
      RETURN QUERY 
-       WITH tmpJuridical AS (SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+       WITH /*tmpJuridical AS (SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                                   , ObjectLink_Partner_Juridical.ObjectId       AS PartnerId
                              FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                                   INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
@@ -37,7 +37,7 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
-          , tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName) AS ClientName
+          , */tmpSale1C  AS (SELECT Sale1C.ClientCode, MAX (Sale1C.ClientName) AS ClientName
                                 , MAX (TRIM (Sale1C.ClientOKPO)) AS ClientOKPO
                                 , MAX (TRIM (Sale1C.ClientINN))  AS ClientINN
                                 , zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS BranchTopId
@@ -169,21 +169,21 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                  ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                 AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-            LEFT JOIN tmpJuridical ON tmpJuridical.PartnerId = ObjectLink_Partner1CLink_Partner.ChildObjectId
-
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                 ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_INN
                                           ON ObjectHistoryString_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails_View.ObjectHistoryId
                                          AND ObjectHistoryString_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = tmpJuridical.JuridicalId
+                                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                                 AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
             LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
@@ -195,7 +195,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                  ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                                 AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()
-            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId   
+            LEFT JOIN Object_Contract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId
+                                                                     AND View_Contract_InvNumber.JuridicalId = Object_Juridical.Id
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract_InvNumber.PaidKindId
             

@@ -26,12 +26,23 @@ RETURNS TABLE (Id Integer, Code Integer
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
-   IF inShowAll= TRUE THEN
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractPartnerChoice());
+   vbUserId:= lpGetUserBySession (inSession);
 
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+   IF inShowAll= TRUE THEN
+   -- Результат такой
    RETURN QUERY
    SELECT
          Object_Contract_View.ContractId   AS Id
@@ -96,13 +107,19 @@ BEGIN
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                            )
+     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+          OR vbIsConstraint = FALSE)
   ;
 
    ELSE
-
+   -- Результат другой
    RETURN QUERY
    SELECT
          Object_Contract_View.ContractId   AS Id
@@ -168,11 +185,16 @@ BEGIN
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                           , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                           , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                            )
+     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+          OR vbIsConstraint = FALSE)
   ;
 
    END IF;
@@ -186,10 +208,11 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.08.14                                        * add ContractComment
  25.04.14                                        * add ContractTagName
  28.02.14         * add inShowAll
- 13.02.14                                         * add zc_Enum_ContractStateKind_Close
+ 13.02.14                                        * add zc_Enum_ContractStateKind_Close
  24.01.14                                                        *
 */
 

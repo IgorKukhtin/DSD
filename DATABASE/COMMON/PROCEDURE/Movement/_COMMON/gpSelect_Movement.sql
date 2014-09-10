@@ -32,13 +32,21 @@ $BODY$
 
    DECLARE vbDescId Integer; 
    DECLARE vbIndex  Integer;
+
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- определяется уровень доступа
+     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+     -- !!!меняется параметр!!!
+     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+
 
      -- таблица - MovementDesc - типы документов
      CREATE TEMP TABLE _tmpMovementDesc (DescId Integer) ON COMMIT DROP;
-
      -- парсим типы документов
      vbIndex := 1;
      WHILE split_part (inDescSet, ';', vbIndex) <> '' LOOP
@@ -178,6 +186,7 @@ ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Intege
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  07.09.14                                        * add Branch...
  31.08.14                                        * ALL
  22.04.14                         *

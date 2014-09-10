@@ -27,12 +27,22 @@ RETURNS TABLE (Id Integer, Code Integer
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractChoice());
+   vbUserId:= lpGetUserBySession (inSession);
 
-   --
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+   -- ограничение
    CREATE TEMP TABLE _tmpPaidKind (PaidKindId Integer, PaidKindName TVarChar) ON COMMIT DROP;
    IF COALESCE (inPaidKindId,0) <> 0 
    THEN 
@@ -44,8 +54,8 @@ BEGIN
    END IF;
 
 
-   IF inShowAll= TRUE THEN
-   
+   IF inShowAll= TRUE AND inJuridicalId <> 0 THEN
+   -- 1.1. Результат такой
    RETURN QUERY 
    SELECT
          Object_Contract_View.ContractId AS Id
@@ -84,7 +94,7 @@ BEGIN
    FROM _tmpPaidKind
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.isErased = FALSE
-                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                       AND Object_Contract_View.JuridicalId = inJuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -117,10 +127,16 @@ BEGIN
 
  	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+        OR vbIsConstraint = FALSE)
    ;
 
    ELSE
-   
+   IF inShowAll= FALSE AND inJuridicalId <> 0 THEN
+   -- 1.2. Результат другой
    RETURN QUERY 
    SELECT
          Object_Contract_View.ContractId AS Id
@@ -161,7 +177,7 @@ BEGIN
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                        AND Object_Contract_View.isErased = FALSE
-                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                       AND Object_Contract_View.JuridicalId = inJuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -194,8 +210,181 @@ BEGIN
 
  	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+        OR vbIsConstraint = FALSE)
+   ;
+
+   ELSE
+   IF inShowAll= TRUE THEN
+   -- 2.1. Результат такой
+   RETURN QUERY 
+   SELECT
+         Object_Contract_View.ContractId AS Id
+       , Object_Contract_View.ContractCode AS Code
+       , Object_Contract_View.InvNumber
+       , Object_Contract_View.StartDate
+       , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagName
+       , Object_ContractKind.ValueData AS ContractKindName
+       , Object_Juridical.Id           AS JuridicalId
+       , Object_Juridical.ObjectCode   AS JuridicalCode
+       , Object_Juridical.ValueData    AS JuridicalName
+       , _tmpPaidKind.PaidKindId
+       , _tmpPaidKind.PaidKindName
+
+       , Object_InfoMoney_View.InfoMoneyId
+       , Object_InfoMoney_View.InfoMoneyGroupCode
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationCode
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
+
+       , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
+
+       , ObjectHistory_JuridicalDetails_View.OKPO
+       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
+
+       , Object_JuridicalBasis.Id           AS JuridicalBasisId
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+
+       , Object_Contract_View.isErased
+       
+   FROM _tmpPaidKind
+        INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
+                                       AND Object_Contract_View.isErased = FALSE
+                                       -- AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+              
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+
+ 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                        , ObjectFloat_Value.ValueData AS ChangePercent
+                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                              AND ObjectFloat_Value.ValueData <> 0
+                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                     AND Object_ContractCondition.isErased = FALSE
+                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+
+ 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+        OR vbIsConstraint = FALSE)
+   ;
+
+   ELSE
+   -- 2.2. Результат другой
+   RETURN QUERY 
+   SELECT
+         Object_Contract_View.ContractId AS Id
+       , Object_Contract_View.ContractCode AS Code
+       , Object_Contract_View.InvNumber
+       , Object_Contract_View.StartDate
+       , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagName
+       , Object_ContractKind.ValueData AS ContractKindName
+       , Object_Juridical.Id           AS JuridicalId
+       , Object_Juridical.ObjectCode   AS JuridicalCode
+       , Object_Juridical.ValueData    AS JuridicalName
+       , _tmpPaidKind.PaidKindId
+       , _tmpPaidKind.PaidKindName
+
+       , Object_InfoMoney_View.InfoMoneyId
+       , Object_InfoMoney_View.InfoMoneyGroupCode
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationCode
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
+
+       , Object_Contract_View.ContractStateKindCode
+       , ObjectString_Comment.ValueData AS ContractComment 
+
+       , ObjectHistory_JuridicalDetails_View.OKPO
+       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
+
+
+       , Object_JuridicalBasis.Id           AS JuridicalBasisId
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+
+       , Object_Contract_View.isErased
+       
+   FROM _tmpPaidKind
+        INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
+                                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                       AND Object_Contract_View.isErased = FALSE
+                                       -- AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+              
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+
+ 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                        , ObjectFloat_Value.ValueData AS ChangePercent
+                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                              AND ObjectFloat_Value.ValueData <> 0
+                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                     AND Object_ContractCondition.isErased = FALSE
+                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+
+ 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+        OR vbIsConstraint = FALSE)
    ;
    END IF;
+   END IF;
+   END IF;
+
 
 END;
 $BODY$
@@ -206,6 +395,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.09.14                                        * add Object_RoleAccessKeyGuide_View
  29.08.14                                        * add InfoMoneyName_all
  21.08.14                                        * add ContractComment
  20.05.14                                        * !!!ContractKindName - всегда!!!
