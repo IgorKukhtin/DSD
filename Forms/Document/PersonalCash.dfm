@@ -1,9 +1,9 @@
-inherited PersonalServiceForm: TPersonalServiceForm
-  Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+inherited PersonalCashForm: TPersonalCashForm
+  Caption = #1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
   ClientHeight = 381
   ClientWidth = 1142
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -152
+  ExplicitLeft = -115
   ExplicitWidth = 1150
   ExplicitHeight = 415
   PixelsPerInch = 96
@@ -44,6 +44,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Kind = skSum
               Column = clAmount
             end>
+          OptionsData.Appending = True
+          OptionsData.Inserting = True
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -87,9 +89,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object colPersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object clPosition: TcxGridDBColumn
@@ -109,15 +118,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 63
-          end
-          object clPaidKind: TcxGridDBColumn
-            Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            FooterAlignmentHorz = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
           end
           object clInfoMoney: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -171,12 +171,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxLabel4: TcxLabel
       Left = 589
       Top = 6
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      Caption = #1050#1072#1089#1089#1072
     end
-    object cePaidKind: TcxButtonEdit
-      Left = 667
+    object ceCash: TcxButtonEdit
+      Left = 627
       Top = 5
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -245,7 +244,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           'Date')
       end
       item
-        Component = PaidKindGuides
+        Component = CashGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -290,7 +289,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Name = 'inPaidKindId'
           Value = '0'
-          Component = PaidKindGuides
+          Component = CashGuides
           ComponentItem = 'Key'
         end>
     end
@@ -335,7 +334,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Name = 'inPaidKindId'
           Value = '0'
-          Component = PaidKindGuides
+          Component = CashGuides
           ComponentItem = 'Key'
         end>
     end
@@ -346,18 +345,69 @@ inherited PersonalServiceForm: TPersonalServiceForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
-        end
-        item
-          StoredProc = spGet
         end>
       DataSource = MasterDS
+    end
+    object PersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PersonalChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionName'
+          Component = MasterCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   inherited MasterCDS: TClientDataSet
     AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService'
+    StoredProcName = 'gpSelect_Movement_PersonalCash'
     Params = <
       item
         Name = 'inStartDate'
@@ -395,10 +445,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inCashId'
         Value = '0'
-        Component = FormParams
-        ComponentItem = 'PaidKindId'
+        Component = CashGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -423,6 +473,37 @@ inherited PersonalServiceForm: TPersonalServiceForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end>
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 240
@@ -437,7 +518,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = PeriodChoice
       end
       item
-        Component = PaidKindGuides
+        Component = CashGuides
       end
       item
         Component = UnitGuides
@@ -448,6 +529,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Component = inServDate
       end>
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    Top = 184
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -475,16 +559,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'PaidKindId'
+        Name = 'CashId'
         Value = '0'
-        Component = PaidKindGuides
+        Component = CashGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'PaidKindName'
+        Name = 'CashName'
         Value = ''
-        Component = PaidKindGuides
+        Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -503,7 +587,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end>
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_PersonalService'
+    StoredProcName = 'gpInsertUpdate_Movement_PersonalCash'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -525,6 +609,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashId'
+        Value = '0'
+        Component = CashGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -566,13 +657,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inServiceDate'
         Value = 41640d
         Component = deServiceDate
@@ -582,160 +666,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 336
     Top = 184
   end
-  object PaidKindGuides: TdsdGuides
+  object CashGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePaidKind
+    LookupControl = ceCash
     Key = '0'
-    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.Value = 'TCashForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
+    FormName = 'TCashForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = PaidKindGuides
+        Component = CashGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 672
-    Top = 65533
-  end
-  object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'Id'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inServiceDate'
-        Value = 41640d
-        Component = deServiceDate
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPersonalId'
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'InvNumber'
-        Component = MasterCDS
-        ComponentItem = 'InvNumber'
-        DataType = ftString
-      end
-      item
-        Name = 'OperDate'
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'ServiceDate'
-        Component = MasterCDS
-        ComponentItem = 'ServiceDate'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'Amount'
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-      end
-      item
-        Name = 'PersonalId'
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-      end
-      item
-        Name = 'PersonalName'
-        Component = MasterCDS
-        ComponentItem = 'PersonalName'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Component = MasterCDS
-        ComponentItem = 'PaidKindId'
-      end
-      item
-        Name = 'PaidKindName'
-        Component = MasterCDS
-        ComponentItem = 'PaidKindName'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Component = MasterCDS
-        ComponentItem = 'InfoMoneyId'
-      end
-      item
-        Name = 'InfoMoneyName'
-        Component = MasterCDS
-        ComponentItem = 'InfoMoneyName'
-        DataType = ftString
-      end
-      item
-        Name = 'UnitId'
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-      end
-      item
-        Name = 'UnitName'
-        Component = MasterCDS
-        ComponentItem = 'UnitName'
-        DataType = ftString
-      end
-      item
-        Name = 'PositionId'
-        Component = MasterCDS
-        ComponentItem = 'PositionId'
-      end
-      item
-        Name = 'PositionName'
-        Component = MasterCDS
-        ComponentItem = 'PositionName'
-        DataType = ftString
-      end
-      item
-        Name = 'StatusCode'
-        Component = MasterCDS
-        ComponentItem = 'StatusCode'
-      end
-      item
-        Name = 'StatusName'
-        Component = MasterCDS
-        ComponentItem = 'StatusName'
-        DataType = ftString
-      end
-      item
-        Name = 'Comment'
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-      end>
-    Left = 408
-    Top = 160
+    Left = 640
+    Top = 5
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

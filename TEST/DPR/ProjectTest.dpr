@@ -519,7 +519,10 @@ uses
   GoodsGroupStat in '..\..\Forms\Guides\GoodsGroupStat.pas' {GoodsGroupStatForm: TParentForm},
   GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm},
   Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
+  Report_Founders in '..\..\Forms\Report\Report_Founders.pas' {Report_FoundersForm: TParentForm},
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
+  Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
+  PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm};
 
 {$R *.RES}
