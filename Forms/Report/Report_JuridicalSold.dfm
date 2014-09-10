@@ -950,6 +950,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
+          IndexFieldNames = 'JuridicalName'
         end>
       Params = <
         item
@@ -980,7 +981,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalPersonalName'
+          IndexFieldNames = 'JuridicalPartnerlName'
         end>
       Params = <
         item
@@ -1011,6 +1012,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
+          IndexFieldNames = 'JuridicalName'
         end>
       Params = <
         item
