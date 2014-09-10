@@ -54,6 +54,10 @@ type
     cxLabel4: TcxLabel;
     BankAccountGuides: TdsdGuides;
     ContractInvNumber: TcxGridDBColumn;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public
