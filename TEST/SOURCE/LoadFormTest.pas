@@ -213,6 +213,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalCashForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;

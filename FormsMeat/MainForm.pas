@@ -410,6 +410,8 @@ type
     bbCashNikolaev: TdxBarButton;
     bbCashKharkov: TdxBarButton;
     bbCashCherkassi: TdxBarButton;
+    actPersonalCash: TdsdOpenForm;
+    bbPersonalCash: TdxBarButton;
   public
     { Public declarations }
   end;
