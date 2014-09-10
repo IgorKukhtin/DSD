@@ -1532,8 +1532,8 @@
 				<Form>Report_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Member.pas">
-				<Form>Report_MemberForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Founders.pas">
+				<Form>Report_FoundersForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
@@ -1546,6 +1546,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalCash.pas">
 				<Form>PersonalCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Member.pas">
+				<Form>Report_MemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -873,6 +873,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
 
 
 

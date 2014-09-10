@@ -146,4 +146,4 @@ ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, TVa
 */
 
 -- тест
- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inAccountId:= 0, inBankAccountId:=0, inSession:= '2');
+-- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inAccountId:= 0, inBankAccountId:=0, inSession:= '2');
