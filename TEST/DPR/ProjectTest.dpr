@@ -519,8 +519,9 @@ uses
   GoodsGroupStat in '..\..\Forms\Guides\GoodsGroupStat.pas' {GoodsGroupStatForm: TParentForm},
   GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm},
   Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
-  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
-  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm};
+  Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
+  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
+  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

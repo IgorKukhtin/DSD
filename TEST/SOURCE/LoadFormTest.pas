@@ -867,6 +867,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
+
+
+
 
 end;
 
