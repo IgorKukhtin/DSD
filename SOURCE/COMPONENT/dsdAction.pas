@@ -763,11 +763,14 @@ function TdsdOpenForm.ShowForm: TForm;
 begin
   Result := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(Result);
-  if TParentForm(Result).Execute(Self, FParams) then
-    if isShowModal then
-       Result.ShowModal
-    else
-       Result.Show
+  if TParentForm(Result).Execute(Self, FParams) then begin
+     if Result.WindowState = wsMinimized then
+        Result.WindowState := wsNormal;
+     if isShowModal then
+        Result.ShowModal
+     else
+        Result.Show
+  end
   else
     Result.Free
 end;

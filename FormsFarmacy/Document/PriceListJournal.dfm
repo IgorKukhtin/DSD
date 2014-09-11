@@ -11,19 +11,19 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Height = 478
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1073
+    ExplicitWidth = 593
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 593
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 1073
+      ExplicitWidth = 593
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 593
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 593
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -117,6 +117,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 136
@@ -147,7 +148,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
   end
   inherited Panel: TPanel
     Width = 593
-    ExplicitWidth = 1073
+    ExplicitWidth = 593
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -272,60 +273,11 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

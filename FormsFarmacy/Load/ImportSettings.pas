@@ -62,6 +62,7 @@ type
     clHDR: TcxGridDBColumn;
     mactLoadPrice: TMultiAction;
     bbLoadAllPrice: TdxBarButton;
+    colDefaultValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -25,9 +25,6 @@ BEGIN
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
-     -- пересчитали Итоговые суммы по накладной
---     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

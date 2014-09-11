@@ -3,26 +3,28 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 1064
   ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 83
     Width = 1064
-    Height = 540
-    ExplicitTop = 128
+    Height = 585
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 585
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 561
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -126,15 +128,14 @@ inherited PriceListForm: TPriceListForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 561
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -157,10 +158,10 @@ inherited PriceListForm: TPriceListForm
   end
   inherited DataPanel: TPanel
     Width = 1064
-    Height = 100
+    Height = 57
     TabOrder = 3
     ExplicitWidth = 1064
-    ExplicitHeight = 100
+    ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -182,18 +183,24 @@ inherited PriceListForm: TPriceListForm
       ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
+      Left = 472
+      Top = 4
+      Visible = False
+      ExplicitLeft = 472
+      ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 63
-      ExplicitTop = 63
+      Left = 472
+      Top = 22
+      Visible = False
+      ExplicitLeft = 472
+      ExplicitTop = 22
       ExplicitWidth = 218
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 218
     end
     object edJuridical: TcxButtonEdit
-      Left = 237
+      Left = 205
       Top = 23
       Properties.Buttons = <
         item
@@ -204,7 +211,7 @@ inherited PriceListForm: TPriceListForm
       Width = 270
     end
     object cxLabel4: TcxLabel
-      Left = 237
+      Left = 205
       Top = 5
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
@@ -221,6 +228,13 @@ inherited PriceListForm: TPriceListForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -356,7 +370,7 @@ inherited PriceListForm: TPriceListForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -961,6 +975,7 @@ inherited PriceListForm: TPriceListForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
+    StoredProcName = ''
     Params = <
       item
         Name = 'inMovementId'
@@ -997,12 +1012,6 @@ inherited PriceListForm: TPriceListForm
     Params = <>
     Left = 508
     Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

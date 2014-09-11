@@ -6,7 +6,7 @@ uses dsdAction, dsdDb, Classes, DB, ExternalData, ADODB;
 
 type
 
-  TDataSetType = (dtDBF, dtXLS, dtMMO);
+  TDataSetType = (dtDBF, dtXLS, dtMMO, dtODBC);
 
   TExternalLoad = class(TExternalData)
   protected
@@ -466,7 +466,10 @@ begin
       FieldType := TFieldType(GetEnumValue(TypeInfo(TFieldType), FieldByName('ParamType').asString));
       with TImportSettingsItems(Result.Add) do begin
         ItemName := FieldByName('ParamValue').asString;
-        Param.Value := GetDefaultByFieldType(FieldType);
+        if FieldByName('DefaultValue').AsString = '' then
+           Param.Value := GetDefaultByFieldType(FieldType)
+        else
+           Param.Value := FieldByName('DefaultValue').AsString;
       end;
       Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, GetDefaultByFieldType(FieldType));
       Next;

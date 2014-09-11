@@ -3,6 +3,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 763
   AddOnFormData.Params = FormParams
+  ExplicitTop = -54
   ExplicitWidth = 771
   ExplicitHeight = 437
   PixelsPerInch = 96
@@ -145,8 +146,8 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actChoiceGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -171,11 +172,8 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     object actUpdate: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdate
+      StoredProc = spUpdatePriceListItem
       StoredProcList = <
-        item
-          StoredProc = spUpdate
-        end
         item
           StoredProc = spUpdatePriceListItem
         end>
@@ -278,46 +276,6 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       end>
     Left = 352
     Top = 32
-  end
-  object spUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsLink'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCode'
-        Component = MasterCDS
-        ComponentItem = 'GoodsCode'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inName'
-        Component = MasterCDS
-        ComponentItem = 'GoodsName'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsMainId'
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 176
-    Top = 272
   end
   object spUpdatePriceListItem: TdsdStoredProc
     StoredProcName = 'gpUpdate_LoadPriceList_GoodsId'

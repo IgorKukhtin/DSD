@@ -17,8 +17,11 @@ type
     colOperDate: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     actOpenPriceList: TdsdInsertUpdateAction;
-    col: TcxGridDBColumn;
+    colNDSinPrice: TcxGridDBColumn;
     bbOpen: TdxBarButton;
+    spLoadPriceList: TdsdStoredProc;
+    actLoadPriceList: TdsdExecStoredProc;
+    bbLoadPriceList: TdxBarButton;
   private
     { Private declarations }
   public
