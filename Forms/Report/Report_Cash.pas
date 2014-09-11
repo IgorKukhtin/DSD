@@ -52,6 +52,10 @@ type
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
     AccountGuides: TdsdGuides;
+    spSelectPrint: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
