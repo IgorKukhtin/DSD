@@ -457,7 +457,7 @@ inherited Report_CashForm: TReport_CashForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'cashname'
+          IndexFieldNames = 'cashname;InfoMoneyName'
         end>
       Params = <
         item
