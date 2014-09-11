@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 247
-  ClientWidth = 298
+  ClientHeight = 292
+  ClientWidth = 307
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 8
-    Top = 78
+    Top = 71
     TabOrder = 1
     Width = 273
   end
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 204
+    Top = 249
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 204
+    Top = 249
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -48,7 +48,7 @@
   end
   object cxLabel2: TcxLabel
     Left = 8
-    Top = 100
+    Top = 97
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
   object ceCode: TcxCurrencyEdit
@@ -66,7 +66,7 @@
   end
   object ceParentGroup: TcxButtonEdit
     Left = 8
-    Top = 123
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -78,12 +78,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 150
+    Top = 142
     Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
   end
   object ceGroupStat: TcxButtonEdit
     Left = 8
-    Top = 173
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -91,6 +91,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
+    Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 8
+    Top = 192
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+  end
+  object ceTradeMark: TcxButtonEdit
+    Left = 8
+    Top = 210
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 273
   end
   object ActionList: TActionList
@@ -163,6 +180,13 @@
         Component = GoodsGroupStatGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inTradeMarkId'
+        Value = ''
+        Component = TradeMarkGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 208
     Top = 8
@@ -223,6 +247,19 @@
         Name = 'GroupStatName'
         Value = ''
         Component = GoodsGroupStatGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'TradeMarkId'
+        Value = ''
+        Component = TradeMarkGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TradeMarkName'
+        Value = ''
+        Component = TradeMarkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -295,5 +332,29 @@
       end>
     Left = 136
     Top = 160
+  end
+  object TradeMarkGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceTradeMark
+    FormNameParam.Value = 'TTradeMarkForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TTradeMarkForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = TradeMarkGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = TradeMarkGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 128
+    Top = 200
   end
 end
