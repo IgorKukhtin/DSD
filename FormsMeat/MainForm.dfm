@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1034
-  ExplicitHeight = 208
+  ExplicitWidth = 1042
+  ExplicitHeight = 209
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1009,10 +1009,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbPersonalService'
-        end
-        item
-          Visible = True
           ItemName = 'bbPersonalServiceProdN'
         end
         item
@@ -1030,6 +1026,10 @@
         item
           Visible = True
           ItemName = 'bbPersonalServiceSecurityN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalService'
         end
         item
           Visible = True
@@ -2565,8 +2565,8 @@
     object actPersonalServiceProdN: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
-      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
       FormName = 'TPersonalServiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -2582,7 +2582,7 @@
         end
         item
           Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1085#1072#1083
+          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1074#1089#1077
           DataType = ftString
         end
         item
