@@ -377,7 +377,7 @@ uses
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  PersonalServiceOld in '..\..\Forms\Document\PersonalServiceOld.pas' {PersonalServiceOldForm: TParentForm},
   PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
   Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},

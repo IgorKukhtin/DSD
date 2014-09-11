@@ -1,11 +1,10 @@
-inherited PersonalServiceForm: TPersonalServiceForm
+inherited PersonalServiceOldForm: TPersonalServiceOldForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
   ClientHeight = 381
   ClientWidth = 1142
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -152
-  ExplicitWidth = 1150
-  ExplicitHeight = 415
+  ExplicitWidth = 1158
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

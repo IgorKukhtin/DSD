@@ -385,8 +385,8 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceOldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceOldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
 end;

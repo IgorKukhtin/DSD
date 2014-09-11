@@ -1081,8 +1081,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
-			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
-				<Form>PersonalServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceOld.pas">
+				<Form>PersonalServiceOldForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceEdit.pas">
