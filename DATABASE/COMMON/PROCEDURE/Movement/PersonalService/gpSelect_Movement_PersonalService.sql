@@ -138,12 +138,15 @@ FROM
           ) AS Personal_Movement 
            FULL JOIN 
             (SELECT * FROM Object_Personal_View
-              WHERE ((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
-                       OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm())) ) AS Object_Personal_View
+              WHERE /*((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
+                       OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm()))
+                   AND */(Object_Personal_View.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+         ) AS Object_Personal_View
 
        ON Object_Personal_View.Personalid = Personal_Movement.PersonalId
                               AND Object_Personal_View.UnitId = Personal_Movement.UnitId 
                               AND Object_Personal_View.PositionId = Personal_Movement.PositionId ) AS PersonalData
+
              LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = PersonalData.PersonalId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = PersonalData.StatusId
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = PersonalData.InfoMoneyId
