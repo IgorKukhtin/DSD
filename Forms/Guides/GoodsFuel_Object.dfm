@@ -15,7 +15,6 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -122,8 +121,8 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -202,6 +201,7 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
     Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -215,6 +215,7 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -235,6 +236,7 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -274,18 +276,11 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 216
-  end
-  object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'inOperDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    Left = 168
-    Top = 272
   end
 end

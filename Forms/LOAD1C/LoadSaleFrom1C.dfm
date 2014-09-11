@@ -33,6 +33,10 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
               Kind = skSum
               Column = colSuma
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -116,7 +120,9 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
@@ -267,6 +273,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colisSync: TcxGridDBColumn

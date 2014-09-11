@@ -118,14 +118,10 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-<<<<<<< HEAD
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  04.09.14                                                        * + zc_ContainerLinkObject_ServiceDate
  04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch
-=======
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch and zc_ContainerLinkObject_ServiceDate
->>>>>>> origin/master
  21.12.13                                        * add zc_ContainerLinkObject_Member
  15.09.13                                        * add zc_ContainerLinkObject_BankAccount and zc_ContainerLinkObject_Partner
  13.07.13                                        * restore zc_ContainerLinkObject_Goods

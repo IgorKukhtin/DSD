@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
-             , JuridicalPersonalName TVarChar
+             , JuridicalPartnerlName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
@@ -56,7 +56,7 @@ BEGIN
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
         Object_Partner.ObjectCode AS PartnerCode,
         Object_Partner.ValueData  AS PartnerName,
-        CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPersonalName,
+        CASE WHEN Object_Partner.ValueData <> '' THEN Object_Partner.ValueData ELSE Object_Juridical.ValueData END :: TVarChar AS JuridicalPartnerlName,
         Object_Branch.ObjectCode  AS BranchCode,
         Object_Branch.ValueData   AS BranchName,
         View_Contract.ContractCode,

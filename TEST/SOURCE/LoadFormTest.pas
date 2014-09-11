@@ -213,6 +213,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalCashForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;
@@ -382,8 +385,8 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceOldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceOldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
 end;
@@ -866,6 +869,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
+
 
 
 end;

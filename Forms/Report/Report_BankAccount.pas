@@ -1,4 +1,4 @@
-unit Report_Cash;
+unit Report_BankAccount;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   cxImageComboBox;
 
 type
-  TReport_CashForm = class(TAncestorReportForm)
+  TReport_BankAccountForm = class(TAncestorReportForm)
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
@@ -46,16 +46,18 @@ type
     bbPrintReal: TdxBarButton;
     ContainerId: TcxGridDBColumn;
     MoneyPlaceName: TcxGridDBColumn;
-    cxLabel6: TcxLabel;
-    ceObject: TcxButtonEdit;
-    ObjectlGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
     AccountGuides: TdsdGuides;
+    BankName: TcxGridDBColumn;
+    ceBankAccount: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    BankAccountGuides: TdsdGuides;
+    ContractInvNumber: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
@@ -69,6 +71,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_CashForm)
+  RegisterClass(TReport_BankAccountForm)
 
 end.

@@ -1,4 +1,4 @@
-unit PersonalService;
+unit PersonalServiceOld;
 
 interface
 
@@ -15,7 +15,7 @@ uses
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TPersonalServiceForm = class(TAncestorJournalForm)
+  TPersonalServiceOldForm = class(TAncestorJournalForm)
     colPersonalName: TcxGridDBColumn;
     deServiceDate: TcxDateEdit;
     spInsertUpdate: TdsdStoredProc;
@@ -42,6 +42,6 @@ implementation
 
 initialization
 
-  RegisterClass(TPersonalServiceForm);
+  RegisterClass(TPersonalServiceOldForm);
 
 end.

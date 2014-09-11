@@ -1,4 +1,4 @@
-unit Report_Cash;
+unit Report_Founders;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   cxImageComboBox;
 
 type
-  TReport_CashForm = class(TAncestorReportForm)
+  TReport_FoundersForm = class(TAncestorReportForm)
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
@@ -26,6 +26,18 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    cxLabel3: TcxLabel;
+    ceInfoMoneyGroup: TcxButtonEdit;
+    InfoMoneyGroupGuides: TdsdGuides;
+    InfoMoneyDestinationGuides: TdsdGuides;
+    ceInfoMoneyDestination: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    InfoMoneyGuides: TdsdGuides;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edAccount: TcxButtonEdit;
+    AccountGuides: TdsdGuides;
     colInfoMoneyCode: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
@@ -45,17 +57,6 @@ type
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
     ContainerId: TcxGridDBColumn;
-    MoneyPlaceName: TcxGridDBColumn;
-    cxLabel6: TcxLabel;
-    ceObject: TcxButtonEdit;
-    ObjectlGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
-    spSelectPrint: TdsdStoredProc;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
@@ -69,6 +70,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_CashForm)
+  RegisterClass(TReport_FoundersForm)
 
 end.

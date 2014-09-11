@@ -53,7 +53,6 @@ type
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ceBusinessName: TcxGridDBColumn;

@@ -1081,8 +1081,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
-			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
-				<Form>PersonalServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceOld.pas">
+				<Form>PersonalServiceOldForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceEdit.pas">
@@ -1532,8 +1532,20 @@
 				<Form>Report_PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Founders.pas">
+				<Form>Report_FoundersForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
 				<Form>Report_CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_BankAccount.pas">
+				<Form>Report_BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalCash.pas">
+				<Form>PersonalCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Member.pas">

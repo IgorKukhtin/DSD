@@ -37,6 +37,9 @@ type
     cxLabel3: TcxLabel;
     ceGroupStat: TcxButtonEdit;
     GoodsGroupStatGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ceTradeMark: TcxButtonEdit;
+    TradeMarkGuides: TdsdGuides;
   private
     { Private declarations }
   public

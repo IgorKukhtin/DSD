@@ -1,29 +1,31 @@
-inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
+inherited Report_FoundersForm: TReport_FoundersForm
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 555
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ClientWidth = 1050
+  ExplicitWidth = 1058
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 1020
-    Height = 472
+    Top = 85
+    Width = 1050
+    Height = 470
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 1020
-    ExplicitHeight = 472
-    ClientRectBottom = 472
-    ClientRectRight = 1020
+    ExplicitTop = 85
+    ExplicitWidth = 1050
+    ExplicitHeight = 470
+    ClientRectBottom = 466
+    ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 472
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1044
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 472
-        ExplicitWidth = 1020
-        ExplicitHeight = 472
+        Width = 1044
+        Height = 464
+        ExplicitWidth = 1044
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -39,72 +41,58 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colOtherSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnOutSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
             end
             item
               Format = ',0.00##'
@@ -119,17 +107,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -145,72 +130,58 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colServiceSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colMoneySumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colOtherSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colIncomeSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnOutSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSendDebtSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_P
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
             end
             item
               Format = ',0.00##'
@@ -225,17 +196,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colSaleRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colReturnInRealSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colTransferDebtSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -245,187 +213,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colAreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085
-            DataBinding.FieldName = 'AreaName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colBranchCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1092#1083'.'
-            DataBinding.FieldName = 'BranchCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 35
-          end
-          object colBranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object clJuridicalGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'JuridicalGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colJuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
-            DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object colJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 142
-          end
-          object colOKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
-            Visible = False
+          object FounderName: TcxGridDBColumn
+            Caption = #1059#1095#1077#1088#1077#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'FounderName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object clPartnerCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-            DataBinding.FieldName = 'PartnerCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object clPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object clContractStateKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractStateKindCode'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Alignment.Horz = taLeftJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1055#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 12
-                Value = 1
-              end
-              item
-                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 11
-                Value = 2
-              end
-              item
-                Description = #1047#1072#1074#1077#1088#1096#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end
-              item
-                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-                ImageIndex = 66
-                Value = 4
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object colContractNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object clContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colStartDate: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
-            DataBinding.FieldName = 'StartDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colEndDate: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
-            DataBinding.FieldName = 'EndDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clPersonalName: TcxGridDBColumn
-            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object clPersonalCollationName: TcxGridDBColumn
-            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalCollationName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -475,180 +269,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object colStartAmount_P: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
-            DataBinding.FieldName = 'StartAmount_P'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colStartAmountD: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'StartAmountD'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colStartAmountK: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'StartAmountK'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colIncomeSumm: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'IncomeSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colReturnOutSumm: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'-'#1082#1091'.'
-            DataBinding.FieldName = 'ReturnOutSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colSaleRealSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072
-            DataBinding.FieldName = 'SaleRealSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colSaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1073#1091#1093#1075'.)'
-            DataBinding.FieldName = 'SaleSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colReturnInRealSumm: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.'
-            DataBinding.FieldName = 'ReturnInRealSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colReturnInSumm: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. ('#1073#1091#1093#1075'.)'
-            DataBinding.FieldName = 'ReturnInSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colMoneySumm: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1090#1072' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
-            DataBinding.FieldName = 'MoneySumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colServiceSumm: TcxGridDBColumn
-            Caption = #1059#1089#1083#1091#1075#1080'. (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'.'
-            DataBinding.FieldName = 'ServiceSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colTransferDebtSumm: TcxGridDBColumn
-            Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'.'
-            DataBinding.FieldName = 'TransferDebtSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colSendDebtSumm: TcxGridDBColumn
-            Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'.'
-            DataBinding.FieldName = 'SendDebtSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colOtherSumm: TcxGridDBColumn
-            Caption = '***'
-            DataBinding.FieldName = 'OtherSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
           object colDebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
@@ -657,7 +277,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -671,7 +290,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -690,65 +308,28 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
-          object colEndAmount_P: TcxGridDBColumn
-            Caption = #1050#1086#1085'.  '#1076#1086#1083#1075' ('#1055#1072#1089#1089#1080#1074')'
-            DataBinding.FieldName = 'EndAmount_P'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colEndAmount_D: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'EndAmount_D'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colEndAmount_K: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'EndAmount_K'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 45
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1050
     Height = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1050
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -789,10 +370,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 125
+      Width = 160
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 495
+      Left = 531
       Top = 30
       Properties.Buttons = <
         item
@@ -801,15 +382,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 125
+      Width = 160
     end
     object cxLabel4: TcxLabel
-      Left = 495
+      Left = 531
       Top = 6
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 625
+      Left = 697
       Top = 30
       Properties.Buttons = <
         item
@@ -818,10 +399,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 135
+      Width = 160
     end
     object cxLabel5: TcxLabel
-      Left = 625
+      Left = 697
       Top = 6
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
@@ -842,51 +423,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       TabOrder = 11
       Width = 150
     end
-    object cxLabel7: TcxLabel
-      Left = 765
-      Top = 6
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 765
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 13
-      Width = 81
-    end
-    object cxLabel8: TcxLabel
-      Left = 851
-      Top = 6
-      Caption = #1060#1080#1083#1080#1072#1083':'
-    end
-    object edBranch: TcxButtonEdit
-      Left = 851
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 160
-    end
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 35
+    Top = 328
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = AccountGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = BranchGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -918,15 +463,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Properties.Strings = (
           'Key'
           'TextValue')
-      end
-      item
-        Component = PaidKindGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end>
   end
   inherited ActionList: TActionList
+    Left = 127
     Top = 327
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGetDescSets
@@ -950,7 +490,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalName'
         end>
       Params = <
         item
@@ -969,37 +508,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
       ReportNameParam.DataType = ftString
     end
-    object dsdPrintReal_byJuridicalPersonal: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = MasterCDS
-          UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalPartnerlName'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' ('#1092#1072#1082#1090')'
-      ReportNameParam.DataType = ftString
-    end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1012,7 +520,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'JuridicalName'
         end>
       Params = <
         item
@@ -1123,17 +630,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1229,17 +725,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1333,17 +818,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1440,17 +914,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1545,17 +1008,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1652,17 +1104,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1757,17 +1198,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -1864,17 +1294,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1969,17 +1388,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Name = 'PaidKindName'
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
@@ -2076,17 +1484,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2182,17 +1579,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-        end
-        item
-          Name = 'BranchId'
-          Component = MasterCDS
-          ComponentItem = 'BranchId'
-        end
-        item
-          Name = 'BranchName'
-          Component = MasterCDS
-          ComponentItem = 'BranchName'
-          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2201,11 +1587,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Top = 184
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'JuridicalName'
+    IndexFieldNames = 'FounderName'
     Top = 184
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_JuridicalSold'
+    StoredProcName = 'gpReport_Founder'
     Params = <
       item
         Name = 'inStartDate'
@@ -2250,29 +1636,19 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        Component = BranchGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 112
-    Top = 192
+    Top = 184
   end
   inherited BarManager: TdxBarManager
-    Left = 176
-    Top = 200
+    Left = 168
+    Top = 184
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2306,14 +1682,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReal_byJuridicalPersonal'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2324,84 +1692,31 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
       Category = 0
+      Visible = ivNever
     end
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction
       Category = 0
-    end
-    object bbPrintReal_byJuridicalPersonal: TdxBarButton
-      Action = dsdPrintReal_byJuridicalPersonal
-      Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
-        Column = colIncomeSumm
+        Column = colDebetSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colReturnOutSumm
+        Column = colKreditSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colSaleSumm
-        Action = SaleJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colReturnInSumm
-        Action = ReturnInJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colMoneySumm
-        Action = MoneyJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colServiceSumm
-        Action = ServiceJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colSendDebtSumm
-        Action = SendDebtJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colOtherSumm
-        Action = OtherJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colSaleRealSumm
-        Action = SaleRealJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colReturnInRealSumm
-        Action = ReturnInRealJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
-      end
-      item
-        Column = colTransferDebtSumm
-        Action = TransferDebtJournal
-        onExitColumn.Active = False
-        onExitColumn.AfterEmptyValue = False
       end>
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 144
@@ -2425,10 +1740,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = InfoMoneyGuides
       end
       item
-        Component = PaidKindGuides
-      end
-      item
-        Component = BranchGuides
       end>
     Top = 228
   end
@@ -2456,7 +1767,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
+    Left = 776
     Top = 53
   end
   object InfoMoneyDestinationGuides: TdsdGuides
@@ -2680,59 +1991,5 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
     Left = 240
     Top = 232
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 800
-    Top = 56
-  end
-  object BranchGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edBranch
-    FormNameParam.Value = 'TBranch_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TBranch_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = BranchGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = BranchGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 912
-    Top = 64
   end
 end

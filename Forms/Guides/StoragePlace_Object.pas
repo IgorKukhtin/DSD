@@ -46,7 +46,6 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    FormParams: TdsdFormParams;
     clItemName: TcxGridDBColumn;
 
   private

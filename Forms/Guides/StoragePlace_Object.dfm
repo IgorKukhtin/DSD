@@ -15,7 +15,6 @@ object StoragePlace_ObjectForm: TStoragePlace_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -285,16 +284,5 @@ object StoragePlace_ObjectForm: TStoragePlace_ObjectForm
     SummaryItemList = <>
     Left = 160
     Top = 216
-  end
-  object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'inOperDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    Left = 168
-    Top = 272
   end
 end

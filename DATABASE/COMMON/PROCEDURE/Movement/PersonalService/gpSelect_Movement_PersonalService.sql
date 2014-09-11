@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
              , Comment TVarChar
+             , INN TVarChar
               )
 AS
 $BODY$
@@ -69,6 +70,7 @@ SELECT
            , Object_Position.Id                   AS PositionId
            , Object_Position.ValueData            AS PositionName
            , PersonalData.Comment
+           , ObjectString_Member_INN.ValueData    AS INN
 
 FROM 
  (SELECT     Personal_Movement.Id
@@ -83,6 +85,7 @@ FROM
            , COALESCE(Personal_Movement.PersonalId, Object_Personal_View.PersonalId) AS PersonalId     
            , COALESCE(Personal_Movement.PositionId, Object_Personal_View.PositionId) AS PositionId
            , COALESCE(Personal_Movement.UnitId, Object_Personal_View.UnitId)         AS UnitId
+           
  FROM (
  
        SELECT
@@ -93,7 +96,7 @@ FROM
            , MIDate_ServiceDate.ValueData    AS ServiceDate           
            , MovementItem.Amount 
            , MovementItem.ObjectId           AS PersonalId
-           , MILinkObject_PaidKind.ObjectId  AS PaidKindId          
+           , MILinkObject_PaidKind.ObjectId  AS PaidKindId   
            , MILinkObject_Position.ObjectId  AS PositionId
            , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
            , MILinkObject_Unit.ObjectId      AS UnitId 
@@ -135,12 +138,15 @@ FROM
           ) AS Personal_Movement 
            FULL JOIN 
             (SELECT * FROM Object_Personal_View
-              WHERE ((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
-                       OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm())) ) AS Object_Personal_View
+              WHERE /*((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
+                       OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm()))
+                   AND */(Object_Personal_View.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+         ) AS Object_Personal_View
 
        ON Object_Personal_View.Personalid = Personal_Movement.PersonalId
                               AND Object_Personal_View.UnitId = Personal_Movement.UnitId 
                               AND Object_Personal_View.PositionId = Personal_Movement.PositionId ) AS PersonalData
+
              LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = PersonalData.PersonalId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = PersonalData.StatusId
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = PersonalData.InfoMoneyId
@@ -148,6 +154,16 @@ FROM
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = PersonalData.PaidKindId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = PersonalData.UnitId
              LEFT JOIN Object AS Object_PaidKindInf ON Object_PaidKindInf.Id = inPaidKindId
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                  ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id  
+                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+
+             LEFT JOIN ObjectString AS ObjectString_Member_INN
+                                    ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
+             
+             
        ;  
 
 END;

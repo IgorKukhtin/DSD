@@ -15,7 +15,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter1: TcxSplitter
@@ -254,25 +253,8 @@ object Unit_ObjectForm: TUnit_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 416
-    Top = 160
-  end
-  object dsdFormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Key'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        DataType = ftString
-      end
-      item
-        Name = 'TextValue'
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-      end>
-    Left = 408
-    Top = 296
+    Left = 288
+    Top = 168
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
@@ -301,7 +283,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 176
-    Top = 200
+    Left = 112
+    Top = 184
   end
 end
