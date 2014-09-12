@@ -643,8 +643,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 64
-    Top = 8
+    Left = 24
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalService'
