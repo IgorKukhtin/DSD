@@ -484,10 +484,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 80
     Top = 320
