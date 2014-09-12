@@ -525,7 +525,9 @@ uses
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
-  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm};
+  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm},
+  PersonalServiceList in '..\..\Forms\Guides\PersonalServiceList.pas' {PersonalServiceListForm: TParentForm},
+  PersonalServiceListEdit in '..\..\Forms\Guides\PersonalServiceListEdit.pas' {PersonalServiceListEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

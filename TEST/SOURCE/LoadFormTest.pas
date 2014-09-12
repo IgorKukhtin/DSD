@@ -83,6 +83,7 @@ type
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPersonalServiceFormTest;
+    procedure LoadPersonalServiceListFormTest;
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
@@ -395,6 +396,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalServiceListFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;

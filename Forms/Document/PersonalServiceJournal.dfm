@@ -161,24 +161,31 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 82
+            Width = 77
           end
           inherited colOperDate: TcxGridDBColumn [1]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 87
+            Width = 81
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 97
+            Width = 91
           end
           object colServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'ServiceDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 157
+            Width = 79
+          end
+          object colPersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 98
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1074#1099#1087#1083#1072#1090#1077
@@ -188,7 +195,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 95
+            Width = 94
           end
           object colTotalSummService: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1086
@@ -202,28 +209,28 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             DataBinding.FieldName = 'TotalSummCard'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 87
           end
           object colTotalSummMinus: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'TotalSummMinus'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 76
+            Width = 75
           end
           object colTotalSummAdd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'TotalSummAdd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 89
           end
           object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 59
+            Width = 58
           end
         end
       end

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , TotalSumm TFloat
              , Comment TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
               )
 AS
 $BODY$
@@ -39,6 +40,8 @@ BEGIN
              , vbServiceDate            AS ServiceDate 
              , CAST (0 AS TFloat)       AS TotalSumm
              , CAST ('' AS TVarChar)    AS Comment
+             , 0                     	AS PersonalServiceListId
+             , CAST ('' AS TVarChar) 	AS PersonalServiceListName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -54,6 +57,8 @@ BEGIN
            , COALESCE (Date_ServiceDate.ValueData, vbServiceDate) AS ServiceDate 
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
            , MovementString_Comment.ValueData   AS Comment
+           , COALESCE (Object_PersonalServiceList.Id, CAST (0 AS Integer))            AS PersonalServiceListId
+           , COALESCE (Object_PersonalServiceList.ValueData, CAST ('' AS TVarChar))  AS PersonalServiceListName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -69,6 +74,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+   
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_PersonalService();

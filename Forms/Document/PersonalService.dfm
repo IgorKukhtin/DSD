@@ -313,15 +313,31 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
     end
     object edComment: TcxTextEdit
-      Left = 467
+      Left = 721
       Top = 23
       TabOrder = 8
       Width = 340
     end
     object cxLabel12: TcxLabel
-      Left = 467
+      Left = 721
       Top = 5
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
+    end
+    object cePersonalServiceList: TcxButtonEdit
+      Left = 484
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 10
+      Width = 189
+    end
+    object cxLabel3: TcxLabel
+      Left = 484
+      Top = 5
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -706,13 +722,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftString
       end
       item
+        Name = 'PersonalServiceListId'
         Value = ''
-        ParamType = ptUnknown
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
       end
       item
+        Name = 'PersonalServiceListName'
         Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -797,6 +817,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -840,8 +864,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Name = 'inPersonalServiceListId'
         Value = ''
-        ParamType = ptUnknown
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = 'False'
@@ -921,6 +948,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Control = edOperDate
       end
       item
+        Control = cePersonalServiceList
       end
       item
       end
@@ -1131,5 +1159,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end>
     Left = 319
     Top = 208
+  end
+  object PersonalServiceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceList
+    isShowModal = True
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 560
+    Top = 13
   end
 end

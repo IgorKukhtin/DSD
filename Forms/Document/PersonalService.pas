@@ -44,6 +44,9 @@ type
     colSummService: TcxGridDBColumn;
     colSummMinus: TcxGridDBColumn;
     colSummAdd: TcxGridDBColumn;
+    cePersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public
