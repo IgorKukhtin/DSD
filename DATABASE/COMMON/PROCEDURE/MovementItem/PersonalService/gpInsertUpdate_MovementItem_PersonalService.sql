@@ -1,13 +1,17 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
-    IN inAmount              TFloat    , -- Количество
-    IN inSumm                TFloat    , -- Сумма на карточку (БН)
+    IN inSummService         TFloat    , -- Сумма начислено
+    IN inSummCard            TFloat    , -- Сумма на карточку (БН)
+    IN inSummMinus           TFloat    , -- Сумма удержания
+    IN inSummAdd             TFloat    , -- Сумма премия
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -28,8 +32,10 @@ BEGIN
      FROM lpInsertUpdate_MovementItem_PersonalService (ioId      := ioId
                                           , inMovementId         := inMovementId
                                           , inPersonalId         := inPersonalId
-                                          , inAmount             := inAmount
-                                          , inSumm               := inSumm
+                                          , inSummService        := inSummService
+                                          , inSummCard           := inSummCard
+                                          , inSummMinus          := inSummMinus
+                                          , inSummAdd            := inSummAdd
                                           , inComment            := inComment
                                           , inInfoMoneyId        := inInfoMoneyId
                                           , inUnitId             := inUnitId
@@ -49,4 +55,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_PersonalService (ioId:= 0, inMovementId:= 258038 , inPersonalId:= 8473, inAmount:= 44, inSumm:= 20, inComment:= 'inComment', inInfoMoneyId:= 8994, inUnitId:= 8426, inPositionId:=12431, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_PersonalService (ioId:= 0, inMovementId:= 258038 , inPersonalId:= 8473, inAmount:= 44, inSummService:= 20, inComment:= 'inComment', inInfoMoneyId:= 8994, inUnitId:= 8426, inPositionId:=12431, inSession:= '2')

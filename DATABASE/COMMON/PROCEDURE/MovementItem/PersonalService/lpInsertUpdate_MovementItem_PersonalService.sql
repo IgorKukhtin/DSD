@@ -1,13 +1,16 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
-    IN inAmount              TFloat    , -- сумма
-    IN inSumm                TFloat    , -- Сумма на карточку (БН)
+    IN inSummService         TFloat    , -- Сумма начислено
+    IN inSummCard            TFloat    , -- Сумма на карточку (БН)
+    IN inSummMinus           TFloat    , -- Сумма удержания
+    IN inSummAdd             TFloat    , -- Сумма премия
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -17,16 +20,26 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbAmount TFloat;
 BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-
+     
+     -- рассчитываем сумму к выплате
+     vbAmount:= inSummService - inSummMinus + inSummAdd;
+     
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, vbAmount, NULL);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), ioId, inSummCard);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

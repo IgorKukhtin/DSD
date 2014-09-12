@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSumm TFloat
+             , TotalSumm TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , Comment TVarChar
               )
 
@@ -42,7 +42,11 @@ BEGIN
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
            , Date_ServiceDate.ValueData         AS ServiceDate 
-           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSummService .ValueData  AS TotalSummService 
+           , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
+           , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
+           , MovementFloat_TotalSummAdd.ValueData       AS TotalSumm
            , MovementString_Comment.ValueData   AS Comment
 
 
@@ -64,6 +68,22 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummService
+                                    ON MovementFloat_TotalSummService.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummService.DescId = zc_MovementFloat_TotalSummService()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
+                                    ON MovementFloat_TotalSummCard.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinus
+                                    ON MovementFloat_TotalSummMinus.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMinus.DescId = zc_MovementFloat_TotalSummMinus()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
+                                    ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id

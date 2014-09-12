@@ -22,7 +22,6 @@ type
     colPositionName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -35,13 +34,16 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    coSumm: TcxGridDBColumn;
+    coSummCard: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     deServiceDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel12: TcxLabel;
+    colSummService: TcxGridDBColumn;
+    colSummMinus: TcxGridDBColumn;
+    colSummAdd: TcxGridDBColumn;
   private
     { Private declarations }
   public

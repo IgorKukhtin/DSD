@@ -51,7 +51,7 @@ BEGIN
            , Movement.OperDate                  AS OperDate
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
-           , Date_ServiceDate.ValueData         AS ServiceDate 
+           , COALESCE (Date_ServiceDate.ValueData, vbServiceDate) AS ServiceDate 
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
            , MovementString_Comment.ValueData   AS Comment
 

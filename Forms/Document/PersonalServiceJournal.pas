@@ -41,6 +41,10 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    colTotalSummService: TcxGridDBColumn;
+    colTotalSummCard: TcxGridDBColumn;
+    colTotalSummMinus: TcxGridDBColumn;
+    colTotalSummAdd: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,5 +1,6 @@
 -- Function: gpSelect_MovementItem_PersonalService()
 
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
@@ -9,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalName TVarChar, INN TVarChar
-             , Amount TFloat, Summ TFloat
+             , Amount TFloat, SummService TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat
              , Comment TVarChar
              , InfoMoneyId Integer, InfoMoneyName  TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -45,7 +46,11 @@ BEGIN
            , Object_Personal.ValueData           AS PersonalName
            , ObjectString_Member_INN.ValueData   AS INN
            , PersonalData.Amount
-           , PersonalData.Summ
+           , PersonalData.SummService
+           , PersonalData.SummCard
+           , PersonalData.SummMinus
+           , PersonalData.SummAdd
+           
            , PersonalData.Comment
           
            , COALESCE (Object_InfoMoney_View.InfoMoneyId, vbInfoMoneyId) AS InfoMoneyId      
@@ -55,13 +60,16 @@ BEGIN
            , Object_Unit.ValueData                AS UnitName
            , Object_Position.Id                   AS PositionId
            , Object_Position.ValueData            AS PositionName
-           , Object_Personal.isErased
+           , PersonalData.isErased
          
      FROM 
         (SELECT
              Personal_Movement.Id
            , Personal_Movement.Amount 
-           , Personal_Movement.Summ 
+           , Personal_Movement.SummService 
+           , Personal_Movement.SummCard 
+           , Personal_Movement.SummMinus 
+           , Personal_Movement.SummAdd 
            , Personal_Movement.Comment
            , Personal_Movement.InfoMoneyId
          
@@ -75,7 +83,10 @@ BEGIN
              SELECT
              MovementItem.Id
            , MovementItem.Amount 
-           , MIFloat_Summ.ValueData AS Summ
+           , MIFloat_SummService.ValueData   AS SummService
+           , MIFloat_SummCard.ValueData      AS SummCard
+           , MIFloat_SummMinus.ValueData     AS SummMinus
+           , MIFloat_SummAdd.ValueData       AS SummAdd
            , MovementItem.ObjectId           AS PersonalId
  
            , MILinkObject_Position.ObjectId  AS PositionId
@@ -103,9 +114,21 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
-            LEFT JOIN MovementItemFloat AS MIFloat_Summ 
-                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummService 
+                                        ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                       
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                        ON MIFloat_SummCard.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                        ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
                                         
        WHERE Movement.Id = inMovementId
          --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -146,7 +169,10 @@ BEGIN
            , Object_Personal.ValueData           AS PersonalName
            , ObjectString_Member_INN.ValueData   AS INN
            , MovementItem.Amount 
-           , MIFloat_Summ.ValueData              AS Summ
+           , MIFloat_SummService.ValueData       AS SummService
+           , MIFloat_SummCard.ValueData          AS SummCard
+           , MIFloat_SummMinus.ValueData         AS SummMinus
+           , MIFloat_SummAdd.ValueData           AS SummAdd
            , MIString_Comment.ValueData          AS Comment
 
           , COALESCE (Object_InfoMoney_View.InfoMoneyId, vbInfoMoneyId)             AS InfoMoneyId      
@@ -172,8 +198,8 @@ BEGIN
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId 
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                        ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId 
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
@@ -185,21 +211,32 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
-            LEFT JOIN MovementItemFloat AS MIFloat_Summ 
-                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummService 
+                                        ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
                                        
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                  ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id  
-                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                        ON MIFloat_SummCard.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                        ON MIFloat_SummMinus.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                       
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                 ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id  
+                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
              LEFT JOIN ObjectString AS ObjectString_Member_INN
                                     ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                    AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
        WHERE Movement.Id = inMovementId
 
-
-            ;
+       ;
 
      END IF;
 
