@@ -51,22 +51,24 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
           OnColumnHeaderClick = nil
           OnCustomDrawColumnHeader = nil
           inherited colStatus: TcxGridDBColumn
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 89
+            Width = 35
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 56
+            Width = 45
           end
           object clServiceDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'mmmm yyyy'
@@ -74,17 +76,18 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 60
           end
           object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
+            Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 85
+            Options.Editing = False
+            Width = 55
           end
           object colPersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1060#1048#1054')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -112,6 +115,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
           object clPaidKind: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -119,7 +123,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
             Width = 81
           end
           object clInfoMoney: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
@@ -165,12 +169,13 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4
-      Width = 86
+      Width = 201
     end
     object cxLabel4: TcxLabel
       Left = 589
       Top = 6
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      Visible = False
     end
     object cePaidKind: TcxButtonEdit
       Left = 667
@@ -182,6 +187,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
+      Visible = False
       Width = 57
     end
     object cxLabel5: TcxLabel
@@ -204,6 +210,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
       Left = 381
       Top = 5
       Caption = #1084#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      State = cbsChecked
       TabOrder = 9
       Width = 116
     end
@@ -225,6 +232,9 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
     Style.IsFontAssigned = True
     TabOrder = 6
     Width = 163
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 242
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -248,7 +258,14 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
+    Top = 242
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -352,8 +369,12 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
       DataSource = MasterDS
     end
   end
+  inherited MasterDS: TDataSource
+    Top = 118
+  end
   inherited MasterCDS: TClientDataSet
     AfterInsert = nil
+    Top = 118
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService'
@@ -381,7 +402,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
       end
       item
         Name = 'inisServiceDate'
-        Value = 'False'
+        Value = 'True'
         Component = inServDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -415,8 +436,10 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    Top = 118
   end
   inherited BarManager: TdxBarManager
+    Top = 118
     DockControlHeights = (
       0
       0
@@ -447,6 +470,12 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
       item
         Component = inServDate
       end>
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    Top = 159
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    Top = 191
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -604,7 +633,7 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
         DataType = ftString
       end>
     Left = 672
-    Top = 65533
+    Top = 21
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalService'

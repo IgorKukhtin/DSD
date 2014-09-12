@@ -26,7 +26,7 @@ BEGIN
            , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate)            AS StartDate
            , Object_Bank.ValueData                                                          AS BankName
            , Object_Bank.Id                                                                 AS BankId
-           , COALESCE(ObjectHistoryString_JuridicalDetails_FullName.ValueData, inFullName)  AS FullName
+           , COALESCE(ObjectHistoryString_JuridicalDetails_FullName.ValueData, CASE WHEN inJuridicalId = 0 THEN 'ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ Фізична особа підприємець' ELSE inFullName END) :: TVarChar AS FullName
            , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData                AS JuridicalAddress
            , COALESCE(ObjectHistoryString_JuridicalDetails_OKPO.ValueData, inOKPO)          AS OKPO
            , ObjectHistoryString_JuridicalDetails_INN.ValueData                             AS INN

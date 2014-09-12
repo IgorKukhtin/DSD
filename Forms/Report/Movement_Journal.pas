@@ -47,6 +47,7 @@ type
     BranchGuides: TdsdGuides;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

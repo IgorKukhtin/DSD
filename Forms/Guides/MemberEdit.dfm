@@ -1,7 +1,7 @@
 ﻿object MemberEditForm: TMemberEditForm
   Left = 0
   Top = 0
-  Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 322
   ClientWidth = 339
   Color = clBtnFace
@@ -18,13 +18,13 @@
   TextHeight = 13
   object edMeasureName: TcxTextEdit
     Left = 32
-    Top = 86
+    Top = 77
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 32
-    Top = 63
+    Top = 54
     Caption = #1060#1048#1054
   end
   object cxButton1: TcxButton
@@ -50,12 +50,12 @@
   end
   object Код: TcxLabel
     Left = 32
-    Top = 19
+    Top = 4
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
     Left = 32
-    Top = 42
+    Top = 27
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -63,36 +63,44 @@
   end
   object ceINN: TcxTextEdit
     Left = 32
-    Top = 136
+    Top = 153
     TabOrder = 6
     Width = 273
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 113
+    Top = 134
     Caption = #1048#1053#1053
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 163
+    Top = 182
     Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
   end
   object cxLabel4: TcxLabel
     Left = 32
-    Top = 213
+    Top = 230
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceDriverCertificate: TcxTextEdit
     Left = 32
-    Top = 186
+    Top = 205
     TabOrder = 10
     Width = 273
   end
   object ceComment: TcxTextEdit
     Left = 32
-    Top = 236
+    Top = 253
     TabOrder = 11
     Width = 273
+  end
+  object cbOfficial: TcxCheckBox
+    Left = 32
+    Top = 108
+    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    TabOrder = 12
+    Width = 141
   end
   object ActionList: TActionList
     Left = 256
@@ -147,6 +155,13 @@
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsOfficial'
+        Value = 'False'
+        Component = cbOfficial
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -205,6 +220,12 @@
         Value = ''
         Component = edMeasureName
         DataType = ftString
+      end
+      item
+        Name = 'IsOfficial'
+        Value = 'False'
+        Component = cbOfficial
+        DataType = ftBoolean
       end
       item
         Name = 'INN'

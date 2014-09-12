@@ -30,7 +30,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , 0 ::Integer  AS Code -- lfGet_ObjectCode(0, zc_Object_Juridical())
-           , inName                 AS NAME
+           --, inName                 AS NAME
+           , '' ::TVarChar          AS NAME
            
            , CAST ('' as TVarChar)    AS GLNCode
            , CAST (false as Boolean)  AS isCorporate

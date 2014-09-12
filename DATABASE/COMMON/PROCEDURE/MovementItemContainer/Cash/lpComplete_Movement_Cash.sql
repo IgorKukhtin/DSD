@@ -140,7 +140,11 @@ BEGIN
                -- Бизнес Баланс: всегда из кассы
              , _tmpItem.BusinessId_Balance
                -- Бизнес ОПиУ: ObjectLink_Unit_Business
-             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+             , CASE WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21502() -- Общефирменные + Маркетинг + Бонусы за мясное сырье
+                              -- криво захардкодил
+                         THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Business() AND Object.ObjectCode = 2) -- Мясо
+                    ELSE COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)
+               END AS BusinessId_ProfitLoss
 
                -- Главное Юр.лицо всегда из кассы
              , _tmpItem.JuridicalId_Basis

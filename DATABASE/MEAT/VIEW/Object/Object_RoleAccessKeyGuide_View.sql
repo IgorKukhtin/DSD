@@ -72,6 +72,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                ELSE 0
           END AS BranchId
 
+        , lfSelect_Object_Unit_byProfitLossDirection.UnitId AS UnitId_PersonalService
+
    FROM (SELECT UserId
               , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_GuideDnepr()
                                              , zc_Enum_Process_AccessKey_GuideKiev()
@@ -84,9 +86,44 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                THEN AccessKeyId
                           ELSE 0
                      END) AS AccessKeyId_Guide
-         FROM Object_RoleAccessKey_View 
+              , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_PersonalServiceProduction()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceSbit()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceMarketing()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceSB()
+                                              )
+                               THEN AccessKeyId
+                          ELSE 0
+                     END) AS AccessKeyId_PersonalService
+         FROM Object_RoleAccessKey_View
+         WHERE AccessKeyId <> 0
          GROUP BY UserId
-        ) AS tmpAccessKey;
+        ) AS tmpAccessKey
+              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect_Object_Unit_byProfitLossDirection
+                                                                     ON (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceProduction()
+                                                                     AND ProfitLossDirectionCode IN (20100 -- Общепроизводственные расходы + Содержание производства
+                                                                                                   , 20200 -- Общепроизводственные расходы + Содержание складов
+                                                                                                   , 20300 -- Общепроизводственные расходы + Содержание транспорта
+                                                                                                   , 20400 -- Общепроизводственные расходы + Содержание Кухни
+                                                                                                   , 30200 -- Административные расходы + Содержание транспорта
+                                                                                                    ))
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                                                                     AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ
+                                                                                                   , 30200 -- Административные расходы + Содержание транспорта
+                                                                                                    ))
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit()
+                                                                     AND UnitCode NOT IN (23010) -- Отдел Маркетинга
+                                                                     AND ProfitLossDirectionCode IN (40300 -- Расходы на сбыт + Общефирменные
+                                                                                                    ))
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceMarketing()
+                                                                     AND UnitCode IN (23010) -- Отдел Маркетинга
+                                                                     AND ProfitLossDirectionCode IN (40300 -- Расходы на сбыт + Общефирменные
+                                                                                                    ))
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSB()
+                                                                     AND UnitCode IN (13000, 13010) -- Охрана + Служба безопастности
+                                                                     AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ
+                                                                                                    ))
+           ;
 
 ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
 

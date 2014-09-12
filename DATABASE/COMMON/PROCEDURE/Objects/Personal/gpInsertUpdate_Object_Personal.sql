@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Object_Personal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
@@ -12,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inPersonalGroupId     Integer   , -- Группировки Сотрудников
     IN inDateIn              TDateTime , -- Дата принятия
     IN inDateOut             TDateTime , -- Дата увольнения
-    IN inOfficial            Boolean   , -- Оформлен официально
+    IN inIsDateOut           Boolean   , -- Уволен
+    IN inIsMain              Boolean   , -- Основное место работы
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -79,10 +79,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalGroup(), ioId, inPersonalGroupId);
    -- сохранили свойство <Дата принятия>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
+
    -- сохранили свойство <Дата увольнения>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
-   -- сохранили свойство <Оформлен официально>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Personal_Official(), ioId, inOfficial);
+   IF inIsDateOut = TRUE
+   THEN
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
+   ELSE
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, zc_DateEnd());
+   END IF;
+   -- сохранили свойство <Основное место работы>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Personal_Main(), ioId, inIsMain);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -90,12 +97,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.09.14                                        * add inIsDateOut and inIsOfficial
  21.05.14                        * add inOfficial
  14.12.13                                        * add inAccessKeyId берем по другому
  08.12.13                                        * add inAccessKeyId берем у <Физические лица>

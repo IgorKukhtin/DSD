@@ -324,8 +324,6 @@ BEGIN
                                                                             , inObjectId_5        := _tmpItem.PositionId
                                                                             , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
                                                                             , inObjectId_6        := _tmpItem.ServiceDateId
-                                                                            , inDescId_7          := zc_ContainerLinkObject_PaidKind()
-                                                                            , inObjectId_7        := _tmpItem.PaidKindId
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- ћ€сное сырье

@@ -61,6 +61,9 @@ type
     clComment: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    clIsOfficial: TcxGridDBColumn;
   private
     { Private declarations }
   public

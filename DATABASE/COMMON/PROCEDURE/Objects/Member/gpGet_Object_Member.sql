@@ -1,18 +1,18 @@
-п»ї-- Function: gpGet_Object_Member (Integer,TVarChar)
+-- Function: gpGet_Object_Member (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_Member (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Member (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Member(
-    IN inId          Integer,        -- Р¤РёР·РёС‡РµСЃРєРёРµ Р»РёС†Р° 
-    IN inSession     TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,        -- Физические лица 
+    IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
             , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
-            , isErased boolean) AS
+            , isOfficial Boolean) AS
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Member());
 
    IF COALESCE (inId, 0) = 0
@@ -27,7 +27,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Comment
            
-           , CAST (NULL AS Boolean) AS isErased;
+           , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
      SELECT 
@@ -38,10 +38,13 @@ BEGIN
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Comment.ValueData           AS Comment
-         
-         , Object_Member.isErased  AS isErased
-         
-     FROM OBJECT AS Object_Member
+
+         , ObjectBoolean_Official.ValueData         AS isOfficial
+
+     FROM Object AS Object_Member
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                  ON ObjectBoolean_Official.ObjectId = Object_Member.Id
+                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
           LEFT JOIN ObjectString AS ObjectString_INN ON ObjectString_INN.ObjectId = Object_Member.Id 
                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
  
@@ -59,17 +62,18 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Member(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Member (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 01.10.13         *  add DriverCertificate, Comment                            
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.09.14                                        * add isOfficial
+ 01.10.13         * add DriverCertificate, Comment             
  01.07.13         *
  19.07.13                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Member('2')

@@ -13,7 +13,7 @@ BEGIN
      -- Выбираем данные
      RETURN QUERY 
        SELECT
-             ''::TVarChar AS ClearFullName
+             '' :: TVarChar AS ClearFullName
            , ''::TVarChar AS ClearOKPO;
 
 END;

@@ -30,16 +30,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
    DECLARE vbInfoMoneyName_all TVarChar;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользовател€ на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- расчет - 1-ое число мес€ца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
      
@@ -51,8 +51,10 @@ BEGIN
 
 
      RETURN QUERY 
-SELECT 
-             PersonalData.Id
+     WITH tmpRoleAccessKey AS (SELECT * FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId)
+        , tmpRoleAccessKeyAll AS (SELECT MAX (UserId) AS UserId FROM tmpRoleAccessKey)
+
+      SELECT PersonalData.Id
            , PersonalData.InvNumber
            , PersonalData.OperDate
            , Object_Status.ObjectCode            AS StatusCode
@@ -130,17 +132,26 @@ FROM
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
+            LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.UnitId_PersonalService = MILinkObject_Unit.ObjectId
+            LEFT JOIN tmpRoleAccessKeyAll ON tmpRoleAccessKeyAll.UserId = vbUserId
+
        WHERE Movement.DescId = zc_Movement_PersonalService()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND (MILinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
          AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+         AND (tmpRoleAccessKey.UnitId_PersonalService <> 0 OR tmpRoleAccessKeyAll.UserId IS NULL)
+
          AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
           ) AS Personal_Movement 
            FULL JOIN 
-            (SELECT * FROM Object_Personal_View
-              WHERE /*((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
+            (SELECT Object_Personal_View.*
+             FROM Object_Personal_View
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.UnitId_PersonalService = Object_Personal_View.UnitId
+                  LEFT JOIN tmpRoleAccessKeyAll ON tmpRoleAccessKeyAll.UserId = vbUserId
+             WHERE /*((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
                        OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm()))
-                   AND */(Object_Personal_View.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+                   AND */ (Object_Personal_View.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+                      AND (tmpRoleAccessKey.UnitId_PersonalService <> 0 OR tmpRoleAccessKeyAll.UserId IS NULL)
          ) AS Object_Personal_View
 
        ON Object_Personal_View.Personalid = Personal_Movement.PersonalId

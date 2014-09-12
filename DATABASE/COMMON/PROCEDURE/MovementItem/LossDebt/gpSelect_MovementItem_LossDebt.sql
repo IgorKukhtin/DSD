@@ -46,7 +46,7 @@ BEGIN
 
             , View_Contract.ContractId
             , View_Contract.InvNumber AS ContractName
-            , View_Contract_InvNumber.ContractTagName
+            , View_Contract.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName

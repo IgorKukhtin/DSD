@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 306
-  ClientWidth = 346
+  ClientHeight = 334
+  ClientWidth = 331
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 72
-    Top = 262
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 176
-    Top = 262
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -57,7 +57,7 @@
     Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
   end
   object cxLabel2: TcxLabel
-    Left = 136
+    Left = 130
     Top = 211
     Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
@@ -118,15 +118,15 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 4
-    Width = 100
+    Width = 92
   end
   object edDateOut: TcxDateEdit
-    Left = 136
+    Left = 130
     Top = 231
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 5
-    Width = 100
+    Width = 92
   end
   object cePersonalGroup: TcxButtonEdit
     Left = 16
@@ -162,17 +162,25 @@
     TabOrder = 17
     Width = 305
   end
-  object cbOfficial: TcxCheckBox
-    Left = 240
+  object cbDateOut: TcxCheckBox
+    Left = 233
     Top = 231
     Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-    Caption = #1054#1092#1086#1088#1084#1083#1077#1085
+    Caption = #1059#1074#1086#1083#1077#1085
     TabOrder = 18
-    Width = 81
+    Width = 79
+  end
+  object cbMain: TcxCheckBox
+    Left = 18
+    Top = 259
+    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
+    TabOrder = 19
+    Width = 186
   end
   object ActionList: TActionList
-    Left = 72
-    Top = 216
+    Left = 64
+    Top = 272
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -264,9 +272,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inOfficial'
+        Name = 'inIsDateOut'
         Value = 'False'
-        Component = cbOfficial
+        Component = cbDateOut
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsMain'
+        Value = 'False'
+        Component = cbMain
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -378,9 +393,15 @@
         DataType = ftDateTime
       end
       item
-        Name = 'Official'
+        Name = 'IsDateOut'
         Value = 'False'
-        Component = cbOfficial
+        Component = cbDateOut
+        DataType = ftBoolean
+      end
+      item
+        Name = 'IsMain'
+        Value = 'False'
+        Component = cbMain
         DataType = ftBoolean
       end>
     Left = 96
@@ -398,12 +419,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 24
-    Top = 216
+    Left = 16
+    Top = 272
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 120
-    Top = 216
+    Left = 112
+    Top = 272
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

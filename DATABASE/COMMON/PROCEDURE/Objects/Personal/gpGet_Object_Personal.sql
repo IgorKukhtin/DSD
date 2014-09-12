@@ -11,7 +11,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionLevelId Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
-               DateIn TDateTime, DateOut TDateTime, Official Boolean) AS
+               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
 $BODY$
 BEGIN
 
@@ -40,7 +40,8 @@ BEGIN
 
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
-           , True AS Official;
+           , FALSE AS isDateOut
+           , TRUE  AS isMain;
    ELSE
      RETURN QUERY 
      SELECT 
@@ -61,9 +62,13 @@ BEGIN
          , Object_Personal_View.PersonalGroupName
  
          , Object_Personal_View.DateIn
-         , Object_Personal_View.DateOut
-         , Object_Personal_View.Official
-     FROM Object_Personal_View
+         -- , Object_Personal_View.DateOut
+         , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
+
+         , Object_Personal_View.isDateOut
+         , Object_Personal_View.isMain
+
+    FROM Object_Personal_View
     WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
@@ -71,12 +76,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Personal (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.09.14                                        * add isDateOut and isOfficial
  21.05.14                         * add Official
  21.11.13                                         * add PositionLevel...
  28.10.13                         * return memberid

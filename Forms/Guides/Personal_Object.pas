@@ -53,6 +53,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPersonalGroupName: TcxGridDBColumn;
     clPositionLevelName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
   private
     { Private declarations }
   public

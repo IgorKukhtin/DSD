@@ -3,7 +3,6 @@ inherited MovementJournalForm: TMovementJournalForm
   ClientHeight = 396
   ClientWidth = 1164
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -52
   ExplicitWidth = 1180
   ExplicitHeight = 431
   PixelsPerInch = 96
@@ -14,19 +13,19 @@ inherited MovementJournalForm: TMovementJournalForm
     Height = 316
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1024
+    ExplicitWidth = 1164
     ExplicitHeight = 316
     ClientRectBottom = 316
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 1024
+      ExplicitWidth = 1164
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1164
         Height = 316
-        ExplicitWidth = 1024
+        ExplicitWidth = 1164
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -266,6 +265,13 @@ inherited MovementJournalForm: TMovementJournalForm
             Options.Editing = False
             Width = 70
           end
+          object colComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
@@ -282,7 +288,7 @@ inherited MovementJournalForm: TMovementJournalForm
   inherited Panel: TPanel
     Width = 1164
     Height = 54
-    ExplicitWidth = 1024
+    ExplicitWidth = 1164
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118

@@ -1,9 +1,13 @@
 -- Function: gpSelect_Object_Personal (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Personal (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inStartDate   TDateTime , --
+    IN inEndDate     TDateTime , --
+    IN inIsPeriod    Boolean   , --
+    IN inIsShowAll   Boolean,    --
+    IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
@@ -11,7 +15,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
-               DateIn TDateTime, DateOut TDateTime, Official Boolean, isErased Boolean) AS
+               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -61,26 +65,41 @@ BEGIN
          , vbInfoMoneyName_all AS InfoMoneyName_all
  
          , Object_Personal_View.DateIn
-         , Object_Personal_View.DateOut
-         , Object_Personal_View.Official
+         , Object_Personal_View.DateOut_user AS DateOut
+         , Object_Personal_View.isDateOut
+         , Object_Personal_View.isMain
+         , Object_Personal_View.isOfficial
          
          , Object_Personal_View.isErased
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
-     WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL
-        OR vbAccessKeyAll = TRUE
-        OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
+     WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
+         OR vbAccessKeyAll = TRUE
+         OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
+           )
+       AND (Object_Personal_View.isErased = FALSE
+            OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
+           )
+       AND (inIsPeriod = FALSE
+            OR (inIsPeriod = TRUE AND ((Object_Personal_View.DateIn BETWEEN inStartDate AND inEndDate)
+                                    OR (Object_Personal_View.DateOut BETWEEN inStartDate AND inEndDate)
+                                    OR (Object_Personal_View.DateIn < inStartDate
+                                    AND Object_Personal_View.DateOut > inEndDate)
+                                      )
+               )
+           )
     ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.09.13                                        * add inIsShowAll
  30.08.14                                        * add InfoMoney...
  11.08.14                                        * add 8429 -- Отдел логистики
  21.05.14                         * add Official
@@ -95,8 +114,16 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
  01.07.13         *              
 */
 /*
+-- доступ
 UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, (SELECT zc_Enum_Process_AccessKey_TrasportDnepr() WHERE EXISTS (SELECT 1 FROM ObjectLink as ObjectLink_ch WHERE ObjectLink_ch.DescId = zc_ObjectLink_Car_Unit() AND ObjectLink_ch.ChildObjectId = ObjectLink.ChildObjectId)))
 FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Personal_Unit() AND Object.DescId = zc_Object_Personal();
+-- синхронизируем удаленных
+update object set  isErased =  TRUE
+where id in (select PersonalId 
+FROM Object_Personal_View
+     left join Object on Object.Id = Object_Personal_View.MemberId
+WHERE Object_Personal_View.isErased <> COALESCE (Object.isErased, TRUE)
+    and COALESCE (Object.isErased, TRUE) = TRUE);
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Personal (zfCalc_UserAdmin())
