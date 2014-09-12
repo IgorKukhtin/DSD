@@ -27,8 +27,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 678
-    ExplicitHeight = 356
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,6 +79,7 @@ object MemberForm: TMemberForm
         DataBinding.FieldName = 'isOfficial'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clComment: TcxGridDBColumn
@@ -181,6 +180,10 @@ object MemberForm: TMemberForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'bbOfficial'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -258,11 +261,8 @@ object MemberForm: TMemberForm
       Category = 0
     end
     object bbOfficial: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Action = actOfficial
       Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
-      Visible = ivAlways
-      ImageIndex = 58
     end
   end
   object ActionList: TActionList
@@ -420,6 +420,18 @@ object MemberForm: TMemberForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actOfficial: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spOfficial
+      StoredProcList = <
+        item
+          StoredProc = spOfficial
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -539,5 +551,26 @@ object MemberForm: TMemberForm
       end>
     Left = 560
     Top = 152
+  end
+  object spOfficial: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Member_isOfficial'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsOfficial'
+        Component = ClientDataSet
+        ComponentItem = 'IsOfficial'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 232
+    Top = 379
   end
 end

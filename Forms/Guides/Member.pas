@@ -65,6 +65,8 @@ type
     bbShowAll: TdxBarButton;
     clIsOfficial: TcxGridDBColumn;
     bbOfficial: TdxBarButton;
+    spOfficial: TdsdStoredProc;
+    actOfficial: TdsdExecStoredProc;
   private
     { Private declarations }
   public
