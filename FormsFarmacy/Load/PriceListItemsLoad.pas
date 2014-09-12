@@ -33,7 +33,6 @@ type
     spGet: TdsdStoredProc;
     GuidesFrom: TdsdGuides;
     actUpdate: TdsdUpdateDataSet;
-    spUpdate: TdsdStoredProc;
     spUpdatePriceListItem: TdsdStoredProc;
   private
     { Private declarations }

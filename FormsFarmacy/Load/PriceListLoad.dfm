@@ -29,18 +29,24 @@ inherited PriceListLoadForm: TPriceListLoadForm
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 131
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 403
+            Width = 368
           end
-          object col: TcxGridDBColumn
+          object colNDSinPrice: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'NDSinPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 84
           end
         end
       end
@@ -51,6 +57,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100
+      ShortCut = 13
       ImageIndex = 1
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
@@ -64,6 +71,16 @@ inherited PriceListLoadForm: TPriceListLoadForm
       isShowModal = False
       ActionType = acUpdate
       IdFieldName = 'Id'
+    end
+    object actLoadPriceList: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spLoadPriceList
+      StoredProcList = <
+        item
+          StoredProc = spLoadPriceList
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
     end
   end
   inherited MasterDS: TDataSource
@@ -108,11 +125,39 @@ inherited PriceListLoadForm: TPriceListLoadForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoadPriceList'
         end>
     end
     object bbOpen: TdxBarButton
       Action = actOpenPriceList
       Category = 0
     end
+    object bbLoadPriceList: TdxBarButton
+      Action = actLoadPriceList
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenPriceList
+      end>
+  end
+  object spLoadPriceList: TdsdStoredProc
+    StoredProcName = 'gpLoadPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 216
+    Top = 152
   end
 end

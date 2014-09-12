@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Integer, Integer, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Integer, Integer, TVarchar, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettingsItems(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
     IN inName                    TVarChar  ,    -- Значение параметра
     IN inImportSettingsId        Integer   ,    -- ссылка на настройки импорта
     IN inImportTypeItemsId       Integer   ,    -- ссылка на параметры
+    IN inDefaultValue            TVarChar  ,    -- Значение параметра по умолчанию
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -26,19 +28,22 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettingsItems_ImportSettings(), ioId, inImportSettingsId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettingsItems_ImportTypeItems(), ioId, inImportTypeItemsId);
+
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportSettingsItems_DefaultValue(), ioId, inDefaultValue);
      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Integer, Integer, TVarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Integer, Integer, TVarchar, TVarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.09.14                         * 
  03.07.14         * 
 
 */
