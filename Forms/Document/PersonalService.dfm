@@ -9,21 +9,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited PageControl: TcxPageControl
     Width = 1064
     Height = 582
-    ExplicitTop = 126
+    ExplicitTop = 86
     ExplicitWidth = 1064
-    ExplicitHeight = 542
+    ExplicitHeight = 582
     ClientRectBottom = 582
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
       ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitHeight = 558
       inherited cxGrid: TcxGrid
         Width = 1064
         Height = 558
         ExplicitWidth = 1064
-        ExplicitHeight = 518
+        ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
