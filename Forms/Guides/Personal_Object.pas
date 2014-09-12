@@ -4,24 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
-  dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
-  cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm,
+  DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
+  cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB,
+  cxDBData, cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems,
+  dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
+  cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod;
 
 type
   TPersonal_ObjectForm = class(TParentForm)
@@ -53,7 +44,21 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPersonalGroupName: TcxGridDBColumn;
     clPositionLevelName: TcxGridDBColumn;
+    clIsOfficial: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    cbPeriod: TcxCheckBox;
+    deStart: TcxDateEdit;
+    cxlEnd: TcxLabel;
+    deEnd: TcxDateEdit;
+    clIsDateOut: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    clIsMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

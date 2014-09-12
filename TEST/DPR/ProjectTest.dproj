@@ -321,8 +321,8 @@
 				<Form>AssetGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
-				<Form>PersonalForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
+				<Form>Personal_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
@@ -702,10 +702,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
 				<Form>AncestorGuidesForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
-				<Form>Personal_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
@@ -1558,6 +1554,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
 				<Form>PersonalServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
+				<Form>PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

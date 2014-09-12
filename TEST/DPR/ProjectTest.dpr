@@ -128,7 +128,7 @@ uses
   Position in '..\..\Forms\Guides\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\Guides\PositionEdit.pas' {PositionEditForm},
   AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm: TParentForm},
-  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
+  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
@@ -264,7 +264,6 @@ uses
   MoneyPlaceCash_Object in '..\..\Forms\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
-  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
@@ -525,7 +524,8 @@ uses
   PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
