@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
    (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
+   (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -13,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inPackCount           TVarChar  ,  
     IN inProducerName        TVarChar  , 
+    IN inNDSinPrice          Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -27,8 +30,8 @@ BEGIN
    WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date;
 
   IF COALESCE(vbLoadPriceListId, 0) = 0 THEN
-     INSERT INTO LoadPriceList (JuridicalId, OperDate)
-             VALUES(inJuridicalId, Current_Date);
+     INSERT INTO LoadPriceList (JuridicalId, OperDate, NDSinPrice)
+             VALUES(inJuridicalId, Current_Date, inNDSinPrice);
   END IF;
 
   SELECT Id INTO vbLoadPriceListItemsId 

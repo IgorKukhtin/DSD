@@ -1,12 +1,13 @@
 -- Function: gpSelect_Object_ImportSettingsItems()
 
+DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettingsItems(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettingsItems(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettingsItems(
     IN inImportSettingsId Integer, 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, ParamValue TVarChar,
+RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ImportSettingsId Integer,
                ImportTypeItemsId Integer,  
                ParamName TVarChar,
@@ -23,6 +24,7 @@ BEGIN
     SELECT 
        Object_ImportSettingsItems_View.Id,
        Object_ImportSettingsItems_View.ValueData, 
+       Object_ImportSettingsItems_View.DefaultValue, 
        Object_ImportSettings_View.Id AS ImportSettingsId, 
        Object_ImportTypeItems_View.Id,
        Object_ImportTypeItems_View.Name,
@@ -46,9 +48,10 @@ ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.09.14                         *
  03.07.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ImportSettingsItems ('2')
+-- SELECT * FROM gpSelect_Object_ImportSettingsItems (0, '2')

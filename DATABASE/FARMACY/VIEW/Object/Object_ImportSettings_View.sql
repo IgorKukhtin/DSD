@@ -21,6 +21,7 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_ImportType.ValueData  AS ImportTypeName 
            
            , ObjectFloat_StartRow.ValueData::Integer AS StartRow
+           , ObjectBoolean_HDR.ValueData      AS HDR
            , ObjectString_Directory.ValueData AS Directory
            
            , Object_ImportSettings.isErased   AS isErased
@@ -49,6 +50,10 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            LEFT JOIN ObjectString AS ObjectString_ProcedureName 
                                   ON ObjectString_ProcedureName.ObjectId = Object_ImportType.Id
                                  AND ObjectString_ProcedureName.DescId = zc_ObjectString_ImportType_ProcedureName()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_HDR 
+                                   ON ObjectBoolean_HDR.ObjectId = Object_ImportSettings.Id
+                                  AND ObjectBoolean_HDR.DescId = zc_ObjectBoolean_ImportSettings_HDR()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_StartRow 
                                   ON ObjectFloat_StartRow.ObjectId = Object_ImportSettings.Id

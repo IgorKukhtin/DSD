@@ -1,20 +1,24 @@
 inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
-  ClientHeight = 158
+  ClientHeight = 177
   ClientWidth = 676
+  KeyPreview = True
   ExplicitWidth = 684
-  ExplicitHeight = 185
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
+    Style = bmsFlat
     Left = 152
     Top = 56
     DockControlHeights = (
       0
       0
-      26
+      22
       0)
     inherited dxBar: TdxBar
+      BorderStyle = bbsNone
+      Hidden = True
       ItemLinks = <
         item
           Visible = True

@@ -523,7 +523,9 @@ uses
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
   Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
   PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
-  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm};
+  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
+  PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

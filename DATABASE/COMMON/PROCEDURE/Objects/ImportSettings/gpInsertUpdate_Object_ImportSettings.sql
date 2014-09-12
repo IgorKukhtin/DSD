@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ImportSettings()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, TVarChar, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, Boolean, TVarChar, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inFileTypeId              Integer   ,    -- ссылка на 
     IN inImportTypeId            Integer   ,    -- ссылка на  
     IN inStartRow                Tfloat    ,    -- 
+    IN inHDR                     Boolean   ,    -- 
     IN inDirectory               TVarChar  ,    --  
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -46,6 +48,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ImportType(), ioId, inImportTypeId);
    
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ImportSettings_HDR(), ioId, inHDR);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ImportSettings_StartRow(), ioId, inStartRow);
    
    -- сохранили свойство <>
@@ -56,13 +61,14 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, TVarChar, TVarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, Boolean, TVarChar, TVarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.09.14                         * 
  02.07.14         * 
 
 */

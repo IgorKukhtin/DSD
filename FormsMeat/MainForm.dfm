@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1042
-  ExplicitHeight = 209
+  ExplicitWidth = 1034
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1009,6 +1009,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPersonalServiceNew'
+        end
+        item
+          Visible = True
           ItemName = 'bbPersonalServiceProdN'
         end
         item
@@ -1093,6 +1097,7 @@
     end
     object bbPersonalServiceProdN: TdxBarButton
       Action = actPersonalServiceProdN
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'(Old)'
       Category = 0
     end
     object bbPersonalServiceAdminN: TdxBarButton
@@ -1890,6 +1895,10 @@
       Action = actPersonalCash
       Category = 0
     end
+    object bbPersonalServiceNew: TdxBarButton
+      Action = actPersonalServiceNew
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -2072,7 +2081,18 @@
         end>
       isShowModal = False
     end
-    object actCashOperationOld: TdsdOpenForm [9]
+    object actPersonalServiceNew: TdsdOpenForm [9]
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      FormName = 'TPersonalServiceJournalForm'
+      FormNameParam.Value = 'TPersonalServiceJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCashOperationOld: TdsdOpenForm [10]
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' (Integer)'
@@ -2092,7 +2112,7 @@
         end>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm [10]
+    object actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
@@ -2113,7 +2133,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalServiceSbN: TdsdOpenForm [11]
+    object actPersonalServiceSbN: TdsdOpenForm [12]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
@@ -2143,7 +2163,7 @@
         end>
       isShowModal = False
     end
-    object actArticleLoss: TdsdOpenForm [12]
+    object actArticleLoss: TdsdOpenForm [13]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -2154,7 +2174,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceSecurityN: TdsdOpenForm [13]
+    object actPersonalServiceSecurityN: TdsdOpenForm [14]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1093#1088#1072#1085#1072')'
@@ -2184,7 +2204,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalServiceMarketN: TdsdOpenForm [14]
+    object actPersonalServiceMarketN: TdsdOpenForm [15]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072')'
@@ -2214,7 +2234,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Founders: TdsdOpenForm [15]
+    object actReport_Founders: TdsdOpenForm [16]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
@@ -2224,7 +2244,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceAdminN: TdsdOpenForm [16]
+    object actPersonalServiceAdminN: TdsdOpenForm [17]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1072#1076#1084#1080#1085')'
@@ -2254,7 +2274,7 @@
         end>
       isShowModal = False
     end
-    object actFounder: TdsdOpenForm [17]
+    object actFounder: TdsdOpenForm [18]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
@@ -2265,7 +2285,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_BankAccount: TdsdOpenForm [18]
+    object actReport_BankAccount: TdsdOpenForm [19]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
@@ -2275,7 +2295,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Cash: TdsdOpenForm [19]
+    object actReport_Cash: TdsdOpenForm [20]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -2285,7 +2305,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceBN: TdsdOpenForm [20]
+    object actPersonalServiceBN: TdsdOpenForm [21]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1041#1053')'
@@ -2315,7 +2335,7 @@
         end>
       isShowModal = False
     end
-    object actReport_Member: TdsdOpenForm [21]
+    object actReport_Member: TdsdOpenForm [22]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
@@ -4310,914 +4330,5 @@
     StorageType = stStream
     Left = 240
     Top = 56
-  end
-  object frxReport1: TfrxReport
-    Version = '4.12'
-    DotMatrixReport = False
-    IniFile = '\Software\Fast Reports'
-    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
-    PreviewOptions.Zoom = 1.000000000000000000
-    PrintOptions.Printer = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-    PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 41656.828892581000000000
-    ReportOptions.LastChange = 41666.626382175900000000
-    ScriptLanguage = 'PascalScript'
-    ScriptText.Strings = (
-      'var'
-      ''
-      '  JuridicalLine: Integer;'
-      '  SumStartAmount, '
-      '  SumEndAmount,'
-      '  SumOther: real;'
-      '  SumSumStartAmount, '
-      '  SumSumEndAmount,'
-      '  SumSumOther: real;'
-      '      '
-      '    '
-      'procedure GroupHeader1OnBeforePrint(Sender: TfrxComponent);'
-      'begin'
-      
-        '  JuridicalLine := JuridicalLine + 1;                           ' +
-        '  '
-      'end;'
-      ''
-      'procedure GroupFooter1OnBeforePrint(Sender: TfrxComponent);'
-      'begin'
-      
-        '  SumStartAmount := SUM(<frxDBDataset."startamount">, MasterData' +
-        '1, 1);'
-      
-        '  SumEndAmount := SUM(<frxDBDataset."endamount">, MasterData1, 1' +
-        ');'
-      
-        '  SumOther := SUM(<frxDBDataset."othersumm">, MasterData1, 1);  ' +
-        '                   '
-      'end;'
-      ''
-      'procedure ReportSummary1OnBeforePrint(Sender: TfrxComponent);'
-      'begin'
-      
-        '  SumSumStartAmount := SUM(<frxDBDataset."startamount">, MasterD' +
-        'ata1, 1);'
-      
-        '  SumSumEndAmount := SUM(<frxDBDataset."endamount">, MasterData1' +
-        ', 1);'
-      
-        '  SumSumOther := SUM(<frxDBDataset."othersumm">, MasterData1, 1)' +
-        ';                     '
-      'end;'
-      ''
-      'begin'
-      '  JuridicalLine := 0;          '
-      'end.')
-    Left = 360
-    Top = 88
-    Datasets = <
-      item
-      end>
-    Variables = <
-      item
-        Name = 'StartDate'
-        Value = #39'01.01.2014'#39
-      end
-      item
-        Name = 'EndDate'
-        Value = #39'31.12.2014 23:59:00'#39
-      end>
-    Style = <>
-    object Data: TfrxDataPage
-      Height = 1000.000000000000000000
-      Width = 1000.000000000000000000
-    end
-    object Page1: TfrxReportPage
-      Orientation = poLandscape
-      PaperWidth = 297.000000000000000000
-      PaperHeight = 210.000000000000000000
-      PaperSize = 9
-      LeftMargin = 10.001250000000000000
-      RightMargin = 10.001250000000000000
-      TopMargin = 10.001250000000000000
-      BottomMargin = 10.001250000000000000
-      object MasterData1: TfrxMasterData
-        Height = 20.000000000000000000
-        Top = 243.000000000000000000
-        Visible = False
-        Width = 1046.920361175000000000
-        RowCount = 0
-      end
-      object Header1: TfrxHeader
-        Height = 31.000000000000000000
-        Top = 154.000000000000000000
-        Width = 1046.920361175000000000
-        object Memo3: TfrxMemoView
-          Top = 1.000000000000000000
-          Width = 33.000000000000000000
-          Height = 32.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          Memo.UTF8W = (
-            #8470' '#1087'/'#1087)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo4: TfrxMemoView
-          Left = 33.000000000000000000
-          Top = 1.000000000000000000
-          Width = 217.000000000000000000
-          Height = 32.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          Memo.UTF8W = (
-            #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo5: TfrxMemoView
-          Left = 250.000000000000000000
-          Top = 1.000000000000000000
-          Width = 156.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haCenter
-          Memo.UTF8W = (
-            #1044#1086#1083#1075' '#1085#1072#1095'.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo6: TfrxMemoView
-          Left = 406.000000000000000000
-          Top = 1.000000000000000000
-          Width = 156.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haCenter
-          Memo.UTF8W = (
-            #1044#1086#1083#1075' '#1082#1086#1085'.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo7: TfrxMemoView
-          Left = 562.000000000000000000
-          Top = 17.000000000000000000
-          Width = 85.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1055#1088#1086#1076#1072#1085#1086' '#1087#1086#1082#1091#1087'.')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo8: TfrxMemoView
-          Left = 647.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1059#1089#1083#1091#1075#1080)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo9: TfrxMemoView
-          Left = 803.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1055#1088#1080#1093#1086#1076' '#1076#1077#1085#1077#1075)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo10: TfrxMemoView
-          Left = 881.101251180000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1054#1089#1090#1072#1083#1100#1085#1086#1077)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo20: TfrxMemoView
-          Left = 250.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            ' '#1044#1077#1073#1077#1090)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo21: TfrxMemoView
-          Left = 328.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1050#1088#1077#1076#1080#1090)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo23: TfrxMemoView
-          Left = 406.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            ' '#1044#1077#1073#1077#1090)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo24: TfrxMemoView
-          Left = 484.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1050#1088#1077#1076#1080#1090)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo26: TfrxMemoView
-          Left = 562.000000000000000000
-          Top = 1.000000000000000000
-          Width = 241.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haCenter
-          Memo.UTF8W = (
-            #1056#1072#1089#1093#1086#1076)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo27: TfrxMemoView
-          Left = 725.000000000000000000
-          Top = 17.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1054#1089#1090#1072#1083#1100#1085#1086#1077)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo29: TfrxMemoView
-          Left = 803.000000000000000000
-          Top = 1.000000000000000000
-          Width = 156.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haCenter
-          Memo.UTF8W = (
-            #1055#1088#1080#1093#1086#1076)
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-      object ReportTitle1: TfrxReportTitle
-        Height = 46.000000000000000000
-        Top = 16.000000000000000000
-        Width = 1046.920361175000000000
-        object Memo2: TfrxMemoView
-          Align = baWidth
-          Top = 20.000000000000000000
-          Width = 1046.920361175000000000
-          Height = 22.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -16
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          HAlign = haCenter
-          Memo.UTF8W = (
-            #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' '#1089' [StartDate] '#1087#1086' [Copy(<EndDate>, 1, 10)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo13: TfrxMemoView
-          Align = baWidth
-          Top = 1.920361180000000000
-          Width = 1046.920361175000000000
-          Height = 17.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Arial'
-          Font.Style = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' [Date] [Time]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-      object GroupHeader1: TfrxGroupHeader
-        Height = 18.000000000000000000
-        Top = 205.000000000000000000
-        Visible = False
-        Width = 1046.920361175000000000
-        OnBeforePrint = 'GroupHeader1OnBeforePrint'
-        Condition = 'frxDBDataset."juridicalname"'
-      end
-      object GroupFooter1: TfrxGroupFooter
-        Height = 17.000000000000000000
-        Top = 283.000000000000000000
-        Width = 1046.920361175000000000
-        OnBeforePrint = 'GroupFooter1OnBeforePrint'
-        Stretched = True
-        object Memo1: TfrxMemoView
-          Top = 2.000000000000000000
-          Width = 33.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[JuridicalLine]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetjuridicalname: TfrxMemoView
-          Left = 33.000000000000000000
-          Top = 2.000000000000000000
-          Width = 217.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DataField = 'juridicalname'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          Memo.UTF8W = (
-            '[frxDBDataset."juridicalname"]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetstartamount: TfrxMemoView
-          Left = 250.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumStartAmount > 0, SumStartAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetendamount: TfrxMemoView
-          Left = 406.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumEndAmount > 0, SumEndAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetsalesumm: TfrxMemoView
-          Left = 562.000000000000000000
-          Top = 2.000000000000000000
-          Width = 85.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."salesumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetservicesumm: TfrxMemoView
-          Left = 647.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."servicesumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetmoneysumm: TfrxMemoView
-          Left = 803.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."moneysumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object frxDBDatasetothersumm: TfrxMemoView
-          Left = 881.101251180000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumOther > 0, SumOther, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo22: TfrxMemoView
-          Left = 328.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."startamount">,MasterData1,1) < 0, - SumS' +
-              'tartAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo25: TfrxMemoView
-          Left = 484.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."endamount">,MasterData1,1) < 0, - SumEnd' +
-              'Amount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo28: TfrxMemoView
-          Left = 725.000000000000000000
-          Top = 2.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."othersumm">,MasterData1,1) < 0, - SumOth' +
-              'er, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-      object ReportSummary1: TfrxReportSummary
-        Height = 18.000000000000000000
-        Top = 360.000000000000000000
-        Width = 1046.920361175000000000
-        OnBeforePrint = 'ReportSummary1OnBeforePrint'
-        object Memo30: TfrxMemoView
-          Left = 250.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumSumStartAmount > 0, SumSumStartAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo31: TfrxMemoView
-          Left = 406.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumSumEndAmount > 0, SumSumEndAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo32: TfrxMemoView
-          Left = 562.000000000000000000
-          Width = 85.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."salesumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo33: TfrxMemoView
-          Left = 647.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."servicesumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo34: TfrxMemoView
-          Left = 803.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[SUM(<frxDBDataset."moneysumm">,MasterData1,1)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo35: TfrxMemoView
-          Left = 881.101251180000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            '[IIF(SumSumOther > 0, SumSumOther, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo36: TfrxMemoView
-          Left = 328.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."startamount">,MasterData1,1) < 0, - SumS' +
-              'umStartAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo37: TfrxMemoView
-          Left = 484.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."endamount">,MasterData1,1) < 0, - SumSum' +
-              'EndAmount, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo38: TfrxMemoView
-          Left = 725.000000000000000000
-          Width = 78.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          DisplayFormat.FormatStr = '%2.2n'
-          DisplayFormat.Kind = fkNumeric
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              '[IIF(SUM(<frxDBDataset."othersumm">,MasterData1,1) < 0, - SumSum' +
-              'Other, 0)]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-        object Memo14: TfrxMemoView
-          Width = 250.000000000000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          StretchMode = smMaxHeight
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
-          Memo.UTF8W = (
-            #1048#1090#1086#1075#1086':')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-      object PageHeader1: TfrxPageHeader
-        Height = 12.000000000000000000
-        Top = 82.000000000000000000
-        Width = 1046.920361175000000000
-        PrintOnFirstPage = False
-        object Memo12: TfrxMemoView
-          Align = baClient
-          Width = 1046.920361175000000000
-          Height = 12.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -8
-          Font.Name = 'Arial'
-          Font.Style = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            
-              #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' '#1089' [StartDate] '#1087#1086' [EndDate]           '#1074#1088#1077#1084#1103' ' +
-              #1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' [Date] [Time]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-      object PageFooter1: TfrxPageFooter
-        Height = 20.000000000000000000
-        Top = 398.000000000000000000
-        Width = 1046.920361175000000000
-        PrintOnFirstPage = False
-        object Memo11: TfrxMemoView
-          Align = baWidth
-          Top = 3.000000000000000000
-          Width = 1046.920361175000000000
-          Height = 16.000000000000000000
-          ShowHint = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Arial'
-          Font.Style = []
-          HAlign = haRight
-          Memo.UTF8W = (
-            #1057#1090#1088#1072#1085#1080#1094#1072' '#8470' [Page]')
-          ParentFont = False
-          VAlign = vaCenter
-        end
-      end
-    end
   end
 end

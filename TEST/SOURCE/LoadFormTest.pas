@@ -389,6 +389,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceOldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;

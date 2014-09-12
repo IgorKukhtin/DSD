@@ -34,7 +34,6 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }

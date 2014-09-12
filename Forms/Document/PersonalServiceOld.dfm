@@ -3,8 +3,8 @@ inherited PersonalServiceOldForm: TPersonalServiceOldForm
   ClientHeight = 381
   ClientWidth = 1142
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1158
-  ExplicitHeight = 416
+  ExplicitWidth = 1150
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
