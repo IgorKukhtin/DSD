@@ -12,7 +12,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
-  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod;
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, cxButtonEdit;
 
 type
   TPersonalForm = class(TParentForm)
@@ -68,6 +68,12 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     clIsMain: TcxGridDBColumn;
+    spMainWorkPlace: TdsdStoredProc;
+    actMainWorkPlace: TdsdExecStoredProc;
+    bbMainWorkPlace: TdxBarButton;
+    actPositionSelect: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
