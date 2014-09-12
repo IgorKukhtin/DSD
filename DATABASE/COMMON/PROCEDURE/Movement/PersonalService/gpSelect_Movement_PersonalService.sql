@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , Amount TFloat, TotalSumm TFloat
+             , TotalSumm TFloat
              , Comment TVarChar
               )
 
@@ -42,7 +42,6 @@ BEGIN
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
            , Date_ServiceDate.ValueData         AS ServiceDate 
-           , Movement.Amount
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
            , MovementString_Comment.ValueData   AS Comment
 

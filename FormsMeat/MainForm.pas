@@ -412,8 +412,8 @@ type
     bbCashCherkassi: TdxBarButton;
     actPersonalCash: TdsdOpenForm;
     bbPersonalCash: TdxBarButton;
-    actPersonalService: TdsdOpenForm;
-    bbPersonalServiceN: TdxBarButton;
+    actPersonalServiceNew: TdsdOpenForm;
+    bbPersonalServiceNew: TdxBarButton;
   public
     { Public declarations }
   end;

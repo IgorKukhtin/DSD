@@ -73,7 +73,7 @@ BEGIN
           FROM (
  
              SELECT
-             Movement.Id
+             MovementItem.Id
            , MovementItem.Amount 
            , MIFloat_Summ.ValueData AS Summ
            , MovementItem.ObjectId           AS PersonalId
@@ -140,7 +140,7 @@ BEGIN
 
  RETURN QUERY
          SELECT
-             Movement.Id
+             MovementItem.Id
   
            , MovementItem.ObjectId               AS PersonalId
            , Object_Personal.ValueData           AS PersonalName

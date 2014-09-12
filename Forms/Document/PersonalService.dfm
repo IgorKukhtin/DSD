@@ -171,7 +171,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -182,12 +181,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitHeight = 558
       inherited cxGridEntry: TcxGrid
         Width = 1064
         Height = 558
         ExplicitWidth = 1064
-        ExplicitHeight = 518
+        ExplicitHeight = 558
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -661,9 +660,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         DataType = ftDateTime
       end
       item
+        Name = 'Comment'
         Value = ''
+        Component = edComment
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -872,8 +872,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Control = edInvNumber
       end
       item
+        Control = deServiceDate
       end
       item
+        Control = edComment
       end
       item
         Control = edOperDate
@@ -1037,6 +1039,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = deServiceDate
+      end
+      item
+        Component = edComment
       end>
     Left = 512
     Top = 328
