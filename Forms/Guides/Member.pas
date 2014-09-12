@@ -64,6 +64,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     clIsOfficial: TcxGridDBColumn;
+    bbOfficial: TdxBarButton;
   private
     { Private declarations }
   public

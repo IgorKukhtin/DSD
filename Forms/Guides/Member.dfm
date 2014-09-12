@@ -2,8 +2,8 @@ object MemberForm: TMemberForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 384
-  ClientWidth = 678
+  ClientHeight = 520
+  ClientWidth = 665
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,16 @@ object MemberForm: TMemberForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 678
-    Height = 358
+    Top = 28
+    Width = 665
+    Height = 492
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 678
+    ExplicitHeight = 356
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -129,8 +131,8 @@ object MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -148,7 +150,7 @@ object MemberForm: TMemberForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -254,6 +256,13 @@ object MemberForm: TMemberForm
     object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object bbOfficial: TdxBarButton
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Visible = ivAlways
+      ImageIndex = 58
     end
   end
   object ActionList: TActionList
@@ -498,6 +507,13 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsOfficial'
+        Component = ClientDataSet
+        ComponentItem = 'isOfficial'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
