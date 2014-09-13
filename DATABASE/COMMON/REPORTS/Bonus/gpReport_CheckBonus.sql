@@ -417,13 +417,13 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, PositionId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
     select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
                                                      , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                     , inOperDate        :='31.08.2014'
+                                                     , inOperDate        :='30.09.2014'
                                                      , inAmountIn        := 0
                                                      , inAmountOut       := Sum_Bonus
                                                      , inComment         := ''
@@ -437,7 +437,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
                                                      , inisLoad          := TRUE
                                                      , inUserId          := zfCalc_UserAdmin() :: Integer
                                                       )
-    from gpReport_CheckBonus (inStartDate:= '01.08.2014', inEndDate:= '31.08.2014', inSession:= '5') as a
+    from gpReport_CheckBonus (inStartDate:= '01.09.2014', inEndDate:= '30.09.2014', inSession:= '5') as a
     where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест

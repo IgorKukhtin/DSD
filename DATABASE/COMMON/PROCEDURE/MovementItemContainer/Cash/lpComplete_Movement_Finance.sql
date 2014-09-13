@@ -230,7 +230,15 @@ BEGIN
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem.ProfitLossGroupId
-                                                                  , inProfitLossDirectionId  := _tmpItem.ProfitLossDirectionId
+                                                                  , inProfitLossDirectionId  := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21600() -- Общефирменные + Коммунальные услуги
+                                                                                                          THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_20700() -- Общепроизводственные расходы + Коммунальные услуги
+                                                                                                                    WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_30400() -- Административные расходы + Коммунальные услуги
+                                                                                                                    ELSE _tmpItem.ProfitLossDirectionId
+                                                                                                              END
+                                                                                                     ELSE _tmpItem.ProfitLossDirectionId
+                                                                                                END
                                                                   , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                   , inInfoMoneyId            := NULL
                                                                   , inInsert                 := FALSE

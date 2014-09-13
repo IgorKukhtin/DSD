@@ -67,14 +67,16 @@ BEGIN
                     ELSE 0
                END AS ServiceDateId
 
+             , 0 AS ContractId -- не используется
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
              LEFT JOIN MovementItemDate AS MIDate_ServiceDate
-                                        ON MIDate_ServiceDate.MovementItemId = _tmpItem.MovementItemId
+                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                        AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
@@ -87,7 +89,7 @@ BEGIN
                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                              ON MILinkObject_Position.MovementItemId = _tmpItem.MovementItemId
+                                              ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
