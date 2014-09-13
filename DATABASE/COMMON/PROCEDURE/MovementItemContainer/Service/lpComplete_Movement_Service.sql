@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Service(
     IN inUserId            Integer    -- Пользователь
 )                              
 RETURNS void
---  RETURNS TABLE (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, ContainerId Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, JuridicalId_Basis Integer, UnitId Integer, ContractId Integer, PaidKindId Integer, IsActive Boolean)
 AS
 $BODY$
   DECLARE vbMovementDescId Integer;
@@ -80,8 +79,8 @@ BEGIN
              , 0 AS UnitId     -- не используется
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: не используется
-             , 0 AS BranchId_Balance
+               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -121,25 +120,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
      END IF;
-
      -- проверка
      IF EXISTS (SELECT _tmpItem.ContractId FROM _tmpItem WHERE _tmpItem.ContractId = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
      END IF;
-
      -- проверка
      IF EXISTS (SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.InfoMoneyId = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определена <УП статья назначения>.Проведение невозможно.';
      END IF;
-
      -- проверка
      IF EXISTS (SELECT _tmpItem.PaidKindId FROM _tmpItem WHERE _tmpItem.PaidKindId = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.У документе не определена <Форма оплаты>. Проведение невозможно.';
      END IF;
-
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
@@ -177,9 +172,9 @@ BEGIN
                     ELSE 0
                END AS AccountId 
 
-               -- Группы ОПиУ
+               -- Группы ОПиУ (для затрат)
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
-               -- Аналитики ОПиУ - направления
+               -- Аналитики ОПиУ - направления (для затрат)
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
 
                -- Управленческие группы назначения
@@ -200,7 +195,7 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: всегда из предыдущей проводки (а значение кстати=0)
+               -- Филиал Баланс: всегда из предыдущей проводки
              , _tmpItem.BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
@@ -262,8 +257,8 @@ END;$BODY$
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, ContractId Integer, PaidKindId Integer
+                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, PositionId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean
                                 ) ON COMMIT DROP;
  SELECT * FROM lpComplete_Movement_Service (inMovementId:= 4139, inUserId:= zfCalc_UserAdmin() :: Integer)

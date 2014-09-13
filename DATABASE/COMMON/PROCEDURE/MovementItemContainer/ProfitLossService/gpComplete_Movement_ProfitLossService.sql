@@ -1,6 +1,5 @@
 -- Function: gpComplete_Movement_ProfitLossService()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ProfitLossService (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_ProfitLossService (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ProfitLossService(

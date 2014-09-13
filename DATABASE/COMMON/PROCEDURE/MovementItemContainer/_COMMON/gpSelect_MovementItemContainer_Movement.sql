@@ -31,7 +31,7 @@ BEGIN
 
 
      -- !!!проводки только у Админа!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898)) -- Отчеты (управленческие)
      THEN
 
      RETURN QUERY 

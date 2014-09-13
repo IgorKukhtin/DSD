@@ -47,7 +47,7 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
                -- Бизнес Баланс: не используется
-             , 0  AS BusinessId_Balance
+             , 0 AS BusinessId_Balance
                -- Бизнес ОПиУ: не используется
              , 0 AS BusinessId_ProfitLoss
 

@@ -25,8 +25,8 @@ BEGIN
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, JuridicalId_Basis
-                         , UnitId, BranchId, ContractId, PaidKindId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -35,45 +35,46 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , -1 * MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
-               -- Группы ОПиУ
-             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
-               -- Аналитики ОПиУ - направления
-             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже, или ...
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
                -- Управленческие группы назначения
              , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
                -- Управленческие назначения
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: всегда по принадлежности маршрута к подразделению
-             , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId
-               -- Главное Юр.лицо: всегда по договору, а не по Подразделению (Место отправки)
+
+               -- Бизнес Баланс: не используется
+             , 0  AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора (а не по Подразделению - Место отправки)
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
-                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
-                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
-                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
-                    ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
-               END AS UnitId
-             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
-                         THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению и к филиалу
-                    ELSE 0 -- иначе затраты без принадлежности к филиалу
-               END AS BranchId
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , MILinkObject_PaidKind.ObjectId AS PaidKindId
+             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
              , FALSE AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
-                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
-                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -83,10 +84,112 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
-                                              ON MILinkObject_Route.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
 
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+        WHERE Movement.Id = inMovementId
+          AND Movement.DescId = zc_Movement_TransportService()
+          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+       ;
+
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0 OR _tmpItem.ObjectDescId <> zc_Object_Juridical())
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
+     END IF;
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.ContractId FROM _tmpItem WHERE _tmpItem.ContractId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+     END IF;
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.InfoMoneyId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определена <УП статья назначения>.Проведение невозможно.';
+     END IF;
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.PaidKindId FROM _tmpItem WHERE _tmpItem.PaidKindId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У документе не определена <Форма оплаты>. Проведение невозможно.';
+     END IF;
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено <Главное юридическое лицо>.Проведение невозможно.';
+     END IF;
+
+
+     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+                         , MovementItemId, ContainerId
+                         , AccountGroupId, AccountDirectionId, AccountId
+                         , ProfitLossGroupId, ProfitLossDirectionId
+                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , IsActive, IsMaster
+                          )
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , 0 AS ObjectId
+             , 0 AS ObjectDescId
+             , -1 * _tmpItem.OperSumm
+             , _tmpItem.MovementItemId
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+
+               -- Группы ОПиУ (для затрат)
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления (для затрат)
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: не используется (а не из предыдущей проводки)
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: всегда по принадлежности маршрута к подразделению
+             , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , _tmpItem.JuridicalId_Basis
+
+             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL -- если у подразделения маршрута нет филиала
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0) -- если филиал у подразделения маршрута = филиал у маршрута
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
+                    ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
+               END AS UnitId
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: не используется (а не из предыдущей проводки)
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ:
+             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0) -- если филиал у подразделения маршрута = филиал у маршрута
+                         THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) -- затраты по принадлежности маршрут -> подразделение -> филиал
+                    ELSE 0 -- иначе затраты без принадлежности к филиалу
+               END AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                          ON MovementLinkObject_UnitForwarding.MovementId = inMovementId
+                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                              ON MILinkObject_Route.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
              LEFT JOIN ObjectLink AS ObjectLink_Route_Branch
                                   ON ObjectLink_Route_Branch.ObjectId = MILinkObject_Route.ObjectId
                                  AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
@@ -99,69 +202,16 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
                                   ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                  AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
-
-             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
-                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-
-             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
-                   = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
-                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
-                          WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
-                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
-                          ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
-                     END
-
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-        WHERE Movement.Id = inMovementId
-          AND Movement.DescId = zc_Movement_TransportService()
-          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
+                    ON lfObject_Unit_byProfitLossDirection.UnitId
+                     = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL -- если у подразделения маршрута нет филиала
+                                 THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
+                            WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0) -- если филиал у подразделения маршрута = филиала у маршрута
+                                 THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- затраты по принадлежности маршрута к подразделению
+                            ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
+                       END
        ;
 
-     -- проверка
-     IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
-     THEN
-         RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>. Проведение невозможно.';
-     END IF;
-   
-     -- проверка
-     IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
-     THEN
-         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо. Проведение невозможно.';
-     END IF;
-
-
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
-                         , MovementItemId, ContainerId
-                         , AccountGroupId, AccountDirectionId, AccountId
-                         , ProfitLossGroupId, ProfitLossDirectionId
-                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, JuridicalId_Basis
-                         , UnitId, BranchId, ContractId, PaidKindId
-                         , IsActive, IsMaster
-                          )
-        SELECT _tmpItem.MovementDescId
-             , _tmpItem.OperDate
-             , 0 AS ObjectId
-             , 0 AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
-             , _tmpItem.MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
-             , _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId
-             , _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
-               -- Бизнес: всегда по Подразделение (Место отправки)
-             , _tmpItem.BusinessId
-               -- Главное Юр.лицо всегда по Подразделение (Место отправки)
-             , _tmpItem.JuridicalId_Basis
-             , _tmpItem.UnitId
-               -- Филиал: всегда по Подразделение (Место отправки)
-             , _tmpItem.BranchId
-             , _tmpItem.ContractId, _tmpItem.PaidKindId
-             , NOT _tmpItem.IsActive
-             , NOT _tmpItem.IsMaster
-        FROM _tmpItem
-       ;
 
      -- !!!5.0. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(), tmp.MovementItemId, tmp.UnitId_Route)
@@ -199,6 +249,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol

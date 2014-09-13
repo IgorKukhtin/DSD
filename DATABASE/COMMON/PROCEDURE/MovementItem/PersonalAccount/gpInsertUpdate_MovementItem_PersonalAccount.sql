@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalAccount ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -18,10 +16,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalAccount(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalAccount());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalAccount());
 
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
@@ -29,6 +28,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
      END IF;
 
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
@@ -49,7 +51,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -58,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.09.14                                        * add lpInsert_MovementItemProtocol
  14.01.14                                        *
  19.12.13         *
 */

@@ -415,8 +415,8 @@ BEGIN
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, JuridicalId_Basis
-                         , UnitId, BranchId, ContractId, PaidKindId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT zc_Movement_LossDebt() AS MovementDescId
@@ -432,20 +432,38 @@ BEGIN
                END AS ObjectDescId
              , tmpResult.OperSumm
              , tmpResult.MovementItemId
+
              , tmpResult.ContainerId
              , tmpResult.AccountGroupId, tmpResult.AccountDirectionId, tmpResult.AccountId
 
-             , tmpResult.ProfitLossGroupId
-             , tmpResult.ProfitLossDirectionId
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId -- не используется
+
              , tmpResult.InfoMoneyGroupId
              , tmpResult.InfoMoneyDestinationId
              , tmpResult.InfoMoneyId
-             , tmpResult.BusinessId
+
+               -- Бизнес Баланс
+             , tmpResult.BusinessId AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо
              , tmpResult.JuridicalId_Basis
-             , tmpResult.UnitId
-             , tmpResult.BranchId
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: (нужен для НАЛ долгов)
+             , tmpResult.BranchId AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
              , tmpResult.ContractId
              , tmpResult.PaidKindId
+
              , CASE WHEN tmpResult.OperSumm >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM tmpResult
@@ -456,20 +474,41 @@ BEGIN
              , 0 AS ObjectDescId
              , -1 * tmpResult.OperSumm
              , tmpResult.MovementItemId
-             , 0 AS ContainerId -- tmpResult.ContainerId
-             , tmpResult.AccountGroupId, tmpResult.AccountDirectionId, 0 AccountId /*AS tmpResult.AccountId*/
 
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже, или ...
+
+               -- Группы ОПиУ (для затрат)
              , tmpResult.ProfitLossGroupId
+               -- Аналитики ОПиУ - направления (для затрат)
              , CASE WHEN tmpResult.OperDate < '01.06.2014' THEN tmpResult.ProfitLossDirectionId ELSE zc_Enum_ProfitLossDirection_80300() END AS ProfitLossDirectionId -- Списание дебиторской задолженности
+
              , tmpResult.InfoMoneyGroupId
              , tmpResult.InfoMoneyDestinationId
              , tmpResult.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ:
              , tmpResult.BusinessId
+
+               -- Главное Юр.лицо
              , tmpResult.JuridicalId_Basis
+
              , tmpResult.UnitId
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ:
              , tmpResult.BranchId
-             , tmpResult.ContractId
-             , tmpResult.PaidKindId
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
              , CASE WHEN tmpResult.OperSumm >= 0 THEN FALSE ELSE TRUE END AS IsActive
              , FALSE AS IsMaster
         FROM tmpResult
@@ -526,6 +565,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  07.09.14                                        * add BranchId
  31.08.14                                        * add PartnerId
  17.08.14                                        * add MovementDescId
