@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_Member (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Member (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Member (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Member(

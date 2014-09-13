@@ -1,6 +1,5 @@
 -- Function: gpSelect_MovementItem_PersonalService()
 
-
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(

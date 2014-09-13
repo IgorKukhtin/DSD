@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_Object_GoodsGroup()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup(Integer, Integer, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
@@ -19,10 +16,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer; 
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsGroup());
 
    -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
@@ -260,9 +255,6 @@ BEGIN
                         AND ObjectLink.ChildObjectId = ioId
                      )
   ;
-
-
-
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

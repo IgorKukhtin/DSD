@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
+    IN inJuridicalGroupId Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
@@ -19,8 +21,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , BranchCode Integer, BranchName TVarChar
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
-             , PersonalName TVarChar
-             , PersonalCollationName TVarChar
+             , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -35,16 +36,25 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbIsBranch Boolean;
+   DECLARE vbIsJuridicalGroup Boolean;
+   DECLARE vbObjectId_Constraint_Branch Integer;
+   DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- определяется ...
+     vbIsBranch:= COALESCE (inBranchId, 0) > 0;
+     vbIsJuridicalGroup:= COALESCE (inJuridicalGroupId, 0) > 0;
+
      -- определяется уровень доступа
-     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+     vbObjectId_Constraint_JuridicalGroup:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
      -- !!!меняется параметр!!!
-     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+     IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
+     IF vbObjectId_Constraint_JuridicalGroup > 0 THEN inJuridicalGroupId:= vbObjectId_Constraint_JuridicalGroup; END IF;
 
 
      -- Результат
@@ -64,6 +74,7 @@ BEGIN
         View_Contract.ContractTagName,
         View_Contract.ContractStateKindCode,
         Object_Personal_View.PersonalName      AS PersonalName,
+        Object_PersonalTrade_View.PersonalName AS PersonalTradeName,
         Object_PersonalCollation.PersonalName  AS PersonalCollationName,
         View_Contract.StartDate,
         View_Contract.EndDate,
@@ -174,9 +185,13 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                                    ON CLO_PaidKind.ContainerId = Container.Id
                                                   AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                          ON ObjectLink_Juridical_JuridicalGroup.ObjectId = CLO_Juridical.ObjectId
+                                         AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
                 WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                   AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-                  AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0)
+                  AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId AND vbIsBranch = FALSE))                 -- !!!пересорт!!
+                  AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0 OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
                   AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR COALESCE (inInfoMoneyDestinationId, 0) = 0)
                   AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                   AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR COALESCE (inInfoMoneyGroupId, 0) = 0)
@@ -214,6 +229,11 @@ BEGIN
                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                               ON ObjectLink_Contract_PersonalTrade.ObjectId = Operation.ContractId
+                              AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+           LEFT JOIN Object_Personal_View AS Object_PersonalTrade_View ON Object_PersonalTrade_View.PersonalId = ObjectLink_Contract_PersonalTrade.ChildObjectId               
+
            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = Operation.ContractId
                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
@@ -241,11 +261,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.09.14                                        * add inJuridicalGroupId
+ 13.09.14                                        * add PersonalTradeName
  07.09.14                                        * add Branch...
  07.09.14                                        * ??? как без GROUP BY Container.Amount ???
  24.08.14                                        * add Partner...
@@ -261,4 +283,4 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin()); 

@@ -161,13 +161,11 @@ type
     actPersonalGroup: TdsdOpenForm;
     actWorkTimeKind: TdsdOpenForm;
     actSheetWorkTime: TdsdOpenForm;
-    actPersonalServiceBN: TdsdOpenForm;
     bbPersonalDocuments: TdxBarSubItem;
     bbWorkTimeKind: TdxBarButton;
     bbPersonalGroup: TdxBarButton;
     bbPersonalDocuments_Separator: TdxBarSeparator;
     bbSheetWorkTime: TdxBarButton;
-    bbPersonalService: TdxBarButton;
     actReport_Account: TdsdOpenForm;
     bbAccountReport: TdxBarButton;
     actCardFuel: TdsdOpenForm;
@@ -390,16 +388,6 @@ type
     bbReport_Cash: TdxBarButton;
     actReport_BankAccount: TdsdOpenForm;
     bbReport_BankAccount: TdxBarButton;
-    actPersonalServiceProdN: TdsdOpenForm;
-    actPersonalServiceAdminN: TdsdOpenForm;
-    actPersonalServiceSbN: TdsdOpenForm;
-    actPersonalServiceSecurityN: TdsdOpenForm;
-    bbPersonalServiceSbN: TdxBarButton;
-    bbPersonalServiceSecurityN: TdxBarButton;
-    bbPersonalServiceAdminN: TdxBarButton;
-    bbPersonalServiceProdN: TdxBarButton;
-    actPersonalServiceMarketN: TdsdOpenForm;
-    bbPersonalServiceMarket: TdxBarButton;
     actCashOperationKrRog: TdsdOpenForm;
     actCashOperationNikolaev: TdsdOpenForm;
     actCashOperationKharkov: TdsdOpenForm;
@@ -412,8 +400,8 @@ type
     bbCashCherkassi: TdxBarButton;
     actPersonalCash: TdsdOpenForm;
     bbPersonalCash: TdxBarButton;
-    actPersonalServiceNew: TdsdOpenForm;
-    bbPersonalServiceNew: TdxBarButton;
+    actPersonalService: TdsdOpenForm;
+    bbPersonalService: TdxBarButton;
     actPersonalServiceList: TdsdOpenForm;
     bbPersonalServiceList: TdxBarButton;
   public

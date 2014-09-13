@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
+             , GoodsTagName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , BusinessName TVarChar
              , FuelName TVarChar
@@ -42,6 +43,7 @@ BEGIN
             , Object_Measure.ValueData     AS MeasureName
 
             , Object_TradeMark.ValueData  AS TradeMarkName
+            , Object_GoodsTag.ValueData   AS GoodsTagName
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -54,8 +56,8 @@ BEGIN
             , Object_Fuel.ValueData    AS FuelName
 
             , ObjectFloat_Weight.ValueData AS Weight
-            , ObjectBoolean_PartionCount.ValueData AS isPartionCount
-            , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
+            , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
+            , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)   AS isPartionSumm 
             , Object_Goods.isErased       AS isErased
 
        FROM (SELECT Object_Goods.*
@@ -69,14 +71,17 @@ BEGIN
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                                  AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
                  
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
              LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
-                                                  AND Object_GoodsGroupStat.DescId = zc_Object_GoodsGroupStat()
                  
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                  ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+             LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -85,13 +90,11 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                                               AND Object_Measure.DescId = zc_Object_Measure()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                   ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
              LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-                                                 AND Object_TradeMark.DescId = zc_Object_TradeMark()
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
@@ -113,12 +116,12 @@ BEGIN
                     ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id 
                    AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
              LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId    
-                                                AND Object_Business.DescId = zc_Object_Business()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                   ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
       ;
   
@@ -131,7 +134,8 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.09.14                                        * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * add zc_ObjectLink_Goods_GoodsGroupStat()
  13.01.14                                        * add GoodsGroupNameFull
  14.12.13                                        * add inAccessKeyId

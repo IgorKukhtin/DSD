@@ -1,8 +1,6 @@
 -- Function: lpInsertUpdate_Movement_PersonalService()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, Integer);
-
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ Перемещение>

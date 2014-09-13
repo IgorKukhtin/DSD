@@ -68,10 +68,10 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     clIsMain: TcxGridDBColumn;
-    spMainWorkPlace: TdsdStoredProc;
-    actMainWorkPlace: TdsdExecStoredProc;
-    bbMainWorkPlace: TdxBarButton;
-    actPositionSelect: TOpenChoiceForm;
+    spUpdateIsMain: TdsdStoredProc;
+    actUpdateIsMain: TdsdExecStoredProc;
+    bbUpdateIsMain: TdxBarButton;
+    actPositionChoice: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
   private

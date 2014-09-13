@@ -66,6 +66,13 @@ object Goods_ObjectForm: TGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object clTradeMarkName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'TradeMarkName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
@@ -93,13 +100,6 @@ object Goods_ObjectForm: TGoods_ObjectForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 55
-      end
-      object clTradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -148,8 +148,8 @@ object Goods_ObjectForm: TGoods_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

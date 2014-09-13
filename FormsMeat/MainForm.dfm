@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1034
-  ExplicitHeight = 208
+  ExplicitWidth = 1042
+  ExplicitHeight = 209
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1013,35 +1013,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbPersonalServiceNew'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceProdN'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceAdminN'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceSbN'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceMarket'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalServiceSecurityN'
-        end
-        item
-          Visible = True
           ItemName = 'bbPersonalService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalDocuments_Separator'
         end
         item
           Visible = True
@@ -1096,28 +1068,11 @@
       Category = 0
     end
     object bbPersonalService: TdxBarButton
-      Action = actPersonalServiceBN
+      Action = actPersonalService
       Category = 0
     end
-    object bbPersonalServiceProdN: TdxBarButton
-      Action = actPersonalServiceProdN
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'(Old)'
-      Category = 0
-    end
-    object bbPersonalServiceAdminN: TdxBarButton
-      Action = actPersonalServiceAdminN
-      Category = 0
-    end
-    object bbPersonalServiceSbN: TdxBarButton
-      Action = actPersonalServiceSbN
-      Category = 0
-    end
-    object bbPersonalServiceMarket: TdxBarButton
-      Action = actPersonalServiceMarketN
-      Category = 0
-    end
-    object bbPersonalServiceSecurityN: TdxBarButton
-      Action = actPersonalServiceSecurityN
+    object bbPersonalCash: TdxBarButton
+      Action = actPersonalCash
       Category = 0
     end
     object bbReportsProduction: TdxBarSubItem
@@ -1895,14 +1850,6 @@
       Action = actReport_BankAccount
       Category = 0
     end
-    object bbPersonalCash: TdxBarButton
-      Action = actPersonalCash
-      Category = 0
-    end
-    object bbPersonalServiceNew: TdxBarButton
-      Action = actPersonalServiceNew
-      Category = 0
-    end
     object bbPersonalServiceList: TdxBarButton
       Action = actPersonalServiceList
       Category = 0
@@ -1912,7 +1859,7 @@
     object actPersonalCash: TdsdOpenForm [0]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
-      Caption = #1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+      Caption = #1042#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
       FormName = 'TPersonalCashForm'
       FormNameParam.Value = 'TPersonalCashForm'
@@ -2089,7 +2036,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalServiceNew: TdsdOpenForm [9]
+    object actPersonalService: TdsdOpenForm [9]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
@@ -2152,37 +2099,7 @@
         end>
       isShowModal = False
     end
-    object actPersonalServiceSbN: TdsdOpenForm [13]
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
-      Hint = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '4'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1053#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1089#1073#1099#1090' '#1085#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_SbN()'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actArticleLoss: TdsdOpenForm [14]
+    object actArticleLoss: TdsdOpenForm [13]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -2193,67 +2110,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceSecurityN: TdsdOpenForm [15]
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1093#1088#1072#1085#1072')'
-      Hint = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1093#1088#1072#1085#1072')'
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '4'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1053#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1086#1093#1088#1072#1085#1072' '#1085#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_SecurityN()'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actPersonalServiceMarketN: TdsdOpenForm [16]
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072')'
-      Hint = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072')'
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '4'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1053#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075' '#1085#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_MarketN()'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actReport_Founders: TdsdOpenForm [17]
+    object actReport_Founders: TdsdOpenForm [14]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
@@ -2263,37 +2120,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceAdminN: TdsdOpenForm [18]
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1072#1076#1084#1080#1085')'
-      Hint = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1072#1076#1084#1080#1085')'
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '4'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1053#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1040#1076#1084#1080#1085'. '#1085#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_AdminN()'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actFounder: TdsdOpenForm [19]
+    object actFounder: TdsdOpenForm [15]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
@@ -2304,7 +2131,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_BankAccount: TdsdOpenForm [20]
+    object actReport_BankAccount: TdsdOpenForm [16]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
@@ -2314,7 +2141,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Cash: TdsdOpenForm [21]
+    object actReport_Cash: TdsdOpenForm [17]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -2324,37 +2151,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actPersonalServiceBN: TdsdOpenForm [22]
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1041#1053')'
-      Hint = 'tmp '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '3'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1041#1053
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1041#1053
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_BN()'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actReport_Member: TdsdOpenForm [23]
+    object actReport_Member: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
@@ -2599,36 +2396,6 @@
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>
-      isShowModal = False
-    end
-    object actPersonalServiceProdN: TdsdOpenForm
-      Category = #1055#1077#1088#1089#1086#1085#1072#1083
-      MoveParams = <>
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
-      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
-      FormName = 'TPersonalServiceOldForm'
-      FormNameParam.Value = 'TPersonalServiceOldForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'PaidKindId'
-          Value = '4'
-        end
-        item
-          Name = 'PaidKindName'
-          Value = #1053#1072#1083
-          DataType = ftString
-        end
-        item
-          Name = 'InDescName'
-          Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1074#1089#1077
-          DataType = ftString
-        end
-        item
-          Name = 'inProcess'
-          Value = 'zc_Enum_Process_PersonalService_ProdN()'
-          DataType = ftString
-        end>
       isShowModal = False
     end
     object actPersonalGroup: TdsdOpenForm

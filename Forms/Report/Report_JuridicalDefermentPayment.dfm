@@ -12,17 +12,17 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Height = 337
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1115
     ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1115
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1115
         Height = 337
-        ExplicitWidth = 1020
+        ExplicitWidth = 1115
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -461,7 +461,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   end
   inherited Panel: TPanel
     Width = 1115
-    ExplicitWidth = 1020
+    ExplicitWidth = 1115
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 41640d
@@ -469,11 +469,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
-      Left = 991
-      Top = 6
+      Left = 1024
+      Top = -2
       Visible = False
-      ExplicitLeft = 991
-      ExplicitTop = 6
+      ExplicitLeft = 1024
+      ExplicitTop = -2
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
@@ -481,8 +481,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel2: TcxLabel
       Left = 966
+      Top = -2
       Visible = False
       ExplicitLeft = 966
+      ExplicitTop = -2
     end
     object edAccount: TcxButtonEdit
       Left = 246
@@ -494,7 +496,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 400
+      Width = 320
     end
     object cxLabel3: TcxLabel
       Left = 161
@@ -502,12 +504,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object cxLabel6: TcxLabel
-      Left = 650
+      Left = 570
       Top = 6
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 733
+      Left = 653
       Top = 5
       Properties.Buttons = <
         item
@@ -519,12 +521,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Width = 55
     end
     object cxLabel9: TcxLabel
-      Left = 797
+      Left = 717
       Top = 6
       Caption = #1060#1080#1083#1080#1072#1083':'
     end
     object edBranch: TcxButtonEdit
-      Left = 845
+      Left = 765
       Top = 5
       Properties.Buttons = <
         item
@@ -533,7 +535,24 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 150
+      Width = 120
+    end
+    object cxLabel4: TcxLabel
+      Left = 890
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'.'#1083#1080#1094':'
+    end
+    object edJuridicalGroup: TcxButtonEdit
+      Left = 975
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 120
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -559,6 +578,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = JuridicalGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = PaidKindGuides
@@ -1211,6 +1236,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalGroupId'
+        Value = ''
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 112
     Top = 187
@@ -1346,6 +1378,9 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Component = BranchGuides
+      end
+      item
+        Component = JuridicalGroupGuides
       end>
   end
   object AccountGuides: TdsdGuides
@@ -1562,5 +1597,32 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end>
     Left = 888
     Top = 40
+  end
+  object JuridicalGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalGroup
+    FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 960
+    Top = 64
   end
 end

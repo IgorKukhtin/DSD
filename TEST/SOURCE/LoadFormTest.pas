@@ -386,21 +386,10 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceOldForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceOldForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
@@ -710,6 +699,8 @@ procedure TLoadFormTest.LoadJuridicalGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroupEditForm');
 end;

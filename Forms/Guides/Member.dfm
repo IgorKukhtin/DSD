@@ -19,9 +19,9 @@ object MemberForm: TMemberForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 665
-    Height = 492
+    Height = 494
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -130,8 +130,8 @@ object MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -149,7 +149,7 @@ object MemberForm: TMemberForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -180,10 +180,6 @@ object MemberForm: TMemberForm
           ItemName = 'bbUnErased'
         end
         item
-          Visible = True
-          ItemName = 'bbOfficial'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -195,6 +191,14 @@ object MemberForm: TMemberForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateIsOfficial'
         end
         item
           Visible = True
@@ -260,8 +264,8 @@ object MemberForm: TMemberForm
       Action = actShowAll
       Category = 0
     end
-    object bbOfficial: TdxBarButton
-      Action = actOfficial
+    object bbUpdateIsOfficial: TdxBarButton
+      Action = actUpdateIsOfficial
       Category = 0
     end
   end
@@ -420,17 +424,17 @@ object MemberForm: TMemberForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actOfficial: TdsdExecStoredProc
+    object actUpdateIsOfficial: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spOfficial
+      StoredProc = spUpdateIsOfficial
       StoredProcList = <
         item
-          StoredProc = spOfficial
+          StoredProc = spUpdateIsOfficial
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
+      ImageIndex = 52
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -552,8 +556,8 @@ object MemberForm: TMemberForm
     Left = 560
     Top = 152
   end
-  object spOfficial: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Member_isOfficial'
+  object spUpdateIsOfficial: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_isOfficial'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -564,7 +568,7 @@ object MemberForm: TMemberForm
         ParamType = ptInput
       end
       item
-        Name = 'inIsOfficial'
+        Name = 'ioIsOfficial'
         Component = ClientDataSet
         ComponentItem = 'IsOfficial'
         DataType = ftBoolean

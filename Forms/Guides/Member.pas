@@ -64,9 +64,9 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     clIsOfficial: TcxGridDBColumn;
-    bbOfficial: TdxBarButton;
-    spOfficial: TdsdStoredProc;
-    actOfficial: TdsdExecStoredProc;
+    bbUpdateIsOfficial: TdxBarButton;
+    spUpdateIsOfficial: TdsdStoredProc;
+    actUpdateIsOfficial: TdsdExecStoredProc;
   private
     { Private declarations }
   public

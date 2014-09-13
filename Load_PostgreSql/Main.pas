@@ -1860,7 +1860,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup';
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -2094,7 +2094,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_goods';
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goods_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -2103,10 +2103,10 @@ begin
         toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inTradeMarkId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inTradeMarkId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBusinessId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inFuelId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inFuelId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectBoolean_Goods_Partion';
         toStoredProc_two.OutputType := otResult;
@@ -2126,10 +2126,10 @@ begin
              toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('Ves_onMeasure').AsFloat;
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inTradeMarkId').Value:=FieldByName('TradeMarkId_PG').AsInteger;
+             //toStoredProc.Params.ParamByName('inTradeMarkId').Value:=FieldByName('TradeMarkId_PG').AsInteger;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inBusinessId').Value:=FieldByName('BusinessId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inFuelId').Value:=FieldByName('FuelId_PG').AsInteger;
+             //toStoredProc.Params.ParamByName('inFuelId').Value:=FieldByName('FuelId_PG').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
