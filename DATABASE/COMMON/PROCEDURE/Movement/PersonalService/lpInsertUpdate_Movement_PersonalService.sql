@@ -1,14 +1,17 @@
 -- Function: lpInsertUpdate_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inServiceDate         TDateTime , -- Дата начисления
-    IN inComment             TVarChar  , -- Комментерий
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                     Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber              TVarChar  , -- Номер документа
+    IN inOperDate               TDateTime , -- Дата документа
+    IN inServiceDate            TDateTime , -- Дата начисления
+    IN inComment                TVarChar  , -- Комментерий
+    IN inPersonalServiceListId  Integer  , -- Комментерий
+    IN inUserId                 Integer     -- пользователь
 )
 RETURNS Integer AS
 $BODY$
@@ -41,6 +44,8 @@ BEGIN
      -- сохранили связь с <Дата начисления>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
    
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

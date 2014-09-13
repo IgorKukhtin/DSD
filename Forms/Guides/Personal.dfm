@@ -2,7 +2,7 @@ object PersonalForm: TPersonalForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
-  ClientHeight = 358
+  ClientHeight = 487
   ClientWidth = 961
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,15 +19,15 @@ object PersonalForm: TPersonalForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 961
-    Height = 332
+    Height = 459
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 864
+    ExplicitHeight = 330
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,7 +42,6 @@ object PersonalForm: TPersonalForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -66,6 +65,14 @@ object PersonalForm: TPersonalForm
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actPositionSelect
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 142
@@ -147,7 +154,7 @@ object PersonalForm: TPersonalForm
     Top = 26
     Action = actRefresh
     Caption = '<'#1056#1072#1073#1086#1090#1072#1083'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 5
+    TabOrder = 3
     Width = 147
   end
   object deStart: TcxDateEdit
@@ -156,7 +163,7 @@ object PersonalForm: TPersonalForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 85
   end
   object cxlEnd: TcxLabel
@@ -207,8 +214,8 @@ object PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -226,7 +233,7 @@ object PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -255,6 +262,10 @@ object PersonalForm: TPersonalForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMainWorkPlace'
         end
         item
           BeginGroup = True
@@ -380,6 +391,10 @@ object PersonalForm: TPersonalForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = deEnd
+    end
+    object bbMainWorkPlace: TdxBarButton
+      Action = actMainWorkPlace
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -526,6 +541,50 @@ object PersonalForm: TPersonalForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actMainWorkPlace: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMainWorkPlace
+      StoredProcList = <
+        item
+          StoredProc = spMainWorkPlace
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084'/'#1088' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084'/'#1088' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
+    object actPositionSelect: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'TPositionForm'
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Personal'
@@ -626,5 +685,53 @@ object PersonalForm: TPersonalForm
       end>
     Left = 536
     Top = 160
+  end
+  object spMainWorkPlace: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Personal_isMain'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsMain'
+        Component = ClientDataSet
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 232
+    Top = 379
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Personal_Property'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPositionId'
+        Component = ClientDataSet
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsMain'
+        Component = ClientDataSet
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 507
+    Top = 254
   end
 end

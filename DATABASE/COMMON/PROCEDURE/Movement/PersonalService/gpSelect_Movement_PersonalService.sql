@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , Comment TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
               )
 
 AS
@@ -48,8 +49,8 @@ BEGIN
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSumm
            , MovementString_Comment.ValueData   AS Comment
-
-
+           , COALESCE (Object_PersonalServiceList.Id, CAST (0 AS Integer))            AS PersonalServiceListId
+           , COALESCE (Object_PersonalServiceList.ValueData, CAST ('' AS TVarChar))  AS PersonalServiceListName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -88,7 +89,13 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
- 
+          
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+
+
             ;
 
 END;

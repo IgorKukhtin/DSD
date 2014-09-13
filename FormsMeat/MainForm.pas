@@ -414,6 +414,8 @@ type
     bbPersonalCash: TdxBarButton;
     actPersonalServiceNew: TdsdOpenForm;
     bbPersonalServiceNew: TdxBarButton;
+    actPersonalServiceList: TdsdOpenForm;
+    bbPersonalServiceList: TdxBarButton;
   public
     { Public declarations }
   end;

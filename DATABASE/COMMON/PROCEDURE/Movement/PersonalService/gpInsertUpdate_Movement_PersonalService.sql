@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inOperDate            TDateTime , -- Дата документа
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inComment             TVarChar  , -- Комментерий
+    IN inPersonalServiceListId  Integer  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -19,12 +22,13 @@ BEGIN
      vbUserId:= inSession;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_PersonalService (ioId               := ioId
-                                         , inInvNumber        := inInvNumber
-                                         , inOperDate         := inOperDate
-                                         , inServiceDate      := inServiceDate
-                                         , inComment          :=inComment
-                                         , inUserId           := vbUserId
+     ioId := lpInsertUpdate_Movement_PersonalService (ioId           := ioId
+                                         , inInvNumber               := inInvNumber
+                                         , inOperDate                := inOperDate
+                                         , inServiceDate             := inServiceDate
+                                         , inComment                 := inComment
+                                         , inPersonalServiceListId   := inPersonalServiceListId 
+                                         , inUserId                  := vbUserId
                                           );
 
 END;
