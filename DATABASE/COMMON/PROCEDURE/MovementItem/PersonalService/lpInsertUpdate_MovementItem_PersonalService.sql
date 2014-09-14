@@ -6,6 +6,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
+   OUT outAmount             TFloat    , -- Сумма к выплате
+   OUT outAmountCash         TFloat    , -- Сумма к выплате из кассы
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCard            TFloat    , -- Сумма на карточку (БН)
     IN inSummMinus           TFloat    , -- Сумма удержания
@@ -16,20 +18,20 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inPositionId          Integer   , -- Должность
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbAmount TFloat;
 BEGIN
+     -- рассчитываем сумму к выплате
+     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0);
+     -- рассчитываем сумму к выплате из кассы
+     outAmountCash:= outAmount - COALESCE (inSummCard, 0);
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-     
-     -- рассчитываем сумму к выплате
-     vbAmount:= inSummService - inSummMinus + inSummAdd;
-     
+
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, vbAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, outAmount, NULL);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
@@ -63,6 +65,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.09.14                                        * add out...
  11.09.14         *
 */
 

@@ -16,18 +16,17 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
-     vbUserId:= inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_PersonalService (ioId           := ioId
-                                         , inInvNumber               := inInvNumber
-                                         , inOperDate                := inOperDate
-                                         , inServiceDate             := inServiceDate
-                                         , inComment                 := inComment
-                                         , inPersonalServiceListId   := inPersonalServiceListId 
-                                         , inUserId                  := vbUserId
-                                          );
+     ioId := lpInsertUpdate_Movement_PersonalService (ioId                      := ioId
+                                                    , inInvNumber               := inInvNumber
+                                                    , inOperDate                := inOperDate
+                                                    , inServiceDate             := inServiceDate
+                                                    , inComment                 := inComment
+                                                    , inPersonalServiceListId   := inPersonalServiceListId 
+                                                    , inUserId                  := vbUserId
+                                                     );
 
 END;
 $BODY$
@@ -37,7 +36,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  11.09.14         *
- 
 */
 
 -- тест

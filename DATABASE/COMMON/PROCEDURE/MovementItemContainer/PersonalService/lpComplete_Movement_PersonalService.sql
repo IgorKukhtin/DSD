@@ -53,7 +53,7 @@ BEGIN
                -- Главное Юр.лицо: из какой кассы будет выплачено
              , zc_Juridical_Basis() AS JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+             , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
 
                -- Филиал Баланс: всегда по подразделению
@@ -62,32 +62,29 @@ BEGIN
              , 0 AS BranchId_ProfitLoss
 
                -- Месяц начислений: есть
-             , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()
-                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
+             , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
+                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MovementDate_ServiceDate.ValueData)
                     ELSE 0
                END AS ServiceDateId
 
              , 0 AS ContractId -- не используется
-             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+             , 0 AS PaidKindId -- не используется
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
-             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
-                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
-                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+             LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                   AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                               ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()

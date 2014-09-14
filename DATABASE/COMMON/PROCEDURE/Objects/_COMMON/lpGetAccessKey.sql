@@ -56,8 +56,15 @@ BEGIN
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54)); -- Касса Днепр
       ELSE
+      -- PersonalService - 
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService()
+                        )
+      THEN
+           inUserId := (SELECT MAX (UserId) FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin());
+      ELSE
           RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
 
+      END IF;
       END IF;
       END IF;
       END IF;
@@ -66,8 +73,8 @@ BEGIN
 
   -- проверка - должен быть только "один" процесс (доступ просмотра)
   IF EXISTS (SELECT 1 FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
-                                                                                                   , zc_Enum_Process_AccessKey_GuideAll()
-                                                                                                    )
+                                                                                                                            , zc_Enum_Process_AccessKey_GuideAll()
+                                                                                                                             )
                                                                              AND RoleCode NOT IN (22 -- Транспорт-просмотр ВСЕХ документов
                                                                                                 , 32 -- Начисления транспорт-просмотр ВСЕХ документов
                                                                                                 , 42 -- Начисления-просмотр ВСЕХ документов
@@ -86,13 +93,20 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                  )
-                                                                             AND ((RoleCode between 50 and 59
+                                                                             AND ((RoleCode BETWEEN 50 and 59
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
                                                                                                  , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                OR (NOT RoleCode BETWEEN 50 and 59
                                                                                    AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                                 )
+                                                                             AND ((AccessKeyId IN (SELECT AccessKeyId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService <> 0)
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                                                                                  )
+                                                                               OR (AccessKeyId NOT IN (SELECT AccessKeyId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService <> 0)
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
                                                                                   )
                                                                                  )
              GROUP BY AccessKeyId) AS tmp
@@ -119,13 +133,20 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                  )
-                                                                             AND ((RoleCode between 50 and 59
+                                                                             AND ((RoleCode BETWEEN 50 and 59
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
                                                                                                  , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                OR (NOT RoleCode BETWEEN 50 and 59
                                                                                    AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                                 )
+                                                                             AND ((AccessKeyId IN (SELECT AccessKeyId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService <> 0)
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                                                                                  )
+                                                                               OR (AccessKeyId NOT IN (SELECT AccessKeyId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService <> 0)
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
                                                                                   )
                                                                                  )
              GROUP BY AccessKeyId

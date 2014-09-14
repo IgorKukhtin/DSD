@@ -2,30 +2,28 @@ inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
   ClientWidth = 1050
-  ExplicitWidth = 1058
-  ExplicitHeight = 589
+  ExplicitWidth = 1066
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 119
+    Top = 117
     Width = 1050
-    Height = 436
+    Height = 438
     TabOrder = 3
-    ExplicitTop = 137
+    ExplicitTop = 117
     ExplicitWidth = 1050
-    ExplicitHeight = 418
-    ClientRectBottom = 432
-    ClientRectRight = 1046
+    ExplicitHeight = 438
+    ClientRectBottom = 438
+    ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1044
-      ExplicitHeight = 412
+      ExplicitWidth = 1050
+      ExplicitHeight = 438
       inherited cxGrid: TcxGrid
-        Width = 1044
-        Height = 430
-        ExplicitWidth = 1044
-        ExplicitHeight = 412
+        Width = 1050
+        Height = 438
+        ExplicitWidth = 1050
+        ExplicitHeight = 438
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -229,8 +227,12 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Width = 55
           end
           object ServiceDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
             DataBinding.FieldName = 'ServiceDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'mmmm yyyy'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -1718,7 +1720,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

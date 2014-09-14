@@ -39,7 +39,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName
                                 , inAccessKeyId:= CASE WHEN ioId <> 0
-                                                            THEN (SELECT inAccessKeyId FROM Object WHERE Id= ioId)
+                                                            THEN (SELECT AccessKeyId FROM Object WHERE Id= ioId)
                                                   END);
 
    -- сохранили свойство <Полное название группы>

@@ -14,25 +14,29 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
 RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
-   DECLARE vbisinsert Boolean;
-
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
-   
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-  
+     -- проверка
+     IF COALESCE (inPersonalServiceListId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Ведомость начисления>.';
+     END IF;
+
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
-     -- расчет
-     IF inInvNumber = '' THEN
-        inInvNumber := (NEXTVAL ('Movement_PersonalService_seq')) :: TVarChar;
-     END IF;
-   
+
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
+
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -49,7 +53,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     --PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

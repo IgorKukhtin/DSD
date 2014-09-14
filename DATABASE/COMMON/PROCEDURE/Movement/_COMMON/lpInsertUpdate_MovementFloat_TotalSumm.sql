@@ -22,6 +22,11 @@ $BODY$
   DECLARE vbOperSumm_PVAT TFloat;
   DECLARE vbOperSumm_Inventory TFloat;
 
+  DECLARE vbTotalSummService TFloat;
+  DECLARE vbTotalSummCard    TFloat;
+  DECLARE vbTotalSummMinus   TFloat;
+  DECLARE vbTotalSummAdd     TFloat;
+
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
@@ -141,8 +146,15 @@ BEGIN
             -- сумма ввода остатка
           , OperSumm_Inventory AS OperSumm_Inventory
 
+            -- сумма начисления зп
+          , OperSumm_Service
+          , OperSumm_Card
+          , OperSumm_Minus
+          , OperSumm_Add
+
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
+               , vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd
      FROM 
           (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
                 , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
@@ -171,6 +183,12 @@ BEGIN
                         END) AS OperSumm_Packer
                    -- сумма ввода остатка
                  , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
+
+                  -- сумма начисления зп
+                 , SUM (tmpMI.OperSumm_Service) AS OperSumm_Service
+                 , SUM (tmpMI.OperSumm_Card)    AS OperSumm_Card
+                 , SUM (tmpMI.OperSumm_Minus)   AS OperSumm_Minus
+                 , SUM (tmpMI.OperSumm_Add)     AS OperSumm_Add
 
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
@@ -208,6 +226,12 @@ BEGIN
                         -- сумма ввода остатка
                       , tmpMI.OperSumm_Inventory
 
+                        -- сумма начисления зп
+                      , tmpMI.OperSumm_Service
+                      , tmpMI.OperSumm_Card
+                      , tmpMI.OperSumm_Minus
+                      , tmpMI.OperSumm_Add
+
                   FROM (SELECT MovementItem.DescId
                              , MovementItem.ObjectId AS GoodsId
                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -230,7 +254,12 @@ BEGIN
                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
                              , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer
 
-                             , SUM (COALESCE (CASE WHEN Movement.DescId <> zc_Movement_EDI() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) as OperSumm_Inventory
+                             , SUM (COALESCE (CASE WHEN Movement.DescId <> zc_Movement_EDI() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
+
+                             , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS OperSumm_Service
+                             , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))    AS OperSumm_Card
+                             , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))   AS OperSumm_Minus
+                             , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))     AS OperSumm_Add
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
@@ -259,6 +288,24 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                          ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummService 
+                                                         ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                                         ON MIFloat_SummCard.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                                                         ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                                         ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+
                         WHERE Movement.Id = inMovementId
                         GROUP BY MovementItem.DescId
                                , MovementItem.ObjectId
@@ -290,6 +337,19 @@ BEGIN
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
      ELSE
+     IF vbMovementDescId = zc_Movement_PersonalService()
+     THEN
+         -- Сохранили свойство <Итого Сумма (к выплате)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
+         -- Сохранили свойство <Итого Сумма начислено>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummService(), inMovementId, vbTotalSummService);
+         -- Сохранили свойство <Итого Сумма на карточку (БН)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCard(), inMovementId, vbTotalSummCard);
+         -- Сохранили свойство <Итого Сумма удержания>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
+         -- Сохранили свойство <Итого Сумма премия>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
+     ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
          -- Сохранили свойство <Итого количество("подчиненные элементы")>
@@ -311,6 +371,7 @@ BEGIN
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
      END IF;
+     END IF;
 
 
 END;
@@ -322,6 +383,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.14                                        * add zc_Movement_PersonalService
  09.08.14                                        * add zc_Movement_SendOnPrice
  19.07.14                                        * add zc_Movement_EDI
  22.05.14                                        * modify - очень важное кол-во, для него расчет сумм

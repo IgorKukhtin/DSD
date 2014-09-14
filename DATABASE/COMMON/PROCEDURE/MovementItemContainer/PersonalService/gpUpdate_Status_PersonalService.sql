@@ -14,7 +14,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_PersonalService (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_PersonalService (inMovementId, FALSE,inSession);
+            PERFORM gpComplete_Movement_PersonalService (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_PersonalService (inMovementId, inSession);
          ELSE
@@ -29,7 +29,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  11.09.14         *
-
 */
 
 -- тест

@@ -6,6 +6,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
+   OUT outAmount             TFloat    , -- Сумма к выплате
+   OUT outAmountCash         TFloat    , -- Сумма к выплате из кассы
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCard            TFloat    , -- Сумма на карточку (БН)
     IN inSummMinus           TFloat    , -- Сумма удержания
@@ -16,31 +18,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inPositionId          Integer   , -- Должность
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
-     vbUserId:= inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 
      -- сохранили
-     SELECT tmp.ioId
-       INTO ioId
+     SELECT tmp.ioId, tmp.outAmount, tmp.outAmountCash
+       INTO ioId, outAmount, outAmountCash
      FROM lpInsertUpdate_MovementItem_PersonalService (ioId      := ioId
-                                          , inMovementId         := inMovementId
-                                          , inPersonalId         := inPersonalId
-                                          , inSummService        := inSummService
-                                          , inSummCard           := inSummCard
-                                          , inSummMinus          := inSummMinus
-                                          , inSummAdd            := inSummAdd
-                                          , inComment            := inComment
-                                          , inInfoMoneyId        := inInfoMoneyId
-                                          , inUnitId             := inUnitId
-                                          , inPositionId         := inPositionId
-                                          , inUserId             := vbUserId
-                                           ) AS tmp;
-
+                                                     , inMovementId         := inMovementId
+                                                     , inPersonalId         := inPersonalId
+                                                     , inSummService        := inSummService
+                                                     , inSummCard           := inSummCard
+                                                     , inSummMinus          := inSummMinus
+                                                     , inSummAdd            := inSummAdd
+                                                     , inComment            := inComment
+                                                     , inInfoMoneyId        := inInfoMoneyId
+                                                     , inUnitId             := inUnitId
+                                                     , inPositionId         := inPositionId
+                                                     , inUserId             := vbUserId
+                                                      ) AS tmp;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -48,8 +48,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.09.14                                        * add out...
  11.09.14         *
-
 */
 
 -- тест

@@ -6,6 +6,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
    SELECT tmpAccessKey.UserId
         , tmpAccessKey.AccessKeyId_Guide
+        , tmpAccessKey.AccessKeyId_PersonalService
+
         , CASE WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideDnepr()
                     THEN 257163 -- покупатели Днепр
 
@@ -120,8 +122,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                      AND ProfitLossDirectionCode IN (40300 -- Расходы на сбыт + Общефирменные
                                                                                                     ))
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSB()
-                                                                     AND UnitCode IN (13000, 13010) -- Охрана + Служба безопастности
-                                                                     AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ
+                                                                     -- AND UnitCode IN (13000, 13010) -- Охрана + Служба безопастности
+                                                                     AND ProfitLossDirectionCode IN (30300 -- Административные расходы + Содержание охраны
                                                                                                     ))
            ;
 

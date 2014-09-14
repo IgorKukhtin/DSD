@@ -47,6 +47,11 @@ type
     cePersonalServiceList: TcxButtonEdit;
     PersonalServiceListGuides: TdsdGuides;
     cxLabel3: TcxLabel;
+    colUnitCode: TcxGridDBColumn;
+    colPersonalCode: TcxGridDBColumn;
+    colIsMain: TcxGridDBColumn;
+    colIsOfficial: TcxGridDBColumn;
+    colAmountCash: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -41,9 +41,9 @@ BEGIN
              -- сохранили <Дата>
               PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ServiceDate_Value(), vbServiceDateId, inOperDate);
              -- сохранили <Год>
-              PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ServiceDate_Year(), vbServiceDateId, DATE_PART ('YEAR', inOperDate));
+              PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ServiceDate_Year(), vbServiceDateId, DATE_PART ('YEAR', inOperDate) :: TFloat);
              -- сохранили <Месяц>
-              PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ServiceDate_Month(), vbServiceDateId, DATE_PART ('MONTH', inOperDate));
+              PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ServiceDate_Month(), vbServiceDateId, DATE_PART ('MONTH', inOperDate) :: TFloat);
          END IF;
 
      END IF;
