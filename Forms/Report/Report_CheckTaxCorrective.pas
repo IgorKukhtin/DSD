@@ -36,6 +36,8 @@ type
     DocumentTaxKindGuides: TdsdGuides;
     clPartnerCode: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
+    clInvNumberPartner_ReturnIn: TcxGridDBColumn;
+    clInvNumberPartner_TaxCorrective: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -80,7 +80,7 @@ begin
             , max (isnull(case when BillItems.OperPrice<>0 and BillItems.OperCount<>0 then BillItems.Id else 0 end,0))as findId
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
-           left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 and BillItems.OperCount<>0 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber
@@ -335,7 +335,7 @@ from
 
 end
 //
--- select * from dba._pgSelect_Bill_Sale ('2014-09-01', '2014-09-21') as a where InvNumber_my = 184302
+-- select * from dba._pgSelect_Bill_Sale ('2014-09-01', '2014-09-21') as a where InvNumber_my = 185761
 /*
 create table dba._pgBillLoad_union (BillId Integer, BillId_union Integer);
 */
