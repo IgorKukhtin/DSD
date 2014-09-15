@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Object_Personal_Property ()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Personal_Property(
     IN inId                  Integer   , -- ключ объекта <Сотрудники>
     IN inPositionId          Integer   , -- ссылка на Должность
+    IN inUnitId              Integer   , -- ссылка на Подразделение
     IN inIsMain              Boolean   , -- Основное место работы
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -23,6 +25,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Position(), inId, inPositionId);
    -- сохранили свойство <Основное место работы>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Personal_Main(), inId, inIsMain);
+   -- сохранили связь с <подразделением>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Unit(), inId, inUnitId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -30,11 +34,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Personal_Property (Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 15.09.14                                                       *
  12.09.14                                                       *
 */
 
