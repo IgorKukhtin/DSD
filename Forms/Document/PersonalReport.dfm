@@ -231,7 +231,7 @@
     Top = 242
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Service'
+    StoredProcName = 'gpInsertUpdate_Movement_PersonalReport'
     Params = <
       item
         Name = 'ioid'
@@ -338,7 +338,7 @@
     Top = 224
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Service'
+    StoredProcName = 'gpGet_Movement_PersonalReport'
     Params = <
       item
         Name = 'inMovementId'
@@ -609,7 +609,7 @@
       end>
     ActionItemList = <>
     Left = 208
-    Top = 120
+    Top = 112
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'

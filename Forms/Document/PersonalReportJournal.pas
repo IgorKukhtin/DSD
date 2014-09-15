@@ -22,14 +22,13 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
-    clContractInvNumber: TcxGridDBColumn;
-    clJuridicalCode: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
+    MemberCode: TcxGridDBColumn;
     N13: TMenuItem;
     actReCompleteAll: TdsdExecStoredProc;
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
-    clOperDatePartner: TcxGridDBColumn;
-    clInvNumberPartner: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
   private
     { Private declarations }
   public

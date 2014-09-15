@@ -86,27 +86,19 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 77
           end
-          object clJuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'
-            DataBinding.FieldName = 'JuridicalCode'
+          object MemberCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1092#1080#1079'.'#1083'.)'
+            DataBinding.FieldName = 'MemberCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MemberName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
-          end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            FooterAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -143,23 +135,17 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
             Options.Editing = False
             Width = 112
           end
-          object clContractInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractInvNumber'
+          object MoneyPlaceName: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072' /'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' /'#1051#1080#1094#1086
+            DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
-          object clOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-            DataBinding.FieldName = 'OperDatePartner'
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
             HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object clInvNumberPartner: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-            DataBinding.FieldName = 'InvNumberPartner'
-            HeaderAlignmentVert = vaCenter
-            Width = 84
+            Width = 80
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -175,10 +161,18 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     Width = 1151
     ExplicitWidth = 1151
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 99
+    Top = 347
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 40
+    Top = 251
+  end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      FormName = 'TServiceForm'
+      FormName = 'TPersonalReportForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -196,8 +190,8 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
-      FormName = 'TServiceForm'
-      FormNameParam.Value = 'TServiceForm'
+      FormName = 'TPersonalReportForm'
+      FormNameParam.Value = 'TPersonalReportForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -217,7 +211,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      FormName = 'TServiceForm'
+      FormName = 'TPersonalReportForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -261,9 +255,9 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     Top = 104
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Service'
-    Left = 96
-    Top = 96
+    StoredProcName = 'gpSelect_Movement_PersonalReport'
+    Left = 88
+    Top = 288
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -356,30 +350,32 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 200
-    Top = 120
+    Left = 232
+    Top = 232
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Service'
-    Left = 16
+    StoredProcName = 'gpComplete_Movement_PersonalReport'
     Top = 152
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Service'
-    Top = 160
+    StoredProcName = 'gpUnComplete_Movement_PersonalReport'
+    Left = 128
+    Top = 168
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Service'
+    StoredProcName = 'gpSetErased_Movement_PersonalReport'
     DataSet = MasterCDS
     DataSets = <
       item
         DataSet = MasterCDS
       end>
-    Left = 80
-    Top = 176
+    Left = 408
+  end
+  inherited FormParams: TdsdFormParams
+    Left = 336
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Service'
+    StoredProcName = 'gpCompletePeriod_Movement_PersonalReport'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -397,7 +393,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 272
-    Top = 224
+    Left = 280
+    Top = 376
   end
 end
