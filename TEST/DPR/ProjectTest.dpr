@@ -365,9 +365,9 @@ uses
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
-  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  PersonalReportJournal in '..\..\Forms\Document\PersonalReportJournal.pas' {PersonalReportJournalForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  PersonalReport in '..\..\Forms\Document\PersonalReport.pas' {PersonalReportForm: TParentForm},
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
   CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
@@ -529,7 +529,9 @@ uses
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   GoodsTag in '..\..\Forms\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
   GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
-  Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm};
+  Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
+  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
