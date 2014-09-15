@@ -71,6 +71,7 @@ type
     procedure LoadOrderExternalFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
+    procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
@@ -511,6 +512,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
 end;
+
+
+
+procedure TLoadFormTest.LoadPersonalReportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalReportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalReportJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalReportJournalForm');
+end;
+
+
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
