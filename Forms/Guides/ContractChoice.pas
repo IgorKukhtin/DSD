@@ -39,6 +39,7 @@ type
     JuridicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     colContractComment: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
