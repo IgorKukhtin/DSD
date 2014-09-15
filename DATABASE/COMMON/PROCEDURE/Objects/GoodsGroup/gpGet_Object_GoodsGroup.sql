@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
+             , GoodsTagId Integer, GoodsTagName TVarChar
              )
 AS
 $BODY$
@@ -31,6 +32,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS GroupStatName
            , CAST (0 as Integer)    AS TradeMarkId
            , CAST ('' as TVarChar)  AS TradeMarkName
+           , CAST (0 as Integer)    AS GoodsTagId
+           , CAST ('' as TVarChar)  AS GoodsTagName
            ;
    ELSE
        RETURN QUERY 
@@ -45,6 +48,9 @@ BEGIN
 
            , Object_TradeMark.Id            AS TradeMarkId
            , Object_TradeMark.ValueData     AS TradeMarkName
+          
+           , Object_GoodsTag.Id            AS GoodsTagId
+           , Object_GoodsTag.ValueData     AS GoodsTagName          
 
        FROM OBJECT AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -62,6 +68,11 @@ BEGIN
                                AND ObjectLink_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark()
            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_TradeMark.ChildObjectId 
 
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
+                                ON ObjectLink_GoodsTag.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsTagk.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
+           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_GoodsTag.ChildObjectId 
+           
        WHERE Object_GoodsGroup.Id = inId;
    END IF;
    
@@ -74,6 +85,7 @@ ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
  04.09.14         * add zc_ObjectLink_GoodsGroup_GoodsGroupStat
  06.09.13                         *

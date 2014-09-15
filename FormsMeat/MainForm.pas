@@ -404,6 +404,8 @@ type
     bbPersonalService: TdxBarButton;
     actPersonalServiceList: TdsdOpenForm;
     bbPersonalServiceList: TdxBarButton;
+    actGoodsTag: TdsdOpenForm;
+    bbGoodsTag: TdxBarButton;
   public
     { Public declarations }
   end;
