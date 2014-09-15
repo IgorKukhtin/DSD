@@ -1,7 +1,7 @@
-object PersonalServiceListEditForm: TPersonalServiceListEditForm
+object GoodsTagEditForm: TGoodsTagEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 139
   ClientWidth = 295
   Color = clBtnFace
@@ -60,8 +60,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 273
   end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 240
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -90,7 +90,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_PersonalServiceList'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsTag'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -128,7 +128,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_PersonalServiceList'
+    StoredProcName = 'gpGet_Object_GoodsTag'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
+             , GoodsTagId Integer, GoodsTagName TVarChar
              ) AS
 $BODY$BEGIN
 
@@ -29,6 +30,9 @@ $BODY$BEGIN
 
          , Object_TradeMark.Id            AS TradeMarkId
          , Object_TradeMark.ValueData     AS TradeMarkName
+
+         , Object_GoodsTag.Id            AS GoodsTagId
+         , Object_GoodsTag.ValueData     AS GoodsTagName         
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -45,6 +49,11 @@ $BODY$BEGIN
                                 ON ObjectLink_TradeMark.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark()
            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_TradeMark.ChildObjectId          
+           
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
+                                ON ObjectLink_GoodsTag.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsTagk.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
+           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_GoodsTag.ChildObjectId
                   
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
   
@@ -58,6 +67,7 @@ ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
  04.09.14         *              
  12.06.13         *

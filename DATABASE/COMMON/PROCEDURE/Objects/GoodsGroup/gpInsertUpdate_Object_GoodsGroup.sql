@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
     IN inParentId            Integer   ,    -- ссылка на группу товаров
     IN inGroupStatId         Integer   ,    -- ссылка на группу товаров (статистика)
     IN inTradeMarkId         Integer   ,    -- ссылка на Торговую марку
+    IN inGoodsTagId          Integer   ,    -- ссылка на Признак товара
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -47,6 +48,9 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_TradeMark(), ioId, inTradeMarkId);
+  
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_GoodsTag(), ioId, inGoodsTagId);
 
    -- изменили свойство <Полное название группы> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ObjectLink.ObjectId, lfGet_Object_TreeNameFull (ObjectLink.ChildObjectId, zc_ObjectLink_GoodsGroup_Parent()))
@@ -269,6 +273,7 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Int
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
  04.09.14         * add свойство <группа статистики> обновление
  13.01.14                                        * zc_ObjectString_Goods_GroupNameFull

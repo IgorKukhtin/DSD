@@ -1,7 +1,7 @@
-object PersonalServiceListForm: TPersonalServiceListForm
+object GoodsTagForm: TGoodsTagForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1079#1085#1072#1082#1080' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -104,8 +104,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -246,8 +246,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPersonalServiceListEditForm'
-      FormNameParam.Value = 'TPersonalServiceListEditForm'
+      FormName = 'TGoodsTagEditForm'
+      FormNameParam.Value = 'TGoodsTagEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -280,8 +280,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPersonalServiceListEditForm'
-      FormNameParam.Value = 'TPersonalServiceListEditForm'
+      FormName = 'TGoodsTagEditForm'
+      FormNameParam.Value = 'TGoodsTagEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -327,7 +327,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PersonalServiceList'
+    StoredProcName = 'gpSelect_Object_GoodsTag'
     DataSet = ClientDataSet
     DataSets = <
       item

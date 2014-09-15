@@ -14,7 +14,7 @@ uses
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TPersonalServiceListForm = class(TParentForm)
+  TGoodsTagForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -55,6 +55,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalServiceListForm);
+  RegisterClass(TGoodsTagForm);
 
 end.

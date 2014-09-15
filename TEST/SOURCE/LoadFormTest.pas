@@ -53,6 +53,7 @@ type
     procedure LoadGoodsFormTest;
     procedure LoadGoodsKindWeighingFormTest;
     procedure LoadGoodsKindFormTest;
+    procedure LoadGoodsTagFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -366,6 +367,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsTagFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTagForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTagForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTagEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTagEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalAccountFormTest;
