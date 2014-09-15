@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS Object_Goods_View CASCADE;

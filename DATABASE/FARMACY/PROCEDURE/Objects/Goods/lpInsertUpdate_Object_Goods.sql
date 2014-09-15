@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, INTEGER, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
-    IN inUserId              Integer        -- Пользователь
+    IN inUserId              Integer   ,    -- Пользователь
+    IN inCheckName           boolean  DEFAULT true
 )
 RETURNS integer AS
 $BODY$
@@ -20,11 +21,13 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    
    -- !!! проверка уникальности <Наименование>
-   IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
+   IF inCheckName THEN
+      IF EXISTS (SELECT GoodsName FROM Object_Goods_View 
            WHERE ((inObjectId = 0 AND ObjectId IS NULL) OR (ObjectId = inObjectId AND inObjectId <> 0))
              AND GoodsName = inName AND Id <> COALESCE(ioId, 0) ) THEN
-      RAISE EXCEPTION 'Значение "%" не уникально для справочника "Товары"', inName;
-   END IF; 
+          RAISE EXCEPTION 'Значение "%" не уникально для справочника "Товары"', inName;
+      END IF; 
+   END IF;
 
    -- !!! проверка уникальности <Код>
    IF inObjectId = 0 THEN
@@ -71,7 +74,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean) OWNER TO postgres;
 
   
 /*

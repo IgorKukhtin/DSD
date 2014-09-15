@@ -9,12 +9,12 @@ inherited ImportSettingsForm: TImportSettingsForm
   inherited PageControl: TcxPageControl
     Width = 1138
     Height = 313
-    ExplicitWidth = 1025
+    ExplicitWidth = 1138
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 1138
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1025
+      ExplicitWidth = 1138
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 697
@@ -56,12 +56,12 @@ inherited ImportSettingsForm: TImportSettingsForm
             Width = 87
           end
           object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
+            Caption = #1054#1073#1098#1077#1082#1090
             DataBinding.FieldName = 'JuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = JuridicalChoiceForm
+                Action = LoadObjectChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -138,7 +138,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 325
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -394,12 +393,12 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = True
     end
-    object JuridicalChoiceForm: TOpenChoiceForm
+    object LoadObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridicalForm'
-      FormNameParam.Value = 'TJuridicalForm'
+      FormName = 'TLoadObjectForm'
+      FormNameParam.Value = 'TLoadObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

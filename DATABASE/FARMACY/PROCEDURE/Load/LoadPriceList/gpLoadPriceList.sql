@@ -34,7 +34,8 @@ BEGIN
                                    0  ,    -- ссылка на единицу измерения
                                    0  ,    -- НДС
                         vbJuridicalId ,    -- Юр лицо или торговая сеть
-                             vbUserId )
+                             vbUserId , 
+                                false )
         FROM LoadPriceListItem
                      JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId 
                 LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode 

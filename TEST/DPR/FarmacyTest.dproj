@@ -443,6 +443,11 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ImportSettingsTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\LoadObjectUnit.pas">
+				<Form>LoadObjectForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -48,7 +48,7 @@ type
     clFileTypeName: TcxGridDBColumn;
     clImportTypeName: TcxGridDBColumn;
     clStartRow: TcxGridDBColumn;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    LoadObjectChoiceForm: TOpenChoiceForm;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     ContractChoiceForm: TOpenChoiceForm;

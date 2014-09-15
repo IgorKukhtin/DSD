@@ -375,7 +375,7 @@ uses
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
-  SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
+  SaveMarketingDocumentTo1C in '..\..\Forms\Export\SaveMarketingDocumentTo1C.pas' {SaveMarketingDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   PersonalServiceOld in '..\..\Forms\Document\PersonalServiceOld.pas' {PersonalServiceOldForm: TParentForm},
   PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
@@ -523,7 +523,8 @@ uses
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
   Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
   PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
-  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm};
+  Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
+  SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

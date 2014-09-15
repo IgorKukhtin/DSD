@@ -152,7 +152,8 @@ uses
   GoodsPartnerCode in '..\..\FormsFarmacy\Guides\GoodsPartnerCode.pas' {GoodsPartnerCodeForm: TParentForm},
   ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas',
   ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas';
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
+  LoadObjectUnit in '..\..\FormsFarmacy\Guides\LoadObjectUnit.pas' {LoadObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

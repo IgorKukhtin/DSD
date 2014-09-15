@@ -1076,8 +1076,8 @@
 				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
-				<Form>SaveDocumentTo1CForm</Form>
+			<DCCReference Include="..\..\Forms\Export\SaveMarketingDocumentTo1C.pas">
+				<Form>SaveMarketingDocumentTo1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
@@ -1550,6 +1550,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Member.pas">
 				<Form>Report_MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
+				<Form>SaveDocumentTo1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
