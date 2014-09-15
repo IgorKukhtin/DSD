@@ -3,15 +3,15 @@
   ClientWidth = 1026
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1042
-  ExplicitHeight = 209
+  ExplicitWidth = 1034
+  ExplicitHeight = 208
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -304,6 +304,10 @@
         item
           Visible = True
           ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsTag'
         end
         item
           Visible = True
@@ -1854,6 +1858,11 @@
       Action = actPersonalServiceList
       Category = 0
     end
+    object bbGoodsTag: TdxBarButton
+      Action = actGoodsTag
+      Caption = #1055#1088#1080#1079#1085#1072#1082#1080' '#1090#1086#1074#1072#1088#1072
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -2254,6 +2263,17 @@
       Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
       FormName = 'TMakerForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsTag: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+      Hint = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TGoodsTagForm'
+      FormNameParam.Value = 'TGoodsTagForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

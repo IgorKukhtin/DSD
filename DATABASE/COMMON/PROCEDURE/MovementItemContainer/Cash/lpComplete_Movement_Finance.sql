@@ -20,6 +20,8 @@ BEGIN
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
                                                            THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
+                                                           THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
@@ -78,8 +80,6 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет*
                                                           THEN zc_Enum_AccountDirection_90400() -- штрафы в бюджет*
 
-                                                      -- WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
-                                                      --     THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  END
      FROM Object
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical

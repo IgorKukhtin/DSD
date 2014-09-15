@@ -105,7 +105,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Options.Editing = False
             Width = 70
           end
-          object colContractCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Code'
             Visible = False

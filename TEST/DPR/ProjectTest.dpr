@@ -526,7 +526,9 @@ uses
   PersonalServiceList in '..\..\Forms\Guides\PersonalServiceList.pas' {PersonalServiceListForm: TParentForm},
   PersonalServiceListEdit in '..\..\Forms\Guides\PersonalServiceListEdit.pas' {PersonalServiceListEditForm: TParentForm},
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
-  JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm};
+  JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
+  GoodsTag in '..\..\Forms\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
+  GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
