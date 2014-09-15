@@ -893,8 +893,8 @@
 				<Form>TaxCorrectiveForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink.pas">
-				<Form>Partner1CLinkForm</Form>
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink_Excel.pas">
+				<Form>Partner1CLink_ExcelForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\LOAD1C\GoodsByGoodsKind1CLink.pas">
@@ -1570,6 +1570,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsTagEdit.pas">
 				<Form>GoodsTagEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink.pas">
+				<Form>Partner1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -406,6 +406,8 @@ type
     bbPersonalServiceList: TdxBarButton;
     actGoodsTag: TdsdOpenForm;
     bbGoodsTag: TdxBarButton;
+    actPartner1CLink_Excel: TdsdOpenForm;
+    bbPartner1CLink_Excel: TdxBarButton;
   public
     { Public declarations }
   end;

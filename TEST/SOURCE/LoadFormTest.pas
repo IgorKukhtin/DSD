@@ -983,6 +983,9 @@ end;
 
 procedure TLoadFormTest.Load1CLinkFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLink_ExcelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner1CLink_ExcelForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkPlaceForm'));
