@@ -1,17 +1,17 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 174
-  ClientWidth = 1026
+  ClientHeight = 100
+  ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1034
-  ExplicitHeight = 208
+  ExplicitWidth = 1102
+  ExplicitHeight = 135
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -121,6 +121,10 @@
         item
           Visible = True
           ItemName = 'bbGoods1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartner1CLink_Excel'
         end
         item
           Visible = True
@@ -1637,6 +1641,10 @@
     end
     object bbGoods1CLink: TdxBarButton
       Action = actGoodsByGoodsKind1CLink
+      Category = 0
+    end
+    object bbPartner1CLink_Excel: TdxBarButton
+      Action = actPartner1CLink_Excel
       Category = 0
     end
     object bbLoad1CSale: TdxBarButton
@@ -3442,6 +3450,16 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actMovementDesc: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      FormName = 'TMovementDescDataForm'
+      FormNameParam.Value = 'TMovementDescDataForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actSetUserDefaults: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
@@ -3480,16 +3498,6 @@
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
       FormName = 'TReport_JuridicalCollationForm'
       FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actMovementDesc: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      FormName = 'TMovementDescDataForm'
-      FormNameParam.Value = 'TMovementDescDataForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3559,6 +3567,16 @@
       Caption = #1057#1074#1103#1079#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1089' 1'#1057
       FormName = 'TGoodsByGoodsKind1CLinkForm'
       FormNameParam.Value = 'TGoodsByGoodsKind1CLinkForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPartner1CLink_Excel: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1095#1077#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1074#1089#1077')'
+      FormName = 'TPartner1CLink_ExcelForm'
+      FormNameParam.Value = 'TPartner1CLink_ExcelForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
