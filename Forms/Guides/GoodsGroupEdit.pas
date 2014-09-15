@@ -40,6 +40,9 @@ type
     cxLabel4: TcxLabel;
     ceTradeMark: TcxButtonEdit;
     TradeMarkGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceGoodsTag: TcxButtonEdit;
+    GoodsTagGuides: TdsdGuides;
   private
     { Private declarations }
   public

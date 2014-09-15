@@ -315,7 +315,7 @@ uses
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
   TaxCorrectiveJournal in '..\..\Forms\Document\TaxCorrectiveJournal.pas' {TaxCorrectiveJournalForm: TParentForm},
   TaxCorrective in '..\..\Forms\Document\TaxCorrective.pas' {TaxCorrectiveForm: TParentForm},
-  Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
+  Partner1CLink_Excel in '..\..\Forms\LOAD1C\Partner1CLink_Excel.pas' {Partner1CLink_ExcelForm: TParentForm},
   GoodsByGoodsKind1CLink in '..\..\Forms\LOAD1C\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm},
   LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas',
   dbMeatTest in '..\SOURCE\dbMeatTest.pas',
@@ -528,7 +528,8 @@ uses
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   GoodsTag in '..\..\Forms\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
-  GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm};
+  GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
+  Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
