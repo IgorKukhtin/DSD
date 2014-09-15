@@ -71,6 +71,7 @@ type
     clFuelName: TcxGridDBColumn;
     cxSplitter: TcxSplitter;
     clGroupStatName: TcxGridDBColumn;
+    clGoodsTagName: TcxGridDBColumn;
   private
     { Private declarations }
   public

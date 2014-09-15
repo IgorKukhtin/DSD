@@ -63,6 +63,9 @@ type
     cxLabel9: TcxLabel;
     ceGroupStat: TcxButtonEdit;
     GoodsGroupStatGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceGoodsTag: TcxButtonEdit;
+    GoodsTagGuides: TdsdGuides;
   private
     { Private declarations }
   public

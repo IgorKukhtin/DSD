@@ -11,7 +11,8 @@ uses
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
   Vcl.ActnList, dsdAction, ParentForm, DataModul, Vcl.ComCtrls,
   cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit,
-  dsdAddOn, cxCheckBox, dxSkinsCore, dxBarExtItems;
+  dsdAddOn, cxCheckBox, dxSkinsCore, dxBarExtItems, dxSkinsDefaultPainters,
+  dxSkinsdxBarPainter;
 
 type
   TGoodsGroupForm = class(TParentForm)
