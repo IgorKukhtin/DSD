@@ -74,6 +74,9 @@ type
     actPositionChoice: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actUnitChoice: TOpenChoiceForm;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbCopy: TdxBarButton;
   private
     { Private declarations }
   public
