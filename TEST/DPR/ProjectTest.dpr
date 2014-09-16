@@ -342,7 +342,7 @@ uses
   JuridicalGroup_Object in '..\..\Forms\Guides\JuridicalGroup_Object.pas' {JuridicalGroup_ObjectForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  OrderExternalTest in '..\SOURCE\Movement\All\OrderExternalTest.pas',
   TaxCorrectiveTest in '..\SOURCE\Movement\All\TaxCorrectiveTest.pas',
   TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
   ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',

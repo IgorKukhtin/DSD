@@ -14,6 +14,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_ContractDocument_Data() RETURNS integer
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_Object_ContractDocument(), 'zc_ObjectBlob_ContractDocument_Data','Пользовательские данные формы' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_UserFormSettings_Data');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_ImportSettings_Query() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_ImportSettings_Query'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_ImportSettings(), 'zc_ObjectBlob_ImportSettings_Query','Запрос' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_ImportSettings_Query');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

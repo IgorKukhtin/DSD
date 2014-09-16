@@ -40,7 +40,7 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            Width = 101
+            Width = 97
           end
           object clDirectory: TcxGridDBColumn
             Caption = #1057#1090#1088#1086#1082#1072' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103
@@ -53,7 +53,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
-            Width = 87
+            Width = 84
           end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090
@@ -67,7 +67,7 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 67
           end
           object clContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -94,7 +94,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
-            Width = 84
+            Width = 90
           end
           object clImportTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1080#1084#1087#1086#1088#1090#1072
@@ -108,25 +108,33 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = False
             HeaderAlignmentVert = vaCenter
-            Width = 67
+            Width = 56
           end
           object clStartRow: TcxGridDBColumn
             Caption = #8470' '#1089#1090#1088#1086#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 71
+          end
+          object clQuery: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1086#1089
+            DataBinding.FieldName = 'Query'
+            PropertiesClassName = 'TcxBlobEditProperties'
+            Properties.BlobPaintStyle = bpsText
+            HeaderAlignmentVert = vaCenter
+            Width = 58
           end
           object clHDR: TcxGridDBColumn
             DataBinding.FieldName = 'HDR'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 47
+            Width = 46
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 53
           end
         end
       end
@@ -633,7 +641,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         Name = 'inStartRow'
         Component = MasterCDS
         ComponentItem = 'StartRow'
-        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -648,6 +655,13 @@ inherited ImportSettingsForm: TImportSettingsForm
         Component = MasterCDS
         ComponentItem = 'Directory'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inQuery'
+        Component = MasterCDS
+        ComponentItem = 'Query'
+        DataType = ftWideString
         ParamType = ptInput
       end>
     Left = 232

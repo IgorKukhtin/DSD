@@ -448,6 +448,8 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

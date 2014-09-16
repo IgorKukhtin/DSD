@@ -974,7 +974,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxCorrectiveTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
@@ -1538,6 +1538,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
 				<Form>SaveDocumentTo1CForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
 				<Form>PersonalServiceJournalForm</Form>

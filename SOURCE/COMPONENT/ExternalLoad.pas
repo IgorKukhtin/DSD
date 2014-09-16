@@ -83,6 +83,7 @@ type
     StartRow: integer;
     HDR: boolean;
     Directory: string;
+    Query: string;
     constructor Create(ItemClass: TCollectionItemClass);
     destructor Destroy; override;
   end;
@@ -425,7 +426,7 @@ begin
         end;
     end;
     dtODBC: begin
-              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, '', ImportSettings) do
+              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, ImportSettings.Query, ImportSettings) do
                 try
                   // Загрузили
                   Load;
@@ -473,6 +474,7 @@ begin
   GetStoredProc.Params.AddParam('ImportTypeName', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('Directory', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('ProcedureName', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('Query', ftString, ptOutput, '');
 
   GetStoredProc.Execute;
   {Заполняем параметрами процедуру}
@@ -483,6 +485,7 @@ begin
   Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
   Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
+  Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
   Result.StoredProc := TdsdStoredProc.Create(nil);
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
@@ -604,11 +607,7 @@ begin
   FDataSet := TADOQuery.Create(nil);
   with FDataSet as TADOQuery do begin
     Connection := FAdoConnection;
-    SQL.Text := 'SELECT abs(OperCount) AS Amount, ItemsSumm, Code, BillDate ' +
-                '    FROM "DBA"."Bill" ' +
-                '               JOIN BillItems ON BillItems.BillId = Bill.Id ' +
-                '               JOIN GoodsProperty ON GoodsProperty.Id = BillItems.GoodsPropertyId ' +
-                ' WHERE Bill.BillKind = zc_bkPointZakaz() and ToId = - 15 AND Amount <> 0';//ASQL;
+    SQL.Text := ASQL;
   end;
 end;
 
