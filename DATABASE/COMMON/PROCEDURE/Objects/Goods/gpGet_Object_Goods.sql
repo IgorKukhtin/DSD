@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , MeasureId Integer,  MeasureName TVarChar
-             , TradeMarkId Integer,  TradeMarkName TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar
+             , GoodsTagId Integer, GoodsTagName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , FuelId Integer, FuelName TVarChar
@@ -44,6 +45,9 @@ BEGIN
            , CAST (0 as Integer)   AS TradeMarkId
            , CAST ('' as TVarChar) AS TradeMarkName
            
+           , CAST (0 as Integer)   AS GoodsTagId
+           , CAST ('' as TVarChar) AS GoodsTagName
+           
            , CAST (0 as Integer)   AS InfoMoneyId
            , CAST ('' as TVarChar) AS InfoMoneyName
            
@@ -72,6 +76,9 @@ BEGIN
 
            , Object_TradeMark.Id          AS TradeMarkId
            , Object_TradeMark.ValueData   AS TradeMarkName
+
+           , COALESCE (Object_GoodsTag.Id, CAST (0 as Integer)) AS GoodsTagId
+           , COALESCE (Object_GoodsTag.ValueData,CAST ('' as TVarChar)) AS GoodsTagName
          
            , Object_InfoMoney.Id          AS InfoMoneyId
            , Object_InfoMoney.ValueData   AS InfoMoneyName
@@ -102,6 +109,11 @@ BEGIN
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                               ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight 
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
@@ -137,6 +149,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.09.14         * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * 
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  06.09.13                          *              

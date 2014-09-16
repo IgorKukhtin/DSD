@@ -411,6 +411,8 @@ type
     actSaveMarketingDocumentTo1CForm: TdsdOpenForm;
     bbSaveMarketingDocumentTo1C: TdxBarButton;
     bbExternalSave: TdxBarSubItem;
+    actPersonalReport: TdsdOpenForm;
+    bbPersonalReport: TdxBarButton;
   public
     { Public declarations }
   end;

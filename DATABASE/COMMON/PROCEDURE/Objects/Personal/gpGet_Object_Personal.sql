@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_Personal(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Personal(
-    IN inId          Integer,       -- Сотрудники 
+    IN inId          Integer,       -- Сотрудники
+    IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
@@ -17,10 +19,40 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Personal());
-  
-   IF COALESCE (inId, 0) = 0
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) <> 0))
    THEN
-       RETURN QUERY 
+     RETURN QUERY
+     SELECT
+           Object_Personal_View.MemberId     AS MemberId
+         , Object_Personal_View.PersonalCode AS MemberCode
+         , Object_Personal_View.PersonalName AS MemberName
+
+         , Object_Personal_View.PositionId
+         , Object_Personal_View.PositionName
+
+         , Object_Personal_View.PositionLevelId
+         , Object_Personal_View.PositionLevelName
+
+         , Object_Personal_View.UnitId
+         , Object_Personal_View.UnitName
+
+         , Object_Personal_View.PersonalGroupId
+         , Object_Personal_View.PersonalGroupName
+
+         , Object_Personal_View.DateIn
+         -- , Object_Personal_View.DateOut
+         , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
+
+         , Object_Personal_View.isDateOut
+         , Object_Personal_View.isMain
+
+    FROM Object_Personal_View
+    WHERE Object_Personal_View.PersonalId = inMaskId;
+   END IF;
+
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
+   THEN
+       RETURN QUERY
        SELECT
              CAST (0 as Integer)   AS MemberId
            , CAST (0 as Integer)   AS MemberCode
@@ -42,9 +74,12 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS DateOut
            , FALSE AS isDateOut
            , TRUE  AS isMain;
-   ELSE
-     RETURN QUERY 
-     SELECT 
+  END IF;
+
+  IF COALESCE (inId, 0) <> 0
+   THEN
+     RETURN QUERY
+     SELECT
            Object_Personal_View.MemberId     AS MemberId
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
@@ -60,7 +95,7 @@ BEGIN
 
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupName
- 
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -72,25 +107,26 @@ BEGIN
     WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Personal (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.09.14                                                        *
  12.09.14                                        * add isDateOut and isOfficial
  21.05.14                         * add Official
  21.11.13                                         * add PositionLevel...
  28.10.13                         * return memberid
  30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
- 03.09.14                        *                                
+ 03.09.14                        *
  19.07.13         *    rename zc_ObjectDate...
- 01.07.13         *              
+ 01.07.13         *
 
 */
 

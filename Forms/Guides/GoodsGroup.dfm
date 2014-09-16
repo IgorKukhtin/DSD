@@ -327,8 +327,8 @@ object GoodsGroupForm: TGoodsGroupForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 160
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
