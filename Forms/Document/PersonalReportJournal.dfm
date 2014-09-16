@@ -347,6 +347,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [1]
+      Action = actInsertMask
     end
   end
   inherited PeriodChoice: TPeriodChoice

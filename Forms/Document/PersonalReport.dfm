@@ -34,24 +34,31 @@
     Top = 11
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object cxLabel2: TcxLabel [4]
-    Left = 10
-    Top = 151
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-  end
-  object cxLabel4: TcxLabel [5]
-    Left = 296
-    Top = 109
+  object cxLabel4: TcxLabel [4]
+    Left = 300
+    Top = 155
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
-  object cxLabel5: TcxLabel [6]
-    Left = 295
-    Top = 61
+  object cxLabel5: TcxLabel [5]
+    Left = 300
+    Top = 110
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object cePaidKind: TcxButtonEdit [7]
-    Left = 10
-    Top = 169
+  object ceUnit: TcxButtonEdit [6]
+    Left = 300
+    Top = 172
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 300
+  end
+  object ceInfoMoney: TcxButtonEdit [7]
+    Left = 300
+    Top = 128
     Properties.Buttons = <
       item
         Default = True
@@ -59,33 +66,9 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 97
+    Width = 300
   end
-  object ceUnit: TcxButtonEdit [8]
-    Left = 295
-    Top = 128
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 304
-  end
-  object ceInfoMoney: TcxButtonEdit [9]
-    Left = 295
-    Top = 84
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 304
-  end
-  object ceOperDate: TcxDateEdit [10]
+  object ceOperDate: TcxDateEdit [8]
     Left = 152
     Top = 34
     Properties.SaveTime = False
@@ -93,37 +76,58 @@
     TabOrder = 2
     Width = 129
   end
-  object ceAmountDebet: TcxCurrencyEdit [11]
+  object ceAmountDebet: TcxCurrencyEdit [9]
     Left = 293
     Top = 34
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 6
+    TabOrder = 3
     Width = 142
   end
-  object cxLabel7: TcxLabel [12]
+  object cxLabel7: TcxLabel [10]
     Left = 293
     Top = 11
     Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
   end
-  object ceJuridical: TcxButtonEdit [13]
+  object cxLabel10: TcxLabel [11]
+    Left = 10
+    Top = 190
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [12]
     Left = 8
-    Top = 128
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
+    Top = 213
+    TabOrder = 7
+    Width = 593
+  end
+  object ceAmountKredit: TcxCurrencyEdit [13]
+    Left = 447
+    Top = 34
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
     TabOrder = 4
-    Width = 273
+    Width = 152
   end
-  object cxLabel6: TcxLabel [14]
+  object cxLabel3: TcxLabel [14]
+    Left = 447
+    Top = 11
+    Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
+  end
+  object edInvNumber: TcxTextEdit [15]
     Left = 8
-    Top = 109
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+    Top = 34
+    Enabled = False
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Text = '0'
+    Width = 118
   end
-  object ceContract: TcxButtonEdit [15]
+  object cxLabel6: TcxLabel [16]
+    Left = 8
+    Top = 67
+    Caption = #1060#1048#1054
+  end
+  object ceMember: TcxButtonEdit [17]
     Left = 8
     Top = 84
     Properties.Buttons = <
@@ -132,70 +136,42 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 17
     Width = 273
   end
-  object cxLabel8: TcxLabel [16]
+  object edCar: TcxButtonEdit [18]
     Left = 8
-    Top = 61
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object cxLabel10: TcxLabel [17]
-    Left = 10
-    Top = 190
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-  end
-  object ceComment: TcxTextEdit [18]
-    Left = 10
-    Top = 208
-    TabOrder = 10
-    Width = 587
-  end
-  object ceAmountKredit: TcxCurrencyEdit [19]
-    Left = 447
-    Top = 34
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 7
-    Width = 152
-  end
-  object cxLabel3: TcxLabel [20]
-    Left = 447
-    Top = 11
-    Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
-  end
-  object cxLabel9: TcxLabel [21]
-    Left = 150
-    Top = 151
-    Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-  end
-  object ceOperDatePartner: TcxDateEdit [22]
-    Left = 150
-    Top = 169
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 22
-    Width = 131
-  end
-  object edInvNumberPartner: TcxTextEdit [23]
-    Left = 296
-    Top = 169
-    TabOrder = 23
-    Width = 153
-  end
-  object cxLabel11: TcxLabel [24]
-    Left = 296
-    Top = 151
-    Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-  end
-  object edInvNumber: TcxTextEdit [25]
-    Left = 8
-    Top = 34
-    Enabled = False
+    Top = 128
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     Properties.ReadOnly = True
-    TabOrder = 25
-    Text = '0'
-    Width = 118
+    TabOrder = 18
+    Width = 273
+  end
+  object cxLabel2: TcxLabel [19]
+    Left = 8
+    Top = 110
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '
+  end
+  object ceMoneyPlace: TcxButtonEdit [20]
+    Left = 300
+    Top = 83
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 300
+  end
+  object cxLabel8: TcxLabel [21]
+    Left = 300
+    Top = 61
+    Caption = #1054#1073#1098#1077#1082#1090
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -255,20 +231,6 @@
         ParamType = ptInput
       end
       item
-        Name = 'inOperDatePartner'
-        Value = 0d
-        Component = ceOperDatePartner
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInvNumberPartner'
-        Value = ''
-        Component = edInvNumberPartner
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inamountIn'
         Value = 0.000000000000000000
         Component = ceAmountDebet
@@ -290,14 +252,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inbusinessid'
+        Name = 'inMemberId'
         Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'incontractid'
-        Value = ''
-        Component = ContractGuides
+        Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -309,30 +266,43 @@
         ParamType = ptInput
       end
       item
-        Name = 'injuridicalid'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'injuridicalbasisid'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inpaidkindid'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inunitid'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = ''
+        Component = MoneyPlaceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCarId'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = 0d
+        DataType = ftDateTime
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
       end>
     Left = 488
     Top = 224
@@ -379,18 +349,6 @@
         DataType = ftDateTime
       end
       item
-        Name = 'OperDatePartner'
-        Value = 0d
-        Component = ceOperDatePartner
-        DataType = ftDateTime
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = ''
-        Component = edInvNumberPartner
-        DataType = ftString
-      end
-      item
         Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountDebet
@@ -403,45 +361,21 @@
         DataType = ftFloat
       end
       item
-        Name = 'JuridicalId'
+        Name = 'Comment'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-      end
-      item
-        Name = 'JuridicalBasisId'
-        Value = ''
-      end
-      item
-        Name = 'JuridicalBasisName'
-        Value = ''
+        Component = ceComment
         DataType = ftString
       end
       item
-        Name = 'BusinessId'
+        Name = 'MemberId'
         Value = ''
-      end
-      item
-        Name = 'BusinessName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
+        Component = MemberGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'PaidKindName'
+        Name = 'MemberName'
         Value = ''
-        Component = PaidKindGuides
+        Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -472,50 +406,61 @@
         DataType = ftString
       end
       item
-        Name = 'Comment'
+        Name = 'MoneyPlaceId'
         Value = ''
-        Component = ceComment
-        DataType = ftString
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        Component = ContractGuides
+        Component = MoneyPlaceGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'ContractInvNumber'
+        Name = 'MoneyPlaceName'
         Value = ''
-        Component = ContractGuides
+        Component = MoneyPlaceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CarId'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CarName'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
       end>
     Left = 544
     Top = 216
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = cePaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 34
-    Top = 152
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -538,8 +483,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 400
-    Top = 103
+    Left = 398
+    Top = 147
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -562,32 +507,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 472
-    Top = 69
-  end
-  object JuridicalGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 88
-    Top = 119
+    Left = 470
+    Top = 113
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -596,88 +517,105 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = ContractGuides
+        Guides = MemberGuides
       end
       item
-        Guides = JuridicalGuides
+        Guides = MoneyPlaceGuides
       end
       item
-        Guides = PaidKindGuides
+        Guides = UnitGuides
       end
       item
         Guides = InfoMoneyGuides
       end>
     ActionItemList = <>
-    Left = 208
-    Top = 112
+    Left = 232
+    Top = 40
   end
-  object ContractGuides: TdsdGuides
+  object MemberGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceContract
-    FormNameParam.Value = 'TContractChoiceForm'
+    LookupControl = ceMember
+    FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        ComponentItem = 'Code'
+      end>
+    Left = 93
+    Top = 72
+  end
+  object GuidesCar: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 122
+    Top = 123
+  end
+  object MoneyPlaceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMoneyPlace
+    FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMoneyPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = MoneyPlaceGuides
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = MoneyPlaceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
+        ParamType = ptInput
       end>
-    Left = 128
-    Top = 69
+    Left = 426
+    Top = 70
   end
 end
