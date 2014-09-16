@@ -16,15 +16,13 @@ type
   TSaveMarketingDocumentTo1CForm = class(TAncestorDialogForm)
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    BillList: TClientDataSet;
+    AccountExternal: TClientDataSet;
     ExternalSaveAction: TExternalSaveAction;
     actClose: TdsdFormClose;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
-    spBillPeriod: TdsdStoredProc;
-    actPeriodOpen: TdsdExecStoredProc;
-    DataSource: TDataSource;
+    spReport_AccountExternal: TdsdStoredProc;
   private
     { Private declarations }
   public

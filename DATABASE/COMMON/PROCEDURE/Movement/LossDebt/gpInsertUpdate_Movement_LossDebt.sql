@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_Movement_LossDebt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -18,13 +15,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_LossDebt());
 
      -- определяем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_LossDebt());
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_LossDebt(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -41,11 +43,8 @@ BEGIN
      -- сохранили связь с <Счет>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Account(), ioId, inAccountId);
 
-     -- пересчитали Итоговые суммы по накладной
-     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -54,6 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.09.14                                        * add lpInsert_MovementProtocol
  25.03.14         * add PaidKind                   
  06.03.14         * add Account               
  14.01.14                                        *

@@ -2,8 +2,8 @@ object MemberForm: TMemberForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 384
-  ClientWidth = 678
+  ClientHeight = 520
+  ClientWidth = 665
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object MemberForm: TMemberForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 678
-    Height = 358
+    Width = 665
+    Height = 494
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -53,37 +53,46 @@ object MemberForm: TMemberForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 40
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 173
+        Width = 100
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 70
       end
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 131
+        Width = 80
+      end
+      object clIsOfficial: TcxGridDBColumn
+        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        DataBinding.FieldName = 'isOfficial'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
-        Width = 137
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
@@ -177,7 +186,19 @@ object MemberForm: TMemberForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateIsOfficial'
         end
         item
           Visible = True
@@ -237,6 +258,14 @@ object MemberForm: TMemberForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbUpdateIsOfficial: TdxBarButton
+      Action = actUpdateIsOfficial
       Category = 0
     end
   end
@@ -376,6 +405,37 @@ object MemberForm: TMemberForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateIsOfficial: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsOfficial
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsOfficial
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -384,7 +444,14 @@ object MemberForm: TMemberForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 48
     Top = 216
   end
@@ -459,6 +526,13 @@ object MemberForm: TMemberForm
         ParamType = ptInput
       end
       item
+        Name = 'inIsOfficial'
+        Component = ClientDataSet
+        ComponentItem = 'isOfficial'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inINN'
         Component = ClientDataSet
         ComponentItem = 'INN'
@@ -481,5 +555,26 @@ object MemberForm: TMemberForm
       end>
     Left = 560
     Top = 152
+  end
+  object spUpdateIsOfficial: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_isOfficial'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioIsOfficial'
+        Component = ClientDataSet
+        ComponentItem = 'IsOfficial'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 232
+    Top = 379
   end
 end

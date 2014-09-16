@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inOperDate         TDateTime , -- 
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inAccountId        Integer   , --
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
+    IN inJuridicalGroupId Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
@@ -32,16 +34,25 @@ $BODY$
 
    DECLARE vbLenght Integer;
 
-   DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbIsBranch Boolean;
+   DECLARE vbIsJuridicalGroup Boolean;
+   DECLARE vbObjectId_Constraint_Branch Integer;
+   DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- определяется ...
+     vbIsBranch:= COALESCE (inBranchId, 0) > 0;
+     vbIsJuridicalGroup:= COALESCE (inJuridicalGroupId, 0) > 0;
+
      -- определяется уровень доступа
-     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId);
+     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+     vbObjectId_Constraint_JuridicalGroup:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
      -- !!!меняется параметр!!!
-     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+     IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
+     IF vbObjectId_Constraint_JuridicalGroup > 0 THEN inJuridicalGroupId:= vbObjectId_Constraint_JuridicalGroup; END IF;
 
 
      -- Выбираем остаток на дату по юр. лицам в разрезе договоров. 
@@ -179,6 +190,7 @@ from (
              , CLO_PaidKind.ObjectId  AS PaidKindId
              , CLO_Partner.ObjectId   AS PartnerId
              , CLO_Branch.ObjectId    AS BranchId
+             , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
         FROM
        (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -250,8 +262,12 @@ from (
            LEFT JOIN ContainerLinkObject AS CLO_Partner
                                          ON CLO_Partner.ContainerId = RESULT_all.Id
                                         AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = RESULT_all.JuridicalId
+                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
          WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-           AND (CLO_Branch.ObjectId = inBranchId OR inBranchId = 0)
+           AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId AND vbIsBranch = FALSE))                 -- !!!пересорт!!
+           AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0 OR (CLO_Branch.ObjectId = inBranchId AND vbIsJuridicalGroup = FALSE)) -- !!!пересорт!!
          GROUP BY RESULT_all.AccountId
                 , RESULT_all.ContractId
                 , RESULT_all.JuridicalId 
@@ -263,6 +279,7 @@ from (
                 , CLO_PaidKind.ObjectId
                 , CLO_Partner.ObjectId
                 , CLO_Branch.ObjectId
+                , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
        ) AS RESULT
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
@@ -293,10 +310,7 @@ from (
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
-                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = RESULT.JuridicalGroupId
 
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = RESULT.BranchId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
@@ -314,11 +328,12 @@ where a.DebetRemains <> 0 or a.KreditRemains <> 0
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.09.14                                        * add inJuridicalGroupId
  07.09.14                                        * add Branch...
  24.08.14                                        * add Partner...
  11.07.14                                        * add RetailName
@@ -337,5 +352,5 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2014', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());

@@ -2,8 +2,8 @@ object PersonalForm: TPersonalForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
-  ClientHeight = 358
-  ClientWidth = 864
+  ClientHeight = 487
+  ClientWidth = 961
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,9 +19,9 @@ object PersonalForm: TPersonalForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 864
-    Height = 332
+    Top = 28
+    Width = 961
+    Height = 459
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -41,7 +41,6 @@ object PersonalForm: TPersonalForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -53,18 +52,28 @@ object PersonalForm: TPersonalForm
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Options.Editing = False
+        Width = 55
       end
       object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 155
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actPositionChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 142
@@ -72,20 +81,32 @@ object PersonalForm: TPersonalForm
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
         DataBinding.FieldName = 'PositionLevelName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 113
       end
       object clPersonalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
         DataBinding.FieldName = 'PersonalGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 133
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actUnitChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 128
@@ -93,18 +114,42 @@ object PersonalForm: TPersonalForm
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object clDateOut: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'DateOut'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 70
+      end
+      object clIsDateOut: TcxGridDBColumn
+        Caption = #1059#1074#1086#1083#1077#1085
+        DataBinding.FieldName = 'isDateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object clIsMain: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
+        DataBinding.FieldName = 'isMain'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clIsOfficial: TcxGridDBColumn
+        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        DataBinding.FieldName = 'isOfficial'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -113,18 +158,49 @@ object PersonalForm: TPersonalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 35
-      end
-      object clOffical: TcxGridDBColumn
-        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-        DataBinding.FieldName = 'Official'
-        HeaderAlignmentVert = vaCenter
-        Width = 91
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cbPeriod: TcxCheckBox
+    Left = 256
+    Top = 26
+    Action = actRefresh
+    Caption = '<'#1056#1072#1073#1086#1090#1072#1083'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+    TabOrder = 1
+    Width = 147
+  end
+  object deStart: TcxDateEdit
+    Left = 445
+    Top = 26
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 3
+    Width = 85
+  end
+  object cxlEnd: TcxLabel
+    Left = 536
+    Top = 26
+    AutoSize = False
+    Caption = #1087#1086
+    Properties.Alignment.Vert = taVCenter
+    Height = 21
+    Width = 21
+    AnchorY = 37
+  end
+  object deEnd: TcxDateEdit
+    Left = 563
+    Top = 26
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 85
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -174,7 +250,7 @@ object PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -206,10 +282,18 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbCopy'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -219,7 +303,35 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateIsMain'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem4'
         end
         item
           Visible = True
@@ -273,6 +385,46 @@ object PersonalForm: TPersonalForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbUpdateIsMain: TdxBarButton
+      Action = actUpdateIsMain
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbCopy: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbPeriod
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = deStart
+    end
+    object dxBarControlContainerItem3: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxlEnd
+    end
+    object dxBarControlContainerItem4: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = deEnd
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -300,6 +452,26 @@ object PersonalForm: TPersonalForm
       ImageIndex = 0
       FormName = 'TPersonalEditForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -399,6 +571,90 @@ object PersonalForm: TPersonalForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateIsMain: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMain
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
+    object actUnitChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'TUnit_ObjectForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actPositionChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'TPositionForm'
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Personal'
@@ -407,7 +663,35 @@ object PersonalForm: TPersonalForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41852d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41852d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPeriod'
+        Value = 'False'
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 48
     Top = 216
   end
@@ -456,5 +740,74 @@ object PersonalForm: TPersonalForm
     SummaryItemList = <>
     Left = 328
     Top = 264
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 480
+    Top = 97
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 536
+    Top = 160
+  end
+  object spUpdateIsMain: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Personal_isMain'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioIsMain'
+        Component = ClientDataSet
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 232
+    Top = 379
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Personal_Property'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPositionId'
+        Component = ClientDataSet
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Component = ClientDataSet
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsMain'
+        Component = ClientDataSet
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 531
+    Top = 310
   end
 end

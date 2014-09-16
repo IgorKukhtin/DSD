@@ -12,6 +12,7 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
   inherited bbOk: TcxButton
     Left = 156
     Top = 61
+    Action = MultiAction
     ExplicitLeft = 156
     ExplicitTop = 61
   end
@@ -78,24 +79,42 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
     Top = 63
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'macPeriodSave'
+      StoredProc = spReport_AccountExternal
       StoredProcList = <
         item
+          StoredProc = spReport_AccountExternal
         end>
+      ShortCut = 0
+    end
+    object MultiAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'FileName'
+          ToParam.DataType = ftString
+        end
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
+        end>
+      ActionList = <
+        item
+          Action = actRefresh
+        end
+        item
+          Action = ExternalSaveAction
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' 1C '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
     end
     object ExternalSaveAction: TExternalSaveAction
       Category = 'macPeriodSave'
       MoveParams = <>
       FieldDefs = <
-        item
-          Name = 'UNITID'
-          DataType = ftString
-          Size = 9
-        end
-        item
-          Name = 'VIDDOC'
-          DataType = ftString
-          Size = 9
-        end
         item
           Name = 'INVNUMBER'
           DataType = ftString
@@ -112,54 +131,19 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
           Size = 9
         end
         item
+          Name = 'CLIENTINN'
+          DataType = ftString
+          Size = 10
+        end
+        item
+          Name = 'CLIENTOKPO'
+          DataType = ftString
+          Size = 10
+        end
+        item
           Name = 'CLIENTNAME'
           DataType = ftString
           Size = 50
-        end
-        item
-          Name = 'GOODSCODE'
-          DataType = ftString
-          Size = 9
-        end
-        item
-          Name = 'GOODSNAME'
-          DataType = ftString
-          Size = 50
-        end
-        item
-          Name = 'OPERCOUNT'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'OPERPRICE'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'TAX'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'DOC1DATE'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'DOC1NUMBER'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'DOC2DATE'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'DOC2NUMBER'
-          DataType = ftString
-          Size = 10
         end
         item
           Name = 'SUMA'
@@ -175,58 +159,8 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
           Name = 'SUMAPDV'
           DataType = ftString
           Size = 10
-        end
-        item
-          Name = 'CLIENTINN'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'CLIENTOKPO'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'CLIENTKIND'
-          DataType = ftString
-          Size = 2
-        end
-        item
-          Name = 'INVNALOG'
-          DataType = ftString
-          Size = 12
-        end
-        item
-          Name = 'BILLID'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'EKSPCODE'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'EXPNAME'
-          DataType = ftString
-          Size = 50
-        end
-        item
-          Name = 'GOODSID'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'PACKID'
-          DataType = ftString
-          Size = 10
-        end
-        item
-          Name = 'PACKNAME'
-          DataType = ftString
-          Size = 50
         end>
-      DataSet = BillList
+      DataSet = AccountExternal
       OpenFileDialog = False
       FileName.Value = Null
       FileName.Component = FormParams
@@ -239,16 +173,6 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
-    object actPeriodOpen: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spBillPeriod
-      StoredProcList = <
-        item
-          StoredProc = spBillPeriod
-        end>
-      Caption = 'actPeriodOpen'
-    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -260,7 +184,7 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
     Left = 48
     Top = 48
   end
-  object BillList: TClientDataSet
+  object AccountExternal: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 256
@@ -271,10 +195,12 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
     DateEnd = deEnd
     Left = 472
   end
-  object spBillPeriod: TdsdStoredProc
-    StoredProcName = 'gpReport_Account'
+  object spReport_AccountExternal: TdsdStoredProc
+    StoredProcName = 'gpReport_AccountExternal'
+    DataSet = AccountExternal
     DataSets = <
       item
+        DataSet = AccountExternal
       end>
     Params = <
       item
@@ -292,16 +218,10 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
         ParamType = ptInput
       end
       item
-        Name = 'inPeriodLenght'
-        Value = 'Day'
-        DataType = ftString
+        Name = 'inAccountId'
         ParamType = ptInput
       end>
-    Left = 24
-    Top = 40
-  end
-  object DataSource: TDataSource
-    Left = 64
+    Left = 16
     Top = 16
   end
 end

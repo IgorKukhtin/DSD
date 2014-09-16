@@ -17,6 +17,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideKharkov() RETURNS Inte
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideCherkassi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideCherkassi' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceProduction() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceProduction' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceAdmin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceAdmin' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceSbit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceSbit' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceMarketing() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceMarketing' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceSB() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceSB' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
@@ -191,6 +197,37 @@ BEGIN
                                    , inName:= 'Справочники Донецк (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_GuideDoneck');
 
+
+ -- ЗП Производство, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceProduction()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 201
+                                   , inName:= 'ЗП Производство (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceProduction');
+ -- ЗП Админ, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 202
+                                   , inName:= 'ЗП Админ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceAdmin');
+ -- ЗП Коммерческий отдел, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceSbit()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 203
+                                   , inName:= 'ЗП Коммерческий отдел (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceSbit');
+ -- ЗП отдел Маркетинга, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceMarketing()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 204
+                                   , inName:= 'ЗП отдел Маркетинга (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceMarketing');
+ -- ЗП СБ, Охрана, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceSB()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 205
+                                   , inName:= 'ЗП СБ, Охрана (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceSB');
 /*
  -- заливка прав 
  PERFORM gpInsertUpdate_Object_RoleProcess2 (ioId        := tmpData.RoleRightId
@@ -222,6 +259,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.09.14                                        * add zc_Enum_Process_AccessKey_PersonalService...
  08.09.14                                        * add zc_Enum_Process_AccessKey_Guide...
  07.04.14                                        * add zc_Enum_Process_AccessKey_DocumentBread
  10.02.14                                        * add zc_Enum_Process_AccessKey_Document...

@@ -113,8 +113,8 @@ BEGIN
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, PositionId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
      -- 5.3. проводим Документ
@@ -134,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!

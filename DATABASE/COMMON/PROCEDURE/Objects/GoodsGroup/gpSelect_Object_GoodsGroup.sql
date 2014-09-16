@@ -1,18 +1,19 @@
-п»ї-- Function: gpSelect_Object_GoodsGroup()
+-- Function: gpSelect_Object_GoodsGroup()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsGroup(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
+             , GoodsTagId Integer, GoodsTagName TVarChar
              ) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY 
@@ -29,6 +30,9 @@ $BODY$BEGIN
 
          , Object_TradeMark.Id            AS TradeMarkId
          , Object_TradeMark.ValueData     AS TradeMarkName
+
+         , Object_GoodsTag.Id            AS GoodsTagId
+         , Object_GoodsTag.ValueData     AS GoodsTagName         
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -45,6 +49,11 @@ $BODY$BEGIN
                                 ON ObjectLink_TradeMark.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_TradeMark.DescId = zc_ObjectLink_GoodsGroup_TradeMark()
            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_TradeMark.ChildObjectId          
+           
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
+                                ON ObjectLink_GoodsTag.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsTagk.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
+           LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_GoodsTag.ChildObjectId
                   
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
   
@@ -56,13 +65,14 @@ ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
  04.09.14         *              
  12.06.13         *
  00.06.13          
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_GoodsGroup('2')

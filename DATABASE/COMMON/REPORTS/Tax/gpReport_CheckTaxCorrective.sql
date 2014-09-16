@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective (
     IN inDocumentTaxKindId   Integer   , -- тип корректировки
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumber_TaxCorrective TVarChar
+RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar, InvNumber_TaxCorrective TVarChar, InvNumberPartner_TaxCorrective TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
@@ -97,7 +97,9 @@ BEGIN
                )
 
     SELECT Movement_ReturnIn.InvNumber AS InvNumber_ReturnIn
+         , MovementString_InvNumberPartner_ReturnIn.ValueData AS InvNumberPartner_ReturnIn
          , Movement_TaxCorrective.InvNumber AS InvNumber_TaxCorrective
+         , MovementString_InvNumberPartner_TaxCorrective.ValueData AS InvNumberPartner_TaxCorrective
          , Object_From.ObjectCode AS FromCode
          , Object_From.ValueData AS FromName
          , Object_To.ObjectCode AS ToCode
@@ -712,7 +714,13 @@ BEGIN
        ) AS tmpGroupMovement
        
          LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = tmpGroupMovement.MovementId_ReturnIn
+         LEFT JOIN MovementString AS MovementString_InvNumberPartner_ReturnIn
+                                  ON MovementString_InvNumberPartner_ReturnIn.MovementId =  Movement_ReturnIn.Id
+                                 AND MovementString_InvNumberPartner_ReturnIn.DescId = zc_MovementString_InvNumberPartner()
          LEFT JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpGroupMovement.MovementId_TaxCorrective
+         LEFT JOIN MovementString AS MovementString_InvNumberPartner_TaxCorrective
+                                  ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
+                                 AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpGroupMovement.FromId
          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpGroupMovement.ToId
          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpGroupMovement.PartnerId
@@ -736,8 +744,9 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.14                                        * add InvNumberPartner...
  29.08.14                                        * add tmpUnit_Corrective
- 12.07.14                                        * add Summ_... 
+ 12.07.14                                        * add Summ_...
  03.05.14                                        * all
  18.02.14         *  
 */

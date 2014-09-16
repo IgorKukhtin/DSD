@@ -73,11 +73,11 @@ BEGIN
                                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
                                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
-                        AND ObjectLink_Partner1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
+                        -- AND ObjectLink_Partner1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
                         AND Object_Partner1CLink.ObjectCode <> 0
                         AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                      ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
-                                          -- AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+                                          AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
            LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
@@ -94,11 +94,11 @@ BEGIN
                                                 ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
-                        AND ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
+                        -- AND ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
                         AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
                         AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0 -- еще проверка что есть объект
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
-                                                   -- AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+                                                   AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
 
 
    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate

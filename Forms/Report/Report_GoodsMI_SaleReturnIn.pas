@@ -56,6 +56,8 @@ type
     clOKPO: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
+    clJuridicalGroupName: TcxGridDBColumn;
+    clBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

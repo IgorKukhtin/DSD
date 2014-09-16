@@ -91,9 +91,23 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Options.Editing = False
             Width = 60
           end
+          object clInvNumberPartner_ReturnIn: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1086#1082'. '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'InvNumberPartner_ReturnIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clInvNumber_TaxCorrective: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'InvNumber_TaxCorrective'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInvNumberPartner_TaxCorrective: TcxGridDBColumn
+            Caption = #8470' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'InvNumberPartner_TaxCorrective'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55

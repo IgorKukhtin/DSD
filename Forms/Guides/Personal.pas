@@ -10,7 +10,9 @@ uses
   cxDBData, cxCheckBox, dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems,
   dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid;
+  cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
+  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, cxButtonEdit;
 
 type
   TPersonalForm = class(TParentForm)
@@ -51,7 +53,30 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPersonalGroupName: TcxGridDBColumn;
     clPositionLevelName: TcxGridDBColumn;
-    clOffical: TcxGridDBColumn;
+    clIsOfficial: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    cbPeriod: TcxCheckBox;
+    deStart: TcxDateEdit;
+    cxlEnd: TcxLabel;
+    deEnd: TcxDateEdit;
+    clIsDateOut: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    clIsMain: TcxGridDBColumn;
+    spUpdateIsMain: TdsdStoredProc;
+    actUpdateIsMain: TdsdExecStoredProc;
+    bbUpdateIsMain: TdxBarButton;
+    actPositionChoice: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actUnitChoice: TOpenChoiceForm;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbCopy: TdxBarButton;
   private
     { Private declarations }
   public

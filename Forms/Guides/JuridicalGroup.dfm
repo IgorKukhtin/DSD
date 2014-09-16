@@ -1,7 +1,7 @@
 object JuridicalGroupForm: TJuridicalGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094'>'
   ClientHeight = 335
   ClientWidth = 397
   Color = clBtnFace
@@ -146,11 +146,11 @@ object JuridicalGroupForm: TJuridicalGroupForm
           ItemName = 'bbSetEnerased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -161,7 +161,15 @@ object JuridicalGroupForm: TJuridicalGroupForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuide'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -206,6 +214,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -219,10 +228,13 @@ object JuridicalGroupForm: TJuridicalGroupForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TJuridicalGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -231,13 +243,17 @@ object JuridicalGroupForm: TJuridicalGroupForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TJuridicalGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -249,9 +265,11 @@ object JuridicalGroupForm: TJuridicalGroupForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -266,6 +284,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     end
     object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -281,6 +300,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -288,6 +308,7 @@ object JuridicalGroupForm: TJuridicalGroupForm
     end
     object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'

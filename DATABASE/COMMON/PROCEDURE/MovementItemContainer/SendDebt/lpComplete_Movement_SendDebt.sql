@@ -31,8 +31,8 @@ BEGIN
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, JuridicalId_Basis
-                         , UnitId, BranchId, ContractId, PaidKindId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , IsActive, IsMaster
                           )
         SELECT tmpMovement.DescId
@@ -41,32 +41,44 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
-               -- Группы ОПиУ
-             , 0 AS ProfitLossGroupId
-               -- Аналитики ОПиУ - направления
-             , 0 AS ProfitLossDirectionId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
                -- Управленческие группы назначения
              , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
                -- Управленческие назначения
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: нет
-             , 0  AS BusinessId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
                -- Главное Юр.лицо: всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
-             , 0 AS UnitId
-               -- Филиал: нет
-             , 0 AS BranchId
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
              , TRUE AS IsActive
              , TRUE AS IsMaster
         FROM tmpMovement
              JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId AND MovementItem.DescId = zc_MI_Master()
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -78,9 +90,9 @@ BEGIN
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
 
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
        UNION ALL
         SELECT tmpMovement.DescId
@@ -89,32 +101,44 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , -1 * MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
-               -- Группы ОПиУ
-             , 0 AS ProfitLossGroupId
-               -- Аналитики ОПиУ - направления
-             , 0 AS ProfitLossDirectionId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
                -- Управленческие группы назначения
              , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
                -- Управленческие назначения
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: нет
-             , 0  AS BusinessId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
                -- Главное Юр.лицо: всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
-             , 0 AS UnitId
-               -- Филиал: нет
-             , 0 AS BranchId
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
              , FALSE AS IsActive
              , FALSE AS IsMaster
         FROM tmpMovement
              JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId AND MovementItem.DescId = zc_MI_Child()
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -126,6 +150,7 @@ BEGIN
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
 
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
@@ -168,6 +193,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol

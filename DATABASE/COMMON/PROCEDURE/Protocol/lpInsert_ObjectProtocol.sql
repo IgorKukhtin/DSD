@@ -8,9 +8,9 @@ CREATE OR REPLACE FUNCTION lpInsert_ObjectProtocol(
     IN inObjectId Integer, 
     IN inUserId   Integer,
     IN inIsUpdate Boolean DEFAULT NULL, -- Признак
-    IN inIsErased Boolean DEFAULT NULL  -- Признак
+    IN inIsErased Boolean DEFAULT NULL  -- Признак, если НЕ пустой тогда в протокол св-ва не пишутся
 )
-RETURNS void
+RETURNS VOID
 AS
 $BODY$
    DECLARE ProtocolXML TBlob;
@@ -22,7 +22,7 @@ BEGIN
            FROM 
           (SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'
                || '<Field FieldName = "Code" FieldValue = "' || Object.ObjectCode || '"/>'
-               || '<Field FieldName = "AccessKeyId" FieldValue = "' || Object.AccessKeyId || '"/>'
+               || '<Field FieldName = "AccessKeyId" FieldValue = "' || CASE WHEN Object.AccessKeyId IS NULL THEN 'NULL' ELSE Object.AccessKeyId :: TVarChar END || '"/>'
                || '<Field FieldName = "isErased" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
                 , 1 AS GroupId
                 , Object.DescId
@@ -76,7 +76,7 @@ BEGIN
 
      -- сохранили "стандартный" протокол
      INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
-          SELECT inObjectId, current_timestamp, inUserId, ProtocolXML, COALESCE ((SELECT 1 FROM ObjectProtocol WHERE ObjectId = inObjectId LIMIT 1), 0) = 0;
+          SELECT inObjectId, CURRENT_TIMESTAMP, inUserId, ProtocolXML, COALESCE ((SELECT 1 FROM ObjectProtocol WHERE ObjectId = inObjectId LIMIT 1), 0) = 0;
 
 
      -- !!!протокол через свойства конкретного объекта!!!

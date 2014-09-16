@@ -3,7 +3,7 @@ inherited PersonalCashForm: TPersonalCashForm
   ClientHeight = 381
   ClientWidth = 1142
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -115
+  ExplicitLeft = -207
   ExplicitWidth = 1150
   ExplicitHeight = 415
   PixelsPerInch = 96
@@ -185,8 +185,8 @@ inherited PersonalCashForm: TPersonalCashForm
       Width = 57
     end
     object cxLabel5: TcxLabel
-      Left = 727
-      Top = 6
+      Left = 722
+      Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object ceUnit: TcxButtonEdit

@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
-             , TradeMarkName TVarChar
+             , TradeMarkName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
+             , JuridicalGroupName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
@@ -55,6 +57,7 @@ BEGIN
                               , MovementItem.Id AS MovementItemId
                               , MovementItem.ObjectId AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                              , COALESCE (MILinkObject_Branch.ObjectId, 0)    AS BranchId
                               , tmpListContainer.MovementDescId
 
                               , SUM (CASE WHEN tmpListContainer.MovementDescId = zc_Movement_Sale() THEN MIReport.Amount * CASE WHEN tmpListContainer.AccountKindId = zc_Enum_AccountKind_Active() THEN -1 ELSE 1 END ELSE 0 END) AS Sale_Summ
@@ -112,6 +115,9 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                                               ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
                          GROUP BY tmpListContainer.JuridicalId 
                                 , MovementLinkObject_Partner.ObjectId
                                 , tmpListContainer.ContractId 
@@ -119,6 +125,7 @@ BEGIN
                                 , MovementItem.Id 
                                 , MovementItem.ObjectId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                , COALESCE (MILinkObject_Branch.ObjectId, 0)
                                 , tmpListContainer.MovementDescId
                                  )
      SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -128,7 +135,12 @@ BEGIN
           , Object_GoodsKind.ValueData  AS GoodsKindName
           , Object_Measure.ValueData    AS MeasureName
           , Object_TradeMark.ValueData  AS TradeMarkName
+          , Object_GoodsTag.ValueData   AS GoodsTagName
+          , Object_GoodsGroupStat.ValueData  AS GoodsGroupStatName
 
+          , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+          , Object_Branch.ObjectCode    AS BranchCode
+          , Object_Branch.ValueData     AS BranchName
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
           , Object_Retail.ValueData     AS RetailName
@@ -162,6 +174,7 @@ BEGIN
                 , tmpOperation.PartnerId
                 , tmpOperation.ContractId 
                 , tmpOperation.InfoMoneyId
+                , tmpOperation.BranchId
 
                 , tmpOperation.GoodsId
                 , tmpOperation.GoodsKindId
@@ -179,6 +192,7 @@ BEGIN
                       , tmpMovement.PartnerId
                       , tmpMovement.ContractId 
                       , tmpMovement.InfoMoneyId
+                      , tmpMovement.BranchId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
 
@@ -195,6 +209,7 @@ BEGIN
                         , tmpMovement.PartnerId
                         , tmpMovement.ContractId 
                         , tmpMovement.InfoMoneyId
+                        , tmpMovement.BranchId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId
 
@@ -203,6 +218,7 @@ BEGIN
                       , tmpMovement.PartnerId
                       , tmpMovement.ContractId 
                       , tmpMovement.InfoMoneyId
+                      , tmpMovement.BranchId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
 
@@ -226,6 +242,7 @@ BEGIN
                         , tmpMovement.ContractId 
                         , tmpMovement.PartnerId
                         , tmpMovement.InfoMoneyId
+                        , tmpMovement.BranchId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId
                 ) AS tmpOperation
@@ -234,18 +251,30 @@ BEGIN
                   , tmpOperation.PartnerId
                   , tmpOperation.ContractId 
                   , tmpOperation.InfoMoneyId
+                  , tmpOperation.BranchId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
                   
           ) AS tmpOperationGroup
-          LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
 
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
+          LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                               ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                               ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -270,6 +299,11 @@ BEGIN
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+          LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
@@ -283,6 +317,7 @@ ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.09.14                                        * add GoodsTagName and GroupStatName and BranchName and JuridicalGroupName
  11.07.14                                        * add RetailName and OKPO
  06.05.14                                        * add GoodsGroupNameFull
  28.03.14                                        * all

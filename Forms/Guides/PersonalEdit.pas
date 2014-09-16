@@ -57,7 +57,8 @@ type
     cxLabel4: TcxLabel;
     cePositionLevel: TcxButtonEdit;
     PositionLevelGuides: TdsdGuides;
-    cbOfficial: TcxCheckBox;
+    cbDateOut: TcxCheckBox;
+    cbMain: TcxCheckBox;
   private
     { Private declarations }
   public

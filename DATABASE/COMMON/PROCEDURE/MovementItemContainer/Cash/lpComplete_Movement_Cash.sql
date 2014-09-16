@@ -57,8 +57,8 @@ BEGIN
              , 0 AS UnitId     -- не используется
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: всегда из кассы
-             , COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -72,7 +72,7 @@ BEGIN
              , TRUE AS IsMaster
 
         FROM Movement
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -83,8 +83,6 @@ BEGIN
                                                                    AND ObjectLink_Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
              LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = MovementItem.ObjectId
                                                              AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch ON ObjectLink_Cash_Branch.ObjectId = MovementItem.ObjectId
-                                                           AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_Cash()
@@ -140,7 +138,11 @@ BEGIN
                -- Бизнес Баланс: всегда из кассы
              , _tmpItem.BusinessId_Balance
                -- Бизнес ОПиУ: ObjectLink_Unit_Business
-             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+             , CASE WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21502() -- Общефирменные + Маркетинг + Бонусы за мясное сырье
+                              -- криво захардкодил
+                         THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Business() AND Object.ObjectCode = 2) -- Мясо
+                    ELSE COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)
+               END AS BusinessId_ProfitLoss
 
                -- Главное Юр.лицо всегда из кассы
              , _tmpItem.JuridicalId_Basis
@@ -148,8 +150,8 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
 
-               -- Филиал Баланс: всегда из кассы
-             , _tmpItem.BranchId_Balance
+               -- Филиал Баланс: всегда из кассы (нужен для НАЛ долгов или долгов подотчета)
+             , COALESCE (ObjectLink_Cash_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
 
@@ -187,8 +189,10 @@ BEGIN
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch ON ObjectLink_Cash_Branch.ObjectId = _tmpItem.ObjectId
+                                                           AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+                                                                                                          AND Object.Id IS NULL -- !!!нужен только для затрат!!!
        ;
 
 

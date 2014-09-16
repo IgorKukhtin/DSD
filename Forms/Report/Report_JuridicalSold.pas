@@ -93,6 +93,10 @@ type
     colBranchName: TcxGridDBColumn;
     dsdPrintReal_byJuridicalPersonal: TdsdPrintAction;
     bbPrintReal_byJuridicalPersonal: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edJuridicalGroup: TcxButtonEdit;
+    clPersonalTradeName: TcxGridDBColumn;
+    JuridicalGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

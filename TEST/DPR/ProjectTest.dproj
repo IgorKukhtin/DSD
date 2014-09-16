@@ -321,8 +321,8 @@
 				<Form>AssetGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
-				<Form>PersonalForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
+				<Form>Personal_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
@@ -704,10 +704,6 @@
 				<Form>AncestorGuidesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
-				<Form>Personal_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -897,8 +893,8 @@
 				<Form>TaxCorrectiveForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink.pas">
-				<Form>Partner1CLinkForm</Form>
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink_Excel.pas">
+				<Form>Partner1CLink_ExcelForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\LOAD1C\GoodsByGoodsKind1CLink.pas">
@@ -969,8 +965,8 @@
 				<Form>BonusKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
-				<Form>JuridicalGroupForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup_Object.pas">
+				<Form>JuridicalGroup_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\SelectKind.pas">
@@ -1081,14 +1077,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceOld.pas">
-				<Form>PersonalServiceOldForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceEdit.pas">
-				<Form>PersonalServiceEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Movement_Journal.pas">
 				<Form>MovementJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1148,10 +1136,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination.pas">
 				<Form>InfoMoneyDestinationForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup.pas">
-				<Form>InfoMoneyGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Business.pas">
@@ -1554,6 +1538,45 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
 				<Form>SaveDocumentTo1CForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
+				<Form>PersonalServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
+				<Form>PersonalServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
+				<Form>PersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PersonalServiceList.pas">
+				<Form>PersonalServiceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PersonalServiceListEdit.pas">
+				<Form>PersonalServiceListEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup.pas">
+				<Form>InfoMoneyGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
+				<Form>JuridicalGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsTag.pas">
+				<Form>GoodsTagForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsTagEdit.pas">
+				<Form>GoodsTagEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink.pas">
+				<Form>Partner1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

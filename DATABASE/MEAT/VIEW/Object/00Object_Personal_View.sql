@@ -1,5 +1,7 @@
 -- View: Object_Personal_View
 
+-- DROP VIEW IF EXISTS Object_Personal_View;
+
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
        , Object_Personal.DescId
@@ -27,7 +29,10 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
  
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
-       , COALESCE(ObjectBoolean_Official.ValueData, TRUE)        AS Official
+       , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut_user
+       , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+       , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
+       , COALESCE (ObjectBoolean_Official.ValueData, FALSE)       AS isOfficial
          
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -61,9 +66,12 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                             ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                            AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
 
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                               ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                              AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
        LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
-                               ON ObjectBoolean_Official.ObjectId = Object_Personal.Id
-                              AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Personal_Official()          
+                               ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                              AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
  WHERE Object_Personal.DescId = zc_Object_Personal();
 
 
@@ -73,6 +81,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.09.14                                        * add isOffical and isDateOut and isMain
  21.05.14                        * add Offical
  08.12.13                                        * add AccessKeyId
  21.11.13                                        * add PositionLevel...

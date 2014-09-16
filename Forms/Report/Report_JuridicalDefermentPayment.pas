@@ -72,6 +72,9 @@ type
     BranchGuides: TdsdGuides;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edJuridicalGroup: TcxButtonEdit;
+    JuridicalGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

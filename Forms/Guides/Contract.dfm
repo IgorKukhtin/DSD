@@ -573,7 +573,7 @@ object ContractForm: TContractForm
     Width = 1186
     Height = 144
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -696,7 +696,7 @@ object ContractForm: TContractForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 3
     Width = 85
   end
   object cxlEnd: TcxLabel
@@ -715,19 +715,21 @@ object ContractForm: TContractForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 8
+    TabOrder = 6
     Width = 85
   end
   object cbPeriod: TcxCheckBox
     Left = 130
     Top = 30
+    Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 9
+    TabOrder = 8
     Width = 218
   end
   object cbEndDate: TcxCheckBox
     Left = 582
     Top = 30
+    Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
     TabOrder = 10
     Width = 278

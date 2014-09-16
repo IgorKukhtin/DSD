@@ -31,7 +31,7 @@ BEGIN
 
 
      -- !!!проводки только у Админа!!!
-     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898)) -- Отчеты (управленческие)
      THEN
 
      RETURN QUERY 
@@ -83,10 +83,10 @@ BEGIN
                 , Container.ObjectId
 
                 , Object_Direction.ObjectCode AS DirectionObjectCode
-                , CASE WHEN Object_ProfitLossDirection.ValueData <> ''
-                            THEN CAST (Object_Direction.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
-                       ELSE ''
-                  END || Object_Direction.ValueData AS DirectionObjectName
+                , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
+                            THEN Object_ProfitLoss_View.ProfitLossName_all
+                       ELSE Object_Direction.ValueData
+                  END AS DirectionObjectName
 
 
                 , Object_Branch.ObjectCode    AS BranchCode
@@ -193,14 +193,7 @@ BEGIN
                                               AND ContainerLinkObject_Business.ObjectId <> 0
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId
 
-                 LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
-                                      ON ObjectLink_ProfitLoss_ProfitLossGroup.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
-                                     AND ObjectLink_ProfitLoss_ProfitLossGroup.DescId = zc_ObjectLink_ProfitLoss_ProfitLossGroup()
-                 LEFT JOIN Object AS Object_ProfitLossGroup ON Object_ProfitLossGroup.Id = ObjectLink_ProfitLoss_ProfitLossGroup.ChildObjectId
-                 LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossDirection
-                                      ON ObjectLink_ProfitLoss_ProfitLossDirection.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
-                                     AND ObjectLink_ProfitLoss_ProfitLossDirection.DescId = zc_ObjectLink_ProfitLoss_ProfitLossDirection()
-                 LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_ProfitLoss_ProfitLossDirection.ChildObjectId
+                 LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = ContainerLinkObject_ProfitLoss.ObjectId
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
@@ -255,8 +248,7 @@ BEGIN
                    , Object_Business.ValueData
                    , Object_Direction.ObjectCode
                    , Object_Direction.ValueData
-                   , Object_ProfitLossGroup.ValueData
-                   , Object_ProfitLossDirection.ValueData
+                   , Object_ProfitLoss_View.ProfitLossName_all
                    , Object_GoodsGroup.ObjectCode
                    , Object_GoodsGroup.ValueData
                    , Object_Destination.ObjectCode

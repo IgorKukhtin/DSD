@@ -20,6 +20,8 @@ BEGIN
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
                                                            THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
+                                                           THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
@@ -78,8 +80,6 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет*
                                                           THEN zc_Enum_AccountDirection_90400() -- штрафы в бюджет*
 
-                                                      -- WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
-                                                      --     THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  END
      FROM Object
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -230,7 +230,15 @@ BEGIN
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem.ProfitLossGroupId
-                                                                  , inProfitLossDirectionId  := _tmpItem.ProfitLossDirectionId
+                                                                  , inProfitLossDirectionId  := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21600() -- Общефирменные + Коммунальные услуги
+                                                                                                          THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_20700() -- Общепроизводственные расходы + Коммунальные услуги
+                                                                                                                    WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
+                                                                                                                         THEN zc_Enum_ProfitLossDirection_30400() -- Административные расходы + Коммунальные услуги
+                                                                                                                    ELSE _tmpItem.ProfitLossDirectionId
+                                                                                                              END
+                                                                                                     ELSE _tmpItem.ProfitLossDirectionId
+                                                                                                END
                                                                   , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                   , inInfoMoneyId            := NULL
                                                                   , inInsert                 := FALSE
@@ -324,8 +332,6 @@ BEGIN
                                                                             , inObjectId_5        := _tmpItem.PositionId
                                                                             , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
                                                                             , inObjectId_6        := _tmpItem.ServiceDateId
-                                                                            , inDescId_7          := zc_ContainerLinkObject_PaidKind()
-                                                                            , inObjectId_7        := _tmpItem.PaidKindId
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье

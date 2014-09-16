@@ -24,10 +24,31 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ExplicitWidth = 958
         ExplicitHeight = 359
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSummIn
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSummOut
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSummIn
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSummOut
             end>
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -72,6 +93,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
           object colSummOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075
@@ -81,6 +103,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082'. 1'#1057
