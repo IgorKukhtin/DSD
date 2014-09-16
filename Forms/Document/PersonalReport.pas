@@ -14,34 +14,30 @@ type
   TPersonalReportForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
-    cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    cePaidKind: TcxButtonEdit;
     ceUnit: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
     ceAmountDebet: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    PaidKindGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
-    ceContract: TcxButtonEdit;
-    cxLabel8: TcxLabel;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    ContractGuides: TdsdGuides;
     ceAmountKredit: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    cxLabel9: TcxLabel;
-    ceOperDatePartner: TcxDateEdit;
-    edInvNumberPartner: TcxTextEdit;
-    cxLabel11: TcxLabel;
     edInvNumber: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    ceMember: TcxButtonEdit;
+    MemberGuides: TdsdGuides;
+    edCar: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    GuidesCar: TdsdGuides;
+    ceMoneyPlace: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    MoneyPlaceGuides: TdsdGuides;
   private
     { Private declarations }
   public
