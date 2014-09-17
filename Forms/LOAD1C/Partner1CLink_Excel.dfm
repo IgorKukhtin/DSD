@@ -1,5 +1,5 @@
 inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
-  Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
+  Caption = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' : '#1055#1088#1086#1075#1088#1072#1084#1084#1072' + 1'#1057' + Excel'
   ClientHeight = 401
   ClientWidth = 1020
   ExplicitWidth = 1036
@@ -88,6 +88,20 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object clJuridicalNameExcel_find: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083'. '#1087#1086#1080#1089#1082' '#1087#1086' '#1054#1050#1055#1054' Excel'
+            DataBinding.FieldName = 'JuridicalNameExcel_find'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -106,7 +120,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1054#1050#1055#1054' 1'#1057
             DataBinding.FieldName = 'OKPO1C'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -124,6 +142,32 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clIsOKPO1C_OKPO: TcxGridDBColumn
+            Caption = #1054#1096'. '#1054#1050#1055#1054' 1'#1089'+'#1087#1088'.'
+            DataBinding.FieldName = 'isOKPO1C_OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clIsOKPO1C_OKPOExcel: TcxGridDBColumn
+            Caption = #1054#1096'. '#1054#1050#1055#1054' 1'#1089'+'#1101#1082#1089'.'
+            DataBinding.FieldName = 'isOKPO1C_OKPOExcel'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clIsOKPOExcel_OKPO: TcxGridDBColumn
+            Caption = #1054#1096'. '#1054#1050#1055#1054' '#1087#1088'.+'#1101#1082#1089'.'
+            DataBinding.FieldName = 'isOKPOExcel_OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clINN: TcxGridDBColumn
@@ -144,7 +188,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1048#1053#1053' 1'#1057
             DataBinding.FieldName = 'INN1C'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -184,7 +232,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -209,7 +261,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' 1'#1057
             DataBinding.FieldName = 'PartnerName1C'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -275,7 +331,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -299,7 +359,11 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName_all'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <>
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -623,7 +687,7 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
       end
       object edBranch: TcxButtonEdit
         Left = 192
-        Top = 40
+        Top = 16
         Properties.Buttons = <
           item
             Default = True
@@ -634,7 +698,7 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
       end
       object cxLabel1: TcxLabel
         Left = 224
-        Top = 24
+        Top = 0
         Caption = #1060#1080#1083#1080#1072#1083
       end
     end

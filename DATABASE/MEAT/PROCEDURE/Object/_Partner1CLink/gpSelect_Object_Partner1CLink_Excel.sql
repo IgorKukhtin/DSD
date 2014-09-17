@@ -14,6 +14,12 @@ RETURNS TABLE (PartnerId integer, PartnerCode Integer, PartnerName TVarChar
              , INN1C TVarChar
              , INN TVarChar
 
+             , isOKPO1C_OKPO Boolean
+             , isOKPO1C_OKPOExcel Boolean
+             , isOKPOExcel_OKPO Boolean
+
+
+             , JuridicalNameExcel_find TVarChar
              , JuridicalNameExcel TVarChar
              , PartnerNameExcel TVarChar
              , OKPOExcel TVarChar
@@ -58,6 +64,8 @@ BEGIN
                              FROM Object_Account_View
                                   INNER JOIN Container ON Container.ObjectId = Object_Account_View.AccountId
                                                       AND Container.DescId = zc_Container_Summ()
+                                  INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                  AND MovementItemContainer.OperDate >= '01.01.2014' :: TDateTime
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                                  ON ContainerLinkObject_Juridical.ContainerId = Container.Id
                                                                 AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -315,6 +323,29 @@ BEGIN
             , tmpAll.INN1C      :: TVarChar      AS INN1C
             , tmpAll.INN        :: TVarChar      AS INN
 
+            , CASE WHEN ((tmpAll.OKPO1C <> '' AND SUBSTRING (tmpAll.OKPO1C, 3, 1) <> '-' AND SUBSTRING (tmpAll.OKPO1C, 3, 1) <> '*')
+                      OR (tmpAll.OKPO <> '' AND SUBSTRING (tmpAll.OKPO, 3, 1) <> '-' AND SUBSTRING (tmpAll.OKPO, 3, 1) <> '*'))
+                    AND COALESCE (tmpAll.OKPO1C, '') <> COALESCE (tmpAll.OKPO, '')
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isOKPO1C_OKPO
+
+            , CASE WHEN ((tmpAll.OKPO1C <> '' AND SUBSTRING (tmpAll.OKPO1C, 3, 1) <> '-' AND SUBSTRING (tmpAll.OKPO1C, 3, 1) <> '*')
+                      OR (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel) <> '' AND SUBSTRING (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), 3, 1) <> '-' AND SUBSTRING (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), 3, 1) <> '*'))
+                    AND COALESCE (tmpAll.OKPO1C, '') <> COALESCE (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), '')
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isOKPO1C_OKPOExcel
+
+            , CASE WHEN ((COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel) <> '' AND SUBSTRING (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), 3, 1) <> '-' AND SUBSTRING (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), 3, 1) <> '*')
+                      OR (tmpAll.OKPO <> '' AND SUBSTRING (tmpAll.OKPO, 3, 1) <> '-' AND SUBSTRING (tmpAll.OKPO, 3, 1) <> '*'))
+                    AND COALESCE (COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel), '') <> COALESCE (tmpAll.OKPO, '')
+                    AND COALESCE (tmpExcel.JuridicalName, tmpAll.JuridicalNameExcel) <> ''
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isOKPOExcel_OKPO
+
+            , CASE WHEN JuridicalExcel_find.isOKPOVirt = TRUE THEN 'виртуальное ОКПО' ELSE Object_JuridicalExcel_find.ValueData END :: TVarChar AS JuridicalNameExcel_find
             , COALESCE (tmpExcel.JuridicalName, tmpAll.JuridicalNameExcel)  :: TVarChar AS JuridicalNameExcel
             , COALESCE (tmpExcel.ClientName, tmpAll.PartnerNameExcel)     :: TVarChar AS PartnerNameExcel
             , COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel)     :: TVarChar AS OKPOExcel
@@ -392,11 +423,22 @@ BEGIN
                  , tmpAll.BranchTopId                  AS BranchTopId
 
              FROM tmpAll
-                  FULL JOIN tmpExcel ON tmpExcel.ClientCode = tmpAll.ClientCode
-                                    AND tmpExcel.BranchTopId = tmpAll.BranchTopId
-                                    AND tmpExcel.IsCode = 1
+                  FULL JOIN (SELECT tmpExcel.* FROM tmpExcel WHERE tmpExcel.IsCode = 1
+                            ) AS tmpExcel
+                              ON tmpExcel.ClientCode = tmpAll.ClientCode
+                             AND tmpExcel.BranchTopId = tmpAll.BranchTopId
             ) AS tmpAll
-            FULL JOIN tmpExcel ON tmpExcel.ClientCode = tmpAll.PartnerId AND tmpExcel.IsCode = 0
+            FULL JOIN (SELECT tmpExcel.* FROM tmpExcel WHERE tmpExcel.IsCode = 0
+                      ) AS tmpExcel ON tmpExcel.ClientCode = tmpAll.PartnerId
+
+
+
+            LEFT JOIN (SELECT MAX (ObjectHistory_JuridicalDetails_View.JuridicalId) AS JuridicalId, ObjectHistory_JuridicalDetails_View.OKPO
+                            , CASE WHEN ObjectHistory_JuridicalDetails_View.OKPO <> '' AND SUBSTRING (ObjectHistory_JuridicalDetails_View.OKPO, 3, 1) <> '-' AND SUBSTRING (ObjectHistory_JuridicalDetails_View.OKPO, 3, 1) <> '*' THEN FALSE ELSE TRUE END AS isOKPOVirt
+                       FROM ObjectHistory_JuridicalDetails_View
+                       GROUP BY ObjectHistory_JuridicalDetails_View.OKPO
+                      ) AS JuridicalExcel_find ON JuridicalExcel_find.OKPO = COALESCE (tmpExcel.ClientOKPO, tmpAll.OKPOExcel)
+            LEFT JOIN Object AS Object_JuridicalExcel_find ON Object_JuridicalExcel_find.Id = JuridicalExcel_find.JuridicalId
 
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpAll.PartnerId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpAll.JuridicalId

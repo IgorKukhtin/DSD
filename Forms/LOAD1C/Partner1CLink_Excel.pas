@@ -63,6 +63,10 @@ type
     kontakt3name: TcxGridDBColumn;
     kontakt3tel: TcxGridDBColumn;
     kontakt3email: TcxGridDBColumn;
+    clJuridicalNameExcel_find: TcxGridDBColumn;
+    clIsOKPO1C_OKPO: TcxGridDBColumn;
+    clIsOKPO1C_OKPOExcel: TcxGridDBColumn;
+    clIsOKPOExcel_OKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public
