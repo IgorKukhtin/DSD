@@ -25,6 +25,8 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.Footer = False
+          OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -32,43 +34,149 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
           object clJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
             DataBinding.FieldName = 'JuridicalGroupName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
+          end
+          object colJuridicalId: TcxGridDBColumn
+            DataBinding.FieldName = 'JuridicalId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
+          end
+          object clJuridicalNameExcel: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' Excel'
+            DataBinding.FieldName = 'JuridicalNameExcel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Width = 55
+          end
+          object colOKPO1C: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' 1'#1057
+            DataBinding.FieldName = 'OKPO1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clOKPOExcel: TcxGridDBColumn
+            Caption = 'OKPO Excel'
+            DataBinding.FieldName = 'OKPOExcel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object clINN: TcxGridDBColumn
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'INN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Width = 55
+          end
+          object clINN1C: TcxGridDBColumn
+            Caption = #1048#1053#1053' 1'#1057
+            DataBinding.FieldName = 'INN1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colPartnerId: TcxGridDBColumn
+            DataBinding.FieldName = 'PartnerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PartnerCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Options.IncSearch = False
             Width = 45
           end
@@ -76,35 +184,67 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoicePartnerForm
-                Default = True
-                Kind = bkEllipsis
-              end>
+            Properties.Buttons = <>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.IncSearch = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn
+          object clPartnerNameCalcExcel: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' '#1053#1054#1042#1067#1049
+            DataBinding.FieldName = 'PartnerNameCalcExcel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colPartnerName1C: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' 1'#1057
+            DataBinding.FieldName = 'PartnerName1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object clPartnerNameExcel: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' Excel'
+            DataBinding.FieldName = 'PartnerNameExcel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colClientCode1C: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
-            DataBinding.FieldName = 'Code'
+            DataBinding.FieldName = 'ClientCode1C'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colName: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' 1'#1057
-            DataBinding.FieldName = 'Name'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colName_find1C: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' 1'#1057' ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'Name_find1C'
+          object clPartner1CLinkId: TcxGridDBColumn
+            DataBinding.FieldName = 'Partner1CLinkId'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -112,193 +252,371 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colOKPO_find1C: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054' 1'#1057' ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'OKPO_find1C'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clINN_find1C: TcxGridDBColumn
-            Caption = #1048#1053#1053' 1'#1057' ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'INN_find1C'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object colBranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceBranchForm
-                Default = True
-                Kind = bkEllipsis
-              end>
+            Properties.Buttons = <>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object clContractStateKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractStateKindCode'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Alignment.Horz = taLeftJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1055#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 12
-                Value = 1
-              end
-              item
-                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 11
-                Value = 2
-              end
-              item
-                Description = #1047#1072#1074#1077#1088#1096#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end
-              item
-                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-                ImageIndex = 66
-                Value = 4
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colContractNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractNumber'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceContractForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
+          object clKodBranchExcel: TcxGridDBColumn
+            Caption = #1092#1080#1083#1080#1072#1083' Excel'
+            DataBinding.FieldName = 'KodBranchExcel'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clEndDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
-            DataBinding.FieldName = 'EndDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
+          object clAccountName_all: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090
+            DataBinding.FieldName = 'AccountName_all'
             PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object clInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object clInfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
+            Properties.Buttons = <>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Width = 55
+          end
+          object index: TcxGridDBColumn
+            Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+            DataBinding.FieldName = 'index'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object citytype: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
+            DataBinding.FieldName = 'citytype'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object cityname: TcxGridDBColumn
+            Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+            DataBinding.FieldName = 'cityname'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object regiontype: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1088#1072#1081#1086#1085', '#1086#1073#1083#1072#1089#1090#1100')'
+            DataBinding.FieldName = 'regiontype'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object region: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085', '#1054#1073#1083#1072#1089#1090#1100
+            DataBinding.FieldName = 'region'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object streettype: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
+            DataBinding.FieldName = 'streettype'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object streetname: TcxGridDBColumn
+            Caption = #1059#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090
+            DataBinding.FieldName = 'streetname'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object house: TcxGridDBColumn
+            Caption = #1044#1086#1084
+            DataBinding.FieldName = 'house'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object house1: TcxGridDBColumn
+            Caption = #1082#1086#1088#1087#1091#1089
+            DataBinding.FieldName = 'house1'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object house2: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1082#1074#1072#1088#1090#1080#1088#1072', '#1086#1092#1080#1089')'
+            DataBinding.FieldName = 'house2'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object house3: TcxGridDBColumn
+            Caption = #8470' '#1082#1074#1072#1088#1090#1080#1088#1072', '#1086#1092#1080#1089
+            DataBinding.FieldName = 'house3'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt1name: TcxGridDBColumn
+            Caption = #1079#1072#1082#1072#1079' '#1060#1048#1054
+            DataBinding.FieldName = 'kontakt1name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt1tel: TcxGridDBColumn
+            Caption = #1079#1072#1082#1072#1079' '#1090#1077#1083'.'
+            DataBinding.FieldName = 'kontakt1tel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt1email: TcxGridDBColumn
+            Caption = #1079#1072#1082#1072#1079' email'
+            DataBinding.FieldName = 'kontakt1email'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt2name: TcxGridDBColumn
+            Caption = #1087#1077#1088#1074#1080#1095#1082#1072' '#1060#1048#1054
+            DataBinding.FieldName = 'kontakt2name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt2tel: TcxGridDBColumn
+            Caption = #1087#1077#1088#1074#1080#1095#1082#1072' '#1090#1077#1083'.'
+            DataBinding.FieldName = 'kontakt2tel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt2email: TcxGridDBColumn
+            Caption = #1087#1077#1088#1074#1080#1095#1082#1072' email'
+            DataBinding.FieldName = 'kontakt2email'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt3name: TcxGridDBColumn
+            Caption = #1072#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1060#1048#1054
+            DataBinding.FieldName = 'kontakt3name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt3tel: TcxGridDBColumn
+            Caption = #1072#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1090#1077#1083'.'
+            DataBinding.FieldName = 'kontakt3tel'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object kontakt3email: TcxGridDBColumn
+            Caption = #1072#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' email'
+            DataBinding.FieldName = 'kontakt3email'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
         end
@@ -362,106 +680,6 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
         end>
       isShowModal = False
     end
-    object actInsertRecordEmpty: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      View = cxGridDBTableView
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-    end
-    object actInsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      View = cxGridDBTableView
-      Params = <
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ShortCut = 16429
-      ImageIndex = 54
-    end
-    object actChoiceContractForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actChoiceContractForm'
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = 'TContractChoiceForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'MasterJuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'MasterJuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actInsertPartner: TInsertUpdateChoiceAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      ImageIndex = 1
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end>
-      isShowModal = True
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'PartnerId'
-      PostDataSetBeforeExecute = False
-    end
     object actChoicePartnerForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -509,67 +727,6 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
         end>
       isShowModal = False
     end
-    object actGetPointName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetPointName
-      StoredProcList = <
-        item
-          StoredProc = spGetPointName
-        end>
-      Caption = 'actGetPointName'
-    end
-    object actInsertPartner1CLink: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertPartner1CLink
-      StoredProcList = <
-        item
-          StoredProc = spInsertPartner1CLink
-        end>
-    end
-    object actInsertPartner1CLinkAll: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actInsertPartner1CLink
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057'?'
-      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1080#1079' 1'#1057' '#1076#1086#1073#1072#1074#1083#1077#1085#1099'.'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1093' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1080#1079' 1'#1057
-      ImageIndex = 41
-    end
-    object actUpdatePartner1CLink_Partner: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUpdatePartner1CLink_Partner
-      StoredProcList = <
-        item
-          StoredProc = spUpdatePartner1CLink_Partner
-        end>
-      Caption = 'actUpdatePartner1CLink_Partner'
-    end
-    object actUpdatePartner1CLink_PartnerAll: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdatePartner1CLink_Partner
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080'?'
-      InfoAfterExecute = #1053#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089#1086#1079#1076#1072#1085#1099'.'
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
-      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1070#1088'.'#1083#1080#1094#1072', '#1044#1086#1075#1086#1074#1086#1088#1072', '#1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
-      ImageIndex = 30
-    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -578,7 +735,7 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Partner1CLink'
+    StoredProcName = 'gpSelect_Object_Partner1CLink_Excel'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -590,38 +747,6 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertEmptyRecord'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddRecord'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertPartner1CLink'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdatePartner1CLink_Partner'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -657,51 +782,24 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
     end
     inherited dxBarStatic: TdxBarStatic [1]
     end
-    object bbInsertEmptyRecord: TdxBarButton [2]
-      Action = actInsertRecordEmpty
-      Category = 0
+    inherited bbRefresh: TdxBarButton [2]
     end
-    object bbAddRecord: TdxBarButton [3]
-      Action = actInsertRecord
-      Category = 0
-    end
-    object bbInsertPartner: TdxBarButton [4]
-      Action = actInsertPartner
-      Category = 0
-    end
-    inherited bbRefresh: TdxBarButton [5]
-    end
-    object dxBarControlContainerItem: TdxBarControlContainerItem [6]
+    object dxBarControlContainerItem: TdxBarControlContainerItem [3]
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = edBranch
     end
-    object bbBranchLabel: TdxBarControlContainerItem [7]
+    object bbBranchLabel: TdxBarControlContainerItem [4]
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
     end
-    object bbInsertPartner1CLink: TdxBarButton
-      Action = actInsertPartner1CLinkAll
-      Category = 0
-    end
-    object bbUpdatePartner1CLink_Partner: TdxBarButton
-      Action = actUpdatePartner1CLink_PartnerAll
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    ColumnAddOnList = <
-      item
-        Column = colCode
-        onExitColumn.Active = True
-        onExitColumn.AfterEmptyValue = True
-        onExitColumn.Action = actGetPointName
-      end>
     Left = 224
     Top = 208
   end
@@ -804,63 +902,5 @@ inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
       end>
     Left = 624
     Top = 216
-  end
-  object spGetPointName: TdsdStoredProc
-    StoredProcName = 'gpGet_PointName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inCode'
-        Component = MasterCDS
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ioName'
-        Component = MasterCDS
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        Component = BranchLinkGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 344
-    Top = 168
-  end
-  object spInsertPartner1CLink: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_Partner1CLink'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inBranchTopId'
-        Value = ''
-        Component = BranchLinkGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 296
-    Top = 256
-  end
-  object spUpdatePartner1CLink_Partner: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Partner1CLink_Partner'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inBranchTopId'
-        Value = ''
-        Component = BranchLinkGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 296
-    Top = 312
   end
 end
