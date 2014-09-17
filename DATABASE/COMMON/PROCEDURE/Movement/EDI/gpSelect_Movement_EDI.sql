@@ -222,7 +222,7 @@ BEGIN
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         AND MovementString_OKPO.ValueData IN ('36387233', '36387249')
+         -- AND MovementString_OKPO.ValueData IN ('36387233', '36387249', '38916588')
          AND (Movement_TaxCorrective.Id IS NULL OR Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete())
          AND (Movement_Sale.Id IS NULL OR Movement_Sale.StatusId = zc_Enum_Status_Complete())
 
