@@ -1,109 +1,204 @@
 -- Function: gpGet_Movement_PersonalReport()
 
--- DROP FUNCTION gpGet_Movement_PersonalReport (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalReport (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalReport(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId        Integer   , -- ключ Документа
+    IN inMovementId_Value  Integer   ,
+    IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat
-             , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
+             , AmountIn TFloat, AmountOut TFloat
+             , Comment TVarChar
+             , MemberId Integer, MemberName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
-             , ContractId Integer, ContractName TVarChar             
              , UnitId Integer, UnitName TVarChar
+             , MoneyPlaceId Integer, MoneyPlaceName TVarChar
+             , CarId Integer, CarName TVarChar
              )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalReport());
-
-     RETURN QUERY 
+     vbUserId := lpGetUserBySession (inSession);
+     --новый
+     IF (COALESCE (inMovementId, 0) = 0) AND (COALESCE (inMovementId_Value, 0) = 0)
+     THEN
+     RETURN QUERY
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
-           
-           , MovementFloat_Amount.ValueData     AS Amount
+             0                                  AS Id
+           , CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar) AS InvNumber
+--           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , inOperDate                         AS OperDate
+           , lfObject_Status.Code               AS StatusCode
+           , lfObject_Status.Name               AS StatusName
 
-           , Object_From.Id               AS FromId
-           , Object_From.ValueData        AS FromName
-           , Object_To.Id                 AS ToId
-           , Object_To.ValueData          AS ToName
+           , 0::TFloat                          AS AmountIn
+           , 0::TFloat                          AS AmountOut
 
-           , Object_PaidKind.Id           AS PaidKindId
-           , Object_PaidKind.ValueData    AS PaidKindName
-   
-           , Object_InfoMoney.Id          AS InfoMoneyId
-           , Object_InfoMoney.ValueData   AS InfoMoneyName
-           
-           , Object_Contract.Id           AS ContractId
-           , Object_Contract.ValueData    AS ContractName          
-        
-           , Object_Unit.Id               AS UnitId
-           , Object_Unit.ValueData        AS UnitName
- 
+           , ''::TVarChar                       AS Comment
+           , 0                                  AS MemberId
+           , CAST ('' as TVarChar)              AS MemberName
+           , 0                                  AS InfoMoneyId
+           , CAST ('' as TVarChar)              AS InfoMoneyName
+           , 0                                  AS UnitId
+           , CAST ('' as TVarChar)              AS UnitName
+           , 0                                  AS MoneyPlaceId
+           , CAST ('' as TVarChar)              AS MoneyPlaceName
+           , 0                                  AS CarId
+           , CAST ('' as TVarChar)              AS CarName
+
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+   END IF;
+
+   --новый по маске
+   IF (COALESCE (inMovementId, 0) = 0) AND (COALESCE (inMovementId_Value, 0) <> 0)
+   THEN
+   RETURN QUERY
+       SELECT
+             inMovementId                       AS Id
+           , CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar) AS InvNumber
+           , inOperDate                         AS OperDate
+           , Object_Status.ObjectCode           AS StatusCode
+           , Object_Status.ValueData            AS StatusName
+
+           , 0 :: TFloat                        AS AmountIn
+           , 0 :: TFloat                        AS AmountOut
+
+           , MIString_Comment.ValueData         AS Comment
+
+           , Object_Member.Id                   AS MemberId
+           , Object_Member.ValueData            AS MemberName
+           , View_InfoMoney.InfoMoneyId         AS InfoMoneyId
+           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , Object_Unit.Id                     AS UnitId
+           , Object_Unit.ValueData              AS UnitName
+           , Object_MoneyPlace.Id               AS MoneyPlaceId
+           , Object_MoneyPlace.ValueData        AS MoneyPlaceName
+           , Object_Car.Id                      AS CarId
+           , Object_Car.ValueData               AS CarName
+
+       FROM Movement
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = zc_Enum_Status_UnComplete()
+
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                             ON MILinkObject_Car.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+
+       WHERE Movement.Id =  inMovementId_Value;
+
+   END IF;
+
+   --существующий
+   IF (COALESCE (inMovementId, 0) <> 0)
+   THEN
+   RETURN QUERY
+       SELECT
+             Movement.Id                        AS Id
+           , Movement.InvNumber                 AS InvNumber
+           , Movement.OperDate                  AS OperDate
+           , Object_Status.ObjectCode           AS StatusCode
+           , Object_Status.ValueData            AS StatusName
+
+           , CASE
+                  WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END :: TFloat                      AS AmountIn
+           , CASE
+                  WHEN MovementItem.Amount < 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END :: TFloat                      AS AmountOut
+
+           , MIString_Comment.ValueData         AS Comment
+
+           , Object_Member.Id                   AS MemberId
+           , Object_Member.ValueData            AS MemberName
+           , View_InfoMoney.InfoMoneyId         AS InfoMoneyId
+           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , Object_Unit.Id                     AS UnitId
+           , Object_Unit.ValueData              AS UnitName
+           , Object_MoneyPlace.Id               AS MoneyPlaceId
+           , Object_MoneyPlace.ValueData        AS MoneyPlaceName
+           , Object_Car.Id                      AS CarId
+           , Object_Car.ValueData               AS CarName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-           
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-   
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_PersonalReport();
-  
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                             ON MILinkObject_Car.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
+
+       WHERE Movement.Id =  inMovementId;
+
+   END IF;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
- 12.08.13         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.09.14                                                        *
+ 15.09.14                                                        *
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inOperDate:= CURRENT_DATE, inMovementId_Value:=0,  inSession:= zfCalc_UserAdmin());

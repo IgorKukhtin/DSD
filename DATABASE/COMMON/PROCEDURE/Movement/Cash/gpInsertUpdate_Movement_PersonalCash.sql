@@ -4,25 +4,24 @@
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_PersonalCash (integer, tvarchar, tdatetime, Integer, Integer, tfloat, TVarChar, integer, integer, integer, TDateTime, tvarchar);
 
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_PersonalCash (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalCash(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inCashId              Integer   , -- Касса
-    IN inPersonalId          Integer   , -- Сотрудник
-    IN inAmount              TFloat    , -- Сумма операции 
     IN inComment             TVarChar  , -- Комментерий
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inUnitId              Integer   , -- Подразделение 	
-    IN inPositionId          Integer   , -- Должность
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMovementItemIdMaster Integer;
-   DECLARE vbMovementItemIdChild Integer;
+   DECLARE vbMIMasterId Integer;
+   
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -39,25 +38,18 @@ BEGIN
      ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL);
 
      -- определяем <Главный Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemIdMaster FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Master();
+     SELECT MovementItem.Id INTO vbMIMasterId FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Master();
      -- сохранили <Элемент документа>
-     vbMovementItemIdMaster:= lpInsertUpdate_MovementItem (vbMovementItemIdMaster, zc_MI_Master(), inCashId, ioMovementId, inAmount, NULL);
+     vbMIMasterId:= lpInsertUpdate_MovementItem (vbMIMasterId, zc_MI_Master(), inCashId, ioMovementId, 0, NULL);
 
      -- определяем <Подчиненный Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemIdChild FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Child();
+     --SELECT MovementItem.Id INTO vbMovementItemIdChild FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Child();
      -- сохранили <Элемент документа>
-     vbMovementItemIdChild:= lpInsertUpdate_MovementItem (vbMovementItemIdChild, zc_MI_Child(), inPersonalId, ioMovementId, inAmount, NULL);
+     --vbMovementItemIdChild:= lpInsertUpdate_MovementItem (vbMovementItemIdChild, zc_MI_Child(), inPersonalId, ioMovementId, inAmount, NULL);
 
 
      -- Комментарий
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemIdChild, inComment);
-
-     -- сохранили связь с <Управленческие статьи>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemIdChild, inInfoMoneyId);
-     -- сохранили связь с <Подразделением>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(),vbMovementItemIdChild, inUnitId);
-     -- сохранили связь с <Должность>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemIdChild, inPositionId);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMIMasterId, inComment);
 
      -- сохранили связь с <Дата начисления>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemIdChild, inServiceDate);
@@ -73,7 +65,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 10.09.14         *
+ 16.09.14         *
 
 
 */

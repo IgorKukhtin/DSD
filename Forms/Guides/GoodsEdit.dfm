@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 361
-  ClientWidth = 352
+  ClientHeight = 404
+  ClientWidth = 345
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 331
+    Top = 371
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 192
-    Top = 331
+    Top = 371
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -192,6 +192,23 @@
     TabOrder = 21
     Width = 273
   end
+  object cxLabel10: TcxLabel
+    Left = 40
+    Top = 319
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceGoodsTag: TcxButtonEdit
+    Left = 40
+    Top = 336
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 304
     Top = 80
@@ -304,6 +321,13 @@
         Component = FuelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsTagId'
+        Value = ''
+        Component = GoodsTagGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 232
     Top = 48
@@ -389,6 +413,19 @@
         Name = 'TradeMarkName'
         Value = ''
         Component = TradeMarkGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'GoodsTagId'
+        Value = ''
+        Component = GoodsTagGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsTagName'
+        Value = ''
+        Component = GoodsTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -625,5 +662,29 @@
       end>
     Left = 112
     Top = 144
+  end
+  object GoodsTagGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsTag
+    FormNameParam.Value = 'TGoodsTagForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsTagGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 152
+    Top = 330
   end
 end

@@ -18,6 +18,7 @@ type
     function EOF: boolean;
     function RecordCount: integer;
     procedure Next;     virtual;
+    procedure Close;    virtual; abstract;
     procedure Activate; virtual; abstract;
     property Active: boolean read FActive;
   end;

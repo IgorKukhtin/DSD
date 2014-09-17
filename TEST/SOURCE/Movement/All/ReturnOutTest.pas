@@ -12,20 +12,21 @@ type
   end;
 
   TReturnOut = class(TMovementTest)
-  private
+  protected
     function InsertDefault: integer; override;
   public
-    function InsertUpdateReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
+    function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest,
-     SysUtils, Db, TestFramework, PartnerTest, ContractTest, PaidKindTest;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest, SysUtils,
+     Db, TestFramework, PartnerTest, ContractTest, PaidKindTest, CurrencyTest;
 
 { TReturnOut }
 
@@ -44,32 +45,35 @@ var Id: Integer;
     OperDatePartner: TDateTime;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId: Integer;
+    FromId, ToId, PaidKindId, ContractId, CurrencyId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
 
   OperDatePartner:= Date;
+
   PriceWithVAT:=true;
   VATPercent:=20;
   ChangePercent:=-10;
 
   FromId := TPartner.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  PaidKindId:=TPaidKind.Create.GetDefault;
-  ContractId:=TContract.Create.GetDefault;
+  PaidKindId:=0;
+  ContractId:=0;
+  CurrencyId := TCurrency.Create.GetDefault;
   //
-  result := InsertUpdateReturnOut(Id, InvNumber, OperDate,
+  result := InsertUpdateMovementReturnOut(Id, InvNumber, OperDate,
              OperDatePartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId);
+             FromId, ToId, PaidKindId, ContractId, CurrencyId, CurrencyId);
 end;
 
-function TReturnOut.InsertUpdateReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
+function TReturnOut.InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId,
+             CurrencyDocumentId, CurrencyPartnerId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -86,6 +90,8 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inCurrencyDocumentId', ftInteger, ptInput, CurrencyDocumentId);
+  FParams.AddParam('inCurrencyPartnerId', ftInteger, ptInput, CurrencyPartnerId);
 
   result := InsertUpdate(FParams);
 end;

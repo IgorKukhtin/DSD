@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit,
-  ExternalLoad;
+  ExternalLoad, cxBlobEdit;
 
 type
   TImportSettingsForm = class(TAncestorDBGridForm)
@@ -48,7 +48,7 @@ type
     clFileTypeName: TcxGridDBColumn;
     clImportTypeName: TcxGridDBColumn;
     clStartRow: TcxGridDBColumn;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    LoadObjectChoiceForm: TOpenChoiceForm;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     ContractChoiceForm: TOpenChoiceForm;
@@ -63,6 +63,7 @@ type
     mactLoadPrice: TMultiAction;
     bbLoadAllPrice: TdxBarButton;
     colDefaultValue: TcxGridDBColumn;
+    clQuery: TcxGridDBColumn;
   private
     { Private declarations }
   public

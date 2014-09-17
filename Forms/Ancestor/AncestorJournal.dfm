@@ -3,28 +3,26 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Width = 717
     Height = 272
-    ExplicitTop = 59
+    ExplicitTop = 57
     ExplicitWidth = 717
-    ExplicitHeight = 270
+    ExplicitHeight = 272
     ClientRectBottom = 272
     ClientRectRight = 717
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 711
-      ExplicitHeight = 264
+      ExplicitWidth = 717
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
-        Width = 711
-        Height = 264
-        ExplicitWidth = 711
-        ExplicitHeight = 264
+        Width = 717
+        Height = 272
+        ExplicitWidth = 717
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil

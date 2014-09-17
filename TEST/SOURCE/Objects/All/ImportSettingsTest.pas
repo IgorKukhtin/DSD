@@ -16,7 +16,9 @@ type
   TImportSettingsObjectTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
-    function InsertUpdateImportSettings(const Id, Code : integer; Name, ProcedureName: string): integer;
+    function InsertUpdateImportSettings(const Id, Code : integer;
+         Name: string; JuridicalId, ContractId, FileTypeId, ImportTypeId, StartRow: Integer;
+         HDR: Boolean; Directory, Query: string): integer;
     constructor Create; override;
   end;
 
@@ -54,8 +56,10 @@ begin
   Id := ObjectTest.InsertDefault;
   try
     // Получение данных о роли
-    with ObjectTest.GetRecord(Id) do
+    with ObjectTest.GetRecord(Id) do begin
       Check((FieldByName('name').AsString = 'Загрузка прихода'), 'Не сходятся данные Id = ' + IntToStr(id));
+      Check((FieldByName('Query').AsString = 'Memo'), 'Не сходятся данные Id = ' + IntToStr(id));
+    end;
     // Получим список ролей
     Check(ObjectTest.GetDataSet.RecordCount = (RecordCount + 1), 'Количество записей не изменилось');
   finally
@@ -75,17 +79,27 @@ end;
 
 function TImportSettingsObjectTest.InsertDefault: integer;
 begin
-  result := InsertUpdateImportSettings(0, -1, 'Загрузка прихода', 'gpInsertIncome');
+  result := InsertUpdateImportSettings(0, -1, 'Загрузка прихода', 0, 0, 0, 0, 0, true, 'Directory', 'Memo');
   inherited;
 end;
 
-function TImportSettingsObjectTest.InsertUpdateImportSettings(const Id, Code : integer; Name, ProcedureName: string): integer;
+function TImportSettingsObjectTest.InsertUpdateImportSettings(const Id, Code : integer;
+         Name: string; JuridicalId, ContractId, FileTypeId, ImportTypeId, StartRow: Integer;
+         HDR: Boolean; Directory, Query: string): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inProcedureName', ftString, ptInput, ProcedureName);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inFileTypeId', ftInteger, ptInput, FileTypeId);
+  FParams.AddParam('inImportTypeId', ftInteger, ptInput, ImportTypeId);
+  FParams.AddParam('inStartRow', ftInteger, ptInput, StartRow);
+  FParams.AddParam('inHDR', ftBoolean, ptInput, HDR);
+  FParams.AddParam('inDirectory', ftString, ptInput, Directory);
+  FParams.AddParam('inQuery', ftBlob, ptInput, Query);
+
   result := InsertUpdate(FParams);
 end;
 

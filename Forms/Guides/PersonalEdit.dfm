@@ -294,6 +294,11 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
+        ParamType = ptInputOutput
       end>
     Left = 88
     Top = 96
@@ -308,6 +313,13 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
       end
       item

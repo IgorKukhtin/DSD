@@ -71,6 +71,7 @@ type
     procedure LoadOrderExternalFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
+    procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
@@ -512,6 +513,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
 end;
 
+
+
+procedure TLoadFormTest.LoadPersonalReportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalReportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalReportJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalReportJournalForm');
+end;
+
+
+
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
@@ -760,6 +773,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveDocumentTo1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveDocumentTo1CForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveMarketingDocumentTo1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaveMarketingDocumentTo1CForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;

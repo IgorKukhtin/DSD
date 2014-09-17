@@ -32,8 +32,21 @@ type
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
-    procedure Close;
+    procedure Close; override;
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
+  end;
+
+  TODBCExternalLoad = class(TExternalLoad)
+  private
+    FAdoConnection: TADOConnection;
+  protected
+    procedure First; override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Open(AConnection, ASQL: string);
+    procedure Activate; override;
+    procedure Close; override;
   end;
 
   TExternalLoadAction = class(TdsdCustomAction)
@@ -70,6 +83,7 @@ type
     StartRow: integer;
     HDR: boolean;
     Directory: string;
+    Query: string;
     constructor Create(ItemClass: TCollectionItemClass);
     destructor Destroy; override;
   end;
@@ -82,13 +96,14 @@ type
     class function GetImportSettings(Id: integer): TImportSettings;
   end;
 
-  TExecuteProcedureFromFile = class
+  TExecuteProcedureFromExternalDataSet = class
   private
-    FExternalLoad: TFileExternalLoad;
+    FExternalLoad: TExternalLoad;
     FImportSettings: TImportSettings;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
   public
-    constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+    constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings); overload;
+    constructor Create(ConnectionString, SQL: string; ImportSettings: TImportSettings); overload;
     procedure Load;
   end;
 
@@ -122,16 +137,19 @@ end;
 
 function GetFileType(FileTypeName: string): TDataSetType;
 begin
-  if FileTypeName = '' then
-     result := dtDBF
+  if FileTypeName = 'ODBC' then
+     result := dtODBC
   else
-    if FileTypeName = 'Excel' then
-       result := dtXLS
+    if FileTypeName = '' then
+       result := dtDBF
     else
-      if FileTypeName = '' then
-         result := dtMMO
+      if FileTypeName = 'Excel' then
+         result := dtXLS
       else
-        raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
+        if FileTypeName = '' then
+           result := dtMMO
+        else
+          raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
 end;
 
 { TFileExternalLoad }
@@ -292,7 +310,7 @@ end;
 
 { TExecuteProcedureFromFile }
 
-constructor TExecuteProcedureFromFile.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+constructor TExecuteProcedureFromExternalDataSet.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
 var ExtendedProperties: string;
 begin
   if ImportSettings.HDR then
@@ -301,10 +319,19 @@ begin
      ExtendedProperties := '; HDR=No';
   FImportSettings := ImportSettings;
   FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow, ExtendedProperties);
-  FExternalLoad.Open(FileName);
+  TFileExternalLoad(FExternalLoad).Open(FileName);
 end;
 
-procedure TExecuteProcedureFromFile.Load;
+constructor TExecuteProcedureFromExternalDataSet.Create(ConnectionString,
+  SQL: string; ImportSettings: TImportSettings);
+begin
+  FImportSettings := ImportSettings;
+  FExternalLoad := TODBCExternalLoad.Create;
+  TODBCExternalLoad(FExternalLoad).Open(ConnectionString, SQL);
+  TODBCExternalLoad(FExternalLoad).Activate;
+end;
+
+procedure TExecuteProcedureFromExternalDataSet.Load;
 begin
   with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
     Start;
@@ -321,7 +348,7 @@ begin
   end;
 end;
 
-procedure TExecuteProcedureFromFile.ProcessingOneRow(AExternalLoad: TExternalLoad;
+procedure TExecuteProcedureFromExternalDataSet.ProcessingOneRow(AExternalLoad: TExternalLoad;
   AImportSettings: TImportSettings);
 var i: integer;
     D: TDateTime;
@@ -376,26 +403,38 @@ var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
 begin
-  saFound := TStringList.Create;
-  try
-    if ImportSettings.FileType = dtXLS then
-       FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
-    TStringList(saFound).Sort;
-    for I := 0 to saFound.Count - 1 do
-        with TExecuteProcedureFromFile.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
-          try
-            // Загрузили
-            Load;
-            // Перенесли в Archive
-            ForceDirectories(ExtractFilePath(saFound[i]) + 'Archive');
-            RenameFile(saFound[i], ExtractFilePath(saFound[i]) + 'Archive\' + ExtractFileName(saFound[i]));
-          finally
-            Free;
-          end;
-  finally
-    saFound.Free
+  case ImportSettings.FileType of
+    dtXLS, dtDBF, dtMMO: begin
+        saFound := TStringList.Create;
+        try
+          if ImportSettings.FileType = dtXLS then
+             FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+          TStringList(saFound).Sort;
+          for I := 0 to saFound.Count - 1 do
+              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
+                try
+                  // Загрузили
+                  Load;
+                  // Перенесли в Archive
+                  ForceDirectories(ExtractFilePath(saFound[i]) + 'Archive');
+                  RenameFile(saFound[i], ExtractFilePath(saFound[i]) + 'Archive\' + ExtractFileName(saFound[i]));
+                finally
+                  Free;
+                end;
+        finally
+          saFound.Free
+        end;
+    end;
+    dtODBC: begin
+              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, ImportSettings.Query, ImportSettings) do
+                try
+                  // Загрузили
+                  Load;
+                 finally
+                  Free;
+                end;
+    end;
   end;
-
 end;
 
 { TImportSettings }
@@ -435,6 +474,7 @@ begin
   GetStoredProc.Params.AddParam('ImportTypeName', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('Directory', ftString, ptOutput, '');
   GetStoredProc.Params.AddParam('ProcedureName', ftString, ptOutput, '');
+  GetStoredProc.Params.AddParam('Query', ftString, ptOutput, '');
 
   GetStoredProc.Execute;
   {Заполняем параметрами процедуру}
@@ -445,6 +485,7 @@ begin
   Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
   Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
+  Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
   Result.StoredProc := TdsdStoredProc.Create(nil);
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
@@ -526,6 +567,48 @@ destructor TImportSettingsItems.Destroy;
 begin
   FreeAndNil(Param);
   inherited;
+end;
+
+{ TODBCExternalLoad }
+
+procedure TODBCExternalLoad.Activate;
+begin
+  inherited;
+  FDataSet.Open;
+end;
+
+procedure TODBCExternalLoad.Close;
+begin
+  FDataSet.Close;
+end;
+
+constructor TODBCExternalLoad.Create;
+begin
+  FAdoConnection := TADOConnection.Create(nil);
+end;
+
+destructor TODBCExternalLoad.Destroy;
+begin
+  FreeAndNil(FAdoConnection);
+  inherited;
+end;
+
+procedure TODBCExternalLoad.First;
+begin
+  inherited;
+  FDataSet.First;
+end;
+
+procedure TODBCExternalLoad.Open(AConnection, ASQL: string);
+begin
+  FAdoConnection.ConnectionString := AConnection;
+  FAdoConnection.LoginPrompt := false;
+  FAdoConnection.Connected := true;
+  FDataSet := TADOQuery.Create(nil);
+  with FDataSet as TADOQuery do begin
+    Connection := FAdoConnection;
+    SQL.Text := ASQL;
+  end;
 end;
 
 end.

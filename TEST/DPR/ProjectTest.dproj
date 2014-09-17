@@ -974,7 +974,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxCorrectiveTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
@@ -1039,16 +1039,16 @@
 				<Form>Report_CheckBonusForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
-				<Form>ServiceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalReportJournal.pas">
+				<Form>PersonalReportJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossServiceJournal.pas">
 				<Form>ProfitLossServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PersonalReport.pas">
+				<Form>PersonalReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
@@ -1072,8 +1072,8 @@
 				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
-				<Form>SaveDocumentTo1CForm</Form>
+			<DCCReference Include="..\..\Forms\Export\SaveMarketingDocumentTo1C.pas">
+				<Form>SaveMarketingDocumentTo1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
@@ -1536,6 +1536,10 @@
 				<Form>Report_MemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
+				<Form>SaveDocumentTo1CForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
 				<Form>PersonalServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1576,6 +1580,19 @@
 				<Form>Partner1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
+				<Form>ServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\IncomeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ProductionUnionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ProductionSeparateTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SendOnPriceTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

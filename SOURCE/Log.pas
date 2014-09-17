@@ -22,7 +22,6 @@ type
   public
     constructor Create(AEnabled: boolean);
     procedure AddToLog(Msg: string; SeverityLevel: TSeverityLevel = sevOperation);
-  published
     property Enabled: boolean read FEnabled write FEnabled;
     property LogFileName: TFileName read FLogFileName write SetLogFileName;
     property ShowSeverityLevelInLog: boolean read fShowSeverityLevelInLog

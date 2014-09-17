@@ -265,6 +265,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadObjectForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');

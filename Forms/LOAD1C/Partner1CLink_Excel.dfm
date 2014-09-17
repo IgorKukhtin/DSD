@@ -1,23 +1,23 @@
 inherited Partner1CLink_ExcelForm: TPartner1CLink_ExcelForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
-  ClientWidth = 1077
-  ExplicitWidth = 1093
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1077
+    Width = 1020
     Height = 375
     ExplicitWidth = 1020
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 1077
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 1077
+        Width = 1020
         Height = 375
         ExplicitWidth = 1020
         ExplicitHeight = 375

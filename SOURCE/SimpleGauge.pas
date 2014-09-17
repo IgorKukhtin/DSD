@@ -25,7 +25,7 @@ type
     Gauge: TGauge;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   protected
-    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer);
+    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer); virtual;
     procedure Start;
     procedure Finish;
     {$IFDEF VER100}

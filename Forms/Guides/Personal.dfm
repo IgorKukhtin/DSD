@@ -457,6 +457,11 @@ object PersonalForm: TPersonalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          ParamType = ptInput
         end>
       isShowModal = False
       DataSource = DataSource
@@ -470,13 +475,20 @@ object PersonalForm: TPersonalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
       ImageIndex = 54
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
+      FormName = 'TPersonalEditForm'
+      FormNameParam.Value = 'TPersonalEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          ParamType = ptInput
+        end
+        item
+          Name = 'MaskId'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
         end>
       isShowModal = False
       DataSource = DataSource

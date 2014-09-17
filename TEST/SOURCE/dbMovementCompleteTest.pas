@@ -17,7 +17,7 @@ type
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest,
-     dbObjectTest, Authentication, CommonData;
+     dbObjectTest, Authentication, CommonData, IncomeTest;
 { TdbMovementItemTest }
 
 { TdbMovementCompleteTest }
@@ -32,16 +32,16 @@ const
     '</gpComplete_Movement_Income>' +
   '</xml>';
 var
-  MovementIncomeTest: TMovementIncomeTest;
+  IncomeTest: TIncome;
   MovementId, MovementItemId: Integer;
 begin
-  MovementIncomeTest := TMovementIncomeTest.Create;
+  IncomeTest := TIncome.Create;
   try
     MovementItemId := TMovementItemIncomeTest.Create.GetDefault;
-    MovementId := MovementIncomeTest.GetDefault;
+    MovementId := IncomeTest.GetDefault;
     TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [MovementId]));
     try
-      check(MovementIncomeTest.GetRecord(MovementId).FieldByName('StatusCode').AsInteger = 1, 'Статус не изменился');
+      check(IncomeTest.GetRecord(MovementId).FieldByName('StatusCode').AsInteger = 1, 'Статус не изменился');
     finally
       UnCompleteMovement(MovementId);
     end;

@@ -166,17 +166,6 @@ end;
 
 { TdsdDataSetWrapper }
 
-{procedure TdsdStoredProc.Assign(Source: TPersistent);
-begin
-  inherited;
-  with TdsdStoredProc(Source) do begin
-    Self.Params.Assign(Params);
-    Self.StoredProcName := Self.StoredProcName;
-    Self.DataSets.Assign(DataSets);
-    Self.OutputType := OutputType;
-  end;
-end;
- }
 constructor TdsdStoredProc.Create(AOwner: TComponent);
 begin
   inherited;
@@ -275,15 +264,19 @@ begin
   for I := 0 to Params.Count - 1 do
       with Params[i] do
         if ParamType in [ptInput, ptInputOutput] then
-           if DataType = ftBlob then
+           if DataType = ftWideString then
               Result := Result + '<' + Name +
-                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                   '  Value="' + (asString) + '" />'
+                   '  DataType="ftBlob" '+
+                   '  Value="' + gfStrToXmlStr(asString) + '" />'
            else
-              Result := Result + '<' + Name +
-                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                   '  Value="' + gfStrToXmlStr(asString) + '" />';
-
+             if DataType = ftBlob then
+                Result := Result + '<' + Name +
+                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                     '  Value="' + (asString) + '" />'
+             else
+                Result := Result + '<' + Name +
+                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                     '  Value="' + gfStrToXmlStr(asString) + '" />';
 end;
 
 function TdsdStoredProc.GetDataSet: TDataSet;

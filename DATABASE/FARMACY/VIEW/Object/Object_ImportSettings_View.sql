@@ -23,6 +23,7 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , ObjectFloat_StartRow.ValueData::Integer AS StartRow
            , ObjectBoolean_HDR.ValueData      AS HDR
            , ObjectString_Directory.ValueData AS Directory
+           , ObjectBlob_Query.ValueData       AS Query
            
            , Object_ImportSettings.isErased   AS isErased
            , ObjectString_ProcedureName.ValueData AS ProcedureName
@@ -62,6 +63,11 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            LEFT JOIN ObjectString AS ObjectString_Directory 
                                   ON ObjectString_Directory.ObjectId = Object_ImportSettings.Id
                                  AND ObjectString_Directory.DescId = zc_ObjectString_ImportSettings_Directory()
+
+           LEFT JOIN ObjectBlob AS ObjectBlob_Query 
+                                ON ObjectBlob_Query.ObjectId = Object_ImportSettings.Id
+                               AND ObjectBlob_Query.DescId = zc_ObjectBlob_ImportSettings_Query()
+
        WHERE Object_ImportSettings.DescId = zc_Object_ImportSettings();
 
 ALTER TABLE Object_ImportSettings_View  OWNER TO postgres;

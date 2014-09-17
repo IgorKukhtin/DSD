@@ -408,6 +408,11 @@ type
     bbGoodsTag: TdxBarButton;
     actPartner1CLink_Excel: TdsdOpenForm;
     bbPartner1CLink_Excel: TdxBarButton;
+    actSaveMarketingDocumentTo1CForm: TdsdOpenForm;
+    bbSaveMarketingDocumentTo1C: TdxBarButton;
+    bbExternalSave: TdxBarSubItem;
+    actPersonalReport: TdsdOpenForm;
+    bbPersonalReport: TdxBarButton;
   public
     { Public declarations }
   end;

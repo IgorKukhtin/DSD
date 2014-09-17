@@ -24,9 +24,6 @@ type
     cxLabel2: TcxLabel;
     cxLabel15: TcxLabel;
     ceStatus: TcxButtonEdit;
-    EntryCDS: TClientDataSet;
-    EntryDS: TDataSource;
-    spSelectMIContainer: TdsdStoredProc;
     FormParams: TdsdFormParams;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
@@ -38,10 +35,7 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     spInsertUpdateMIMaster: TdsdStoredProc;
-    EntryViewAddOn: TdsdDBViewAddOn;
     colIsErased: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
     actAddMask: TdsdExecStoredProc;
     spInsertMaskMIMaster: TdsdStoredProc;
     bbAddMask: TdxBarButton;
