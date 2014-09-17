@@ -532,7 +532,12 @@ uses
   GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  IncomeTest in '..\SOURCE\Movement\All\IncomeTest.pas',
+  ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
+  ProductionSeparateTest in '..\SOURCE\Movement\All\ProductionSeparateTest.pas',
+  SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

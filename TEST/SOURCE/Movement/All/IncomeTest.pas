@@ -1,57 +1,60 @@
-unit ReturnOutTest;
+unit IncomeTest;
 
 interface
 
 uses dbTest, dbMovementTest, ObjectTest;
 
 type
-  TReturnOutTest = class (TdbMovementTestNew)
+  TIncomeTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
 
-  TReturnOut = class(TMovementTest)
-  protected
+  TIncome = class(TMovementTest)
+  private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+    function InsertUpdateIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId,
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
              CurrencyDocumentId, CurrencyPartnerId: Integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest, SysUtils,
-     Db, TestFramework, PartnerTest, ContractTest, PaidKindTest, CurrencyTest;
+uses UtilConst, PartnerTest, UnitsTest, CurrencyTest, dbObjectTest, SysUtils,
+     Db, TestFramework;
 
-{ TReturnOut }
+{ TIncome }
 
-constructor TReturnOut.Create;
+constructor TIncome.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_ReturnOut';
-  spSelect := 'gpSelect_Movement_ReturnOut';
-  spGet := 'gpGet_Movement_ReturnOut';
+  spInsertUpdate := 'gpInsertUpdate_Movement_Income';
+  spSelect := 'gpSelect_Movement_Income';
+  spGet := 'gpGet_Movement_Income';
 end;
 
-function TReturnOut.InsertDefault: integer;
+function TIncome.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     OperDatePartner: TDateTime;
+    InvNumberPartner: String;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, CurrencyId: Integer;
+    FromId, ToId, PaidKindId, ContractId, PersonalPackerId: Integer;
+    CurrencyId: integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
 
   OperDatePartner:= Date;
+  InvNumberPartner:='InvNumberPartner';
 
   PriceWithVAT:=true;
   VATPercent:=20;
@@ -61,18 +64,20 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
+  PersonalPackerId:=0;
   CurrencyId := TCurrency.Create.GetDefault;
   //
-  result := InsertUpdateMovementReturnOut(Id, InvNumber, OperDate,
-             OperDatePartner, PriceWithVAT,
+  result := InsertUpdateIncome(Id, InvNumber, OperDate,
+             OperDatePartner, InvNumberPartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, CurrencyId, CurrencyId);
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId, CurrencyId, CurrencyId);
+  inherited;
 end;
 
-function TReturnOut.InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+function TIncome.InsertUpdateIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId,
+             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
              CurrencyDocumentId, CurrencyPartnerId: Integer):Integer;
 begin
   FParams.Clear;
@@ -81,6 +86,7 @@ begin
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
 
   FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumberPartner);
 
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
@@ -90,42 +96,40 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inPersonalPackerId', ftInteger, ptInput, PersonalPackerId);
   FParams.AddParam('inCurrencyDocumentId', ftInteger, ptInput, CurrencyDocumentId);
   FParams.AddParam('inCurrencyPartnerId', ftInteger, ptInput, CurrencyPartnerId);
 
   result := InsertUpdate(FParams);
 end;
 
-{ TReturnOutTest }
+{ TBankStatementItemTest }
 
-procedure TReturnOutTest.ProcedureLoad;
+procedure TIncomeTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\ReturnOut\';
-  inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\ReturnOut\';
-  inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\ReturnOut\';
+  ScriptDirectory := ProcedurePath + 'Movement\Income\';
   inherited;
 end;
 
-procedure TReturnOutTest.Test;
-var MovementReturnOut: TReturnOut;
-    Id: Integer;
+procedure TIncomeTest.Test;
+var
+  Income: TIncome;
+  Id: Integer;
 begin
-  inherited;
-  // Создаем документ
-  MovementReturnOut := TReturnOut.Create;
-  Id := MovementReturnOut.InsertDefault;
+  Income := TIncome.Create;
+  Id := Income.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
-    MovementReturnOut.Delete(Id);
+    // удаление
+    DeleteMovement(Id);
   end;
 end;
 
+
 initialization
 
-  TestFramework.RegisterTest('Документы', TReturnOutTest.Suite);
+  TestFramework.RegisterTest('Документы', TIncomeTest.Suite);
 
 end.

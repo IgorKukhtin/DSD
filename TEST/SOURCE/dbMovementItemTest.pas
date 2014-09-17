@@ -116,7 +116,8 @@ type
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication,
-     dbObjectMeatTest, GoodsTest, GoodsKindTest;
+     dbObjectMeatTest, GoodsTest, GoodsKindTest, IncomeTest, ProductionUnionTest,
+     SendOnPriceTest;
 { TdbMovementItemTest }
 
 {------------------------------------------------------------------------------}
@@ -241,7 +242,7 @@ var Id, MovementId, GoodsId: Integer;
     GoodsKindId,AssetId: Integer;
 begin
   Id:=0;
-  MovementId:= TMovementIncomeTest.Create.GetDefault;
+  MovementId:= TIncome.Create.GetDefault;
   GoodsId:=TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
@@ -285,7 +286,7 @@ end;
 procedure TMovementItemIncomeTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementIncomeTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TIncome.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
@@ -306,7 +307,7 @@ var Id, MovementId, GoodsId: Integer;
     GoodsKindId: Integer;
 begin
   Id := 0;
-  MovementId := TMovementSendOnPriceTest.Create.GetDefault;
+  MovementId := TSendOnPrice.Create.GetDefault;
   GoodsId := TGoods.Create.GetDefault;
   Amount := 10;
   AmountPartner := 11;
@@ -349,7 +350,7 @@ end;
 procedure TMovementItemSendOnPriceTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendOnPriceTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TSendOnPrice.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
@@ -432,7 +433,7 @@ end;
 function TMovementItemProductionUnionMasterTest.InsertDefault: integer;
 var MovementId, GoodsKindId, GoodsId: Integer;
 begin
-  MovementId := TMovementIncomeTest.Create.GetDefault;
+  MovementId := TIncome.Create.GetDefault;
   GoodsId := TGoods.Create.GetDefault;
   GoodsKindId:= TGoodsKind.Create.GetDefault;
 
@@ -491,7 +492,7 @@ end;
 function TMovementItemProductionUnionChildTest.InsertDefault: integer;
 var MovementId, GoodsId, GoodsKindId : Integer;
 begin
-  MovementId := TMovementIncomeTest.Create.GetDefault;
+  MovementId := TIncome.Create.GetDefault;
   GoodsId := TGoods.Create.GetDefault;
   MovementItem_InId := TMovementItemProductionUnionMasterTest.Create.GetDefault;
   GoodsKindId:= TGoodsKind.Create.GetDefault;
@@ -522,7 +523,7 @@ end;
 procedure TMovementItemProductionUnionChildTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementProductionUnionTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TProductionUnion.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 

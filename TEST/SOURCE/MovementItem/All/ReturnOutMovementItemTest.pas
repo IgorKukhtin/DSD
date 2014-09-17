@@ -11,12 +11,12 @@ type
     procedure SetUp; override;
   published
     // загрузка процедура из определенной директории
-    procedure ProcedureLoad; virtual;
-    procedure Test; virtual;
+    procedure ProcedureLoad; override;
+    procedure Test; override;
   end;
 
   TReturnOutMovementItem = class(TMovementItemTest)
-  private
+  protected
     function InsertDefault: integer; override;
   public
     function InsertUpdateReturnOutMovementItem

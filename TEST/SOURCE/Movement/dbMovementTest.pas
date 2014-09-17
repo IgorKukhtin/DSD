@@ -7,18 +7,13 @@ type
 
   TdbMovementTestNew = class (TdbTest)
   protected
+    // Удаление документа
+    procedure DeleteMovement(Id: integer);
     procedure SetUp; override;
   end;
 
   TdbMovementTest = class (TdbMovementTestNew)
-  private
-    // Удаление документа
-    procedure DeleteMovement(Id: integer);
   published
-    procedure MovementIncomeTest;
-    procedure MovementProductionUnionTest;
-    procedure MovementProductionSeparateTest;
-    procedure MovementSendOnPriceTest;
     procedure MovementReturnOutTest;
     procedure MovementSendTest;
 
@@ -26,48 +21,6 @@ type
     procedure MovementInventoryTest;
     procedure MovementZakazExternalTest;
     procedure MovementZakazInternalTest;
-  end;
-
-  TMovementIncomeTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
-             CurrencyDocumentId, CurrencyPartnerId: Integer): integer;
-    constructor Create; override;
-  end;
-
-  TMovementProductionUnionTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementProductionUnion(Id: Integer; InvNumber: String;
-             OperDate: TDateTime; FromId, ToId: Integer): integer;
-    constructor Create; override;
-  end;
-
-  TMovementProductionSeparateTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementProductionSeparate(Id: Integer; InvNumber: String;
-             OperDate: TDateTime; PartionGoods: String; FromId, ToId: Integer): integer;
-    constructor Create; override;
-  end;
-
-  TMovementSendOnPriceTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementSendOnPrice(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
-             ): integer;
-    constructor Create; override;
   end;
 
   TMovementReturnOutTest = class(TMovementTest)
@@ -135,7 +88,7 @@ uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData
    , Authentication, dbObjectMeatTest, PartnerTest, CurrencyTest;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
-procedure TdbMovementTest.DeleteMovement(Id: integer);
+procedure TdbMovementTestNew.DeleteMovement(Id: integer);
 const
    pXML =
   '<xml Session = "">' +
@@ -152,71 +105,6 @@ begin
          break;
       end;
 end;
-{------------------------------------------------------------------------------}
-procedure TdbMovementTest.MovementIncomeTest;
-var
-  MovementIncome: TMovementIncomeTest;
-  Id: Integer;
-begin
-  MovementIncome := TMovementIncomeTest.Create;
-  Id := MovementIncome.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
-
-procedure TdbMovementTest.MovementProductionUnionTest;
-var
-  MovementProductionUnion: TMovementProductionUnionTest;
-  Id: Integer;
-begin
-  MovementProductionUnion := TMovementProductionUnionTest.Create;
-  Id := MovementProductionUnion.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
-
-procedure TdbMovementTest.MovementProductionSeparateTest;
-var
-  MovementProductionSeparate: TMovementProductionSeparateTest;
-  Id: Integer;
-begin
-  MovementProductionSeparate := TMovementProductionSeparateTest.Create;
-  Id := MovementProductionSeparate.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
-
-procedure TdbMovementTest.MovementSendOnPriceTest;
-var
-  MovementSendOnPrice: TMovementSendOnPriceTest;
-  Id: Integer;
-begin
-  MovementSendOnPrice := TMovementSendOnPriceTest.Create;
-  Id := MovementSendOnPrice.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
-
 
 procedure TdbMovementTest.MovementReturnOutTest;
 var
@@ -313,207 +201,6 @@ begin
     DeleteMovement(Id);
   end;
 end;
-{------------------------------------------------------------------------------}
-{ TMovementIncome }
-constructor TMovementIncomeTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_Income';
-  spSelect := 'gpSelect_Movement_Income';
-  spGet := 'gpGet_Movement_Income';
-end;
-
-function TMovementIncomeTest.InsertDefault: integer;
-var Id: Integer;
-    InvNumber: String;
-    OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    InvNumberPartner: String;
-    PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, PersonalPackerId: Integer;
-    CurrencyId: integer;
-begin
-  Id:=0;
-  InvNumber:='1';
-  OperDate:= Date;
-
-  OperDatePartner:= Date;
-  InvNumberPartner:='InvNumberPartner';
-
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
-
-  FromId := TPartner.Create.GetDefault;
-  ToId := TUnit.Create.GetDefault;
-  PaidKindId:=0;
-  ContractId:=0;
-  PersonalPackerId:=0;
-  CurrencyId := TCurrency.Create.GetDefault;
-  //
-  result := InsertUpdateMovementIncome(Id, InvNumber, OperDate,
-             OperDatePartner, InvNumberPartner, PriceWithVAT,
-             VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId, CurrencyId, CurrencyId);
-  inherited;
-end;
-
-function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, PersonalPackerId,
-             CurrencyDocumentId, CurrencyPartnerId: Integer):Integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumberPartner);
-
-  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
-  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-  FParams.AddParam('inPersonalPackerId', ftInteger, ptInput, PersonalPackerId);
-  FParams.AddParam('inCurrencyDocumentId', ftInteger, ptInput, CurrencyDocumentId);
-  FParams.AddParam('inCurrencyPartnerId', ftInteger, ptInput, CurrencyPartnerId);
-
-  result := InsertUpdate(FParams);
-end;
-
-{ TMovementProductionUnionTest }
-
-constructor TMovementProductionUnionTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_ProductionUnion';
-  spSelect := 'gpSelect_Movement_ProductionUnion';
-  spGet := 'gpGet_Movement_ProductionUnion';
-end;
-
-function TMovementProductionUnionTest.InsertDefault: integer;
-begin
-  result := InsertUpdateMovementProductionUnion(0, 'Номер 1', Date, 0, 0);
-end;
-
-function TMovementProductionUnionTest.InsertUpdateMovementProductionUnion(
-  Id: Integer; InvNumber: String; OperDate: TDateTime; FromId,
-  ToId: Integer): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  result := InsertUpdate(FParams);
-end;
-
-
-{ TMovementProductionSeparateTest }
-constructor TMovementProductionSeparateTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_ProductionSeparate';
-  spSelect := 'gpSelect_Movement_ProductionSeparate';
-  spGet := 'gpGet_Movement_ProductionSeparate';
-end;
-
-function TMovementProductionSeparateTest.InsertDefault: integer;
-begin
-  result := InsertUpdateMovementProductionSeparate(0, 'Номер 1' ,Date, '12.05.13', 0, 0);
-end;
-
-function TMovementProductionSeparateTest.InsertUpdateMovementProductionSeparate(
-  Id: Integer; InvNumber: String; OperDate: TDateTime; PartionGoods: String;
-  FromId, ToId: Integer): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  result := InsertUpdate(FParams);
-end;
-
-
-{ TMovementSendOnPrice }
-constructor TMovementSendOnPriceTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_SendOnPrice';
-  spSelect := 'gpSelect_Movement_SendOnPrice';
-  spGet := 'gpGet_Movement_SendOnPrice';
-end;
-
-function TMovementSendOnPriceTest.InsertDefault: integer;
-var Id: Integer;
-    InvNumber: String;
-    OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer;
-begin
-  Id:=0;
-  InvNumber:='1';
-  OperDate:= Date;
-  OperDatePartner:= Date;
-
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
-
-  FromId := TPartner.Create.GetDefault;
-  ToId := TUnit.Create.GetDefault;
-  CarId:=0;
-  PersonalDriverId:=0;
-  RouteId:=0;
-  RouteSortingId:=0;
-  //
-  result := InsertUpdateMovementSendOnPrice(Id, InvNumber, OperDate,
-             OperDatePartner, PriceWithVAT,
-             VATPercent, ChangePercent,
-             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId);
-
-end;
-
-function TMovementSendOnPriceTest.InsertUpdateMovementSendOnPrice(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer):Integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-
-  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
-  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-
-  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
-  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
-  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
-
-  result := InsertUpdate(FParams);
-end;
-
 
 { TMovementReturnOut }
 constructor TMovementReturnOutTest.Create;
