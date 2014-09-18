@@ -25,6 +25,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.Footer = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
