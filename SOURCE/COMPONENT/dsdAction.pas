@@ -421,6 +421,7 @@ type
   TdsdFormClose = class(TdsdCustomAction)
   protected
     function LocalExecute: boolean; override;
+  public
     constructor Create(AOwner: TComponent); override;
   published
     property Caption;
@@ -1103,6 +1104,7 @@ var lDataSet: TDataSet;
     ID: Integer;
     IdField: TField;
 begin
+  IdField := nil;
   if Assigned(DataSource.DataSet.FindField('Id')) then
      IdField := DataSource.DataSet.FieldByName('Id');
   if Assigned(DataSource.DataSet.FindField('MovementId')) then
@@ -1817,7 +1819,6 @@ end;
 
 function TMultiAction.LocalExecute: boolean;
 begin
-  result := false;
   if QuestionBeforeExecute <> '' then
      SaveQuestionBeforeExecute;
   if InfoAfterExecute <> '' then

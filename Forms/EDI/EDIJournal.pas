@@ -124,6 +124,23 @@ type
     spSelectTaxCorrective_Client: TdsdStoredProc;
     EDIDeclarReturn: TEDIAction;
     actStoredProcTaxCorrectivePrint: TdsdExecStoredProc;
+    EDI1: TMenuItem;
+    EDI2: TMenuItem;
+    N2: TMenuItem;
+    EDI3: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    ComDoc1: TMenuItem;
+    mactSendComdoc: TMultiAction;
+    mactSendComdocAndRefresh: TMultiAction;
+    EDI4: TMenuItem;
+    mactSendDeclar: TMultiAction;
+    mactSendDeclarAndRefresh: TMultiAction;
+    mactSendReturnAndRefresh: TMultiAction;
+    EDI5: TMenuItem;
+    mactSendReturn: TMultiAction;
+    mactSendReturnAndRefresh1: TMenuItem;
   private
     { Private declarations }
   public

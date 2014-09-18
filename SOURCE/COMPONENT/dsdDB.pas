@@ -23,10 +23,10 @@ type
     function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
     procedure SetInCrossDBViewAddOn(const Value: Variant);
     function GetFromCrossDBViewAddOn: Variant;
-    function GetOwner: TComponent;
   protected
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
+    function GetOwner: TPersistent; override;
   public
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
@@ -193,14 +193,14 @@ begin
      if DataSets[0].DataSet is TkbmMemTable then begin
 
         StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
-        OldDateFormat := ShortDateFormat;
-        ShortDateFormat := 'yyyy-mm-dd';
-        DateSeparator := '-';
+        OldDateFormat := FormatSettings.ShortDateFormat;
+        FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+        FormatSettings.DateSeparator := '-';
         try
            TkbmMemTable(DataSets[0].DataSet).LoadFromStreamViaFormat(StringStream, DefaultStreamFormat);
         finally
            StringStream.Free;
-           ShortDateFormat := OldDateFormat;
+           FormatSettings.ShortDateFormat := OldDateFormat;
         end;
      end;
      if Assigned(B) then
@@ -523,7 +523,7 @@ var Owner: TComponent;
 begin
   if Source is TdsdParam then begin
      AssignParam(TdsdParam(Source));
-     Owner := GetOwner;
+     Owner := TComponent(GetOwner);
      Component := nil;
      // доставляем еще свойств
      if Assigned(TdsdParam(Source).Component) and Assigned(Owner) then
@@ -651,11 +651,13 @@ begin
   end;
 end;
 
-function TdsdParam.GetOwner: TComponent;
+function TdsdParam.GetOwner: TPersistent;
 var Owner: TComponent;
 begin
   if Assigned(Collection) then
-     Owner := TComponent(Collection.Owner);
+     Owner := TComponent(Collection.Owner)
+  else
+     Owner := nil;
   while (Owner <> nil) do
      if Owner is TCustomForm then
         break

@@ -7,7 +7,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
            ObjectLink_LinkGoods_GoodsMain.ObjectId       AS Id
                                                         
          , ObjectLink_LinkGoods_GoodsMain.ChildObjectId  AS GoodsMainId
-         , Object_MainGoods.GoodsCodeInt                 AS GoodsCodeInt
+         , Object_MainGoods.GoodsCode                    AS GoodsMainCode
          , Object_MainGoods.GoodsName                    AS GoodsMainName
 
          , ObjectLink_LinkGoods_Goods.ChildObjectId      AS GoodsId
@@ -19,7 +19,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , false                                         AS isErased
          
      FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-          JOIN Object_Goods_View AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+          JOIN Object_Goods_Main_View AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
  
           JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                           ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId

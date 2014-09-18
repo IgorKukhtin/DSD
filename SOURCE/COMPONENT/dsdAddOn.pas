@@ -99,7 +99,6 @@ type
 
   TColumnActionOptions = class(TPersistent)
   private
-    FOnlyEditMode: boolean;
     FAfterEmptyValue: boolean;
     FActive: boolean;
     FAction: TCustomAction;
@@ -138,7 +137,7 @@ type
     procedure onGetText(Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean; var AText: string);
   public
     constructor Create(ACollection: TCollection); override;
-    destructor Destroy;
+    destructor Destroy; override;
   published
     property Param: TdsdParam read FParam write FParam;
     property DataSummaryItemIndex: Integer read FDataSummaryItemIndex write SetDataSummaryItemIndex;
@@ -150,7 +149,6 @@ type
   // 3. Обработка признака isErased
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
-    FDataSource: TDataSource;
     FBackGroundStyle: TcxStyle;
     FView: TcxGridTableView;
     FonExit: TNotifyEvent;
@@ -271,7 +269,6 @@ type
   TPivotAddOn = class(TCustomDBControlAddOn)
   private
     FPivotGrid: TcxDBPivotGrid;
-    FonDblClick: TNotifyEvent;
     procedure SetPivotGrid(const Value: TcxDBPivotGrid);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;

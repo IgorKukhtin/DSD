@@ -537,7 +537,12 @@ uses
   IncomeTest in '..\SOURCE\Movement\All\IncomeTest.pas',
   ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
   ProductionSeparateTest in '..\SOURCE\Movement\All\ProductionSeparateTest.pas',
-  SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas';
+  SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas',
+  SendTest in '..\SOURCE\Movement\All\SendTest.pas',
+  LossTest in '..\SOURCE\Movement\All\LossTest.pas',
+  InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',
+  ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
+  ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

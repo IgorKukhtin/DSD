@@ -245,7 +245,6 @@ var
   Stream: TStringStream;
   FileData: string;
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
-  isReturn: boolean;
 begin
   FTPSetConnection;
   // загружаем файлы с FTP
@@ -253,9 +252,9 @@ begin
   if FIdFTP.Connected then
   begin
     FIdFTP.ChangeDir(Directory);
+    List := TStringList.Create;
+    Stream := TStringStream.Create;
     try
-      List := TStringList.Create;
-      Stream := TStringStream.Create;
       FIdFTP.List(List, '', false);
       with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
         try
@@ -385,7 +384,11 @@ begin
     ('JuridicalAddress_From').asString;
   DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName
     ('JuridicalAddress_To').asString;
+  if HeaderDataSet.FieldByName('Phone_From').asString = '' then
+     raise Exception.Create('Не определен телефон Продавца');
   DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
+  if HeaderDataSet.FieldByName('Phone_To').asString = '' then
+     raise Exception.Create('Не определен телефон Покупателя');
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
 
   DECLAR.DECLARBODY.H02G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName
@@ -639,7 +642,11 @@ begin
     ('JuridicalAddress_From').asString;
   DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName
     ('JuridicalAddress_To').asString;
+  if HeaderDataSet.FieldByName('Phone_From').asString = '' then
+     raise Exception.Create('Не определен телефон Продавца');
   DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
+  if HeaderDataSet.FieldByName('Phone_To').asString = '' then
+     raise Exception.Create('Не определен телефон Покупателя');
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
 
   DECLAR.DECLARBODY.H01G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName
@@ -1139,9 +1146,9 @@ begin
   if FIdFTP.Connected then
   begin
     FIdFTP.ChangeDir(Directory);
+    List := TStringList.Create;
+    Stream := TStringStream.Create;
     try
-      List := TStringList.Create;
-      Stream := TStringStream.Create;
       FIdFTP.List(List, '', false);
       if List.Count = 0 then
         exit;
@@ -1218,10 +1225,10 @@ begin
   if FIdFTP.Connected then
   begin
     FIdFTP.ChangeDir(Directory);
+    List := TStringList.Create;
+    Receipt := TStringList.Create;
+    Stream := TStringStream.Create;
     try
-      List := TStringList.Create;
-      Receipt := TStringList.Create;
-      Stream := TStringStream.Create;
       FIdFTP.List(List, '', false);
       with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
         try
@@ -1360,7 +1367,6 @@ end;
 
 function TEDIAction.LocalExecute: boolean;
 begin
-  Result := false;
   // создание документ
   case EDIDocType of
     ediOrder:
@@ -1403,5 +1409,5 @@ end;
 
 end.
 
-  FIdFTP.Username := 'uatovalanftp'; FIdFTP.Password := 'ftp349067';
-FIdFTP.Host := 'ruftpex.edi.su'; '/archive'
+{  FIdFTP.Username := 'uatovalanftp'; FIdFTP.Password := 'ftp349067';
+FIdFTP.Host := 'ruftpex.edi.su'; '/archive'}

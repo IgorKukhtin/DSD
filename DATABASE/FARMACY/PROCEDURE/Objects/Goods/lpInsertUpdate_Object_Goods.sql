@@ -59,6 +59,8 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
       -- сохранили свойство <связи чьи товары>
       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
+   ELSE
+      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Goods_isMain(), ioId, true);
    END IF; 
 
    -- сохранили связь с <Группа>

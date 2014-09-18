@@ -14,19 +14,18 @@ type
   TOrderExternal = class(TMovementTest)
   private
     function InsertDefault: integer; override;
+  protected
+     procedure SetDataSetParam; override;
   public
-    function InsertUpdateOrderExternal(Id: Integer; InvNumber,InvNumberPartner,InvNumberOrder: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId, }RouteSortingId,PriceListId: Integer
-             ): integer;
+    function InsertUpdateOrderExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest,
-     SysUtils, Db, TestFramework, PartnerTest, ContractTest;
+uses UtilConst, JuridicalTest, UnitsTest, dbObjectTest,
+     SysUtils, Db, TestFramework, ContractTest;
 
 { TOrderExternal }
 
@@ -40,82 +39,37 @@ end;
 
 function TOrderExternal.InsertDefault: integer;
 var Id: Integer;
-    InvNumber,InvNumberPartner: String;
+    InvNumber: String;
     OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    Checked,PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    InvNumberOrder:String;
-    FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId,} RouteSortingId, PriceListId: Integer;
+    FromId, ToId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
-  InvNumberPartner:='123';
   OperDate:= Date;
-  OperDatePartner:= Date;
 
-  Checked:=true;
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
-
-  InvNumberOrder:='';
-
-  FromId := TPartner.Create.GetDefault;
+  FromId := TJuridical.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  PaidKindId:=1;
-  ContractId:=TContract.Create.GetDefault;
-  //CarId:=0;
-  //PersonalDriverId:=0;
-  //RouteId:=0;
-  //PersonalId:=0;
-  RouteSortingId:=0;
-  PriceListId:=0;
   //
-  result := InsertUpdateOrderExternal(Id, InvNumber, InvNumberPartner, InvNumberOrder, OperDate,
-             OperDatePartner, Checked, PriceWithVAT,
-             VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId,
-             {CarId,PersonalDriverId, RouteId, PersonalId,}
-             RouteSortingId,PriceListId);
+  result := InsertUpdateOrderExternal(Id, InvNumber, OperDate, FromId, ToId);
 end;
 
-function TOrderExternal.InsertUpdateOrderExternal(Id: Integer; InvNumber,InvNumberPartner,InvNumberOrder: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId, }RouteSortingId,PriceListId: Integer
-             ): integer;
+function TOrderExternal.InsertUpdateOrderExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumber);
-  FParams.AddParam('inInvNumberOrder', ftString, ptInput, InvNumberOrder);
-
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-
-  FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
-
-  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
-  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
 
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-
-//  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-//  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
-//  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
-//  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
-
-  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
-  FParams.AddParam('ioPriceListId', ftInteger, ptInput, PriceListId);
-
   result := InsertUpdate(FParams);
+end;
+
+procedure TOrderExternal.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inIsErased', ftBoolean, ptInput, true);
 end;
 
 { TOrderExternalTest }
@@ -131,12 +85,15 @@ end;
 procedure TOrderExternalTest.Test;
 var MovementOrderExternal: TOrderExternal;
     Id: Integer;
+    RecordCount: Integer;
 begin
   inherited;
   // —оздаем документ
   MovementOrderExternal := TOrderExternal.Create;
+  RecordCount := MovementOrderExternal.GetDataSet.RecordCount;
   Id := MovementOrderExternal.InsertDefault;
   // создание документа
+  Check(MovementOrderExternal.GetDataSet.RecordCount = RecordCount + 1, 'Ќе добавилась запись');
   try
   // редактирование
   finally
