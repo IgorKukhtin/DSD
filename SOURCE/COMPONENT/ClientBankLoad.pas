@@ -24,6 +24,7 @@ type
     function GetComment: string; virtual; abstract;
     function GetCurrencyCode: string; virtual; abstract;
     function GetCurrencyName: string; virtual; abstract;
+  protected
     procedure First; override;
   public
     constructor Create(StartDate, EndDate: TDateTime; DataSetType: TDataSetType = dtDBF); overload; virtual;
@@ -46,7 +47,6 @@ type
   TClientBankLoadAction = class(TExternalLoadAction)
   private
     FClientBankType: TClientBankType;
-    FBankOKPO: string;
     FEndDate: TdsdParam;
     FStartDate: TdsdParam;
     function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
@@ -208,6 +208,7 @@ end;
 function TClientBankLoadAction.GetClientBankLoad(
   AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
 begin
+  result := nil;
   case AClientBankType of
     cbPrivatBank: result := TPrivatBankLoad.Create(StartDate, EndDate);
     cbForum, cbPireusBankDBF: result := TForumBankLoad.Create(StartDate, EndDate);

@@ -18,8 +18,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
 
-     SELECT Id INTO vbGoodsMainId FROM Object_Goods_View
-      WHERE ObjectId = inRetailId AND GoodsCode = inGoodsMainCode;
+     SELECT Id INTO vbGoodsMainId FROM Object_Goods_Main_View
+      WHERE GoodsCode = inGoodsMainCode;
 
      SELECT Id INTO vbGoodsId FROM Object_Goods_View
       WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode;
@@ -30,9 +30,11 @@ BEGIN
         AND Object_LinkGoods_View.GoodsId = vbGoodsId;
 
      IF COALESCE(vbId, 0) = 0 THEN
+        vbId  := 1 /0 ;
+
                  PERFORM gpInsertUpdate_Object_LinkGoods(
                                    ioId := 0                     ,  
-                                   inGoodsMainId := inGoodsMainId, -- Главный товар
+                                   inGoodsMainId := vbGoodsMainId, -- Главный товар
                                    inGoodsId  := vbGoodsId       , -- Товар для замены
                                    inSession  := inSession         -- сессия пользователя
                                    );

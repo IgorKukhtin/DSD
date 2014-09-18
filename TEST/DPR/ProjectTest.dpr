@@ -539,7 +539,12 @@ uses
   SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas',
   PersonalCashJournal in '..\..\Forms\Document\PersonalCashJournal.pas' {PersonalCashJournalForm: TParentForm},
   PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
-  PersonalServiceJournalSelect in '..\..\Forms\Document\PersonalServiceJournalSelect.pas' {PersonalServiceJournalSelectForm: TParentForm};
+  PersonalServiceJournalSelect in '..\..\Forms\Document\PersonalServiceJournalSelect.pas' {PersonalServiceJournalSelectForm: TParentForm},
+  SendTest in '..\SOURCE\Movement\All\SendTest.pas',
+  LossTest in '..\SOURCE\Movement\All\LossTest.pas',
+  InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',
+  ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
+  ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

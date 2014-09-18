@@ -16,14 +16,15 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePersonalReport(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        OperDate: TDateTime; AmountIn: Double; AmountOut: Double;
+        Comment: String;
+        MemberId, InfoMoneyId, UnitId, MoneyPlaceId, CarId: integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, JuridicalTest, PersonalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, MemberTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TPersonalReport }
 
@@ -37,41 +38,47 @@ end;
 
 function TPersonalReport.InsertDefault: integer;
 var Id: Integer;
-    InvNumber: String;
+    InvNumber, Comment: String;
     OperDate: TDateTime;
-    Amount: Double;
-    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: Integer;
+    AmountIn, AmountOut: Double;
+    MemberId, InfoMoneyId, UnitId, MoneyPlaceId, CarId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  FromId := TPersonal.Create.GetDefault;
-  ToId := TJuridical.Create.GetDefault;
-  PaidKindId := 0;
+  AmountIn:= 265.68;
+  AmountOut:= 0;
+  Comment:= '';
+  MemberId := 8490;//TMember.Create.GetDefault;
   InfoMoneyId := 0;
   UnitId := 0;
-  ContractId := 0;
-  Amount := 265.68;
+  InfoMoneyId := 8908;
+  MoneyPlaceId := 14686;
+  CarId := 0;
 
-  result := InsertUpdatePersonalReport(Id, InvNumber, OperDate, Amount,
-              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId);
+  result := InsertUpdatePersonalReport(Id,InvNumber,
+        OperDate, AmountIn, AmountOut,
+        Comment,
+        MemberId, InfoMoneyId, UnitId, MoneyPlaceId, CarId);
 end;
 
 function TPersonalReport.InsertUpdatePersonalReport(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        OperDate: TDateTime; AmountIn: Double; AmountOut: Double;
+        Comment: String;
+        MemberId, InfoMoneyId, UnitId, MoneyPlaceId, CarId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inAmountIn', ftFloat, ptInput, AmountIn);
+  FParams.AddParam('inAmountOut', ftFloat, ptInput, AmountOut);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+  FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inMoneyPlaceId', ftInteger, ptInput, MoneyPlaceId);
+  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
 
   result := InsertUpdate(FParams);
 
@@ -92,7 +99,8 @@ begin
   inherited;
   // Создаем документ
   MovementPersonalReport := TPersonalReport.Create;
-  Id := MovementPersonalReport.InsertDefault;
+//  Id := MovementPersonalReport.InsertDefault;
+  Id := 0;
   // создание документа
   try
   // редактирование

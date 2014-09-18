@@ -18,8 +18,7 @@ BEGIN
    RETURN QUERY 
    SELECT 
              Object_Goods_View.Id
-           , Object_Goods_View.GoodsCodeInt
---           , ObjectString.ValueData                           AS GoodsCode
+           , Object_Goods_View.GoodsCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -29,8 +28,7 @@ BEGIN
            , Object_Goods_View.NDSKindId
            , Object_Goods_View.NDSKindName
 
-    FROM Object_Goods_View 
-   WHERE Object_Goods_View.ObjectId IS NULL;
+    FROM Object_Goods_Main_View AS Object_Goods_View;
   
 END;
 $BODY$

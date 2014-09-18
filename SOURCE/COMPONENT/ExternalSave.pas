@@ -14,11 +14,9 @@ type
   TFileExternalSave = class(TExternalSave)
   private
     FInitializeFile: string;
-    FFileDataSet: TDataSet;
     FFieldDefs: TFieldDefs;
     FSourceDataSet: TDataSet;
     FFileName: string;
-    procedure CreateFieldList;
   public
     constructor Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AFileName: string; AisOEM: boolean = true);
     function Execute(var AFileName: string): boolean;
@@ -74,11 +72,6 @@ begin
   FSourceDataSet := ASourceDataSet;
   Self.FOEM := AisOEM;
   FFileName := AFileName;
-end;
-
-procedure TFileExternalSave.CreateFieldList;
-begin
-
 end;
 
 function TFileExternalSave.Execute(var AFileName: string): boolean;

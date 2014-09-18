@@ -1589,6 +1589,7 @@
 			<DCCReference Include="..\SOURCE\Movement\All\ProductionUnionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ProductionSeparateTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SendOnPriceTest.pas"/>
+
 			<DCCReference Include="..\..\Forms\Document\PersonalCashJournal.pas">
 				<Form>PersonalCashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1601,6 +1602,13 @@
 				<Form>PersonalServiceJournalSelectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+
+			<DCCReference Include="..\SOURCE\Movement\All\SendTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\LossTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\InventoryTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ZakazExternalTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ZakazInternalTest.pas"/>
+
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

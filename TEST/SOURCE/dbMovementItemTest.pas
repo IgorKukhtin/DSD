@@ -117,7 +117,7 @@ implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication,
      dbObjectMeatTest, GoodsTest, GoodsKindTest, IncomeTest, ProductionUnionTest,
-     SendOnPriceTest;
+     SendOnPriceTest, ReturnOutTest;
 { TdbMovementItemTest }
 
 {------------------------------------------------------------------------------}
@@ -371,7 +371,7 @@ var Id, MovementId, GoodsId: Integer;
     GoodsKindId, AssetId: Integer;
 begin
   Id:=0;
-  MovementId:= TMovementReturnOutTest.Create.GetDefault;
+  MovementId:= TReturnOut.Create.GetDefault;
   GoodsId:=TGoods.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
@@ -410,7 +410,7 @@ end;
 procedure TMovementItemReturnOutTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementReturnOutTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TReturnOut.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 

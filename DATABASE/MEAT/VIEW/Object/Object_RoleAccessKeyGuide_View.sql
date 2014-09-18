@@ -1,6 +1,6 @@
 -- View: Object_RoleAccessKeyGuide_View
 
-DROP VIEW IF EXISTS Object_RoleAccessKeyGuide_View;
+-- DROP VIEW IF EXISTS Object_RoleAccessKeyGuide_View;
 
 CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
@@ -93,6 +93,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_PersonalServiceSbit()
                                              , zc_Enum_Process_AccessKey_PersonalServiceMarketing()
                                              , zc_Enum_Process_AccessKey_PersonalServiceSB()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
                                               )
                                THEN AccessKeyId
                           ELSE 0
@@ -125,6 +126,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                      -- AND UnitCode IN (13000, 13010) -- Охрана + Служба безопастности
                                                                      AND ProfitLossDirectionCode IN (30300 -- Административные расходы + Содержание охраны
                                                                                                     ))
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceFirstForm()
+                                                                                                    )
            ;
 
 ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
@@ -133,6 +136,7 @@ ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.09.14                                        *
  08.09.14                                        *
 */
 

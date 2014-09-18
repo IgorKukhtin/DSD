@@ -53,6 +53,7 @@ function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFou
 var
   sr: TSearchRec;
 begin
+  result := 0;
   try
     if FindFirst(sDirPath + sMask, faAnyFile, sr) = 0 then
     begin
