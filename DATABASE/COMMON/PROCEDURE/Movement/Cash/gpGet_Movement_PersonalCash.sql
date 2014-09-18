@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalCash(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , ParentId Integer, ParentName TVarChar
              , Amount TFloat 
              , ServiceDate TDateTime
              , Comment TVarChar
@@ -29,11 +30,14 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_PersonalCash_seq') AS TVarChar)  AS InvNumber
+           , CAST (NEXTVAL ('movement_cash_seq') AS TVarChar)  AS InvNumber
 --           , CAST (CURRENT_DATE AS TDateTime)                AS OperDate
            , inOperDate                                        AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
+     
+           , 0                      AS ParentId
+           , '' :: TVarChar         AS ParentName
            
            , 0::TFloat                                         AS Amount
 
@@ -55,7 +59,10 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
-                      
+
+           , MovementPersonalService.Id         AS ParentId
+           , MovementPersonalService.InvNumber  AS ParentName  
+                    
            , MovementItem.Amount
 
            , COALESCE (MIDate_ServiceDate.ValueData, Movement.OperDate) AS ServiceDate
@@ -77,7 +84,12 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-            
+
+            LEFT JOIN Movement AS MovementPersonalService 
+                               ON MovementPersonalService.Id = Movement.ParentId
+                              AND MovementPersonalService.DescId = zc_Movement_PersonalService()
+                                                           
+           
        WHERE Movement.Id =  inMovementId;
 
    END IF;  

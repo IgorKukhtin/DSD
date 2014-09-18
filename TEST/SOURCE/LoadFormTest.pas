@@ -219,6 +219,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalCashForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalCashJournalForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;
@@ -400,6 +403,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalSelectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalSelectForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;

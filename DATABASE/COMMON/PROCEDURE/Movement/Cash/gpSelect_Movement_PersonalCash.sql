@@ -55,14 +55,15 @@ BEGIN
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
                                                                            
             LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MovementItem..Id
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
        WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.ParentId NOT IS NULL 
+         AND Movement.ParentId is NOT NULL 
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          --AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
-         --AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END);
+         --AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
+         ;
    
 END;
 $BODY$

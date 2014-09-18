@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalCash()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalCash(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalCash(
     IN inPositionId          Integer   , -- Должность
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN

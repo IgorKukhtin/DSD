@@ -3,33 +3,58 @@ unit PersonalCash;
 interface
 
 uses
-  AncestorJournal, DataModul, cxGraphics, cxControls, cxLookAndFeels,
-  cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
-  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, cxImageComboBox,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dsdAddOn, ChoicePeriod,
-  Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
-  dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, cxLabel,
-  cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dsdGuides, cxButtonEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
+  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsdxBarPainter, dsdAddOn,
+  dsdGuides, dsdDB, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
+  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
+  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
-  TPersonalCashForm = class(TAncestorJournalForm)
+  TPersonalCashForm = class(TAncestorDocumentForm)
+    colINN: TcxGridDBColumn;
     colPersonalName: TcxGridDBColumn;
-    deServiceDate: TcxDateEdit;
-    spInsertUpdate: TdsdStoredProc;
+    colPositionName: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    spSelectPrint: TdsdStoredProc;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshPrice: TdsdDataSetRefresh;
+    PrintHeaderCDS: TClientDataSet;
+    bbPrintTax: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
+    bbTax: TdxBarButton;
+    bbPrintTax_Client: TdxBarButton;
+    bbPrint_Bill: TdxBarButton;
+    PrintItemsSverkaCDS: TClientDataSet;
     colComment: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    deServiceDate: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    colSummAdd: TcxGridDBColumn;
+    cePersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    colUnitCode: TcxGridDBColumn;
+    colPersonalCode: TcxGridDBColumn;
+    colIsMain: TcxGridDBColumn;
+    colIsOfficial: TcxGridDBColumn;
+    colAmountCash: TcxGridDBColumn;
+    edDocumentPersonalService: TcxButtonEdit;
+    DocumentPersonalServiceGuides: TdsdGuides;
     cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
     ceCash: TcxButtonEdit;
     CashGuides: TdsdGuides;
-    UpdateDataSet: TdsdUpdateDataSet;
-    cxLabel5: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
-    edInDescName: TcxTextEdit;
-    inServDate: TcxCheckBox;
-    PersonalChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
@@ -41,7 +66,6 @@ implementation
 {$R *.dfm}
 
 initialization
-
   RegisterClass(TPersonalCashForm);
 
 end.

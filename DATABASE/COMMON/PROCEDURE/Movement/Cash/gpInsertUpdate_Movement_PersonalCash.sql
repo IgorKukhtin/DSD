@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalCash(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
+    IN inParentId            Integer   , -- документ наче=исления зп
     IN inCashId              Integer   , -- Касса
     IN inComment             TVarChar  , -- Комментерий
     IN inServiceDate         TDateTime , -- Дата начисления
@@ -35,7 +36,7 @@ BEGIN
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- сохранили <Документ>
-     ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL);
+     ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_Cash(), inInvNumber, inOperDate, inParentId);
 
      -- определяем <Главный Элемент документа>
      SELECT MovementItem.Id INTO vbMIMasterId FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Master();

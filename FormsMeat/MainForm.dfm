@@ -11,7 +11,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1903,9 +1903,8 @@
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1042#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1086#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
-      FormName = 'TPersonalCashForm'
-      FormNameParam.Value = 'TPersonalCashForm'
+      FormName = 'TPersonalCashJournalForm'
+      FormNameParam.Value = 'TPersonalCashJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

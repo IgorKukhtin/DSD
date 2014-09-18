@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalCash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalCash(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -22,8 +22,8 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalCash());
 
      -- сохранили
-     SELECT tmp.ioId, tmp.outAmount, tmp.outAmountCash
-       INTO ioId, outAmount, outAmountCash
+     SELECT tmp.ioId
+       INTO ioId
      FROM lpInsertUpdate_MovementItem_PersonalCash (ioId      := ioId
                                                      , inMovementId         := inMovementId
                                                      , inPersonalId         := inPersonalId
