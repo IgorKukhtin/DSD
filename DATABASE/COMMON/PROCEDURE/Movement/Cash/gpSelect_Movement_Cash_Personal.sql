@@ -1,11 +1,12 @@
--- Function: gpSelect_Movement_PersonalCash()
+-- Function: gpSelect_Movement_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Boolean, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalCash(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Personal(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean   ,
@@ -68,7 +69,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -78,4 +79,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_PersonalCash (inStartDate:= '30.01.2012', inEndDate:= '01.01.2016', inCashId:= 14462, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '30.01.2012', inEndDate:= '01.01.2016', inCashId:= 14462, inSession:= '2')

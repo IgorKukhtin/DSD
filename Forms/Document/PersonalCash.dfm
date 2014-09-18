@@ -408,7 +408,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PersonalCash'
+    StoredProcName = 'gpSelect_MovementItem_Cash_Personal'
     Params = <
       item
         Name = 'inMovementId'
@@ -614,7 +614,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Top = 8
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalCash'
+    StoredProcName = 'gpGet_Movement_Cash_Personal'
     Params = <
       item
         Name = 'inMovementId'
@@ -779,7 +779,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Top = 264
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_PersonalCash'
+    StoredProcName = 'gpInsertUpdate_Movement_Cash_Personal'
     Params = <
       item
         Name = 'ioMovementId'
@@ -882,6 +882,7 @@ inherited PersonalCashForm: TPersonalCashForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = PersonalServiceListGuides
       end
       item
       end>
@@ -947,7 +948,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalCash'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Cash_Personal'
     Params = <
       item
         Name = 'ioId'

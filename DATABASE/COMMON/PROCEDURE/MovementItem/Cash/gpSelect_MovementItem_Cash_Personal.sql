@@ -1,11 +1,12 @@
---select * from gpSelect_MovementItem_PersonalCash(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '5');
+--select * from gpSelect_MovementItem_Cash_Personal(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '5');
 
--- Function: gpSelect_MovementItem_PersonalCash()
+-- Function: gpSelect_MovementItem_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalCash (Integer, Boolean, Boolean, TVarChar);
+
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalCash (Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Cash_Personal (Integer, Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalCash(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Cash_Personal(
     IN inMovementId  Integer      , -- ÍÎ˛˜ ƒÓÍÛÏÂÌÚ‡
     IN inparentid    Integer      ,
     IN inShowAll     Boolean      , --
@@ -151,7 +152,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_MovementItem_PersonalCash (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_Cash_Personal (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -160,8 +161,8 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MovementItem_PersonalCash (inMovementId:= 25173, inparentid:=0 , inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_PersonalCash (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Cash_Personal (inMovementId:= 25173, inparentid:=0 , inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_Cash_Personal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --393497
 
 

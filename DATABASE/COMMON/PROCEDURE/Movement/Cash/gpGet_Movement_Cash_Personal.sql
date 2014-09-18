@@ -1,8 +1,9 @@
--- Function: gpGet_Movement_PersonalCash()
+-- Function: gpGet_Movement_Cash_Personal()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalCash(
+CREATE OR REPLACE FUNCTION gpGet_Movement_Cash_Personal(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar    -- сессия пользователя
@@ -21,7 +22,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalCash());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash_Personal());
      vbUserId := lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
@@ -97,7 +98,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -107,4 +108,4 @@ ALTER FUNCTION gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalCash (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Cash_Personal (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin());

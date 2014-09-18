@@ -1,14 +1,16 @@
--- Function: gpInsertUpdate_Movement_PersonalCash()
+-- Function: gpInsertUpdate_Movement_Cash_Personal()
 
 
 DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_PersonalCash (integer, tvarchar, tdatetime, Integer, Integer, tfloat, TVarChar, integer, integer, integer, TDateTime, tvarchar);
+   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, Integer, tfloat, TVarChar, integer, integer, integer, TDateTime, tvarchar);
 
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_PersonalCash (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
+   
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_Cash_Personal (integer, tvarchar, tdatetime, Integer, TVarChar, TDateTime, tvarchar);
 
-
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalCash(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Personal(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -53,7 +55,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMIMasterId, inComment);
 
      -- сохранили связь с <Дата начисления>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemIdChild, inServiceDate);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMIMasterId, inServiceDate);
 
      -- сохранили протокол
      --PERFORM lpInsert_MovementProtocol (ioMovementId, vbUserId);
@@ -74,4 +76,4 @@ LANGUAGE PLPGSQL VOLATILE;
 --select * from Object where descid = zc_Object_Position()
 
 -- тест
---SELECT * FROM gpInsertUpdate_Movement_PersonalCash (ioMovementId:= 0, inInvNumber:= '', inOperDate:= '01.09.2014', inCashId := 14462, inPersonalId:= 8469, inAmount:= 99, inComment:= 'inComment', inInfoMoneyId:= 8994, inUnitId:= 8386, inPositionId:= 12428, inPaidKindId:= 4, inServiceDate:= '01.01.2013', inSession:= '2')
+--SELECT * FROM gpInsertUpdate_Movement_Cash_Personal (ioMovementId:= 0, inInvNumber:= '', inOperDate:= '01.09.2014', inCashId := 14462, inPersonalId:= 8469, inAmount:= 99, inComment:= 'inComment', inInfoMoneyId:= 8994, inUnitId:= 8386, inPositionId:= 12428, inPaidKindId:= 4, inServiceDate:= '01.01.2013', inSession:= '2')
