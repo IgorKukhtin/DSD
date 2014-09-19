@@ -1,4 +1,4 @@
-unit PersonalCash;
+unit Cash_Personal;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
-  TPersonalCashForm = class(TAncestorDocumentForm)
+  TCash_PersonalForm = class(TAncestorDocumentForm)
     colINN: TcxGridDBColumn;
     colPersonalName: TcxGridDBColumn;
     colPositionName: TcxGridDBColumn;
@@ -66,6 +66,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalCashForm);
+  RegisterClass(TCash_PersonalForm);
 
 end.

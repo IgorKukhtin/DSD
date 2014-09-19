@@ -1029,7 +1029,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbPersonalCash'
+          ItemName = 'bbCash_Personal'
         end>
     end
     object bbPersonalDocuments_Separator: TdxBarSeparator
@@ -1083,7 +1083,7 @@
       Action = actPersonalService
       Category = 0
     end
-    object bbPersonalCash: TdxBarButton
+    object bbCash_Personal: TdxBarButton
       Action = actPersonalCash
       Category = 0
     end
@@ -1903,8 +1903,8 @@
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1042#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      FormName = 'TPersonalCashJournalForm'
-      FormNameParam.Value = 'TPersonalCashJournalForm'
+      FormName = 'TCash_PersonalJournalForm'
+      FormNameParam.Value = 'TCash_PersonalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

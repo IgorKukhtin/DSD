@@ -399,7 +399,7 @@ type
     bbCashKharkov: TdxBarButton;
     bbCashCherkassi: TdxBarButton;
     actPersonalCash: TdsdOpenForm;
-    bbPersonalCash: TdxBarButton;
+    bbCash_Personal: TdxBarButton;
     actPersonalService: TdsdOpenForm;
     bbPersonalService: TdxBarButton;
     actPersonalServiceList: TdsdOpenForm;

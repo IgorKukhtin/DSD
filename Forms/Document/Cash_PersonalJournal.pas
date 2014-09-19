@@ -1,4 +1,4 @@
-unit PersonalCashJournal;
+unit Cash_PersonalJournal;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   cxButtonEdit;
 
 type
-  TPersonalCashJournalForm = class(TAncestorJournalForm)
+  TCash_PersonalJournalForm = class(TAncestorJournalForm)
     clComment: TcxGridDBColumn;
     ceCash: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -33,6 +33,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalCashJournalForm);
+  RegisterClass(TCash_PersonalJournalForm);
 
 end.

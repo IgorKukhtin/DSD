@@ -1,4 +1,4 @@
-inherited PersonalCashForm: TPersonalCashForm
+inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1099#1087#1083#1072#1090#1072' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 623
   ClientWidth = 1104
@@ -21,6 +21,8 @@ inherited PersonalCashForm: TPersonalCashForm
       inherited cxGrid: TcxGrid
         Width = 1104
         Height = 484
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1104
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -419,7 +421,7 @@ inherited PersonalCashForm: TPersonalCashForm
       end
       item
         Name = 'inParentId'
-        Value = ''
+        Value = 'NULL'
         Component = DocumentPersonalServiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -584,19 +586,16 @@ inherited PersonalCashForm: TPersonalCashForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameLoss'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameLossTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameLossBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -657,7 +656,7 @@ inherited PersonalCashForm: TPersonalCashForm
       end
       item
         Name = 'ParentId'
-        Value = ''
+        Value = 'NULL'
         Component = DocumentPersonalServiceGuides
         ComponentItem = 'Key'
       end
@@ -809,7 +808,7 @@ inherited PersonalCashForm: TPersonalCashForm
       end
       item
         Name = 'inParentId'
-        Value = ''
+        Value = 'NULL'
         Component = DocumentPersonalServiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -890,6 +889,7 @@ inherited PersonalCashForm: TPersonalCashForm
         Guides = PersonalServiceListGuides
       end
       item
+        Guides = CashGuides
       end>
     Left = 160
     Top = 192
@@ -1075,6 +1075,9 @@ inherited PersonalCashForm: TPersonalCashForm
       end
       item
         Component = CashGuides
+      end
+      item
+        Component = PersonalServiceListGuides
       end>
     Left = 512
     Top = 328
@@ -1130,7 +1133,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = 'NULL'
         Component = DocumentPersonalServiceGuides
         ComponentItem = 'Key'
       end
@@ -1169,6 +1172,7 @@ inherited PersonalCashForm: TPersonalCashForm
   object DocumentPersonalServiceGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentPersonalService
+    Key = 'NULL'
     FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
     FormNameParam.DataType = ftString
     FormName = 'TPersonalServiceJournalSelectForm'
@@ -1176,7 +1180,7 @@ inherited PersonalCashForm: TPersonalCashForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = 'NULL'
         Component = DocumentPersonalServiceGuides
         ComponentItem = 'Key'
       end

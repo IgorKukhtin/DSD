@@ -1,4 +1,4 @@
-inherited PersonalCashJournalForm: TPersonalCashJournalForm
+inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1079#1087'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
@@ -135,8 +135,8 @@ inherited PersonalCashJournalForm: TPersonalCashJournalForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TPersonalCashForm'
-      FormNameParam.Value = 'TPersonalCashForm'
+      FormName = 'TCash_PersonalForm'
+      FormNameParam.Value = 'TCash_PersonalForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -161,8 +161,8 @@ inherited PersonalCashJournalForm: TPersonalCashJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TPersonalCashForm'
-      FormNameParam.Value = 'TPersonalCashForm'
+      FormName = 'TCash_PersonalForm'
+      FormNameParam.Value = 'TCash_PersonalForm'
       GuiParams = <
         item
           Name = 'Id'
