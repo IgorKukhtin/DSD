@@ -694,9 +694,11 @@ inherited PersonalCashForm: TPersonalCashForm
         DataType = ftString
       end
       item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'PersonalServiceListName'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Value = 0.000000000000000000
@@ -771,6 +773,9 @@ inherited PersonalCashForm: TPersonalCashForm
       item
         Value = Null
         ParamType = ptUnknown
+      end
+      item
+        Value = Null
       end
       item
         Value = Null
@@ -910,8 +915,10 @@ inherited PersonalCashForm: TPersonalCashForm
         Control = edDocumentPersonalService
       end
       item
+        Control = cePersonalServiceList
       end
       item
+        Control = cxGrid
       end
       item
       end

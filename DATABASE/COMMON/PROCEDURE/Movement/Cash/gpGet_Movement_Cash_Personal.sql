@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
+             , PersonalServiceListName TVarChar
            
              )
 AS
@@ -46,6 +47,7 @@ BEGIN
            , '' :: TVarChar         AS Comment
            , 0                      AS CashId
            , '' :: TVarChar         AS CashName
+           , '' :: TVarChar         AS PersonalServiceListName
    
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
@@ -71,6 +73,7 @@ BEGIN
 
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
+           , Object_PersonalServiceList.ValueData AS PersonalServiceListName
          
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -89,8 +92,12 @@ BEGIN
             LEFT JOIN Movement AS MovementPersonalService 
                                ON MovementPersonalService.Id = Movement.ParentId
                               AND MovementPersonalService.DescId = zc_Movement_PersonalService()
-                                                           
-           
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = MovementPersonalService.Id
+                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+        
        WHERE Movement.Id =  inMovementId;
 
    END IF;  
