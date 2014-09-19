@@ -130,7 +130,7 @@ procedure TPeriodChoiceForm.FormCreate(Sender: TObject);
 var i: integer;
 begin
   for i := 1 to 12 do
-    cbMonth.Properties.Items.Add(LongMonthNames[i]);
+    cbMonth.Properties.Items.Add(FormatSettings.LongMonthNames[i]);
   // Заполняем недели
   WeekList := TList.Create;
 
@@ -191,7 +191,6 @@ begin
 end;
 
 procedure TPeriodChoice.Execute;
-var ddd: TDateTime;
 begin
    with TPeriodChoiceForm.Create(nil) do
    begin

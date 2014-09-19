@@ -155,7 +155,8 @@ uses
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   LoadObjectUnit in '..\..\FormsFarmacy\Guides\LoadObjectUnit.pas' {LoadObjectForm: TParentForm},
   OrderExternalTest in '..\SOURCE\Movement\All\OrderExternalTest.pas',
-  dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas';
+  dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas',
+  CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

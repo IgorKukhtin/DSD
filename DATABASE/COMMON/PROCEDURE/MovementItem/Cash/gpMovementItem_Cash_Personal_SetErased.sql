@@ -1,8 +1,9 @@
--- Function: gpMovementItem_PersonalCash_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Cash_Personal_SetErased (Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpMovementItem_PersonalCash_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Cash_Personal_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PersonalCash_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Cash_Personal_SetErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -43,7 +44,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_PersonalAccount_SetErased (Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -52,4 +53,4 @@ ALTER FUNCTION gpMovementItem_PersonalAccount_SetErased (Integer, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_PersonalCash_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_Cash_Personal_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

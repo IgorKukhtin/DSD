@@ -42,7 +42,7 @@ type
   protected
     procedure First; override;
   public
-    constructor Create;
+    constructor Create; override;
     destructor Destroy; override;
     procedure Open(AConnection, ASQL: string);
     procedure Activate; override;
@@ -128,7 +128,7 @@ type
 implementation
 
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
-     DBClient, TypInfo, Variants, UtilConvert;
+     DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows;
 
 procedure Register;
 begin
@@ -458,7 +458,6 @@ class function TImportSettingsFactory.CreateImportSettings(
   Id: integer): TImportSettings;
 var
   GetStoredProc: TdsdStoredProc;
-  DataSet: TDataSet;
   FieldType: TFieldType;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);

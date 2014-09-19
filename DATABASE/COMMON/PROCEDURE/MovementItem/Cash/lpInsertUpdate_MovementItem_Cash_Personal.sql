@@ -1,8 +1,9 @@
--- Function: lpInsertUpdate_MovementItem_PersonalCash()
+-- Function: lpInsertUpdate_MovementItem_Cash_Personal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalCash (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Cash_Personal (Integer, Integer, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalCash(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Cash_Personal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonalId          Integer   , -- Сотрудники
@@ -13,7 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalCash(
     IN inPositionId          Integer   , -- Должность
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
@@ -52,4 +53,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_PersonalCash (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_Cash_Personal (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

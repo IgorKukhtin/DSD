@@ -518,7 +518,6 @@ uses
   Report_Founders in '..\..\Forms\Report\Report_Founders.pas' {Report_FoundersForm: TParentForm},
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
   Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
-  PersonalCash in '..\..\Forms\Document\PersonalCash.pas' {PersonalCashForm: TParentForm},
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
@@ -537,7 +536,15 @@ uses
   IncomeTest in '..\SOURCE\Movement\All\IncomeTest.pas',
   ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
   ProductionSeparateTest in '..\SOURCE\Movement\All\ProductionSeparateTest.pas',
-  SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas';
+  SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas',
+  Cash_PersonalJournal in '..\..\Forms\Document\Cash_PersonalJournal.pas' {Cash_PersonalJournalForm: TParentForm},
+  Cash_Personal in '..\..\Forms\Document\Cash_Personal.pas' {Cash_PersonalForm: TParentForm},
+  PersonalServiceJournalSelect in '..\..\Forms\Document\PersonalServiceJournalSelect.pas' {PersonalServiceJournalSelectForm: TParentForm},
+  SendTest in '..\SOURCE\Movement\All\SendTest.pas',
+  LossTest in '..\SOURCE\Movement\All\LossTest.pas',
+  InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',
+  ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
+  ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

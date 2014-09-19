@@ -1,18 +1,21 @@
--- Function: gpGet_Movement_PersonalCash()
+-- Function: gpGet_Movement_Cash_Personal()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalCash(
+CREATE OR REPLACE FUNCTION gpGet_Movement_Cash_Personal(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , ParentId Integer, ParentName TVarChar
              , Amount TFloat 
              , ServiceDate TDateTime
              , Comment TVarChar
              , CashId Integer, CashName TVarChar
+             , PersonalServiceListName TVarChar
            
              )
 AS
@@ -20,7 +23,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalCash());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash_Personal());
      vbUserId := lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
@@ -29,11 +32,14 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_PersonalCash_seq') AS TVarChar)  AS InvNumber
+           , CAST (NEXTVAL ('movement_cash_seq') AS TVarChar)  AS InvNumber
 --           , CAST (CURRENT_DATE AS TDateTime)                AS OperDate
            , inOperDate                                        AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
+     
+           , 0                      AS ParentId
+           , '' :: TVarChar         AS ParentName
            
            , 0::TFloat                                         AS Amount
 
@@ -41,6 +47,7 @@ BEGIN
            , '' :: TVarChar         AS Comment
            , 0                      AS CashId
            , '' :: TVarChar         AS CashName
+           , '' :: TVarChar         AS PersonalServiceListName
    
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
@@ -55,7 +62,10 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
-                      
+
+           , MovementPersonalService.Id         AS ParentId
+           , MovementPersonalService.InvNumber  AS ParentName  
+                    
            , MovementItem.Amount
 
            , COALESCE (MIDate_ServiceDate.ValueData, Movement.OperDate) AS ServiceDate
@@ -63,6 +73,7 @@ BEGIN
 
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
+           , Object_PersonalServiceList.ValueData AS PersonalServiceListName
          
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -77,7 +88,16 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN Movement AS MovementPersonalService 
+                               ON MovementPersonalService.Id = Movement.ParentId
+                              AND MovementPersonalService.DescId = zc_Movement_PersonalService()
             
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = MovementPersonalService.Id
+                                        AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+        
        WHERE Movement.Id =  inMovementId;
 
    END IF;  
@@ -85,7 +105,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -95,4 +115,4 @@ ALTER FUNCTION gpGet_Movement_PersonalCash (Integer, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalCash (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Cash_Personal (inMovementId:= 1, inOperDate:= NULL, inSession:= zfCalc_UserAdmin());

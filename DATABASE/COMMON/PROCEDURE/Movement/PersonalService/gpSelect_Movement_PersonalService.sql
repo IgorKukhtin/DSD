@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , Comment TVarChar
-             , PersonalServiceListName TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
               )
 
 AS
@@ -50,6 +50,7 @@ BEGIN
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
            , MovementString_Comment.ValueData           AS Comment
+           , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
 
        FROM (SELECT Movement.id

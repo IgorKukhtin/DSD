@@ -1,11 +1,12 @@
--- Function: gpSelect_Movement_PersonalCash()
+-- Function: gpSelect_Movement_Cash_Personal()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Boolean, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalCash(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Personal(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean   ,
@@ -55,19 +56,20 @@ BEGIN
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
                                                                            
             LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MovementItem..Id
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
        WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.ParentId NOT IS NULL 
+         AND Movement.ParentId is NOT NULL 
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          --AND (MILinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
-         --AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END);
+         --AND (CASE WHEN inisServiceDate = True THEN MIDate_ServiceDate.ValueData = inServiceDate else 0 = 0 END)
+         ;
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_PersonalCash (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -77,4 +79,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_PersonalCash (inStartDate:= '30.01.2012', inEndDate:= '01.01.2016', inCashId:= 14462, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '30.01.2012', inEndDate:= '01.01.2016', inCashId:= 14462, inSession:= '2')

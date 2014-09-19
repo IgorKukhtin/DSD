@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1102
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1118
-  ExplicitHeight = 459
+  ExplicitWidth = 1110
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -690,7 +690,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = 'actExecPrintStoredProc'
     end
     object maEDIReceiptLoad: TMultiAction
-      Category = 'EDI'
+      Category = 'EDI Load'
       MoveParams = <>
       ActionList = <
         item
@@ -705,7 +705,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1082#1074#1080#1090#1072#1085#1094#1080#1103#1084' '#1080#1079' EDI'
     end
     object EDIActionComdocLoad: TEDIAction
-      Category = 'EDI'
+      Category = 'EDI Load'
       MoveParams = <>
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
@@ -720,7 +720,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Directory = '/inbox'
     end
     object maEDIComDocLoad: TMultiAction
-      Category = 'EDI'
+      Category = 'EDI Load'
       MoveParams = <>
       ActionList = <
         item
@@ -736,7 +736,7 @@ inherited EDIJournalForm: TEDIJournalForm
       ImageIndex = 30
     end
     object mactReturnComdoc: TMultiAction
-      Category = 'EDI'
+      Category = 'EDI COMDOC'
       MoveParams = <>
       ActionList = <
         item
@@ -755,7 +755,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = 'ReturnCOMDOC'
     end
     object maEDIOrdersLoad: TMultiAction
-      Category = 'EDI'
+      Category = 'EDI Load'
       MoveParams = <>
       ActionList = <
         item
@@ -771,7 +771,7 @@ inherited EDIJournalForm: TEDIJournalForm
       ImageIndex = 27
     end
     object EDIActionOrdersLoad: TEDIAction
-      Category = 'EDI'
+      Category = 'EDI Load'
       MoveParams = <>
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
@@ -859,7 +859,7 @@ inherited EDIJournalForm: TEDIJournalForm
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
     end
     object mactCOMDOC: TMultiAction
-      Category = 'EDI'
+      Category = 'EDI COMDOC'
       MoveParams = <>
       ActionList = <
         item
@@ -869,7 +869,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
-      Caption = 'mactCOMDOC'
+      Caption = 'EDI '#1056#1072#1089#1093#1086#1076
     end
     object mactDECLAR: TMultiAction
       Category = 'EDI'
@@ -882,7 +882,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIDeclar
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
-      Caption = 'mactDECLAR'
+      Caption = 'EDI '#1053#1072#1083#1086#1075#1086#1074#1072#1103
     end
     object EDIDeclar: TEDIAction
       Category = 'EDI'
@@ -915,7 +915,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Directory = '/inbox'
     end
     object EDIReturnComDoc: TEDIAction
-      Category = 'EDI'
+      Category = 'EDI COMDOC'
       MoveParams = <>
       StartDateParam.Value = Null
       EndDateParam.Value = Null
@@ -935,6 +935,86 @@ inherited EDIJournalForm: TEDIJournalForm
       EDIDocType = ediDeclarReturn
       HeaderDataSet = PrintHeaderCDS
       Directory = '/outbox'
+    end
+    object mactSendComdoc: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIReturnComDoc
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactSendComdoc'
+    end
+    object mactSendComdocAndRefresh: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactSendComdoc
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 'EDI '#1056#1072#1089#1093#1086#1076
+    end
+    object mactSendDeclar: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIDeclar
+        end>
+      View = cxGridDBTableView
+      Caption = 'EDI '#1053#1072#1083#1086#1075#1086#1074#1072#1103
+    end
+    object mactSendDeclarAndRefresh: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactSendDeclar
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 'EDI '#1053#1072#1083#1086#1075#1086#1074#1072#1103
+    end
+    object mactSendReturn: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIReturnComDoc
+        end
+        item
+          Action = actStoredProcTaxCorrectivePrint
+        end
+        item
+          Action = EDIDeclarReturn
+        end>
+      View = cxGridDBTableView
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 'mactSendReturn'
+    end
+    object mactSendReturnAndRefresh: TMultiAction
+      Category = 'EDI COMDOC DataSet'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactSendReturn
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 'EDI '#1042#1086#1079#1074#1088#1072#1090
+      Hint = 'EDI '#1042#1086#1079#1074#1088#1072#1090
     end
   end
   inherited MasterDS: TDataSource
@@ -1085,6 +1165,7 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbReturnCOMDOC: TdxBarButton
       Action = mactReturnComdoc
+      Caption = 'EDI '#1042#1086#1079#1074#1088#1072#1090
       Category = 0
     end
   end
@@ -1094,6 +1175,39 @@ inherited EDIJournalForm: TEDIJournalForm
   end
   inherited PopupMenu: TPopupMenu
     Top = 184
+    object EDI4: TMenuItem [0]
+      Action = mactSendComdocAndRefresh
+    end
+    object EDI5: TMenuItem [1]
+      Action = mactSendDeclarAndRefresh
+    end
+    object mactSendReturnAndRefresh1: TMenuItem [2]
+      Action = mactSendReturnAndRefresh
+    end
+    object N4: TMenuItem [3]
+      Caption = '-'
+    end
+    object N5: TMenuItem [4]
+      Action = actUpdate_EDIComdoc_Params
+    end
+    object ComDoc1: TMenuItem [5]
+      Action = actUpdateMI_EDIComdoc
+    end
+    object N3: TMenuItem [6]
+      Caption = '-'
+    end
+    object EDI1: TMenuItem [7]
+      Action = maEDIOrdersLoad
+    end
+    object EDI2: TMenuItem [8]
+      Action = maEDIComDocLoad
+    end
+    object EDI3: TMenuItem [9]
+      Action = maEDIReceiptLoad
+    end
+    object N2: TMenuItem [10]
+      Caption = '-'
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
