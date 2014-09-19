@@ -413,6 +413,8 @@ type
     bbExternalSave: TdxBarSubItem;
     actPersonalReport: TdsdOpenForm;
     bbPersonalReport: TdxBarButton;
+    actFounderService: TdsdOpenForm;
+    bbFounderService: TdxBarButton;
   public
     { Public declarations }
   end;

@@ -125,6 +125,9 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
           object colFounderName: TcxGridDBColumn
             Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'FounderName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

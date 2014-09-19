@@ -118,9 +118,8 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMovementId_Value'
         Value = '0'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 96
     Top = 170
