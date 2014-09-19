@@ -46,6 +46,7 @@ type
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFounderFormTest;
+    procedure LoadFounderServiceFormTest;
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
@@ -1355,6 +1356,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFounderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFounderEditForm');
+end;
+
+procedure TLoadFormTest.LoadFounderServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderServiceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCityFormTest;

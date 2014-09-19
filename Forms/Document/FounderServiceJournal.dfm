@@ -144,13 +144,13 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Name = 'TPersonalServiceForm'
-      FormNameParam.Value = 'TPersonalServiceForm'
+      FormName = 'TFounderServiceForm'
+      FormNameParam.Name = 'TFounderServiceForm'
+      FormNameParam.Value = 'TFounderServiceForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TPersonalServiceForm'
-      FormNameParam.Value = 'TPersonalServiceForm'
+      FormName = 'TFounderServiceForm'
+      FormNameParam.Value = 'TFounderServiceForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -204,7 +204,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService'
+    StoredProcName = 'gpSelect_Movement_FounderService'
     Params = <
       item
         Name = 'instartdate'
@@ -368,7 +368,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_PersonalService'
+    StoredProcName = 'gpComplete_Movement_FounderService'
     Params = <
       item
         Name = 'inmovementid'
@@ -385,7 +385,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_PersonalService'
+    StoredProcName = 'gpUnComplete_Movement_FounderService'
     Params = <
       item
         Name = 'inmovementid'
@@ -397,7 +397,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_PersonalService'
+    StoredProcName = 'gpSetErased_Movement_FounderService'
     Params = <
       item
         Name = 'inmovementid'
@@ -455,7 +455,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_FounderService_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

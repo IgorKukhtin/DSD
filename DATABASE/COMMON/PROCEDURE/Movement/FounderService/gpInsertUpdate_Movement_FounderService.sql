@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_FounderService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
+    IN inFounderId                Integer   , --
     IN inAmount                   TFloat    , -- Сумма операции 
     IN inComment                  TVarChar  , -- Комментарий
     IN inSession                  TVarChar    -- сессия пользователя

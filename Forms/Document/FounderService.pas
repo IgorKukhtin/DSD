@@ -3,55 +3,27 @@ unit FounderService;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsdxBarPainter, dsdAddOn,
-  dsdGuides, dsdDB, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
-  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+   AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
+  cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
+  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TFounderServiceForm = class(TAncestorDocumentForm)
-    colINN: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
-    colPositionName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    spSelectPrint: TdsdStoredProc;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
-    PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
-    PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
-    coSummCard: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    deServiceDate: TcxDateEdit;
+  TFounderServiceForm = class(TAncestorEditDialogForm)
+    cxLabel1: TcxLabel;
+    Код: TcxLabel;
+    ceOperDate: TcxDateEdit;
+    ceAmount: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceFounder: TcxButtonEdit;
+    FounderGuides: TdsdGuides;
     cxLabel6: TcxLabel;
-    edComment: TcxTextEdit;
-    cxLabel12: TcxLabel;
-    colSummService: TcxGridDBColumn;
-    colSummMinus: TcxGridDBColumn;
-    colSummAdd: TcxGridDBColumn;
-    cePersonalServiceList: TcxButtonEdit;
-    PersonalServiceListGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    colUnitCode: TcxGridDBColumn;
-    colPersonalCode: TcxGridDBColumn;
-    colIsMain: TcxGridDBColumn;
-    colIsOfficial: TcxGridDBColumn;
-    colAmountCash: TcxGridDBColumn;
+    GuidesFiller: TGuidesFiller;
+    cxLabel10: TcxLabel;
+    ceComment: TcxTextEdit;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -61,7 +33,6 @@ type
 implementation
 
 {$R *.dfm}
-
 initialization
   RegisterClass(TFounderServiceForm);
 
