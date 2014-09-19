@@ -353,7 +353,7 @@ BEGIN
                                            ON MovementLinkMovement_child.MovementId = Movement.Id
                                           AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
             LEFT JOIN Movement AS Movement_child ON Movement_child.Id = MovementLinkMovement_child.MovementChildId
-                                                AND Movement_child.StatusId = zc_Enum_Status_Complete()
+                                                AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
 
 --   09.07.14
             LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = inMovementId
@@ -402,7 +402,7 @@ BEGIN
                                                ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
-                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                                                    AND Movement_find.StatusId IN (zc_Enum_Status_Complete())
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
