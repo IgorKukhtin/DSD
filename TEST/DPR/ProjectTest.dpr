@@ -544,7 +544,9 @@ uses
   LossTest in '..\SOURCE\Movement\All\LossTest.pas',
   InventoryTest in '..\SOURCE\Movement\All\InventoryTest.pas',
   ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
-  ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas';
+  ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas',
+  FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
+  FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
