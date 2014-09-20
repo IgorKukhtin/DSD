@@ -717,8 +717,11 @@ begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400()' // Общефирменные + услуги полученные
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21500()' // Общефирменные + Маркетинг
+                                 +'                                                                                         , zc_Enum_InfoMoneyDestination_21600()' // Общефирменные + Коммунальные услуги
+                                 +'                                                                                          )'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 30000' // Доходы
                                  +' where JuridicalId='+IntToStr(JuridicalId)
                                  +'   and PaidKindId='+IntToStr(PaidKindId)
                                  +'   and Object_Contract_View.isErased = FALSE'
