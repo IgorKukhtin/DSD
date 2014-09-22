@@ -1,31 +1,31 @@
 ﻿inherited FounderServiceForm: TFounderServiceForm
   ActiveControl = ceAmount
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
-  ClientHeight = 243
-  ClientWidth = 306
+  ClientHeight = 204
+  ClientWidth = 311
   AddOnFormData.isSingle = False
-  ExplicitWidth = 312
-  ExplicitHeight = 275
+  ExplicitWidth = 317
+  ExplicitHeight = 236
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 42
-    Top = 211
+    Top = 163
     Height = 26
     ExplicitLeft = 42
-    ExplicitTop = 211
+    ExplicitTop = 163
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 175
-    Top = 211
+    Left = 183
+    Top = 163
     Height = 26
-    ExplicitLeft = 175
-    ExplicitTop = 211
+    ExplicitLeft = 183
+    ExplicitTop = 163
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 152
+    Left = 168
     Top = 11
     Caption = #1044#1072#1090#1072
   end
@@ -35,7 +35,7 @@
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceOperDate: TcxDateEdit [4]
-    Left = 152
+    Left = 168
     Top = 34
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -43,16 +43,16 @@
     Width = 129
   end
   object ceAmount: TcxCurrencyEdit [5]
-    Left = 8
-    Top = 125
+    Left = 200
+    Top = 80
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 4
-    Width = 142
+    Width = 97
   end
   object cxLabel7: TcxLabel [6]
-    Left = 8
-    Top = 107
+    Left = 200
+    Top = 61
     Caption = #1057#1091#1084#1084#1072
   end
   object ceFounder: TcxButtonEdit [7]
@@ -65,7 +65,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 273
+    Width = 174
   end
   object cxLabel6: TcxLabel [8]
     Left = 8
@@ -74,14 +74,14 @@
   end
   object cxLabel10: TcxLabel [9]
     Left = 8
-    Top = 152
+    Top = 108
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [10]
     Left = 8
-    Top = 170
+    Top = 127
     TabOrder = 5
-    Width = 273
+    Width = 289
   end
   object edInvNumber: TcxTextEdit [11]
     Left = 8
@@ -97,8 +97,8 @@
     Top = 2
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 168
-    Top = 178
+    Left = 152
+    Top = 162
   end
   inherited ActionList: TActionList
     Left = 271
@@ -208,7 +208,8 @@
         DataType = ftDateTime
         ParamType = ptUnknown
       end>
-    Top = 112
+    Left = 112
+    Top = 120
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_FounderService'
