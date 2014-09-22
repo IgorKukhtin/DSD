@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_FounderService()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_FounderService (integer, Tvarchar, TDateTime, Tfloat, Tfloat, Tvarchar, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_FounderService (integer, Tvarchar, TDateTime, Integer , Tfloat, Tvarchar, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_FounderService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -16,13 +16,13 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
-   DECLARE vbAmount TFloat;
+   
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_FounderService());
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_FounderService());
+     --vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_FounderService());
 
      -- проверка
      IF (COALESCE(inAmount, 0) = 0) THEN
@@ -46,7 +46,7 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inFounderId, ioId, vbAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inFounderId, ioId, inAmount, NULL);
     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
@@ -59,11 +59,6 @@ BEGIN
      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
   
      -- 5.3. проводим Документ
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_FounderService())
-     THEN
-          PERFORM lpComplete_Movement_FounderService (inMovementId := ioId
-                                                    , inUserId     := vbUserId);
-     END IF;
 
 END;
 $BODY$

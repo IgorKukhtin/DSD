@@ -1,25 +1,25 @@
 inherited FounderServiceJournalForm: TFounderServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
-  ClientHeight = 534
-  ClientWidth = 1070
-  ExplicitWidth = 1078
-  ExplicitHeight = 568
+  ClientHeight = 537
+  ClientWidth = 841
+  ExplicitWidth = 849
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1070
-    Height = 477
+    Width = 841
+    Height = 480
     TabOrder = 3
     ExplicitWidth = 1070
     ExplicitHeight = 477
-    ClientRectBottom = 477
-    ClientRectRight = 1070
+    ClientRectBottom = 480
+    ClientRectRight = 841
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1070
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 1070
-        Height = 477
+        Width = 841
+        Height = 480
         ExplicitWidth = 1070
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -94,16 +94,23 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 77
+            Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 78
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 118
+          end
+          object colFounderName: TcxGridDBColumn
+            Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'FounderName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 176
           end
           object colAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075#1086')'
@@ -113,28 +120,21 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 110
           end
           object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colFounderName: TcxGridDBColumn
-            Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'FounderName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 290
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1070
+    Width = 841
     ExplicitWidth = 1070
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

@@ -1,27 +1,27 @@
 ﻿inherited FounderServiceForm: TFounderServiceForm
   ActiveControl = ceAmount
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
-  ClientHeight = 287
+  ClientHeight = 243
   ClientWidth = 306
   AddOnFormData.isSingle = False
   ExplicitWidth = 312
-  ExplicitHeight = 319
+  ExplicitHeight = 275
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 34
-    Top = 251
+    Left = 42
+    Top = 211
     Height = 26
-    ExplicitLeft = 34
-    ExplicitTop = 251
+    ExplicitLeft = 42
+    ExplicitTop = 211
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 167
-    Top = 251
+    Left = 175
+    Top = 211
     Height = 26
-    ExplicitLeft = 167
-    ExplicitTop = 251
+    ExplicitLeft = 175
+    ExplicitTop = 211
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -44,7 +44,7 @@
   end
   object ceAmount: TcxCurrencyEdit [5]
     Left = 8
-    Top = 150
+    Top = 125
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 4
@@ -52,12 +52,12 @@
   end
   object cxLabel7: TcxLabel [6]
     Left = 8
-    Top = 127
+    Top = 107
     Caption = #1057#1091#1084#1084#1072
   end
   object ceFounder: TcxButtonEdit [7]
     Left = 8
-    Top = 88
+    Top = 80
     Properties.Buttons = <
       item
         Default = True
@@ -69,17 +69,17 @@
   end
   object cxLabel6: TcxLabel [8]
     Left = 8
-    Top = 69
+    Top = 61
     Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
   end
   object cxLabel10: TcxLabel [9]
     Left = 8
-    Top = 185
+    Top = 152
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [10]
     Left = 8
-    Top = 208
+    Top = 170
     TabOrder = 5
     Width = 273
   end
