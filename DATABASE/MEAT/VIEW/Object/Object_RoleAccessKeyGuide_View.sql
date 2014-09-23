@@ -7,6 +7,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
    SELECT tmpAccessKey.UserId
         , tmpAccessKey.AccessKeyId_Guide
         , tmpAccessKey.AccessKeyId_PersonalService
+        , tmpAccessKey.AccessKeyId_PeriodClose
 
         , CASE WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideDnepr()
                     THEN 257163 -- покупатели Днепр
@@ -98,6 +99,12 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                THEN AccessKeyId
                           ELSE 0
                      END) AS AccessKeyId_PersonalService
+              , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_PeriodCloseAll()
+                                             , zc_Enum_Process_AccessKey_PeriodCloseTax()
+                                              )
+                               THEN AccessKeyId
+                          ELSE 0
+                     END) AS AccessKeyId_PeriodClose
          FROM Object_RoleAccessKey_View
          WHERE AccessKeyId <> 0
          GROUP BY UserId
@@ -137,6 +144,7 @@ ALTER TABLE Object_RoleAccessKeyGuide_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.09.14                                        * add AccessKeyId_PeriodClose
  17.09.14                                        *
  08.09.14                                        *
 */

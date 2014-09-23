@@ -1,13 +1,13 @@
 -- View: Object_RoleAccessKey_View
 
-DROP VIEW IF EXISTS Object_RoleAccess_View;
-DROP VIEW IF EXISTS Object_RoleAccessKey_View;
+-- DROP VIEW IF EXISTS Object_RoleAccess_View;
+-- DROP VIEW IF EXISTS Object_RoleAccessKey_View;
 
 CREATE OR REPLACE VIEW Object_RoleAccessKey_View AS
 
    SELECT ObjectLink_RoleProcessAccess_Process.ChildObjectId AS AccessKeyId
         , ObjectLink_RoleProcessAccess_Role.ChildObjectId AS RoleId
-        , ObjectLink_RoleProcessAccess_Process.ObjectId AS ProcessId
+        , 0 AS ProcessId
         , ObjectLink_UserRole_View.UserId
         , Object_Role.ObjectCode AS RoleCode
         , Object_Role.ValueData AS RoleName

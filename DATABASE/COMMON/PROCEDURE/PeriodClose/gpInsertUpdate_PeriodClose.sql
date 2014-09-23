@@ -13,12 +13,25 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
 )
   RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE vbInterval Interval;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UserRole());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- для Админа  - Все Права
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+   THEN vbAccessKeyId:= 0;
+   ELSE vbAccessKeyId:= (SELECT AccessKeyId_PeriodClose FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PeriodClose <> 0 AND UserId = vbUserId GROUP BY AccessKeyId_PeriodClose);
+   END IF;
+
+   IF vbAccessKeyId <> 0 AND COALESCE (ioId, 0) <> 3
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет Прав.';
+   END IF;
+
 
    inCloseDate:= DATE_TRUNC ('DAY', inCloseDate);
 

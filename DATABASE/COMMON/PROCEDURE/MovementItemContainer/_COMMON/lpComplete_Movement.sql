@@ -12,6 +12,7 @@ AS
 $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbCloseDate TDateTime;
+  DECLARE vbRoleId Integer;
 BEGIN
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
@@ -27,22 +28,24 @@ BEGIN
 
   -- определяется дата для <Закрытие периода>
   SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END
-         INTO vbCloseDate
+       , tmp.RoleId
+         INTO vbCloseDate, vbRoleId
   FROM (SELECT MAX (CASE WHEN PeriodClose.Period = INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', PeriodClose.CloseDate) ELSE zc_DateStart() END) AS CloseDate
              , MAX (CASE WHEN PeriodClose.Period <> INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 day' ELSE zc_DateStart() END) AS ClosePeriod
+             , MAX (PeriodClose.RoleId) AS RoleId
         FROM PeriodClose
-        -- select * FROM PeriodClose where Period = interval '1 day'
              LEFT JOIN ObjectLink_UserRole_View AS View_UserRole
                                                 ON View_UserRole.RoleId = PeriodClose.RoleId
                                                AND View_UserRole.UserId = inUserId
-                                               AND inDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_SendDebt())
-        WHERE View_UserRole.UserId = inUserId OR PeriodClose.RoleId IS NULL
+                                               -- AND inDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_SendDebt())
+        WHERE View_UserRole.UserId = inUserId -- OR PeriodClose.RoleId IS NULL
+          AND PeriodClose.RoleId IN (SELECT RoleId FROM Object_Role_MovementDesc_View WHERE MovementDescId = inDescId)
        ) AS tmp;
             
   -- проверка прав для <Закрытие периода>
   IF vbOperDate < vbCloseDate
   THEN 
-       RAISE EXCEPTION 'Ошибка.Изменения за <%> не возможны.Период закрыт до <%>.', TO_CHAR (vbOperDate, 'DD.MM.YYYY'), TO_CHAR (vbCloseDate, 'DD.MM.YYYY');
+       RAISE EXCEPTION 'Ошибка.Изменения за <%> не возможны.Для роли <%> период закрыт до <%>.', TO_CHAR (vbOperDate, 'DD.MM.YYYY'), lfGet_Object_ValueData (vbRoleId), TO_CHAR (vbCloseDate, 'DD.MM.YYYY');
   END IF;
 
 
@@ -57,7 +60,7 @@ ALTER FUNCTION lpComplete_Movement (Integer, Integer, Integer) OWNER TO postgres
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 23.09.14                                        * add inDescId NOT IN (...
+ 23.09.14                                        * add Object_Role_MovementDesc_View
  25.05.14                                        * add проверка прав для <Закрытие периода>
  10.05.14                                        *
 */
