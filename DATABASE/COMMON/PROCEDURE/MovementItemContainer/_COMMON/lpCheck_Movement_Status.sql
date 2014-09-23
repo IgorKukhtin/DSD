@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpCheck_Movement_Status(
   RETURNS VOID
 AS
 $BODY$
+   DECLARE vbDescId Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbCloseDate TDateTime;
 
@@ -214,8 +215,10 @@ BEGIN
      END IF;
      -- END 2.2. проверка для корректировок
 
-  -- 3. определяется дата
+  -- 3.1. определяется дата
   vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+  -- 3.2. определяется 
+  vbDescId:= (SELECT DescId FROM Movement WHERE Id = inMovementId);
 
   -- 3.1. определяется дата для <Закрытие периода>
   SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END
@@ -227,6 +230,7 @@ BEGIN
              LEFT JOIN ObjectLink_UserRole_View AS View_UserRole
                                                 ON View_UserRole.RoleId = PeriodClose.RoleId
                                                AND View_UserRole.UserId = inUserId
+                                               AND vbDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_SendDebt())
         WHERE View_UserRole.UserId = inUserId OR PeriodClose.RoleId IS NULL
        ) AS tmp;
             
@@ -244,6 +248,7 @@ ALTER FUNCTION lpCheck_Movement_Status (Integer, Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.09.14                                        * add inDescId NOT IN (...
  05.09.14                                        * add проверка - если входит в сводную, то она должна быть распроведена
 */
 

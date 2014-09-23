@@ -38,6 +38,19 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Приход> или <Расход>.';
      END IF;
      -- проверка
+     IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300()) -- Расчеты с участниками
+     THEN
+         IF COALESCE (inMoneyPlaceId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Значении <От Кого, Кому> должно быть заполнено.';
+         END IF;
+         IF EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Founder())
+           AND NOT EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inMoneyPlaceId AND DescId = zc_ObjectLink_Founder_InfoMoney() AND ChildObjectId = inInfoMoneyId)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Значении <УП статья назначения> должно соответсвовать значению <От Кого, Кому>.';
+         END IF;
+     END IF;
+     -- проверка
      IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
      THEN
          IF inOperDate < '01.09.2014' AND inServiceDate < '01.08.2014'
@@ -48,7 +61,7 @@ BEGIN
          ELSE
              IF NOT EXISTS (SELECT PersonalId FROM Object_Personal_View WHERE PersonalId = inMoneyPlaceId)
              THEN
-               RAISE EXCEPTION 'Ошибка.В значении <От Кого, Кому> должно быть установлено ФИО сотрудника.';
+                 RAISE EXCEPTION 'Ошибка.Значении <От Кого, Кому> должно содержать ФИО сотрудника.';
              END IF;
              IF COALESCE (inPositionId, 0) = 0
              THEN

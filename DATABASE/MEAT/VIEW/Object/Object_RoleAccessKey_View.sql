@@ -7,6 +7,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKey_View AS
 
    SELECT ObjectLink_RoleProcessAccess_Process.ChildObjectId AS AccessKeyId
         , ObjectLink_RoleProcessAccess_Role.ChildObjectId AS RoleId
+        , ObjectLink_RoleProcessAccess_Process.ObjectId AS ProcessId
         , ObjectLink_UserRole_View.UserId
         , Object_Role.ObjectCode AS RoleCode
         , Object_Role.ValueData AS RoleName
@@ -54,6 +55,7 @@ ALTER TABLE Object_RoleAccessKey_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.09.14                                        * add ProcessId
  06.03.14                                        * add RoleCode and RoleName
  15.12.13                                        * select ...
  14.12.13                                        * add zc_Enum_Process_AccessKey_GuideAll

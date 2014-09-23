@@ -35,6 +35,7 @@ BEGIN
              LEFT JOIN ObjectLink_UserRole_View AS View_UserRole
                                                 ON View_UserRole.RoleId = PeriodClose.RoleId
                                                AND View_UserRole.UserId = inUserId
+                                               AND inDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_SendDebt())
         WHERE View_UserRole.UserId = inUserId OR PeriodClose.RoleId IS NULL
        ) AS tmp;
             
@@ -56,6 +57,7 @@ ALTER FUNCTION lpComplete_Movement (Integer, Integer, Integer) OWNER TO postgres
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.09.14                                        * add inDescId NOT IN (...
  25.05.14                                        * add проверка прав для <Закрытие периода>
  10.05.14                                        *
 */

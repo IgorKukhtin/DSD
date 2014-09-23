@@ -113,7 +113,7 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , COALESCE (MILinkObject_MoneyPlace.ObjectId, 0) AS ObjectId
+             , COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , -1 * _tmpItem.OperSumm
              , _tmpItem.MovementItemId
@@ -168,7 +168,11 @@ BEGIN
                                               ON MILinkObject_Contract.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
 
-             LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
+                                  ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
+                                 AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
+
+             LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
@@ -193,6 +197,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.09.14                                        * add zc_ObjectLink_Founder_InfoMoney
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement

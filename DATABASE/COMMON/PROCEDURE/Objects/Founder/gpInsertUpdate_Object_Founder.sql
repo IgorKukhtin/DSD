@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_Founder()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Founder(
  INOUT ioId             Integer   ,     -- ключ объекта <Учредители>
     IN inCode           Integer   ,     -- Код объекта
     IN inName           TVarChar  ,     -- Название объекта
+    IN inInfoMoneyId    Integer   ,     -- Статьи назначения
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -17,6 +18,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Founder());
    --vbUserId := inSession;
+
+   -- проверка
+   IF COALESCE (inInfoMoneyId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
+   END IF;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -33,13 +40,15 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Founder(), vbCode_calc, inName);
   
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Founder_InfoMoney(), ioId, inInfoMoneyId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -49,4 +58,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Founder(ioId:=null, inCode:=null, inName:='Учредитель 1', inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_Founder (ioId:= NULL, inCode:= NULL, inName:= 'Учредитель 1', inInfoMoneyId:= NULL, inSession:='2')

@@ -151,6 +151,10 @@ BEGIN
                                                ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                               AND ContainerLinkObject_Juridical.ObjectId <> 0
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Founder
+                                               ON ContainerLinkObject_Founder.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                              AND ContainerLinkObject_Founder.DescId = zc_ContainerLinkObject_Founder()
+                                              AND ContainerLinkObject_Founder.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
                                                ON ContainerLinkObject_Member.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
@@ -171,7 +175,7 @@ BEGIN
                                                ON ContainerLinkObject_BankAccount.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
                                               AND ContainerLinkObject_BankAccount.ObjectId <> 0
-                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))))
+                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Founder.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId)))))))
 
                  -- вот так "не просто" выбираем филиал
                  /*LEFT JOIN (SELECT MAX (MovementItemReport.MovementItemId) AS MovementItemId, ReportContainerLink.ContainerId
