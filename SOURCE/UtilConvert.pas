@@ -146,7 +146,7 @@ end;
 {-----------------------------------------------------------------------------------------------}
 function gfFloatToStr(const inFloat: Extended): string;
 Begin
-  result:=StringReplace(FloatToStr(inFloat), DecimalSeparator, cMainDecimalSeparator, []);
+  result:=StringReplace(FloatToStr(inFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 end;
 {-----------------------------------------------------------------------------------------------}
 function gfStrToFloat(const inStr: string): Extended;
@@ -154,7 +154,7 @@ const cProcName = 'gfStrToFloat';
 Begin
   result:=0;
   try
-    result:=StrToFloat(ReplaceStr(ReplaceStr(inStr, '.', DecimalSeparator), ',', DecimalSeparator));
+    result:=StrToFloat(ReplaceStr(ReplaceStr(inStr, '.', FormatSettings.DecimalSeparator), ',', FormatSettings.DecimalSeparator));
   except
     on E: Exception do
       // gpRaiseError(gc_ecConvertStrToFloat,[inStr], cProcName,E.Message);

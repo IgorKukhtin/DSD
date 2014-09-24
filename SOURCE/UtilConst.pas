@@ -20,9 +20,10 @@ var
   ViewPath: string = '..\DATABASE\COMMON\View\';
   LocalViewPath: string = '..\DATABASE\MEAT\View\';
   ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
+  gc_AdminPassword: string = 'Admin';
 
 
-  FormatSettings: TFormatSettings;
+  LocalFormatSettings: TFormatSettings;
   {константы времени}
   gc_DateStart: TDateTime;
   gc_DateEnd: TDateTime;
@@ -426,12 +427,12 @@ uses Windows;
  end;
 
 initialization
-  with FormatSettings do begin
+  with LocalFormatSettings do begin
     DateSeparator:='.';
     ShortDateFormat:='dd.mm.yyyy';
   end;
     {константы времени}
-  gc_DateStart:=StrToDate('01.01.1900', FormatSettings);
-  gc_DateEnd:=StrToDate('01.01.2500', FormatSettings);
+  gc_DateStart:=StrToDate('01.01.1900', LocalFormatSettings);
+  gc_DateEnd:=StrToDate('01.01.2500', LocalFormatSettings);
   gc_isShowTimeMode := false;
 end.

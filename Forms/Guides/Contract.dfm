@@ -573,7 +573,7 @@ object ContractForm: TContractForm
     Width = 1186
     Height = 144
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -715,7 +715,7 @@ object ContractForm: TContractForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 4
     Width = 85
   end
   object cbPeriod: TcxCheckBox
@@ -723,7 +723,7 @@ object ContractForm: TContractForm
     Top = 30
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 8
+    TabOrder = 7
     Width = 218
   end
   object cbEndDate: TcxCheckBox
@@ -779,8 +779,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_OrderExternal()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_OrderExternal();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMainGoodsId         Integer   , -- Товары
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , -- Цена
     IN inSumm                TFloat    , -- Сумма заказа
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -19,18 +21,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderExternal());
      vbUserId := inSession;
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Сумма заказа>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
-
-     -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsertUpdate_MovementItem_OrderExternal(ioId, inMovementId, inMainGoodsId, 
+                 inGoodsId, inAmount, inPrice, inSumm, vbUserId);
 
 END;
 $BODY$

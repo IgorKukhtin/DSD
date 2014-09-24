@@ -10,7 +10,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, Vcl.Menus,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxPCdxBarPopupMenu;
 
 type
   TContractForm = class(TAncestorGuidesForm)
@@ -20,6 +20,7 @@ type
     clJuridicalBasisName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
+    colDeferment: TcxGridDBColumn;
   private
     { Private declarations }
   public

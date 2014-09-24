@@ -95,8 +95,6 @@ uses
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
-  Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
-  ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
   Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   PriceList in '..\..\FormsFarmacy\Document\PriceList.pas' {PriceListForm: TParentForm},
@@ -120,8 +118,6 @@ uses
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AdditionalGoods in '..\..\FormsFarmacy\Guides\AdditionalGoods.pas' {AdditionalGoodsForm: TParentForm},
   LinkGoodsTest in '..\SOURCE\Objects\All\LinkGoodsTest.pas',
-  ContractTest in '..\SOURCE\Objects\All\Farmacy\ContractTest.pas',
-  ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
   GoodsTest in '..\SOURCE\Objects\All\Farmacy\GoodsTest.pas',
   GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
   ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
@@ -156,7 +152,17 @@ uses
   LoadObjectUnit in '..\..\FormsFarmacy\Guides\LoadObjectUnit.pas' {LoadObjectForm: TParentForm},
   OrderExternalTest in '..\SOURCE\Movement\All\OrderExternalTest.pas',
   dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas',
-  CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas';
+  CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas',
+  PriceListMovementTest in '..\SOURCE\Movement\All\PriceListMovementTest.pas',
+  OrderInternalTest in '..\SOURCE\Movement\All\OrderInternalTest.pas',
+  ContractKindTest in '..\SOURCE\Objects\All\ContractKindTest.pas',
+  ContractTest in '..\SOURCE\Objects\All\Farmacy\ContractTest.pas',
+  Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
+  ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
+  PriceGroupSettingsTest in '..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas',
+  PriceGroupSettingsUnit in '..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas' {PriceGroupSettingsForm: TParentForm},
+  JuridicalSettingsTest in '..\SOURCE\Objects\All\JuridicalSettingsTest.pas',
+  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -168,6 +174,7 @@ begin
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
   ProcessPath := '..\DATABASE\FARMACY\PROCESS\';
 
+  gc_AdminPassword := 'Админ';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

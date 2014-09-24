@@ -67,7 +67,6 @@ type
     FFormName: string;
     FLookupControl: TWinControl;
     FKeyField: string;
-    FOnChange: TNotifyEvent;
     FChoiceAction: TObject;
     FFormNameParam: TdsdParam;
     FisShowModal: boolean;
@@ -84,6 +83,7 @@ type
     function GetFormName: string;
     function GetFormNameParam: TdsdParam;
   protected
+    FOnChange: TNotifyEvent;
     // имя формы
     property FormName: string read GetFormName write SetFormName;
     property FormNameParam: TdsdParam read GetFormNameParam write FFormNameParam;

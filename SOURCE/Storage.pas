@@ -157,7 +157,7 @@ end;
 function TStorage.ProcessMultiDataSet: Variant;
 var
   XMLStructureLenght: integer;
-  DataFromServer: AnsiString;
+  DataFromServer: String;
   i, StartPosition: integer;
 begin
   DataFromServer := PrepareStr;
@@ -207,7 +207,7 @@ begin
 end;
 
 function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
-  function GetAddConnectString(pExecOnServer: boolean): Ansistring;
+  function GetAddConnectString(pExecOnServer: boolean): String;
   begin
     if pExecOnServer then
        result := 'server.php'

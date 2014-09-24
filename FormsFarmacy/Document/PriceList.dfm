@@ -1,37 +1,30 @@
 inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
-  ClientWidth = 1064
-  ExplicitWidth = 1072
+  ClientWidth = 810
+  ExplicitWidth = 818
   ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1064
+    Width = 810
     Height = 585
-    ExplicitTop = 126
-    ExplicitWidth = 1064
-    ExplicitHeight = 542
+    ExplicitTop = 83
+    ExplicitWidth = 810
+    ExplicitHeight = 585
     ClientRectBottom = 585
-    ClientRectRight = 1064
+    ClientRectRight = 810
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitWidth = 810
+      ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 1064
+        Width = 810
         Height = 561
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        ExplicitWidth = 810
+        ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmount
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -53,11 +46,6 @@ inherited PriceListForm: TPriceListForm
               Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmount
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -97,7 +85,7 @@ inherited PriceListForm: TPriceListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 63
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -105,15 +93,22 @@ inherited PriceListForm: TPriceListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 240
+          end
+          object colGoodsJuridicalName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1088#1072#1081#1089#1077
+            DataBinding.FieldName = 'GoodsJuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Width = 231
           end
           object colAmount: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 102
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
@@ -122,45 +117,17 @@ inherited PriceListForm: TPriceListForm
             Properties.DateButtons = [btnClear, btnNow, btnToday]
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 160
           end
-        end
-      end
-    end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
-      inherited cxGridEntry: TcxGrid
-        Width = 1064
-        Height = 561
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 810
     Height = 57
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 810
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -200,7 +167,7 @@ inherited PriceListForm: TPriceListForm
       Width = 218
     end
     object edJuridical: TcxButtonEdit
-      Left = 205
+      Left = 198
       Top = 23
       Properties.Buttons = <
         item
@@ -211,18 +178,43 @@ inherited PriceListForm: TPriceListForm
       Width = 270
     end
     object cxLabel4: TcxLabel
-      Left = 205
+      Left = 198
       Top = 5
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 472
+    Top = 5
+    Caption = #1050#1086#1085#1090#1088#1072#1082#1090
+  end
+  object edContract: TcxButtonEdit [3]
+    Left = 472
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 270
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
-    Top = 640
+    Top = 40
   end
   inherited ActionList: TActionList
     Left = 55
@@ -272,7 +264,6 @@ inherited PriceListForm: TPriceListForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
@@ -281,7 +272,6 @@ inherited PriceListForm: TPriceListForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [13]
@@ -442,10 +432,6 @@ inherited PriceListForm: TPriceListForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -503,26 +489,6 @@ inherited PriceListForm: TPriceListForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 709
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -630,98 +596,17 @@ inherited PriceListForm: TPriceListForm
         DataType = ftString
       end
       item
+        Name = 'ContractId'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuidesContract
+        ComponentItem = 'Key'
       end
       item
+        Name = 'ContractName'
         Value = ''
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -966,10 +851,6 @@ inherited PriceListForm: TPriceListForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 912
-    Top = 262
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 368
     Top = 272
@@ -1060,5 +941,31 @@ inherited PriceListForm: TPriceListForm
       end>
     Left = 360
     Top = 16
+  end
+  object GuidesContract: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 512
+    Top = 32
   end
 end

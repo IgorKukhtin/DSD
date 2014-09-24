@@ -11,12 +11,12 @@ inherited ImportTypeForm: TImportTypeForm
   inherited PageControl: TcxPageControl
     Width = 791
     Height = 313
-    ExplicitWidth = 743
+    ExplicitWidth = 791
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 791
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 743
+      ExplicitWidth = 791
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 465
@@ -25,7 +25,6 @@ inherited ImportTypeForm: TImportTypeForm
         ExplicitWidth = 465
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
           OptionsData.Inserting = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -66,7 +65,6 @@ inherited ImportTypeForm: TImportTypeForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 275
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -80,7 +78,6 @@ inherited ImportTypeForm: TImportTypeForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True

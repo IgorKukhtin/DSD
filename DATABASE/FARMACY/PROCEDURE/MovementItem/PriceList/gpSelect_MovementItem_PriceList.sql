@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceList(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
-             , PartionGoodsDate TDateTime
+             , PartionGoodsDate TDateTime, GoodsJuridicalName TVarChar
              , isErased Boolean
               )
 AS
@@ -32,6 +32,7 @@ BEGIN
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
+           , ''::TVarChar               AS GoodsJuridicalName
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -58,6 +59,7 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+           , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -70,6 +72,11 @@ BEGIN
                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+
+            LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
             ;
 
@@ -83,6 +90,7 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+           , Object_JuridicalGoods.ValueData    AS GoodsJuridicalName
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -95,6 +103,12 @@ BEGIN
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+
+            LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
             ;
 

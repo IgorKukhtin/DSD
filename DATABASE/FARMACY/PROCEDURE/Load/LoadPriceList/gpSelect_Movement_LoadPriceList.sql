@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_LoadPriceList (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceList(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime, JuridicalId Integer, JuridicalName TVarChar
+RETURNS TABLE (Id Integer, OperDate TDateTime
+             , JuridicalId Integer, JuridicalName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , isAllGoodsConcat Boolean, NDSinPrice Boolean)
 
 AS
@@ -23,10 +25,13 @@ BEGIN
            , LoadPriceList.OperDate	 -- Дата документа
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
+           , Object_Contract.Id          AS ContractId
+           , Object_Contract.ValueData   AS ContractName
            , LoadPriceList.isAllGoodsConcat           
            , LoadPriceList.NDSinPrice           
        FROM LoadPriceList
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId;
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId;
 
 END;
 $BODY$

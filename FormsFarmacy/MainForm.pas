@@ -87,6 +87,10 @@ type
     actGoodsPartnerCodeMaster: TdsdOpenForm;
     bbGoodsPartnerCodeMaster: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
+    actPriceGroupSettings: TdsdOpenForm;
+    bbPriceGroupSettings: TdxBarButton;
+    actJuridicalSettings: TdsdOpenForm;
+    bbJuridicalSettings: TdxBarButton;
   private
     { Private declarations }
   public

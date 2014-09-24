@@ -58,8 +58,8 @@ BEGIN
 
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- НМА
                                                            THEN zc_Enum_AccountDirection_70900() -- НМА
-                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                           THEN zc_Enum_AccountDirection_70800() -- Производственные ОС
+                                                      -- WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                      --     THEN zc_Enum_AccountDirection_70800() -- Производственные ОС
 
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
                                                            THEN zc_Enum_AccountDirection_80100() -- Кредиты банков
@@ -229,24 +229,41 @@ BEGIN
      -- return;
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ObjectId = lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+     UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+
+                                              THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
+                                                             THEN zc_Enum_ProfitLoss_60201() -- Амортизация + Производственные ОС + Основные средства
+
+                                                        WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
+                                                             THEN zc_Enum_ProfitLoss_60101() -- Амортизация + Административные ОС + Основные средства
+
+                                                        ELSE NULL -- !!!Ошибка!!!
+                                                   END
+                                         ELSE 
+                                    lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                                                                           THEN zc_Enum_ProfitLossGroup_60000() -- Амортизация
                                                                                                      ELSE _tmpItem.ProfitLossGroupId
                                                                                                 END
                                                                   , inProfitLossDirectionId  := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+
                                                                                                           THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_60200() -- Амортизация + Производственные ОС
+
                                                                                                                     WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_60100() -- Амортизация + Административные ОС
+
                                                                                                                     WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000() -- Расходы на сбыт
                                                                                                                          THEN zc_Enum_ProfitLossDirection_60100() -- Амортизация + Административные ОС
+
                                                                                                                     ELSE _tmpItem.ProfitLossDirectionId
                                                                                                               END
                                                                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21600() -- Общефирменные + Коммунальные услуги
                                                                                                           THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_20700() -- Общепроизводственные расходы + Коммунальные услуги
+
                                                                                                                     WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_30000() -- Административные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_30400() -- Административные расходы + Коммунальные услуги
+
                                                                                                                     ELSE _tmpItem.ProfitLossDirectionId
                                                                                                               END
                                                                                                      ELSE _tmpItem.ProfitLossDirectionId
@@ -256,6 +273,7 @@ BEGIN
                                                                   , inInsert                 := FALSE
                                                                   , inUserId                 := inUserId
                                                                    )
+                                    END
      WHERE _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
        AND _tmpItem.ObjectId = 0
     ;
@@ -296,7 +314,8 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
-                                            WHEN _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
+                                            WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
+                                                 -- _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -305,7 +324,7 @@ BEGIN
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Founder()
-                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inObjectId_1        := _tmpItem.ObjectId -- (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = _tmpItem.InfoMoneyId AND DescId = zc_ObjectLink_Founder_InfoMoney())
                                                                              )
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Member() -- Подотчет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -366,7 +385,7 @@ BEGIN
                                                                             , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                             , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT MAX (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END -- and <> наши компании
                                                                              )
@@ -388,7 +407,7 @@ BEGIN
                                                                             , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                             , inObjectId_4        := _tmpItem.PaidKindId
                                                                             , inDescId_5          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_5        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.ObjectId ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_5        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT MAX (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
                                                                             , inDescId_6          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_6        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END -- and <> наши компании
                                                                              )

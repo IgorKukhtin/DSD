@@ -125,7 +125,7 @@ implementation
 
 uses CommonData, Storage, FormStorage, Classes,
      dsdDB, Authentication, SysUtils, cxPropertiesStore,
-     cxStorage, DBClient, MainForm, ActionTest;
+     cxStorage, DBClient, MainForm, ActionTest, UtilConst;
 
 { TLoadFormTest }
 
@@ -518,6 +518,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
 end;
 
 
@@ -1402,7 +1404,7 @@ end;
 procedure TLoadFormTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TLoadFormTest.TearDown;

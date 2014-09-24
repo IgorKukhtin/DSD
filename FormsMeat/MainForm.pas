@@ -415,6 +415,8 @@ type
     bbPersonalReport: TdxBarButton;
     actFounderService: TdsdOpenForm;
     bbFounderService: TdxBarButton;
+    actPeriodClose_User: TdsdOpenForm;
+    bbPeriodClose_User: TdxBarButton;
   public
     { Public declarations }
   end;

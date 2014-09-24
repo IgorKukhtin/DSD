@@ -10,7 +10,8 @@ uses
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  Vcl.Controls, cxGrid;
+  Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TPartner1CLinkPlaceForm = class(TParentForm)

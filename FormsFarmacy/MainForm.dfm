@@ -69,6 +69,15 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceGroupSettings'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalSettings'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'bbMeasure'
         end
         item
@@ -352,6 +361,14 @@ inherited MainForm: TMainForm
           Visible = True
           ItemName = 'bbGoodsPartnerCodeMaster'
         end>
+    end
+    object bbPriceGroupSettings: TdxBarButton
+      Action = actPriceGroupSettings
+      Category = 0
+    end
+    object bbJuridicalSettings: TdxBarButton
+      Action = actJuridicalSettings
+      Category = 0
     end
   end
   inherited ActionList: TActionList
@@ -746,6 +763,26 @@ inherited MainForm: TMainForm
       Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       FormName = 'TGoodsPartnerCodeMasterForm'
       FormNameParam.Value = 'TGoodsPartnerCodeMasterForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPriceGroupSettings: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1086#1074#1099#1093' '#1075#1088#1091#1087#1087
+      FormName = 'TPriceGroupSettingsForm'
+      FormNameParam.Value = 'TPriceGroupSettingsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actJuridicalSettings: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+      FormName = 'TJuridicalSettingsForm'
+      FormNameParam.Value = 'TJuridicalSettingsForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

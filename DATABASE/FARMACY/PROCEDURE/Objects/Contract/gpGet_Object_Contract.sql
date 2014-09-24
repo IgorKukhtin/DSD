@@ -6,9 +6,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
     IN inId          Integer,       -- Подразделение 
     IN inSession     TVarChar       -- сессия пользователя 
 )
-RETURNS TABLE (Id Integer, Code Integer, InvNumber TVarChar,  
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
                Comment TVarChar,
                isErased boolean) AS
 $BODY$
@@ -22,13 +22,14 @@ BEGIN
        SELECT
              CAST (0 as Integer)   AS Id
            , lfGet_ObjectCode(0, zc_Object_Contract()) AS Code
-           , CAST ('' as TVarChar) AS InvNumber
+           , CAST ('' as TVarChar) AS Name
            
            , CAST (0 as Integer)   AS JuridicalBasisId
            , CAST ('' as TVarChar) AS JuridicalBasisName 
            
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
+           , 0                     AS Deferment
 
            , CAST (NULL AS TVarChar) AS Comment     
        
@@ -39,13 +40,14 @@ BEGIN
        SELECT 
              Object_Contract.Id           AS Id
            , Object_Contract.ObjectCode   AS Code
-           , Object_Contract.ValueData    AS InvNumber
+           , Object_Contract.ValueData    AS Name
          
            , Object_JuridicalBasis.Id         AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName 
 
            , Object_Juridical.Id         AS JuridicalId
-           , Object_Juridical.ValueData  AS JuridicalName          
+           , Object_Juridical.ValueData  AS JuridicalName
+           , ObjectFloat_Deferment.ValueData::Integer AS Deferment
 
            , ObjectString_Comment.ValueData AS Comment
            
@@ -65,6 +67,9 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id
                                  AND ObjectString_Comment.DescId = zc_ObjectString_Contract_Comment()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
+                                 ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
                                   
       WHERE Object_Contract.Id = inId;
    END IF;

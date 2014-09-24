@@ -2,6 +2,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 1138
+  ExplicitLeft = -340
   ExplicitWidth = 1146
   ExplicitHeight = 366
   PixelsPerInch = 96
@@ -23,7 +24,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         ExplicitWidth = 697
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
           OptionsData.Inserting = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -159,7 +159,6 @@ inherited ImportSettingsForm: TImportSettingsForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True

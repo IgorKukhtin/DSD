@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
                Comment TVarChar,
                isErased boolean) AS
 $BODY$
@@ -27,6 +27,7 @@ BEGIN
                      
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
+           , ObjectFloat_Deferment.ValueData::Integer AS Deferment
 
            , ObjectString_Comment.ValueData AS Comment
            
@@ -46,6 +47,11 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id
                                  AND ObjectString_Comment.DescId = zc_ObjectString_Contract_Comment()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
+                                 ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+
        WHERE Object_Contract.DescId = zc_Object_Contract();
   
 END;

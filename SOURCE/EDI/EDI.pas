@@ -532,7 +532,7 @@ begin
     .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R02G9 :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat')
-    .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
   DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
@@ -734,7 +734,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := StringReplace(FormatFloat('0.00',
-        ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat), DecimalSeparator,
+        ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator,
         cMainDecimalSeparator, []);
     end;
     inc(i);
@@ -743,15 +743,15 @@ begin
 
   DECLAR.DECLARBODY.R01G7 :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
-    .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R01G11 := DECLAR.DECLARBODY.R01G7;
   DECLAR.DECLARBODY.R03G7 :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT')
-    .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R03G11 := DECLAR.DECLARBODY.R03G7;
   DECLAR.DECLARBODY.R04G7 :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT')
-    .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R04G11 := DECLAR.DECLARBODY.R04G7;
   DECLAR.DECLARBODY.H10G1S := 'Неграш';
 
@@ -1137,7 +1137,6 @@ var
   List: TStrings;
   i: integer;
   Stream: TStringStream;
-  FileData: string;
   ORDER: IXMLORDERType;
 begin
   FTPSetConnection;

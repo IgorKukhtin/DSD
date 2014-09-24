@@ -2,26 +2,27 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 1073
+  ExplicitTop = -59
   ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 476
+    Height = 478
     TabOrder = 3
     ExplicitWidth = 1073
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1069
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1067
-      ExplicitHeight = 470
+      ExplicitWidth = 1073
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1067
-        Height = 470
-        ExplicitWidth = 1067
-        ExplicitHeight = 470
+        Width = 1073
+        Height = 478
+        ExplicitWidth = 1073
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -168,6 +169,25 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
     Top = 243
   end
@@ -178,6 +198,42 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Category = 'Status'
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Category = 'Status'
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Category = 'Status'
+    end
+    inherited actCompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited actUnCompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited actSetErasedList: TMultiAction
+      Category = 'Status'
+    end
+    inherited spCompete: TdsdExecStoredProc
+      Category = 'Status'
+    end
+    inherited spUncomplete: TdsdExecStoredProc
+      Category = 'Status'
+    end
+    inherited spErased: TdsdExecStoredProc
+      Category = 'Status'
+    end
+    inherited actSimpleCompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited actSimpleUncompleteList: TMultiAction
+      Category = 'Status'
+    end
+    inherited actSimpleErased: TMultiAction
+      Category = 'Status'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -221,6 +277,20 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actCalculateExternalZakaz: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spCalculate
+      StoredProcList = <
+        item
+          StoredProc = spCalculate
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1056#1072#1089#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ImageIndex = 41
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1079#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1047#1072#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1089#1086#1079#1076#1072#1085#1099'!'
     end
   end
   inherited MasterDS: TDataSource
@@ -268,7 +338,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -352,11 +422,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end>
     end
     object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Action = actCalculateExternalZakaz
       Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Visible = ivNever
-      ImageIndex = 41
     end
     object bbPrint: TdxBarButton
       Action = actPrint
@@ -517,10 +584,18 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Left = 535
     Top = 248
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
+  object spCalculate: TdsdStoredProc
+    StoredProcName = 'gpCalculate_ExternalOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInternalOrder'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 712
+    Top = 360
   end
 end

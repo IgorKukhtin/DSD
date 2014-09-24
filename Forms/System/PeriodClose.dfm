@@ -1,9 +1,13 @@
 inherited PeriodCloseForm: TPeriodCloseForm
-  Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+  Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072')'
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 575
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -66,6 +70,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
   inherited ActionList: TActionList
     object actUserForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actUserForm'
       FormName = 'TUserForm'
       FormNameParam.Value = 'TUserForm'
@@ -86,6 +91,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
     end
     object actRoleForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actRoleForm'
       FormName = 'TRoleForm'
       FormNameParam.Value = 'TRoleForm'
@@ -106,6 +112,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
     end
     object actUnitForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actUnitForm'
       FormName = 'TUnitForm'
       FormNameParam.Value = 'TUnitForm'
@@ -126,6 +133,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item

@@ -126,7 +126,7 @@ procedure FileWriteString(const FileName: String; Data: AnsiString);
 var
   FileHandle: hFile;
   FileSize, Dummy: DWord;
-  S: AnsiString;
+  S: String;
   Buffer: PChar;
 begin
   FileHandle := CreateFile(PChar(FileName), GENERIC_WRITE, FILE_SHARE_READ or FILE_SHARE_WRITE, nil,

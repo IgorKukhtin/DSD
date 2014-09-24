@@ -14,14 +14,14 @@ type
 
 implementation
 
-uses Storage, SysUtils, CommonData, Authentication;
+uses Storage, SysUtils, CommonData, Authentication, UtilConst;
 
 { TdbMovementTestNew }
 
 procedure TdbMovementTestNew.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TdbMovementTestNew.DeleteMovement(Id: integer);

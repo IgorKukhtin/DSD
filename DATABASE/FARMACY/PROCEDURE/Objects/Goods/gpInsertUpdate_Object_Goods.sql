@@ -17,6 +17,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUserName TVarChar;
    DECLARE vbObjectId Integer;
+   DECLARE vbCode Integer;
+   DECLARE vbMainGoodsId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
@@ -38,8 +40,22 @@ BEGIN
       RAISE EXCEPTION 'Тип НДС должен быть определен';
    END IF; 
 
+   vbCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode);
    
    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId);
+
+   -- Кусок ниже реализован временно пока работает одна сеть
+
+   -- Добавляем данные в общий справочник
+
+   SELECT Object_Goods_Main_View.Id INTO vbMainGoodsId
+     FROM Object_Goods_Main_View 
+    WHERE Object_Goods_Main_View.GoodsCode = vbCode; 
+
+   --
+   vbMainGoodsId := lpInsertUpdate_Object_Goods(vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId);
+
+   PERFORM gpInsertUpdate_Object_LinkGoods_Load(inCode, inCode, vbObjectId, inSession);
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);

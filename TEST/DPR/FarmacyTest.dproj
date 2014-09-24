@@ -274,14 +274,6 @@
 			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
-				<Form>ContractForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
-				<Form>ContractEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Income.pas">
 				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -362,8 +354,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\LinkGoodsTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
@@ -451,6 +441,30 @@
 			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\PriceListMovementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\OrderInternalTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ContractKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ContractTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
+				<Form>ContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
+				<Form>ContractEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas">
+				<Form>PriceGroupSettingsForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\JuridicalSettingsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
+				<Form>JuridicalSettingsForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

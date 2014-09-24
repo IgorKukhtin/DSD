@@ -10,7 +10,7 @@ type
     procedure Test; override;
   end;
 
-   TPaidKind = class(TObjectTest)
+  TPaidKind = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public

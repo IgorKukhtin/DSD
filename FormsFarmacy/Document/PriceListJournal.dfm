@@ -10,14 +10,11 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Width = 593
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 593
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 593
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 593
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -125,7 +122,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 129
+            Width = 85
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
@@ -140,7 +137,12 @@ inherited PriceListJournalForm: TPriceListJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 685
+            Width = 316
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            Width = 178
           end
         end
       end
@@ -154,6 +156,25 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
     Top = 243
   end
