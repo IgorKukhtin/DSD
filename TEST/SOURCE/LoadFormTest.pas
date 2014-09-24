@@ -46,6 +46,7 @@ type
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFounderFormTest;
+    procedure LoadFounderServiceFormTest;
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
@@ -217,8 +218,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalCashForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPersonalCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalJournalForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;
@@ -400,6 +404,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalSelectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalSelectForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
@@ -511,6 +518,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
 end;
 
 
@@ -1349,6 +1358,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFounderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFounderEditForm');
+end;
+
+procedure TLoadFormTest.LoadFounderServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFounderServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFounderServiceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCityFormTest;

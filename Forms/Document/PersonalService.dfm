@@ -2,21 +2,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 668
   ClientWidth = 1104
-  ExplicitWidth = 1120
-  ExplicitHeight = 703
+  ExplicitWidth = 1112
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1104
     Height = 582
-    ExplicitTop = 86
     ExplicitWidth = 1104
     ExplicitHeight = 582
     ClientRectBottom = 582
     ClientRectRight = 1104
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
       ExplicitWidth = 1104
       ExplicitHeight = 558
       inherited cxGrid: TcxGrid
@@ -252,34 +249,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1080
-      ExplicitHeight = 558
-      inherited cxGridEntry: TcxGrid
-        Width = 1104
-        Height = 558
-        ExplicitWidth = 1080
-        ExplicitHeight = 558
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Width = 1104
@@ -402,7 +371,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
@@ -411,7 +379,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actAddMask: TdsdExecStoredProc
@@ -537,10 +504,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -595,26 +558,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 629
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1084,10 +1027,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 912
-    Top = 262
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 368
     Top = 272
@@ -1118,6 +1057,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Component = edComment
+      end
+      item
+        Component = StatusGuides
       end>
     Left = 512
     Top = 328

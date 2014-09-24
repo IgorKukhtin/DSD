@@ -115,7 +115,10 @@ BEGIN
           , ''::TVarChar AS ContractKindName
      FROM Object AS Object_Founder
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_80301() -- Расчеты с участниками
+          LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
+                               ON ObjectLink_Founder_InfoMoney.ObjectId = Object_Founder.Id
+                              AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
     WHERE Object_Founder.DescId = zc_Object_Founder()
       AND Object_Founder.isErased = FALSE
     ;

@@ -1,4 +1,7 @@
 -- Документ <Приход>
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PeriodCloseAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PeriodCloseAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PeriodCloseTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PeriodCloseTax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -36,6 +39,19 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentBread() RETURNS Int
 
 DO $$
 BEGIN
+
+ -- zc_Enum_Process_AccessKey_PeriodCloseAll
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PeriodCloseAll()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1001
+                                   , inName:= 'Закрытый период ВСЕ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PeriodCloseAll');
+ -- zc_Enum_Process_AccessKey_PeriodCloseTax
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PeriodCloseTax()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1002
+                                   , inName:= 'Закрытый период Налог+Корректировки (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PeriodCloseTax');
 
  -- zc_Object_Goods, для Транспорта ограничивается Справочник Товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportAll()
@@ -236,6 +252,7 @@ BEGIN
                                    , inName:= 'ЗП карточки БН (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceFirstForm');
 
+
 /*
  -- заливка прав 
  PERFORM gpInsertUpdate_Object_RoleProcess2 (ioId        := tmpData.RoleRightId
@@ -267,6 +284,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.09.14                                        * add zc_Enum_Process_AccessKey_PeriodClose...
  17.09.14                                        * add zc_Enum_Process_AccessKey_PersonalServiceFirstForm
  10.09.14                                        * add zc_Enum_Process_AccessKey_PersonalService...
  08.09.14                                        * add zc_Enum_Process_AccessKey_Guide...

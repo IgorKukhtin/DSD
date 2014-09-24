@@ -151,8 +151,8 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -687,14 +687,10 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 384

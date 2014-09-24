@@ -93,10 +93,6 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
            , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
 
-    FROM (SELECT Movement.id FROM  tmpStatus
-           , COALESCE(MovementLinkMovement_Tax.MovementId, 0) <> 0           AS isEDI
-           , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
-
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
                WHERE inIsRegisterDate = FALSE

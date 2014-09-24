@@ -399,7 +399,7 @@ type
     bbCashKharkov: TdxBarButton;
     bbCashCherkassi: TdxBarButton;
     actPersonalCash: TdsdOpenForm;
-    bbPersonalCash: TdxBarButton;
+    bbCash_Personal: TdxBarButton;
     actPersonalService: TdsdOpenForm;
     bbPersonalService: TdxBarButton;
     actPersonalServiceList: TdsdOpenForm;
@@ -413,6 +413,10 @@ type
     bbExternalSave: TdxBarSubItem;
     actPersonalReport: TdsdOpenForm;
     bbPersonalReport: TdxBarButton;
+    actFounderService: TdsdOpenForm;
+    bbFounderService: TdxBarButton;
+    actPeriodClose_User: TdsdOpenForm;
+    bbPeriodClose_User: TdxBarButton;
   public
     { Public declarations }
   end;

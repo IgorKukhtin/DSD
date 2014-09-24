@@ -21,7 +21,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_FounderService());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE (inMovementId_Value, 0) = 0
+     IF COALESCE (inMovementId, 0) = 0
      THEN
 
      RETURN QUERY 
@@ -74,7 +74,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_FounderService (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_FounderService (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
