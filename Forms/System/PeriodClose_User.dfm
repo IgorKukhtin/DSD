@@ -1,17 +1,13 @@
-inherited PeriodCloseForm: TPeriodCloseForm
-  Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072')'
-  ExplicitWidth = 591
-  ExplicitHeight = 343
+inherited PeriodClose_UserForm: TPeriodClose_UserForm
+  Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103')'
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
-          OptionsData.Inserting = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -26,6 +22,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Options.Editing = False
             Width = 65
           end
           object colRoleName: TcxGridDBColumn
@@ -38,6 +35,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Options.Editing = False
             Width = 65
           end
           object colUnitName: TcxGridDBColumn
@@ -50,6 +48,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Options.Editing = False
             Width = 65
           end
           object colCloseDate: TcxGridDBColumn

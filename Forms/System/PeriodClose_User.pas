@@ -1,4 +1,4 @@
-unit PeriodClose;
+unit PeriodClose_User;
 
 interface
 
@@ -14,7 +14,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TPeriodCloseForm = class(TAncestorDBGridForm)
+  TPeriodClose_UserForm = class(TAncestorDBGridForm)
     colRoleName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
@@ -37,6 +37,6 @@ implementation
 
 initialization
 
-  RegisterClass(TPeriodCloseForm);
+  RegisterClass(TPeriodClose_UserForm);
 
 end.

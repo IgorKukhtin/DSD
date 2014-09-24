@@ -372,7 +372,7 @@ uses
   CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
   CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
-  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
+  PeriodClose_User in '..\..\Forms\System\PeriodClose_User.pas' {PeriodClose_UserForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveMarketingDocumentTo1C in '..\..\Forms\Export\SaveMarketingDocumentTo1C.pas' {SaveMarketingDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
@@ -546,7 +546,8 @@ uses
   ZakazExternalTest in '..\SOURCE\Movement\All\ZakazExternalTest.pas',
   ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas',
   FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
-  FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm};
+  FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
+  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -518,6 +518,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
 end;
 
 
@@ -1402,7 +1404,7 @@ end;
 procedure TLoadFormTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
 end;
 
 procedure TLoadFormTest.TearDown;

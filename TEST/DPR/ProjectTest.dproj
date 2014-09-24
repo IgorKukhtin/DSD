@@ -1064,8 +1064,8 @@
 				<Form>ContractConditionKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
-				<Form>PeriodCloseForm</Form>
+			<DCCReference Include="..\..\Forms\System\PeriodClose_User.pas">
+				<Form>PeriodClose_UserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
@@ -1612,6 +1612,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\FounderServiceJournal.pas">
 				<Form>FounderServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
+				<Form>PeriodCloseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
