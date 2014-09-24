@@ -3,15 +3,16 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 134
+  ExplicitLeft = -104
+  ExplicitWidth = 1102
+  ExplicitHeight = 135
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1678,6 +1679,10 @@
     end
     object bbPeriodClose: TdxBarButton
       Action = actPeriodClose
+      Category = 0
+    end
+    object bbPeriodClose_User: TdxBarButton
+      Action = actPeriodClose_User
       Category = 0
     end
     object bbToolsWeighingTree: TdxBarButton
@@ -3836,9 +3841,19 @@
     object actPeriodClose: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
-      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1040#1076#1084#1080#1085')'
       FormName = 'TPeriodCloseForm'
       FormNameParam.Value = 'TPeriodCloseForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPeriodClose_User: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100')'
+      FormName = 'TPeriodClose_UserForm'
+      FormNameParam.Value = 'TPeriodClose_UserForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
