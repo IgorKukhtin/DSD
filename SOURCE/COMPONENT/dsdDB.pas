@@ -16,8 +16,8 @@ type
     FComponentItem: String;
     FParamType: TParamType;
     FonChange: TNotifyEvent;
-    function GetValue: OleVariant;
-    procedure SetValue(const Value: OleVariant);
+    function GetValue: Variant;
+    procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
     procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
     function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
@@ -34,7 +34,7 @@ type
     constructor Create(Collection: TCollection); override;
   published
     property Name: String read FName write FName;
-    property Value: OleVariant read GetValue write SetValue;
+    property Value: Variant read GetValue write SetValue;
     // Откуда считывать значение параметра
     property Component: TComponent read FComponent write SetComponent;
     property ComponentItem: String read FComponentItem write FComponentItem;
@@ -547,7 +547,7 @@ end;
 
 function TdsdParam.AsString: string;
 var i: Integer;
-    Data: OleVariant;
+    Data: Variant;
 begin
   Data := Value;
   if VarisNull(Data) then
@@ -557,8 +557,13 @@ begin
     end;
   if varType(Data) in [varSingle, varDouble, varCurrency] then
      result := gfFloatToStr(Data)
-  else
-     result := Data;
+  else begin
+     if (varType(Data) = varString) and (Data = #0) then
+        // При пустой строку result = #0
+        result := ''
+     else
+        result := Data;
+  end;
   case DataType of
     ftSmallint, ftInteger, ftWord:
            if not TryStrToInt(result, i)
@@ -666,7 +671,7 @@ begin
   result := Owner;
 end;
 
-function TdsdParam.GetValue: OleVariant;
+function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
 var DateTime: TDateTime;
@@ -766,7 +771,7 @@ begin
   end;
 end;
 
-procedure TdsdParam.SetValue(const Value: OleVariant);
+procedure TdsdParam.SetValue(const Value: Variant);
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -791,8 +796,12 @@ begin
      if Component is TcxDateEdit then
         if VarType(FValue) = vtObject then
           (Component as TcxDateEdit).Date := FValue
-        else
-          (Component as TcxDateEdit).Date := gfXSStrToDate(FValue); // convert to TDateTime
+        else begin
+          if FValue <> '' then
+             (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
+          else
+             (Component as TcxDateEdit).Text := '';
+        end;
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := Value;
      if Component is TCustomGuides then

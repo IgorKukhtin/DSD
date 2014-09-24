@@ -1,23 +1,23 @@
 inherited PriceListLoadForm: TPriceListLoadForm
   Caption = #1060#1086#1088#1084#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
   ClientHeight = 399
-  ClientWidth = 597
-  ExplicitWidth = 605
+  ClientWidth = 616
+  ExplicitWidth = 624
   ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 597
+    Width = 616
     Height = 373
     ExplicitWidth = 597
     ExplicitHeight = 373
     ClientRectBottom = 373
-    ClientRectRight = 597
+    ClientRectRight = 616
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 597
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 597
+        Width = 616
         Height = 373
         ExplicitWidth = 597
         ExplicitHeight = 373
@@ -31,14 +31,20 @@ inherited PriceListLoadForm: TPriceListLoadForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 131
+            Width = 116
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 368
+            Width = 199
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentVert = vaCenter
+            Width = 199
           end
           object colNDSinPrice: TcxGridDBColumn
             Caption = #1053#1044#1057' '#1074' '#1094#1077#1085#1077
@@ -46,7 +52,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 88
           end
         end
       end
@@ -75,8 +81,11 @@ inherited PriceListLoadForm: TPriceListLoadForm
     object actLoadPriceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spLoadPriceList
+      StoredProc = spUpdateGoods
       StoredProcList = <
+        item
+          StoredProc = spUpdateGoods
+        end
         item
           StoredProc = spLoadPriceList
         end>
@@ -159,5 +168,19 @@ inherited PriceListLoadForm: TPriceListLoadForm
       end>
     Left = 216
     Top = 152
+  end
+  object spUpdateGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdatePartnerGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 216
+    Top = 120
   end
 end

@@ -268,6 +268,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLoadObjectForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
+
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));

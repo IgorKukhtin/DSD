@@ -1,0 +1,50 @@
+-- Function: gpInsertUpdate_MovementItem_OrderExternal()
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMainGoodsId         Integer   , -- Товары
+    IN inGoodsId             Integer   , -- Товары
+    IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , -- Цена
+    IN inSumm                TFloat    , -- Сумма заказа
+    IN inUserId              Integer     -- сессия пользователя
+)
+RETURNS Integer AS
+$BODY$
+BEGIN
+
+     -- сохранили <Элемент документа>
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inMainGoodsId, inMovementId, inAmount, NULL);
+
+     -- сохранили свойство <Цена>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+
+     -- сохранили свойство <Сумма заказа>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+
+     -- сохранили связь с <Товаром из прайса>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+
+     -- пересчитали Итоговые суммы
+--     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+
+     -- сохранили протокол
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.07.14                                                       *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_OrderExternal (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

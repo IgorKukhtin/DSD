@@ -264,7 +264,7 @@ begin
   case FDataSetType of
     dtDBF: begin
         FDataSet := TVKSmartDBF.Create(nil);
-        TVKSmartDBF(FDataSet).DBFFileName := FileName;
+        TVKSmartDBF(FDataSet).DBFFileName := AnsiString(FileName);
         TVKSmartDBF(FDataSet).OEM := FOEM;
         try
           FDataSet.Open;
@@ -359,38 +359,41 @@ begin
     for i := 0 to Count - 1 do begin
         if TImportSettingsItems(Items[i]).ItemName = '%JURIDICAL%' then
            StoredProc.Params.Items[i].Value := AImportSettings.JuridicalId
-        else begin
-           if TImportSettingsItems(Items[i]).ItemName <> '' then begin
-              case StoredProc.Params[i].DataType of
-                ftDateTime: begin
-                   try
-                     Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
-                     D := VarToDateTime(Value);
-                     StoredProc.Params.Items[i].Value := D;
-                   except
-                     on E: EVariantTypeCastError do
-                        StoredProc.Params.Items[i].Value := Date;
-                     on E: Exception do
-                        raise E;
-                   end;
+        else
+           if TImportSettingsItems(Items[i]).ItemName = '%CONTRACT%' then
+              StoredProc.Params.Items[i].Value := AImportSettings.ContractId
+           else begin
+             if TImportSettingsItems(Items[i]).ItemName <> '' then begin
+                case StoredProc.Params[i].DataType of
+                  ftDateTime: begin
+                     try
+                       Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                       D := VarToDateTime(Value);
+                       StoredProc.Params.Items[i].Value := D;
+                     except
+                       on E: EVariantTypeCastError do
+                          StoredProc.Params.Items[i].Value := Date;
+                       on E: Exception do
+                          raise E;
+                     end;
+                  end;
+                  ftFloat: begin
+                     try
+                       Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                       Ft := gfStrToFloat(Value);
+                       StoredProc.Params.Items[i].Value := Ft;
+                     except
+                       on E: EVariantTypeCastError do
+                          StoredProc.Params.Items[i].Value := 0;
+                       on E: Exception do
+                          raise E;
+                     end;
+                  end
+                  else
+                    StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
                 end;
-                ftFloat: begin
-                   try
-                     Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
-                     Ft := gfStrToFloat(Value);
-                     StoredProc.Params.Items[i].Value := Ft;
-                   except
-                     on E: EVariantTypeCastError do
-                        StoredProc.Params.Items[i].Value := 0;
-                     on E: Exception do
-                        raise E;
-                   end;
-                end
-                else
-                  StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
-              end;
-           end;
-        end;
+             end;
+          end;
     end;
     StoredProc.Execute;
   end;
@@ -552,6 +555,7 @@ end;
 function TExecuteImportSettingsAction.LocalExecute: boolean;
 begin
   TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value));
+  result := true;
 end;
 
 { TImportSettingsItems }

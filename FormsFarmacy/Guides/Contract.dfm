@@ -1,19 +1,20 @@
 inherited ContractForm: TContractForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientWidth = 707
+  ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 715
+  ExplicitWidth = 806
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 707
+    Width = 798
     ExplicitWidth = 707
-    ClientRectRight = 703
+    ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 707
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 707
+        Width = 798
         ExplicitWidth = 707
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -53,6 +54,11 @@ inherited ContractForm: TContractForm
             HeaderAlignmentVert = vaCenter
             Width = 122
           end
+          object colDeferment: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1072
+            DataBinding.FieldName = 'Deferment'
+            HeaderAlignmentVert = vaCenter
+          end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -82,7 +88,7 @@ inherited ContractForm: TContractForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
 end

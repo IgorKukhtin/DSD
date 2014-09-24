@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PriceList(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , ContractId Integer, ContractName TVarChar
               )
 AS
 $BODY$
@@ -31,6 +32,8 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , 0                     				            AS JuridicalId
              , CAST ('' AS TVarChar) 				            AS JuridicalName
+             , 0                     				            AS ContractId
+             , CAST ('' AS TVarChar) 				            AS ContractName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -45,6 +48,8 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
            , Object_Juridical.Id                                AS JuridicalId
            , Object_Juridical.ValueData                         AS JuridicalName
+           , Object_Contract.Id                                 AS ContractId
+           , Object_Contract.ValueData                          AS ContractName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -52,9 +57,12 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_PriceList();

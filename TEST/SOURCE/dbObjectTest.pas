@@ -15,7 +15,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, ZLibEx, zLibUtil;
+     UtilConvert, ZLibEx, zLibUtil, UtilConst;
 
 
 { TdbObjectTestNew }
@@ -23,7 +23,7 @@ uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
 procedure TdbObjectTestNew.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TdbObjectTestNew.TearDown;

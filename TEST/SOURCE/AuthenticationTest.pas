@@ -17,7 +17,7 @@ type
 
 implementation
 
-uses Authentication, Storage, SysUtils;
+uses Authentication, Storage, SysUtils, UtilConst;
 
 { TAuthenticationTest }
 
@@ -43,7 +43,7 @@ begin
   end;
   Check(Pos('Неправильный логин или пароль', ErrorMessage) <> -1, 'Ошибка ' + ErrorMessage);
 
-  Check(TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', lUser), 'Проверка пользователя');
+  Check(TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, lUser), 'Проверка пользователя');
 end;
 
 procedure TAuthenticationTest.SetUp;

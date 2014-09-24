@@ -22,6 +22,8 @@ type
     spLoadPriceList: TdsdStoredProc;
     actLoadPriceList: TdsdExecStoredProc;
     bbLoadPriceList: TdxBarButton;
+    spUpdateGoods: TdsdStoredProc;
+    colContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public

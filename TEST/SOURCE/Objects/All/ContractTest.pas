@@ -28,7 +28,7 @@ type
 
 implementation
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, PaidKindTest;
 
 { TContractTest }
  constructor TContract.Create;
@@ -53,14 +53,17 @@ begin
     InvNumber:='123456-test';
     InvNumberArchive:='';
     Comment:='comment';
-    BankAccountExternal:='BankAccountExternal';
+    BankAccountExternal := 'BankAccountExternal';
     SigningDate:=date; StartDate:=date; EndDate:=date;
     JuridicalId:=TJuridical.Create.GetDefault;
-    JuridicalBasisId:=9399;//ŒŒŒ ¿À¿Õ
-    InfoMoneyId:=8913;//10203;"”Ô‡ÍÓ‚Í‡"
+    JuridicalBasisId := 9399;//ŒŒŒ ¿À¿Õ
+    InfoMoneyId := 8913;//10203;"”Ô‡ÍÓ‚Í‡"
     ContractKindId:=0;
-    PaidKindId:=3;//¡Õ
-    PersonalId:=0;
+    with TPaidKind.Create.GetDataSet do begin
+         if Locate('Name', '¡Õ', []) then
+            PaidKindId := FieldByName('Id').AsInteger;//¡Õ
+    end;
+    PersonalId := 0;
 
     PersonalTradeId:=0;
     PersonalCollationId:=0;
@@ -137,6 +140,12 @@ end;
 
 procedure TContractTest.ProcedureLoad;
 begin
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContractDocument\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContractCondition\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContractKey\';
+  inherited;
   ScriptDirectory := ProcedurePath + 'OBJECTS\Contract\';
   inherited;
 end;

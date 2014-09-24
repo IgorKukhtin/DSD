@@ -2,22 +2,19 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitWidth = 1114
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1106
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1106
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -481,10 +478,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ImageIndex = 58
     end
     inherited actCompleteList: TMultiAction [7]
+      View = cxGridDBTableView
     end
     inherited actUnCompleteList: TMultiAction [8]
+      View = cxGridDBTableView
     end
     inherited actSetErasedList: TMultiAction [9]
+      View = cxGridDBTableView
     end
     object actTaxCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'

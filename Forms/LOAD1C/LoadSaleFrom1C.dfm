@@ -2,8 +2,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1080#1079' 1'#1057
   ClientHeight = 416
   ClientWidth = 958
-  ExplicitWidth = 974
-  ExplicitHeight = 451
+  ExplicitWidth = 966
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -456,6 +456,9 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       StoredProcList = <
         item
           StoredProc = spCheckLoad
+        end
+        item
+          StoredProc = spErased
         end>
       Caption = 'actBeforeMove'
     end
@@ -778,7 +781,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 296
+    Left = 264
     Top = 216
   end
   object DBViewAddOn1: TdsdDBViewAddOn

@@ -3,20 +3,21 @@
 DROP VIEW IF EXISTS LastPriceList_View;
 
 CREATE OR REPLACE VIEW LastPriceList_View AS 
-       SELECT Movement.Id AS MovementId, MovementLinkObject_Juridical.ObjectId AS JuridicalId
-  FROM Movement
-         JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                 ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-      JOIN (SELECT max(Movement.OperDate) AS OperDate, MovementLinkObject_Juridical.ObjectId FROM Movement
-            JOIN MovementLinkObject AS MovementLinkObject_Juridical
+SELECT JuridicalId, ContractId, MovementId 
+  FROM (SELECT max(Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId, COALESCE(MovementLinkObject_Contract.ObjectId, 0)) AS Max_Date
+     , Movement.OperDate, Movement.Id AS MovementId, MovementLinkObject_Juridical.ObjectId AS JuridicalId 
+     , COALESCE(MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+       FROM Movement
+       LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                    AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-           WHERE Movement.DescId = zc_Movement_PriceList()
-       GROUP BY MovementLinkObject_Juridical.ObjectId) AS MaxMovement ON MaxMovement.OperDate = Movement.OperDate
-                         AND MaxMovement.ObjectId = MovementLinkObject_Juridical.ObjectId
 
-     WHERE Movement.DescId = zc_Movement_PriceList() ;
+       LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+           WHERE Movement.DescId = zc_Movement_PriceList()) AS PriceList
+           WHERE PriceList.Max_Date = PriceList.OperDate;
 
 ALTER TABLE LastPriceList_View
   OWNER TO postgres;

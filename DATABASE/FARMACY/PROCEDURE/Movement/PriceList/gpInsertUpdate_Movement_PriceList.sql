@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_PriceList()
 
--- DROP FUNCTION gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceList (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inJuridicalId         Integer   , -- Юридические лица
+    IN inContractId          Integer   , -- Договор
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,6 +25,9 @@ BEGIN
 
      -- сохранили связь с <Юридические лица>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
+
+     -- сохранили связь с <Договор>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);

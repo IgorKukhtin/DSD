@@ -11,15 +11,22 @@ CREATE OR REPLACE FUNCTION gpErasedSaleFrom1C(
 RETURNS Void AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPaidKindId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
 
+     SELECT zfGetPaidKindFrom1CType(Sale1C.VIDDOC) INTO vbPaidKindId
+     FROM Sale1C             
+          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+            AND zfGetBranchFromUnitId (Sale1C.UnitId) = inBranchId
+     GROUP BY zfGetPaidKindFrom1CType(Sale1C.VIDDOC);
+
      -- !!!Продажи!!!
 
-     -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер
+     -- Удаление всех Документов за период по филиалу 
      PERFORM gpSetErased_Movement (Movement.Id, inSession) 
      FROM Movement  
           JOIN MovementLinkObject AS MLO_From
@@ -33,14 +40,19 @@ BEGIN
                                ON MovementBoolean_isLoad.MovementId = Movement.Id
                               AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
                               AND MovementBoolean_isLoad.ValueData = TRUE
+     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                  ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                 AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
      WHERE Movement.DescId = zc_Movement_Sale()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
-                        , Sale1C.OperDate
-           FROM Sale1C             
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
+       AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId;
+--       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
+  --                      , Sale1C.OperDate
+    --       FROM Sale1C             
+      --    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+        --    AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
 
@@ -60,14 +72,18 @@ BEGIN
                                ON MovementBoolean_isLoad.MovementId = Movement.Id
                               AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
                               AND MovementBoolean_isLoad.valuedata = TRUE 
+     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                  ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                 AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
      WHERE Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
-                        , Sale1C.OperDate
-           FROM Sale1C             
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
+       AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
+       AND Movement.StatusId <> zc_Enum_Status_Erased();
+--       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
+  --                      , Sale1C.OperDate
+    --       FROM Sale1C             
+      --    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+        --    AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
      -- сохранили протокол
@@ -80,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.09.14                        * 
  14.08.14                        * новая связь с филиалами
  24.04.14                        * 
 */

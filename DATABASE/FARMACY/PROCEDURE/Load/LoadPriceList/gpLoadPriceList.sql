@@ -11,6 +11,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceListId Integer;
    DECLARE vbJuridicalId Integer;
+   DECLARE vbContractId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -20,61 +21,25 @@ BEGIN
      -- Получаем параметры прайсЛиста
      SELECT 
            LoadPriceList.OperDate	 
-         , LoadPriceList.JuridicalId INTO vbOperDate, vbJuridicalId
+         , LoadPriceList.JuridicalId 
+         , LoadPriceList.ContractId INTO vbOperDate, vbJuridicalId, vbContractId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
-
-     -- Тут мы меняем или добавляем товары в справочник товаров прайс-листа
-
-     PERFORM lpInsertUpdate_Object_Goods(
-                     Object_Goods.Id  ,    -- ключ объекта <Товар>
-         LoadPriceListItem.GoodsCode  ,    -- Код объекта <Товар>
-         LoadPriceListItem.GoodsName  ,    -- Название объекта <Товар>
-                                   0  ,    -- группы товаров
-                                   0  ,    -- ссылка на единицу измерения
-                                   0  ,    -- НДС
-                        vbJuridicalId ,    -- Юр лицо или торговая сеть
-                             vbUserId , 
-                                false )
-        FROM LoadPriceListItem
-                     JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId 
-                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode 
-                            FROM Object_Goods_View 
-                           WHERE ObjectId = vbJuridicalId
-                        ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-         WHERE LoadPriceListItem.GoodsId <> 0 AND LoadPriceList.Id = inId;
-
-     -- Тут устанавливаем связь между товарами покупателей и главным товаром
-
-     PERFORM
-            gpInsertUpdate_Object_LinkGoods(0 , -- ключ объекта <Условия договора>
-                    LoadPriceListItem.GoodsId , -- Главный товар
-                              Object_Goods.Id , -- Товар для замены
-                                    inSession )
-       FROM LoadPriceListItem
-               JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-               JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
-                                FROM Object_Goods_View 
-                               WHERE ObjectId = vbJuridicalId
-                    ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-          WHERE GoodsId <> 0 AND LoadPriceList.Id = inId
-           AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN 
-               (SELECT GoodsMainId, GoodsId FROM Object_LinkGoods_View
-                       WHERE ObjectId = vbJuridicalId AND ObjectMainId IS NULL);
-
-
-     -- Если прайс за этот день и по юрлицу не найден, то находим. А если найден, то сохраняем ИД
+     -- Если прайс за этот день, юрлицу и договору не найден, то добавляем. А если найден, то сохраняем ИД
      SELECT
             Movement.Id INTO vbPriceListId
        FROM Movement 
             JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                    AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
       WHERE Movement.OperDate = vbOperDate AND Movement.DescId = zc_Movement_PriceList()
-        AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId;
+        AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId AND COALESCE(MovementLinkObject_Contract.ObjectId, 0) = vbContractId;
 
       IF COALESCE(vbPriceListId, 0) = 0 THEN 
-         vbPriceListId := gpInsertUpdate_Movement_PriceList(0, '', vbOperDate, vbJuridicalId, inSession);
+         vbPriceListId := gpInsertUpdate_Movement_PriceList(0, '', vbOperDate, vbJuridicalId, vbContractId, inSession);
       END IF;
 
      -- Перенос элементов прайса
@@ -82,12 +47,22 @@ BEGIN
                       0 , -- Ключ объекта <Элемент документа>
           vbPriceListId , -- Ключ объекта <Документ>
                 GoodsId , -- Товары
+        Object_Goods.Id , -- Товар прайс-листа
                   Price , -- Цена
          ExpirationDate , -- Партия товара
               inSession )
        FROM LoadPriceListItem 
+               JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
+                                FROM Object_Goods_View 
+                               WHERE ObjectId = vbJuridicalId
+                    ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
       WHERE GoodsId <> 0 AND LoadPriceListId = inId
-        AND GoodsId NOT IN (SELECT ObjectId FROM MovementItem WHERE MovementId = vbPriceListId);
+        AND (GoodsId, Object_Goods.Id)  
+             NOT IN (SELECT MovementItem.ObjectId, MILinkObject_Goods.ObjectId FROM MovementItem 
+                       JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                      WHERE MovementId = vbPriceListId);
 
     
      -- сохранили протокол
@@ -100,6 +75,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.09.14                        *  
  10.09.14                        *  
 */
 

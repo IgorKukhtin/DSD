@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;

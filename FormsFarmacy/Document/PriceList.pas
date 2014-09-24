@@ -35,6 +35,10 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     colPartionGoodsDate: TcxGridDBColumn;
+    colGoodsJuridicalName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
   private
     { Private declarations }
   public

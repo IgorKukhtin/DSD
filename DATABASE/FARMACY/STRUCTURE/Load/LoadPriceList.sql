@@ -15,6 +15,7 @@ CREATE TABLE LoadPriceList
   Id            serial    NOT NULL PRIMARY KEY,
   OperDate	TDateTime, -- Дата документа
   JuridicalId	Integer , -- Юридические лица
+  ContractId	Integer , -- Договор
   isAllGoodsConcat Boolean, -- Все ли товары имеют связь
   NDSinPrice    Boolean, -- Цена с НДС?
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id))

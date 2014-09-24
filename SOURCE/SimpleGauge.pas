@@ -25,7 +25,6 @@ type
     Gauge: TGauge;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   protected
-    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer); virtual;
     procedure Start;
     procedure Finish;
     {$IFDEF VER100}
@@ -33,6 +32,8 @@ type
     {$ELSE}
     procedure IncProgress(IncValue: integer = 1);
     {$ENDIF}
+  public
+    constructor Create(AOwner: TForm; ACaption: TCaption; AMinValue, AMaxValue: integer); virtual;
   end;
 
 implementation

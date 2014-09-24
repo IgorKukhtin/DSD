@@ -29,8 +29,9 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colTotalSumm: TcxGridDBColumn;
+    actCalculateExternalZakaz: TdsdExecStoredProc;
+    spCalculate: TdsdStoredProc;
   private
     { Private declarations }
   public

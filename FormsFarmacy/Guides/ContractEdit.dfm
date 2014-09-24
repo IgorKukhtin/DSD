@@ -1,18 +1,18 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
-  ClientHeight = 306
-  ClientWidth = 360
-  ExplicitWidth = 366
-  ExplicitHeight = 338
+  ClientHeight = 216
+  ClientWidth = 353
+  ExplicitWidth = 359
+  ExplicitHeight = 241
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 273
-    ExplicitTop = 273
+    Top = 176
+    ExplicitTop = 176
   end
   inherited bbCancel: TcxButton
-    Top = 273
-    ExplicitTop = 273
+    Top = 176
+    ExplicitTop = 176
   end
   object cxLabel2: TcxLabel [2]
     Left = 10
@@ -25,78 +25,92 @@ inherited ContractEditForm: TContractEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 3
-    Width = 139
+    TabOrder = 2
+    Width = 95
   end
   object cxLabel1: TcxLabel [4]
-    Left = 10
-    Top = 51
+    Left = 111
+    Top = 5
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object edName: TcxTextEdit [5]
-    Left = 10
-    Top = 72
-    TabOrder = 5
-    Width = 335
+    Left = 111
+    Top = 26
+    TabOrder = 3
+    Width = 232
   end
   object cxLabel4: TcxLabel [6]
-    Left = 10
-    Top = 101
+    Left = 8
+    Top = 61
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
   end
   object ceJuridicalBasis: TcxButtonEdit [7]
-    Left = 10
-    Top = 121
+    Left = 8
+    Top = 81
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
-    Width = 333
+    TabOrder = 4
+    Width = 168
   end
   object cxLabel3: TcxLabel [8]
-    Left = 12
-    Top = 199
+    Left = 111
+    Top = 115
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
-    Left = 10
-    Top = 222
-    TabOrder = 9
-    Width = 335
+    Left = 109
+    Top = 133
+    TabOrder = 7
+    Width = 234
   end
   object cxLabel5: TcxLabel [10]
-    Left = 10
-    Top = 149
+    Left = 178
+    Top = 59
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit [11]
-    Left = 10
-    Top = 171
+    Left = 178
+    Top = 81
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 11
-    Width = 333
+    TabOrder = 5
+    Width = 167
+  end
+  object cxLabel6: TcxLabel [12]
+    Left = 10
+    Top = 115
+    Caption = #1044#1085#1077#1081' '#1086#1090#1089#1088#1086#1095#1082#1080
+  end
+  object ceDeferment: TcxCurrencyEdit [13]
+    Left = 10
+    Top = 133
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 6
+    Width = 95
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 315
     Top = 9
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 248
-    Top = 5
+    Left = 256
+    Top = 45
   end
   inherited ActionList: TActionList
     Left = 159
-    Top = 8
+    Top = 48
   end
   inherited FormParams: TdsdFormParams
     Left = 24
-    Top = 253
+    Top = 165
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -136,6 +150,12 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inDeferment'
+        Value = 0.000000000000000000
+        Component = ceDeferment
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = edComment
@@ -143,7 +163,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 288
-    Top = 233
+    Top = 145
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -197,9 +217,14 @@ inherited ContractEditForm: TContractEditForm
         Value = ''
         Component = edComment
         DataType = ftString
+      end
+      item
+        Name = 'Deferment'
+        Value = 0.000000000000000000
+        Component = ceDeferment
       end>
-    Left = 168
-    Top = 249
+    Left = 192
+    Top = 153
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'

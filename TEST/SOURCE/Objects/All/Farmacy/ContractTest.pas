@@ -16,7 +16,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateContract(const Id: integer; Code: integer; InvNumber, Comment: string;
-             JuridicalId, JuridicalBasisId :Integer): integer;
+             JuridicalId, JuridicalBasisId, Deferment :Integer): integer;
     constructor Create; override;
   end;
 
@@ -46,12 +46,12 @@ begin
     JuridicalId := TJuridical.Create.GetDefault;
     JuridicalBasisId := JuridicalId;
 
-  result := InsertUpdateContract(Id, Code, InvNumber, Comment, JuridicalId, JuridicalBasisId);
+  result := InsertUpdateContract(Id, Code, InvNumber, Comment, JuridicalId, JuridicalBasisId, 10);
   inherited;
 end;
 
 function TContract.InsertUpdateContract(const Id: integer; Code: integer; InvNumber, Comment: String;
-  JuridicalId, JuridicalBasisId: Integer): integer;
+  JuridicalId, JuridicalBasisId, Deferment: Integer): integer;
 
 begin
   FParams.Clear;
@@ -60,6 +60,7 @@ begin
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   FParams.AddParam('inJuridicalBasisId', ftInteger, ptInput, JuridicalBasisId);
+  FParams.AddParam('inDeferment', ftInteger, ptInput, Deferment);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
 
   result := InsertUpdate(FParams);
@@ -84,7 +85,7 @@ begin
   try
     // Получение данных о юр лице
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('InvNumber').AsString = '123456-test'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Name').AsString = '123456-test'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
     ObjectTest.Delete(Id);

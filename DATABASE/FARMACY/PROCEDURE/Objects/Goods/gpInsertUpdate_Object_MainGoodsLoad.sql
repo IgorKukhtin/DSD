@@ -26,10 +26,9 @@ BEGIN
        vbNDSKindId  := zc_Enum_NDSKind_Medical();
     END IF; 
 
-       SELECT Object_Goods_View.Id INTO vbId
-         FROM Object_Goods_View 
-        WHERE Object_Goods_View.ObjectId IS NULL
-          AND Object_Goods_View.GoodsCodeInt = inCode;   
+       SELECT Object_Goods_Main_View.Id INTO vbId
+         FROM Object_Goods_Main_View 
+        WHERE Object_Goods_Main_View.GoodsCode = inCode;   
 
     PERFORM lpInsertUpdate_Object_Goods(vbId, inCode::TVarChar, inName, 0, inMeasureId, vbNDSKindId, 0, vbUserId);
 

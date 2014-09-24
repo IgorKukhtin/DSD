@@ -974,7 +974,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxCorrectiveTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>

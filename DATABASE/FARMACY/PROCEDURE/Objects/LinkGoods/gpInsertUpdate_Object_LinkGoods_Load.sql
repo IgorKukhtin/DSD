@@ -30,7 +30,6 @@ BEGIN
         AND Object_LinkGoods_View.GoodsId = vbGoodsId;
 
      IF COALESCE(vbId, 0) = 0 THEN
-        vbId  := 1 /0 ;
 
                  PERFORM gpInsertUpdate_Object_LinkGoods(
                                    ioId := 0                     ,  

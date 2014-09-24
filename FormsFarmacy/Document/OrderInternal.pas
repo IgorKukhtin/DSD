@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, cxSplitter;
 
 type
   TOrderInternalForm = class(TAncestorDocumentForm)
@@ -37,6 +37,19 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colSumm: TcxGridDBColumn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    colPrice: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    spSelect_MovementItem_OrderInternal_Price: TdsdStoredProc;
+    coCode: TcxGridDBColumn;
+    DBViewChildAddOn: TdsdDBViewAddOn;
+    colContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public
