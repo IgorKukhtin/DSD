@@ -20,7 +20,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
      vbUserId := inSession;
 
-     PERFORM lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inInternalOrderId, vbUserId);
+     ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inInternalOrderId, vbUserId);
 
 END;
 $BODY$

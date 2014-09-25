@@ -19,7 +19,7 @@ BEGIN
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
 
      SELECT Id INTO vbGoodsMainId FROM Object_Goods_Main_View
-      WHERE GoodsCode = inGoodsMainCode;
+      WHERE GoodsCode = inGoodsMainCode::Integer;
 
      SELECT Id INTO vbGoodsId FROM Object_Goods_View
       WHERE ObjectId = inRetailId AND GoodsCode = inGoodsCode;

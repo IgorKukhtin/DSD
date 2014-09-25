@@ -18,7 +18,7 @@ type
      procedure SetDataSetParam; override;
   public
     function InsertUpdatePriceListMovement(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             JuridicalId: Integer): integer;
+             JuridicalId, ContractId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -49,17 +49,18 @@ begin
 
   JuridicalId := TJuridical.Create.GetDefault;
   //
-  result := InsertUpdatePriceListMovement(Id, InvNumber, OperDate, JuridicalId);
+  result := InsertUpdatePriceListMovement(Id, InvNumber, OperDate, JuridicalId, 0);
 end;
 
 function TPriceListMovement.InsertUpdatePriceListMovement(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             JuridicalId: Integer): integer;
+             JuridicalId, ContractId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
 
   result := InsertUpdate(FParams);
 end;

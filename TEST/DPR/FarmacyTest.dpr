@@ -119,7 +119,7 @@ uses
   AdditionalGoods in '..\..\FormsFarmacy\Guides\AdditionalGoods.pas' {AdditionalGoodsForm: TParentForm},
   LinkGoodsTest in '..\SOURCE\Objects\All\LinkGoodsTest.pas',
   GoodsTest in '..\SOURCE\Objects\All\Farmacy\GoodsTest.pas',
-  GoodsGroupTest in '..\SOURCE\Objects\All\GoodsGroupTest.pas',
+  GoodsGroupTest in '..\SOURCE\Objects\All\Farmacy\GoodsGroupTest.pas',
   ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
   ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
