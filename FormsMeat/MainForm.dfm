@@ -117,6 +117,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPeriodClose_User'
+        end
+        item
+          Visible = True
           ItemName = 'bbPartner1CLink'
         end
         item

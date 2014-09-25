@@ -94,11 +94,18 @@ inherited ServiceJournalForm: TServiceJournalForm
             Width = 50
           end
           object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 37
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -117,6 +124,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 99
           end
@@ -135,6 +143,14 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 101
           end
+          object clInfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object clUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -149,15 +165,25 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object clOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object clInvNumberPartner: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
             DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
@@ -166,6 +192,13 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
             Width = 81
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

@@ -45,6 +45,12 @@ type
     ceContractTo: TcxButtonEdit;
     PaidKindToGuides: TdsdGuides;
     ContractJuridicalToGuides: TdsdGuides;
+    cePartnerFrom: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    PartnerFromGuides: TdsdGuides;
+    cePartnerTo: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    PartnerToGuides: TdsdGuides;
   private
     { Private declarations }
   public

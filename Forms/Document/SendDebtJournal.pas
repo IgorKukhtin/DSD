@@ -11,7 +11,8 @@ uses
   dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.Controls, Vcl.ExtCtrls;
+  cxCalendar, Vcl.Controls, Vcl.ExtCtrls, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TSendDebtJournalForm = class(TParentForm)

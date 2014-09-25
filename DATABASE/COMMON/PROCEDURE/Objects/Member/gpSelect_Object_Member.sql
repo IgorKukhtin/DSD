@@ -11,10 +11,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOfficial Boolean, isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsAllUnit Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
    vbUserId:= lpGetUserBySession (inSession);
+
+   vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId);
 
    -- Результат
    RETURN QUERY 
@@ -31,6 +34,15 @@ BEGIN
          , Object_Member.isErased                   AS isErased
 
      FROM Object AS Object_Member
+          LEFT JOIN (SELECT Object_Personal_View.MemberId
+                     FROM Object_Personal_View
+                          INNER JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide
+                                                                    ON View_RoleAccessKeyGuide.UserId = vbUserId
+                                                                   AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId
+                                                                   AND vbIsAllUnit = FALSE
+                     GROUP BY Object_Personal_View.MemberId
+                    ) AS View_Personal ON View_Personal.MemberId = Object_Member.Id
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
@@ -47,6 +59,9 @@ BEGIN
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
            )
+       AND (View_Personal.MemberId > 0
+            OR vbIsAllUnit = TRUE
+           )
     ;
   
 END;
@@ -58,6 +73,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.09.13                                        * add vbIsAllUnit
  12.09.14                                        * add isOfficial
  12.09.13                                        * add inIsShowAll
  13.12.13                                        * del Object_RoleAccessKey_View

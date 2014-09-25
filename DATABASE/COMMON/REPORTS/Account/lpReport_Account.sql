@@ -67,12 +67,12 @@ BEGIN
     --
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                           FROM (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
-                                                                             AND AccountCode NOT IN (100101 -- Собственный капитал + Первоначальный капитал + Первоначальный капитал
-                                                                                                   , 100201 -- Собственный капитал + Дополнительный капитал + Дополнительный капитал
-                                                                                                   , 100401 -- Собственный капитал + Расчеты с участниками + Расчеты с участниками
-                                                                                                   , 100501 -- Собственный капитал + Прибыль накопленная + Прибыль накопленная
-                                                                                                    )
+                           FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
+                                                                             AND Object_Account_View.AccountCode NOT IN (100101 -- Собственный капитал + Первоначальный капитал + Первоначальный капитал
+                                                                                                                       , 100201 -- Собственный капитал + Дополнительный капитал + Дополнительный капитал
+                                                                                                                       , 100401 -- Собственный капитал + Расчеты с участниками + Расчеты с участниками
+                                                                                                                       , 100501 -- Собственный капитал + Прибыль накопленная + Прибыль накопленная
+                                                                                                                        )
                                  AND (
                                    -- !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
                                   /*((Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
@@ -450,6 +450,7 @@ BEGIN
     WHERE (View_ProfitLoss_inf.ProfitLossGroupId = inProfitLossGroupId OR 0 = inProfitLossGroupId)
       AND (View_ProfitLoss_inf.ProfitLossDirectionId = inProfitLossDirectionId OR 0 = inProfitLossDirectionId)
       AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
+      AND View_InfoMoney.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
     ;
 
 END;

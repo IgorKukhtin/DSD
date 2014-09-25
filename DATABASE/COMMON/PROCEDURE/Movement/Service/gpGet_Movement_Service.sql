@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountIn TFloat, AmountOut TFloat 
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -50,6 +51,8 @@ BEGIN
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
+           , 0                                AS PartnerId
+           , CAST ('' as TVarChar)            AS PartnerName
            , 0                                AS InfoMoneyId
            , CAST ('' as TVarChar)            AS InfoMoneyName
            , 0                                AS ContractId
@@ -92,6 +95,9 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ValueData       AS JuridicalName
 
+           , Object_Partner.Id                AS PartnerId
+           , Object_Partner.ValueData         AS PartnerName
+
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
            , View_Contract_InvNumber.ContractId AS ContractId
@@ -114,7 +120,11 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Juridical.ObjectId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
  
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id

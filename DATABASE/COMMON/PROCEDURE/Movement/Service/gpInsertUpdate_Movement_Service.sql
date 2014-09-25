@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inContractId               Integer   , -- Договор
     IN inInfoMoneyId              Integer   , -- Статьи назначения 
     IN inJuridicalId              Integer   , -- Юр. лицо	
+    IN inPartnerId                Integer   , -- Контрагент
     IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
@@ -38,10 +40,15 @@ BEGIN
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
         RAISE EXCEPTION 'Введите сумму.';
      END IF;
-
      -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
+     END IF;
+     -- проверка
+     IF inPaidKindId = zc_Enum_PaidKind_SecondForm()
+        AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);
      END IF;
 
      -- расчет
@@ -73,7 +80,7 @@ BEGIN
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inJuridicalId, ioId, vbAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), CASE WHEN inPartnerId <> 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN inPartnerId ELSE inJuridicalId END, ioId, vbAmount, NULL);
     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
@@ -120,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.09.14                                        * add inPartnerId
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  10.05.14                                        * add lpInsert_MovementItemProtocol
