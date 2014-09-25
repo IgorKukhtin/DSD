@@ -87,8 +87,8 @@ begin
 
   result := InsertUpdateJuridical(0, -1, 'ёр. лицо', false, 0);
 
-  InsertUpdateJuridicalHistory(result, Date, 0, 'ёр. лицо 12', '', '1212121212', '',
-          '', '', '', '');
+//  InsertUpdateJuridicalHistory(result, Date, 0, 'ёр. лицо 12', '', '1212121212', '',
+//          '', '', '', '');
   inherited;
 end;
 

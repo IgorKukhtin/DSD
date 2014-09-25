@@ -355,7 +355,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\LinkGoodsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\GoodsGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\GoodsGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>

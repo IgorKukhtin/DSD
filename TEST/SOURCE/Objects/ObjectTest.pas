@@ -149,7 +149,9 @@ begin
   with FdsdStoredProc do begin
     StoredProcName := FspInsertUpdate;
     OutputType := otResult;
+    Params.Clear;
     Params.Assign(dsdParams);
+    OldId := StrToInt(ParamByName('ioId').Value);
     Execute;
     Result := StrToInt(ParamByName('ioId').Value);
     FIdentity := Result;

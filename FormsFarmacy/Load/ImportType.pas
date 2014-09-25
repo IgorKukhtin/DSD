@@ -46,6 +46,7 @@ type
     clParamType: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     clNumber: TcxGridDBColumn;
+    clUserParamName: TcxGridDBColumn;
   private
     { Private declarations }
   public

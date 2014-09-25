@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW Object_ImportTypeItems_View AS
            , ObjectLink_ImportTypeItems_ImportType.ChildObjectId    AS ImportTypeId
 
            , ObjectString_ImportTypeItems_ParamType.ValueData  AS ParamType
+           , ObjectString_ImportTypeItems_UserParamName.ValueData  AS UserParamName
      
            , Object_ImportTypeItems.isErased           AS isErased
            
@@ -22,6 +23,10 @@ CREATE OR REPLACE VIEW Object_ImportTypeItems_View AS
            LEFT JOIN ObjectString AS ObjectString_ImportTypeItems_ParamType
                                 ON ObjectString_ImportTypeItems_ParamType.ObjectId = Object_ImportTypeItems.Id
                                AND ObjectString_ImportTypeItems_ParamType.DescId = zc_ObjectString_ImportTypeItems_ParamType()
+
+           LEFT JOIN ObjectString AS ObjectString_ImportTypeItems_UserParamName
+                                ON ObjectString_ImportTypeItems_UserParamName.ObjectId = Object_ImportTypeItems.Id
+                               AND ObjectString_ImportTypeItems_UserParamName.DescId = zc_ObjectString_ImportTypeItems_UserParamName()
 
        WHERE Object_ImportTypeItems.DescId = zc_Object_ImportTypeItems();
 

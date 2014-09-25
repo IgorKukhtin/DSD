@@ -96,6 +96,8 @@ begin
   ExecFile(StructurePath + 'Movement\MovementLinkObject.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementFloatDesc.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementFloat.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementBlobDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementBlob.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementBooleanDesc.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementBoolean.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementDateDesc.sql', ZQuery);
