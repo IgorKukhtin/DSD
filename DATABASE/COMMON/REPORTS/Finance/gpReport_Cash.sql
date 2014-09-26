@@ -14,9 +14,9 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar
              , AccountName TVarChar
              , UnitName TVarChar
              , MoneyPlaceName TVarChar
-             , StartAmount_A TFloat
+             , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , EndAmount_A TFloat
+             , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
 $BODY$
@@ -38,10 +38,15 @@ BEGIN
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Object_Unit.ValueData                                                                       AS UnitName,
         Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
-        Operation.StartAmount ::TFloat                                                              AS StartAmount_A,
+        Operation.StartAmount ::TFloat                                                              AS StartAmount,
+        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
+        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
         Operation.DebetSumm::TFloat                                                                 AS DebetSumm,
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
-        Operation.EndAmount ::TFloat                                                                AS EndAmount_A
+        Operation.EndAmount ::TFloat                                                                AS EndAmount,
+        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
+
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.CashId, Operation_all.InfoMoneyId,
