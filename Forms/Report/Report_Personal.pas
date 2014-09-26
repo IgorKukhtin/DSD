@@ -65,8 +65,8 @@ type
     deServiceDate: TcxDateEdit;
     colStartAmountD: TcxGridDBColumn;
     colStartAmountK: TcxGridDBColumn;
-    colEndAmount_D: TcxGridDBColumn;
-    colEndAmount_K: TcxGridDBColumn;
+    colEndAmountD: TcxGridDBColumn;
+    colEndAmountK: TcxGridDBColumn;
     colMoneySumm: TcxGridDBColumn;
     colServiceSumm: TcxGridDBColumn;
     clInfoMoneyName_all: TcxGridDBColumn;

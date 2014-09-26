@@ -71,12 +71,12 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
+              Column = colEndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+              Column = colEndAmountK
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -122,12 +122,12 @@ inherited Report_PersonalForm: TReport_PersonalForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_D
+              Column = colEndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_K
+              Column = colEndAmountK
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -354,9 +354,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object colEndAmount_D: TcxGridDBColumn
+          object colEndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'EndAmount_D'
+            DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'
@@ -366,9 +366,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object colEndAmount_K: TcxGridDBColumn
+          object colEndAmountK: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'EndAmount_K'
+            DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'

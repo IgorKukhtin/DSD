@@ -16,9 +16,10 @@ RETURNS TABLE (ContainerId Integer, MemberCode Integer, MemberName TVarChar
              , AccountName TVarChar
              , CarName TVarChar
              , BranchName TVarChar
-             , StartAmount_A TFloat
+             , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , EndAmount_A TFloat
+             , MoneySumm TFloat, PersonalReportSumm TFloat
+             , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
 $BODY$
@@ -40,10 +41,22 @@ BEGIN
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Object_Car.ValueData                                                                        AS CarName,
         Object_Branch.ValueData                                                                     AS BranchName,
-        Operation.StartAmount ::TFloat                                                              AS StartAmount_A,
+        Operation.StartAmount ::TFloat                                                              AS StartAmount,
+
+        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
+        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
+
+
         Operation.DebetSumm::TFloat                                                                 AS DebetSumm,
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
-        Operation.EndAmount ::TFloat                                                                AS EndAmount_A
+
+        Operation.MoneySumm::TFloat                                                                 AS MoneySumm,
+        Operation.PersonalReportSumm::TFloat                                                        AS PersonalReportSumm,
+
+        Operation.EndAmount ::TFloat                                                                AS EndAmount,
+        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
+
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.MemberId, Operation_all.InfoMoneyId,
@@ -51,13 +64,21 @@ BEGIN
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
+
+                     SUM (Operation_all.MoneySumm)   AS MoneySumm,
+                     SUM (Operation_all.PersonalReportSumm)  AS PersonalReportSumm,
+
                      SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.Id AS ContainerId, tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId,
-                     tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                                                   AS StartAmount,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)      AS DebetSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm,
-                     tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
+                     tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                                                    AS StartAmount,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)          AS DebetSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm,
+
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END)                 AS MoneySumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalReport()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)  AS PersonalReportSumm,
+
+                     tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                         AS EndAmount
             FROM (SELECT CLO_Member.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Member.ObjectId AS MemberId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
                   FROM ContainerLinkObject AS CLO_Member
                   INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -101,7 +122,7 @@ BEGIN
      LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
      LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
 
-     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
+     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.PersonalReportSumm <> 0);
 
 
 END;
@@ -112,6 +133,7 @@ ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer,
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.09.14                                                        *
  04.09.14                                                        *  + Branch
  03.09.14                                                        *
 

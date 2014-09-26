@@ -24,7 +24,7 @@ RETURNS TABLE (PersonalCode Integer, PersonalName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , MoneySumm TFloat, ServiceSumm TFloat
-             , EndAmoun TFloat, EndAmount_D TFloat, EndAmount_K TFloat
+             , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
 $BODY$
@@ -52,15 +52,15 @@ BEGIN
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Operation.ServiceDate                                                                       AS ServiceDate,
         (-1 * Operation.StartAmount) :: TFloat                                                      AS StartAmount,
-        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmount_D,
-        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmount_K,
+        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
+        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
         Operation.DebetSumm :: TFloat                                                               AS DebetSumm,
         Operation.KreditSumm :: TFloat                                                              AS KreditSumm,
         Operation.MoneySumm :: TFloat                                                               AS MoneySumm,
         Operation.ServiceSumm :: TFloat                                                             AS ServiceSumm,
         (- 1 * Operation.EndAmount) :: TFloat                                                       AS EndAmount,
-        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmount_D,
-        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmount_K
+        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
