@@ -12,19 +12,19 @@ inherited Report_MemberForm: TReport_MemberForm
     Height = 470
     TabOrder = 3
     ExplicitTop = 85
-    ExplicitWidth = 1020
+    ExplicitWidth = 1050
     ExplicitHeight = 470
     ClientRectBottom = 466
     ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
-      ExplicitWidth = 1014
+      ExplicitWidth = 1044
       ExplicitHeight = 464
       inherited cxGrid: TcxGrid
         Width = 1044
         Height = 464
-        ExplicitWidth = 1014
+        ExplicitWidth = 1044
         ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -208,6 +208,7 @@ inherited Report_MemberForm: TReport_MemberForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -343,7 +344,7 @@ inherited Report_MemberForm: TReport_MemberForm
   inherited Panel: TPanel
     Width = 1050
     Height = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 1050
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118

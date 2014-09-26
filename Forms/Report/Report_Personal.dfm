@@ -2,28 +2,30 @@ inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
   ClientWidth = 1050
-  ExplicitWidth = 1066
-  ExplicitHeight = 590
+  ExplicitWidth = 1058
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
+    Top = 85
     Width = 1050
-    Height = 472
+    Height = 470
     TabOrder = 3
-    ExplicitTop = 117
+    ExplicitTop = 85
     ExplicitWidth = 1050
-    ExplicitHeight = 438
-    ClientRectBottom = 472
-    ClientRectRight = 1050
+    ExplicitHeight = 470
+    ClientRectBottom = 466
+    ClientRectRight = 1046
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
-      ExplicitHeight = 438
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1044
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1050
-        Height = 472
-        ExplicitWidth = 1050
-        ExplicitHeight = 438
+        Width = 1044
+        Height = 464
+        ExplicitWidth = 1044
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -130,6 +132,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -1765,7 +1768,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
