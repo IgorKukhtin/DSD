@@ -499,7 +499,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 55
           end
           object colStartAmountD: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -513,7 +513,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 55
           end
           object colStartAmountK: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -719,7 +719,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 55
           end
           object colEndAmount_D: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'EndAmount_D'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -733,7 +733,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 55
           end
           object colEndAmount_K: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmount_K'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

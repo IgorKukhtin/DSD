@@ -450,7 +450,7 @@ BEGIN
     WHERE (View_ProfitLoss_inf.ProfitLossGroupId = inProfitLossGroupId OR 0 = inProfitLossGroupId)
       AND (View_ProfitLoss_inf.ProfitLossDirectionId = inProfitLossDirectionId OR 0 = inProfitLossDirectionId)
       AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
-      AND View_InfoMoney.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
+      AND COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
     ;
 
 END;

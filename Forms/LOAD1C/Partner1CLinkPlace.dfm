@@ -36,6 +36,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -69,6 +70,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object clJuridicalName: TcxGridDBColumn
@@ -90,6 +92,7 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
         DataBinding.FieldName = 'ItemName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clIsErased: TcxGridDBColumn
@@ -505,7 +508,6 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     Top = 216
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -551,7 +553,6 @@ object Partner1CLinkPlaceForm: TPartner1CLinkPlaceForm
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Partner'
     DataSets = <>
     OutputType = otResult
     Params = <

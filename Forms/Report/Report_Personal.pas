@@ -21,8 +21,8 @@ type
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
-    colStartAmount_A: TcxGridDBColumn;
-    colEndAmount_A: TcxGridDBColumn;
+    colStartAmount: TcxGridDBColumn;
+    colEndAmount: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
@@ -60,11 +60,21 @@ type
     cxLabel7: TcxLabel;
     BranchGuides: TdsdGuides;
     BranchName: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
     ServiceDate: TcxGridDBColumn;
-    cxLabel8: TcxLabel;
-    inServDate: TcxCheckBox;
+    cbServiceDate: TcxCheckBox;
     deServiceDate: TcxDateEdit;
+    colStartAmountD: TcxGridDBColumn;
+    colStartAmountK: TcxGridDBColumn;
+    colEndAmount_D: TcxGridDBColumn;
+    colEndAmount_K: TcxGridDBColumn;
+    colMoneySumm: TcxGridDBColumn;
+    colServiceSumm: TcxGridDBColumn;
+    clInfoMoneyName_all: TcxGridDBColumn;
+    PersonalCode: TcxGridDBColumn;
+    UnitCode: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PositionCode: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

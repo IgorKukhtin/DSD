@@ -45,7 +45,12 @@ BEGIN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
      -- проверка
-     IF inPaidKindId = zc_Enum_PaidKind_SecondForm()
+     IF (COALESCE (inJuridicalId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <Юридическое лицо>.';
+     END IF;
+     -- проверка
+     IF inPaidKindId = zc_Enum_PaidKind_SecondForm() AND (COALESCE (inPartnerId, 0) = 0)
         AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
      THEN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);

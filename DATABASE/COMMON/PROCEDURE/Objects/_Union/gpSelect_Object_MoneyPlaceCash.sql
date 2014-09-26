@@ -42,6 +42,28 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
+     SELECT Object_BankAccount_View.Id
+          , Object_BankAccount_View.Code     
+          , (Object_BankAccount_View.Name || ' * '|| Object_BankAccount_View.BankName) ::TVarChar AS Name
+          , ObjectDesc.ItemName
+          , Object_BankAccount_View.isErased
+          , NULL::Integer AS InfoMoneyId
+          , NULL::Integer AS InfoMoneyCode
+          , ''::TVarChar AS InfoMoneyGroupName
+          , ''::TVarChar AS InfoMoneyDestinationName
+          , ''::TVarChar AS InfoMoneyName
+          , ''::TVarChar AS InfoMoneyName_all
+          , NULL::Integer
+          , ''::TVarChar
+          , NULL::Integer AS ContractStateKindCode
+          , NULL::TDateTime AS StartDate
+          , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
+          , ''::TVarChar AS ContractKindName
+     FROM Object_BankAccount_View
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
+     WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
+    UNION ALL
      SELECT Object_Member.Id
           , Object_Member.ObjectCode     
           , Object_Member.ValueData

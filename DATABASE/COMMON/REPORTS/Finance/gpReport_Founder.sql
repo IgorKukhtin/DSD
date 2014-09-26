@@ -54,8 +54,8 @@ BEGIN
             FROM (SELECT CLO_Founder.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Founder.ObjectId AS FounderId, CLO_InfoMoney.ObjectId AS InfoMoneyId
                   FROM ContainerLinkObject AS CLO_Founder
                   INNER JOIN Container ON Container.Id = CLO_Founder.ContainerId AND Container.DescId = zc_Container_Summ()
-                  INNER JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                 ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                  LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                   WHERE CLO_Founder.DescId = zc_ContainerLinkObject_Founder()
                     AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
