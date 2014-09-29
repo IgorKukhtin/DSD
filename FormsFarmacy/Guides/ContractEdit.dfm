@@ -15,29 +15,31 @@ inherited ContractEditForm: TContractEditForm
     ExplicitTop = 176
   end
   object cxLabel2: TcxLabel [2]
-    Left = 10
-    Top = 8
+    Left = 8
+    Top = 142
     Caption = #1050#1086#1076
+    Visible = False
   end
   object edCode: TcxCurrencyEdit [3]
-    Left = 10
-    Top = 26
+    Left = 8
+    Top = 160
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 2
+    Visible = False
     Width = 95
   end
   object cxLabel1: TcxLabel [4]
-    Left = 111
-    Top = 5
+    Left = 8
+    Top = 11
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object edName: TcxTextEdit [5]
-    Left = 111
-    Top = 26
+    Left = 8
+    Top = 32
     TabOrder = 3
-    Width = 232
+    Width = 335
   end
   object cxLabel4: TcxLabel [6]
     Left = 8
@@ -80,7 +82,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 167
+    Width = 165
   end
   object cxLabel6: TcxLabel [12]
     Left = 10

@@ -126,7 +126,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_LinkGoods_Load';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_LinkGoodsRetail_Load';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inGoodsMainCode', ftString, ptInput, '');

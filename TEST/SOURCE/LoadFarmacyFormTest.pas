@@ -273,10 +273,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
 
-
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
+
+{ TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
@@ -287,8 +290,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));

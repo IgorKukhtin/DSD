@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ParamName TVarChar,
                ParamType TVarChar,
                ParamNumber Integer,
+               UserParamName TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +31,7 @@ BEGIN
        Object_ImportTypeItems_View.Name,
        Object_ImportTypeItems_View.ParamType,
        Object_ImportTypeItems_View.ParamNumber,
+       Object_ImportTypeItems_View.UserParamName,
        Object_ImportSettingsItems_View.isErased
 
 FROM Object_ImportSettings_View

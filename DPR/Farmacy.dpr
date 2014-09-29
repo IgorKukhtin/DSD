@@ -2,6 +2,7 @@ program Farmacy;
 
 uses
   Vcl.Forms,
+  Controls,
   SysUtils,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
@@ -51,7 +52,8 @@ uses
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
-  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -62,11 +64,14 @@ begin
 //  Application.MainFormOnTaskbar := True;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 
-  TUpdater.AutomaticUpdateProgram;
-
-  Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+  with TLoginForm.Create(Application) do
+  //Если все хорошо создаем главную форму Application.CreateForm();
+  if ShowModal = mrOk then
+  begin
+     TUpdater.AutomaticUpdateProgram;
+     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TdmMain, dmMain);
+  end;
   Application.Run;
 end.

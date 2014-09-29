@@ -14,7 +14,6 @@ uses
 
 type
   TContractForm = class(TAncestorGuidesForm)
-    clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     clJuridicalBasisName: TcxGridDBColumn;

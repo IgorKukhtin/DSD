@@ -91,6 +91,8 @@ type
     bbPriceGroupSettings: TdxBarButton;
     actJuridicalSettings: TdsdOpenForm;
     bbJuridicalSettings: TdxBarButton;
+    actProtocolUser: TdsdOpenForm;
+    bbUserProtocol: TdxBarButton;
   private
     { Private declarations }
   public

@@ -25,7 +25,7 @@ BEGIN
          , Object_AdditionalGoods_View.GoodsId
          , Object_AdditionalGoods_View.GoodsName
          
-     FROM Object_LinkGoods_View AS Object_AdditionalGoods_View
+     FROM Object_LinkGoodsRetail_View AS Object_AdditionalGoods_View
            
      WHERE Object_AdditionalGoods_View.ObjectId = vbObjectId;
   
