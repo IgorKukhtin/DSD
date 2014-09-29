@@ -1,4 +1,5 @@
-DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+-- Function: gpReport_Member
+
 DROP FUNCTION IF EXISTS gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Member(
@@ -12,13 +13,13 @@ CREATE OR REPLACE FUNCTION gpReport_Member(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, MemberCode Integer, MemberName TVarChar
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
              , CarName TVarChar
              , BranchName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , MoneySumm TFloat, PersonalReportSumm TFloat
+             , MoneySumm TFloat, ReportSumm TFloat, AccountSumm TFloat, SendSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
@@ -38,6 +39,7 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
+        Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Object_Car.ValueData                                                                        AS CarName,
         Object_Branch.ValueData                                                                     AS BranchName,
@@ -51,7 +53,9 @@ BEGIN
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
 
         Operation.MoneySumm::TFloat                                                                 AS MoneySumm,
-        Operation.PersonalReportSumm::TFloat                                                        AS PersonalReportSumm,
+        Operation.ReportSumm::TFloat                                                                AS ReportSumm,
+        Operation.AccountSumm::TFloat                                                               AS AccountSumm,
+        Operation.SendSumm::TFloat                                                                  AS SendSumm,
 
         Operation.EndAmount ::TFloat                                                                AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
@@ -66,7 +70,9 @@ BEGIN
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
 
                      SUM (Operation_all.MoneySumm)   AS MoneySumm,
-                     SUM (Operation_all.PersonalReportSumm)  AS PersonalReportSumm,
+                     SUM (Operation_all.ReportSumm)  AS ReportSumm,
+                     SUM (Operation_all.AccountSumm) AS AccountSumm,
+                     SUM (Operation_all.SendSumm)    AS SendSumm,
 
                      SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
@@ -76,18 +82,18 @@ BEGIN
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm,
 
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END)                 AS MoneySumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalReport()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)  AS PersonalReportSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN (Movement.DescId = zc_Movement_PersonalReport()) OR (Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NOT NULL) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)  AS ReportSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalAccount(), zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)  AS AccountSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_PersonalSendCash() AND MIReport.MovementItemId IS NULL THEN MIContainer.Amount ELSE 0 END ELSE 0 END)  AS SendSumm,
 
                      tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                         AS EndAmount
             FROM (SELECT CLO_Member.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Member.ObjectId AS MemberId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_Branch.ObjectId AS BranchId
                   FROM ContainerLinkObject AS CLO_Member
                   INNER JOIN Container ON Container.Id = CLO_Member.ContainerId AND Container.DescId = zc_Container_Summ()
-                  INNER JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                 ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-
+                  LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                   LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                 ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-
                   LEFT JOIN ContainerLinkObject AS CLO_Goods
                                                 ON CLO_Goods.ContainerId = Container.Id AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
 
@@ -101,8 +107,18 @@ BEGIN
                     AND (CLO_Goods.ObjectId IS  NULL)
                   ) AS tmpContainer
             LEFT JOIN MovementItemContainer AS MIContainer
-                                            ON MIContainer.Containerid = tmpContainer.Id
+                                            ON MIContainer.ContainerId = tmpContainer.Id
                                            AND MIContainer.OperDate >= inStartDate
+            LEFT JOIN MovementItemReport AS MIReport ON MIReport.MovementItemId = MIContainer.MovementItemId
+                                                    AND ((MIReport.ActiveContainerId = MIContainer.ContainerId
+                                                      AND MIReport.PassiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                      AND MIContainer.Amount > 0
+                                                         )
+                                                      OR (MIReport.PassiveContainerId = MIContainer.ContainerId
+                                                      AND MIReport.ActiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                      AND MIContainer.Amount < 0
+                                                        ))
+
             LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
             GROUP BY tmpContainer.Id , tmpContainer.ObjectId, tmpContainer.MemberId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.Amount
 
@@ -115,15 +131,13 @@ BEGIN
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.MemberId, Operation_all.InfoMoneyId, CLO_Car.ObjectId, Operation_all.BranchId
          ) AS Operation
 
-
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
      LEFT JOIN Object AS Object_Member ON Object_Member.Id = Operation.MemberId
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Car ON Object_Car.Id = Operation.CarId
      LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
 
-     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.PersonalReportSumm <> 0);
-
+     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
 
 END;
 $BODY$
@@ -133,10 +147,10 @@ ALTER FUNCTION gpReport_Member (TDateTime, TDateTime, Integer, Integer, Integer,
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.14                                        *
  26.09.14                                                        *
  04.09.14                                                        *  + Branch
  03.09.14                                                        *
-
 */
 
 -- тест

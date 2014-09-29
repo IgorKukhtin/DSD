@@ -1,24 +1,24 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 649
-  ClientWidth = 1151
-  ExplicitWidth = 1167
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1151
+    Width = 1020
     Height = 592
     TabOrder = 3
     ExplicitWidth = 1151
     ExplicitHeight = 592
     ClientRectBottom = 592
-    ClientRectRight = 1151
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1151
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
-        Width = 1151
+        Width = 1020
         Height = 592
         ExplicitWidth = 1151
         ExplicitHeight = 592
@@ -159,6 +159,15 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 112
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object clContractInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
@@ -205,7 +214,7 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1151
+    Width = 1020
     ExplicitWidth = 1151
   end
   inherited ActionList: TActionList

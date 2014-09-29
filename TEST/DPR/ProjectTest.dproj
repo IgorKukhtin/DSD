@@ -1185,8 +1185,8 @@
 				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
-				<Form>BankAccountForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount_Object.pas">
+				<Form>BankAccount_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
@@ -1615,6 +1615,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
 				<Form>PeriodCloseForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

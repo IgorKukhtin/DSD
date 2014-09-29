@@ -467,6 +467,7 @@ BEGIN
              , CASE WHEN tmpResult.OperSumm >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM tmpResult
+        WHERE tmpResult.OperSumm <> 0
        UNION ALL
         SELECT zc_Movement_LossDebt() AS MovementDescId
              , tmpResult.OperDate
@@ -512,6 +513,7 @@ BEGIN
              , CASE WHEN tmpResult.OperSumm >= 0 THEN FALSE ELSE TRUE END AS IsActive
              , FALSE AS IsMaster
         FROM tmpResult
+        WHERE tmpResult.OperSumm <> 0
        ;
 
      -- проверка

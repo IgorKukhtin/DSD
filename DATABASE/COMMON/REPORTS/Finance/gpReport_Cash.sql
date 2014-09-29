@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, TVarChar);
+-- Function: gpReport_Cash
+
 DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Cash(
@@ -10,10 +10,12 @@ CREATE OR REPLACE FUNCTION gpReport_Cash(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , BranchName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
              , UnitName TVarChar
              , MoneyPlaceName TVarChar
+             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
@@ -31,13 +33,18 @@ BEGIN
         Operation.ContainerId,
         Object_Cash.ObjectCode                                                                      AS CashCode,
         Object_Cash.ValueData                                                                       AS CashName,
+        Object_Branch.ValueData                                                                     AS BranchName,
         Object_InfoMoney_View.InfoMoneyGroupName                                                    AS InfoMoneyGroupName,
         Object_InfoMoney_View.InfoMoneyDestinationName                                              AS InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
+        Object_InfoMoney_View.InfoMoneyName_all                                                     AS InfoMoneyName_all,
         Object_Account_View.AccountName_all                                                         AS AccountName,
         Object_Unit.ValueData                                                                       AS UnitName,
         Object_MoneyPlace.ValueData                                                                 AS MoneyPlaceName,
+        Object_Contract_InvNumber_View.ContractCode                                                 AS ContractCode,
+        Object_Contract_InvNumber_View.InvNumber                                                    AS ContractInvNumber,
+        Object_Contract_InvNumber_View.ContractTagName                                              AS ContractTagName,
         Operation.StartAmount ::TFloat                                                              AS StartAmount,
         CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
         CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
@@ -49,8 +56,8 @@ BEGIN
 
 
      FROM
-         (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.CashId, Operation_all.InfoMoneyId,
-                 Operation_all.UnitId, Operation_all.MoneyPlaceId,
+         (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId,
+                 Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId,
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
@@ -63,6 +70,7 @@ BEGIN
                   0                         AS InfoMoneyId,
                   0                         AS UnitId,
                   0                         AS MoneyPlaceId,
+                  0                         AS ContractId,
                   Container.Amount - COALESCE(SUM (MIContainer.Amount), 0)                                                             AS StartAmount,
                   0                         AS DebetSumm,
                   0                         AS KreditSumm,
@@ -87,6 +95,7 @@ BEGIN
                   MILO_InfoMoney.ObjectId           AS InfoMoneyId,
                   MILO_Unit.ObjectId                AS UnitId,
                   MILO_MoneyPlace.ObjectId          AS MoneyPlaceId,
+                  MILO_Contract.ObjectId            AS ContractId,
                   0                                 AS StartAmount,
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END)         AS DebetSumm,
                   SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)    AS KreditSumm,
@@ -101,6 +110,9 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
                                                    ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
                                                   AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                  LEFT JOIN MovementItemLinkObject AS MILO_Contract
+                                                   ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
+                                                  AND MILO_Contract.DescId = zc_MILinkObject_Contract()
                   LEFT JOIN MovementItemLinkObject AS MILO_Unit
                                                    ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
                                                   AND MILO_Unit.DescId = zc_MILinkObject_Unit()
@@ -113,13 +125,13 @@ BEGIN
              AND (Container.ObjectId = inAccountId OR inAccountId = 0)
              AND (CLO_Cash.ObjectId = inCashId OR inCashId = 0)
            GROUP BY CLO_Cash.ContainerId , Container.ObjectId, CLO_Cash.ObjectId, MILO_InfoMoney.ObjectId,
-                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId
+                    MILO_Unit.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
 
            ) AS Operation_all
 
 
 
-          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId
+          GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId
          ) AS Operation
 
 
@@ -128,6 +140,13 @@ BEGIN
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Operation.UnitId
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
+
+     LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
+                          ON ObjectLink_Cash_Branch.ObjectId = Operation.CashId
+                         AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+     LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Cash_Branch.ChildObjectId
+
+     LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = Operation.ContractId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
 
@@ -140,8 +159,8 @@ ALTER FUNCTION gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.14                                        *
  09.09.14                                                        *
-
 */
 
 -- тест

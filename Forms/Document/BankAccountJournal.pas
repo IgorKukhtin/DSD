@@ -20,7 +20,7 @@ type
     colBankName: TcxGridDBColumn;
     colBankAccount: TcxGridDBColumn;
     colJuridical: TcxGridDBColumn;
-    colInfoMoney: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
     colUnit: TcxGridDBColumn;
     colContract: TcxGridDBColumn;
     colDebet: TcxGridDBColumn;
@@ -42,6 +42,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    colInfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

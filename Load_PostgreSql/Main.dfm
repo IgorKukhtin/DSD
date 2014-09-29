@@ -304,6 +304,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '6.1. '#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      Enabled = False
       TabOrder = 16
     end
     object cbGoodsPropertyValue: TCheckBox

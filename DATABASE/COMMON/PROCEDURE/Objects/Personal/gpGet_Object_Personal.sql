@@ -1,6 +1,5 @@
 -- Function: gpGet_Object_Personal(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Personal(

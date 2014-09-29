@@ -44,7 +44,6 @@ type
     TransferDebtJournal: TdsdOpenForm;
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
-    ContainerId: TcxGridDBColumn;
     MoneyPlaceName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;

@@ -148,6 +148,8 @@ procedure TLoadFormTest.LoadBankAccountFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
 end;

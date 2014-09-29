@@ -254,7 +254,8 @@ BEGIN
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
 
-           WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.SaleSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.ServiceSumm <> 0 OR Operation.OtherSumm <> 0);
+           WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0
+               OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
 

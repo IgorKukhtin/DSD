@@ -52,12 +52,13 @@ BEGIN
                             , CASE WHEN OKPO <> '' THEN (zfConvert_ViewWorkHourToHour (OKPO) :: BIGINT) :: TVarChar ELSE OKPO END AS OKPO_calc
                        FROM
                       (SELECT Sale1C.ClientCode, MAX (TRIM (Sale1C.ClientName)) AS ClientName
-                            , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) ELSE TRIM (Sale1C.ClientINN) END) AS OKPO
+                            , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) <> '' THEN TRIM (Sale1C.ClientOKPO) WHEN TRIM (Sale1C.ClientOKPO) = '' AND TRIM (Sale1C.ClientINN) = '' THEN '01*01' ELSE TRIM (Sale1C.ClientINN) END) AS OKPO
                        FROM Sale1C
                        WHERE zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (Sale1C.UnitId), zc_Enum_PaidKind_SecondForm()) = inBranchTopId
                          AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
                          AND Sale1C.ClientCode <> 0
-                         AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
+                         -- !!!потом вернуть!!!
+                         -- AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
                          -- AND LENGTH (TRIM (Sale1C.ClientOKPO)) > 5
                        GROUP BY Sale1C.ClientCode
                       ) AS tmp
@@ -246,7 +247,7 @@ BEGIN
                             , INN
                        FROM
                       (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                            , MAX (TRIM (Sale1C.ClientOKPO)) AS OKPO
+                            , MAX (CASE WHEN TRIM (Sale1C.ClientOKPO) = '' THEN '01*01' ELSE TRIM (Sale1C.ClientOKPO) END) AS OKPO
                             , MAX (TRIM (Sale1C.ClientINN))  AS INN
                        FROM _tmp
                             INNER JOIN Object AS Object_Partner1CLink ON Object_Partner1CLink.Id = _tmp.Id

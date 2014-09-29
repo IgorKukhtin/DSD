@@ -9,20 +9,13 @@ inherited CashJournalForm: TCashJournalForm
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 982
-    ExplicitHeight = 272
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 982
-      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 982
-        Height = 272
         ExplicitWidth = 982
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -183,12 +176,29 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object clContractInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clUnitName: TcxGridDBColumn

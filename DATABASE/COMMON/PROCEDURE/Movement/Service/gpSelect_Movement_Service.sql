@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , ContractInvNumber TVarChar, ContractTagName TVarChar
+             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
              )
@@ -68,6 +68,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyName_all
+           , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData            AS UnitName

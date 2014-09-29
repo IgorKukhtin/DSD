@@ -181,7 +181,11 @@ BEGIN
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- Финансовая деятельность + проценты по кредитам
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Финансовая деятельность + Лиол
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() -- Финансовая деятельность + Финансовая помощь
                                                            THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                           THEN zc_Enum_ProfitLossDirection_70400() -- Дополнительная прибыль + Списание кредиторской задолженности
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
                                                            THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
