@@ -106,6 +106,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbUserProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbAbout'
         end
         item
@@ -370,6 +374,10 @@ inherited MainForm: TMainForm
       Action = actJuridicalSettings
       Category = 0
     end
+    object bbUserProtocol: TdxBarButton
+      Action = actProtocolUser
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     Left = 240
@@ -455,6 +463,17 @@ inherited MainForm: TMainForm
       Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
       FormName = 'TImportTypeForm'
       FormNameParam.Value = 'TImportTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocolUser: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TUserProtocolForm'
+      FormNameParam.Value = 'TUserProtocolForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

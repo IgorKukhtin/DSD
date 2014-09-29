@@ -72,13 +72,7 @@ type
     ContractDockControl: TdxBarDockControl;
     ContractGrid: TcxGrid;
     ContractGridDBTableView: TcxGridDBTableView;
-    clContractStateKindCode: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clContractTagName: TcxGridDBColumn;
-    clContractKindName: TcxGridDBColumn;
-    clIsStandart: TcxGridDBColumn;
-    clIsDefault: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     ContractGridLevel: TcxGridLevel;
@@ -86,6 +80,7 @@ type
     JuridicalDetailsGridDBTableView: TcxGridDBTableView;
     colJDData: TcxGridDBColumn;
     JuridicalDetailsGridLevel: TcxGridLevel;
+    colDeferment: TcxGridDBColumn;
   private
     { Private declarations }
   public

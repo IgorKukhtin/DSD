@@ -64,6 +64,7 @@ type
     bbLoadAllPrice: TdxBarButton;
     colDefaultValue: TcxGridDBColumn;
     clQuery: TcxGridDBColumn;
+    colUserParamName: TcxGridDBColumn;
   private
     { Private declarations }
   public

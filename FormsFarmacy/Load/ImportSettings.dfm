@@ -1,19 +1,21 @@
 inherited ImportSettingsForm: TImportSettingsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
-  ClientWidth = 1138
-  ExplicitLeft = -340
-  ExplicitWidth = 1146
+  ClientWidth = 1184
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitLeft = -364
+  ExplicitWidth = 1192
   ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1138
+    Width = 1184
     Height = 313
     ExplicitWidth = 1138
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 1138
+    ClientRectRight = 1184
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1138
       ExplicitHeight = 313
@@ -141,11 +143,12 @@ inherited ImportSettingsForm: TImportSettingsForm
       object cxGrid1: TcxGrid
         Left = 700
         Top = 0
-        Width = 438
+        Width = 484
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 438
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -172,36 +175,47 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'ParamNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 38
+            SortIndex = 0
+            SortOrder = soAscending
+            Width = 47
           end
           object clParamName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'ParamName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
           end
+          object colUserParamName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'UserParamName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 129
+          end
           object colParamValue: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
+            Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1076#1072#1085#1085#1099#1093
             DataBinding.FieldName = 'ParamValue'
             PropertiesClassName = 'TcxComboBoxProperties'
             Properties.Items.Strings = (
-              '%JURIDICAL%'
+              '%OBJECT%'
               '%CONTRACT%')
             HeaderAlignmentVert = vaCenter
-            Width = 127
+            Width = 113
           end
           object colDefaultValue: TcxGridDBColumn
             Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
             DataBinding.FieldName = 'DefaultValue'
-            Width = 65
+            HeaderAlignmentVert = vaCenter
+            Width = 95
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 53
+            Width = 48
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -536,18 +550,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteImportSettings'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLoadAllPrice'
         end>
     end
     object bbSetErased: TdxBarButton

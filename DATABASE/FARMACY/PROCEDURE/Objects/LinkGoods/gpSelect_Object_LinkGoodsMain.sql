@@ -23,13 +23,13 @@ BEGIN
 
            Object_LinkGoods_View.Id               
          , Object_LinkGoods_View.GoodsMainId
-         , Object_LinkGoods_View.GoodsCodeInt
+         , Object_LinkGoods_View.GoodsMainCode
          , Object_LinkGoods_View.GoodsMainName
          , Object_LinkGoods_View.GoodsId
          
-     FROM Object_LinkGoods_View 
+     FROM Object_Goods_Main_View 
            
-    WHERE Object_LinkGoods_View.ObjectId = inObjectId AND Object_LinkGoods_View.ObjectMainId IS NULL;
+    WHERE Object_LinkGoods_View.ObjectId = inObjectId;
   
 END;
 $BODY$

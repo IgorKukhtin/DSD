@@ -14,9 +14,8 @@ DECLARE vbGoodsMainId Integer;
 BEGIN
 
    SELECT Id INTO vbGoodsMainId
-     FROM Object_Goods_View
-    WHERE Object_Goods_View.GoodsCodeInt = inMainCode
-      AND Object_Goods_View.ObjectId IS Null;
+     FROM Object_Goods_Main_View
+    WHERE Object_Goods_Main_View.GoodsCode = inMainCode;
 
       SELECT JuridicalId INTO vbJuridicalId
         FROM ObjectHistory_JuridicalDetails_View

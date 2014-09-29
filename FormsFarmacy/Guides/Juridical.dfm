@@ -30,19 +30,19 @@ inherited JuridicalForm: TJuridicalForm
             Width = 221
           end
           object clisCorporate: TcxGridDBColumn
-            Caption = #1043#1083'.'#1102#1088'.'#1083#1080#1094#1086
+            Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'isCorporate'
-            Width = 75
+            Width = 98
           end
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
-            Width = 150
+            Width = 133
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            Width = 57
+            Width = 51
           end
         end
       end

@@ -93,7 +93,6 @@ uses
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
-  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
   Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
@@ -162,7 +161,11 @@ uses
   PriceGroupSettingsTest in '..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas',
   PriceGroupSettingsUnit in '..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas' {PriceGroupSettingsForm: TParentForm},
   JuridicalSettingsTest in '..\SOURCE\Objects\All\JuridicalSettingsTest.pas',
-  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm};
+  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
+  CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
+  UserProtocol in '..\..\Forms\System\UserProtocol.pas' {UserProtocolForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

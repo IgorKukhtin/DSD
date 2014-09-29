@@ -74,13 +74,13 @@ begin
      Application.CreateForm(TdmMain, dmMain);
   end
   else
-
-  with TLoginForm.Create(Application) do
-    //≈сли все хорошо создаем главную форму Application.CreateForm();
-    if ShowModal = mrOk then begin
-       TUpdater.AutomaticUpdateProgram;
-       Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
-  end;
+    with TLoginForm.Create(Application) do
+      //≈сли все хорошо создаем главную форму Application.CreateForm();
+      if ShowModal = mrOk then
+      begin
+         TUpdater.AutomaticUpdateProgram;
+         Application.CreateForm(TMainForm, MainFormInstance);
+         Application.CreateForm(TdmMain, dmMain);
+      end;
   Application.Run;
 end.

@@ -357,7 +357,7 @@ var i: integer;
 begin
   with AImportSettings do begin
     for i := 0 to Count - 1 do begin
-        if TImportSettingsItems(Items[i]).ItemName = '%JURIDICAL%' then
+        if TImportSettingsItems(Items[i]).ItemName = '%OBJECT%' then
            StoredProc.Params.Items[i].Value := AImportSettings.JuridicalId
         else
            if TImportSettingsItems(Items[i]).ItemName = '%CONTRACT%' then

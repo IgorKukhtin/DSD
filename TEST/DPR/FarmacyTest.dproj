@@ -270,7 +270,6 @@
 				<Form>JuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
@@ -463,6 +462,16 @@
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
 				<Form>JuridicalSettingsForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\Forms\Action.pas">
+				<Form>ActionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\UserProtocol.pas">
+				<Form>UserProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
