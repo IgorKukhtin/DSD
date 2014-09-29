@@ -21,6 +21,7 @@ $BODY$
 
     DECLARE vbMovementId_Sale Integer;
     DECLARE vbMovementId_Tax Integer;
+    DECLARE vbStatusId_Tax Integer;
     DECLARE vbDocumentTaxKindId Integer;
 
     DECLARE vbPriceWithVAT Boolean;
@@ -32,12 +33,13 @@ BEGIN
 
      -- определяется <Налоговый документ> и его параметры 
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
+          , Movement_Tax.StatusId                    AS StatusId_Tax
           , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbMovementId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
+            INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -48,6 +50,7 @@ BEGIN
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
            WHERE Movement.Id = inMovementId
           ) AS tmpMovement
+          LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = tmpMovement.MovementId_Tax
           LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                        ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
@@ -68,6 +71,26 @@ BEGIN
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                               -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
      ;
+
+     -- очень важная проверка
+     IF COALESCE (vbMovementId_Tax, 0) = 0 OR COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete()
+     THEN
+         IF COALESCE (vbMovementId_Tax, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> не создан.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
+         END IF;
+         IF vbStatusId_Tax = zc_Enum_Status_Erased()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax()), (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementString_InvNumberPartner()), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId_Tax);
+         END IF;
+         IF vbStatusId_Tax = zc_Enum_Status_UnComplete()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax()), (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementString_InvNumberPartner()), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId_Tax);
+         END IF;
+         -- это уже странная ошибка
+         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
+     END IF;
+
 
      -- определяется <Продажа покупателю> или <Перевод долга (расход)>
      SELECT COALESCE(CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut())
