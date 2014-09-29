@@ -14634,6 +14634,9 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.Id_Postgres>0'
+           +'  and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF()'
+           +'                   ,zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
+           +'  and Bill.MoneyKindId = zc_mkBN()'
 //           +'  and BillItems.GoodsPropertyId<>1041' //йнбаюямI бхпнах
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
