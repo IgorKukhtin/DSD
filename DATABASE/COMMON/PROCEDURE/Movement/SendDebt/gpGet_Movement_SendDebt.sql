@@ -11,18 +11,18 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
  
-             , InfoMoneyGroupFromName TVarChar
-             , InfoMoneyFromId Integer, InfoMoneyFromCode Integer, InfoMoneyFromName TVarChar
+             , InfoMoneyFromId Integer, InfoMoneyFromName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar
-             , JuridicalFromId Integer, JuridicalFromCode Integer, JuridicalFromName TVarChar
-             , FromOKPO TVarChar
+             , JuridicalFromId Integer, JuridicalFromName TVarChar
+             , PartnerFromId Integer, PartnerFromName TVarChar
+
              , PaidKindFromId Integer, PaidKindFromName TVarChar
 
-             , InfoMoneyGroupToName TVarChar
-             , InfoMoneyToId Integer, InfoMoneyToCode Integer, InfoMoneyToName TVarChar
+             , InfoMoneyToId Integer, InfoMoneyToName TVarChar
              , ContractToId Integer, ContractToName TVarChar
-             , JuridicalToId Integer, JuridicalToCode Integer, JuridicalToName TVarChar
-             , ToOKPO TVarChar
+             , JuridicalToId Integer, JuridicalToName TVarChar
+             , PartnerToId Integer, PartnerToName TVarChar
+
              , PaidKindToId Integer, PaidKindToName TVarChar
              
              , Amount TFloat
@@ -48,34 +48,32 @@ BEGIN
             , 0             AS StatusCode
             , ''::TVarChar  AS StatusName
 
-            , ''::TVarChar AS InfoMoneyGroupFromName
             , 0            AS InfoMoneyFromId
-            , 0            AS InfoMoneyFromCode
             , ''::TVarChar AS InfoMoneyFromName
 
             , 0            AS ContractFromId
             , ''::TVarChar AS ContractFromName
 
             , 0            AS JuridicalFromId
-            , 0            AS JuridicalFromCode
             , ''::TVarChar AS JuridicalFromName
-            , ''::TVarChar AS FromOKPO
+            , 0                                AS PartnerFromId
+            , CAST ('' as TVarChar)            AS PartnerFromName
+
             , 0            AS PaidKindFromId
             , ''::TVarChar AS PaidKindFromName
 
 
-            , ''::TVarChar AS InfoMoneyGroupToName
             , 0            AS InfoMoneyToId
-            , 0            AS InfoMoneyToCode
             , ''::TVarChar AS InfoMoneyToName
 
             , 0            AS ContractToId
             , ''::TVarChar AS ContractToName
 
             , 0            AS JuridicalToId
-            , 0            AS JuridicalToCode
             , ''::TVarChar AS JuridicalToName
-            , ''::TVarChar AS ToOKPO
+            , 0                                AS PartnerToId
+            , CAST ('' as TVarChar)            AS PartnerToName
+
             , 0            AS PaidKindToId
             , ''::TVarChar AS PaidKindToName
 
@@ -98,34 +96,32 @@ BEGIN
             , Object_Status.ObjectCode   AS StatusCode
             , Object_Status.ValueData    AS StatusName
 
-            , View_InfoMoney_From.InfoMoneyGroupName       AS InfoMoneyGroupFromName
             , View_InfoMoney_From.InfoMoneyId              AS InfoMoneyFromId
-            , View_InfoMoney_From.InfoMoneyCode            AS InfoMoneyFromCode
-            , View_InfoMoney_From.InfoMoneyName            AS InfoMoneyFromName
+            , View_InfoMoney_From.InfoMoneyName_all        AS InfoMoneyFromName
 
             , View_Contract_InvNumber_From.ContractId  AS ContractFromId
             , View_Contract_InvNumber_From.InvNumber   AS ContractFromName
 
             , Object_Juridical_From.Id                 AS JuridicalFromId
-            , Object_Juridical_From.ObjectCode         AS JuridicalFromCode
             , Object_Juridical_From.ValueData          AS JuridicalFromName
-            , ObjectHistory_JuridicalDetails_From.OKPO AS FromOKPO
+            , Object_Partner_From.Id                   AS PartnerFromId
+            , Object_Partner_From.ValueData            AS PartnerFromName
+
             , Object_PaidKind_From.Id                  AS PaidKindFromId
             , Object_PaidKind_From.ValueData           AS PaidKindFromName
 
 
-            , View_InfoMoney_To.InfoMoneyGroupName       AS InfoMoneyGroupToName
             , View_InfoMoney_To.InfoMoneyId              AS InfoMoneyToId
-            , View_InfoMoney_To.InfoMoneyCode            AS InfoMoneyToCode
-            , View_InfoMoney_To.InfoMoneyName            AS InfoMoneyToName
+            , View_InfoMoney_To.InfoMoneyName_all        AS InfoMoneyToName
 
             , View_Contract_InvNumber_To.ContractId  AS ContractToId
             , View_Contract_InvNumber_To.InvNumber   AS ContractToName
 
             , Object_Juridical_To.Id                 AS JuridicalToId
-            , Object_Juridical_To.ObjectCode         AS JuridicalToCode
             , Object_Juridical_To.ValueData          AS JuridicalToName
-            , ObjectHistory_JuridicalDetails_To.OKPO AS ToOKPO
+            , Object_Partner_To.Id                   AS PartnerToId
+            , Object_Partner_To.ValueData            AS PartnerToName
+
             , Object_PaidKind_To.Id                  AS PaidKindToId
             , Object_PaidKind_To.ValueData           AS PaidKindToName
 
@@ -138,8 +134,11 @@ BEGIN
             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
                                          AND MI_Master.DescId     = zc_MI_Master()
 
-            LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = MI_Master.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_From ON ObjectHistory_JuridicalDetails_From.JuridicalId = Object_Juridical_From.Id 
+            LEFT JOIN ObjectLink AS ObjectLink_PartnerFrom_Juridical
+                                 ON ObjectLink_PartnerFrom_Juridical.ObjectId = MI_Master.ObjectId
+                                AND ObjectLink_PartnerFrom_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Partner_From ON Object_Partner_From.Id = ObjectLink_PartnerFrom_Juridical.ObjectId
+            LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = COALESCE (ObjectLink_PartnerFrom_Juridical.ChildObjectId, MI_Master.ObjectId)
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney_From
                                              ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
@@ -164,8 +163,11 @@ BEGIN
             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
                                          AND MI_Child.DescId     = zc_MI_Child()
                                          
-            LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = MI_Child.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_To ON ObjectHistory_JuridicalDetails_To.JuridicalId = Object_Juridical_To.Id 
+            LEFT JOIN ObjectLink AS ObjectLink_PartnerTo_Juridical
+                                 ON ObjectLink_PartnerTo_Juridical.ObjectId = MI_Child.ObjectId
+                                AND ObjectLink_PartnerTo_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_Partner_To ON Object_Partner_To.Id = ObjectLink_PartnerTo_Juridical.ObjectId
+            LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = COALESCE (ObjectLink_PartnerTo_Juridical.ChildObjectId, MI_Child.ObjectId)
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney_To
                                              ON MILinkObject_InfoMoney_To.MovementItemId = MI_Child.Id
@@ -203,4 +205,4 @@ ALTER FUNCTION gpGet_Movement_SendDebt (Integer, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_SendDebt (inMovementId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_SendDebt (inMovementId:= 0, inOperDate:= NULL, inSession:= zfCalc_UserAdmin())

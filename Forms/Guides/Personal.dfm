@@ -19,9 +19,9 @@ object PersonalForm: TPersonalForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 961
-    Height = 459
+    Height = 461
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -231,8 +231,8 @@ object PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -250,7 +250,7 @@ object PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -567,6 +567,48 @@ object PersonalForm: TPersonalForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'MemberName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionName'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = 0
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

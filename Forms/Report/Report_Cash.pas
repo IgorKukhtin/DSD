@@ -21,14 +21,14 @@ type
     colAccountName: TcxGridDBColumn;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
-    colStartAmount_A: TcxGridDBColumn;
-    colEndAmount_A: TcxGridDBColumn;
+    StartAmount: TcxGridDBColumn;
+    EndAmount: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colInfoMoneyCode: TcxGridDBColumn;
-    colDebetSumm: TcxGridDBColumn;
-    colKreditSumm: TcxGridDBColumn;
+    DebetSumm: TcxGridDBColumn;
+    KreditSumm: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
     ReturnInJournal: TdsdOpenForm;
     IncomeJournal: TdsdOpenForm;
@@ -56,6 +56,10 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
+    StartAmountD: TcxGridDBColumn;
+    StartAmountK: TcxGridDBColumn;
+    EndAmountD: TcxGridDBColumn;
+    EndAmountK: TcxGridDBColumn;
   private
     { Private declarations }
   public

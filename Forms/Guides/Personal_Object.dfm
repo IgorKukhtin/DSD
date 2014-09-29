@@ -27,7 +27,6 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 961
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -152,7 +151,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     Top = 26
     Action = actRefresh
     Caption = '<'#1056#1072#1073#1086#1090#1072#1083'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 2
+    TabOrder = 1
     Width = 147
   end
   object deStart: TcxDateEdit
@@ -161,7 +160,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 85
   end
   object cxlEnd: TcxLabel
@@ -391,6 +390,48 @@ object Personal_ObjectForm: TPersonal_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'MemberName'
+          DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionName'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = 0
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

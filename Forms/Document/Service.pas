@@ -42,6 +42,9 @@ type
     edInvNumberPartner: TcxTextEdit;
     cxLabel11: TcxLabel;
     edInvNumber: TcxTextEdit;
+    cePartner: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    PartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

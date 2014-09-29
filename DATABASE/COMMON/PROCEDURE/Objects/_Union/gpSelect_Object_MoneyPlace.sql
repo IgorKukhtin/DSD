@@ -69,8 +69,9 @@ BEGIN
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
           , ''::TVarChar    AS OKPO
-     FROM Object_BankAccount_View, ObjectDesc 
-     WHERE ObjectDesc.Id = zc_Object_BankAccount()
+     FROM Object_BankAccount_View
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
+     WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
     UNION ALL
      SELECT Object_Member.Id       
           , Object_Member.ObjectCode     

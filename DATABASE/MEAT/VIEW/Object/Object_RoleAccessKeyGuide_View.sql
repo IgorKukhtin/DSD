@@ -111,12 +111,24 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
         ) AS tmpAccessKey
               LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect_Object_Unit_byProfitLossDirection
                                                                      ON (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceProduction()
-                                                                     AND ProfitLossDirectionCode IN (20100 -- Общепроизводственные расходы + Содержание производства
-                                                                                                   , 20200 -- Общепроизводственные расходы + Содержание складов
-                                                                                                   , 20300 -- Общепроизводственные расходы + Содержание транспорта
-                                                                                                   , 20400 -- Общепроизводственные расходы + Содержание Кухни
-                                                                                                   , 30200 -- Административные расходы + Содержание транспорта
-                                                                                                    ))
+                                                                     AND (ProfitLossDirectionCode IN (20100 -- Общепроизводственные расходы + Содержание производства
+                                                                                                    , 20200 -- Общепроизводственные расходы + Содержание складов
+                                                                                                    , 20300 -- Общепроизводственные расходы + Содержание транспорта
+                                                                                                    , 20400 -- Общепроизводственные расходы + Содержание Кухни
+                                                                                                    , 30200 -- Административные расходы + Содержание транспорта
+                                                                                                     )
+                                                                          OR (UnitCode NOT IN (11010 -- АУП
+                                                                                             , 11030 -- Бухгалтерия
+                                                                                             , 23010 -- Отдел Маркетинга
+                                                                                             , 23020 -- Отдел логистики
+                                                                                             , 23040 -- Отдел коммерции (общефирменный)
+                                                                                              )
+                                                                              AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ
+                                                                                                            , 40300 -- Расходы на сбыт + Общефирменные
+                                                                                                             )
+                                                                             )
+                                                                         )
+                                                                        )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin()
 --                                                                     AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ
 --                                                                                                   , 30200 -- Административные расходы + Содержание транспорта

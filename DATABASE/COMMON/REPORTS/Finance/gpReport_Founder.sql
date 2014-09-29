@@ -12,9 +12,9 @@ CREATE OR REPLACE FUNCTION gpReport_Founder(
 RETURNS TABLE (ContainerId Integer, FounderCode Integer, FounderName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AccountName TVarChar
-             , StartAmount_A TFloat
+             , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , EndAmount_A TFloat
+             , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
 $BODY$
@@ -34,10 +34,16 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyCode                                                         AS InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName                                                         AS InfoMoneyName,
         Object_Account_View.AccountName_all                                                         AS AccountName,
-        Operation.StartAmount ::TFloat                                                              AS StartAmount_A,
+        Operation.StartAmount ::TFloat                                                              AS StartAmount,
+        CASE WHEN Operation.StartAmount > 0 THEN Operation.StartAmount ELSE 0 END ::TFloat          AS StartAmountD,
+        CASE WHEN Operation.StartAmount < 0 THEN -1 * Operation.StartAmount ELSE 0 END :: TFloat    AS StartAmountK,
+
         Operation.DebetSumm::TFloat                                                                 AS DebetSumm,
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
-        Operation.EndAmount ::TFloat                                                                AS EndAmount_A
+        Operation.EndAmount ::TFloat                                                                AS EndAmount,
+        CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
+
 
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId,  Operation_all.FounderId, Operation_all.InfoMoneyId,
@@ -54,8 +60,8 @@ BEGIN
             FROM (SELECT CLO_Founder.ContainerId AS Id, Container.Amount, Container.ObjectId, CLO_Founder.ObjectId AS FounderId, CLO_InfoMoney.ObjectId AS InfoMoneyId
                   FROM ContainerLinkObject AS CLO_Founder
                   INNER JOIN Container ON Container.Id = CLO_Founder.ContainerId AND Container.DescId = zc_Container_Summ()
-                  INNER JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                 ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                  LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                   WHERE CLO_Founder.DescId = zc_ContainerLinkObject_Founder()
                     AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)

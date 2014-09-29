@@ -51,9 +51,9 @@ BEGIN
          END IF;
      END IF;
      -- проверка
-     IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
+     /*IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000()) -- Заработная плата
      THEN
-         IF inOperDate < '01.09.2014' AND inServiceDate < '01.08.2014'
+         IF inOperDate < '01.09.2014' AND inServiceDate < '01.08.2014' AND 1 = 0
          THEN
              IF inMoneyPlaceId <> 0 THEN
                RAISE EXCEPTION 'Ошибка.Для данного периода значение <От Кого, Кому> должно быть пустым.';
@@ -68,7 +68,7 @@ BEGIN
                RAISE EXCEPTION 'Ошибка.Не установлено значение <Должность>.';
              END IF;
          END IF;
-     END IF;
+     END IF;*/
 
      -- расчет
      IF inAmountIn <> 0 THEN

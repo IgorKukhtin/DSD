@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_SendDebt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -13,11 +14,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
     IN inAmount              TFloat    , -- сумма  
     
     IN inJuridicalFromId     Integer   , -- Юр.лицо
+    IN inPartnerFromId       Integer   , -- Контрагент
     IN inContractFromId      Integer   , -- Договор
     IN inPaidKindFromId      Integer   , -- Вид форм оплаты
     IN inInfoMoneyFromId     Integer   , -- Статьи назначения
 
     IN inJuridicalToId       Integer   , -- Юр.лицо
+    IN inPartnerToId         Integer   , -- Контрагент
     IN inContractToId        Integer   , -- Договор
     IN inPaidKindToId        Integer   , -- Вид форм оплаты
     IN inInfoMoneyToId       Integer   , -- Статьи назначения
@@ -39,13 +42,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <Юридическое лицо (Дебет)>.';
      END IF;
+     -- проверка
      IF (COALESCE (inInfoMoneyFromId, 0) = 0)
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Дебет)>.';
      END IF;
+     -- проверка
      IF (COALESCE (inContractFromId, 0) = 0)
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Дебет)>.';
+     END IF;
+     -- проверка
+     IF inPaidKindFromId = zc_Enum_PaidKind_SecondForm()
+        AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalFromId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент (Дебет)>.', lfGet_Object_ValueData (inPaidKindFromId);
      END IF;
 
      -- проверка
@@ -53,13 +64,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <Юридическое лицо (Кредит)>.';
      END IF;
+     -- проверка
      IF (COALESCE (inInfoMoneyToId, 0) = 0)
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Кредит)>.';
      END IF;
+     -- проверка
      IF (COALESCE (inContractToId, 0) = 0)
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Кредит)>.';
+     END IF;
+     -- проверка
+     IF inPaidKindToId = zc_Enum_PaidKind_SecondForm()
+        AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalToId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент (Кредит)>.', lfGet_Object_ValueData (inPaidKindToId);
      END IF;
 
 
@@ -76,7 +95,7 @@ BEGIN
 
    
      -- сохранили <Главный Элемент документа>
-     ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
+     ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), CASE WHEN inPartnerFromId <> 0 AND inPaidKindFromId = zc_Enum_PaidKind_SecondForm() THEN inPartnerFromId ELSE inJuridicalFromId END, ioId, inAmount, NULL);
 
      -- сохранили связь с <Договор ОТ >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioMasterId, inContractFromId);
@@ -92,7 +111,7 @@ BEGIN
 
 
      -- сохранили <Второй Элемент документа>
-     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioId, inAmount, NULL);
+     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), CASE WHEN inPartnerToId <> 0 AND inPaidKindToId = zc_Enum_PaidKind_SecondForm() THEN inPartnerToId ELSE inJuridicalToId END, ioId, inAmount, NULL);
 
      -- сохранили связь с <Договор КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioChildId, inContractToId);
@@ -134,6 +153,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.09.14                                        * add inPartner...
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___

@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbIsAllUnit Boolean;
 
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
@@ -29,6 +30,8 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+   vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId);
 
    -- определяется Дефолт
    SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
@@ -73,9 +76,13 @@ BEGIN
          , Object_Personal_View.isErased
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
+          LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.UnitId = 8429 -- Отдел логистики
+           )
+       AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
+            OR vbIsAllUnit = TRUE
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)
@@ -99,6 +106,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.09.13                                        * add vbIsAllUnit
  12.09.13                                        * add inIsShowAll
  30.08.14                                        * add InfoMoney...
  11.08.14                                        * add 8429 -- Отдел логистики

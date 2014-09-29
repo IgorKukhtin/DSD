@@ -31,7 +31,7 @@ BEGIN
              , Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , MovementItem.Amount AS OperSumm
+             , -1 * MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -70,7 +70,7 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
+             , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE

@@ -2916,7 +2916,7 @@ begin
                            ((FieldByName('JuridicalId_pg').AsInteger <> toSqlQuery.FieldByName('JuridicalId').AsInteger)
                            or(FieldByName('PartnerId_pg').AsInteger <> toSqlQuery.FieldByName('PartnerId').AsInteger))
                        then begin
-                            ShowMessage('Ошибка JuridicalId_pg<>JuridicalId or PartnerId_pg<>PartnerId');
+                            ShowMessage('Ошибка JuridicalId_pg('+FieldByName('JuridicalId_pg').AsString+')<>JuridicalId('+toSqlQuery.FieldByName('JuridicalId').AsString+') or PartnerId_pg('+FieldByName('PartnerId_pg').AsString+')<>PartnerId('+toSqlQuery.FieldByName('PartnerId').AsString+')');
                             fStop:=true;
                             exit;
                        end;
@@ -3139,6 +3139,18 @@ begin
                             fOpenSqToQuery ('select JuridicalId, ObjectHistoryId from ObjectHistory_JuridicalDetails_View where OKPO='+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString));
                             JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
                             JuridicalDetailsId_pg:=toSqlQuery.FieldByName('ObjectHistoryId').AsInteger;
+                            // Пытаемся найти по ИНН - не виртуальному
+                            if JuridicalId_pg=0 then
+                            begin
+                                 fOpenSqToQuery (' select JuridicalId, ObjectHistory_JuridicalDetails_View.ObjectHistoryId'
+                                                +' from ObjectHistory_JuridicalDetails_View'
+                                                +'      left join ObjectHistoryString on ObjectHistoryString.ObjectHistoryId=ObjectHistory_JuridicalDetails_View.ObjectHistoryId and ObjectHistoryString.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()'
+                                                +' where ObjectHistoryString.ValueData='+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString)
+                                                );
+                                 JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+                                 JuridicalDetailsId_pg:=toSqlQuery.FieldByName('ObjectHistoryId').AsInteger;
+                            end;
+
                        end;
              //
              if JuridicalId_pg = 0 then

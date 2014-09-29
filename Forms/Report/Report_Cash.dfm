@@ -31,183 +31,88 @@ inherited Report_CashForm: TReport_CashForm
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_A
+              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_A
+              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = EndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colDebetSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colKreditSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
+              Column = EndAmountK
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colStartAmount_A
+              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = colEndAmount_A
+              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = DebetSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = KreditSumm
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = StartAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = StartAmountK
             end
             item
               Format = ',0.00##'
               Kind = skSum
+              Column = EndAmountD
             end
             item
               Format = ',0.00##'
               Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colDebetSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = colKreditSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
+              Column = EndAmountK
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -263,11 +168,11 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 70
           end
-          object colStartAmount_A: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
-            DataBinding.FieldName = 'StartAmount_A'
+          object StartAmount: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
+            DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
@@ -276,43 +181,91 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 55
           end
-          object colDebetSumm: TcxGridDBColumn
+          object StartAmountD: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'StartAmountD'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object StartAmountK: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'StartAmountK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
-          object colKreditSumm: TcxGridDBColumn
+          object KreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
-          object colEndAmount_A: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
-            DataBinding.FieldName = 'EndAmount_A'
+          object EndAmount: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1076#1086#1083#1075
+            DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
+            Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
+          end
+          object EndAmountD: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'EndAmountD'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object EndAmountK: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'EndAmountK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colAccountName: TcxGridDBColumn
@@ -1695,13 +1648,13 @@ inherited Report_CashForm: TReport_CashForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
-        Column = colDebetSumm
+        Column = DebetSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = colKreditSumm
+        Column = KreditSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
