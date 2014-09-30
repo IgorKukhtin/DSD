@@ -46,6 +46,8 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
+    AccountGroupCode: TcxGridDBColumn;
+    AccountGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

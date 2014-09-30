@@ -265,9 +265,6 @@
 			<DCCReference Include="..\..\Forms\Guides\ProfitLoss_Object.pas">
 				<Form>ProfitLoss_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
-				<Form>ProfitLossDirection_ObjectForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirectionEdit.pas">
 				<Form>ProfitLossDirectionEditForm</Form>
 			</DCCReference>
@@ -1619,6 +1616,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
 				<Form>BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
+				<Form>ProfitLossDirection_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

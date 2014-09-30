@@ -244,7 +244,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 98
       end
       object DescName_Direction: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'DescName_Direction'
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -265,7 +265,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 94
       end
       object DescName_Destination: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'DescName_Destination'
         HeaderAlignmentVert = vaCenter
         Width = 88
@@ -421,7 +421,7 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
       end
       object SummStart: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+        Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
         DataBinding.FieldName = 'SummStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -431,7 +431,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 70
       end
       object SummIn: TcxGridDBColumn
-        Caption = #1044#1077#1073#1077#1090
+        Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
         DataBinding.FieldName = 'SummIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -441,7 +441,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 70
       end
       object SummOut: TcxGridDBColumn
-        Caption = #1050#1088#1077#1076#1080#1090
+        Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
         DataBinding.FieldName = 'SummOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -451,7 +451,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 70
       end
       object SummEnd: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094
+        Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086
         DataBinding.FieldName = 'SummEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -755,8 +755,8 @@ object Report_AccountForm: TReport_AccountForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 192
-    Top = 8
+    Left = 120
+    Top = 40
     DockControlHeights = (
       0
       0
@@ -776,6 +776,18 @@ object Report_AccountForm: TReport_AccountForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenDocument'
         end
         item
@@ -784,20 +796,11 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Visible = True
-          ItemName = 'bbDialogForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -873,8 +876,8 @@ object Report_AccountForm: TReport_AccountForm
         item
           Action = actOpenForm
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
     object actOpenForm: TdsdOpenForm
@@ -1116,9 +1119,39 @@ object Report_AccountForm: TReport_AccountForm
         ParamType = ptInput
       end
       item
-        Name = 'TextValueAll'
+        Name = 'TextValue'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = ''
+        Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1308,6 +1341,36 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 216
     Top = 37
@@ -1331,6 +1394,36 @@ object Report_AccountForm: TReport_AccountForm
         Name = 'TextValue'
         Value = ''
         Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        Component = AccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1413,6 +1506,36 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossId'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossName'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 216
     Top = 85
@@ -1436,6 +1559,36 @@ object Report_AccountForm: TReport_AccountForm
         Name = 'TextValue'
         Value = ''
         Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossGroupId'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossGroupName'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossId'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossName'
+        Value = ''
+        Component = ProfitLossGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1488,6 +1641,36 @@ object Report_AccountForm: TReport_AccountForm
         Name = 'TextValue'
         Value = ''
         Component = ProfitLossGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossGroupId'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossGroupName'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = ''
+        Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

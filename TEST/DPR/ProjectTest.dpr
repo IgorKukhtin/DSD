@@ -109,7 +109,6 @@ uses
   Account_Object in '..\..\Forms\Guides\Account_Object.pas' {Account_ObjectForm},
   AccountEdit in '..\..\Forms\Guides\AccountEdit.pas' {AccountEditForm},
   ProfitLoss_Object in '..\..\Forms\Guides\ProfitLoss_Object.pas' {ProfitLoss_ObjectForm},
-  ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm},
   ProfitLossDirectionEdit in '..\..\Forms\Guides\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
   ProfitLossEdit in '..\..\Forms\Guides\ProfitLossEdit.pas' {ProfitLossEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
@@ -547,7 +546,8 @@ uses
   FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
-  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm};
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -183,11 +183,11 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -196,6 +196,18 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -228,6 +240,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -241,6 +254,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -252,6 +266,28 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossGroupId'
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossDirectionId'
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossDirectionName'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -259,6 +295,7 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -302,6 +339,8 @@ object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 224
   end
