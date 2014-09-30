@@ -11,7 +11,8 @@ uses
   dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient,
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, Vcl.Controls, cxGrid;
+  cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TContractForm = class(TParentForm)

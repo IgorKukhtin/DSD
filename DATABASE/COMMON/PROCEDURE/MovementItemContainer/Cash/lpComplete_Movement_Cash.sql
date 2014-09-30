@@ -121,7 +121,13 @@ BEGIN
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
+             , CASE WHEN Object.DescId IN (zc_Object_Cash())
+                         THEN zc_Enum_Account_110201() -- Транзит + деньги в пути
+                    WHEN Object.DescId IN (zc_Object_BankAccount())
+                         THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
+                    ELSE 0
+               END AS AccountId -- ... или сформируем позже
 
                -- Группы ОПиУ
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId

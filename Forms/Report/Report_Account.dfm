@@ -211,7 +211,6 @@ object Report_AccountForm: TReport_AccountForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -242,13 +241,13 @@ object Report_AccountForm: TReport_AccountForm
         Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ObjectName_Direction'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 98
       end
       object DescName_Direction: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'DescName_Direction'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object ObjectCode_Destination: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
@@ -263,13 +262,13 @@ object Report_AccountForm: TReport_AccountForm
         DataBinding.FieldName = 'ObjectName_Destination'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 94
       end
       object DescName_Destination: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'DescName_Destination'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 88
       end
       object JuridicalBasisName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
@@ -317,7 +316,7 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 110
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099

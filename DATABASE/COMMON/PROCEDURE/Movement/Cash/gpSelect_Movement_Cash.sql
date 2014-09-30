@@ -1,11 +1,12 @@
 -- Function: gpSelect_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inCashId      Integer , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -33,6 +34,12 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                         )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -64,7 +71,10 @@ BEGIN
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData              AS UnitName
-       FROM Movement
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
             INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -111,14 +121,12 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-
-       WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+       ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

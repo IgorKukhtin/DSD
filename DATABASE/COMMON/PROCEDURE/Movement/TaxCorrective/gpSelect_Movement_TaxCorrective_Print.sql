@@ -43,7 +43,7 @@ BEGIN
           INNER JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpMovement.MovementId_TaxCorrective
                                                        AND (Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete() OR tmpMovement.MovementId_TaxCorrective = inMovementId)
      ;
-
+/* пока убрал, т.к. проверка сумм происходит в непроведенном состо€нии, надо или добавить параметр - "когда ругатьс€" или сделать еще одну печать-проверку
      -- очень важна€ проверка
      IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 OR COALESCE (vbStatusId_TaxCorrective, 0) <> zc_Enum_Status_Complete()
      THEN
@@ -62,7 +62,7 @@ BEGIN
          -- это уже странна€ ошибка
          RAISE EXCEPTION 'ќшибка.ƒокумент <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
      END IF;
-
+*/
 
      -- определ€етс€ параметр
      vbGoodsPropertyId:= (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId

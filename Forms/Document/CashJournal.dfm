@@ -3,7 +3,6 @@ inherited CashJournalForm: TCashJournalForm
   ClientWidth = 982
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,14 +87,14 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 150
           end
           object clMemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -105,7 +104,7 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object clAmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
@@ -115,7 +114,7 @@ inherited CashJournalForm: TCashJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object clServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -133,7 +132,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 111
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -215,7 +214,7 @@ inherited CashJournalForm: TCashJournalForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 85
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -341,6 +340,13 @@ inherited CashJournalForm: TCashJournalForm
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 96

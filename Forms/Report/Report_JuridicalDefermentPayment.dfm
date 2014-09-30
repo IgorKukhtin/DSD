@@ -295,7 +295,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 90
           end
           object clPersonalCollationName: TcxGridDBColumn
             Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
@@ -335,7 +335,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object clStartContractDate: TcxGridDBColumn
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072' '#1076#1086
@@ -356,7 +356,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 75
           end
           object colKreditRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1050#1088#1077#1076#1080#1090')'
@@ -368,7 +368,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 75
           end
           object colSaleSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072
@@ -380,7 +380,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 75
           end
           object colDefermentPaymentRemains: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
@@ -391,7 +391,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 75
           end
           object colSaleSumm1: TcxGridDBColumn
             Caption = '7 '#1076#1085'.'
@@ -402,7 +402,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 75
           end
           object colSaleSumm2: TcxGridDBColumn
             Caption = '14 '#1076#1085'.'
@@ -413,7 +413,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 75
           end
           object colSaleSumm3: TcxGridDBColumn
             Caption = '21 '#1076#1085'.'
@@ -424,7 +424,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 75
           end
           object colSaleSumm4: TcxGridDBColumn
             Caption = '28 '#1076#1085'.'
@@ -435,7 +435,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 75
           end
           object colSaleSumm5: TcxGridDBColumn
             Caption = '>28 '#1076#1085'.'
@@ -446,7 +446,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 53
+            Width = 75
           end
           object colCondition: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077

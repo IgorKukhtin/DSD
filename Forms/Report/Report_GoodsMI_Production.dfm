@@ -4,8 +4,8 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 981
-  ExplicitHeight = 378
+  ExplicitWidth = 989
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -96,7 +96,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 162
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -110,7 +110,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 149
           end
           object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -124,7 +124,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 109
           end
           object clAmount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'

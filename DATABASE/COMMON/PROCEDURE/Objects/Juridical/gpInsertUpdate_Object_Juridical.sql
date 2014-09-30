@@ -54,6 +54,12 @@ BEGIN
    THEN
       RAISE EXCEPTION 'Ошибка.Необходимо определить <Название юридического лица>.';
    END IF;
+   -- проверка
+   IF inIsCorporate = TRUE AND COALESCE (ioId, 0) <> zc_Juridical_Basis()
+   THEN
+      RAISE EXCEPTION 'Ошибка.Неправильно установлен признак <Главное юридическое лицо>.';
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), vbCode, inName);
