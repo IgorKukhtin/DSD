@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_PersonalServiceList()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
  INOUT ioId             Integer   ,     -- ключ объекта <> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
+    IN inJuridicalId    Integer   ,     -- Юр. лицо
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -31,13 +32,15 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PersonalServiceList(), vbCode_calc, inName);
-   
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Juridical(), ioId, inJuridicalId);
+        
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

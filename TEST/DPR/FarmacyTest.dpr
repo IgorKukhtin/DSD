@@ -165,7 +165,9 @@ uses
   CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
-  UserProtocol in '..\..\Forms\System\UserProtocol.pas' {UserProtocolForm: TParentForm};
+  UserProtocol in '..\..\Forms\System\UserProtocol.pas' {UserProtocolForm: TParentForm},
+  ImportGroupTest in '..\SOURCE\Objects\All\ImportGroupTest.pas',
+  ImportGroupItemsTest in '..\SOURCE\Objects\All\ImportGroupItemsTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

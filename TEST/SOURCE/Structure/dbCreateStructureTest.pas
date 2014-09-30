@@ -23,6 +23,7 @@ type
     procedure CreateProtocol;
     procedure CreatePeriodClose;
     procedure CreateDefaults;
+    procedure CreateLoad;
     procedure UpdateStructure;
     procedure CreateIndexes;
   end;
@@ -85,7 +86,12 @@ end;
 
 procedure TdbCreateStructureTest.CreateIndexes;
 begin
-  DirectoryLoad(CreateStructurePath + 'INDEX\');
+  DirectoryLoad(StructurePath + 'INDEX\');
+end;
+
+procedure TdbCreateStructureTest.CreateLoad;
+begin
+  DirectoryLoad(CreateStructurePath + 'Load\');
 end;
 
 procedure TdbCreateStructureTest.CreateMovement;
