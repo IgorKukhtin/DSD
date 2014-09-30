@@ -474,6 +474,8 @@
 				<Form>UserProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupItemsTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -44,8 +44,9 @@ type
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants, UtilConvert,
-     MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge, Forms, Log;
+uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants,
+     UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
+     Forms, Log, IdStack;
 
 const
 
@@ -225,7 +226,18 @@ begin
   FReceiveStream.Clear;
   IdHTTPWork.FExecOnServer := pExecOnServer;
   try
-    idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+    try
+      idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+    except
+      on E: EIdSocketError do begin
+         case E.LastError of
+           10060: raise Exception.Create('Нет доступа к серверу. Обратитесь к системному администратору. context ' + E.Message);
+            else  raise E;
+         end;
+      end;
+      on E: Exception do
+         raise E;
+    end;
   finally
     if IdHTTPWork.FExecOnServer then
        IdHTTPWork.Gauge.Finish;

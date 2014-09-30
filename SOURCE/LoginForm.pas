@@ -34,15 +34,26 @@ implementation
 {$R *.dfm}
 
 uses
-  Storage, Authentication, CommonData;
-
+  Storage, Authentication, CommonData, MessagesUnit;
 
 procedure TLoginForm.btnOkClick(Sender: TObject);
+var TextMessage: String;
 begin
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, edUserName.Text, edPassword.Text, gc_User);
-  if edUserName.Properties.Items.IndexOf(edUserName.Text) = -1 then
-     edUserName.Properties.Items.Add(edUserName.Text);
-  ModalResult := mrOk;
+  try
+    TAuthentication.CheckLogin(TStorageFactory.GetStorage, edUserName.Text, edPassword.Text, gc_User);
+    if edUserName.Properties.Items.IndexOf(edUserName.Text) = -1 then
+       edUserName.Properties.Items.Add(edUserName.Text);
+    ModalResult := mrOk;
+  except
+    on E: Exception do begin
+        if pos('context', AnsilowerCase(E.Message)) = 0 then
+           TextMessage := E.Message
+        else
+           // Выбрасываем все что после Context
+           TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
+        TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
+    end;
+  end;
 end;
 
 procedure TLoginForm.FormClose(Sender: TObject; var Action: TCloseAction);
