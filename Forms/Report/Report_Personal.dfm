@@ -1,31 +1,29 @@
 inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
-  ClientWidth = 1050
-  ExplicitWidth = 1058
-  ExplicitHeight = 589
+  ClientWidth = 1020
+  ExplicitWidth = 1036
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
-    Width = 1050
-    Height = 470
+    Top = 83
+    Width = 1020
+    Height = 472
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 83
     ExplicitWidth = 1050
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1046
+    ExplicitHeight = 472
+    ClientRectBottom = 472
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1044
-      ExplicitHeight = 464
+      ExplicitWidth = 1050
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1044
-        Height = 464
-        ExplicitWidth = 1044
-        ExplicitHeight = 464
+        Width = 1020
+        Height = 472
+        ExplicitWidth = 1050
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -392,7 +390,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 1020
     Height = 57
     ExplicitWidth = 1050
     ExplicitHeight = 57
@@ -585,8 +583,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -607,16 +605,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       ReportNameParam.DataType = ftString
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -637,8 +635,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
       ReportNameParam.DataType = ftString
     end
     object IncomeJournal: TdsdOpenForm
@@ -1768,7 +1766,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

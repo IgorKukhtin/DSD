@@ -1,31 +1,29 @@
 inherited Report_CashForm: TReport_CashForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
   ClientHeight = 555
-  ClientWidth = 1050
-  ExplicitWidth = 1058
-  ExplicitHeight = 589
+  ClientWidth = 1020
+  ExplicitWidth = 1036
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
-    Width = 1050
-    Height = 470
+    Top = 83
+    Width = 1020
+    Height = 472
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 83
     ExplicitWidth = 1050
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1046
+    ExplicitHeight = 472
+    ClientRectBottom = 472
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1044
-      ExplicitHeight = 464
+      ExplicitWidth = 1050
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1044
-        Height = 464
-        ExplicitWidth = 1044
-        ExplicitHeight = 464
+        Width = 1020
+        Height = 472
+        ExplicitWidth = 1050
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -118,6 +116,13 @@ inherited Report_CashForm: TReport_CashForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object CashName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashName'
@@ -131,6 +136,37 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object ContractInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colInfoMoneyCode: TcxGridDBColumn
@@ -168,8 +204,16 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 70
           end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object StartAmount: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
+            Caption = #1053#1072#1095'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -232,7 +276,7 @@ inherited Report_CashForm: TReport_CashForm
             Width = 55
           end
           object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075
+            Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -276,18 +320,12 @@ inherited Report_CashForm: TReport_CashForm
             Options.Editing = False
             Width = 55
           end
-          object ContainerId: TcxGridDBColumn
-            DataBinding.FieldName = 'ContainerId'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 45
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 1020
     Height = 57
     ExplicitWidth = 1050
     ExplicitHeight = 57
@@ -318,9 +356,9 @@ inherited Report_CashForm: TReport_CashForm
     object cxLabel6: TcxLabel
       Left = 209
       Top = 6
-      Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+      Caption = #1050#1072#1089#1089#1072':'
     end
-    object ceObject: TcxButtonEdit
+    object ceCash: TcxButtonEdit
       Left = 209
       Top = 29
       Properties.Buttons = <
@@ -347,7 +385,7 @@ inherited Report_CashForm: TReport_CashForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 201
+      Width = 345
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -402,8 +440,8 @@ inherited Report_CashForm: TReport_CashForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
-      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
+      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -464,8 +502,8 @@ inherited Report_CashForm: TReport_CashForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -486,8 +524,8 @@ inherited Report_CashForm: TReport_CashForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' - '#1076#1077#1090#1072#1083#1100#1085#1086
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077' - '#1076#1077#1090#1072#1083#1100#1085#1086
       ReportNameParam.DataType = ftString
     end
     object IncomeJournal: TdsdOpenForm
@@ -1569,7 +1607,7 @@ inherited Report_CashForm: TReport_CashForm
       item
         Name = 'inCashId'
         Value = ''
-        Component = ObjectlGuides
+        Component = CashGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1594,7 +1632,7 @@ inherited Report_CashForm: TReport_CashForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1673,7 +1711,7 @@ inherited Report_CashForm: TReport_CashForm
         Component = PeriodChoice
       end
       item
-        Component = ObjectlGuides
+        Component = CashGuides
       end
       item
         Component = AccountGuides
@@ -1843,9 +1881,9 @@ inherited Report_CashForm: TReport_CashForm
     Left = 240
     Top = 232
   end
-  object ObjectlGuides: TdsdGuides
+  object CashGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceObject
+    LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TCash_ObjectForm'
@@ -1854,13 +1892,13 @@ inherited Report_CashForm: TReport_CashForm
       item
         Name = 'Key'
         Value = ''
-        Component = ObjectlGuides
+        Component = CashGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ObjectlGuides
+        Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1923,8 +1961,8 @@ inherited Report_CashForm: TReport_CashForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 8
+    Left = 592
+    Top = 24
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpReport_Cash'

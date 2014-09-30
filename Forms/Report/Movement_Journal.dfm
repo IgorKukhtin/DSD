@@ -18,8 +18,6 @@ inherited MovementJournalForm: TMovementJournalForm
     ClientRectBottom = 316
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1164
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
@@ -492,6 +490,11 @@ inherited MovementJournalForm: TMovementJournalForm
         end
         item
           Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMovementId_Value'
           Component = MasterCDS
           ComponentItem = 'Id'
         end>

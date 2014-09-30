@@ -1,5 +1,5 @@
-DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- Function: gpReport_Personal
+
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Personal(

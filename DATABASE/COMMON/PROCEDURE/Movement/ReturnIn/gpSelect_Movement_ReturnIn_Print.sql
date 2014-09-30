@@ -17,6 +17,8 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
+    DECLARE vbDescId Integer;
+    DECLARE vbStatusId Integer;
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
     DECLARE vbDiscountPercent TFloat;
@@ -31,13 +33,15 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+     SELECT Movement.DescId
+          , Movement.StatusId
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -62,6 +66,22 @@ BEGIN
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                               AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
      WHERE Movement.Id = inMovementId;
+
+
+    -- очень важная проверка
+    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+    THEN
+        IF vbStatusId = zc_Enum_Status_Erased()
+        THEN
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+        END IF;
+        IF vbStatusId = zc_Enum_Status_UnComplete()
+        THEN
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+        END IF;
+        -- это уже странная ошибка
+        RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
+    END IF;
 
 
     IF vbDiscountPercent <> 0

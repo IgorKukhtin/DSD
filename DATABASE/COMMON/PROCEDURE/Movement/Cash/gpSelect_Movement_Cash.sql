@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberName TVarChar, PositionName TVarChar
-             , ContractInvNumber TVarChar
+             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
 )
 AS
@@ -60,7 +60,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyName_all
            , Object_Member.ValueData            AS MemberName
            , Object_Position.ValueData          AS PositionName
+           , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
+           , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData              AS UnitName
        FROM Movement
             INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId

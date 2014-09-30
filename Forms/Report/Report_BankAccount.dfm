@@ -1,31 +1,29 @@
 inherited Report_BankAccountForm: TReport_BankAccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091'>'
   ClientHeight = 555
-  ClientWidth = 1050
-  ExplicitWidth = 1058
-  ExplicitHeight = 589
+  ClientWidth = 1020
+  ExplicitWidth = 1036
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
-    Width = 1050
-    Height = 470
+    Top = 83
+    Width = 1020
+    Height = 472
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 83
     ExplicitWidth = 1050
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1046
+    ExplicitHeight = 472
+    ClientRectBottom = 472
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1044
-      ExplicitHeight = 464
+      ExplicitWidth = 1050
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1044
-        Height = 464
-        ExplicitWidth = 1044
-        ExplicitHeight = 464
+        Width = 1020
+        Height = 472
+        ExplicitWidth = 1050
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -118,19 +116,19 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object BankAccountName: TcxGridDBColumn
-            Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-            DataBinding.FieldName = 'BankAccountName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object BankAccountName: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object MoneyPlaceName: TcxGridDBColumn
@@ -140,12 +138,36 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object clItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object ContractInvNumber: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -182,8 +204,16 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 70
           end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object StartAmount: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
+            Caption = #1053#1072#1095'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -246,7 +276,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Width = 55
           end
           object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075
+            Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -290,18 +320,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 55
           end
-          object ContainerId: TcxGridDBColumn
-            DataBinding.FieldName = 'ContainerId'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 45
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 1020
     Height = 57
     ExplicitWidth = 1050
     ExplicitHeight = 57
@@ -344,7 +368,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 201
+      Width = 350
     end
     object ceBankAccount: TcxButtonEdit
       Left = 209
@@ -415,8 +439,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -437,8 +461,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091' - '#1076#1077#1090#1072#1083#1100#1085#1086
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091' - '#1076#1077#1090#1072#1083#1100#1085#1086
       ReportNameParam.DataType = ftString
     end
     object IncomeJournal: TdsdOpenForm
@@ -1502,8 +1526,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1582,7 +1606,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1848,9 +1872,9 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBankAccount
-    FormNameParam.Value = 'TBankAccountForm'
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBankAccountForm'
+    FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

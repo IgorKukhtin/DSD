@@ -403,7 +403,7 @@ uses
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
-  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccount_Object in '..\..\Forms\Guides\BankAccount_Object.pas' {BankAccount_ObjectForm: TParentForm},
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   Partner1CLinkPlace in '..\..\Forms\LOAD1C\Partner1CLinkPlace.pas' {Partner1CLinkPlaceForm: TParentForm},
   TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
@@ -546,7 +546,8 @@ uses
   ZakazInternalTest in '..\SOURCE\Movement\All\ZakazInternalTest.pas',
   FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
-  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm};
+  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

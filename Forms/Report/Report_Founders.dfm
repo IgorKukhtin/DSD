@@ -1,31 +1,29 @@
 inherited Report_FoundersForm: TReport_FoundersForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 555
-  ClientWidth = 1050
-  ExplicitWidth = 1058
-  ExplicitHeight = 589
+  ClientWidth = 882
+  ExplicitWidth = 898
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 85
-    Width = 1050
-    Height = 470
+    Top = 83
+    Width = 882
+    Height = 472
     TabOrder = 3
-    ExplicitTop = 85
+    ExplicitTop = 83
     ExplicitWidth = 1050
-    ExplicitHeight = 470
-    ClientRectBottom = 466
-    ClientRectRight = 1046
+    ExplicitHeight = 472
+    ClientRectBottom = 472
+    ClientRectRight = 882
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1044
-      ExplicitHeight = 464
+      ExplicitWidth = 1050
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1044
-        Height = 464
-        ExplicitWidth = 1044
-        ExplicitHeight = 464
+        Width = 882
+        Height = 472
+        ExplicitWidth = 1050
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -67,6 +65,16 @@ inherited Report_FoundersForm: TReport_FoundersForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colServiceSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colMoneySumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +116,16 @@ inherited Report_FoundersForm: TReport_FoundersForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colServiceSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colMoneySumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -119,7 +137,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Styles.Footer = nil
           Styles.Header = nil
           object FounderName: TcxGridDBColumn
-            Caption = #1059#1095#1077#1088#1077#1076#1080#1090#1077#1083#1100
+            Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'FounderName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -156,13 +174,14 @@ inherited Report_FoundersForm: TReport_FoundersForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object StartAmount: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -198,6 +217,28 @@ inherited Report_FoundersForm: TReport_FoundersForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object colServiceSumm: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
+            DataBinding.FieldName = 'ServiceSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colMoneySumm: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
+            DataBinding.FieldName = 'MoneySumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetSumm'
@@ -206,6 +247,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -219,13 +261,14 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
           object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075
+            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -264,49 +307,48 @@ inherited Report_FoundersForm: TReport_FoundersForm
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object ContainerId: TcxGridDBColumn
-            DataBinding.FieldName = 'ContainerId'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 45
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1050
+    Width = 882
     Height = 57
     ExplicitWidth = 1050
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 118
+      Left = 60
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 118
+      ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
-      Left = 118
+      Left = 60
       Top = 30
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 118
+      ExplicitLeft = 60
       ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
-      Left = 27
-      ExplicitLeft = 27
+      Left = 13
+      Caption = #1044#1072#1090#1072' '#1089' :'
+      ExplicitLeft = 13
+      ExplicitWidth = 45
     end
     inherited cxLabel2: TcxLabel
-      Left = 8
+      Left = 6
       Top = 31
-      ExplicitLeft = 8
+      Caption = #1044#1072#1090#1072' '#1087#1086' :'
+      ExplicitLeft = 6
       ExplicitTop = 31
+      ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
       Left = 365
@@ -360,12 +402,12 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
-      Left = 209
-      Top = 6
+      Left = 160
+      Top = 7
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 209
+      Left = 160
       Top = 30
       Properties.Buttons = <
         item
@@ -374,7 +416,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 150
+      Width = 199
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -435,8 +477,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -457,16 +499,16 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1073#1091#1093#1075')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
       ReportNameParam.DataType = ftString
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1092#1072#1082#1090#1080#1095#1077#1089#1082#1080#1077' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -487,8 +529,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1080'('#1092#1072#1082#1090')'
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' - '#1076#1077#1090#1072#1083#1100#1085#1099#1081
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' - '#1076#1077#1090#1072#1083#1100#1085#1099#1081
       ReportNameParam.DataType = ftString
     end
     object IncomeJournal: TdsdOpenForm
@@ -1601,7 +1643,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1672,8 +1714,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
     Left = 128
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 144
-    Top = 8
+    Left = 72
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

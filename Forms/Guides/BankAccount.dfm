@@ -1,7 +1,7 @@
 object BankAccountForm: TBankAccountForm
   Left = 0
   Top = 0
-  Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 376
   ClientWidth = 588
   Color = clBtnFace
@@ -176,16 +176,23 @@ object BankAccountForm: TBankAccountForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0

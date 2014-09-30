@@ -74,6 +74,11 @@ BEGIN
                                                                  ON ContainerLinkObject_PaidKind.ContainerId = Container.Id
                                                                 AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND ContainerLinkObject_PaidKind.ObjectId > 0
+                                  INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = Container.Id
+                                                                AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                  INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+                                                                  AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                              WHERE Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_30100() -- Дебиторы + покупатели
                              GROUP BY ContainerLinkObject_Juridical.ObjectId
                                     , Object_Account_View.AccountId
@@ -252,20 +257,29 @@ BEGIN
                                 , Object_BranchLink_View.Id AS BranchTopId
                                 , TRIM (PartnerAll.KodBranch) AS KodBranch
                            FROM PartnerAll
-                                INNER JOIN Object_BranchLink_View ON (Object_BranchLink_View.ObjectCode = CASE KodBranch WHEN '1' THEN '1'
-                                                                                                                        WHEN '02' THEN '2'
-                                                                                                                        WHEN '03' THEN '3'
-                                                                                                                        WHEN '04' THEN '4'
-                                                                                                                        WHEN '4'  THEN '4'
-                                                                                                                        WHEN '05' THEN '5'
-                                                                                                                        WHEN '06' THEN '6'
-                                                                                                                        WHEN '07' THEN '7'
-                                                                                                                        WHEN '08' THEN '8'
-                                                                                                                        WHEN '09' THEN '9'
+                                INNER JOIN Object_BranchLink_View ON (Object_BranchLink_View.Id = CASE KodBranch WHEN '01' THEN 257153 -- филиал Днепр
+                                                                                                                 WHEN '1' THEN 257153 -- филиал Днепр
+                                                                                                                        WHEN '02' THEN 257152 -- 2 филиал Киев";8379;"филиал Киев";3;"БН";"филиал Киев БН"
+                                                                                                                        WHEN '2' THEN 257152 -- 2 филиал Киев";8379;"филиал Киев";3;"БН";"филиал Киев БН"
+                                                                                                                        WHEN '03' THEN 257161 -- 3;"филиал Николаев (Херсон)";8373;"филиал Николаев (Херсон)";;"";"филиал Николаев (Херсон) "
+                                                                                                                        WHEN '3' THEN 257161 -- 3;"филиал Николаев (Херсон)";8373;"филиал Николаев (Херсон)";;"";"филиал Николаев (Херсон) "
+                                                                                                                        WHEN '04' THEN 257154 -- 4;"филиал Одесса";8374;"филиал Одесса";;"";"филиал Одесса "
+                                                                                                                        WHEN '4'  THEN 257154 -- 4;"филиал Одесса";8374;"филиал Одесса";;"";"филиал Одесса "
+                                                                                                                        WHEN '05' THEN 257155 -- 5;"филиал Черкассы ( Кировоград)";8375;"филиал Черкассы (Кировоград)";;"";"филиал Черкассы (Кировоград) "
+                                                                                                                        WHEN '5' THEN 257155 -- 5;"филиал Черкассы ( Кировоград)";8375;"филиал Черкассы (Кировоград)";;"";"филиал Черкассы (Кировоград) "
+                                                                                                                        WHEN '06' THEN 257156 -- 6;"филиал Крым";8376;"филиал Крым";;"";"филиал Крым "
+                                                                                                                        WHEN '6' THEN 257156 -- 6;"филиал Крым";8376;"филиал Крым";;"";"филиал Крым "
+                                                                                                                        WHEN '07' THEN 257157 -- 7;"филиал Кр.Рог";8377;"филиал Кр.Рог";;"";"филиал Кр.Рог "
+                                                                                                                        WHEN '7' THEN 257157 -- 7;"филиал Кр.Рог";8377;"филиал Кр.Рог";;"";"филиал Кр.Рог "
+                                                                                                                        WHEN '08' THEN 257158 -- 8;"филиал Донецк";8378;"филиал Донецк";;"";"филиал Донецк "
+                                                                                                                        WHEN '8' THEN 257158 -- 8;"филиал Донецк";8378;"филиал Донецк";;"";"филиал Донецк "
+                                                                                                                        WHEN '09' THEN 257159 -- 9;"филиал Харьков";8381;"филиал Харьков";;"";"филиал Харьков "
+                                                                                                                        WHEN '9' THEN 257159 -- 9;"филиал Харьков";8381;"филиал Харьков";;"";"филиал Харьков "
+                                                                                                                        -- WHEN '10' THEN 257160 -- 10;"филиал Никополь";18342;"филиал Никополь";;"";"филиал Никополь "
+                                                                                                                        WHEN '222' THEN 257162 -- 2;"филиал Киев";8379;"филиал Киев";4;"Нал";"филиал Киев Нал"
                                                                                                               ELSE '0'
                                                                                                          END :: Integer
-                                                                     AND (Object_BranchLink_View.PaidKindId = zc_Enum_PaidKind_FirstForm()
-                                                                       OR Object_BranchLink_View.ObjectCode <> 2))
+                                                                     )
                                                                    OR Object_BranchLink_View.Id :: TVarChar = KodBranch
                            GROUP BY CASE WHEN TRIM (PartnerAll.CodeTT1C) = '' THEN '0' ELSE TRIM (PartnerAll.CodeTT1C) END
                                   , Object_BranchLink_View.Id
@@ -420,7 +434,7 @@ BEGIN
                  , tmpExcel.kontakt3tel    :: TVarChar AS kontakt3tel
                  , tmpExcel.kontakt3email  :: TVarChar AS kontakt3email
 
-                 , tmpAll.BranchTopId                  AS BranchTopId
+                 , COALESCE (tmpExcel.BranchTopId, tmpAll.BranchTopId)  AS BranchTopId
 
              FROM tmpAll
                   FULL JOIN (SELECT tmpExcel.* FROM tmpExcel WHERE tmpExcel.IsCode = 1
@@ -443,7 +457,7 @@ BEGIN
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpAll.PartnerId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpAll.JuridicalId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpAll.PaidKindId
-            LEFT JOIN Object_BranchLink_View AS Object_Branch ON Object_Branch.Id = tmpAll.BranchTopId
+            LEFT JOIN Object_BranchLink_View AS Object_Branch ON Object_Branch.Id = COALESCE (tmpExcel.BranchTopId, tmpAll.BranchTopId)
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                  ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
@@ -452,6 +466,8 @@ BEGIN
 
             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpAll.AccountId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+      WHERE ObjectDesc.Id = zc_Object_Partner()
+        AND Object_Account_View.AccountCode = 30101
        ;
 
 END;

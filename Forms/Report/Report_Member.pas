@@ -60,14 +60,16 @@ type
     cxLabel7: TcxLabel;
     BranchGuides: TdsdGuides;
     BranchName: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
     CarName: TcxGridDBColumn;
     StartAmountD: TcxGridDBColumn;
     StartAmountK: TcxGridDBColumn;
     MoneySumm: TcxGridDBColumn;
-    PersonalReportSumm: TcxGridDBColumn;
+    ReportSumm: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    SendSumm: TcxGridDBColumn;
+    AccountSumm: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

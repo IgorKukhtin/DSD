@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
@@ -15,11 +14,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , AmountOut TFloat 
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar
-             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
+             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , ContractInvNumber TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
              , CurrencyName TVarChar
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar)
@@ -62,13 +61,17 @@ BEGIN
            , Object_BankAccount_View.BankName  AS BankName
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
+           , ObjectDesc.ItemName
            , ObjectHistory_JuridicalDetails_View.OKPO
            , MovementString_OKPO.ValueData     AS OKPO_Parent
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
-           , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
+           , Object_InfoMoney_View.InfoMoneyName_all
+           , Object_Contract_InvNumber_View.ContractCode
+           , Object_Contract_InvNumber_View.InvNumber  AS ContractInvNumber
+           , Object_Contract_InvNumber_View.ContractTagName
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
            , Partner_BankAccount_View.BankName
@@ -96,6 +99,7 @@ BEGIN
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                         AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_MoneyPlace.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
@@ -136,6 +140,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 27.09.14                                        * add ContractTagName
  18.06.14                         * add Object_BankAccount_View
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  03.02.14                                        * add inIsErased
@@ -144,4 +149,4 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
  */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

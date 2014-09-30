@@ -12,6 +12,9 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbMovementId_TaxCorrective Integer;
+    DECLARE vbStatusId_TaxCorrective Integer;
+
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
@@ -21,6 +24,45 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
+
+
+     -- определяется <Налоговый документ> и его параметры
+     SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
+          , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
+            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective
+     FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
+                            THEN inMovementId
+                       ELSE MovementLinkMovement_Master.MovementChildId
+                  END AS MovementId_TaxCorrective
+           FROM Movement
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                               ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                              AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+           WHERE Movement.Id = inMovementId
+          ) AS tmpMovement
+          INNER JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpMovement.MovementId_TaxCorrective
+                                                       AND (Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete() OR tmpMovement.MovementId_TaxCorrective = inMovementId)
+     ;
+
+     -- очень важная проверка
+     IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 OR COALESCE (vbStatusId_TaxCorrective, 0) <> zc_Enum_Status_Complete()
+     THEN
+         IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> не создан.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+         END IF;
+         IF vbStatusId_TaxCorrective = zc_Enum_Status_Erased()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective()), (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementString_InvNumberPartner()), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId_TaxCorrective);
+         END IF;
+         IF vbStatusId_TaxCorrective = zc_Enum_Status_UnComplete()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective()), (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementString_InvNumberPartner()), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId_TaxCorrective);
+         END IF;
+         -- это уже странная ошибка
+         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+     END IF;
+
 
      -- определяется параметр
      vbGoodsPropertyId:= (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId

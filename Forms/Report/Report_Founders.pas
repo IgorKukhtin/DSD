@@ -56,7 +56,6 @@ type
     TransferDebtJournal: TdsdOpenForm;
     dsdPrintRealAction: TdsdPrintAction;
     bbPrintReal: TdxBarButton;
-    ContainerId: TcxGridDBColumn;
     StartAmountD: TcxGridDBColumn;
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
