@@ -1,15 +1,18 @@
 -- Function: gpInsertUpdate_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inServiceDate         TDateTime , -- Дата начисления
-    IN inComment             TVarChar  , -- Комментерий
-    IN inPersonalServiceListId  Integer  , -- 
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber              TVarChar  , -- Номер документа
+    IN inOperDate               TDateTime , -- Дата документа
+    IN inServiceDate            TDateTime , -- Дата начисления
+    IN inComment                TVarChar  , -- Комментерий
+    IN inPersonalServiceListId  Integer   , -- 
+    IN inJuridicalId            Integer   , -- 
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -25,6 +28,7 @@ BEGIN
                                                     , inServiceDate             := inServiceDate
                                                     , inComment                 := inComment
                                                     , inPersonalServiceListId   := inPersonalServiceListId 
+                                                    , inJuridicalId             := inJuridicalId
                                                     , inUserId                  := vbUserId
                                                      );
 
@@ -35,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.10.14         * add Juridical
  11.09.14         *
 */
 

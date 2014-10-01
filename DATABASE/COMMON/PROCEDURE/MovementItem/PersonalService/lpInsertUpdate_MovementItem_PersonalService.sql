@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,12 +11,19 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
    OUT outAmountCash         TFloat    , -- Сумма к выплате из кассы
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCard            TFloat    , -- Сумма на карточку (БН)
+    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
+    
+    IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (в зарплате)
+    IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (к зарплате)
+    IN inSummChild           TFloat    , -- Сумма алименты (удержание)
+    
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
+    IN inMemberId            Integer   , -- юр.лицо
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD AS
@@ -38,9 +46,17 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), ioId, inSummCard);
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialIn(), ioId, inSummSocialIn);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSocialAdd(), ioId, inSummSocialAdd);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(), ioId, inSummChild);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -51,6 +67,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Member(), ioId, inMemberId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -65,6 +83,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.10.14         * add redmine 30.09
  14.09.14                                        * add out...
  11.09.14         *
 */

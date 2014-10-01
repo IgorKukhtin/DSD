@@ -11,8 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
+             , TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
               )
 
 AS
@@ -49,9 +51,17 @@ BEGIN
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
+
+           , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
+           , MovementFloat_TotalSummSocialIn.ValueData    AS TotalSummSocialIn
+           , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
+           , MovementFloat_TotalSummChild.ValueData       AS TotalSummChild
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
+           , Object_Juridical.Id                        AS JuridicalId
+           , Object_Juridical.ValueData                 AS JuridicalName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -81,6 +91,19 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+           
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
+                                    ON MovementFloat_TotalSummCardRecalc.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSocialAdd
+                                    ON MovementFloat_TotalSummSocialAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummSocialAdd.DescId = zc_MovementFloat_TotalSummSocialAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSocialIn
+                                    ON MovementFloat_TotalSummSocialIn.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummSocialIn.DescId = zc_MovementFloat_TotalSummSocialIn()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
+                                    ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -90,6 +113,11 @@ BEGIN
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
             ;
 
 END;
@@ -101,6 +129,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.10.14         * add Juridical
  11.09.14         *
 */
 

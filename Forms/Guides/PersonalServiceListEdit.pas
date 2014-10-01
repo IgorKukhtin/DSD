@@ -8,7 +8,7 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TPersonalServiceListEditForm = class(TParentForm)
@@ -27,6 +27,9 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel3: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

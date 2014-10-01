@@ -130,6 +130,8 @@ type
     CurrencyPartnerGuides: TdsdGuides;
     actPrint_Invoice: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
+    actPrint_Pack: TdsdPrintAction;
+    bbPrint_Pack: TdxBarButton;
   private
     { Private declarations }
   public

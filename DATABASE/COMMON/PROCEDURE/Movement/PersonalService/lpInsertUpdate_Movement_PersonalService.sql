@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PersonalService(
     IN inOperDate               TDateTime , -- Дата документа
     IN inServiceDate            TDateTime , -- Дата начисления
     IN inComment                TVarChar  , -- Комментерий
-    IN inPersonalServiceListId  Integer  , -- Комментерий
+    IN inPersonalServiceListId  Integer   , -- 
+    IN inJuridicalId            Integer   , -- 
     IN inUserId                 Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -48,6 +50,9 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), ioId, inPersonalServiceListId);
+
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
    
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -62,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.10.14         * add inJuridicalId
  11.09.14         *
 */
 

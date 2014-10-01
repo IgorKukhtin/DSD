@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -37,6 +38,9 @@ BEGIN
              , 0                     	AS PersonalServiceListId
              , CAST ('' AS TVarChar) 	AS PersonalServiceListName
 
+             , 0                     	AS JuridicalId
+             , CAST ('' AS TVarChar) 	AS JuridicalName
+
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -52,6 +56,8 @@ BEGIN
            , MovementString_Comment.ValueData     AS Comment
            , Object_PersonalServiceList.Id        AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+           , Object_Juridical.Id                  AS JuridicalId
+           , Object_Juridical.ValueData           AS JuridicalName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -69,6 +75,12 @@ BEGIN
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+
        WHERE Movement.Id =  inMovementId;
 
        END IF;
@@ -82,6 +94,7 @@ ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.10.14         * add Juridical
  11.09.14         *
 */
 

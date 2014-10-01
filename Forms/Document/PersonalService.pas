@@ -34,7 +34,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    coSummCard: TcxGridDBColumn;
+    colSummCard: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     deServiceDate: TcxDateEdit;
@@ -52,6 +52,15 @@ type
     colIsMain: TcxGridDBColumn;
     colIsOfficial: TcxGridDBColumn;
     colAmountCash: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    colSummCardRecalc: TcxGridDBColumn;
+    colSummSocialIn: TcxGridDBColumn;
+    colSummSocialAdd: TcxGridDBColumn;
+    colSummChild: TcxGridDBColumn;
+    colMemberName: TcxGridDBColumn;
+    MemberChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
