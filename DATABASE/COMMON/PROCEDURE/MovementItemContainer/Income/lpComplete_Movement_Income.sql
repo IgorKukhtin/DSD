@@ -33,6 +33,7 @@ $BODY$
   DECLARE vbMemberId_From Integer;
   DECLARE vbCardFuelId_From Integer;
   DECLARE vbTicketFuelId_From Integer;
+  DECLARE vbInfoMoneyGroupId_From Integer;
   DECLARE vbInfoMoneyDestinationId_From Integer;
   DECLARE vbInfoMoneyId_From Integer;
 
@@ -248,7 +249,7 @@ BEGIN
 
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
-     SELECT lfGet_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfGet_InfoMoney;
+     SELECT lfGet_InfoMoney.InfoMoneyGroupId, lfGet_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyGroupId_From, vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfGet_InfoMoney;
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -256,8 +257,8 @@ BEGIN
                          , ContainerId_Summ, ContainerId_Goods, ContainerId_CountSupplier, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
                          , ContainerId_GoodsTicketFuel, GoodsId_TicketFuel
                          , OperCount, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
-                         , AccountId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
-                         , BusinessId
+                         , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
+                         , BusinessId, UnitId_Asset
                          , isPartionCount, isPartionSumm, isCountSupplier
                          , PartionGoodsId)
         SELECT
@@ -324,8 +325,15 @@ BEGIN
 
               
             , 0 AS AccountId              -- Счет(справочника), сформируем позже
+            , _tmp.InfoMoneyGroupId       -- Управленческая группа
             , _tmp.InfoMoneyDestinationId -- Управленческие назначения
             , _tmp.InfoMoneyId            -- Статьи назначения
+
+              -- Управленческая группа (детализация с/с), она же !!!соответствует!!! УП долг Контрагента
+            , CASE WHEN vbInfoMoneyGroupId_From <> 0
+                        THEN vbInfoMoneyGroupId_From -- УП ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
+                   ELSE _tmp.InfoMoneyGroupId -- УП берется по товару
+              END AS InfoMoneyGroupId_Detail
 
               -- Управленческие назначения (детализация с/с), она же !!!соответствует!!! УП долг Контрагента
             , CASE WHEN vbInfoMoneyDestinationId_From <> 0
@@ -341,6 +349,7 @@ BEGIN
 
               -- значение Бизнес !!!выбирается!!! из 1)Автомобиля или 2)Товара или 3)Подраделения
             , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId END AS BusinessId 
+            , 0 AS UnitId_Asset -- !!!потом доделать!!!
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm 
@@ -385,6 +394,10 @@ BEGIN
                                                                                   ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                      END AS tmpOperSumm_Packer
 
+                    -- Управленческая группа
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfGet_InfoMoney_Fuel.InfoMoneyGroupId, 0)
+                         ELSE COALESCE (View_InfoMoney.InfoMoneyGroupId, 0)
+                    END AS InfoMoneyGroupId
                     -- Управленческие назначения
                   , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfGet_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
                          ELSE COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0)
@@ -589,13 +602,15 @@ BEGIN
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId_Detail!!!
      -- !!!только если не талон!!!
-     INSERT INTO _tmpItem_SummPartner (ContainerId, AccountId, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId, BusinessId, PartionMovementId, OperSumm_Partner)
+     INSERT INTO _tmpItem_SummPartner (ContainerId, AccountId, ContainerId_Transit, AccountId_Transit, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, UnitId_Asset, PartionMovementId, OperSumm_Partner)
         SELECT 0 AS ContainerId, 0 AS AccountId, 0 AS ContainerId_Transit, 0 AS AccountId_Transit
-             , _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.PartionMovementId
+             , _tmpSumm.InfoMoneyGroupId_Detail, _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.UnitId_Asset, _tmpSumm.PartionMovementId
              , SUM (_tmpSumm.OperSumm_Partner) AS OperSumm_Partner
-        FROM (SELECT _tmpSumm_all.InfoMoneyDestinationId_Detail
+        FROM (SELECT _tmpSumm_all.InfoMoneyGroupId_Detail
+                   , _tmpSumm_all.InfoMoneyDestinationId_Detail
                    , _tmpSumm_all.InfoMoneyId_Detail
                    , _tmpSumm_all.BusinessId
+                   , _tmpSumm_all.UnitId_Asset
                      -- формируются Партии накладной, если Юр Лицо и NOT vbIsCorporate_From и Управленческие назначения = 10100; "Мясное сырье"
                    , CASE WHEN vbMemberId_From = 0
                            AND _tmpSumm_all.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -604,15 +619,15 @@ BEGIN
                           ELSE 0
                      END AS PartionMovementId
                    , _tmpSumm_all.OperSumm_Partner
-              FROM (SELECT _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId_Detail, _tmpItem.InfoMoneyId_Detail, _tmpItem.BusinessId
+              FROM (SELECT _tmpItem.InfoMoneyGroupId_Detail, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId_Detail, _tmpItem.InfoMoneyId_Detail, _tmpItem.BusinessId, _tmpItem.UnitId_Asset
                          , SUM (_tmpItem.OperSumm_Partner) AS OperSumm_Partner
                     FROM _tmpItem
                     WHERE _tmpItem.OperSumm_Partner <> 0 AND zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
                       AND vbTicketFuelId_From = 0
-                    GROUP BY _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId_Detail, _tmpItem.InfoMoneyId_Detail, _tmpItem.BusinessId
+                    GROUP BY _tmpItem.InfoMoneyGroupId_Detail, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId_Detail, _tmpItem.InfoMoneyId_Detail, _tmpItem.BusinessId, _tmpItem.UnitId_Asset
                    ) AS _tmpSumm_all
              ) AS _tmpSumm
-        GROUP BY _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.PartionMovementId;
+        GROUP BY _tmpSumm.InfoMoneyGroupId_Detail, _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.UnitId_Asset, _tmpSumm.PartionMovementId;
 
      -- заполняем таблицу - элементы по Сотруднику (заготовитель), со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId!!!
      INSERT INTO _tmpItem_SummPacker (ContainerId, AccountId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, OperSumm_Packer)
@@ -797,14 +812,21 @@ BEGIN
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT CASE WHEN vbMemberId_From <> 0
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы  -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
+
                              WHEN vbIsCorporate_From = TRUE
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
+
                              ELSE zc_Enum_AccountGroup_70000()  -- Кредиторы select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
                         END AS AccountGroupId
                       , CASE WHEN vbMemberId_From <> 0
                                   THEN zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)  -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30500())
+
                              WHEN vbIsCorporate_From = TRUE
                                   THEN zc_Enum_AccountDirection_30200() -- наши компании -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30200())
+
+                             WHEN _tmpItem_SummPartner.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                  THEN zc_Enum_AccountDirection_70800() -- Кредиторы + Производственные ОС !!!захардкодил-все сюда, надо будет сделать с подразделением или...!!!
+
                              ELSE zc_Enum_AccountDirection_70100() -- поставщики select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70100())
                         END AS AccountDirectionId
                       , _tmpItem_SummPartner.InfoMoneyDestinationId
@@ -820,7 +842,7 @@ BEGIN
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                         END AS AccountId
                  FROM _tmpItem_SummPartner
-                 GROUP BY _tmpItem_SummPartner.InfoMoneyDestinationId
+                 GROUP BY _tmpItem_SummPartner.InfoMoneyGroupId, _tmpItem_SummPartner.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummPartner.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
@@ -1217,6 +1239,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.10.14                                        * add InfoMoneyGroupId and InfoMoneyGroupId_Detail and UnitId_Asset
  07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_From
  05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  17.08.14                                        * add MovementDescId

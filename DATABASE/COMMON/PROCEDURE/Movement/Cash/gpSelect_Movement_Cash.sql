@@ -34,18 +34,30 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
                          UNION
-                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
                          UNION
-                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                          SELECT zc_Enum_Status_Erased() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate WHERE inIsErased = TRUE
                          )
+          , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId)
+          , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+          , Movement AS (SELECT Movement.*
+                              , Object_Status.ObjectCode AS StatusCode
+                              , Object_Status.ValueData  AS StatusName
+                         FROM tmpAll
+                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                                                 AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
+                                                 AND Movement.StatusId = tmpAll.StatusId
+                                                 AND Movement.AccessKeyId = tmpAll.AccessKeyId
+                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
+                        )
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+           , Movement.StatusCode
+           , Movement.StatusName
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
@@ -71,15 +83,10 @@ BEGIN
            , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData              AS UnitName
-       FROM tmpStatus
-            INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
-                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                               AND Movement.StatusId = tmpStatus.StatusId
-            INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                                             AND MovementItem.ObjectId = inCashId
+       FROM Movement
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
@@ -140,4 +147,5 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 273734, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

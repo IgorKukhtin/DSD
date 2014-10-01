@@ -83,7 +83,7 @@ BEGIN
                          AND Movement.StatusId = tmpStatus.StatusId
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpStatus.StatusId
 
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id
