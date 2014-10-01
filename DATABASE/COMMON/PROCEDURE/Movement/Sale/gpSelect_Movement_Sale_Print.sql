@@ -432,7 +432,7 @@ BEGIN
            , CASE Object_Measure.Id
                   WHEN zc_Measure_Sh() THEN 'PCE'
                   ELSE 'KGM'
-             END::TVarChar AS DELIVEREDUNIT
+             END::TVarChar                   AS DELIVEREDUNIT
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
            , tmpMI.Price                     AS Price
@@ -471,6 +471,10 @@ BEGIN
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
+
+           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -513,6 +517,9 @@ BEGIN
             ) AS tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -543,6 +550,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.05.14                                                       * Amount_Weight Amount_Sh
  23.07.14                                        * add ArticleGLN
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  20.06.14                                                       * change InvNumber
