@@ -8696,7 +8696,8 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                        and Bill.Id_Postgres>0'
@@ -8837,7 +8838,8 @@ begin
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -9157,7 +9159,8 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                        and Bill.Id_Postgres>0'
@@ -9833,7 +9836,8 @@ begin
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                         and Bill.MoneyKindId = zc_mkNal()'
@@ -11439,7 +11443,8 @@ begin
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                            and GoodsProperty.InfoMoneyCode not in (20501)' //  Оборотная тара
+           +'                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit(), zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()'
@@ -13281,7 +13286,8 @@ begin
            +'                      from dba.Bill'
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkReturnToClient()'
            +'                        and Bill.Id_Postgres>0'
@@ -13415,7 +13421,8 @@ begin
            +'                      from dba.Bill'
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -13691,7 +13698,8 @@ begin
            +'                      from dba.Bill'
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkReturnToClient()'
            +'                        and Bill.Id_Postgres>0'
@@ -13828,7 +13836,8 @@ begin
            +'                      from dba.Bill'
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
            +'                         and Bill.MoneyKindId = zc_mkNal()'
@@ -14137,7 +14146,8 @@ begin
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                            and GoodsProperty.InfoMoneyCode not in (20501)' //  Оборотная тара
+           +'                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit(), zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()'

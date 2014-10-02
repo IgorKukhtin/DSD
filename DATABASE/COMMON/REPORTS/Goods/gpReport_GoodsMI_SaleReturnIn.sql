@@ -32,6 +32,12 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Не выбрано юр.лицов!!!';
    END IF;*/
    
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inStartDate + (INTERVAL '62 DAY') <= inEndDate
+    THEN
+        inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    END IF;
+
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0 
