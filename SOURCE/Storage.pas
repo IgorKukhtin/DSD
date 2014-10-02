@@ -242,7 +242,7 @@ begin
     if IdHTTPWork.FExecOnServer then
        IdHTTPWork.Gauge.Finish;
     IdHTTPWork.FExecOnServer := false;
-    idHTTP.Disconnect;
+ //   idHTTP.Disconnect;
   end;
 //  if pExecOnServer then
 

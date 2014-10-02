@@ -21,7 +21,7 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, ExternalLoad;
+uses DB, UtilConst, TestFramework, SysUtils, ImportSettingsTest, ImportGroupTest;
 
 { TdbUnitTest }
 
@@ -60,13 +60,16 @@ begin
 end;
 
 function TImportGroupItemsObjectTest.InsertDefault: integer;
+var vbImportSettingsId, vbImportGroupId: integer;
 begin
-  result := InsertUpdateImportGroupItems(0, 'Загрузка прихода');
+  vbImportSettingsId := TImportSettingsObjectTest.Create.GetDefault;
+  vbImportGroupId := TImportGroupObjectTest.Create.GetDefault;
+  result := InsertUpdateImportGroupItems(0, vbImportSettingsId, vbImportGroupId);
   inherited;
 end;
 
 function TImportGroupItemsObjectTest.
-          InsertUpdateImportGroupItems(const Id, ImportSettingsId, ImportGroupId): integer;
+          InsertUpdateImportGroupItems(const Id, ImportSettingsId, ImportGroupId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);

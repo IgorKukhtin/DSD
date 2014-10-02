@@ -18,7 +18,7 @@ BEGIN
 
    RETURN QUERY 
        SELECT 
-             Object_ImportGroup.Id           AS Id
+             ObjectLink_ImportGroupItems_ImportSettings.ObjectId  AS Id
            , Object_ImportSettings.Id        AS ImportSettingsId
            , Object_ImportSettings.ValueData AS Name
            , ObjectLink_ImportGroup_Object.ObjectId AS ImportGroupId

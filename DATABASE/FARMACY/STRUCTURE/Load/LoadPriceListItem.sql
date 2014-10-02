@@ -32,6 +32,7 @@ ALTER TABLE LoadPriceListItem
   OWNER TO postgres;
  
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId ON LoadPriceListItem(LoadPriceListId);
+CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_GoodsCode ON LoadPriceListItem(LoadPriceListId, GoodsCode);
 CREATE INDEX idx_LoadPriceListItem_GoodsId         ON LoadPriceListItem(GoodsId); 
 
 

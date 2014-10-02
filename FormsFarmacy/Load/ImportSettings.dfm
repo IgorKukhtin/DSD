@@ -4,7 +4,6 @@ inherited ImportSettingsForm: TImportSettingsForm
   ClientWidth = 1184
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -364
   ExplicitWidth = 1192
   ExplicitHeight = 366
   PixelsPerInch = 96
@@ -12,12 +11,12 @@ inherited ImportSettingsForm: TImportSettingsForm
   inherited PageControl: TcxPageControl
     Width = 1184
     Height = 313
-    ExplicitWidth = 1138
+    ExplicitWidth = 1184
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 1184
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1138
+      ExplicitWidth = 1184
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 697
@@ -148,7 +147,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 438
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -357,16 +355,6 @@ inherited ImportSettingsForm: TImportSettingsForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
-        end
-        item
-          Name = 'ImportSettingsItemsId'
-          Component = ChildCDS
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'ImportSettingsItemsName'
-          Component = ChildCDS
-          ComponentItem = 'Name'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -466,24 +454,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = False
     end
-    object ExecuteImportSettingsAction: TExecuteImportSettingsAction
-      Category = 'Load'
-      MoveParams = <>
-      ImportSettingsId.Component = MasterCDS
-      ImportSettingsId.ComponentItem = 'Id'
-    end
-    object mactLoadPrice: TMultiAction
-      Category = 'Load'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteImportSettingsAction
-        end>
-      DataSource = MasterDS
-      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099'? '
-      InfoAfterExecute = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1042#1089#1077#1093' '#1087#1088#1072#1081#1089#1086#1074
-    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -574,15 +544,6 @@ inherited ImportSettingsForm: TImportSettingsForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
-      Category = 0
-    end
-    object bbExecuteImportSettings: TdxBarButton
-      Action = ExecuteImportSettingsAction
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072
-      Category = 0
-    end
-    object bbLoadAllPrice: TdxBarButton
-      Action = mactLoadPrice
       Category = 0
     end
   end

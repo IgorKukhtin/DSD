@@ -151,6 +151,9 @@ begin
   //Настройки импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

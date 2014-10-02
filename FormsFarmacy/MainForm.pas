@@ -93,6 +93,8 @@ type
     bbJuridicalSettings: TdxBarButton;
     actProtocolUser: TdsdOpenForm;
     bbUserProtocol: TdxBarButton;
+    actImportGroup: TdsdOpenForm;
+    bbLoadLoad: TdxBarButton;
   private
     { Private declarations }
   public

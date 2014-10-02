@@ -11,15 +11,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportGroupItems(
   RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode Integer;  
-
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportType());
    vbUserId := lpGetUserBySession (inSession); 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportGroupItems(), vbCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportGroupItems(), 0, '');
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportGroupItems_ImportSettings(), ioId, inImportSettingsId);

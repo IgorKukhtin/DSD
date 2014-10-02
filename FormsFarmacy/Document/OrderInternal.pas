@@ -50,6 +50,10 @@ type
     coCode: TcxGridDBColumn;
     DBViewChildAddOn: TdsdDBViewAddOn;
     colContractName: TcxGridDBColumn;
+    colDeferment: TcxGridDBColumn;
+    colPercent: TcxGridDBColumn;
+    colSuperFinalPrice: TcxGridDBColumn;
+    colBonus: TcxGridDBColumn;
   private
     { Private declarations }
   public

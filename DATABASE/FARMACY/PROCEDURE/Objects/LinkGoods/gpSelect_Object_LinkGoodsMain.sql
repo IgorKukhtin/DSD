@@ -27,7 +27,7 @@ BEGIN
          , Object_LinkGoods_View.GoodsMainName
          , Object_LinkGoods_View.GoodsId
          
-     FROM Object_Goods_Main_View 
+     FROM Object_LinkGoods_View
            
     WHERE Object_LinkGoods_View.ObjectId = inObjectId;
   

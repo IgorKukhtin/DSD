@@ -100,6 +100,7 @@ type
   private
     FExternalLoad: TExternalLoad;
     FImportSettings: TImportSettings;
+    function GetFieldName(AFieldName: String; AImportSettings: TImportSettings): string;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
   public
     constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings); overload;
@@ -331,6 +332,15 @@ begin
   TODBCExternalLoad(FExternalLoad).Activate;
 end;
 
+function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: String;
+  AImportSettings: TImportSettings): string;
+begin
+  result := AFieldName;
+  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then
+     if lowercase(AFieldName) = 'a' then
+        result := 'F1';
+end;
+
 procedure TExecuteProcedureFromExternalDataSet.Load;
 begin
   with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
@@ -354,6 +364,7 @@ var i: integer;
     D: TDateTime;
     Value: OleVariant;
     Ft: double;
+    vbFieldName: string;
 begin
   with AImportSettings do begin
     for i := 0 to Count - 1 do begin
@@ -364,10 +375,11 @@ begin
               StoredProc.Params.Items[i].Value := AImportSettings.ContractId
            else begin
              if TImportSettingsItems(Items[i]).ItemName <> '' then begin
+                vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
                 case StoredProc.Params[i].DataType of
                   ftDateTime: begin
                      try
-                       Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                       Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
                        D := VarToDateTime(Value);
                        StoredProc.Params.Items[i].Value := D;
                      except
@@ -379,7 +391,7 @@ begin
                   end;
                   ftFloat: begin
                      try
-                       Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                       Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
                        Ft := gfStrToFloat(Value);
                        StoredProc.Params.Items[i].Value := Ft;
                      except
@@ -390,7 +402,7 @@ begin
                      end;
                   end
                   else
-                    StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+                    StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
                 end;
              end;
           end;
