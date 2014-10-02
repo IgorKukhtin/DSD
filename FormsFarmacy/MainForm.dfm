@@ -276,6 +276,10 @@ inherited MainForm: TMainForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbLoadLoad'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementLoad'
         end
         item
@@ -378,6 +382,10 @@ inherited MainForm: TMainForm
       Action = actProtocolUser
       Category = 0
     end
+    object bbLoadLoad: TdxBarButton
+      Action = actImportGroup
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     Left = 240
@@ -435,7 +443,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoods: TdsdOpenForm [7]
+    object actImportGroup: TdsdOpenForm [7]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1080
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1080
+      FormName = 'TImportGroupForm'
+      FormNameParam.Value = 'TImportGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoods: TdsdOpenForm [8]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080
@@ -446,7 +465,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [8]
+    object actUser: TdsdOpenForm [9]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080

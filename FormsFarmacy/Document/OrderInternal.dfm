@@ -1,29 +1,28 @@
 inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
-  ClientWidth = 1064
-  ExplicitLeft = -282
-  ExplicitWidth = 1072
+  ClientWidth = 1072
+  ExplicitWidth = 1080
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 1064
+    Width = 1072
     Height = 457
     ExplicitTop = 75
     ExplicitWidth = 1064
     ExplicitHeight = 457
     ClientRectBottom = 457
-    ClientRectRight = 1064
+    ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1064
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
-        Width = 489
+        Width = 425
         Height = 433
         Align = alLeft
-        ExplicitWidth = 489
+        ExplicitWidth = 425
         ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -107,7 +106,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 43
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -115,7 +114,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 355
+            Width = 260
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -126,7 +125,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 48
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -137,20 +136,20 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 60
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 493
+        Left = 428
         Top = 0
-        Width = 571
+        Width = 644
         Height = 433
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 589
-        ExplicitWidth = 475
+        ExplicitLeft = 493
+        ExplicitWidth = 571
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -236,18 +235,37 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 172
+            Width = 133
+          end
+          object colBonus: TcxGridDBColumn
+            Caption = #1041#1086#1085#1091#1089
+            DataBinding.FieldName = 'Bonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.## %; ; '
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
           end
           object colContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 78
+          end
+          object colDeferment: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088'.'
+            DataBinding.FieldName = 'Deferment'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 39
           end
           object coCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            Width = 69
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -255,13 +273,32 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 161
+            Width = 95
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 50
+          end
+          object colPercent: TcxGridDBColumn
+            Caption = '% '#1079#1072' '#1086#1090#1089#1088'.'
+            DataBinding.FieldName = 'Percent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.## %; ; '
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object colSuperFinalPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'SuperFinalPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -269,17 +306,17 @@ inherited OrderInternalForm: TOrderInternalForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 489
+        Left = 425
         Top = 0
-        Width = 4
+        Width = 3
         Height = 433
         Control = cxGrid
-        ExplicitLeft = 585
+        ExplicitLeft = 409
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 1072
     Height = 49
     TabOrder = 3
     ExplicitWidth = 1064

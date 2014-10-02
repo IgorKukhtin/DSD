@@ -111,7 +111,7 @@ uses
   JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
   MovementItemsLoad in '..\..\FormsFarmacy\Load\MovementItemsLoad.pas' {MovementItemsLoadForm: TParentForm},
-  ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  ImportGroup in '..\..\FormsFarmacy\Load\ImportGroup.pas' {ImportGroupForm: TParentForm},
   FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
@@ -167,7 +167,9 @@ uses
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
   UserProtocol in '..\..\Forms\System\UserProtocol.pas' {UserProtocolForm: TParentForm},
   ImportGroupTest in '..\SOURCE\Objects\All\ImportGroupTest.pas',
-  ImportGroupItemsTest in '..\SOURCE\Objects\All\ImportGroupItemsTest.pas';
+  ImportGroupItemsTest in '..\SOURCE\Objects\All\ImportGroupItemsTest.pas',
+  ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

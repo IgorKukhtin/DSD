@@ -1,4 +1,4 @@
-unit ImportSettings;
+unit ImportGroup;
 
 interface
 
@@ -14,25 +14,21 @@ uses
   ExternalLoad, cxBlobEdit;
 
 type
-  TImportSettingsForm = class(TAncestorDBGridForm)
+  TImportGroupForm = class(TAncestorDBGridForm)
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
-    clParamName: TcxGridDBColumn;
     clIisErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    clDirectory: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
-    spInsertUpdateImportType: TdsdStoredProc;
+    spInsertUpdateImportGroup: TdsdStoredProc;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
     spSelectItems: TdsdStoredProc;
-    spInsertUpdateImportTypeItems: TdsdStoredProc;
+    spInsertUpdateImportGroupItems: TdsdStoredProc;
     dsdDBViewAddOnItems: TdsdDBViewAddOn;
     dsdUpdateMaster: TdsdUpdateDataSet;
     dsdUpdateChild: TdsdUpdateDataSet;
-    spErasedUnErased: TdsdStoredProc;
     spErasedUnErasedChild: TdsdStoredProc;
     dsdSetErased: TdsdUpdateErased;
     dsdUnErased: TdsdUpdateErased;
@@ -42,25 +38,16 @@ type
     dsdUnErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     bbUnErasedChild: TdxBarButton;
-    colParamValue: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clContractName: TcxGridDBColumn;
-    clFileTypeName: TcxGridDBColumn;
-    clImportTypeName: TcxGridDBColumn;
-    clStartRow: TcxGridDBColumn;
-    LoadObjectChoiceForm: TOpenChoiceForm;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
-    ContractChoiceForm: TOpenChoiceForm;
-    FileTypeKindChoiceForm: TOpenChoiceForm;
+    ImportSettingsChoiceForm: TOpenChoiceForm;
     cxSplitter1: TcxSplitter;
-    colParamNumber: TcxGridDBColumn;
-    FileDialogAction: TFileDialogAction;
-    ImportType: TOpenChoiceForm;
-    clHDR: TcxGridDBColumn;
-    colDefaultValue: TcxGridDBColumn;
-    clQuery: TcxGridDBColumn;
-    colUserParamName: TcxGridDBColumn;
+    ExecuteImportSettingsAction: TExecuteImportSettingsAction;
+    bbExecuteImportSettings: TdxBarButton;
+    mactLoadPrice: TMultiAction;
+    bbLoadAllPrice: TdxBarButton;
+    colName: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -71,6 +58,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TImportSettingsForm);
+  RegisterClass(TImportGroupForm);
 
 end.

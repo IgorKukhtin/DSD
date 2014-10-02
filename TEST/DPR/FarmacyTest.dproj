@@ -332,8 +332,8 @@
 				<Form>MovementItemsLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
-				<Form>ImportSettingsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Load\ImportGroup.pas">
+				<Form>ImportGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\FileTypeKind.pas">
@@ -476,6 +476,11 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupItemsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
