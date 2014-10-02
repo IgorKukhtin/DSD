@@ -8,23 +8,23 @@ inherited SaleJournalForm: TSaleJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 478
+    Height = 476
     TabOrder = 3
-    ExplicitTop = 57
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
-        ExplicitWidth = 1020
-        ExplicitHeight = 478
+        Width = 1014
+        Height = 470
+        ExplicitWidth = 1014
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -826,6 +826,92 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintSaleBillProcName'
     end
+    object actPrint_Invoice: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1085#1074#1086#1081#1089
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1085#1074#1086#1081#1089
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Pack: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
+      ImageIndex = 20
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack'
+      ReportNameParam.Name = 'PrintMovement_SalePack'
+      ReportNameParam.Value = 'PrintMovement_SalePack'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -874,7 +960,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -978,6 +1064,14 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1015,6 +1109,14 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbspChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbPrint_Invoice: TdxBarButton
+      Action = actPrint_Invoice
+      Category = 0
+    end
+    object bbPrint_Pack: TdxBarButton
+      Action = actPrint_Pack
       Category = 0
     end
   end

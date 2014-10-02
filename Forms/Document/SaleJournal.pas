@@ -89,6 +89,10 @@ type
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
+    actPrint_Invoice: TdsdPrintAction;
+    actPrint_Pack: TdsdPrintAction;
+    bbPrint_Invoice: TdxBarButton;
+    bbPrint_Pack: TdxBarButton;
   private
     { Private declarations }
   public
