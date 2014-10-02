@@ -120,7 +120,6 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                                                           OR (UnitCode NOT IN (11010 -- АУП
                                                                                              , 11030 -- Бухгалтерия
                                                                                              , 23010 -- Отдел Маркетинга
-                                                                                             , 23020 -- Отдел логистики
                                                                                              , 23040 -- Отдел коммерции (общефирменный)
                                                                                               )
                                                                               AND ProfitLossDirectionCode IN (30100 -- Административные расходы + Содержание админ

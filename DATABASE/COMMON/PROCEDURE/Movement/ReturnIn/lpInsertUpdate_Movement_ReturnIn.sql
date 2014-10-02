@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
+    IN inOperDate            TDateTime , -- Дата(склад)
+    IN inOperDatePartner     TDateTime , -- Дата документа у покупателя
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -32,6 +32,12 @@ BEGIN
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+
+     -- проверка
+     IF inOperDate <> inOperDatePartner
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Дата(склад)> должно соответствовать значению <Дата документа у покупателя>.';
      END IF;
 
      -- проверка
