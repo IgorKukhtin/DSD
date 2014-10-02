@@ -1069,8 +1069,10 @@ procedure TLoadFormTest.LoadProfitLossDirectionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirection_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirection_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
 end;

@@ -9,28 +9,6 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
       select '4715' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 union select '189245' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189234' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189232' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189274' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '187869' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '187861' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '188502' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '188499' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189226' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189115' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189243' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189390' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189449' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '188849' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189112' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-
-union select '188329' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '189254' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-
-union select '178593' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '179441' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-union select '181607' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
-
 union select '182556' as InvNumber, zc_UnitId_StoreSale()        as FromId, 0 as ToId -- Склад реализации
 
 -- !!!!!!

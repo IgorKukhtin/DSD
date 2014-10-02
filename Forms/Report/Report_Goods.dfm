@@ -10,6 +10,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Width = 1174
     Height = 284
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1174
     ExplicitHeight = 284
     ClientRectBottom = 284
@@ -148,7 +149,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 91
           end
           object clLocationCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
@@ -198,7 +199,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             DataBinding.FieldName = 'ObjectByName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 139
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -251,7 +252,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Properties.DisplayFormat = ',0.####;-,0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
           object clSummStart: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090'. '#1085#1072#1095'.'
@@ -262,7 +263,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
@@ -273,7 +274,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clSummIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
@@ -284,7 +285,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clAmountOut: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
@@ -295,7 +296,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clSummOut: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
@@ -306,7 +307,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clAmountEnd: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'. '#1082#1086#1085'.'
@@ -317,7 +318,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object clSummEnd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090'. '#1082#1086#1085'.'
@@ -328,7 +329,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
         end
       end

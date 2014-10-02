@@ -111,8 +111,8 @@ BEGIN
                                                THEN _tmpItem.AccountId
                                           WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
-                                          WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
-                                               THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
+                                          -- WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
+                                          --      THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                THEN zc_Enum_Account_100401() -- Расчеты с участниками
@@ -285,7 +285,8 @@ BEGIN
      -- 2. определяется ContainerId для проводок суммового учета
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
-                                            WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
+                                            WHEN _tmpItem.AccountId IN (zc_Enum_Account_110201()  -- Транзит + деньги в пути
+                                                                      , zc_Enum_Account_110301()) -- Транзит + расчетный счет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId

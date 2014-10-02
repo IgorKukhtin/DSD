@@ -12,17 +12,17 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 472
-        ExplicitWidth = 1050
+        ExplicitWidth = 1020
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -142,7 +142,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 93
           end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
@@ -159,7 +159,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 148
           end
           object PersonalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1086#1090#1088'.'
@@ -176,7 +176,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 138
           end
           object PositionCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
@@ -193,7 +193,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 110
           end
           object ServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
@@ -205,7 +205,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 97
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -263,7 +263,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colStartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -275,7 +275,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colStartAmountK: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -287,7 +287,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colServiceSumm: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
@@ -298,7 +298,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colMoneySumm: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
@@ -309,7 +309,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colDebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
@@ -323,7 +323,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colKreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
@@ -337,7 +337,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colEndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
@@ -350,7 +350,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colEndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -362,7 +362,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colEndAmountK: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -374,7 +374,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
@@ -392,7 +392,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   inherited Panel: TPanel
     Width = 1020
     Height = 57
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60

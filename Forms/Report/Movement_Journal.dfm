@@ -77,7 +77,7 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 65
           end
           object colDebetSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1044#1077#1073#1077#1090
@@ -101,7 +101,7 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 77
           end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -118,7 +118,7 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 127
           end
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -144,7 +144,7 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 142
           end
           object colBranchCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1092#1083'.'
@@ -167,7 +167,7 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 35
+            Width = 67
           end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
@@ -261,14 +261,14 @@ inherited MovementJournalForm: TMovementJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 105
           end
           object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 161
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090

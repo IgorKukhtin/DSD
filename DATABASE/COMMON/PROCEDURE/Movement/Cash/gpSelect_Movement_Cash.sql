@@ -1,11 +1,12 @@
 -- Function: gpSelect_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inCashId      Integer , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -33,12 +34,30 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId, inStartDate AS StartDate, inEndDate AS EndDate WHERE inIsErased = TRUE
+                         )
+          , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId)
+          , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+          , Movement AS (SELECT Movement.*
+                              , Object_Status.ObjectCode AS StatusCode
+                              , Object_Status.ValueData  AS StatusName
+                         FROM tmpAll
+                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                                                 AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
+                                                 AND Movement.StatusId = tmpAll.StatusId
+                                                 AND Movement.AccessKeyId = tmpAll.AccessKeyId
+                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpAll.StatusId
+                        )
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+           , Movement.StatusCode
+           , Movement.StatusName
            , CASE WHEN MovementItem.Amount > 0
                        THEN MovementItem.Amount
                   ELSE 0
@@ -65,11 +84,9 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName
            , Object_Unit.ValueData              AS UnitName
        FROM Movement
-            INNER JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                                             AND MovementItem.ObjectId = inCashId
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.ObjectId = inCashId
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
@@ -111,14 +128,12 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-
-       WHERE Movement.DescId = zc_Movement_Cash()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+       ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -132,4 +147,5 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, Integer, TVarChar) 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 273734, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inCashId:= 1, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

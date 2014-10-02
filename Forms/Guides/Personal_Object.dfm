@@ -44,7 +44,6 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -60,7 +59,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 155
+        Width = 226
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -90,7 +89,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 128
+        Width = 239
       end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072

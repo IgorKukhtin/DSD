@@ -45,7 +45,7 @@ inherited MoneyPlaceCash_ObjectForm: TMoneyPlaceCash_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 151
+            Width = 240
           end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'

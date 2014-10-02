@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,12 +11,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
    OUT outAmountCash         TFloat    , -- Сумма к выплате из кассы
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCard            TFloat    , -- Сумма на карточку (БН)
+    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения    
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
+    IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (в зарплате)
+    IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (к зарплате)
+    IN inSummChild           TFloat    , -- Сумма алименты (удержание)    
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
+    IN inMemberId            Integer   , -- юр.лицо
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -33,12 +39,17 @@ BEGIN
                                                      , inPersonalId         := inPersonalId
                                                      , inSummService        := inSummService
                                                      , inSummCard           := inSummCard
+                                                     , inSummCardRecalc     := inSummCardRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
+                                                     , inSummSocialIn       := inSummSocialIn
+                                                     , inSummSocialAdd      := inSummSocialAdd
+                                                     , inSummChild          := inSummChild
                                                      , inComment            := inComment
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
+                                                     , inMemberId           := inMemberId
                                                      , inUserId             := vbUserId
                                                       ) AS tmp;
 END;
@@ -48,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.10.14         * add redmine 30.09
  14.09.14                                        * add out...
  11.09.14         *
 */

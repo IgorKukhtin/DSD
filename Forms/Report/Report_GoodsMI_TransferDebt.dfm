@@ -143,7 +143,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 204
           end
           object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -167,7 +167,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 123
           end
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1096#1090'.'
@@ -177,7 +177,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 100
           end
           object clSummPartner: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075')'
@@ -188,7 +188,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 70
+            Width = 100
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -219,7 +219,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 146
           end
         end
       end

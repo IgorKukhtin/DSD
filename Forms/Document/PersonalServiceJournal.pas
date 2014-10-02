@@ -47,6 +47,10 @@ type
     colTotalSummAdd: TcxGridDBColumn;
     colPersonalServiceListName: TcxGridDBColumn;
     colTotalSummCash: TcxGridDBColumn;
+    colTotalSummCardRecalc: TcxGridDBColumn;
+    colTotalSummSocialIn: TcxGridDBColumn;
+    colTotalSummSocialAdd: TcxGridDBColumn;
+    colTotalSummChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

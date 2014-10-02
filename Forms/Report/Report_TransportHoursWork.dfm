@@ -199,7 +199,6 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True

@@ -146,6 +146,11 @@ BEGIN
 
    END IF;
 
+   IF COALESCE (vbAccountId, 0) = 0 
+   THEN
+         RAISE EXCEPTION 'Ошибка.Счет не определен.Параметры: <%> <%> <%> <%> <%> <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId, inInsert, inUserId;
+   END IF;
+
    -- Возвращаем значение
    RETURN (vbAccountId);
 

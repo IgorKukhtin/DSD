@@ -27,8 +27,6 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 451
-    ExplicitHeight = 365
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -240,6 +238,26 @@ object ProfitLossDirection_ObjectForm: TProfitLossDirection_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossGroupId'
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Component = ClientDataSet
+          ComponentItem = 'ProfitLossGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = 0
+        end
+        item
+          Name = 'ProfitLossName'
+          Value = ''
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

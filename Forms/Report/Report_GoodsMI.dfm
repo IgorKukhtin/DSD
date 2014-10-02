@@ -131,7 +131,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 150
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -153,7 +153,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 151
           end
           object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -188,7 +188,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 85
           end
           object clAmountPartner_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1091' '#1087#1086#1082#1091#1087'.'
@@ -198,7 +198,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 111
           end
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1096#1090'. ('#1089#1082#1083#1072#1076')'
@@ -241,7 +241,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 102
           end
           object clSummPartner: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087'.'
@@ -252,7 +252,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 70
+            Width = 114
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -283,7 +283,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 129
           end
         end
       end

@@ -10,6 +10,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
     Width = 1174
     Height = 284
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1174
     ExplicitHeight = 284
     ClientRectBottom = 284
@@ -91,21 +92,21 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 69
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 84
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 87
           end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
@@ -137,7 +138,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 171
           end
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -224,21 +225,21 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 91
           end
           object clAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 95
           end
           object clOperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 55
           end
         end
       end

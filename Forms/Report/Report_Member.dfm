@@ -12,17 +12,17 @@ inherited Report_MemberForm: TReport_MemberForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 472
-        ExplicitWidth = 1050
+        ExplicitWidth = 1020
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -158,7 +158,7 @@ inherited Report_MemberForm: TReport_MemberForm
             DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 93
           end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
@@ -166,7 +166,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 181
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -201,7 +201,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 133
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -223,7 +223,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object StartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -236,7 +236,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object StartAmountK: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -249,7 +249,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object MoneySumm: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' (+)'#1087#1088#1080#1093' (-)'#1074#1086#1079#1074#1088'.'
@@ -261,7 +261,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.MaxLength = 0
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object ReportSumm: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076#1099' ('#1072#1074#1072#1085#1089'. '#1086#1090#1095'.)'
@@ -273,7 +273,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.MaxLength = 0
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object AccountSumm: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1099' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
@@ -282,7 +282,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object SendSumm: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.'
@@ -291,7 +291,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object DebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
@@ -306,7 +306,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object KreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
@@ -321,7 +321,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object EndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
@@ -335,7 +335,7 @@ inherited Report_MemberForm: TReport_MemberForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object EndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -348,7 +348,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object EndAmountK: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -361,7 +361,7 @@ inherited Report_MemberForm: TReport_MemberForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
@@ -378,7 +378,7 @@ inherited Report_MemberForm: TReport_MemberForm
   inherited Panel: TPanel
     Width = 1020
     Height = 57
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60

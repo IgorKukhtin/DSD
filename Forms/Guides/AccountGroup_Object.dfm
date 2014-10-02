@@ -134,7 +134,23 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuide'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -143,11 +159,6 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoiceGuide'
         end>
       OneOnRow = True
       Row = 0
@@ -180,6 +191,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -193,6 +205,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -204,6 +217,24 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = 0
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = ''
+          DataType = ftString
+        end
+        item
+          Name = 'AccountId'
+          Value = 0
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -211,6 +242,7 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -254,6 +286,8 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 168
     Top = 240
   end

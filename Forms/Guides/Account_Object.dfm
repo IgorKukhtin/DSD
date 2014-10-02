@@ -53,7 +53,7 @@ object Account_ObjectForm: TAccount_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 35
       end
       object AccountName_All: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
@@ -217,11 +217,11 @@ object Account_ObjectForm: TAccount_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -230,6 +230,18 @@ object Account_ObjectForm: TAccount_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -262,6 +274,7 @@ object Account_ObjectForm: TAccount_ObjectForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -275,6 +288,7 @@ object Account_ObjectForm: TAccount_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -283,6 +297,7 @@ object Account_ObjectForm: TAccount_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -300,6 +315,28 @@ object Account_ObjectForm: TAccount_ObjectForm
           Name = 'TextValueAll'
           Component = ClientDataSet
           ComponentItem = 'AccountName_All'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountGroupId'
+          Component = ClientDataSet
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Component = ClientDataSet
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountDirectionId'
+          Component = ClientDataSet
+          ComponentItem = 'AccountDirectionId'
+        end
+        item
+          Name = 'AccountDirectionName'
+          Component = ClientDataSet
+          ComponentItem = 'AccountDirectionName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -341,6 +378,10 @@ object Account_ObjectForm: TAccount_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 216
   end

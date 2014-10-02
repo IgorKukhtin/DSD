@@ -228,7 +228,6 @@ object Report_FuelForm: TReport_FuelForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -236,38 +235,44 @@ object Report_FuelForm: TReport_FuelForm
       object colBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 84
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 96
       end
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 30
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 88
       end
       object FuelCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelCode'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
       object FuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -276,18 +281,18 @@ object Report_FuelForm: TReport_FuelForm
         DataBinding.FieldName = 'StartAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object StartSumm: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090'.  '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'StartSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object IncomeAmount: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
@@ -296,47 +301,52 @@ object Report_FuelForm: TReport_FuelForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object IncomeSumm: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'IncomeSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object RateAmount: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'RateAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object RateSumm: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'RateSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object EndAmount: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'EndAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
       object EndSumm: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'EndSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel

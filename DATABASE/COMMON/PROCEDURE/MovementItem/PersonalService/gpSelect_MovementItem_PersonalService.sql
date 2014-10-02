@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyName  TVarChar
-             , Amount TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat
+             , MemberId Integer, MemberName  TVarChar
+             , Amount TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , Comment TVarChar
              , isErased Boolean
               )
@@ -41,7 +43,8 @@ BEGIN
                            , MILinkObject_Unit.ObjectId               AS UnitId
                            , MILinkObject_Position.ObjectId           AS PositionId
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
-                           , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                           , MILinkObject_Member.ObjectId             AS MemberId
+                           , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
                            , MovementItem.isErased
                       FROM tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -56,6 +59,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                                            ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Member.DescId = zc_MILinkObject_Member()                                                           
                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                 ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -66,8 +72,9 @@ BEGIN
                                  , View_Personal.PersonalId
                                  , View_Personal.UnitId
                                  , View_Personal.PositionId
-                                 , vbInfoMoneyId_def AS InfoMoneyId
-                                 , View_Personal.MemberId
+                                 , vbInfoMoneyId_def         AS InfoMoneyId
+                                 , View_Personal.MemberId    AS MemberId_Personal
+                                 , 0 as MemberId
                                  , FALSE AS isErased
                             FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                  UNION
@@ -79,11 +86,12 @@ BEGIN
                                  LEFT JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
                                                 AND tmpMI.UnitId     = View_Personal.UnitId
                                                 AND tmpMI.PositionId = View_Personal.PositionId
+                                                
                             WHERE tmpMI.PersonalId IS NULL
                            )
-          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId, tmpMI.isErased FROM tmpMI
+          , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId, tmpMI.isErased FROM tmpMI
                       UNION ALL
-                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.MemberId, tmpPersonal.isErased FROM tmpPersonal
+                       SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.isErased FROM tmpPersonal
                       )
        SELECT tmpAll.MovementItemId                   AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -101,14 +109,21 @@ BEGIN
             , View_InfoMoney.InfoMoneyId              AS InfoMoneyId
             , View_InfoMoney.InfoMoneyName_all        AS InfoMoneyName
 
-            , tmpAll.Amount :: TFloat         AS Amount
+            , COALESCE (Object_Member.Id, 0)          AS MemberId
+            , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
+            
+            , tmpAll.Amount :: TFloat          AS Amount
             , (COALESCE (tmpAll.Amount, 0) - COALESCE (MIFloat_SummCard.ValueData)) :: TFloat AS AmountCash
-            , MIFloat_SummService.ValueData   AS SummService
-            , MIFloat_SummCard.ValueData      AS SummCard
-            , MIFloat_SummMinus.ValueData     AS SummMinus
-            , MIFloat_SummAdd.ValueData       AS SummAdd
+            , MIFloat_SummService.ValueData    AS SummService
+            , MIFloat_SummCard.ValueData       AS SummCard
+            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
+            , MIFloat_SummMinus.ValueData      AS SummMinus
+            , MIFloat_SummAdd.ValueData        AS SummAdd
+            , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
+            , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
+            , MIFloat_SummChild.ValueData      AS SummChild
 
-            , MIString_Comment.ValueData      AS Comment
+            , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
          
        FROM tmpAll 
@@ -122,6 +137,11 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                         ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                        ON MIFloat_SummCardRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                                                                              
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -129,19 +149,30 @@ BEGIN
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                        ON MIFloat_SummSocialIn.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                        ON MIFloat_SummSocialAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
+            LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                                        ON MIFloat_SummChild.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                                                   
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpAll.InfoMoneyId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
                                    AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
             LEFT JOIN ObjectString AS ObjectString_Member_INN
-                                   ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId
+                                   ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
-                                    ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
+                                    ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
       ;
 
@@ -153,6 +184,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.10.14         * add redmine 30.09
  14.09.14                                        * ALL
  11.09.14         *
 */
@@ -160,3 +192,4 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+

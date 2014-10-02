@@ -12,17 +12,17 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 472
-        ExplicitWidth = 1050
+        ExplicitWidth = 1020
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -129,21 +129,21 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 105
           end
           object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 105
           end
           object clItemName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -202,7 +202,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 121
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -223,7 +223,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object StartAmountD: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -235,7 +235,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object StartAmountK: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -247,7 +247,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object colDebetSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
@@ -260,7 +260,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object colKreditSumm: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
@@ -273,7 +273,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object EndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
@@ -286,7 +286,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
           end
           object EndAmountD: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
@@ -298,7 +298,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object EndAmountK: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
@@ -310,7 +310,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 80
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
@@ -318,7 +318,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
         end
       end
@@ -327,7 +327,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   inherited Panel: TPanel
     Width = 1020
     Height = 57
-    ExplicitWidth = 1050
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118

@@ -27,8 +27,6 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 337
-    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -186,6 +184,7 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
     Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -199,6 +198,7 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -210,6 +210,24 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Value = 0
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Value = ''
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = 0
+        end
+        item
+          Name = 'ProfitLossName'
+          Value = ''
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -217,6 +235,7 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -260,6 +279,8 @@ object ProfitLossGroup_ObjectForm: TProfitLossGroup_ObjectForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 152
     Top = 224
   end

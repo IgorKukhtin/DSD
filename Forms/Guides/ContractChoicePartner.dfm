@@ -44,7 +44,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 183
           end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'. '#1083'.'
@@ -180,7 +180,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 111
           end
           object colChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
@@ -197,7 +197,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 112
           end
           object colContractComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
