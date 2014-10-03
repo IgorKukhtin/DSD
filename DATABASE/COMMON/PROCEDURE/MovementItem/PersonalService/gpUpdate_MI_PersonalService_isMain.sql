@@ -12,6 +12,12 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
 BEGIN
+
+     -- проверка
+     IF COALESCE (inId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка! Не внесена сумма!';
+     END IF;
      
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
 

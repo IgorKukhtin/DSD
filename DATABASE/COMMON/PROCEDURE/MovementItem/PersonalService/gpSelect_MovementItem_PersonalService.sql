@@ -86,7 +86,7 @@ BEGIN
                                  LEFT JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
                                                 AND tmpMI.UnitId     = View_Personal.UnitId
                                                 AND tmpMI.PositionId = View_Personal.PositionId
-                                                
+                                              
                             WHERE tmpMI.PersonalId IS NULL
                            )
           , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId, tmpMI.isErased FROM tmpMI
@@ -98,7 +98,7 @@ BEGIN
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
-            , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) :: Boolean   AS isMain
+            , COALESCE (COALESCE (MIBoolean_Main.ValueData, ObjectBoolean_Personal_Main.ValueData), False) :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_Unit.Id                          AS UnitId
@@ -162,6 +162,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                         ON MIFloat_SummChild.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
+                                          ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
+                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
                                                    
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
@@ -196,4 +199,5 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_PersonalService (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+
 
