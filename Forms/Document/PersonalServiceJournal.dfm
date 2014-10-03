@@ -2,8 +2,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 534
   ClientWidth = 1070
-  ExplicitWidth = 1078
-  ExplicitHeight = 568
+  ExplicitWidth = 1086
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,6 +77,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummToPay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -128,6 +133,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummToPay
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -174,14 +184,24 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object colTotalSumm: TcxGridDBColumn
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colTotalSummToPay: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'TotalSummToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colTotalSummCash: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
@@ -213,6 +233,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object colTotalSummCardRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053') '#1074#1074#1086#1076
+            DataBinding.FieldName = 'TotalSummCardRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object colTotalSummMinus: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'TotalSummMinus'
@@ -233,17 +262,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colTotalSummCardRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053') '#1088#1072#1089#1087#1088#1077#1076'.'
-            DataBinding.FieldName = 'TotalSummCardRecalc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
           object colTotalSummSocialIn: TcxGridDBColumn
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083#1072#1090#1072' ('#1074' '#1079#1087')'
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
             DataBinding.FieldName = 'TotalSummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -252,7 +272,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object colTotalSummSocialAdd: TcxGridDBColumn
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083#1072#1090#1072' ('#1082' '#1079#1087')'
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
             DataBinding.FieldName = 'TotalSummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

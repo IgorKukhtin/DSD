@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyName  TVarChar
              , MemberId Integer, MemberName  TVarChar
-             , Amount TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -113,7 +113,8 @@ BEGIN
             , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
             
             , tmpAll.Amount :: TFloat          AS Amount
-            , (COALESCE (tmpAll.Amount, 0) - COALESCE (MIFloat_SummCard.ValueData)) :: TFloat AS AmountCash
+            , MIFloat_SummToPay.ValueData      AS AmountToPay
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
             , MIFloat_SummService.ValueData    AS SummService
             , MIFloat_SummCard.ValueData       AS SummCard
             , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
@@ -131,6 +132,9 @@ BEGIN
                                          ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                                         
+            LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                                        ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
             LEFT JOIN MovementItemFloat AS MIFloat_SummService 
                                         ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummService.DescId = zc_MIFloat_SummService()

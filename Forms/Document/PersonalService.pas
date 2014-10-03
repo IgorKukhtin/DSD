@@ -61,6 +61,7 @@ type
     colSummChild: TcxGridDBColumn;
     colMemberName: TcxGridDBColumn;
     MemberChoiceForm: TOpenChoiceForm;
+    colAmountToPay: TcxGridDBColumn;
   private
     { Private declarations }
   public

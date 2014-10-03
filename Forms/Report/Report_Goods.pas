@@ -40,6 +40,7 @@ type
     cxLabel4: TcxLabel;
     edLocation: TcxButtonEdit;
     LocationGuides: TdsdGuides;
+    clPartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

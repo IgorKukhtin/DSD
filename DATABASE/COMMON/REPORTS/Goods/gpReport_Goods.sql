@@ -14,7 +14,7 @@ RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTim
               , CarCode Integer, CarName TVarChar
               , ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, PartionGoods TVarChar
               , Price TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
@@ -28,6 +28,7 @@ BEGIN
                                      , COALESCE (CLO_Unit.ObjectId, COALESCE (CLO_Car.ObjectId, COALESCE (CLO_Member.ObjectId, 0))) AS LocationId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                     , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                      , Container.Amount
                                 FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods 
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
@@ -40,6 +41,8 @@ BEGIN
                                                                                 AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                                    AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                 WHERE CLO_Unit.ObjectId = inLocationId
                                    OR CLO_Car.ObjectId = inLocationId
                                    OR CLO_Member.ObjectId = inLocationId
@@ -49,6 +52,7 @@ BEGIN
                                        , tmpContainer_Count.LocationId
                                        , tmpContainer_Count.GoodsId
                                        , tmpContainer_Count.GoodsKindId
+                                       , tmpContainer_Count.PartionGoodsId
                                        , tmpContainer_Count.Amount
                                        , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    THEN MIContainer.MovementId
@@ -70,6 +74,7 @@ BEGIN
                                          , tmpContainer_Count.LocationId
                                          , tmpContainer_Count.GoodsId
                                          , tmpContainer_Count.GoodsKindId
+                                         , tmpContainer_Count.PartionGoodsId
                                          , tmpContainer_Count.Amount
                                          , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                      THEN MIContainer.MovementId
@@ -84,6 +89,7 @@ BEGIN
                                     , tmpContainer_Count.LocationId
                                     , tmpContainer_Count.GoodsId
                                     , tmpContainer_Count.GoodsKindId
+                                    , tmpContainer_Count.PartionGoodsId
                                     , Container.Id AS ContainerId_Summ
                                     , Container.Amount
                                FROM tmpContainer_Count
@@ -94,6 +100,7 @@ BEGIN
                                       , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
                                       , tmpContainer_Summ.GoodsKindId
+                                      , tmpContainer_Summ.PartionGoodsId
                                       , tmpContainer_Summ.Amount
                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                   THEN MIContainer.MovementId
@@ -115,6 +122,7 @@ BEGIN
                                         , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
                                         , tmpContainer_Summ.GoodsKindId
+                                        , tmpContainer_Summ.PartionGoodsId
                                         , tmpContainer_Summ.Amount
                                         , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     THEN MIContainer.MovementId
@@ -143,6 +151,7 @@ BEGIN
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
         , Object_GoodsKind.ValueData AS GoodsKindName
+        , Object_PartionGoods.ValueData AS PartionGoods
 
         , CAST (CASE WHEN tmpMIContainer_group.MovementId = -1 AND tmpMIContainer_group.AmountStart <> 0
                           THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
@@ -169,6 +178,7 @@ BEGIN
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
+              , tmpMIContainer_all.PartionGoodsId
               , SUM (tmpMIContainer_all.AmountStart) AS AmountStart
               , SUM (tmpMIContainer_all.AmountEnd)   AS AmountEnd
               , SUM (tmpMIContainer_all.AmountIn)    AS AmountIn
@@ -183,6 +193,7 @@ BEGIN
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
+                   , tmpMIContainer_Count.PartionGoodsId
                    , tmpMIContainer_Count.Amount - SUM (tmpMIContainer_Count.Amount_Total) AS AmountStart
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
@@ -196,6 +207,7 @@ BEGIN
                      , tmpMIContainer_Count.LocationId
                      , tmpMIContainer_Count.GoodsId
                      , tmpMIContainer_Count.GoodsKindId
+                     , tmpMIContainer_Count.PartionGoodsId
                      , tmpMIContainer_Count.Amount
               HAVING tmpMIContainer_Count.Amount - SUM (tmpMIContainer_Count.Amount_Total) <> 0
                   OR SUM (tmpMIContainer_Count.Amount_Period) <> 0
@@ -206,6 +218,7 @@ BEGIN
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
+                   , tmpMIContainer_Count.PartionGoodsId
                    , 0 AS AmountStart
                    , tmpMIContainer_Count.Amount - SUM (tmpMIContainer_Count.Amount_Total) + SUM (tmpMIContainer_Count.Amount_Period) AS AmountEnd
                    , 0 AS AmountIn
@@ -219,6 +232,7 @@ BEGIN
                      , tmpMIContainer_Count.LocationId
                      , tmpMIContainer_Count.GoodsId
                      , tmpMIContainer_Count.GoodsKindId
+                     , tmpMIContainer_Count.PartionGoodsId
                      , tmpMIContainer_Count.Amount
               HAVING tmpMIContainer_Count.Amount - SUM (tmpMIContainer_Count.Amount_Total) <> 0
                   OR SUM (tmpMIContainer_Count.Amount_Period) <> 0
@@ -229,6 +243,7 @@ BEGIN
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
+                   , tmpMIContainer_Count.PartionGoodsId
                    , 0 AS AmountStart
                    , 0 AS AmountEnd
                    , CASE WHEN tmpMIContainer_Count.Amount_Period > 0 THEN tmpMIContainer_Count.Amount_Period ELSE 0 END AS AmountIn
@@ -246,6 +261,7 @@ BEGIN
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
+                   , tmpMIContainer_Summ.PartionGoodsId
                    , 0 AS AmountStart
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
@@ -259,6 +275,7 @@ BEGIN
                      , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
                      , tmpMIContainer_Summ.GoodsKindId
+                     , tmpMIContainer_Summ.PartionGoodsId
                      , tmpMIContainer_Summ.Amount
               HAVING tmpMIContainer_Summ.Amount - SUM (tmpMIContainer_Summ.Amount_Total) <> 0
                   OR SUM (tmpMIContainer_Summ.Amount_Period) <> 0
@@ -269,6 +286,7 @@ BEGIN
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
+                   , tmpMIContainer_Summ.PartionGoodsId
                    , 0 AS AmountStart
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
@@ -282,6 +300,7 @@ BEGIN
                      , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
                      , tmpMIContainer_Summ.GoodsKindId
+                     , tmpMIContainer_Summ.PartionGoodsId
                      , tmpMIContainer_Summ.Amount
               HAVING tmpMIContainer_Summ.Amount - SUM (tmpMIContainer_Summ.Amount_Total) <> 0
                   OR SUM (tmpMIContainer_Summ.Amount_Period) <> 0
@@ -292,6 +311,7 @@ BEGIN
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
+                   , tmpMIContainer_Summ.PartionGoodsId
                    , 0 AS AmountStart
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
@@ -308,6 +328,7 @@ BEGIN
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
+                , tmpMIContainer_all.PartionGoodsId
         ) AS tmpMIContainer_group
         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -337,6 +358,7 @@ BEGIN
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
         LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
         LEFT JOIN Object AS Object_By ON Object_By.Id = MovementLinkObject_By.ObjectId
+        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
 
    ;
     

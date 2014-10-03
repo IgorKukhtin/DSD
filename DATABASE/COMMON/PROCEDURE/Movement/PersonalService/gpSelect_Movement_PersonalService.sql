@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSumm TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
+             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
              , TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
@@ -46,7 +46,8 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_ServiceDate.ValueData         AS ServiceDate 
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)) :: TFloat AS TotalSummCash
+           , MovementFloat_TotalSummToPay.ValueData     AS TotalSummToPay
+           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
            , MovementFloat_TotalSummService .ValueData  AS TotalSummService 
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
@@ -79,6 +80,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
+                                    ON MovementFloat_TotalSummToPay.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummToPay.DescId = zc_MovementFloat_TotalSummToPay()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummService
                                     ON MovementFloat_TotalSummService.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummService.DescId = zc_MovementFloat_TotalSummService()
