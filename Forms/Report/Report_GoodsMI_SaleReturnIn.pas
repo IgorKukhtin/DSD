@@ -58,6 +58,8 @@ type
     bbPrint_byJuridical: TdxBarButton;
     clJuridicalGroupName: TcxGridDBColumn;
     clBranchName: TcxGridDBColumn;
+    actPrint_byStatGroup: TdsdPrintAction;
+    bbPrint_byStatGroup: TdxBarButton;
   private
     { Private declarations }
   public

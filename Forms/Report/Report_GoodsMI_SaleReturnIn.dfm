@@ -3,28 +3,30 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1071
-  ExplicitHeight = 422
+  ExplicitWidth = 1063
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 82
     Width = 1055
-    Height = 307
+    Height = 305
     TabOrder = 3
-    ExplicitTop = 80
+    ExplicitTop = 82
     ExplicitWidth = 1055
-    ExplicitHeight = 307
-    ClientRectBottom = 307
-    ClientRectRight = 1055
+    ExplicitHeight = 305
+    ClientRectBottom = 301
+    ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1055
-      ExplicitHeight = 307
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1049
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 1055
-        Height = 307
-        ExplicitWidth = 1055
-        ExplicitHeight = 307
+        Width = 1049
+        Height = 299
+        ExplicitWidth = 1049
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -596,6 +598,41 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
       ReportNameParam.DataType = ftString
     end
+    object actPrint_byStatGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ImageIndex = 20
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -667,7 +704,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -693,6 +730,10 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byStatGroup'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -710,6 +751,10 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     end
     object bbPrint_byJuridical: TdxBarButton
       Action = actPrint_byJuridical
+      Category = 0
+    end
+    object bbPrint_byStatGroup: TdxBarButton
+      Action = actPrint_byStatGroup
       Category = 0
     end
   end
