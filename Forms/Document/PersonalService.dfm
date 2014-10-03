@@ -2,8 +2,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 668
   ClientWidth = 1112
-  ExplicitWidth = 1128
-  ExplicitHeight = 703
+  ExplicitWidth = 1120
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -478,6 +478,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actUpdateIsMain: TdsdExecStoredProc [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMain
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -655,6 +667,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateIsMain'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -700,6 +720,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbUpdateIsMain: TdxBarButton
+      Action = actUpdateIsMain
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1128,6 +1152,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Name = 'inisMain'
+        Component = MasterCDS
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'outAmount'
         Component = MasterCDS
         ComponentItem = 'Amount'
@@ -1369,5 +1400,26 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end>
     Left = 744
     Top = 16
+  end
+  object spUpdateIsMain: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_isMain'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioIsMain'
+        Component = MasterCDS
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 403
   end
 end

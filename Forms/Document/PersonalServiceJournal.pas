@@ -52,6 +52,7 @@ type
     colTotalSummSocialAdd: TcxGridDBColumn;
     colTotalSummChild: TcxGridDBColumn;
     colTotalSummToPay: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
