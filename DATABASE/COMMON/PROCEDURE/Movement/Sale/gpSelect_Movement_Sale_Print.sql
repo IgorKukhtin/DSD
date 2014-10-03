@@ -473,7 +473,7 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Amount_Weight
-           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+--           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
@@ -579,7 +579,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');
 COMMIT;
 */
 -- тест
