@@ -250,7 +250,7 @@ BEGIN
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
                                     LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
-                                                                                 AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_20000() -- Запасы
+                                                                                 -- AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_20000() -- Запасы
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
                                       , tmpContainer_Summ.AccountId
@@ -688,3 +688,4 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 
 -- тест
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inSession:= '2') 
+-- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inSession := '5');

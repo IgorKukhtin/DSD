@@ -18,6 +18,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 1.1. долг сотруднику по ЗП
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -113,6 +114,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 1.2. ОПиУ по ЗП
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
@@ -174,6 +176,69 @@ BEGIN
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
        ;
 
+
+     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- 2.1. долг сотруднику по Соц.Выпл
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+                         , MovementItemId, ContainerId
+                         , AccountGroupId, AccountDirectionId, AccountId
+                         , ProfitLossGroupId, ProfitLossDirectionId
+                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
+                         , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , IsActive, IsMaster
+                          )
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+             , -1 * (COALESCE (MIFloat_SummSocialIn.ValueData, 0) + COALESCE (MIFloat_SummSocialAdd.ValueData, 0)) AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , View_InfoMoney.InfoMoneyGroupId
+               -- Управленческие назначения
+             , View_InfoMoney.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , View_InfoMoney.InfoMoneyId
+
+               -- Бизнес Баланс: из какой кассы будет выплачено
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , _tmpItem.JuridicalId_Basis
+
+             , _tmpItem.UnitId
+             , _tmpItem.PositionId
+
+               -- Филиал Баланс: всегда по подразделению
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , _tmpItem.ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , FALSE AS IsActive
+             , TRUE AS IsMaster
+        FROM _tmpItem
+              LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                                          ON MIFloat_SummSocialIn.MovementItemId = _tmpItem.MovementItemId
+                                         AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
+              LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                                          ON MIFloat_SummSocialAdd.MovementItemId = _tmpItem.MovementItemId
+                                         AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
+              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60103() -- Заработная плата + Алименты
+       ;
 
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки

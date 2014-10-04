@@ -2065,9 +2065,8 @@ begin
         Add('     , Goods.Id_Postgres_Fuel AS FuelId_PG');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// ¿À¿Õ
-        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
-//        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionSumm on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id and isPartionCount.isCount=zc_rvYes()');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id and isPartionSumm.isSumm=zc_rvYes()');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
