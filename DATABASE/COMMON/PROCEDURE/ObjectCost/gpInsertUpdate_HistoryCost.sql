@@ -36,7 +36,7 @@ BEGIN
              , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                          THEN TRUE
                     ELSE FALSE
-               END AS isInfoMoney_80401
+               END AS isInfoMoney_80401 -- прибыль текущего периода
 
              , SUM (tmpContainer.StartCount)
              , SUM (tmpContainer.StartSumm)

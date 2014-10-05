@@ -470,7 +470,7 @@ BEGIN
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
       FROM 
-        (SELECT tmpMIContainer_all.AccountId
+        (SELECT MAX  (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
@@ -633,7 +633,7 @@ BEGIN
                  OR tmpMIContainer_Summ.Amount_ProductionOut  <> 0
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.ContainerId
-                , tmpMIContainer_all.AccountId
+                -- , tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
