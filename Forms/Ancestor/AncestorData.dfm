@@ -28,6 +28,7 @@ inherited AncestorDataForm: TAncestorDataForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 80
     Top = 16
   end

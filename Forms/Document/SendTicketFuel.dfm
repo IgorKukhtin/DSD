@@ -1,7 +1,7 @@
 inherited SendTicketFuelForm: TSendTicketFuelForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')>'
   ClientWidth = 701
-  ExplicitWidth = 717
+  ExplicitWidth = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,23 +48,13 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 701
-      inherited cxGridEntry: TcxGrid
-        Width = 701
-        ExplicitWidth = 701
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Width = 701
     ExplicitWidth = 701
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cxLabel3: TcxLabel
       Left = 380
       Top = 5
@@ -112,6 +102,13 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
       0
       26
       0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        DataSummaryItemIndex = 0
+      end>
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
@@ -306,6 +303,8 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
   object FromGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    FormNameParam.Value = 'TObject_StoragePlace'
+    FormNameParam.DataType = ftString
     FormName = 'TObject_StoragePlace'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -328,6 +327,8 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
   object ToGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    FormNameParam.Value = 'TObject_StoragePlace'
+    FormNameParam.DataType = ftString
     FormName = 'TObject_StoragePlace'
     PositionDataSet = 'ClientDataSet'
     Params = <

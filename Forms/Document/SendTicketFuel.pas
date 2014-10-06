@@ -13,7 +13,7 @@ uses
   cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid,
   cxPC, Vcl.Grids, Vcl.DBGrids, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TSendTicketFuelForm = class(TAncestorDocumentForm)
