@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
+    IN inContractId          Integer   , -- Договор
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -20,7 +22,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
      vbUserId := inSession;
 
-     ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inInternalOrderId, vbUserId);
+     ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inContractId, inInternalOrderId, vbUserId);
 
 END;
 $BODY$
@@ -30,6 +32,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.10.14                         *
  01.07.14                                                        *
 
 

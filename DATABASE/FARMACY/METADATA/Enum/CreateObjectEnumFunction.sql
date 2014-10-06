@@ -1,4 +1,11 @@
 -- !!!
+-- !!! Глобальные константы
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_Marion() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_Marion' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
+-- !!!
 -- !!! Роли
 -- !!!
 

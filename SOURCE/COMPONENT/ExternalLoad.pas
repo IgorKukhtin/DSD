@@ -334,11 +334,16 @@ end;
 
 function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: String;
   AImportSettings: TImportSettings): string;
+var
+  c: char;
 begin
   result := AFieldName;
   if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then
-     if lowercase(AFieldName) = 'a' then
-        result := 'F1';
+     if (length(AFieldName) = 1) then begin
+        c := lowercase(AFieldName)[1];
+        if c in ['a'..'z'] then
+           result := 'F' + IntToStr(byte(c) - byte('a') + 1);
+     end;
 end;
 
 procedure TExecuteProcedureFromExternalDataSet.Load;
@@ -351,6 +356,7 @@ begin
         IncProgress;
         FExternalLoad.Next;
       end;
+      FImportSettings.StoredProc.Execute(true);
       FExternalLoad.Close;
     finally
      Finish
@@ -458,7 +464,8 @@ constructor TImportSettings.Create(ItemClass: TCollectionItemClass);
 begin
   inherited;
   StoredProc := TdsdStoredProc.Create(nil);
-  StoredProc.OutputType := otResult;
+  StoredProc.OutputType := otMultiExecute;
+  StoredProc.PackSize := 100;
 end;
 
 destructor TImportSettings.Destroy;
@@ -501,9 +508,9 @@ begin
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
-  Result.StoredProc := TdsdStoredProc.Create(nil);
+//  Result.StoredProc := TdsdStoredProc.Create(nil);
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
-  Result.StoredProc.OutputType := otResult;
+//  Result.StoredProc.OutputType := otResult;
 
   GetStoredProc.Params.Clear;
   {Заполняем параметрами параметры процедуры}

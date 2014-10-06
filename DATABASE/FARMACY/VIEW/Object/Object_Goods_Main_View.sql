@@ -1,10 +1,10 @@
 -- View: Object_Goods_View
 
-DROP VIEW IF EXISTS Object_Goods_Main_View;
+DROP VIEW IF EXISTS Object_Goods_Main_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Goods_Main_View AS
          SELECT 
-             Object_Goods.Id                                  AS Id
+             ObjectBoolean_Goods_isMain.ObjectId              AS Id
            , Object_Goods.ObjectCode                          AS GoodsCode
            , Object_Goods.ValueData                           AS GoodsName
            , Object_Goods.isErased                            AS isErased
@@ -16,11 +16,10 @@ CREATE OR REPLACE VIEW Object_Goods_Main_View AS
            , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
            , Object_NDSKind.ValueData                         AS NDSKindName
 
-       FROM Object AS Object_Goods
+       FROM ObjectBoolean AS ObjectBoolean_Goods_isMain 
 
-            JOIN ObjectBoolean AS ObjectBoolean_Goods_isMain 
-                               ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
-                              AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
+            LEFT JOIN Object AS Object_Goods 
+                             ON Object_Goods.Id = ObjectBoolean_Goods_isMain.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
                                  ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
@@ -40,7 +39,9 @@ CREATE OR REPLACE VIEW Object_Goods_Main_View AS
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId;
+        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+   WHERE ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain();
 
 
 ALTER TABLE Object_Goods_Main_View  OWNER TO postgres;

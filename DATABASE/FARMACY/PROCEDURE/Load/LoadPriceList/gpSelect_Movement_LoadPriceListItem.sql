@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
     IN inLoadPriceListId Integer ,   --
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
+RETURNS TABLE (Id Integer, CommonCode Integer, GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
                Price TFloat, ExpirationDate TDateTime)
 AS
@@ -21,6 +21,7 @@ BEGIN
      RETURN QUERY
        SELECT
          LoadPriceListItem.Id, 
+         LoadPriceListItem.CommonCode, 
          LoadPriceListItem.GoodsCode, 
          LoadPriceListItem.GoodsName, 
          LoadPriceListItem.GoodsNDS, 

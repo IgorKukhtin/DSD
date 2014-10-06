@@ -5,7 +5,7 @@ interface
 uses Classes, DBClient, DB;
 
 type
-  TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob);
+  TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob, otMultiExecute);
 
   TdsdParam = class(TCollectionItem)
   private
@@ -94,6 +94,9 @@ type
     FParams: TdsdParams;
     FStoredProcName: string;
     FOutputType: TOutputType;
+    FPackSize: integer;
+    FCurrentPackSize: integer;
+    FDataXML: string;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -103,10 +106,12 @@ type
     procedure MultiDataSetRefresh;
     procedure SetStoredProcName(const Value: String);
     function GetDataSetType: string;
+    property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
+    procedure MultiExecute(ExecPack: boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute: string;
+    function Execute(ExecPack: boolean = false): string;
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
@@ -123,6 +128,8 @@ type
     property OutputType: TOutputType read FOutputType write FOutputType default otDataSet;
     // Параметры процедуры
     property Params: TdsdParams read FParams write FParams;
+    // Количество записей в пакете для вызова
+    property PackSize: integer read FPackSize write FPackSize;
   end;
 
   procedure Register;
@@ -172,6 +179,9 @@ begin
   FDataSets := TdsdDataSets.Create(Self, TdsdDataSetLink);
   FParams := TdsdParams.Create(Self, TdsdParam);
   OutputType := otDataSet;
+  CurrentPackSize := 0;
+  PackSize := 1;
+  FDataXML := '';
 end;
 
 procedure TdsdStoredProc.DataSetRefresh;
@@ -221,7 +231,7 @@ begin
   inherited;
 end;
 
-function TdsdStoredProc.Execute;
+function TdsdStoredProc.Execute(ExecPack: boolean = false): string;
 var TickCount: cardinal;
 begin
   result := '';
@@ -235,7 +245,9 @@ begin
     if (OutputType = otResult) then
        FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
     if (OutputType = otBlob) then
-        result := TStorageFactory.GetStorage.ExecuteProc(GetXML)
+        result := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+    if (OutputType = otMultiExecute) then
+        MultiExecute(ExecPack);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -397,11 +409,14 @@ begin
         raise Exception.Create('Пользователь не установлен');
   if trim(StoredProcName) = '' then
      raise Exception.Create('Не указано название процедуры в объекте ' + Name);
+  if FDataXML <> '' then
+     FDataXML := '<data>' + FDataXML + '</data>';
   Result :=
            '<xml Session = "' + Session + '" >' +
                 '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '" DataSetType = "' + GetDataSetType + '" >' +
                    FillParams +
                 '</' + StoredProcName + '>' +
+                FDataXML +
            '</xml>';
 end;
 
@@ -429,6 +444,23 @@ begin
   finally
     if Assigned(B) then
        DataSets[0].DataSet.FreeBookmark(B);
+  end;
+end;
+
+procedure TdsdStoredProc.MultiExecute(ExecPack: boolean);
+begin
+  // Заполняем значение Data
+  FDataXML := FDataXML + '<dataitem>' + FillParams + '</dataitem>';
+  // Увеличиваем счетчик
+  CurrentPackSize := CurrentPackSize + 1;
+  // Выполняем
+  if (CurrentPackSize = PackSize) or ExecPack then begin
+     CurrentPackSize := 0;
+     try
+       TStorageFactory.GetStorage.ExecuteProc(GetXML);
+     finally
+       FDataXML := '';
+     end;
   end;
 end;
 

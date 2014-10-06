@@ -3,7 +3,6 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 763
   AddOnFormData.Params = FormParams
-  ExplicitTop = -54
   ExplicitWidth = 771
   ExplicitHeight = 437
   PixelsPerInch = 96
@@ -18,16 +17,27 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     ClientRectBottom = 335
     ClientRectRight = 763
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 763
+      ExplicitHeight = 335
       inherited cxGrid: TcxGrid
         Width = 763
         Height = 335
         ExplicitWidth = 763
         ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsView.ColumnAutoWidth = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colCommonCode: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' '#1082#1086#1076
+            DataBinding.FieldName = 'CommonCode'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsCode'

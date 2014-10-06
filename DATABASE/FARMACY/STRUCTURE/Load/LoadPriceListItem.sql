@@ -13,6 +13,7 @@
 CREATE TABLE LoadPriceListItem
 (
   Id              serial        NOT NULL PRIMARY KEY,
+  CommonCode      Integer  , -- Общий код товара
   GoodsCode       TVarChar , -- Код товара поставщика
   GoodsName	  TVarChar , -- Наименование товара поставщика
   GoodsNDS	  TVarChar , -- НДС товара
@@ -33,6 +34,7 @@ ALTER TABLE LoadPriceListItem
  
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId ON LoadPriceListItem(LoadPriceListId);
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_GoodsCode ON LoadPriceListItem(LoadPriceListId, GoodsCode);
+CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_CommonCode ON LoadPriceListItem(LoadPriceListId, CommonCode);
 CREATE INDEX idx_LoadPriceListItem_GoodsId         ON LoadPriceListItem(GoodsId); 
 
 

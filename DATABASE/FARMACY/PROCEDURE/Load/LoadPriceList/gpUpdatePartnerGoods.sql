@@ -23,6 +23,13 @@ BEGIN
          , LoadPriceList.JuridicalId INTO vbOperDate, vbJuridicalId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
+     -- Создаем общие коды, которых еще нет
+
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, ''), zc_Enum_GlobalConst_Marion())
+            FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
+             AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
+             AND CommonCode > 0;
+
      -- Тут мы меняем или добавляем товары в справочник товаров прайс-листа
 
      PERFORM lpInsertUpdate_Object_Goods(
@@ -36,18 +43,20 @@ BEGIN
                              vbUserId , 
                                 false )
         FROM LoadPriceListItem
-                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode 
+                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName 
                             FROM Object_Goods_View 
                            WHERE ObjectId = vbJuridicalId
                         ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
-         WHERE LoadPriceListItem.GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId  = inId;
+         WHERE LoadPriceListItem.GoodsId <> 0 
+           AND LoadPriceListItem.LoadPriceListId  = inId 
+           AND Object_Goods.GoodsName <> LoadPriceListItem.GoodsName;
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
 
      PERFORM
             gpInsertUpdate_Object_LinkGoods(0 , -- ключ объекта <Условия договора>
                     LoadPriceListItem.GoodsId , -- Главный товар
-                              Object_Goods.Id , -- Товар для замены
+                              Object_Goods.Id , -- товар из группы
                                     inSession )
        FROM LoadPriceListItem
                JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
@@ -57,8 +66,28 @@ BEGIN
           WHERE GoodsId <> 0 AND LoadPriceListItem.LoadPriceListId = inId
            AND (LoadPriceListItem.GoodsId, Object_Goods.Id) NOT IN 
                (SELECT GoodsMainId, GoodsId FROM Object_LinkGoods_View
-                       WHERE ObjectId = vbJuridicalId AND ObjectMainId IS NULL);
+                       WHERE ObjectId = vbJuridicalId);
    
+      -- Выбираем коды Мориона, у которых нет стыковки с главным 
+
+      PERFORM gpInsertUpdate_Object_LinkGoods(
+              0 
+            , MainGoodsId -- Главный товар
+            , GoodsId      -- Товар для замены
+            , inSession                 -- сессия пользователя
+            )  
+        FROM(
+        SELECT DISTINCT 
+            LoadPriceListItem.GoodsId AS MainGoodsId 
+          , Object_Goods_View.Id AS GoodsId 
+        FROM Object_Goods_View 
+          JOIN LoadPriceListItem ON LoadPriceListItem.CommonCode = Object_Goods_View.goodscodeInt
+                                AND LoadPriceListItem.LoadPriceListId = inId
+      
+      WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND LoadPriceListItem.GoodsId <> 0
+                     
+      AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())) AS DDD;
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -69,6 +98,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.10.14                        *  
  18.09.14                        *  
 */
 

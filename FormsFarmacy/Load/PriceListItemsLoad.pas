@@ -34,6 +34,7 @@ type
     GuidesFrom: TdsdGuides;
     actUpdate: TdsdUpdateDataSet;
     spUpdatePriceListItem: TdsdStoredProc;
+    colCommonCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

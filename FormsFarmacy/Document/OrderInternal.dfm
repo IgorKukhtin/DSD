@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1072
+  ExplicitLeft = -290
   ExplicitWidth = 1080
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -11,12 +12,12 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1072
     Height = 457
     ExplicitTop = 75
-    ExplicitWidth = 1064
+    ExplicitWidth = 1072
     ExplicitHeight = 457
     ClientRectBottom = 457
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 1072
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 425
@@ -148,8 +149,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 493
-        ExplicitWidth = 571
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -256,6 +255,9 @@ inherited OrderInternalForm: TOrderInternalForm
           object colDeferment: TcxGridDBColumn
             Caption = #1054#1090#1089#1088'.'
             DataBinding.FieldName = 'Deferment'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0; ; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 39
@@ -311,7 +313,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 3
         Height = 433
         Control = cxGrid
-        ExplicitLeft = 409
       end
     end
   end
@@ -319,7 +320,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1072
     Height = 49
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 1072
     ExplicitHeight = 49
     inherited edInvNumber: TcxTextEdit
       Left = 8

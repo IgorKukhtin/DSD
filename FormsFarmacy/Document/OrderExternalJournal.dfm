@@ -2,6 +2,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 535
   ClientWidth = 1073
+  ExplicitLeft = -291
+  ExplicitTop = -179
   ExplicitWidth = 1081
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -110,8 +112,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -162,6 +164,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object colContract: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

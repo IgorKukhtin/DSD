@@ -1,25 +1,26 @@
 inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
-  ClientWidth = 1073
-  ExplicitTop = -59
-  ExplicitWidth = 1081
+  ClientWidth = 828
+  ExplicitLeft = -46
+  ExplicitTop = -179
+  ExplicitWidth = 836
   ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1073
+    Width = 828
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1073
+    ClientRectRight = 828
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1073
+        Width = 828
         Height = 478
         ExplicitWidth = 1073
         ExplicitHeight = 478
@@ -111,6 +112,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
           Styles.Inactive = nil
@@ -162,7 +164,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1073
+    Width = 828
     ExplicitWidth = 1073
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

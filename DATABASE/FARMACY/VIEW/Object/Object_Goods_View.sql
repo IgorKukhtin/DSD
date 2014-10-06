@@ -1,10 +1,10 @@
 -- View: Object_Goods_View
 
-DROP VIEW IF EXISTS Object_Goods_View;
+DROP VIEW IF EXISTS Object_Goods_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Goods_View AS
          SELECT 
-             Object_Goods.Id                                  AS Id
+             ObjectLink_Goods_Object.ObjectId                 AS Id
            , Object_Goods.ObjectCode                          AS GoodsCodeInt
            , ObjectString.ValueData                           AS GoodsCode
            , Object_Goods.ValueData                           AS GoodsName
@@ -16,18 +16,18 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , Object_Measure.ValueData                         AS MeasureName
            , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
            , Object_NDSKind.ValueData                         AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
 
-       FROM Object AS Object_Goods
+       FROM ObjectLink AS ObjectLink_Goods_Object
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
-                                 ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+            LEFT JOIN Object AS Object_Goods 
+                             ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
 
-            LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_Goods.Id
+            LEFT JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
                                   AND ObjectString.DescId = zc_ObjectString_Goods_Code()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
 
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
@@ -42,7 +42,11 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-       WHERE Object_Goods.DescId = zc_Object_Goods();
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+
+       WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
 
 
 ALTER TABLE Object_Goods_View  OWNER TO postgres;

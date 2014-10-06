@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , ContractId Integer, ContractName TVarChar
               )
 AS
 $BODY$
@@ -34,6 +35,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS FromName
              , 0                     				            AS ToId
              , CAST ('' AS TVarChar) 				            AS ToName
+             , 0                     				            AS ContractId
+             , CAST ('' AS TVarChar) 				            AS ContractName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -50,8 +53,8 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
-
-
+           , Object_Contract.Id                                 AS ContractId
+           , Object_Contract.ValueData                          AS ContractName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -67,6 +70,12 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
 
        WHERE Movement.Id =  inMovementId

@@ -20,14 +20,17 @@ RETURNS TABLE (MovementItemId Integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
-     vbUserId := inSession;
+   -- проверка прав пользователя на вызов процедуры
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
+
+   vbUserId := inSession;
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
    RETURN QUERY
-       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval ('240'))
+       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession))
 
        SELECT ddd.Id
             , ddd.Price  
@@ -38,10 +41,13 @@ BEGIN
             , ddd.ContractName
             , ddd.Deferment
             , ddd.Bonus 
-            , PriceSettings.Percent
+            , CASE ddd.Deferment 
+                   WHEN 0 THEN 0
+                   ELSE PriceSettings.Percent
+              END::TFloat AS Percent
             , CASE ddd.Deferment 
                    WHEN 0 THEN FinalPrice
-                   ELSE FinalPrice * (100 + PriceSettings.PERCENt)/100
+                   ELSE FinalPrice * (100 - PriceSettings.PERCENt)/100
               END::TFloat AS SuperFinalPrice   
          FROM 
 
@@ -65,27 +71,19 @@ BEGIN
                                     ON MILinkObject_Goods.MovementItemId = PriceList.Id
                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
+   
    JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
-        LEFT JOIN
-                (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId AS JuridicalId
-                      , ObjectFloat_Bonus.ValueData AS Bonus 
-                 FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
 
-                 JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
-                                 ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()                      
-                                AND ObjectLink_JuridicalSettings_Juridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
+   LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(vbObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
 
-                 JOIN ObjectFloat AS ObjectFloat_Bonus 
-                                  ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                 AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
-
-               WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
-                 AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = 345
-                 ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
    JOIN OBJECT AS Goods ON Goods.Id = MovementItem.ObjectId
+
    JOIN OBJECT AS MainGoods ON MainGoods.Id = Object_LinkGoods_View.GoodsMainId
+
    JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
+
    LEFT JOIN OBJECT AS Contract ON Contract.Id = LastPriceList_View.ContractId
+
    LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
                          ON ObjectFloat_Deferment.ObjectId = Contract.Id
                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()

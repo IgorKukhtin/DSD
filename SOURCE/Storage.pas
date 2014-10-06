@@ -110,6 +110,10 @@ begin
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
+    with Instance.IdHTTP.Request do
+    begin
+      Connection:='keep-alive';
+    end;
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
     Instance.FSendList := TStringList.Create;

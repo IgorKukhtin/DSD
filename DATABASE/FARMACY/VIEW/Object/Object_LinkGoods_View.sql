@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , Object_MainGoods.GoodsName                    AS GoodsMainName
 
          , ObjectLink_LinkGoods_Goods.ChildObjectId      AS GoodsId
+         , Object_Goods.GoodsCodeInt                     AS GoodsCodeInt
          , Object_Goods.GoodsCode                        AS GoodsCode
          , Object_Goods.GoodsName                        AS GoodsName
 

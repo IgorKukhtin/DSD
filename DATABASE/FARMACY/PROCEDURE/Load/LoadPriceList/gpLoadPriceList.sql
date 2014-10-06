@@ -48,10 +48,22 @@ BEGIN
           vbPriceListId , -- Ключ объекта <Документ>
                 GoodsId , -- Товары
         Object_Goods.Id , -- Товар прайс-листа
-                  Price , -- Цена
-         ExpirationDate , -- Партия товара
+           CASE LoadPriceList.NDSinPrice 
+                 WHEN True THEN Price 
+                 ELSE Price * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100 
+           END:: TFloat  , -- Цена
+          ExpirationDate , -- Партия товара
               inSession )
        FROM LoadPriceListItem 
+               JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                             ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
+                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+               
+          LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
+                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+
                JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
                                 FROM Object_Goods_View 
                                WHERE ObjectId = vbJuridicalId

@@ -18,6 +18,7 @@ type
     procedure CreatePeriodCloseProcedure;
     procedure CreateReportProcedure;
     procedure CreateSystemProcedure;
+    procedure CreateLoadProcedure;
   end;
 
 
@@ -72,6 +73,12 @@ begin
 //  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\_PriceListItem\gpInsertUpdate_ObjectHistory_PriceListItem.sql');
 //  ZQuery.ExecSQL;
 
+end;
+
+procedure TdbProcedureTest.CreateLoadProcedure;
+begin
+  ScriptDirectory := FarmacyProcedurePath + 'Load\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;

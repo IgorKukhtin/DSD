@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PartnerGoodsCode TVarChar
              , Amount TFloat
              , Summ TFloat
              , isErased Boolean
@@ -30,6 +31,7 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ''::TVarChar
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Summ
            , FALSE                      AS isErased
@@ -56,6 +58,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , ObjectString.ValueData             AS PartnerGoodsCode
            , MovementItem.Amount                AS Amount
            , MIFloat_Summ.ValueData             AS Summ
            , MovementItem.isErased              AS isErased
@@ -69,6 +72,14 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+            
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+ 
+            LEFT JOIN ObjectString ON ObjectString.ObjectId = MILinkObject_Goods.ObjectId
+                                  AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+
             ;
 
      ELSE
@@ -79,6 +90,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , ObjectString.ValueData             AS PartnerGoodsCode
            , MovementItem.Amount                AS Amount
            , MIFloat_Summ.ValueData             AS Summ
            , MovementItem.isErased              AS isErased
@@ -94,6 +106,13 @@ BEGIN
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+ 
+            LEFT JOIN ObjectString ON ObjectString.ObjectId = MILinkObject_Goods.ObjectId
+                                  AND ObjectString.DescId = zc_ObjectString_Goods_Code()
             ;
 
      END IF;

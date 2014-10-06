@@ -39,6 +39,10 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colSumm: TcxGridDBColumn;
+    colClientCode: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public
