@@ -14,11 +14,11 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbOperDate TDateTime;
-  DECLARE vbCarId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbMemberId Integer;
+  DECLARE vbArticleLossId Integer;
   DECLARE vbBranchId Integer;
-  DECLARE vbAccountDirectionId_Unit Integer;
+  DECLARE vbAccountDirectionId Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
 
   DECLARE vbJuridicalId_Basis Integer;
@@ -31,59 +31,55 @@ BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
-          , _tmp.CarId, _tmp.MemberId, _tmp.UnitId, _tmp.BranchId, _tmp.AccountDirectionId_Unit, _tmp.isPartionDate_Unit
+          , _tmp.UnitId, _tmp.MemberId, _tmp.ArticleLossId, _tmp.BranchId, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit
+          , _tmp.JuridicalId_Basis, _tmp.BusinessId
             INTO vbOperDate
-               , vbCarId, vbMemberId, vbUnitId, vbBranchId, vbAccountDirectionId_Unit, vbIsPartionDate_Unit
+               , vbUnitId, vbMemberId, vbArticleLossId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit
                , vbJuridicalId_Basis, vbBusinessId
      FROM (SELECT Movement.OperDate
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car() THEN Object_From.Id ELSE 0 END, 0) AS CarId
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id ELSE 0 END, 0) AS MemberId
+                , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0) AS ArticleLossId
                 , COALESCE (ObjectLink_Branch.ChildObjectId, 0) AS BranchId
-                , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_Unit -- Аналитики счетов - направления !!!нужны только для подразделения!!!
-                , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE)  AS isPartionDate_Unit
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
+                                      THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
+                                 WHEN Object_From.DescId = zc_Object_Member()
+                                      THEN zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
+                            END, 0) AS AccountDirectionId -- !!!не окончательное значение, т.к. еще может зависить от InfoMoneyDestinationId (Товара)!!!
+
+                , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
                 , COALESCE (ObjectLink_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Business.ChildObjectId, 0) AS BusinessId_To
            FROM Movement
-                JOIN (SELECT zc_Movement_Transport() AS DescId UNION ALL SELECT zc_Movement_Loss() AS DescId) AS tmpMovementDesc ON tmpMovementDesc.DescId = Movement.DescId
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                             ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                            AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                             ON MovementLinkObject_Car.MovementId = Movement.Id
-                                            AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (MovementLinkObject_Car.ObjectId, MovementLinkObject_From.ObjectId)
+                LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-                LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
-                                        ON ObjectBoolean_PartionDate.ObjectId = MovementLinkObject_From.ObjectId
-                                       AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
+                LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
+                                     ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_From
+                                        ON ObjectBoolean_PartionDate_From.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectBoolean_PartionDate_From.DescId = zc_ObjectBoolean_Unit_PartionDate()
 
-                LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
-                                     ON ObjectLink_Unit_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
-                                    AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
-                LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
-                                     ON ObjectLink_Car_Unit.ObjectId = COALESCE (MovementLinkObject_Car.ObjectId, MovementLinkObject_From.ObjectId)
-                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                     ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_From.ObjectId
-                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                     ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_From.ObjectId
-                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-
-                -- в документе устанавливается что-то одно - или Автомобиль или От кого (Автомобиль или Сотрудник или Подразделение)
                 LEFT JOIN ObjectLink AS ObjectLink_Branch
-                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_Car_Unit.ChildObjectId, COALESCE (ObjectLink_Personal_Unit.ChildObjectId, MovementLinkObject_From.ObjectId))
+                                     ON ObjectLink_Branch.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Unit_Branch()
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical
-                                     ON ObjectLink_Juridical.ObjectId = COALESCE (ObjectLink_Car_Unit.ChildObjectId, COALESCE (ObjectLink_Personal_Unit.ChildObjectId, MovementLinkObject_From.ObjectId))
+                                     ON ObjectLink_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                 LEFT JOIN ObjectLink AS ObjectLink_Business
-                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_Car_Unit.ChildObjectId, COALESCE (ObjectLink_Personal_Unit.ChildObjectId, MovementLinkObject_From.ObjectId))
+                                     ON ObjectLink_Business.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
 
            WHERE Movement.Id = inMovementId
-             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+             AND Movement.DescId = zc_Movement_Loss()
+             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
 
@@ -193,7 +189,7 @@ BEGIN
         ;
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbAccountDirectionId_Unit = zc_Enum_AccountDirection_20200() -- "Запасы"; 20200; "на складах"
+     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbAccountDirectionId = zc_Enum_AccountDirection_20200() -- "Запасы"; 20200; "на складах"
                                                 AND vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND (_tmpItem.isPartionCount OR _tmpItem.isPartionSumm)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)

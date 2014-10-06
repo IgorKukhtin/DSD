@@ -3,30 +3,28 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1063
-  ExplicitHeight = 421
+  ExplicitWidth = 1071
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 80
     Width = 1055
-    Height = 305
+    Height = 307
     TabOrder = 3
-    ExplicitTop = 82
+    ExplicitTop = 80
     ExplicitWidth = 1055
-    ExplicitHeight = 305
-    ClientRectBottom = 301
-    ClientRectRight = 1051
+    ExplicitHeight = 307
+    ClientRectBottom = 307
+    ClientRectRight = 1055
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1049
-      ExplicitHeight = 299
+      ExplicitWidth = 1055
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1049
-        Height = 299
-        ExplicitWidth = 1049
-        ExplicitHeight = 299
+        Width = 1055
+        Height = 307
+        ExplicitWidth = 1055
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -614,7 +612,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupName;GoodsName'
+          IndexFieldNames = 'GoodsGroupStatName;GoodsName'
         end>
       Params = <
         item
@@ -704,7 +702,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -726,7 +724,15 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_byJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

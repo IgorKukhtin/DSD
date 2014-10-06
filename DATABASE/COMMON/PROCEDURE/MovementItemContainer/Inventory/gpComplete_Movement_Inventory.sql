@@ -51,7 +51,7 @@ BEGIN
                            WHEN Object_From.DescId = zc_Object_Member()
                                 THEN zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                       END, 0) AS AccountDirectionId -- !!!не окончательное значение, т.к. еще может зависить от InfoMoneyDestinationId (Товара)!!!
-          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS vbIsPartionDate_Unit
+          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
           , COALESCE (ObjectLink_ObjectFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
           , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)  AS BusinessId
 

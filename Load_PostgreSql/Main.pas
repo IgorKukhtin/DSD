@@ -2136,8 +2136,22 @@ begin
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
 
+             fOpenSqToQuery (' select COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) as isPartionCount'
+                            +'      , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE) as isPartionSumm'
+                            +' from Object'
+                            +'      left join ObjectBoolean as ObjectBoolean_PartionCount'
+                            +'                                   on ObjectBoolean_PartionCount.ObjectId=Object.Id'
+                            +'                                  and ObjectBoolean_PartionCount.DescId=zc_ObjectBoolean_Goods_PartionCount()'
+                            +'      left join ObjectBoolean as ObjectBoolean_PartionSumm'
+                            +'                                   on ObjectBoolean_PartionSumm.ObjectId=Object.Id'
+                            +'                                  and ObjectBoolean_PartionSumm.DescId=zc_ObjectBoolean_Goods_PartionSumm()'
+                            +' where Object.Id='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                             );
+
              if (FieldByName('isPartionCount').AsInteger=FieldByName('zc_rvYes').AsInteger)
               or(FieldByName('isPartionSumm').AsInteger=FieldByName('zc_rvYes').AsInteger)
+              or(toSqlQuery.FieldByName('isPartionCount').AsBoolean=TRUE)
+              or(toSqlQuery.FieldByName('isPartionSumm').AsBoolean=TRUE)
              then begin
                        toStoredProc_two.Params.ParamByName('inId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
 
@@ -16831,6 +16845,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Delete_Int:Integer;
 var Id_PG:Integer;
+    addSklad:String;
 begin
      Result:=0;
      if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
@@ -16872,10 +16887,11 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459' // Склад Реализации
+                           +addSklad // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
@@ -16892,12 +16908,12 @@ begin
                   then begin
                             if toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_Complete').AsInteger
                             then Id_PG:=FieldByName('Id_Postgres').AsInteger// begin ShowMessage('Ошибка.Документ проведен. № '+FieldByName('Id_Postgres').AsString);exit;end;
-                            else Id_PG:=0;
+                            else Id_PG:=-1*FieldByName('Id_Postgres').AsInteger;// ???почему был 0???
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -16910,14 +16926,16 @@ begin
                             //!!!RecalSumm
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+FieldByName('Id_Postgres').AsString+')');
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then begin
                                 //!!!Complete
-                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                                 if myExecToStoredProc_two
-                                then if cbClearDelete.Checked
-                                     then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                                then ;
                             end;
+                            //
+                            if cbClearDelete.Checked
+                            then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString)
                   end
                   else begin
                             //!!!DELETE
@@ -16941,6 +16959,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Delete_Int(SaveCount:Integer);
 var Id_PG,movId_PG:Integer;
+    addSklad:String;
 begin
      if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
      //
@@ -16980,11 +16999,12 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459' // Склад Реализации
+                           +addSklad // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
@@ -17005,12 +17025,12 @@ begin
                             movId_PG:=toSqlQuery.FieldByName('MovementId').AsInteger;
                             if toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_Complete').AsInteger
                             then Id_PG:=toSqlQuery.FieldByName('MovementId').AsInteger// begin ShowMessage('Ошибка.Документ проведен. № '+FieldByName('Id_Postgres').AsString);exit;end;
-                            else Id_PG:=0;
+                            else Id_PG:=-1*toSqlQuery.FieldByName('MovementId').AsInteger;
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(movId_PG)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -17021,14 +17041,16 @@ begin
                             //!!!RecalSumm
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+IntToStr(movId_PG)+')');
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then begin
                                 //!!!Complete
-                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=movId_PG;
                                 if myExecToStoredProc_two
-                                then if cbClearDelete.Checked
-                                     then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                                then ;
                             end;
+                            //
+                            if cbClearDelete.Checked
+                            then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
                   end
                   else begin
                             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;

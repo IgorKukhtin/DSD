@@ -55,7 +55,7 @@ BEGIN
                            VALUES (inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
      ELSE
          --
-         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId WHERE Id = ioId
+         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId/*, MovementId = inMovementId*/ WHERE Id = ioId
          RETURNING isErased INTO vbIsErased;
          --
          IF NOT FOUND THEN

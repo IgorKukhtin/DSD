@@ -86,6 +86,29 @@ BEGIN
         --    AND ((Sale1C.VIDDOC = '3') OR (Sale1C.VIDDOC = '4')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
+     -- !!!Списания!!!
+    IF vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+    THEN
+        -- Удаление Документов
+        PERFORM gpSetErased_Movement(Movement.Id, inSession) 
+        FROM Movement
+             JOIN MovementLinkObject AS MLO_From
+                                     ON MLO_From.MovementId = Movement.Id
+                                    AND MLO_From.DescId = zc_MovementLinkObject_From()
+             JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                             ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                            AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+             JOIN MovementBoolean AS MovementBoolean_isLoad 
+                                  ON MovementBoolean_isLoad.MovementId = Movement.Id
+                                 AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+                                 AND MovementBoolean_isLoad.valuedata = TRUE 
+        WHERE Movement.DescId = zc_Movement_Loss()
+          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND Movement.StatusId <> zc_Enum_Status_Erased();
+    END IF;
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
