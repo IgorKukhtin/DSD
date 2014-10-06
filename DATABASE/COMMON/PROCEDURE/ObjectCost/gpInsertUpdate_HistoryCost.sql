@@ -30,13 +30,21 @@ BEGIN
      CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
+        WITH tmpContainerList AS (SELECT Container_Summ.ParentId, Container_Summ.Id
+FROM Container AS Container_Count JOIN Container AS Container_Summ ON Container_Summ.ParentId = Container_Count.Id
+                                AND Container_Summ.DescId = zc_Container_Summ()
+                                AND Container_Summ.ObjectId <> zc_Enum_Account_20901() -- "Оборотная тара"
+                                       JOIN MovementItemContainer AS MIContainer
+                                                   ON MIContainer.ContainerId = Container_Summ.Id
+                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+group by Container_Summ.ParentId, Container_Summ.Id
+)
      INSERT INTO _tmpMaster (ContainerId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
-        --SELECT COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId)) AS ContainerId
         SELECT COALESCE (Container_Summ.Id, tmpContainer.ContainerId) AS ContainerId
              , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                          THEN TRUE
                     ELSE FALSE
-               END AS isInfoMoney_80401
+               END AS isInfoMoney_80401 -- прибыль текущего периода
 
              , SUM (tmpContainer.StartCount)
              , SUM (tmpContainer.StartSumm)
@@ -102,11 +110,13 @@ BEGIN
                   OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
                   OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
              ) AS tmpContainer
-             LEFT JOIN Container AS Container_Summ
+             LEFT JOIN tmpContainerList AS Container_Summ ON Container_Summ.ParentId = tmpContainer.ContainerId
+                                       AND tmpContainer.DescId = zc_Container_Count()
+             /*LEFT JOIN Container AS Container_Summ
                                  ON Container_Summ.ParentId = tmpContainer.ContainerId
                                 AND Container_Summ.DescId = zc_Container_Summ()
                                 AND Container_Summ.ObjectId <> zc_Enum_Account_20901() -- "Оборотная тара"
-                                AND tmpContainer.DescId = zc_Container_Count()
+                                AND tmpContainer.DescId = zc_Container_Count()*/
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
                                            ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpContainer.ContainerId
                                           AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
@@ -205,6 +215,8 @@ BEGIN
         FROM (SELECT MasterContainerId_Count, ContainerId_Count, OperCount FROM _tmpChild GROUP BY MasterContainerId_Count, ContainerId_Count, OperCount) AS _tmpChild_group
              INNER JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild_group.MasterContainerId_Count
                                                 AND HistoryCostContainerLink.ChildContainerId_Count = _tmpChild_group.ContainerId_Count
+             INNER JOIN _tmpMaster ON _tmpMaster.ContainerId = HistoryCostContainerLink.ChildContainerId_Summ -- условие что б отбросить "нулевые"
+                                  AND (_tmpMaster.StartSumm <> 0 OR _tmpMaster.IncomeSumm <> 0 OR _tmpMaster.calcSumm <> 0)
              LEFT JOIN _tmpChild ON _tmpChild.MasterContainerId_Count = HistoryCostContainerLink.MasterContainerId_Count
                                 AND _tmpChild.ContainerId_Count       = HistoryCostContainerLink.ChildContainerId_Count
                                 AND _tmpChild.MasterContainerId       = HistoryCostContainerLink.MasterContainerId_Summ
@@ -481,6 +493,7 @@ LANGUAGE PLPGSQL VOLATILE;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
 -- SELECT StartDate, EndDate, Count(*) FROM HistoryCost GROUP BY StartDate, EndDate ORDER BY 1;
 
+-- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= 12345, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext

@@ -3,29 +3,27 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1250
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1258
-  ExplicitHeight = 702
+  ExplicitWidth = 1266
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1250
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1250
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1246
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1250
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1244
-      ExplicitHeight = 514
+      ExplicitWidth = 1250
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1244
-        Height = 514
-        ExplicitWidth = 1244
-        ExplicitHeight = 514
+        Width = 1250
+        Height = 518
+        ExplicitWidth = 1250
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -289,7 +287,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -785,8 +783,8 @@ inherited SaleForm: TSaleForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1085#1074#1086#1081#1089
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1085#1074#1086#1081#1089
+      Caption = #1048#1085#1074#1086#1081#1089
+      Hint = #1048#1085#1074#1086#1081#1089
       ImageIndex = 22
       ShortCut = 16464
       DataSets = <
@@ -819,8 +817,8 @@ inherited SaleForm: TSaleForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
-      Hint = #1055#1077#1095#1072#1090#1100' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1051#1080#1089#1090
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1051#1080#1089#1090
       ImageIndex = 20
       ShortCut = 16464
       DataSets = <
@@ -1079,7 +1077,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1162,6 +1160,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Invoice'
         end
         item
@@ -1174,19 +1176,7 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbDECLAR'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEDIComDoc'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbConnectWithComdoc'
         end
         item
           Visible = True
@@ -1302,8 +1292,8 @@ inherited SaleForm: TSaleForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
-    Left = 128
-    Top = 56
+    Left = 184
+    Top = 128
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'

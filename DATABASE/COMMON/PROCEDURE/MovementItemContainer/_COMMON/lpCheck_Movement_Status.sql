@@ -33,6 +33,9 @@ BEGIN
   -- END 1. проверка <Зарегестрирован>
 
 
+  IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+  THEN
+
      -- 2.1. проверка для налоговых
      -- определяется тип налог.
      SELECT MovementLinkObject_DocumentTaxKind_Master.ObjectId AS DocumentTaxKindId
@@ -216,6 +219,8 @@ BEGIN
      END IF;
      -- END 2.2. проверка для корректировок
 
+  END IF;
+
   -- 3.1. определяется дата
   vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
   -- 3.2. определяется 
@@ -251,6 +256,7 @@ ALTER FUNCTION lpCheck_Movement_Status (Integer, Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.14                                        * add zc_Enum_Role_Admin
  23.09.14                                        * add Object_Role_MovementDesc_View
  05.09.14                                        * add проверка - если входит в сводную, то она должна быть распроведена
 */

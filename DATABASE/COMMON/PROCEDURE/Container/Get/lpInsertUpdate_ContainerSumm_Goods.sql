@@ -116,7 +116,7 @@ BEGIN
                                                                 , inDescId_3   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_3 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                                 , inDescId_4   := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_4 := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
+                                                                , inObjectId_4 := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_5 := inInfoMoneyId
                                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END

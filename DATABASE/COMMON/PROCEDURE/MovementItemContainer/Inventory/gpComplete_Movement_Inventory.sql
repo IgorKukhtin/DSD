@@ -51,7 +51,7 @@ BEGIN
                            WHEN Object_From.DescId = zc_Object_Member()
                                 THEN zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                       END, 0) AS AccountDirectionId -- !!!не окончательное значение, т.к. еще может зависить от InfoMoneyDestinationId (Товара)!!!
-          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS vbIsPartionDate_Unit
+          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
           , COALESCE (ObjectLink_ObjectFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
           , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)  AS BusinessId
 
@@ -277,10 +277,13 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
                                                WHEN vbIsPartionDate_Unit = TRUE
-                                                AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                   THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
-                                               WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                   THEN 0
+                                                AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                      , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+
+                                               WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                      , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                                    THEN 0
 
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -298,6 +301,7 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
      ;
 
@@ -520,7 +524,8 @@ BEGIN
                                                                                                                                             , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
                                                                                                                                             , zc_Enum_InfoMoneyDestination_21000() -- "Общефирменные"; 21000; "Чапли"
                                                                                                                                             , zc_Enum_InfoMoneyDestination_21100() -- "Общефирменные"; 21100; "Дворкин"
-                                                                                                                                            , zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
+                                                                                                                                            , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                                            , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                                                                                                                              )
                                                                                                     THEN 0 -- !!!всё в сотрудники (МО), а здесь ошибка!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
                                                                                                ELSE vbAccountDirectionId
@@ -535,8 +540,10 @@ BEGIN
                 FROM (SELECT _tmpItem.InfoMoneyDestinationId
                            , _tmpItem.InfoMoneyId
                            , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                                    OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                     OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Ирна
                                     OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                    OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                   WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                        THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -549,8 +556,10 @@ BEGIN
                       GROUP BY _tmpItem.InfoMoneyDestinationId
                              , _tmpItem.InfoMoneyId
                              , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                                      OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                       OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Ирна
                                       OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                      OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
                                     WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -640,6 +649,7 @@ BEGIN
                             , ViewObject_InfoMoney.InfoMoneyDestinationId
                             , ViewObject_InfoMoney.InfoMoneyId
                             , CASE WHEN (vbAccountDirectionId = zc_Enum_AccountDirection_20100() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на складах ГП AND Доходы + Мясное сырье
+                                     OR (vbAccountDirectionId = zc_Enum_AccountDirection_20700() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на филиалах ГП AND Доходы + Мясное сырье
                                         THEN zc_Enum_InfoMoneyDestination_30100() -- Общефирменные + Продукция
                                    ELSE ViewObject_InfoMoney.InfoMoneyDestinationId
                               END AS InfoMoneyDestinationId_calc

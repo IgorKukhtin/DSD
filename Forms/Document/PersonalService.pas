@@ -61,6 +61,10 @@ type
     colSummChild: TcxGridDBColumn;
     colMemberName: TcxGridDBColumn;
     MemberChoiceForm: TOpenChoiceForm;
+    colAmountToPay: TcxGridDBColumn;
+    spUpdateIsMain: TdsdStoredProc;
+    actUpdateIsMain: TdsdExecStoredProc;
+    bbUpdateIsMain: TdxBarButton;
   private
     { Private declarations }
   public

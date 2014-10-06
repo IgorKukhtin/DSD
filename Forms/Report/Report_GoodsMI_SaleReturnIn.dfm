@@ -596,6 +596,41 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
       ReportNameParam.DataType = ftString
     end
+    object actPrint_byStatGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ImageIndex = 20
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupStatName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -689,7 +724,19 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_byJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byStatGroup'
         end
         item
           Visible = True
@@ -710,6 +757,10 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     end
     object bbPrint_byJuridical: TdxBarButton
       Action = actPrint_byJuridical
+      Category = 0
+    end
+    object bbPrint_byStatGroup: TdxBarButton
+      Action = actPrint_byStatGroup
       Category = 0
     end
   end

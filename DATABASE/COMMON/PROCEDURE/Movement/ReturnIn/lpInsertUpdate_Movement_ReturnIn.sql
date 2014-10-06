@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
+    IN inOperDate            TDateTime , -- Дата(склад)
+    IN inOperDatePartner     TDateTime , -- Дата документа у покупателя
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -33,7 +33,6 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
-
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN

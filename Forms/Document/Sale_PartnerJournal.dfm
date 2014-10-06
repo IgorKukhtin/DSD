@@ -2,23 +2,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -120
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -828,6 +824,92 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = 'actSPPrintSaleBillProcName'
     end
+    object actPrint_Invoice: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1048#1085#1074#1086#1081#1089
+      Hint = #1048#1085#1074#1086#1081#1089
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Pack: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
+      ImageIndex = 20
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack'
+      ReportNameParam.Name = 'PrintMovement_SalePack'
+      ReportNameParam.Value = 'PrintMovement_SalePack'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -984,6 +1066,18 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1018,6 +1112,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbactChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbPrint_Invoice: TdxBarButton
+      Action = actPrint_Invoice
+      Category = 0
+    end
+    object bbPrint_Pack: TdxBarButton
+      Action = actPrint_Pack
       Category = 0
     end
   end
@@ -1055,7 +1157,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
       end>

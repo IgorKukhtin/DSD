@@ -2,7 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 668
   ClientWidth = 1112
-  ExplicitLeft = -1
   ExplicitWidth = 1120
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -10,17 +9,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited PageControl: TcxPageControl
     Width = 1112
     Height = 582
-    ExplicitWidth = 1104
+    ExplicitWidth = 1112
     ExplicitHeight = 582
     ClientRectBottom = 582
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1104
+      ExplicitWidth = 1112
       ExplicitHeight = 558
       inherited cxGrid: TcxGrid
         Width = 1112
         Height = 558
-        ExplicitWidth = 1104
+        ExplicitWidth = 1112
         ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -73,6 +72,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clInfoMoneyName
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -124,6 +133,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountToPay
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clInfoMoneyName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -210,17 +229,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 60
           end
           object colAmount: TcxGridDBColumn [8]
-            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            Caption = #1057#1091#1084#1084#1072' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
           end
-          object colAmountCash: TcxGridDBColumn [9]
+          object colAmountToPay: TcxGridDBColumn [9]
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'AmountToPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colAmountCash: TcxGridDBColumn [10]
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
             DataBinding.FieldName = 'AmountCash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +261,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 75
           end
-          object colSummService: TcxGridDBColumn [10]
+          object colSummService: TcxGridDBColumn [11]
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'SummService'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -240,16 +270,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object colSummCard: TcxGridDBColumn [11]
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
-            DataBinding.FieldName = 'SummCard'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object colSummMinus: TcxGridDBColumn [12]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
@@ -271,17 +291,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [14]
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
+          object colSummCard: TcxGridDBColumn [14]
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
+            DataBinding.FieldName = 'SummCard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object colSummCardRecalc: TcxGridDBColumn [15]
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053') '#1088#1072#1089#1087#1088#1077#1076'.'
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053') '#1074#1074#1086#1076
             DataBinding.FieldName = 'SummCardRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -290,7 +312,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 70
           end
           object colSummSocialIn: TcxGridDBColumn [16]
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083#1072#1090#1072' ('#1074' '#1079#1087')'
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -299,25 +321,25 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 70
           end
           object colSummSocialAdd: TcxGridDBColumn [17]
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083#1072#1090#1072' ('#1082' '#1079#1087')'
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 85
           end
           object colSummChild: TcxGridDBColumn [18]
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' '
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099
             DataBinding.FieldName = 'SummChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 75
           end
           object colMemberName: TcxGridDBColumn [19]
-            Caption = #1060#1080#1079'.'#1083#1080#1094#1086
+            Caption = #1060#1048#1054' ('#1040#1083#1080#1084#1077#1085#1090#1099')'
             DataBinding.FieldName = 'MemberName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -329,9 +351,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 90
           end
-          object colComment: TcxGridDBColumn [20]
+          object clInfoMoneyName: TcxGridDBColumn [20]
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colComment: TcxGridDBColumn [21]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -345,7 +378,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   inherited DataPanel: TPanel
     Width = 1112
     TabOrder = 3
-    ExplicitWidth = 1104
+    ExplicitWidth = 1112
     inherited edInvNumber: TcxTextEdit
       Left = 144
       ExplicitLeft = 144
@@ -416,7 +449,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxLabel4: TcxLabel
       Left = 697
       Top = 5
-      Caption = #1070#1088'.'#1083#1080#1094#1086
+      Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1086#1094'.'#1074#1099#1087#1083#1072#1090#1099')'
     end
     object ceJuridical: TcxButtonEdit
       Left = 697
@@ -444,6 +477,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object actUpdateIsMain: TdsdExecStoredProc [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMain
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -622,6 +667,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateIsMain'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -667,6 +720,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbUpdateIsMain: TdxBarButton
+      Action = actUpdateIsMain
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1095,9 +1152,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
       end
       item
+        Name = 'inisMain'
+        Component = MasterCDS
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'outAmount'
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmountToPay'
+        Component = MasterCDS
+        ComponentItem = 'AmountToPay'
         DataType = ftFloat
       end
       item
@@ -1110,13 +1180,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Name = 'inSummService'
         Component = MasterCDS
         ComponentItem = 'SummService'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inSummCard'
-        Component = MasterCDS
-        ComponentItem = 'SummCard'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1337,5 +1400,26 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end>
     Left = 744
     Top = 16
+  end
+  object spUpdateIsMain: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_isMain'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioIsMain'
+        Component = MasterCDS
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 403
   end
 end

@@ -2065,9 +2065,8 @@ begin
         Add('     , Goods.Id_Postgres_Fuel AS FuelId_PG');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// АЛАН
-        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
-//        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionSumm on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id and isPartionCount.isCount=zc_rvYes()');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO_PG AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id and isPartionSumm.isSumm=zc_rvYes()');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
@@ -2137,8 +2136,22 @@ begin
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
 
+             fOpenSqToQuery (' select COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) as isPartionCount'
+                            +'      , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE) as isPartionSumm'
+                            +' from Object'
+                            +'      left join ObjectBoolean as ObjectBoolean_PartionCount'
+                            +'                                   on ObjectBoolean_PartionCount.ObjectId=Object.Id'
+                            +'                                  and ObjectBoolean_PartionCount.DescId=zc_ObjectBoolean_Goods_PartionCount()'
+                            +'      left join ObjectBoolean as ObjectBoolean_PartionSumm'
+                            +'                                   on ObjectBoolean_PartionSumm.ObjectId=Object.Id'
+                            +'                                  and ObjectBoolean_PartionSumm.DescId=zc_ObjectBoolean_Goods_PartionSumm()'
+                            +' where Object.Id='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                             );
+
              if (FieldByName('isPartionCount').AsInteger=FieldByName('zc_rvYes').AsInteger)
               or(FieldByName('isPartionSumm').AsInteger=FieldByName('zc_rvYes').AsInteger)
+              or(toSqlQuery.FieldByName('isPartionCount').AsBoolean=TRUE)
+              or(toSqlQuery.FieldByName('isPartionSumm').AsBoolean=TRUE)
              then begin
                        toStoredProc_two.Params.ParamByName('inId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
 
@@ -8696,7 +8709,8 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                        and Bill.Id_Postgres>0'
@@ -8837,7 +8851,8 @@ begin
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -9157,7 +9172,8 @@ begin
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id  and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                        and Bill.Id_Postgres>0'
@@ -9833,7 +9849,8 @@ begin
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            //+'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId' // BillItems_find.GoodsPropertyId
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                         and Bill.MoneyKindId = zc_mkNal()'
@@ -11439,7 +11456,8 @@ begin
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                            and GoodsProperty.InfoMoneyCode not in (20501)' //  Оборотная тара
+           +'                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit(), zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()'
@@ -13281,7 +13299,8 @@ begin
            +'                      from dba.Bill'
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkReturnToClient()'
            +'                        and Bill.Id_Postgres>0'
@@ -13415,7 +13434,8 @@ begin
            +'                      from dba.Bill'
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -13691,7 +13711,8 @@ begin
            +'                      from dba.Bill'
            +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'                        and Bill.BillKind=zc_bkReturnToClient()'
            +'                        and Bill.Id_Postgres>0'
@@ -13828,7 +13849,8 @@ begin
            +'                      from dba.Bill'
            +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                                            and GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
            +'                         and Bill.MoneyKindId = zc_mkNal()'
@@ -14137,7 +14159,8 @@ begin
            +'                                                                and Information1.OKPO <> '+FormatToVarCharServer_notNULL('')
            +'           left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id'
            +'           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
-           +'                                            and GoodsProperty.InfoMoneyCode not in (20501)' //  Оборотная тара
+           +'                                            and (GoodsProperty.InfoMoneyCode not in (20501)' // Оборотная тара
+           +'                                              or (BillItems.OperCount<>0 and BillItems.OperPrice<>0))'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit(), zc_bkSendUnitToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil()'
@@ -16822,6 +16845,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Delete_Int:Integer;
 var Id_PG:Integer;
+    addSklad:String;
 begin
      Result:=0;
      if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
@@ -16863,10 +16887,11 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459' // Склад Реализации
+                           +addSklad // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
@@ -16883,12 +16908,12 @@ begin
                   then begin
                             if toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_Complete').AsInteger
                             then Id_PG:=FieldByName('Id_Postgres').AsInteger// begin ShowMessage('Ошибка.Документ проведен. № '+FieldByName('Id_Postgres').AsString);exit;end;
-                            else Id_PG:=0;
+                            else Id_PG:=-1*FieldByName('Id_Postgres').AsInteger;// ???почему был 0???
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -16901,14 +16926,16 @@ begin
                             //!!!RecalSumm
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+FieldByName('Id_Postgres').AsString+')');
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then begin
                                 //!!!Complete
-                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                                 if myExecToStoredProc_two
-                                then if cbClearDelete.Checked
-                                     then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                                then ;
                             end;
+                            //
+                            if cbClearDelete.Checked
+                            then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString)
                   end
                   else begin
                             //!!!DELETE
@@ -16932,6 +16959,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Delete_Int(SaveCount:Integer);
 var Id_PG,movId_PG:Integer;
+    addSklad:String;
 begin
      if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
      //
@@ -16971,11 +16999,12 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459' // Склад Реализации
+                           +addSklad // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
@@ -16996,12 +17025,12 @@ begin
                             movId_PG:=toSqlQuery.FieldByName('MovementId').AsInteger;
                             if toSqlQuery.FieldByName('StatusId').AsInteger = toSqlQuery.FieldByName('zc_Enum_Status_Complete').AsInteger
                             then Id_PG:=toSqlQuery.FieldByName('MovementId').AsInteger// begin ShowMessage('Ошибка.Документ проведен. № '+FieldByName('Id_Postgres').AsString);exit;end;
-                            else Id_PG:=0;
+                            else Id_PG:=-1*toSqlQuery.FieldByName('MovementId').AsInteger;
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(movId_PG)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -17012,14 +17041,16 @@ begin
                             //!!!RecalSumm
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+IntToStr(movId_PG)+')');
                             //
-                            if Id_PG<>0
+                            if Id_PG>0
                             then begin
                                 //!!!Complete
-                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=movId_PG;
                                 if myExecToStoredProc_two
-                                then if cbClearDelete.Checked
-                                     then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                                then ;
                             end;
+                            //
+                            if cbClearDelete.Checked
+                            then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
                   end
                   else begin
                             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;

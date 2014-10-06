@@ -131,6 +131,7 @@ type
     PriceTotalOut: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

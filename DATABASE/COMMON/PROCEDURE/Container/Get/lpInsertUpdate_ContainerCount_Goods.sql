@@ -88,7 +88,7 @@ BEGIN
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                 , inObjectId_2        := CASE WHEN inBranchId IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                   );
