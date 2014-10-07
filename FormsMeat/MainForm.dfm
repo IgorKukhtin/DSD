@@ -2785,7 +2785,7 @@
       MoveParams = <>
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TReturnInJournalForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TReturnInJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
