@@ -279,8 +279,7 @@ BEGIN
           THEN
                -- Провели существующий документ - Loss
                PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
-                                               , inUserId         := vbUserId
-                                               , inIsLastComplete := FALSE);
+                                               , inUserId         := vbUserId);
           END IF;
           END IF;
 

@@ -3,32 +3,31 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   ClientWidth = 935
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 943
-  ExplicitHeight = 766
+  ExplicitWidth = 951
+  ExplicitHeight = 767
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 122
+    Top = 120
     Width = 935
-    Height = 610
-    ExplicitTop = 122
+    Height = 612
+    ExplicitTop = 120
     ExplicitWidth = 935
-    ExplicitHeight = 610
-    ClientRectBottom = 606
-    ClientRectRight = 931
-    ClientRectTop = 22
+    ExplicitHeight = 612
+    ClientRectBottom = 612
+    ClientRectRight = 935
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 929
-      ExplicitHeight = 584
+      ExplicitTop = 24
+      ExplicitWidth = 935
+      ExplicitHeight = 588
       inherited cxGrid: TcxGrid
-        Width = 929
-        Height = 226
-        ExplicitWidth = 929
-        ExplicitHeight = 226
+        Width = 935
+        Height = 230
+        ExplicitWidth = 935
+        ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -80,8 +79,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 226
-        Width = 929
+        Top = 230
+        Width = 935
         Height = 358
         Align = alBottom
         PopupMenu = PopupMenuChild
@@ -206,8 +205,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 929
-        Height = 584
+        Width = 935
+        Height = 588
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -387,7 +386,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 90
     end
@@ -430,6 +429,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 152
     end
@@ -451,6 +451,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 270
     end
@@ -462,6 +463,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 270
     end
@@ -500,6 +502,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Category = 'DSDLib'
       TabSheet = tsEntry
       MoveParams = <>
+      Enabled = False
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -832,7 +835,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1010,6 +1013,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 517
     Top = 268
   end
@@ -1069,6 +1073,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 168
     Top = 48
   end
@@ -1143,6 +1148,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 368
     Top = 72
   end
@@ -1184,6 +1190,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 434
     Top = 120
   end
@@ -1249,6 +1256,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 438
     Top = 208
   end
@@ -1269,6 +1277,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 350
     Top = 176
   end
@@ -1302,6 +1311,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 552
     Top = 176
   end
@@ -1348,6 +1358,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 392
     Top = 288
   end
@@ -1370,6 +1381,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 548
     Top = 124
   end
@@ -1405,6 +1417,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 302
     Top = 592
   end
@@ -1425,6 +1438,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 414
     Top = 584
   end
@@ -1457,6 +1471,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 624
     Top = 440
   end
@@ -1542,6 +1557,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 464
     Top = 496
   end
