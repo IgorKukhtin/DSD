@@ -58,7 +58,7 @@ type
     colAmountSumm: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actTaxJournalSelectChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
     PrintHeaderCDS: TClientDataSet;
@@ -109,7 +109,7 @@ type
     spMovementCompleteTaxCorrective: TdsdStoredProc;
     spMovementSetErasedTaxCorrective: TdsdStoredProc;
     spMovementUnCompleteTaxCorrective: TdsdStoredProc;
-    actUpdateIncomeDS: TdsdUpdateDataSet;
+    actUpdateTaxCorrectiveDS: TdsdUpdateDataSet;
     actUnCompleteTaxCorrective: TdsdChangeMovementStatus;
     actCompleteTaxCorrective: TdsdChangeMovementStatus;
     actSetErasedTaxCorrective: TdsdChangeMovementStatus;

@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_TaxCorrective_DocMaster()
+-- Function: gpSelect_Movement_TaxCorrective_DocChild()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_DocMaster (integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_DocChild (integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective_DocMaster(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective_DocChild(
     IN inDocumentMasterId     integer   , -- id документа возврата
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar, ToId Integer, ToName TVarChar
-             , PartnerCode Integer, PartnerName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar
@@ -64,6 +64,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
+           , Object_Partner.Id                          AS PartnerId
            , Object_Partner.ObjectCode                  AS PartnerCode
            , Object_Partner.ValueData               	AS PartnerName
            , View_Contract_InvNumber.ContractId        	AS ContractId
@@ -119,7 +120,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
             join MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkMovement_Master.MovementChildId = 327828 ---inDocumentMasterId
+                                          AND MovementLinkMovement_Master.MovementChildId = inDocumentMasterId  --327828 ---
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -253,7 +254,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TaxCorrective_DocMaster (integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_TaxCorrective_DocChild (integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -263,4 +264,5 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_DocMaster (integer, TVarChar) OWN
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective_DocMaster (inDocumentMasterId:= 327828, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_TaxCorrective_DocChild (inDocumentMasterId:= 327826, inSession:= zfCalc_UserAdmin())
+
