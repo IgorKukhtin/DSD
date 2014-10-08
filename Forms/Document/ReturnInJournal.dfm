@@ -3,7 +3,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1114
-  ExplicitHeight = 562
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -152,7 +152,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 62
+            Width = 66
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
@@ -1084,6 +1084,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 312
   end
@@ -1106,6 +1107,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 650
     Top = 210
   end
@@ -1134,6 +1136,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 650
     Top = 306
   end
@@ -1162,6 +1165,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 650
     Top = 258
   end
@@ -1218,6 +1222,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 280
   end
@@ -1240,6 +1245,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 584
     Top = 376
   end
@@ -1261,6 +1267,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 320
     Top = 435
   end

@@ -1,27 +1,28 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 695
+  ClientWidth = 1137
+  ExplicitWidth = 1145
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1137
     Height = 542
+    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1137
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1137
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1137
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1137
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1137
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -103,7 +104,7 @@ inherited ReturnInForm: TReturnInForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindChoice
+                Action = actTaxJournalSelectChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -194,12 +195,329 @@ inherited ReturnInForm: TReturnInForm
         end
       end
     end
+    object cxTabSheetTaxCorrective: TcxTabSheet
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+      ImageIndex = 2
+      object cxGridTaxCorrective: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1137
+        Height = 518
+        Align = alClient
+        TabOrder = 0
+        object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = TaxCorrectiveDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummMVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colVATPercent
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummPVAT
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummMVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colVATPercent
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummPVAT
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colStatus: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object colIsError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'IsError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clincInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object clincInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object colInvNumberPartner_Child: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Child'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actTaxJournalSelectChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 46
+          end
+          object colOperDate_Child: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'OperDate_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object colTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object colOKPO_From: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 41
+          end
+          object colFromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object colToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colTotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object colVATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 41
+          end
+          object colTotalSummVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colTotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colTotalSummPVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummPVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
+          object colDocument: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1072#1085
+            DataBinding.FieldName = 'Document'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 29
+          end
+        end
+        object cxGridTaxCorrectiveLevel: TcxGridLevel
+          GridView = cxGridTaxCorrectiveDBTableView
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1137
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1137
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -499,7 +817,98 @@ inherited ReturnInForm: TReturnInForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectTaxCorrective
+        end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = gpUpdateTaxCorrective
+        end>
+    end
+    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = gpUpdateTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = gpUpdateTaxCorrective
+        end>
+      Caption = 'actUpdateTaxCorrectiveDS'
+      DataSource = TaxCorrectiveDS
+    end
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [9]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementUnCompleteTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteTaxCorrective
+        end
+        item
+          StoredProc = spSelectTaxCorrective
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = TaxCorrectiveDS
+    end
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [10]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementSetErasedTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedTaxCorrective
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = TaxCorrectiveDS
+    end
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus [11]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementCompleteTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteTaxCorrective
+        end
+        item
+          StoredProc = spSelectTaxCorrective
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = TaxCorrectiveDS
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -532,7 +941,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -564,7 +973,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [10]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -604,7 +1013,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrint: TMultiAction [12]
+    object mactPrint: TMultiAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -619,7 +1028,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [13]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -659,24 +1068,42 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [17]
+    object actTaxJournalSelectChoice: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      Caption = 'TaxJournalSelectForm'
+      FormName = 'TTaxJournalSelectForm'
+      FormNameParam.Value = 'TTaxJournalSelectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'DocumentChildId'
         end
         item
           Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'InvNumberPartner_Child'
           DataType = ftString
+        end
+        item
+          Name = 'OperDate_Tax'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate_Child'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'FromId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerId'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
         end>
       isShowModal = True
     end
@@ -791,7 +1218,7 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited BarManager: TdxBarManager
     Left = 80
-    Top = 207
+    Top = 231
     DockControlHeights = (
       0
       0
@@ -851,6 +1278,22 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -923,6 +1366,18 @@ inherited ReturnInForm: TReturnInForm
       Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
+    object bbCompleteTaxCorrective: TdxBarButton
+      Action = actCompleteTaxCorrective
+      Category = 0
+    end
+    object bbSetErasedTaxCorrective: TdxBarButton
+      Action = actSetErasedTaxCorrective
+      Category = 0
+    end
+    object bbUnCompleteTaxCorrective: TdxBarButton
+      Action = actUnCompleteTaxCorrective
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -940,8 +1395,8 @@ inherited ReturnInForm: TReturnInForm
         Param.DataType = ftString
         DataSummaryItemIndex = 4
       end>
-    Left = 654
-    Top = 337
+    Left = 582
+    Top = 345
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -988,8 +1443,8 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
-    Left = 72
-    Top = 112
+    Left = 56
+    Top = 184
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -1371,9 +1826,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edCurrencyValue
+      end
+      item
+        Control = cxGridTaxCorrective
+      end
+      item
       end>
-    Left = 232
-    Top = 193
+    Left = 224
+    Top = 209
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1571,6 +2031,7 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+    Top = 100
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -1606,6 +2067,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 250
     Top = 442
   end
@@ -1634,6 +2096,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 426
     Top = 458
   end
@@ -1682,8 +2145,9 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 280
-    Top = 316
+    PackSize = 1
+    Left = 232
+    Top = 292
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1790,6 +2254,7 @@ inherited ReturnInForm: TReturnInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
       end>
+    PackSize = 1
     Left = 280
     Top = 336
   end
@@ -1845,6 +2310,7 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 306
     Top = 266
   end
@@ -1867,6 +2333,7 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 320
     Top = 392
   end
@@ -2033,5 +2500,135 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 1016
     Top = 80
+  end
+  object TaxCorrectiveCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 632
+    Top = 218
+  end
+  object TaxCorrectiveDS: TDataSource
+    DataSet = TaxCorrectiveCDS
+    Left = 733
+    Top = 226
+  end
+  object gpUpdateTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_DocChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovement_ChildId'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'DocumentChildId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 827
+    Top = 250
+  end
+  object spSelectTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_DocChild'
+    DataSet = TaxCorrectiveCDS
+    DataSets = <
+      item
+        DataSet = TaxCorrectiveCDS
+      end>
+    Params = <
+      item
+        Name = 'inDocumentMasterId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 930
+    Top = 226
+  end
+  object spMovementCompleteTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_TaxCorrective'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 888
+    Top = 321
+  end
+  object spMovementSetErasedTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_TaxCorrective'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 281
+  end
+  object spMovementUnCompleteTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCorrectiveCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 313
+  end
+  object TaxCorrectiveViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridTaxCorrectiveDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 775
+    Top = 388
   end
 end

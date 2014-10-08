@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox;
 
 type
   TReturnInForm = class(TAncestorDocumentForm)
@@ -58,7 +58,7 @@ type
     colAmountSumm: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actTaxJournalSelectChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
     PrintHeaderCDS: TClientDataSet;
@@ -102,6 +102,25 @@ type
     cxLabel17: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
+    TaxCorrectiveCDS: TClientDataSet;
+    TaxCorrectiveDS: TDataSource;
+    gpUpdateTaxCorrective: TdsdStoredProc;
+    spSelectTaxCorrective: TdsdStoredProc;
+    spMovementCompleteTaxCorrective: TdsdStoredProc;
+    spMovementSetErasedTaxCorrective: TdsdStoredProc;
+    spMovementUnCompleteTaxCorrective: TdsdStoredProc;
+    actUpdateTaxCorrectiveDS: TdsdUpdateDataSet;
+    actUnCompleteTaxCorrective: TdsdChangeMovementStatus;
+    actCompleteTaxCorrective: TdsdChangeMovementStatus;
+    actSetErasedTaxCorrective: TdsdChangeMovementStatus;
+    colIsError: TcxGridDBColumn;
+    colInvNumberPartner_Child: TcxGridDBColumn;
+    colOperDate_Child: TcxGridDBColumn;
+    colTaxKindName: TcxGridDBColumn;
+    bbCompleteTaxCorrective: TdxBarButton;
+    bbSetErasedTaxCorrective: TdxBarButton;
+    bbUnCompleteTaxCorrective: TdxBarButton;
+    TaxCorrectiveViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
