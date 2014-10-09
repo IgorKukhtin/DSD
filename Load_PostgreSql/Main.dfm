@@ -1768,7 +1768,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 15
       Top = 344
-      Width = 194
+      Width = 106
       Height = 17
       Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
       Font.Charset = DEFAULT_CHARSET
@@ -1779,6 +1779,22 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 33
       OnClick = cbCompleteIncomeBNClick
+    end
+    object cbCompleteLossNotError: TCheckBox
+      Left = 137
+      Top = 344
+      Width = 72
+      Height = 17
+      Caption = 'Not Error'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 34
+      Visible = False
     end
   end
   object DataSource: TDataSource
