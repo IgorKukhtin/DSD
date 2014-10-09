@@ -3,41 +3,48 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Measure();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
- INOUT ioId	         Integer,   	-- ключ объекта <Единица измерения> 
-    IN inCode        Integer,       -- свойство <Код Единицы измерения> 
-    IN inName        TVarChar,      -- главное Название Единицы измерения
-    IN inSession     TVarChar       -- сессия пользователя
+ INOUT ioId	          Integer,   	-- ключ объекта <Единица измерения>
+    IN inCode         Integer,       -- свойство <Код Единицы измерения>
+    IN inName         TVarChar,      -- главное Название Единицы измерения
+    IN inInternalCode TVarChar,      --
+    IN inInternalName TVarChar,      --
+    IN inSession      TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
- 
+   DECLARE Code_max Integer;
+
 BEGIN
- 
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
    UserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
-   THEN 
+   THEN
        SELECT COALESCE( MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Measure();
    ELSE
        Code_max := inCode;
-   END IF; 
-   
+   END IF;
+
    -- проверка уникальности для свойства <Наименование Единицы измерения>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName);
    -- проверка уникальности для свойства <Код Единицы измерения>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Measure(), Code_max);
 
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), Code_max, inName);
-   
+
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalCode(), ioId, inInternalCode);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalName(), ioId, inInternalName);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
-   
+
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
@@ -47,7 +54,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarCh
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.10.14                                                       *
  13.06.13          *
  16.06.13                                        * COALESCE( MAX (ObjectCode), 0)
 
@@ -55,5 +63,3 @@ ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarCh
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Measure()
-  
-                            
