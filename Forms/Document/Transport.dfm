@@ -290,7 +290,7 @@
     Height = 421
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 421
     ClientRectRight = 1200
@@ -1537,6 +1537,7 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 105
     Top = 226
   end
@@ -1778,6 +1779,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       View = cxGridDBTableView
       Action = RouteChoiceForm
       Params = <>
@@ -1790,6 +1792,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1806,6 +1809,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -2256,6 +2260,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetReport
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMiReport
       StoredProcList = <
         item
@@ -2455,6 +2460,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 221
     Top = 182
   end
@@ -2481,6 +2487,7 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 106
     Top = 403
   end
@@ -2593,6 +2600,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 75
     Top = 226
   end
@@ -2727,6 +2735,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 348
     Top = 226
   end
@@ -2964,6 +2973,7 @@
         ComponentItem = 'RateFuelKindId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 74
     Top = 269
   end
@@ -3260,8 +3270,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 261
-    Top = 320
+    Left = 285
+    Top = 304
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3274,8 +3284,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 320
-    Top = 304
+    Left = 368
+    Top = 328
   end
   object IncomeCDS: TClientDataSet
     Aggregates = <>
@@ -3316,7 +3326,8 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 106
+    PackSize = 1
+    Left = 114
     Top = 314
   end
   object spInsertUpdateMIIncome: TdsdStoredProc
@@ -3510,6 +3521,7 @@
         ComponentItem = 'AmountSummTotal'
         DataType = ftFloat
       end>
+    PackSize = 1
     Left = 75
     Top = 314
   end
@@ -3530,6 +3542,7 @@
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 614
     Top = 185
   end
@@ -3550,6 +3563,7 @@
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 678
     Top = 201
   end
@@ -3570,6 +3584,7 @@
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 612
     Top = 244
   end
@@ -3590,6 +3605,7 @@
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 684
     Top = 260
   end
@@ -3604,8 +3620,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 263
-    Top = 364
+    Left = 271
+    Top = 388
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3638,6 +3654,7 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 552
     Top = 329
   end
@@ -3652,6 +3669,7 @@
         ComponentItem = 'MovementId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 624
     Top = 345
   end
@@ -3666,6 +3684,7 @@
         ComponentItem = 'MovementId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 696
     Top = 329
   end
@@ -3698,6 +3717,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 64
     Top = 16
   end
@@ -3740,6 +3760,7 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 106
     Top = 357
   end
@@ -3764,6 +3785,7 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 466
     Top = 194
   end

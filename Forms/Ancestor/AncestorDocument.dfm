@@ -3,8 +3,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 837
-  ExplicitHeight = 443
+  ExplicitWidth = 845
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -56,7 +56,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 90
     end
@@ -99,6 +99,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 152
     end
@@ -563,6 +564,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 168
     Top = 176
   end
@@ -607,6 +609,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 152
     Top = 232
   end
@@ -635,6 +638,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 194
     Top = 256
   end
@@ -688,6 +692,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 326
     Top = 216
   end
@@ -708,6 +713,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 358
     Top = 224
   end
@@ -741,6 +747,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 384
     Top = 240
   end
@@ -773,6 +780,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 392
     Top = 288
   end
@@ -795,6 +803,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 436
     Top = 156
   end

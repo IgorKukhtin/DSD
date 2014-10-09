@@ -91,7 +91,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
-           , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
+
+           , COALESCE(MovementLinkMovement_Tax.MovementId, 0) <> 0   AS isEDI
+           , COALESCE(MovementBoolean_Electron.ValueData, false)     AS isElectron
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
@@ -204,12 +206,10 @@ BEGIN
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
-                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
-                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+
 
            ;
 
@@ -221,6 +221,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.10.14         *  dell MovementBoolean_Electron было 2 раза
  12.08.14                                        * add isEDI and isElectron
  03.05.14                                        * add ContractTagName
  01.05.14                                        * InvNumber, InvNumberPartner is Integer

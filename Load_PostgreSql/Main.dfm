@@ -1823,12 +1823,14 @@ object MainForm: TMainForm
   object toStoredProc: TdsdStoredProc
     DataSets = <>
     Params = <>
+    PackSize = 1
     Left = 128
     Top = 248
   end
   object toStoredProc_two: TdsdStoredProc
     DataSets = <>
     Params = <>
+    PackSize = 1
     Left = 120
     Top = 160
   end
@@ -1882,6 +1884,7 @@ object MainForm: TMainForm
   object toStoredProc_three: TdsdStoredProc
     DataSets = <>
     Params = <>
+    PackSize = 1
     Left = 120
     Top = 112
   end

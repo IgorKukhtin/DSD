@@ -167,7 +167,18 @@ BEGIN
      END IF;
 
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.ProfitLossDirectionId <> 0
+     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
+                                                           THEN zc_Enum_ProfitLossDirection_50400() -- Налоговые платежи по ЗП
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
+                                                           THEN zc_Enum_ProfitLossDirection_50100() -- Налог на прибыль
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
+                                                           THEN zc_Enum_ProfitLossDirection_50200() -- НДС
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
+                                                           THEN zc_Enum_ProfitLossDirection_50300() -- Налоговые платежи (прочие)
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
+                                                           THEN zc_Enum_ProfitLossDirection_50500() -- штрафы в бюджет
+
+                                                      WHEN _tmpItem.ProfitLossDirectionId <> 0
                                                            THEN _tmpItem.ProfitLossDirectionId -- если уже был определен
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
@@ -190,16 +201,6 @@ BEGIN
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80500() -- Собственный капиталл + Прочие
                                                            THEN zc_Enum_ProfitLossDirection_80400() -- Расходы с прибыли + Прочие
 
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
-                                                           THEN zc_Enum_ProfitLossDirection_50400() -- Налоговые платежи по ЗП
-                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
-                                                           THEN zc_Enum_ProfitLossDirection_50100() -- Налог на прибыль
-                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
-                                                           THEN zc_Enum_ProfitLossDirection_50200() -- НДС
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
-                                                           THEN zc_Enum_ProfitLossDirection_50300() -- Налоговые платежи (прочие)
-                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
-                                                           THEN zc_Enum_ProfitLossDirection_50500() -- штрафы в бюджет
 
                                                       ELSE _tmpItem.ProfitLossDirectionId
                                                  END
