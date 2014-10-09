@@ -573,6 +573,7 @@
         Component = RetailGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 96
   end
@@ -617,6 +618,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 240
     Top = 144
   end
@@ -744,6 +746,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 176
     Top = 160
   end
@@ -762,6 +765,7 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 688
     Top = 104
   end
@@ -878,6 +882,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 280
     Top = 192
   end
@@ -900,6 +905,7 @@
         ComponentItem = 'OKPO'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 896
     Top = 120
   end

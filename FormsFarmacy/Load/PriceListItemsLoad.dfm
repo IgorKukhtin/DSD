@@ -36,28 +36,35 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 69
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 98
+            Width = 82
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 159
+            Width = 133
+          end
+          object colProducerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'ProducerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 122
           end
           object colGoodsNDS: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'GoodsNDS'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 47
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -70,14 +77,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
-            Width = 43
+            Width = 30
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 204
+            Width = 142
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -87,14 +94,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
+            Width = 50
           end
           object colExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 74
           end
         end
       end
@@ -258,6 +265,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 232
     Top = 104
   end
@@ -304,6 +312,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 224
     Top = 248
   end

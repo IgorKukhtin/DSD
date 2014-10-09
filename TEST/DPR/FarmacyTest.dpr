@@ -169,7 +169,9 @@ uses
   ImportGroupTest in '..\SOURCE\Objects\All\ImportGroupTest.pas',
   ImportGroupItemsTest in '..\SOURCE\Objects\All\ImportGroupItemsTest.pas',
   ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
-  CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas';
+  CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas',
+  UploadUnloadData in '..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
+  Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -33,6 +33,9 @@ type
     GoodsLinkCDS: TClientDataSet;
     GoodsLinkDS: TDataSource;
     clJuridicalName: TcxGridDBColumn;
+    DBViewAddOnMaster: TdsdDBViewAddOn;
+    actGoodsLinkRefresh: TdsdDataSetRefresh;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

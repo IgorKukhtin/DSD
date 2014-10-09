@@ -21,8 +21,8 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Left = 356
         Width = 426
         Height = 397
-        ExplicitLeft = 405
-        ExplicitWidth = 377
+        ExplicitLeft = 356
+        ExplicitWidth = 426
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = GoodsLinkDS
@@ -34,20 +34,22 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           object clCodeInt: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 36
           end
           object clCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1089#1090#1088#1086#1082')'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
-            Width = 57
+            Width = 88
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 183
@@ -55,6 +57,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentVert = vaCenter
             Width = 87
           end
         end
@@ -132,7 +135,6 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         Width = 3
         Height = 397
         Control = cxGrid
-        ExplicitLeft = 402
       end
     end
   end
@@ -173,6 +175,18 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           Component = MasterCDS
           ComponentItem = 'Code'
         end>
+    end
+    object actGoodsLinkRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGoodsLink
+      StoredProcList = <
+        item
+          StoredProc = spGoodsLink
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -280,8 +294,8 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         ShortCut = 13
       end>
     SearchAsFilter = False
-    Left = 256
-    Top = 216
+    Left = 448
+    Top = 168
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -324,6 +338,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 560
     Top = 88
   end
@@ -341,5 +356,43 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     DataSet = GoodsLinkCDS
     Left = 464
     Top = 72
+  end
+  object DBViewAddOnMaster: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewGoodsLink
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 304
+    Top = 168
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actGoodsLinkRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 200
+    Top = 112
   end
 end

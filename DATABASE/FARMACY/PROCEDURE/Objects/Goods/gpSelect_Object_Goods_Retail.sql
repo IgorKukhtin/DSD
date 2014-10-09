@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
-               NDSKindId Integer, NDSKindName TVarChar
+               NDSKindId Integer, NDSKindName TVarChar,
+               NDS TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -33,6 +34,7 @@ BEGIN
            , Object_Goods_View.MeasureName
            , Object_Goods_View.NDSKindId
            , Object_Goods_View.NDSKindName
+           , Object_Goods_View.NDS
 
     FROM Object_Goods_View 
    WHERE Object_Goods_View.ObjectId = vbObjectId;

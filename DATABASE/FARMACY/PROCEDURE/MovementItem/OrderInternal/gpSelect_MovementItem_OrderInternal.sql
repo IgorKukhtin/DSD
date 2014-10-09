@@ -16,11 +16,13 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
      vbUserId := inSession;
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
      IF inShowAll THEN
 
@@ -35,10 +37,10 @@ BEGIN
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
-             FROM Object AS Object_Goods
-             WHERE Object_Goods.DescId = zc_Object_Goods() AND Object_Goods.isErased = FALSE
+                  , Object_Goods.GoodsCodeInt                                           AS GoodsCode
+                  , Object_Goods.GoodsName                                            AS GoodsName
+             FROM Object_Goods_View AS Object_Goods
+             WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId

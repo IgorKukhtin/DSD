@@ -7,7 +7,7 @@
  function PrepareStr($str)
  {
    global $isArchive;
-   if ($isArchive)
+   if (($isArchive) && (strlen($str) > 100))
    {
  
      return 't ' . gzcompress($str);
@@ -25,17 +25,8 @@
 $dbconn = pg_pconnect($connectstring)
     or die('Could not connect: ' . pg_last_error());
 
-$query = 'set client_encoding=WIN1251';
-$result = pg_query_params($query, array());
-pg_free_result($result);
-
 $doc = new DOMDocument('1.0','windows-1251');
 $doc->loadXML($_POST["XML"]);
-
-/*$doc->loadXML('<xml Session = "" >'.
-    '<gp_Select_Master OutputType="otDataSet"/>'.
-  '</xml>');*/
-
 
 $Session = $doc->documentElement->getAttribute('Session');
 $StoredProcNode = $doc->documentElement->firstChild;
@@ -59,9 +50,36 @@ else
    $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
 };
 
-$result = pg_send_query_params ($dbconn, $query, $ParamValues);
-$result = pg_get_result($dbconn);
-$result_error = pg_result_error($result);
+                 
+if ($OutputType=='otMultiExecute')
+{
+  $data = $doc->documentElement->childNodes->Item(1);
+  // выполняем прорцедуру со всеми параметрами из $data
+  foreach ($data->childNodes as $dataitem) {
+      $i = 0;
+      // заполняем прорцедуру параметрами из $dataitem
+      foreach($dataitem->childNodes as $param) {
+         $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+         $i = $i + 1;
+      };
+     $result = pg_send_query_params ($dbconn, $query, $ParamValues);
+     $result = pg_get_result($dbconn);
+     $result_error = pg_result_error($result);
+     if ($result_error != false)
+     {
+         $res = '<error ';                                                   
+         $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
+         $res .= ' />';
+         echo 'error        '.PrepareStr($res);
+     };
+  };
+} 
+else
+{
+     $result = pg_send_query_params ($dbconn, $query, $ParamValues);
+     $result = pg_get_result($dbconn);
+     $result_error = pg_result_error($result);
+};
 
 if ($result_error != false)
 {

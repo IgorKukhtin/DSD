@@ -9,19 +9,20 @@ inherited PriceListLoadForm: TPriceListLoadForm
   inherited PageControl: TcxPageControl
     Width = 616
     Height = 373
-    ExplicitWidth = 597
+    ExplicitWidth = 616
     ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 616
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 597
+      ExplicitWidth = 616
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
         Width = 616
         Height = 373
-        ExplicitWidth = 597
+        ExplicitWidth = 616
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -90,6 +91,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
           StoredProc = spLoadPriceList
         end>
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+      ImageIndex = 27
     end
   end
   inherited MasterDS: TDataSource
@@ -154,6 +156,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
       item
         Action = actOpenPriceList
       end>
+    SearchAsFilter = False
   end
   object spLoadPriceList: TdsdStoredProc
     StoredProcName = 'gpLoadPriceList'
@@ -166,6 +169,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 216
     Top = 152
   end
@@ -180,6 +184,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 216
     Top = 120
   end

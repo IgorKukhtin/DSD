@@ -78,6 +78,7 @@ object UnitTreeForm: TUnitTreeForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -430,6 +431,7 @@ object UnitTreeForm: TUnitTreeForm
         DataSet = TreeDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 152
   end
@@ -456,6 +458,7 @@ object UnitTreeForm: TUnitTreeForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 416
     Top = 160
   end
@@ -514,6 +517,7 @@ object UnitTreeForm: TUnitTreeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    SearchAsFilter = False
     Left = 432
     Top = 240
   end

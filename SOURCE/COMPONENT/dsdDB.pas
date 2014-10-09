@@ -708,7 +708,8 @@ function TdsdParam.GetValue: Variant;
 // иначе из значени€ Value
 var DateTime: TDateTime;
 begin
-  if Assigned(FComponent) then begin
+  if Assigned(FComponent) and (not Assigned(FComponent.Owner)
+       or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
      // ¬ зависимости от типа компонента Value содержитс€ в разных property
      if Component is TCrossDBViewAddOn then
         result := GetFromCrossDBViewAddOn;
