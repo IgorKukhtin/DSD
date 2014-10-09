@@ -1,8 +1,14 @@
 -- Function: lpInsert_MovementItemProtocol (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpInsert_MovementItemProtocol (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpInsert_MovementItemProtocol (Integer, Integer, Boolean, Boolean);
 
-CREATE OR REPLACE FUNCTION lpInsert_MovementItemProtocol (inMovementItemId Integer, inUserId Integer, inIsInsert Boolean)
+CREATE OR REPLACE FUNCTION lpInsert_MovementItemProtocol
+(   IN inMovementItemId Integer,
+    IN inUserId         Integer,
+    IN inIsInsert       Boolean,              -- Признак
+    IN inIsErased       Boolean DEFAULT NULL  -- Признак, если НЕ пустой тогда в протокол св-ва не пишутся
+)
   RETURNS void AS
 $BODY$
  DECLARE 
@@ -16,6 +22,7 @@ BEGIN
    (SELECT '<Field FieldName = "ObjectId" FieldValue = "' || MovementItem.ObjectId || '"/>'
         || '<Field FieldName = "ValueData" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>'
         || '<Field FieldName = "Amount" FieldValue = "' || MovementItem.Amount || '"/>'
+        || '<Field FieldName = "isErased" FieldValue = "' || MovementItem.isErased || '"/>'
            AS FieldXML
          , 1 AS GroupId
          , MovementItem.DescId
@@ -29,6 +36,7 @@ BEGIN
     FROM MovementItemFloat
          INNER JOIN MovementItemFloatDesc ON MovementItemFloatDesc.Id = MovementItemFloat.DescId
     WHERE MovementItemFloat.MovementItemId = inMovementItemId
+      AND inIsErased IS NULL
    UNION
     SELECT '<Field FieldName = "' || MovementItemDateDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 3 AS GroupId
@@ -36,6 +44,7 @@ BEGIN
     FROM MovementItemDate
          INNER JOIN MovementItemDateDesc ON MovementItemDateDesc.Id = MovementItemDate.DescId
     WHERE MovementItemDate.MovementItemId = inMovementItemId
+      AND inIsErased IS NULL
    UNION
     SELECT '<Field FieldName = "' || MovementItemLinkObjectDesc.ItemName || '" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>' AS FieldXML
          , 4 AS GroupId
@@ -44,6 +53,7 @@ BEGIN
          INNER JOIN MovementItemLinkObjectDesc ON MovementItemLinkObjectDesc.Id = MovementItemLinkObject.DescId
          LEFT JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
     WHERE MovementItemLinkObject.MovementItemId = inMovementItemId
+      AND inIsErased IS NULL
    UNION
     SELECT '<Field FieldName = "' || MovementItemStringDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemString.ValueData, 'NULL') || '"/>' AS FieldXML
          , 5 AS GroupId
@@ -51,6 +61,7 @@ BEGIN
     FROM MovementItemString
          INNER JOIN MovementItemStringDesc ON MovementItemStringDesc.Id = MovementItemString.DescId
     WHERE MovementItemString.MovementItemId = inMovementItemId
+      AND inIsErased IS NULL
    UNION
     SELECT '<Field FieldName = "' || MovementItemBooleanDesc.ItemName || '" FieldValue = "' || COALESCE (MovementItemBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 6 AS GroupId
@@ -58,6 +69,7 @@ BEGIN
     FROM MovementItemBoolean
          INNER JOIN MovementItemBooleanDesc ON MovementItemBooleanDesc.Id = MovementItemBoolean.DescId
     WHERE MovementItemBoolean.MovementItemId = inMovementItemId
+      AND inIsErased IS NULL
    ) AS D
     ORDER BY D.GroupId, D.DescId
    ) AS D
@@ -74,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.10.14                                        * add MovementItem.isErased
  10.05.14                                        * add ORDER BY
  07.05.14                                        *
 */

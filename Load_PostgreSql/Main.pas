@@ -166,6 +166,7 @@ type
     cbCompleteCash: TCheckBox;
     cbCompleteLoss: TCheckBox;
     cbLossGuide: TCheckBox;
+    cbCompleteLossNotError: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -11761,8 +11762,19 @@ begin
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_pg').AsInteger;
              toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
-             // !!для НАЛ - все данные из Integer!!!
-             toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                       // !!!для НАЛ - все данные из Integer!!!
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             end
+                  // !!!для НАЛ - все данные из Integer!!!
+             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             ;
+             
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -11933,8 +11945,18 @@ begin
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
 
-             // !!для НАЛ - все данные из Integer!!!
-             toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('MovementId_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                       // !!!для НАЛ - все данные из Integer!!!
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             end
+                  // !!!для НАЛ - все данные из Integer!!!
+             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -12087,9 +12109,21 @@ begin
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_pg').AsInteger;
              toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
-             if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
-             then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
-             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked;
+
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                  else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                       then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                       else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             end
+             else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -12256,9 +12290,20 @@ begin
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
 
-             if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
-             then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
-             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('MovementId_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                  else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                       then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                       else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             end
+             else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -15375,9 +15420,9 @@ begin
              // gc_isDebugMode:=true;
              //
              //!!!УДАЛЯЕМ ВСЕ ЭЛЕМЕНТЫ!!!
-             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
-             then
-                  fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
+             //!!! if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             //!!! then
+             //!!!     fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
              //!!!!!!!!!!!!!!!!!!
              //
              //Номер филиала не должен измениться
@@ -16892,15 +16937,18 @@ begin
              // gc_isDebugMode:=true;
              //
              if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
-                           +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
+                           +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
+                           +'             )or MovementLinkMovement.MovementId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
+                           +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=Movement.Id and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
 
 // if FieldByName('Id_Postgres').AsString = '259257' then showMessage('');
@@ -17003,18 +17051,21 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             if cbOnlyUpdateInt.Checked then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
-                           +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
+                           +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
+                           +'             )or MovementLinkMovement.MovementId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
                            +'      left join Movement on Movement.Id = MovementItem.MovementId'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
+                           +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=MovementItem.MovementId and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
                            +' where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
 
 
@@ -17359,7 +17410,12 @@ begin
                   if toSqlQuery.FieldByName('FromId').AsInteger>0 then}
                   begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                       if not myExecToStoredProc_two then ;//exit;
+                       if cbCompleteLossNotError.Checked
+                       then try
+                               myExecToStoredProc_two;
+                            except
+                            end
+                       else if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
              //
@@ -17379,6 +17435,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Loss:Integer;
 var ArticleLossId_Defroster:Integer;
+    ToId_pg,ArticleLossId_pg:Integer;
 begin
      if (not cbLoss.Checked)or(not cbLoss.Enabled) then exit;
      //
@@ -17464,13 +17521,29 @@ begin
              //!!!
              if fStop then begin exit;end;
 
-            // Save
+             // ToId_Postgres не должна измениться
+             if (FieldByName('ToId_Postgres').AsInteger=0) and (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select ObjectId AS RetV from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_To()');
+                  ToId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else ToId_pg:=FieldByName('ToId_Postgres').AsInteger;
+
+             // ArticleLossId_pg не должна измениться
+             if (FieldByName('ArticleLossId_pg').AsInteger=0) and (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select ObjectId AS RetV from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_ArticleLoss()');
+                  ArticleLossId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else ArticleLossId_pg:=FieldByName('ArticleLossId_pg').AsInteger;
+
+             // Save
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inArticleLossId').Value:=FieldByName('ArticleLossId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=ToId_pg;
+             toStoredProc.Params.ParamByName('inArticleLossId').Value:=ArticleLossId_pg;
 
              if not myExecToStoredProc then ;//exit;
              //
