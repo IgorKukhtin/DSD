@@ -17408,7 +17408,9 @@ begin
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as InvNumber_all');
         Add('     , isnull(_pgPersonalFrom.Id_Postgres,pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , case when pgUnitTo.Id_Postgres > 0 and isnull(Bill.FromId,0) <> isnull(Bill.ToId,0)'
+        Add('     , case when isnull(Bill.FromId,0) = isnull(Bill.ToId,0)'
+           +'                 then 0'
+           +'            when pgUnitTo.Id_Postgres > 0'
            +'                 then pgUnitTo.Id_Postgres'
            +'            when _pgCar.CarId_pg > 0'
            +'                 then _pgCar.CarId_pg'

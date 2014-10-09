@@ -53,17 +53,31 @@ BEGIN
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
                                       THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
                                  WHEN Object_From.DescId = zc_Object_Member()
-                                      THEN zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
-                            END, 0) AS AccountDirectionId -- !!!не окончательное значение, т.к. еще может зависить от InfoMoneyDestinationId (Товара)!!!
+                                      THEN zc_Enum_AccountDirection_20500() -- Запасы + сотрудники (МО)
+                            END, 0) AS AccountDirectionId -- Аналитики счетов - направления !!!нужны только для подразделения!!!
                 , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
 
                 , COALESCE (ObjectLink_ArticleLoss_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_ArticleLoss
                 , COALESCE (ObjectLink_Branch.ChildObjectId, 0)                AS BranchId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
 
                   -- Группы ОПиУ (!!!приоритет - ArticleLoss!!!)
-                , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0))                   AS ProfitLossGroupId
+                , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)) AS ProfitLossGroupId
                   -- Аналитики ОПиУ - направления (!!!приоритет - ArticleLoss!!!)
-                , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)) AS ProfitLossDirectionId
+                , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
+                                                                                                THEN CASE WHEN Object_From.DescId = zc_Object_Member()
+                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) -- !!!исключение!!!
+                                                                                                          WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
+                                                                                                                                                                    , zc_Enum_AccountDirection_20200() -- Запасы + на складах
+                                                                                                                                                                    , zc_Enum_AccountDirection_20400() -- Запасы + на производстве
+                                                                                                                                                                     )
+                                                                                                               THEN zc_Enum_ProfitLossDirection_20500() -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация)
+                                                                                                          WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20700() -- Запасы + на филиалах
+                                                                                                                                                                     )
+                                                                                                               THEN zc_Enum_ProfitLossDirection_40400() -- Расходы на сбыт + Прочие потери (Списание+инвентаризация)
+                                                                                                          ELSE 0 -- !!!будет ошибка!!!
+                                                                                                     END
+                                                                                           ELSE COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)
+                                                                                      END) AS ProfitLossDirectionId
 
                 , COALESCE (ObjectLink_UnitFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Business.ChildObjectId, 0)                              AS BusinessId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
@@ -76,6 +90,7 @@ BEGIN
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                            AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From.ObjectId -- что б однозначно получить - Прочие потери (Списание+инвентаризация)
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
@@ -88,7 +103,6 @@ BEGIN
                                      ON ObjectLink_ArticleLoss_ProfitLossDirection.ObjectId = MovementLinkObject_ArticleLoss.ObjectId
                                     AND ObjectLink_ArticleLoss_ProfitLossDirection.DescId = zc_ObjectLink_ArticleLoss_ProfitLossDirection()
                 LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId
-
 
                 LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
                                      ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
@@ -111,15 +125,18 @@ BEGIN
                 LEFT JOIN tmpMember AS tmpMemberTo ON tmpMemberTo.MemberId = MovementLinkObject_To.ObjectId
                                                   AND Object_To.DescId = zc_Object_Member()
 
+                LEFT JOIN tmpMember AS tmpMemberFrom ON tmpMemberFrom.MemberId = MovementLinkObject_From.ObjectId
+                                                    AND Object_From.DescId = zc_Object_Member()
+
                 LEFT JOIN ObjectLink AS ObjectLink_Branch
-                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, MovementLinkObject_From.ObjectId)))
+                                     ON ObjectLink_Branch.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
                                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Unit_Branch()
                 LEFT JOIN ObjectLink AS ObjectLink_Business
-                                     ON ObjectLink_Business.ObjectId = ObjectLink_Branch.ObjectId -- такое же подразделение как и при поиске филиала ОПиУ
+                                     ON ObjectLink_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
                                     AND ObjectLink_Business.DescId = zc_ObjectLink_Unit_Business()
                 -- для затрат (!!!если не указан ArticleLoss!!!)
                 LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
-                       ON lfObject_Unit_byProfitLossDirection.UnitId = ObjectLink_Branch.ObjectId -- такое же подразделение как и при поиске филиала ОПиУ
+                       ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (tmpMemberFrom.UnitId, MovementLinkObject_From.ObjectId))))
                       AND MovementLinkObject_ArticleLoss.ObjectId IS NULL
 
            WHERE Movement.Id = inMovementId
@@ -340,16 +357,20 @@ BEGIN
                        FROM (SELECT  _tmpItem.InfoMoneyDestinationId
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN vbInfoMoneyId_ArticleLoss > 0
-                                               THEN vbInfoMoneyId_ArticleLoss -- !!!статья не зависит от товара!!!
+                                               THEN (SELECT InfoMoneyDestinationId FROM Object_InfoMoney_View WHERE InfoMoneyId = vbInfoMoneyId_ArticleLoss) -- !!!статья не зависит от товара!!!
+
                                           WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                             OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                             OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Ирна
                                             OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
                                             OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
                                                THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+
                                           WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
                                                THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+
                                           ELSE _tmpItem.InfoMoneyDestinationId
+
                                      END AS InfoMoneyDestinationId_calc
                              FROM _tmpItemSumm
                                   JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
