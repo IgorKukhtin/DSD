@@ -53,7 +53,8 @@ uses
   MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm};
+  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
+  UploadUnloadData in '..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -71,7 +72,7 @@ begin
   begin
      TUpdater.AutomaticUpdateProgram;
      Application.CreateForm(TMainForm, MainFormInstance);
-     Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;
 end.

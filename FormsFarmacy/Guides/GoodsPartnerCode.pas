@@ -32,6 +32,8 @@ type
     cxSplitter: TcxSplitter;
     GoodsLinkCDS: TClientDataSet;
     GoodsLinkDS: TDataSource;
+    DBViewAddOnChild: TdsdDBViewAddOn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

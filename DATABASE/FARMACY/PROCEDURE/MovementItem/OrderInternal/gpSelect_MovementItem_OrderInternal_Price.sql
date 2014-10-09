@@ -66,13 +66,13 @@ BEGIN
           , COALESCE(ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
        FROM MovementItem  
    JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
+   JOIN LastPriceList_View ON true 
    JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
+                           AND PriceList.MovementId  = LastPriceList_View.MovementId 
    JOIN MovementItemLinkObject AS MILinkObject_Goods
                                     ON MILinkObject_Goods.MovementItemId = PriceList.Id
                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-   
-   JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
 
    LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(vbObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
 

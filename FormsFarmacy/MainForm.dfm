@@ -69,6 +69,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSaveData'
+        end
+        item
+          Visible = True
           ItemName = 'bbPriceGroupSettings'
         end
         item
@@ -384,6 +388,10 @@ inherited MainForm: TMainForm
     end
     object bbLoadLoad: TdxBarButton
       Action = actImportGroup
+      Category = 0
+    end
+    object bbSaveData: TdxBarButton
+      Action = actSaveData
       Category = 0
     end
   end
@@ -824,6 +832,11 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
+    end
+    object actSaveData: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
+      OnExecute = actSaveDataExecute
     end
   end
   inherited cxLocalizer: TcxLocalizer

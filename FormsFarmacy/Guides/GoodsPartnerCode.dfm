@@ -324,6 +324,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 560
     Top = 88
   end
@@ -341,5 +342,43 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     DataSet = GoodsLinkCDS
     Left = 464
     Top = 72
+  end
+  object DBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewGoodsLink
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 472
+    Top = 232
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 216
+    Top = 112
   end
 end

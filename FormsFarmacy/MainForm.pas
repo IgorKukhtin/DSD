@@ -95,6 +95,9 @@ type
     bbUserProtocol: TdxBarButton;
     actImportGroup: TdsdOpenForm;
     bbLoadLoad: TdxBarButton;
+    actSaveData: TAction;
+    bbSaveData: TdxBarButton;
+    procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -105,7 +108,20 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-
+uses UploadUnloadData, Dialogs, Forms;
 {$R *.dfm}
+
+procedure TMainForm.actSaveDataExecute(Sender: TObject);
+begin
+  with TdmUnloadUploadData.Create(nil) do
+     try
+       UnloadData;
+     finally
+       Free;
+     end;
+
+  Application.ProcessMessages;
+  ShowMessage('Выгрузили');
+end;
 
 end.

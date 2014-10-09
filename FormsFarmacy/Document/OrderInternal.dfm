@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1072
-  ExplicitLeft = -290
   ExplicitWidth = 1080
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -125,7 +124,6 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 48
           end
           object colSumm: TcxGridDBColumn
@@ -1082,48 +1080,6 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Summ'
         DataType = ftFloat
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
@@ -1195,6 +1151,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
@@ -1255,6 +1212,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 1008
     Top = 168
   end

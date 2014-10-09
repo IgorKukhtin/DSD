@@ -66,9 +66,9 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Build>6</VerInfo_Build>
+			<VerInfo_Build>8</VerInfo_Build>
 			<VerInfo_Release>1</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.6;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -153,6 +153,10 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\SOURCE\LoginForm.pas">
 				<Form>LoginForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas">
+				<Form>dmUnloadUploadData</Form>
+				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

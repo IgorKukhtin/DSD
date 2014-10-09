@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
 )
 RETURNS TABLE (Id Integer, CommonCode Integer, GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
-               Price TFloat, ExpirationDate TDateTime)
+               Price TFloat, ProducerName TVarChar, ExpirationDate TDateTime)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -30,6 +30,7 @@ BEGIN
          Object_Goods.ValueData  AS Name, 
          LoadPriceListItem.LoadPriceListId, 
          LoadPriceListItem.Price, 
+         LoadPriceListItem.ProducerName, 
          LoadPriceListItem.ExpirationDate 
        FROM LoadPriceListItem 
   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId

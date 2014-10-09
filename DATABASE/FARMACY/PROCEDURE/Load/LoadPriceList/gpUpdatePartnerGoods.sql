@@ -49,7 +49,7 @@ BEGIN
                         ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
          WHERE LoadPriceListItem.GoodsId <> 0 
            AND LoadPriceListItem.LoadPriceListId  = inId 
-           AND Object_Goods.GoodsName <> LoadPriceListItem.GoodsName;
+           AND COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName;
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
 
