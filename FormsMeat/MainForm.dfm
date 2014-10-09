@@ -1,17 +1,17 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 100
+  ClientHeight = 246
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1094
-  ExplicitHeight = 134
+  ExplicitHeight = 280
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -320,6 +320,10 @@
         item
           Visible = True
           ItemName = 'bbGoodsKindWeighing'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBox'
         end
         item
           Visible = True
@@ -1917,6 +1921,10 @@
       Action = actFounderService
       Category = 0
     end
+    object bbBox: TdxBarButton
+      Action = actBox
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -3088,6 +3096,17 @@
       Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       FormName = 'TMeasureForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBox: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1071#1097#1080#1082#1080
+      Hint = #1071#1097#1080#1082#1080
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

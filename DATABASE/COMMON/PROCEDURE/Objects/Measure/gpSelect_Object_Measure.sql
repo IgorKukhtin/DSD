@@ -17,9 +17,9 @@ $BODY$BEGIN
              Object.Id         AS Id
            , Object.ObjectCode AS Code
            , Object.ValueData  AS Name
-           , Object.isErased   AS isErased
            , OS_Measure_InternalCode.ValueData  AS InternalCode
            , OS_Measure_InternalName.ValueData  AS InternalName
+           , Object.isErased   AS isErased
 
    FROM Object
         LEFT JOIN ObjectString AS OS_Measure_InternalName
