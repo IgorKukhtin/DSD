@@ -2,8 +2,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 703
+  ExplicitWidth = 1072
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -200,34 +200,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Options.Editing = False
             Width = 80
           end
-        end
-      end
-    end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
-      inherited cxGridEntry: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
         end
       end
     end
@@ -432,7 +404,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
@@ -441,7 +412,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [13]
@@ -610,10 +580,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
         end>
     end
     object bbPrint_Bill: TdxBarButton [5]
@@ -665,26 +631,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1184,10 +1130,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 912
-    Top = 262
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 368
     Top = 272
@@ -1283,6 +1225,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end

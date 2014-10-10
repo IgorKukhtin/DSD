@@ -16,8 +16,6 @@ inherited ReturnOutForm: TReturnOutForm
     ClientRectBottom = 553
     ClientRectRight = 838
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
       ExplicitWidth = 838
       ExplicitHeight = 529
       inherited cxGrid: TcxGrid
@@ -220,34 +218,6 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-        end
-      end
-    end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 838
-      ExplicitHeight = 529
-      inherited cxGridEntry: TcxGrid
-        Width = 838
-        Height = 529
-        ExplicitWidth = 838
-        ExplicitHeight = 529
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
         end
       end
     end
@@ -477,6 +447,28 @@ inherited ReturnOutForm: TReturnOutForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameReturnOut'
+      ReportNameParam.ParamType = ptInput
+    end
     object mactPrint_ReturnOut: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -531,35 +523,12 @@ inherited ReturnOutForm: TReturnOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameReturnOut'
-      ReportNameParam.ParamType = ptInput
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
@@ -568,7 +537,6 @@ inherited ReturnOutForm: TReturnOutForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [16]
@@ -726,10 +694,6 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
-          ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -762,26 +726,6 @@ inherited ReturnOutForm: TReturnOutForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 421
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1303,10 +1247,6 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 728
-    Top = 334
-  end
   inherited spGetTotalSumm: TdsdStoredProc
     Params = <
       item
@@ -1348,6 +1288,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'ReportNameReturnOutTax'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 416
     Top = 384
   end
@@ -1403,6 +1344,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
@@ -1425,6 +1367,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'ReportNameReturnOut'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 312
     Top = 392
   end

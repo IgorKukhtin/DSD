@@ -7,22 +7,22 @@ inherited OrderInternalForm: TOrderInternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1064
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -153,35 +153,6 @@ inherited OrderInternalForm: TOrderInternalForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
-      inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Width = 1064
@@ -217,7 +188,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -302,7 +273,6 @@ inherited OrderInternalForm: TOrderInternalForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
@@ -311,7 +281,6 @@ inherited OrderInternalForm: TOrderInternalForm
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [13]
@@ -400,7 +369,7 @@ inherited OrderInternalForm: TOrderInternalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -472,10 +441,6 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -533,26 +498,6 @@ inherited OrderInternalForm: TOrderInternalForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1007,10 +952,6 @@ inherited OrderInternalForm: TOrderInternalForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 912
-    Top = 262
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 368
     Top = 272
@@ -1078,6 +1019,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end

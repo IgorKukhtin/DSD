@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 998
   ExplicitWidth = 1006
-  ExplicitHeight = 569
+  ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,8 +16,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     ClientRectBottom = 411
     ClientRectRight = 998
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
       ExplicitWidth = 998
       ExplicitHeight = 387
       inherited cxGrid: TcxGrid
@@ -146,34 +144,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             Options.Editing = False
             Width = 80
           end
-        end
-      end
-    end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 998
-      ExplicitHeight = 387
-      inherited cxGridEntry: TcxGrid
-        Width = 998
-        Height = 387
-        ExplicitWidth = 998
-        ExplicitHeight = 387
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
         end
       end
     end
@@ -380,6 +350,37 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = ''
+      Hint = ''
+      ImageIndex = -1
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -460,44 +461,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = ''
-      Hint = ''
-      ImageIndex = -1
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.ParamType = ptInput
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [14]
@@ -520,15 +497,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           DataType = ftString
         end>
       isShowModal = True
-    end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
     end
     object actCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -703,10 +671,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
-          ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -746,26 +710,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1184,10 +1128,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 800
-    Top = 246
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PriceCorrective'
     Params = <
@@ -1307,6 +1247,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
@@ -1329,6 +1270,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 496
     Top = 272
   end
@@ -1620,6 +1562,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 368
     Top = 380
   end
@@ -1648,6 +1591,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 306
   end
@@ -1676,6 +1620,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 354
   end
