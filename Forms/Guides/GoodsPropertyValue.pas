@@ -69,6 +69,7 @@ type
     GoodsChoiceForm: TOpenChoiceForm;
     clGoodsKindName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
+    GroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
