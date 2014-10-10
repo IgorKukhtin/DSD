@@ -165,12 +165,12 @@
 				<Form>GoodsGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Measure.pas">
-				<Form>MeasureForm</Form>
+			<DCCReference Include="..\..\Forms\Box.pas">
+				<Form>BoxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
-				<Form>MeasureEditForm</Form>
+			<DCCReference Include="..\..\Forms\BoxEdit.pas">
+				<Form>BoxEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\NDSKind.pas">

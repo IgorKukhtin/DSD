@@ -417,6 +417,8 @@ type
     bbFounderService: TdxBarButton;
     actPeriodClose_User: TdsdOpenForm;
     bbPeriodClose_User: TdxBarButton;
+    actBox: TdsdOpenForm;
+    bbBox: TdxBarButton;
   public
     { Public declarations }
   end;

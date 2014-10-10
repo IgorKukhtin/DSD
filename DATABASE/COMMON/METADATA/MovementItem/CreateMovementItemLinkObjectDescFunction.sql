@@ -58,7 +58,7 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Juridical', 'Юр. лицо' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Juridical');
-  
+
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Member', 'Физ лицо (через кого)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Member');
@@ -66,7 +66,7 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MILinkObject_MoneyPlace() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MoneyPlace'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_MoneyPlace', 'Место операций с деньгами' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MoneyPlace');
-        
+
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_PaidKind', 'Форма оплаты' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PaidKind');
@@ -131,9 +131,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_WorkTimeKind() RETURNS Integer AS $BO
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_WorkTimeKind', 'Типы рабочего времени' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_WorkTimeKind');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Box() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Box'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Box', 'Ящик (гофро)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Box');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.10.14                                                       * add zc_MIFloat_BoxCount
  30.08.14                      	                 * add zc_MILinkObject_Member
  27.08.14                      	                 * add zc_MILinkObject_Partner
  30.07.14                      	                 * add zc_MILinkObject_PartionGoods
@@ -141,19 +146,19 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
  17.06.14                         * add zc_MILinkObject_BankAccount
  29.03.14                                        * add zc_MILinkObject_Juridical
  15.01.14                         * add zc_MILinkObject_Currency
- 24.12.13         * add zc_MILinkObject_Contract, zc_MILinkObject_ContractConditionKind              
+ 24.12.13         * add zc_MILinkObject_Contract, zc_MILinkObject_ContractConditionKind
  21.11.13                                        * add zc_MILinkObject_PositionLevel
  01.11.13                                        * add zc_MILinkObject_Branch and zc_MILinkObject_UnitRoute and zc_MILinkObject_BranchRoute
  26.10.13                                        * add zc_MILinkObject_RouteKindFreight
- 02.10.13         * add zc_MILinkObject_Unit            
- 01.10.13         * add PersonalGroup, Position, WorkTimeKind             
+ 02.10.13         * add zc_MILinkObject_Unit
+ 01.10.13         * add PersonalGroup, Position, WorkTimeKind
  01.10.13                                        * НОВАЯ СХЕМА
  30.09.13                                        * add for PersonalSendCash
  29.09.13                                        * add for Transport
  29.09.13                                        * del zc_MILinkObject_Goods - Товар
  29.09.13                                        * del zc_MILinkObject_AmountNorm - Количество по норме
  29.09.13                                        * del zc_MILinkObject_From - Откуда идет заправка
- 20.08.13         * add zc_MILinkObject_From, zc_MILinkObject_Goods 
+ 20.08.13         * add zc_MILinkObject_From, zc_MILinkObject_Goods
  30.06.13                                        * rename zc_MI...
  29.06.13                                        * НОВАЯ СХЕМА
  29.06.13                                        * zc_MovementItemFloat_AmountPacker

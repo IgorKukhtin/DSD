@@ -132,6 +132,8 @@ type
     bbPrint_Invoice: TdxBarButton;
     actPrint_Pack: TdsdPrintAction;
     bbPrint_Pack: TdxBarButton;
+    BoxName: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

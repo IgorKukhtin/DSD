@@ -1,4 +1,4 @@
-unit Measure;
+unit Box;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore;
 
 type
-  TMeasureForm = class(TParentForm)
+  TBoxForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -45,8 +45,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    InternalCode: TcxGridDBColumn;
-    InternalName: TcxGridDBColumn;
+    BoxVolume: TcxGridDBColumn;
+    BoxWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -58,6 +58,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureForm);
+  RegisterClass(TBoxForm);
 
 end.

@@ -1,7 +1,7 @@
-object MeasureEditForm: TMeasureEditForm
+object BoxEditForm: TBoxEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1045#1076#1080#1085#1080#1094#1091' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1097#1080#1082'>'
   ClientHeight = 281
   ClientWidth = 295
   Color = clBtnFace
@@ -63,22 +63,28 @@ object MeasureEditForm: TMeasureEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 104
-    Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
+    Caption = #1054#1073#1098#1077#1084', '#1084'3.'
   end
   object cxLabel4: TcxLabel
     Left = 10
     Top = 150
-    Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1042#1077#1089' '#1103#1097#1080#1082#1072
   end
-  object edNameInt: TcxTextEdit
+  object ceBoxVolume: TcxCurrencyEdit
     Left = 10
-    Top = 168
+    Top = 124
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 8
     Width = 273
   end
-  object edCodeInt: TcxTextEdit
+  object ceBoxWeight: TcxCurrencyEdit
     Left = 10
-    Top = 122
+    Top = 167
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 9
     Width = 273
   end
@@ -113,7 +119,7 @@ object MeasureEditForm: TMeasureEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Measure'
+    StoredProcName = 'gpInsertUpdate_Object_Box'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -138,17 +144,17 @@ object MeasureEditForm: TMeasureEditForm
         ParamType = ptInput
       end
       item
-        Name = 'inInternalCode'
+        Name = 'inBoxVolume'
         Value = Null
-        Component = edCodeInt
-        DataType = ftString
+        Component = ceBoxVolume
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inInternalName'
+        Name = 'inBoxWeight'
         Value = Null
-        Component = edNameInt
-        DataType = ftString
+        Component = ceBoxWeight
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1
@@ -166,7 +172,7 @@ object MeasureEditForm: TMeasureEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Measure'
+    StoredProcName = 'gpGet_Object_Box'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -190,15 +196,16 @@ object MeasureEditForm: TMeasureEditForm
         DataType = ftUnknown
       end
       item
-        Name = 'InternalCode'
-        Component = edCodeInt
-        DataType = ftString
+        Name = 'BoxVolume'
+        Value = Null
+        Component = ceBoxVolume
+        DataType = ftFloat
       end
       item
-        Name = 'InternalName'
+        Name = 'BoxWeight'
         Value = Null
-        Component = edNameInt
-        DataType = ftString
+        Component = ceBoxWeight
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 184

@@ -1,4 +1,4 @@
-unit MeasureEdit;
+unit BoxEdit;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TMeasureEditForm = class(TParentForm)
+  TBoxEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -29,8 +29,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    edNameInt: TcxTextEdit;
-    edCodeInt: TcxTextEdit;
+    ceBoxVolume: TcxCurrencyEdit;
+    ceBoxWeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -42,6 +42,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureEditForm);
+  RegisterClass(TBoxEditForm);
 
 end.

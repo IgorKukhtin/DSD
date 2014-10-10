@@ -31,6 +31,7 @@ type
     procedure LoadBonusKindFormTest;
     procedure LoadBranchFormTest;
     procedure LoadBusinessFormTest;
+    procedure LoadBoxFormTest;
     procedure LoadCashFormTest;
     procedure LoadCarFormTest;
     procedure LoadCarModelFormTest;
@@ -744,6 +745,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMeasureForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureEditForm');
+end;
+
+procedure TLoadFormTest.LoadBoxFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBoxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBoxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBoxEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBoxEditForm');
 end;
 
 procedure TLoadFormTest.LoadContactPersonFormTest;

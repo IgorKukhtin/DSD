@@ -1,7 +1,7 @@
-object MeasureForm: TMeasureForm
+object BoxForm: TBoxForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1097#1080#1082#1086#1074'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -67,18 +67,16 @@ object MeasureForm: TMeasureForm
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
-      object InternalCode: TcxGridDBColumn
-        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
-        DataBinding.FieldName = 'InternalCode'
-        Visible = False
+      object BoxVolume: TcxGridDBColumn
+        Caption = #1054#1073#1098#1077#1084', '#1084'3.'
+        DataBinding.FieldName = 'BoxVolume'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 70
       end
-      object InternalName: TcxGridDBColumn
-        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'InternalName'
-        Visible = False
+      object BoxWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1103#1097#1080#1082#1072
+        DataBinding.FieldName = 'BoxWeight'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 70
@@ -254,7 +252,7 @@ object MeasureForm: TMeasureForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMeasureEditForm'
+      FormName = 'TBoxEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
@@ -274,7 +272,7 @@ object MeasureForm: TMeasureForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMeasureEditForm'
+      FormName = 'TBoxEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
@@ -356,7 +354,7 @@ object MeasureForm: TMeasureForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Measure'
+    StoredProcName = 'gpSelect_Object_Box'
     DataSet = ClientDataSet
     DataSets = <
       item
