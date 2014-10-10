@@ -134,6 +134,7 @@ type
     bbPrint_Pack: TdxBarButton;
     BoxName: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
+    actGoodsBoxChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

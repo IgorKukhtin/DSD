@@ -262,6 +262,14 @@ inherited SaleForm: TSaleForm
           object BoxName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsBoxChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1051,6 +1059,29 @@ inherited SaleForm: TSaleForm
       EDIDocType = ediComDocSave
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
+    end
+    object actGoodsBoxChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'BoxForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1869,6 +1900,14 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end
       item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
@@ -1888,6 +1927,13 @@ inherited SaleForm: TSaleForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId'
         ParamType = ptInput
       end>
     Left = 160
