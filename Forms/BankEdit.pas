@@ -32,6 +32,10 @@ type
     edJuridical: TcxButtonEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel4: TcxLabel;
+    edSWIFT: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edIBAN: TcxTextEdit;
   private
     { Private declarations }
   public
