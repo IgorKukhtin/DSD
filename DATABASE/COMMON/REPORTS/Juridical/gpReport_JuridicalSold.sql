@@ -26,6 +26,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
+             , ContractConditionKindName TVarChar, ContractConditionValue TFloat
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -58,7 +59,34 @@ BEGIN
 
 
      -- –ÂÁÛÎ¸Ú‡Ú
-     RETURN QUERY  
+     RETURN QUERY
+     WITH tmpContractCondition AS
+                      (SELECT ObjectLink_Contract.ChildObjectId AS ContractId
+                            , MAX (ObjectLink_ContractConditionKind.ChildObjectId) AS ContractConditionKindId
+                            , SUM (COALESCE (ObjectFloat_Value.ValueData, 0)) AS Value
+                       FROM ObjectLink AS ObjectLink_ContractConditionKind
+                            INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractConditionKind.ObjectId
+                                                                         AND Object_ContractCondition.isErased = FALSE
+                            LEFT JOIN ObjectLink AS ObjectLink_Contract
+                                                 ON ObjectLink_Contract.ObjectId = ObjectLink_ContractConditionKind.ObjectId
+                                                AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                  ON ObjectFloat_Value.ObjectId = ObjectLink_ContractConditionKind.ObjectId
+                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                       WHERE ObjectLink_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_BonusPercentAccount() -- % ·ÓÌÛÒ‡ Á‡ ÓÔÎ‡ÚÛ
+                         AND ObjectLink_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                       GROUP BY ObjectLink_Contract.ChildObjectId
+                      )
+        , tmpContract AS
+                      (SELECT View_Contract.JuridicalId
+                            , MAX (tmpContractCondition.ContractConditionKindId) AS ContractConditionKindId
+                            , MAX (tmpContractCondition.Value) AS Value
+                       FROM tmpContractCondition
+                            INNER JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpContractCondition.ContractId
+                                                                            AND View_Contract.isErased = FALSE
+                                                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                       GROUP BY View_Contract.JuridicalId
+                      )
      SELECT 
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
@@ -85,6 +113,9 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName,
         Object_Area.ValueData AS AreaName,
+
+        Object_ContractConditionKind.ValueData AS ContractConditionKindName,
+        tmpContract.Value :: TFloat AS ContractConditionValue,
 
         Operation.ObjectId  AS AccountId,
         Object_Juridical.Id AS JuridicalId,
@@ -240,7 +271,7 @@ BEGIN
            LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId        
 
            LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
-           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId   
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId         
            
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
@@ -253,6 +284,9 @@ BEGIN
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Operation.PartnerId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
+
+           LEFT JOIN tmpContract ON tmpContract.JuridicalId = Operation.JuridicalId
+           LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpContract.ContractConditionKindId
 
            WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0
                OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
@@ -267,6 +301,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.10.14                                        * add tmpContractCondition
  13.09.14                                        * add inJuridicalGroupId
  13.09.14                                        * add PersonalTradeName
  07.09.14                                        * add Branch...
