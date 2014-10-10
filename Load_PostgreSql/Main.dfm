@@ -1786,7 +1786,6 @@ object MainForm: TMainForm
       Width = 72
       Height = 17
       Caption = 'Not Error'
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1794,7 +1793,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 34
-      Visible = False
     end
   end
   object DataSource: TDataSource
