@@ -549,7 +549,8 @@ uses
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
-  Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm};
+  Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
+  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

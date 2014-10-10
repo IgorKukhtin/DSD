@@ -72,6 +72,7 @@ type
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadPartnerFormTest;
+    procedure LoadPartionGoodsChoiceFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
@@ -813,6 +814,12 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
+end;
+
+procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
