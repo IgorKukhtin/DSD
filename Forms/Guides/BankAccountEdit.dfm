@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-  ClientHeight = 307
-  ClientWidth = 348
+  ClientHeight = 343
+  ClientWidth = 666
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,8 +29,8 @@
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 273
+    Left = 200
+    Top = 298
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -39,8 +39,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 273
+    Left = 344
+    Top = 298
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -108,6 +108,74 @@
         Kind = bkEllipsis
       end>
     TabOrder = 11
+    Width = 273
+  end
+  object edCorrespondentAccount: TcxTextEdit
+    Left = 344
+    Top = 238
+    TabOrder = 12
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 344
+    Top = 215
+    Cursor = crDrag
+    Caption = #1057#1095#1077#1090' '#1074' '#1073#1072#1085#1082#1077' - '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1077
+  end
+  object cxLabel6: TcxLabel
+    Left = 344
+    Top = 48
+    Cursor = crDrag
+    Caption = #1057#1095#1077#1090' '#1073#1072#1085#1082#1072' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+  end
+  object edBeneficiarysBankAccount: TcxTextEdit
+    Left = 344
+    Top = 71
+    TabOrder = 15
+    Width = 273
+  end
+  object cxLabel7: TcxLabel
+    Left = 344
+    Top = 105
+    Cursor = crDrag
+    Caption = #1057#1095#1077#1090' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+  end
+  object edBeneficiarysAccount: TcxTextEdit
+    Left = 344
+    Top = 128
+    TabOrder = 17
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 344
+    Top = 159
+    Caption = #1041#1072#1085#1082' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090' '#1076#1083#1103' '#1089#1095#1077#1090#1072
+  end
+  object edCorrespondentBank: TcxButtonEdit
+    Left = 344
+    Top = 182
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 273
+  end
+  object cxLabel9: TcxLabel
+    Left = 344
+    Top = 3
+    Caption = #1041#1072#1085#1082' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+  end
+  object edBeneficiarysBank: TcxButtonEdit
+    Left = 344
+    Top = 26
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 21
     Width = 273
   end
   object ActionList: TActionList
@@ -184,7 +252,43 @@
         Value = ''
         Component = dsdCurrencyGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inCorrespondentBankId'
+        Value = Null
+        Component = dsdCorrBankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBeneficiarysBankId'
+        Value = Null
+        Component = dsdBeneficiarysBankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCorrespondentAccount'
+        Value = Null
+        Component = edCorrespondentAccount
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBeneficiarysBankAccount'
+        Value = Null
+        Component = edBeneficiarysBankAccount
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBeneficiarysAccount'
+        Value = Null
+        Component = edBeneficiarysAccount
+        DataType = ftString
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -245,6 +349,7 @@
         Value = ''
         Component = dsdBankGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'CurrencyId'
@@ -257,8 +362,54 @@
         Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CorrespondentBankId'
+        Value = Null
+        Component = dsdCorrBankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CorrespondentBankName'
+        Value = Null
+        Component = dsdCorrBankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BeneficiarysBankId'
+        Value = Null
+        Component = dsdBeneficiarysBankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BeneficiarysBankName'
+        Value = Null
+        Component = dsdBankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CorrespondentAccount'
+        Value = Null
+        Component = edCorrespondentAccount
+        DataType = ftString
+      end
+      item
+        Name = 'BeneficiarysBankAccount'
+        Value = Null
+        Component = edBeneficiarysBankAccount
+        DataType = ftString
+      end
+      item
+        Name = 'BeneficiarysAccount'
+        Value = Null
+        Component = edBeneficiarysAccount
+        DataType = ftString
       end>
-    Left = 192
+    PackSize = 1
+    Left = 176
     Top = 88
   end
   object dsdJuridicalGuides: TdsdGuides
@@ -282,7 +433,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 312
+    Left = 288
     Top = 125
   end
   object dsdBankGuides: TdsdGuides
@@ -334,8 +485,8 @@
     Top = 229
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 40
+    Left = 24
+    Top = 32
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -350,5 +501,53 @@
     StorageName = 'cxPropertiesStore'
     Left = 248
     Top = 88
+  end
+  object dsdCorrBankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCorrespondentBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdCorrBankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdCorrBankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 616
+    Top = 165
+  end
+  object dsdBeneficiarysBankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBeneficiarysBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdBeneficiarysBankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdBeneficiarysBankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 616
+    Top = 25
   end
 end

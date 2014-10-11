@@ -1,35 +1,65 @@
-п»ї-- Function: gpSelect_Object_BankAccount(TVarChar)
+-- Function: gpSelect_Object_BankAccount(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               JuridicalName TVarChar, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
+               JuridicalName TVarChar, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar,
+               CorrespondentBankId Integer, CorrespondentBankName TVarChar,
+               BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
+               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar
+               ) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-     RETURN QUERY 
-         SELECT 
+     RETURN QUERY
+         SELECT
              Object_BankAccount_View.Id
            , Object_BankAccount_View.Code
            , Object_BankAccount_View.Name
-           , Object_BankAccount_View.isErased                 
+           , Object_BankAccount_View.isErased
            , Object_BankAccount_View.JuridicalName
            , Object_BankAccount_View.BankName
            , Object_BankAccount_View.CurrencyId
            , Object_BankAccount_View.CurrencyName
+           , Object_CorrespondentBank.Id                        AS CorrespondentBankId
+           , Object_CorrespondentBank.ValueData                 AS CorrespondentBankName
+           , Object_BeneficiarysBank.Id                         AS BeneficiarysBankId
+           , Object_BeneficiarysBank.ValueData                  AS BeneficiarysBankName
+           , OS_BankAccount_CorrespondentAccount.ValueData      AS CorrespondentAccount
+           , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
+           , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount
+
      FROM Object_BankAccount_View
-     -- РџРѕРєР°Р¶РµРј СЃС‡РµС‚Р° С‚РѕР»СЊРєРѕ РїРѕ РІРЅСѓС‚СЂРµРЅРЅРёРј С„РёСЂРјР°Рј
+     -- Покажем счета только по внутренним фирмам
         LEFT  JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                             ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 
+                             ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
                             AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
                             AND ObjectBoolean_isCorporate.ValueData = TRUE
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_CorrespondentBank
+                             ON ObjectLink_BankAccount_CorrespondentBank.ObjectId = Object_BankAccount_View.Id
+                            AND ObjectLink_BankAccount_CorrespondentBank.DescId = zc_ObjectLink_BankAccount_CorrespondentBank()
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_BeneficiarysBank
+                             ON ObjectLink_BankAccount_BeneficiarysBank.ObjectId = Object_BankAccount_View.Id
+                            AND ObjectLink_BankAccount_BeneficiarysBank.DescId = zc_ObjectLink_BankAccount_BeneficiarysBank()
+        LEFT JOIN Object AS Object_CorrespondentBank ON Object_CorrespondentBank.Id = ObjectLink_BankAccount_CorrespondentBank.ChildObjectId
+        LEFT JOIN Object AS Object_BeneficiarysBank ON Object_BeneficiarysBank.Id = ObjectLink_BankAccount_BeneficiarysBank.ChildObjectId
+        LEFT JOIN ObjectString AS OS_BankAccount_CorrespondentAccount
+                               ON OS_BankAccount_CorrespondentAccount.ObjectId = Object_BankAccount_View.Id
+                              AND OS_BankAccount_CorrespondentAccount.DescId = zc_ObjectString_BankAccount_CorrespondentAccount()
+        LEFT JOIN ObjectString AS OS_BankAccount_BeneficiarysBankAccount
+                               ON OS_BankAccount_BeneficiarysBankAccount.ObjectId = Object_BankAccount_View.Id
+                              AND OS_BankAccount_BeneficiarysBankAccount.DescId = zc_ObjectString_BankAccount_BeneficiarysBankAccount()
+        LEFT JOIN ObjectString AS OS_BankAccount_BeneficiarysAccount
+                               ON OS_BankAccount_BeneficiarysAccount.ObjectId = Object_BankAccount_View.Id
+                              AND OS_BankAccount_BeneficiarysAccount.DescId = zc_ObjectString_BankAccount_BeneficiarysAccount()
+
 ;
-  
+
 END;$BODY$
 
   LANGUAGE plpgsql VOLATILE
@@ -41,13 +71,14 @@ ALTER FUNCTION gpSelect_Object_BankAccount(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.14                                                       *
  15.01.14                         *
  10.06.13          *
- 05.06.13          
+ 05.06.13
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_BankAccount('2')

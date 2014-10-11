@@ -47,6 +47,11 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     bbGridToExcel: TdxBarButton;
+    CorrespondentBankName: TcxGridDBColumn;
+    BeneficiarysBankName: TcxGridDBColumn;
+    CorrespondentAccount: TcxGridDBColumn;
+    BeneficiarysBankAccount: TcxGridDBColumn;
+    BeneficiarysAccount: TcxGridDBColumn;
   private
     { Private declarations }
   public

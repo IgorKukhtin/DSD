@@ -3,7 +3,7 @@ object BankAccountForm: TBankAccountForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 376
-  ClientWidth = 588
+  ClientWidth = 876
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,11 +19,12 @@ object BankAccountForm: TBankAccountForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 588
-    Height = 350
+    Top = 28
+    Width = 876
+    Height = 348
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 588
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -76,6 +77,36 @@ object BankAccountForm: TBankAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
+      object CorrespondentBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090' '#1076#1083#1103' '#1089#1095#1077#1090#1072
+        DataBinding.FieldName = 'CorrespondentBankName'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object CorrespondentAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1074' '#1073#1072#1085#1082#1077' - '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1077
+        DataBinding.FieldName = 'CorrespondentAccount'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object BeneficiarysBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+        DataBinding.FieldName = 'BeneficiarysBankName'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object BeneficiarysBankAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1073#1072#1085#1082#1072' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+        DataBinding.FieldName = 'BeneficiarysBankAccount'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object BeneficiarysAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
+        DataBinding.FieldName = 'BeneficiarysAccount'
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -116,8 +147,8 @@ object BankAccountForm: TBankAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -135,7 +166,7 @@ object BankAccountForm: TBankAccountForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -283,6 +314,7 @@ object BankAccountForm: TBankAccountForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -331,6 +363,7 @@ object BankAccountForm: TBankAccountForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
@@ -338,6 +371,7 @@ object BankAccountForm: TBankAccountForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -345,11 +379,13 @@ object BankAccountForm: TBankAccountForm
         end
         item
           Name = 'CurrencyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
         end
         item
           Name = 'CurrencyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
           DataType = ftString
@@ -367,6 +403,7 @@ object BankAccountForm: TBankAccountForm
         DataSet = MasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 152
   end

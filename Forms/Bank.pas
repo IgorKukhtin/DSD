@@ -45,6 +45,8 @@ type
     clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clMFO: TcxGridDBColumn;
+    SWIFT: TcxGridDBColumn;
+    IBAN: TcxGridDBColumn;
   private
     { Private declarations }
   public
