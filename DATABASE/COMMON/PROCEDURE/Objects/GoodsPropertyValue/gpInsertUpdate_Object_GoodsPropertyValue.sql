@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_GoodsPropertyValue()
 
--- DROP FUNCTION gpInsertUpdate_Object_GoodsPropertyValue();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
@@ -16,15 +16,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
     IN inGoodsKindId         Integer   ,    -- Виды товара
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-
+   DECLARE vbUserId Integer;
  BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
-   UserId := inSession;
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
+   vbUserId:= lpGetUserBySession (inSession);
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsPropertyValue(), 0, inName);
 
@@ -49,14 +47,11 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsKind(), ioId, inGoodsKindId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                        TVarChar, Integer, Integer, Integer, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/

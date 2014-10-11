@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Loss()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -35,6 +36,7 @@ BEGIN
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
+                                          , inPartionGoodsId     := inPartionGoodsId
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -45,6 +47,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.14                                        * add inPartionGoodsId
  06.09.14                                        * add lpInsertUpdate_MovementItem_Loss
  01.09.14                                                       * + PartionGoodsDate
  26.05.14                                                       *
