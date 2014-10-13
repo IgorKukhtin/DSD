@@ -64,8 +64,8 @@ BEGIN
                 , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)) AS ProfitLossGroupId
                   -- Аналитики ОПиУ - направления (!!!приоритет - ArticleLoss!!!)
                 , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
-                                                                                                THEN CASE WHEN Object_From.DescId = zc_Object_Member()
-                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) -- !!!исключение!!!
+                                                                                                THEN CASE /*WHEN Object_From.DescId = zc_Object_Member()
+                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)*/ -- !!!исключение!!!
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
                                                                                                                                                                     , zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                                                                                                                                     , zc_Enum_AccountDirection_20400() -- Запасы + на производстве

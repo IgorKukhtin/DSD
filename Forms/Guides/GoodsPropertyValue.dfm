@@ -19,12 +19,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 986
-    Height = 438
+    Height = 436
     Align = alClient
     TabOrder = 4
-    ExplicitWidth = 927
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -134,6 +133,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object GroupName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'GroupName'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -176,8 +181,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -195,7 +200,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -336,6 +341,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -379,11 +385,13 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyName'
           DataType = ftString
@@ -400,11 +408,13 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
@@ -421,11 +431,13 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -438,12 +450,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -481,6 +495,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 80
     Top = 216
   end
@@ -491,10 +506,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 424
     Top = 216
   end
@@ -537,12 +554,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
@@ -550,6 +569,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -557,6 +577,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inBarCode'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BarCode'
         DataType = ftString
@@ -564,6 +585,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inArticle'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Article'
         DataType = ftString
@@ -571,6 +593,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inBarCodeGLN'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BarCodeGLN'
         DataType = ftString
@@ -578,29 +601,42 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       end
       item
         Name = 'inArticleGLN'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ArticleGLN'
         DataType = ftString
         ParamType = ptInput
       end
       item
+        Name = 'inGroupName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GroupName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsPropertyId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 112
     Top = 328
   end

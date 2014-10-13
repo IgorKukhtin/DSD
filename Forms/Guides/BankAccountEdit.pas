@@ -38,6 +38,18 @@ type
     edBank: TcxButtonEdit;
     edCurrency: TcxButtonEdit;
     cxPropertiesStore: TcxPropertiesStore;
+    edCorrespondentAccount: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edBeneficiarysBankAccount: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edBeneficiarysAccount: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edCorrespondentBank: TcxButtonEdit;
+    dsdCorrBankGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edBeneficiarysBank: TcxButtonEdit;
+    dsdBeneficiarysBankGuides: TdsdGuides;
   private
     { Private declarations }
   public

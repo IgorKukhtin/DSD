@@ -820,9 +820,9 @@ object MainForm: TMainForm
     end
     object cbLoss: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 344
-      Width = 93
+      Left = 1
+      Top = 342
+      Width = 155
       Height = 17
       Caption = '5.2. '#1057#1087#1080#1089#1072#1085#1080#1077
       Font.Charset = DEFAULT_CHARSET
@@ -1222,9 +1222,9 @@ object MainForm: TMainForm
     end
     object cbLossGuide: TCheckBox
       Tag = 20
-      Left = 126
+      Left = 132
       Top = 341
-      Width = 126
+      Width = 108
       Height = 24
       Caption = '5.1. !!!'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1089#1087#1080#1089#1072#1085#1080#1103'!!!'
       Font.Charset = DEFAULT_CHARSET

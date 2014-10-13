@@ -7,33 +7,42 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Bank(
     IN inCode                Integer,       -- Код объекта <Банк>
     IN inName                TVarChar,      -- Название объекта <Банк>
     IN inMFO                 TVarChar,      -- МФО
+    IN inSWIFT               TVarChar,      -- SWIFT
+    IN inIBAN                TVarChar,      -- IBAN
     IN inJuridicalId         Integer,       -- Юр. лицо
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Bank());
-   
+
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Bank());
-   
+
    -- проверка прав уникальности для свойства <Наименование Банка>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Bank(), inName);
    -- проверка прав уникальности для свойства <Код Банка>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Bank(), vbCode_calc);
    -- проверка прав уникальности для свойства <МФО>
    PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_MFO(), inMFO);
+   -- проверка прав уникальности для свойства <SWIFT>
+   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_SWIFT(), inSWIFT);
+   -- проверка прав уникальности для свойства <IBAN>
+   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_IBAN(), inIBAN);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Bank(), vbCode_calc, inName);
 
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_MFO(), ioId, inMFO);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_SWIFT(), ioId, inSWIFT);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_IBAN(), ioId, inIBAN);
+
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Bank_Juridical(), ioId, inJuridicalId);
-   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -46,10 +55,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Bank (Integer,Integer,TVarChar,TVarChar,Int
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.14                                                       *
  08.05.14                                        * add lpCheckRight
- 04.07.13          * vbCode_calc             
+ 04.07.13          * vbCode_calc
  10.06.13          *
- 05.06.13          
+ 05.06.13
 */
 
 -- тест

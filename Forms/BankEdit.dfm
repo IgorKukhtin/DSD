@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1073#1072#1085#1082#1072
-  ClientHeight = 256
+  ClientHeight = 378
   ClientWidth = 346
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 219
+    Left = 80
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 219
+    Left = 224
+    Top = 335
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -88,11 +88,34 @@
     TabOrder = 9
     Width = 273
   end
+  object cxLabel4: TcxLabel
+    Left = 40
+    Top = 203
+    Caption = 'SWIFT'
+  end
+  object edSWIFT: TcxTextEdit
+    Left = 40
+    Top = 226
+    TabOrder = 11
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 253
+    Caption = 'IBAN'
+  end
+  object edIBAN: TcxTextEdit
+    Left = 40
+    Top = 276
+    TabOrder = 13
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -105,6 +128,7 @@
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -114,6 +138,7 @@
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -149,11 +174,26 @@
         ParamType = ptInput
       end
       item
+        Name = 'inSWIFT'
+        Value = Null
+        Component = edSWIFT
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIBAN'
+        Value = Null
+        Component = edIBAN
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inJuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -207,13 +247,29 @@
         Name = 'MFO'
         Value = ''
         Component = edMFO
+        DataType = ftString
+      end
+      item
+        Name = 'SWIFT'
+        Value = Null
+        Component = edSWIFT
+        DataType = ftString
+      end
+      item
+        Name = 'IBAN'
+        Value = Null
+        Component = edIBAN
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 192
     Top = 136
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

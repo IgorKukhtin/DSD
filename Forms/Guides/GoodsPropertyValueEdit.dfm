@@ -2,7 +2,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   Left = 0
   Top = 0
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 293
+  ClientHeight = 361
   ClientWidth = 563
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton1: TcxButton
     Left = 167
-    Top = 260
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton2: TcxButton
     Left = 311
-    Top = 260
+    Top = 320
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -153,11 +153,23 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     TabOrder = 19
     Width = 535
   end
+  object cxLabel10: TcxLabel
+    Left = 18
+    Top = 253
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+  end
+  object ceGroupName: TcxTextEdit
+    Left = 18
+    Top = 272
+    TabOrder = 21
+    Width = 267
+  end
   object ActionList: TActionList
     Left = 432
     Top = 246
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -171,9 +183,11 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -237,6 +251,13 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inGroupName'
+        Value = Null
+        Component = ceGroupName
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsPropertyId'
         Value = ''
         Component = dsdGoodsPropertyGuides
@@ -257,8 +278,9 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 88
-    Top = 245
+    Top = 317
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -321,6 +343,12 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         DataType = ftString
       end
       item
+        Name = 'GroupName'
+        Value = Null
+        Component = ceGroupName
+        DataType = ftString
+      end
+      item
         Name = 'GoodsPropertyId'
         Value = ''
         Component = dsdGoodsPropertyGuides
@@ -359,8 +387,9 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 259
-    Top = 246
+    PackSize = 1
+    Left = 251
+    Top = 318
   end
   object dsdGoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'

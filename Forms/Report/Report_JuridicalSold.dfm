@@ -2,6 +2,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1044
+  ExplicitLeft = -62
   ExplicitWidth = 1060
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -470,6 +471,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object colContractConditionKindName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'ContractConditionKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colContractConditionValue: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095'. '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'ContractConditionValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object colStartAmount_A: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -2669,6 +2688,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 232
   end
