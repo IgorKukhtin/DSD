@@ -543,9 +543,9 @@ CREATE OR REPLACE FUNCTION zc_Object_Box() RETURNS Integer AS $BODY$BEGIN RETURN
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Box', 'Виды ящиков' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Box');
 
-CREATE OR REPLACE FUNCTION zc_Object_CorrespondentAccountIntermediaryBank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CorrespondentAccountIntermediaryBank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_CorrespondentAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CorrespondentAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_CorrespondentAccountIntermediaryBank', 'Корреспондентский счет в Банке-посреднике' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CorrespondentAccountIntermediaryBank');
+  SELECT 'zc_Object_CorrespondentAccount', 'Корреспондентский счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CorrespondentAccount');
 
 
 
@@ -565,7 +565,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.10.14                                                        * add zc_Object_CorrespondentAccountIntermediaryBank
+ 13.10.14                                                        * add zc_Object_CorrespondentAccount
  09.10.14                                                        * add zc_Object_Box
  04.09.14                                                        * + zc_Object_ServiceDate
  01.09.14         * add zc_Object_ArticleLoss, zc_Object_Founder

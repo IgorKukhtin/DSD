@@ -820,13 +820,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceGroupSettings_Retail() RETURNS Int
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PriceGroupSettings_Retail', 'Ссылка на торговую сеть', zc_Object_PriceGroupSettings(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceGroupSettings_Retail');
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrespondentAccount_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccount_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount', 'Корреспондентский счет в Банке-посреднике', zc_Object_CorrespondentAccountIntermediaryBank(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount');
+SELECT 'zc_ObjectLink_CorrespondentAccount_BankAccount', 'обычный счет, для которого указан Корреспондентский счет', zc_Object_CorrespondentAccount(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount');
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrespondentAccountIntermediaryBank_IntermediaryBank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_IntermediaryBank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CorrespondentAccount_Bank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccount_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_IntermediaryBank', '	Банк посредник', zc_Object_CorrespondentAccountIntermediaryBank(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccountIntermediaryBank_IntermediaryBank');
+SELECT 'zc_ObjectLink_CorrespondentAccount_Bank', '	в каком банке находится Корреспондентский счет', zc_Object_CorrespondentAccount(), zc_Object_Bank() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CorrespondentAccount_Bank');
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -865,7 +865,7 @@ SELECT 'zc_ObjectLink_Founder_InfoMoney', '<Пользователь (корректировка)>', zc_O
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.10.14                                                        * add zc_ObjectLink_BankAccount_СorrespondentBank, zc_ObjectLink_BankAccount_BeneficiarysBank, zc_ObjectLink_CorrespondentAccountIntermediaryBank_BankAccount, zc_ObjectLink_CorrespondentAccountIntermediaryBank_IntermediaryBank
+ 13.10.14                                                        *
  30.09.14         * add zc_ObjectLink_PersonalServiceList_Juridical
  23.09.14                         *
  20.09.14                                        * add zc_ObjectLink_Founder_InfoMoney
