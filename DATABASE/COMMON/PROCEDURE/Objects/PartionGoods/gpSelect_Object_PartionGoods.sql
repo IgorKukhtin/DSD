@@ -1,7 +1,6 @@
 ﻿-- Function: gpSelect_Object_PartionGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Integer, TVarChar);
+
 DROP FUNCTION IF EXISTS gpSelect_Object_PartionGoods (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
@@ -22,7 +21,7 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
 
      RETURN QUERY 
-      SELECT
+     SELECT
              Object_PartionGoods.Id          AS Id
            , Object_PartionGoods.ValueData AS InvNumber
            , ObjectDate_Value.ValueData    AS  OperDate
@@ -38,29 +37,30 @@ $BODY$BEGIN
            , Object_Unit.ValueData   AS UnitName
                      
            , Object_PartionGoods.isErased AS isErased
-           
-       FROM Object AS Object_PartionGoods
-            JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = Object_PartionGoods.Id 
-                                               AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
-            JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id 
-                                               AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-                                                                                                          
-            JOIN ObjectLink AS ObjectLink_PartionGoods_Goods ON ObjectLink_PartionGoods_Goods.ObjectId = Object_PartionGoods.Id 
-                                                            AND ObjectLink_PartionGoods_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
-                                                            AND (ObjectLink_PartionGoods_Goods.ChildObjectId = inGoodsId or inGoodsId = 0)
-            JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PartionGoods_Goods.ChildObjectId         
-           
-            LEFT  JOIN ObjectLink AS ObjectLink_PartionGoods_Storage ON ObjectLink_PartionGoods_Storage.ObjectId = Object_PartionGoods.Id 
-                                                                    AND ObjectLink_PartionGoods_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
-            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_PartionGoods_Storage.ChildObjectId  
-           
-            JOIN ObjectLink AS ObjectLink_PartionGoods_Unit ON ObjectLink_PartionGoods_Unit.ObjectId = Object_PartionGoods.Id 
-                                                           AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                                           And (ObjectLink_PartionGoods_Unit.ChildObjectId = inUnitId Or inUnitId =0) 
-            JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_PartionGoods_Unit.ChildObjectId
+     FROM ObjectLink AS ObjectLink_Goods
+          INNER JOIN Object as Object_PartionGoods  ON Object_PartionGoods.Id = ObjectLink_Goods.ObjectId                       --партия
 
-      WHERE Object_PartionGoods.DescId = zc_Object_PartionGoods();
+          INNER JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = ObjectLink_Goods.ObjectId                    -- дата
+                                                   AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                                        
+          JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = ObjectLink_Goods.ObjectId                       -- цена
+                                               AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
+
+          INNER JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId		        -- подразделение
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                                  AND (ObjectLink_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+          JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+                                    
+          LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId		-- склад
+                                                     AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+          LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId  
+                                                                                 
+          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId                                 -- товар         
+            
+     WHERE (ObjectLink_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+       AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods();
+
   
 END;
 $BODY$
@@ -76,4 +76,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_PartionGoods('2')
+--select * from gpSelect_Object_PartionGoods(inGoodsId := 0 , inUnitId := 0 , inShowAll := 'False' ,  inSession := '5');
