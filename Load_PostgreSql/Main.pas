@@ -11067,7 +11067,8 @@ begin
         Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
-           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           //+'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'               then -1 * BillItems.OperCount '
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
@@ -11942,7 +11943,8 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
-           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           //+'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'               then -1 * BillItems.OperCount '
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
@@ -18860,45 +18862,96 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select BillItems.Id as ObjectId');
-        Add('     , Bill.BillDate as BillDate');
+        Add('select ScaleHistory.Id as ObjectId');
+        Add('     , ScaleHistory.Date_pg');
         Add('     , Bill.BillNumber as BillNumber');
-        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , ScaleHistory.InsertDate');
+        Add('     , ScaleHistory.MovementId_pg as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , BillItems.ZakazCount1 + BillItems.ZakazCount1 as Amount');
-        Add('     , BillItems.ZakazChange as AmountSecond');
-
+        Add('     , case when fIsClient_Fozzi(Bill.ToID)=zc_rvYes() or fIsClient_Kisheni(Bill.ToID)=zc_rvYes() or fIsClient_Vivat(Bill.ToID)=zc_rvYes() or fIsClient_Amstor(Bill.ToID)=zc_rvYes() or fIsClient_Real(Bill.ToID)=zc_rvYes()'
+           +'              or fIsClient_ATB(Bill.ToID)=zc_rvYes() or fIsClient_OK(Bill.ToID)=zc_rvYes()'
+           +'              or fIsClient_Fozzi(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Kisheni(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Vivat(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Amstor(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Real(ScaleHistory.ToID)=zc_rvYes()'
+           +'              or fIsClient_ATB(ScaleHistory.ToID)=zc_rvYes() or fIsClient_OK(ScaleHistory.ToID)=zc_rvYes()'
+           +'                 then zf_MyRound3(ScaleHistory.Production_Weight*(1-ScaleHistory.DiscountWeight/100))'
+           +'            when ScaleHistory.BillKind=zc_bkSaleToClient() and isnull(Bill.BillKind,0)<>zc_bkOut()'
+           +'                 then zf_MyRound(ScaleHistory.Production_Weight*(1-ScaleHistory.DiscountWeight/100))'
+           +'            else ScaleHistory.Production_Weight'
+           +'       end as inAmount');
+        Add('     , ScaleHistory.Production_Weight as inRealWeight');
+        Add('     , ScaleHistory.DiscountWeight as inChangePercentAmount');
+        Add('     , ScaleHistory.Tare_Count as inCountTare');
+        Add('     , ScaleHistory.Tare_Weight as inWeightTare');
+        Add('     , ScaleHistory.OperCount_Upakovka as inCount');
+        Add('     , ScaleHistory.OperCount_sh as inBoxCount');
+        Add('     , ScaleHistory.NumberTare as inBoxNumber');
+        Add('     , ScaleHistory.NumberLevel as inLevelNumber');
         Add('     , PriceListItems_byHistory.NewPrice as Price');
         Add('     , 1 as CountForPrice');
-        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , ScaleHistory.PartionDate as inPartionGoodsDate');
 
+        Add('     , KindPackage.Id_Postgres as inGoodsKindId');
+        Add('     , PriceList_byHistory.Id_Postgres as inPriceListId');
+
+        Add('     , ScaleHistory.isErased');
         Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡(')+'+GoodsProperty.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+isnull(KindPackage.KindPackageName,'+FormatToVarCharServer_notNULL('')+')+'+FormatToVarCharServer_notNULL(')')
 //           +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ‚Ë‰')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
-        Add('     , zc_rvYes() as zc_rvYes');
-        Add('     , BillItems.Id_Postgres as Id_Postgres');
-        Add('from dba.Bill');
-        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
-        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
 
-        Add('     left outer join dba.BillItemsZakaz as BillItems on BillItems.BillId = Bill.Id');
-        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from (select ScaleHistory.BillId'
+           +'            ,zc_rvNo() as isObv'
+           +'            ,fCalcCurrentBillDate_byPG(InsertDate,10) as Date_pg'
+           +'            ,InsertDate'
+           +'            ,BillKind,ToId'
+           +'            ,Production_GoodsId as GoodsPropertyId'
+           +'            ,KindPackageId'
+           +'            ,PriceListId'
+           +'            ,Production_Weight'
+           +'            ,Tare_GoodsId'
+           +'            ,Tare_Weight'
+           +'            ,OperCount_Upakovka,OperCount_sh,NumberTare,NumberLevel,PartionDate'
+           +'            ,isErased'
+           +'            ,Tare_Count'
+           +'            ,DiscountWeight'
+           +'            ,ScaleHistory.MovementId_pg'
+           +'      from dba.ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'        and ScaleHistory.MovementId_pg>0'
+           +'     union'
+           +'      select ScaleHistory.BillId'
+           +'            ,zc_rvYes() as isObv'
+           +'            ,fCalcCurrentBillDate_byPG(InsertDate,10) as Date_pg'
+           +'            ,InsertDate'
+           +'            ,BillKind,ToId'
+           +'            ,Production_GoodsId as GoodsPropertyId'
+           +'            ,KindPackageId'
+           +'            ,PriceListId'
+           +'            ,Production_Weight'
+           +'            ,Tare_GoodsId'
+           +'            ,Tare_Weight'
+           +'            ,OperCount_Upakovka,OperCount_sh,NumberTare,NumberLevel,PartionDate'
+           +'            ,isErased'
+           +'            ,Tare_Count'
+           +'            ,DiscountWeight'
+           +'            ,ScaleHistory.MovementId_pg'
+           +'      from dba.ScaleHistory_byObvalka as ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'        and ScaleHistory.MovementId_pg>0'
+           +'     ) as ScaleHistory');
+
+        Add('     left outer join dba.Bill on Bill.Id = ScaleHistory.BillId');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = ScaleHistory.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
-        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = ScaleHistory.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('     left join dba.PriceList_byHistory on PriceList_byHistory.Id=ScaleHistory.PriceListID');
         Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
-           +'                                           and PriceListItems_byHistory.PriceListID = 2' // Œœ“Œ¬€≈ ÷≈Õ€
-           +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
-           +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
-           +'  and BillItems.Id is not null'
-           +'  and Bill.Id_Postgres>0'
-           );
-        if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+           +'                                           and PriceListItems_byHistory.PriceListID = ScaleHistory.PriceListID' // Œœ“Œ¬€≈ ÷≈Õ€
+           +'                                           and ScaleHistory.Date_pg between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
         Add('order by 2,3,1');
         Open;
 
@@ -18910,17 +18963,27 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_OrderExternal';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_WeighingPartner';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRealWeight',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountTare',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeightTare',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxNumber',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLevelNumber',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
         toStoredProc_two.OutputType := otResult;
