@@ -105,7 +105,6 @@ type
     edInvNumberTransport: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
-    edInvNumberOrder: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     colDestinationObjectCode: TcxGridDBColumn;
@@ -149,6 +148,20 @@ type
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    edOperDate_parent: TcxDateEdit;
+    cxLabel12: TcxLabel;
+    edInvNumber_parent: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    edInvNumberOrder: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    edPartionGoods: TcxTextEdit;
+    ContractGuides: TdsdGuides;
+    edContractTag: TcxTextEdit;
+    edWeighingNumber: TcxCurrencyEdit;
   private
   public
   end;

@@ -167,6 +167,8 @@ type
     cbCompleteLoss: TCheckBox;
     cbLossGuide: TCheckBox;
     cbCompleteLossNotError: TCheckBox;
+    cbWeighingPartner: TCheckBox;
+    cbWeighingProduction: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -301,6 +303,9 @@ type
 
     function pLoadDocument_OrderExternal:Integer;
     procedure pLoadDocumentItem_OrderExternal(SaveCount:Integer);
+
+    function pLoadDocument_WeighingPartner:Integer;
+    procedure pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
 
     function pLoadDocument_Tax_Int:Integer;
     procedure pLoadDocumentItem_Tax_Int(SaveCount:Integer);
@@ -1464,6 +1469,9 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_OrderExternal;
      if not fStop then pLoadDocumentItem_OrderExternal(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_WeighingPartner;
+     if not fStop then pLoadDocumentItem_WeighingPartner(myRecordCount1);
 
      //
      Gauge.Visible:=false;
@@ -18393,7 +18401,7 @@ begin
         Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
-        cbOrderExternal.Caption:='7.1. ('+IntToStr(RecordCount)+') Заявки покупателей';
+        cbOrderExternal.Caption:='7.1. ('+IntToStr(RecordCount)+')Заявки покуп.';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -18554,7 +18562,7 @@ begin
         Add('order by 2,3,1');
         Open;
 
-        cbOrderExternal.Caption:='7.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Заявки покупателей';
+        cbOrderExternal.Caption:='7.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Заявки покуп.';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -18614,6 +18622,346 @@ begin
      end;
      //
      myDisabledCB(cbOrderExternal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pLoadDocument_WeighingPartner:Integer;
+var ContractId_pg,MovementDescId_pg:Integer;
+    FromId_pg,ToId_pg,PaidKindId_pg,RouteSortingId_pg:Integer;
+begin
+     Result:=0;
+     if (not cbWeighingPartner.Checked)or(not cbWeighingPartner.Enabled) then exit;
+     //
+     myEnabledCB(cbWeighingPartner);
+     //
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ScaleHistory.BillId as ObjectId');
+        Add('     , ScaleHistory.Date_pg as inOperDate');
+        Add('     , isnull(Bill.Id_Postgres,-1*ScaleHistory.BillId) as inParentId');
+
+        Add('     , ScaleHistory.minInsertDate as inStartWeighing');
+        Add('     , ScaleHistory.maxInsertDate as inEndWeighing');
+
+        Add('     , case when ScaleHistory.BillKind=zc_bkIncomeToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_Income()')
+          +'             when ScaleHistory.BillKind=zc_bkReturnToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_ReturnOut()')
+          +'             when ScaleHistory.BillKind=zc_bkSaleToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_Sale()')
+          +'             when ScaleHistory.BillKind=zc_bkReturnToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_ReturnIn()')
+
+          +'             when ScaleHistory.BillKind=zc_bkSendUnitToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_Send()')
+          +'             when ScaleHistory.BillKind=zc_bkProduction() then ' + FormatToVarCharServer_notNULL('zc_Movement_ProductionSeparate()')
+          +'             when ScaleHistory.BillKind=zc_bkProductionInFromReceipt() then ' + FormatToVarCharServer_notNULL('zc_Movement_ProductionUnion()')
+
+          +'             when ScaleHistory.BillKind=zc_bkOut() then ' + FormatToVarCharServer_notNULL('zc_Movement_Loss()')
+          +'             when ScaleHistory.BillKind=zc_bkProductionInZakaz() then ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory()')
+          +'        end as MovementDescName_pg');
+
+
+        Add('     , NULL as inInvNumberTransport');
+        Add('     , fGet_BillNumberAdd_byBillNumber(Bill.BillDate,Bill.BillNumber,Bill.Id) as inWeighingNumber');
+
+        Add('     , trim(Bill.BillNumberClient1) as inInvNumberOrder');
+        Add('     , ScaleHistory.PartionStr_MB as inPartionGoods');
+
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, isnull (pgUnitFrom.Id_Postgres, isnull (_pgPartnerFrom.PartnerId_pg,UnitFrom.Id3_Postgres))) as FromId_pg');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, isnull (pgUnitTo.Id_Postgres, isnull (_pgPartnerTo.PartnerId_pg,UnitTo.Id3_Postgres))) as ToId_pg');
+        Add('     , case when ScaleHistory.BillKind in (zc_bkSendUnitToUnit(),zc_bkProduction(),zc_bkProductionInFromReceipt(),zc_bkOut(),zc_bkProductionInZakaz()) then null'
+           +'            when Bill.MoneyKindId=zc_mkBN() then 3'
+           +'            else 4'
+           +'       end as PaidKindId_pg');
+        Add('     , NULL as RouteSortingId_pg');
+
+        Add('     , _pgUsers.Id_pg as inUserId');
+
+        Add('     , ScaleHistory.isObv');
+        Add('     , ScaleHistory.MovementId_pg as Id_Postgres');
+
+        Add('from (select ScaleHistory.BillId'
+           +'            ,zc_rvNo() as isObv'
+           +'            ,max (isnull(ScaleHistory.UserId,0))as UserId'
+           +'            ,max (isnull(ScaleHistory.FromId,0))as FromId'
+           +'            ,max (isnull(ScaleHistory.ToId,0))as ToId'
+           +'            ,max (isnull(ScaleHistory.BillKind,0))as BillKind'
+           +'            ,max (isnull(ScaleHistory.isRemainsFact,zc_rvNo()))as isRemainsFact'
+           +'            ,min(InsertDate) as minInsertDate'
+           +'            ,max(InsertDate) as maxInsertDate'
+           +'            ,fCalcCurrentBillDate_byPG(maxInsertDate,10) as Date_pg'
+           +'            ,max(isnull(ScaleHistory.PartionStr_MB,'+FormatToVarCharServer_notNULL('')+')) as PartionStr_MB'
+           +'            ,max(isnull(ScaleHistory.MovementId_pg,0))as MovementId_pg'
+           +'      from dba.ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'      group by ScaleHistory.BillId'
+           +'     union'
+           +'      select ScaleHistory.BillId'
+           +'            ,zc_rvYes() as isObv'
+           +'            ,max (isnull(ScaleHistory.UserId,0))as UserId'
+           +'            ,max (isnull(ScaleHistory.FromId,0))as FromId'
+           +'            ,max (isnull(ScaleHistory.ToId,0))as ToId'
+           +'            ,max (isnull(ScaleHistory.BillKind,0))as BillKind'
+           +'            ,max (isnull(ScaleHistory.isRemainsFact,zc_rvNo()))as isRemainsFact'
+           +'            ,min(InsertDate) as minInsertDate'
+           +'            ,max(InsertDate) as maxInsertDate'
+           +'            ,fCalcCurrentBillDate_byPG(maxInsertDate,10) as Date_pg'
+           +'            ,max(isnull(ScaleHistory.PartionStr_MB,'+FormatToVarCharServer_notNULL('')+')) as PartionStr_MB'
+           +'            ,max(isnull(ScaleHistory.MovementId_pg,0))as MovementId_pg'
+           +'      from dba.ScaleHistory_byObvalka as ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'      group by ScaleHistory.BillId'
+           +'     ) as ScaleHistory');
+        Add('     left outer join dba.Bill on Bill.Id = ScaleHistory.BillId');
+
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+
+        Add('     left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, UnitId from dba._pgPartner where _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by UnitId'
+           +'                     ) as _pgPartnerFrom on _pgPartnerFrom.UnitId = Bill.FromId');
+        Add('     left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, UnitId from dba._pgPartner where _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by UnitId'
+           +'                     ) as _pgPartnerTo on _pgPartnerTo.UnitId = Bill.ToId');
+
+        Add('     left outer join dba._pgUsers on _pgUsers.UserId = ScaleHistory.UserId');
+
+        Add('where Date_pg between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by inOperDate, ObjectId');
+        Open;
+        Result:=RecordCount;
+        cbWeighingPartner.Caption:='9.1. ('+IntToStr(RecordCount)+')Взвеш.покуп.';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_WeighingPartner_Sybase';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inStartWeighing',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inEndWeighing',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementDescId',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInvNumberTransport',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeighingNumber',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInvNumberOrder',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
+
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUserId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             //находим параметры по документу продажи
+             if (FieldByName('inParentId').AsInteger>0)
+             then begin
+                       fOpenSqToQuery (' select Movement.DescId AS MovementDescId'
+                                      +'      , MovementLinkObject_From.ObjectId AS FromId'
+                                      +'      , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, MovementLinkObject_To.ObjectId) AS ToId'
+                                      +'      , MovementLinkObject_Contract.ObjectId AS ContractId'
+                                      +'      , MovementLinkObject_PaidKind.ObjectId AS PaidKindId'
+                                      +'      , MovementLinkObject_RouteSorting.ObjectId AS RouteSortingId'
+                                      +' from Movement'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_From'
+                                      +'                                   ON MovementLinkObject_From.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_To'
+                                      +'                                   ON MovementLinkObject_To.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss'
+                                      +'                                   ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract'
+                                      +'                                   ON MovementLinkObject_Contract.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind'
+                                      +'                                   ON MovementLinkObject_PaidKind.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting'
+                                      +'                                   ON MovementLinkObject_RouteSorting.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()'
+                                      +' where Movement.Id = '+ FieldByName('inParentId').AsString);
+
+                        MovementDescId_pg:=toSqlQuery.FieldByName('MovementDescId').AsInteger;
+                        FromId_pg:=toSqlQuery.FieldByName('FromId').AsInteger;
+                        ToId_pg:=toSqlQuery.FieldByName('ToId').AsInteger;
+                        ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                        PaidKindId_pg:=toSqlQuery.FieldByName('PaidKindId').AsInteger;
+                        RouteSortingId_pg:=toSqlQuery.FieldByName('RouteSortingId').AsInteger;
+                  end
+             else begin if FieldByName('MovementDescName_pg').AsString <> ''
+                        then begin fOpenSqToQuery ('select '+FieldByName('MovementDescName_pg').AsString+' AS RetV');
+                                   MovementDescId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+                        end else MovementDescId_pg:=0;
+                        FromId_pg:=FieldByName('FromId_pg').AsInteger;
+                        ToId_pg:=FieldByName('ToId_pg').AsInteger;
+                        ContractId_pg:=0;
+                        PaidKindId_pg:=FieldByName('PaidKindId_pg').AsInteger;
+                        RouteSortingId_pg:=0;
+                  end;
+             //
+             //сохранение
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('inParentId').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inStartWeighing').Value:=FieldByName('inStartWeighing').AsDateTime;
+             toStoredProc.Params.ParamByName('inEndWeighing').Value:=FieldByName('inEndWeighing').AsDateTime;
+
+             toStoredProc.Params.ParamByName('inMovementDescId').Value:=MovementDescId_pg;
+             toStoredProc.Params.ParamByName('inInvNumberTransport').Value:=FieldByName('inInvNumberTransport').AsInteger;
+             toStoredProc.Params.ParamByName('inWeighingNumber').Value:=FieldByName('inWeighingNumber').AsInteger;
+
+             toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('inInvNumberOrder').AsString;
+             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('inPartionGoods').AsString;
+
+             toStoredProc.Params.ParamByName('inFromId').Value:=FromId_pg;
+             toStoredProc.Params.ParamByName('inToId').Value:=ToId_pg;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=PaidKindId_pg;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=RouteSortingId_pg;
+             toStoredProc.Params.ParamByName('inUserId').Value:=FieldByName('inUserId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvYes)
+             then fExecSqFromQuery('update dba.ScaleHistory_byObvalka set MovementId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where BillId = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value))
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvNo)
+                 then fExecSqFromQuery('update dba.ScaleHistory set MovementId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where BillId = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbWeighingPartner);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
+begin
+     if (not cbWeighingPartner.Checked)or(not cbWeighingPartner.Enabled) then exit;
+     myEnabledCB(cbWeighingPartner);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+
+        Add('     , BillItems.ZakazCount1 + BillItems.ZakazCount1 as Amount');
+        Add('     , BillItems.ZakazChange as AmountSecond');
+
+        Add('     , PriceListItems_byHistory.NewPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+isnull(KindPackage.KindPackageName,'+FormatToVarCharServer_notNULL('')+')+'+FormatToVarCharServer_notNULL(')')
+//           +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
+           +'            else '+FormatToVarCharServer_notNULL('')
+           +'       end as errInvNumber');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
+
+        Add('     left outer join dba.BillItemsZakaz as BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+        Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
+           +'                                           and PriceListItems_byHistory.PriceListID = 2' // ОПТОВЫЕ ЦЕНЫ
+           +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
+           +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
+           +'  and BillItems.Id is not null'
+           +'  and Bill.Id_Postgres>0'
+           );
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        Add('order by 2,3,1');
+        Open;
+
+        cbWeighingPartner.Caption:='9.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Взвеш.покуп.';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_OrderExternal';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountSecond').Value:=FieldByName('AmountSecond').AsFloat;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
+             then fExecSqFromQuery('update dba.BillItemsZakaz set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if (FieldByName('errInvNumber').AsString<>'')
+             then begin
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
+                  if not myExecToStoredProc_two then;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbWeighingPartner);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 

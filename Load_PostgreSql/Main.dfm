@@ -820,7 +820,7 @@ object MainForm: TMainForm
     end
     object cbLoss: TCheckBox
       Tag = 20
-      Left = 1
+      Left = 3
       Top = 342
       Width = 155
       Height = 17
@@ -851,10 +851,10 @@ object MainForm: TMainForm
     object cbOrderExternal: TCheckBox
       Tag = 20
       Left = 3
-      Top = 393
-      Width = 235
+      Top = 392
+      Width = 120
       Height = 17
-      Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087'.'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1180,9 +1180,9 @@ object MainForm: TMainForm
       Tag = 20
       Left = 3
       Top = 411
-      Width = 235
+      Width = 120
       Height = 17
-      Caption = '7.2. '#1047#1072#1103#1074#1082#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      Caption = '7.2. '#1047#1072#1103#1074#1082#1080' '#1087#1088'-'#1074#1086
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1235,6 +1235,36 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 40
       WordWrap = True
+    end
+    object cbWeighingPartner: TCheckBox
+      Tag = 20
+      Left = 120
+      Top = 392
+      Width = 120
+      Height = 17
+      Caption = '9.1. '#1042#1079#1074#1077#1096'.'#1087#1086#1082#1091#1087'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 41
+    end
+    object cbWeighingProduction: TCheckBox
+      Tag = 20
+      Left = 120
+      Top = 411
+      Width = 120
+      Height = 17
+      Caption = '9.2. '#1042#1079#1074#1077#1096'.'#1087#1088'-'#1074#1086
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 42
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1718,7 +1748,7 @@ object MainForm: TMainForm
     object cbCompleteOrderExternal: TCheckBox
       Tag = 30
       Left = 15
-      Top = 393
+      Top = 391
       Width = 194
       Height = 17
       Caption = '7.1. '#1047#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081

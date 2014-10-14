@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_WeighingPartner()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_WeighingPartner (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingPartner(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -106,7 +108,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

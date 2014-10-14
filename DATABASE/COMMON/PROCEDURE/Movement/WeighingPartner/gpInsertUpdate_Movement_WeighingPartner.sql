@@ -1,23 +1,25 @@
--- Function: gpInsertUpdate_Movement_WeighingPartner()
+-- Function: gpInsertUpdate_Movement_WeighingPartner_Sybase()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner_Sybase(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inParentId            Integer   , -- Документ родитель
     IN inOperDate            TDateTime , -- Дата документа
 
-    IN inParentId            Integer   , -- Документ родитель
     IN inStartWeighing       TDateTime , -- Протокол начало взвешивания
     IN inEndWeighing         TDateTime , -- Протокол окончание взвешивания
 
     IN inMovementDesc        TFloat    , -- Вид документа
-    IN inInvNumberTransport  TFloat    , -- Номер путевого листа 
+    IN inInvNumberTransport  TFloat    , -- Номер путевого листа
+    IN inWeighingNumber      TFloat    , -- Номер взвешивания
+
     IN inInvNumberOrder      TVarChar  , -- Номер заявки у контрагента 
+    IN inPartionGoods        TVarChar  , -- Партия товара
 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inContractId          Integer   , -- Договора
     IN inPaidKindId          Integer   , -- Форма оплаты
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inUserId              Integer   , -- Пользователь
@@ -28,14 +30,29 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbInvNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
+     -- vbAccessKeyId:= ...;
+
+     IF COALESCE (ioId, 0) = 0
+     THEN
+         vbInvNumber:= CAST (NEXTVAL ('Movement_WeighingPartner_seq') AS TVarChar);
+     ELSE
+         vbInvNumber:= (SELECT InvNumber FROM Movement WHERE Id = ioId);
+     END IF;
+
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_WeighingPartner(), inInvNumber, inOperDate, inParentId, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_WeighingPartner(), vbInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
      -- сохранили свойство <Протокол начало взвешиванияа>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), ioId, inStartWeighing);
@@ -46,16 +63,22 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), ioId, inMovementDesc);
      -- сохранили свойство <Номер путевого листа>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_InvNumberTransport(), ioId, inInvNumberTransport);
+     -- сохранили свойство <Номер взвешивания>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), ioId, inWeighingNumber);
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
+     -- сохранили свойство <Партия товара>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), ioId, inPartionGoods);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-     -- сохранили связь с <ФО>
+     -- сохранили связь с <Договора>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+     -- сохранили связь с <Форма оплаты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
      -- сохранили связь с <Сортировки маршрутов>
@@ -65,10 +88,10 @@ BEGIN
 
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -77,8 +100,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 11.03.14         *
+ 11.10.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_WeighingPartner (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', , inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_WeighingPartner_Sybase (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', , inSession:= '2')

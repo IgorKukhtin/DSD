@@ -1,6 +1,5 @@
 -- Function: lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_ProfitLoss(
@@ -43,11 +42,15 @@ BEGIN
    END IF;
 
 
-   -- Находим статью ОПиУ по <Управленческие назначения> или <Статьи назначения>
+   -- Попытка.1 - Находим статью ОПиУ по <Управленческие назначения> или <Статьи назначения>
    IF inInfoMoneyDestinationId <> 0 THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId);
                                     ELSE vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoney (inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyId);
    END IF;
-
+   -- Попытка.2 (если не нашли) - меняем (10200)Прочее сырье -> (20600)Прочие материалы и Находим статью ОПиУ по <Управленческие назначения>
+   IF COALESCE (vbProfitLossId, 0) = 0 AND inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()
+   THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, inProfitLossDirectionId, zc_Enum_InfoMoneyDestination_20600());
+   END IF;
+  
 
    -- проверка - статья не должна быть удалена
    IF EXISTS (SELECT Id FROM Object WHERE Id = vbProfitLossId AND isErased = TRUE)
@@ -142,6 +145,7 @@ ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Intege
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.10.14                                        * add меняем (10200)Прочее сырье -> (20600)Прочие материалы и ...
  31.01.14                                        * add проверка - статья не должна быть удалена
  30.01.14                                        * add !!!запрет вставки статьи!!!, т.е. inInsert = FALSE
  23.12.13                                        * add inInsert

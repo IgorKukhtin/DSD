@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_WeighingPartner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat, TDateTime, TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,10 +13,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inCountTare           TFloat    , -- Количество тары
     IN inWeightTare          TFloat    , -- Вес тары
     IN inCount               TFloat    , -- Количество батонов или упаковок
+    IN inBoxCount            TFloat    , -- Количество Ящик(гофро)
+    IN inBoxNumber           TFloat    , -- Номер ящика
+    IN inLevelNumber         TFloat    , -- Номер слоя 
+    IN inPrice               TFloat    , -- Цена
+    IN inCountForPrice       TFloat    , -- Цена за количество
     IN inPartionGoodsDate    TDateTime , -- Партия
-    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inPriceListId         Integer   , -- Прайс
+    IN inBoxId               Integer   , -- Ящик(гофро)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -32,28 +38,32 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
-     -- сохранили свойство <>
+     -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemIDate (zc_MIFIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
-     -- сохранили свойство <>
+     -- сохранили свойство <Реальный вес (без учета % скидки для кол-ва)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
-     -- сохранили свойство <>
+     -- сохранили свойство <% скидки для кол-ва>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество тары>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare(), ioId, inCountTare);
-     -- сохранили свойство <>
+     -- сохранили свойство <Вес тары>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare(), ioId, inWeightTare);
-     -- сохранили свойство <>
+     -- сохранили свойство <Количество батонов или упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+     -- сохранили свойство <Количество Ящик(гофро)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BoxCount(), ioId, inBoxCount);
+     -- сохранили свойство <Номер ящика>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BoxNumber(), ioId, inBoxNumber);
+     -- сохранили свойство <Номер слоя>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LevelNumber(), ioId, inLevelNumber);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
      -- сохранили связь с <Прайс>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PriceList(), ioId, inPriceListId);
+     -- сохранили связь с <Прайс>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box(), ioId, inBoxId);
     
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
@@ -69,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.10.14                                        * all
  13.03.14         *
 */
 
