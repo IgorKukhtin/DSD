@@ -65,7 +65,7 @@ type
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     colInvNumberOrder: TcxGridDBColumn;
-    colMovementDesc: TcxGridDBColumn;
+    colMovementDescName: TcxGridDBColumn;
     colInvNumberTransport: TcxGridDBColumn;
     colEndWeighing: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
@@ -77,7 +77,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    colInvNumberParent: TcxGridDBColumn;
+    colInvNumber_parent: TcxGridDBColumn;
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
@@ -85,6 +85,9 @@ type
     colRouteSorting: TcxGridDBColumn;
     colStartWeighing: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
+    colOperDate_parent: TcxGridDBColumn;
+    colWeighingNumber: TcxGridDBColumn;
+    colPartionGoods: TcxGridDBColumn;
   private
   public
   end;

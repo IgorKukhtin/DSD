@@ -64,8 +64,8 @@ BEGIN
                 , COALESCE (View_ProfitLossDirection.ProfitLossGroupId, COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0)) AS ProfitLossGroupId
                   -- Аналитики ОПиУ - направления (!!!приоритет - ArticleLoss!!!)
                 , COALESCE (ObjectLink_ArticleLoss_ProfitLossDirection.ChildObjectId, CASE WHEN COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, COALESCE (tmpMemberTo.UnitId, COALESCE (MovementLinkObject_To.ObjectId, COALESCE (MovementLinkObject_ArticleLoss.ObjectId, 0)))) = 0
-                                                                                                THEN CASE WHEN Object_From.DescId = zc_Object_Member()
-                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) -- !!!исключение!!!
+                                                                                                THEN CASE /*WHEN Object_From.DescId = zc_Object_Member()
+                                                                                                               THEN COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0)*/ -- !!!исключение!!!
                                                                                                           WHEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId IN (zc_Enum_AccountDirection_20100() -- Запасы + на складах ГП
                                                                                                                                                                     , zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                                                                                                                                     , zc_Enum_AccountDirection_20400() -- Запасы + на производстве
@@ -90,7 +90,7 @@ BEGIN
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                            AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From.ObjectId -- что б однозначно получить - Прочие потери (Списание+инвентаризация)
+                                            -- AND MovementLinkObject_To.ObjectId <> MovementLinkObject_From.ObjectId -- что б однозначно получить - Прочие потери (Списание+инвентаризация)
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
@@ -341,8 +341,13 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
-           FROM (SELECT CASE WHEN 1 = 0
-                                  THEN 0
+           FROM (SELECT CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                  THEN CASE WHEN _tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_70102() -- Производственное оборудование
+                                                     -- !!!...!!!
+                                                THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Амортизация + Производственные ОС + Основные средства*****
+                                                -- !!!...!!!
+                                           ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
+                                      END
                              ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
                                                                 , inProfitLossDirectionId  := vbProfitLossDirectionId
                                                                 , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
@@ -354,7 +359,9 @@ BEGIN
                       , _tmpItem_group.InfoMoneyDestinationId
                  FROM (SELECT _tmpItem.InfoMoneyDestinationId_calc
                             , _tmpItem.InfoMoneyDestinationId
+                            , _tmpItem.InfoMoneyId
                        FROM (SELECT  _tmpItem.InfoMoneyDestinationId
+                                   , _tmpItem.InfoMoneyId
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN vbInfoMoneyId_ArticleLoss > 0
                                                THEN (SELECT InfoMoneyDestinationId FROM Object_InfoMoney_View WHERE InfoMoneyId = vbInfoMoneyId_ArticleLoss) -- !!!статья не зависит от товара!!!
@@ -375,10 +382,12 @@ BEGIN
                              FROM _tmpItemSumm
                                   JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
                              GROUP BY _tmpItem.InfoMoneyDestinationId
+                                    , _tmpItem.InfoMoneyId
                                     , _tmpItem.GoodsKindId
                             ) AS _tmpItem
                        GROUP BY _tmpItem.InfoMoneyDestinationId_calc
                               , _tmpItem.InfoMoneyDestinationId
+                              , _tmpItem.InfoMoneyId
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId

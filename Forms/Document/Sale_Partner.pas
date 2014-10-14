@@ -119,6 +119,9 @@ type
     actPrint_Pack: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     bbPrint_Pack: TdxBarButton;
+    BoxName: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
+    actGoodsBoxChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

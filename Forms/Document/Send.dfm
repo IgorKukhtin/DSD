@@ -2,8 +2,8 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1080
-  ExplicitHeight = 703
+  ExplicitWidth = 1072
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -461,20 +461,33 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'PartionGoodsForm'
-      FormName = 'TPartionGoodsForm'
-      FormNameParam.Value = 'TPartionGoodsForm'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
         item
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
     end
@@ -1176,6 +1189,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
@@ -1202,8 +1216,8 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 360
-    Top = 8
+    Left = 328
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

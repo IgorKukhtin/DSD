@@ -173,6 +173,14 @@
 				<Form>MeasureEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Box.pas">
+				<Form>BoxForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BoxEdit.pas">
+				<Form>BoxEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\NDSKind.pas">
 				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>

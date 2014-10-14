@@ -66,6 +66,8 @@ uses
   GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
+  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
+  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
   UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},

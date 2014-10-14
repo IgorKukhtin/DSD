@@ -163,8 +163,8 @@
 			<DCCReference Include="..\..\Forms\Guides\ToolsWeighingEdit.pas">
 				<Form>ToolsWeighingEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
-				<Form>MeasureEditForm</Form>
+			<DCCReference Include="..\..\Forms\BoxEdit.pas">
+				<Form>BoxEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Status.pas">
 				<Form>StatusForm</Form>
@@ -358,8 +358,8 @@
 			<DCCReference Include="..\..\Forms\Guides\ContractEdit.pas">
 				<Form>ContractEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Measure.pas">
-				<Form>MeasureForm</Form>
+			<DCCReference Include="..\..\Forms\Box.pas">
+				<Form>BoxForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PriceListItem.pas">
 				<Form>PriceListItemForm</Form>
@@ -1616,6 +1616,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
 				<Form>ProfitLossDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartionGoodsChoice.pas">
+				<Form>PartionGoodsChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

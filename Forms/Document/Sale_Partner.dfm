@@ -2,27 +2,29 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1252
-  ExplicitWidth = 1268
-  ExplicitHeight = 703
+  ExplicitWidth = 1260
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1252
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1252
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1252
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1248
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1252
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1246
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1252
-        Height = 518
-        ExplicitWidth = 1252
-        ExplicitHeight = 518
+        Width = 1246
+        Height = 514
+        ExplicitWidth = 1246
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -49,6 +51,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
               Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,6 +86,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxCount
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -222,6 +234,31 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 65
           end
+          object BoxName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
+            DataBinding.FieldName = 'BoxName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsBoxChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object BoxCount: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1103#1097#1080#1082#1086#1074
+            DataBinding.FieldName = 'BoxCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
       end
     end
@@ -262,7 +299,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -834,7 +871,30 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [22]
+    object actGoodsBoxChoice: TOpenChoiceForm [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'BoxForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoice: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -844,11 +904,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -968,7 +1030,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1106,6 +1168,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -1186,6 +1249,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1629,6 +1693,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1642,12 +1707,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
@@ -1655,6 +1722,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1662,6 +1730,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1669,19 +1738,30 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1689,14 +1769,23 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId'
         ParamType = ptInput
       end>
     Left = 160
@@ -1719,6 +1808,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1731,6 +1821,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1738,6 +1829,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1745,6 +1837,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
@@ -1757,6 +1850,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1764,34 +1858,20 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end>
     Left = 64
     Top = 368
-  end
-  inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1821,6 +1901,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 360
   end
@@ -1843,6 +1924,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 536
     Top = 448
   end
@@ -1930,6 +2012,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 456
     Top = 304
   end
@@ -1961,6 +2044,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 304
   end
@@ -1983,6 +2067,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'ReportNameSale'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 552
     Top = 384
   end
@@ -2020,6 +2105,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 440
     Top = 384
   end
@@ -2122,6 +2208,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end

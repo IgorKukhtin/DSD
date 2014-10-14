@@ -3,7 +3,7 @@ object BankForm: TBankForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1073#1072#1085#1082#1086#1074
   ClientHeight = 376
-  ClientWidth = 438
+  ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,14 @@ object BankForm: TBankForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 438
-    Height = 350
+    Top = 28
+    Width = 520
+    Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 438
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -65,6 +66,18 @@ object BankForm: TBankForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object SWIFT: TcxGridDBColumn
+        Caption = ' SWIFT'
+        DataBinding.FieldName = 'SWIFT'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object IBAN: TcxGridDBColumn
+        Caption = ' IBAN'
+        DataBinding.FieldName = 'IBAN'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -87,8 +100,8 @@ object BankForm: TBankForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 88
+    Left = 88
+    Top = 80
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -127,7 +140,7 @@ object BankForm: TBankForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -271,6 +284,7 @@ object BankForm: TBankForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -327,12 +341,14 @@ object BankForm: TBankForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -350,8 +366,9 @@ object BankForm: TBankForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 56
-    Top = 104
+    PackSize = 1
+    Left = 64
+    Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -388,12 +405,14 @@ object BankForm: TBankForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 72
-    Top = 120
+    PackSize = 1
+    Left = 80
+    Top = 248
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 328

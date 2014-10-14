@@ -45,6 +45,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    InternalCode: TcxGridDBColumn;
+    InternalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

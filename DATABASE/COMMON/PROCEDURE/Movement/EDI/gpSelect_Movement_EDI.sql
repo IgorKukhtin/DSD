@@ -223,8 +223,8 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          -- AND MovementString_OKPO.ValueData IN ('36387233', '36387249', '38916588')
-         AND (Movement_TaxCorrective.Id IS NULL OR Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete())
-         AND (Movement_Sale.Id IS NULL OR Movement_Sale.StatusId = zc_Enum_Status_Complete())
+         -- *** AND (Movement_TaxCorrective.Id IS NULL OR Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete())
+         -- *** AND (Movement_Sale.Id IS NULL OR Movement_Sale.StatusId = zc_Enum_Status_Complete())
 
        ;
 
@@ -238,6 +238,7 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.14                                        * rem --***
  20.07.14                                        * ALL
  15.05.14                         *
 */

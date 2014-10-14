@@ -11,20 +11,18 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1174
     Height = 531
     ExplicitTop = 131
-    ExplicitWidth = 1146
-    ExplicitHeight = 537
+    ExplicitWidth = 1174
+    ExplicitHeight = 531
     ClientRectBottom = 531
     ClientRectRight = 1174
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1146
-      ExplicitHeight = 513
+      ExplicitWidth = 1174
+      ExplicitHeight = 507
       inherited cxGrid: TcxGrid
         Width = 1174
         Height = 507
-        ExplicitWidth = 1146
-        ExplicitHeight = 513
+        ExplicitWidth = 1174
+        ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -149,40 +147,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1146
-      ExplicitHeight = 513
-      inherited cxGridEntry: TcxGrid
-        Width = 1174
-        Height = 507
-        ExplicitWidth = 1146
-        ExplicitHeight = 513
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Width = 1174
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1146
+    ExplicitWidth = 1174
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -438,6 +408,37 @@ inherited TransferDebtInForm: TTransferDebtInForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = ''
+      Hint = ''
+      ImageIndex = -1
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -518,44 +519,20 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = ''
-      Hint = ''
-      ImageIndex = -1
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.ParamType = ptInput
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
         end>
     end
     object actGoodsKindChoice: TOpenChoiceForm [14]
@@ -578,15 +555,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataType = ftString
         end>
       isShowModal = True
-    end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
     end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -794,10 +762,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
-          ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -841,26 +805,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  inherited EntryCDS: TClientDataSet
-    Left = 693
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 653
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 237
-    Top = 468
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1353,10 +1297,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Left = 160
     Top = 368
   end
-  inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 912
-    Top = 262
-  end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_TransferDebtIn'
     Params = <
@@ -1531,6 +1471,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
@@ -1553,6 +1494,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 496
     Top = 272
   end
@@ -1865,6 +1807,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 368
     Top = 380
   end
@@ -1912,6 +1855,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
       end>
+    PackSize = 1
     Left = 368
     Top = 432
   end
@@ -1940,6 +1884,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 306
   end
@@ -1968,6 +1913,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 354
   end

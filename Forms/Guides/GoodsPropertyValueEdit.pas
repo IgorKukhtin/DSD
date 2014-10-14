@@ -55,6 +55,8 @@ type
     cxLabel4: TcxLabel;
     ceGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceGroupName: TcxTextEdit;
   private
     { Private declarations }
   public

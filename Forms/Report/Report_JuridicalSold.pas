@@ -97,6 +97,8 @@ type
     edJuridicalGroup: TcxButtonEdit;
     clPersonalTradeName: TcxGridDBColumn;
     JuridicalGroupGuides: TdsdGuides;
+    colContractConditionKindName: TcxGridDBColumn;
+    colContractConditionValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

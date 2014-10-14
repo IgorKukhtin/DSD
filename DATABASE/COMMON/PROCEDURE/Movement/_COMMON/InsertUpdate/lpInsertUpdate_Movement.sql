@@ -8,6 +8,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (INOUT ioId Integer, IN inDes
 $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
+
+     -- меняем параметр
+     IF inParentId = 0
+     THEN
+         inParentId := NULL;
+     END IF;
+
+
   IF COALESCE (ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId, AccessKeyId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId, inAccessKeyId) RETURNING Id INTO ioId;
@@ -44,6 +52,7 @@ ALTER FUNCTION lpInsertUpdate_Movement(Integer, Integer, tvarchar, tdatetime, In
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.14                                        * add inParentId
  23.08.14                                        * add inAccessKeyId
  07.12.13                                        * add inAccessKeyId
  07.12.13                                        * !!! add UPDATE Movement SET ... ParentId = inParentId ...

@@ -166,6 +166,9 @@ type
     cbCompleteCash: TCheckBox;
     cbCompleteLoss: TCheckBox;
     cbLossGuide: TCheckBox;
+    cbCompleteLossNotError: TCheckBox;
+    cbWeighingPartner: TCheckBox;
+    cbWeighingProduction: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -300,6 +303,9 @@ type
 
     function pLoadDocument_OrderExternal:Integer;
     procedure pLoadDocumentItem_OrderExternal(SaveCount:Integer);
+
+    function pLoadDocument_WeighingPartner:Integer;
+    procedure pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
 
     function pLoadDocument_Tax_Int:Integer;
     procedure pLoadDocumentItem_Tax_Int(SaveCount:Integer);
@@ -1463,6 +1469,9 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_OrderExternal;
      if not fStop then pLoadDocumentItem_OrderExternal(myRecordCount1);
+
+     if not fStop then myRecordCount1:=pLoadDocument_WeighingPartner;
+     if not fStop then pLoadDocumentItem_WeighingPartner(myRecordCount1);
 
      //
      Gauge.Visible:=false;
@@ -6860,6 +6869,418 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_GoodsPropertyValue;
+  procedure my1;
+  begin
+     with fromQuery,Sql do begin
+             // 1
+             if FieldByName('is1').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres1').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName1').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount1').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article1').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN1').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN1').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName1').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres1').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 2
+             if FieldByName('is2').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres2').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName2').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount2').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article2').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN2').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN2').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName2').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres2').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 3
+             if FieldByName('is3').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres3').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName3').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount3').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode3').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article3').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN3').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN3').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName3').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId3').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId3').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId3').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres3').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 4
+             if FieldByName('is4').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres4').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName4').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount4').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode4').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article4').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN4').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN4').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName4').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId4').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId4').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId4').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres4').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id4_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 5
+             if FieldByName('is5').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode5').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article5').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN5').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN5').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName5').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId5').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId5').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId5').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres5').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id5_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 6
+             if FieldByName('is6').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article6').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN6').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN6').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName6').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId6').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId6').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId6').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres6').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id6_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 7
+             if FieldByName('is7').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article7').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN7').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN7').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName7').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId7').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId7').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId7').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres7').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id7_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 8
+             if FieldByName('is8').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres8').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName8').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount8').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode8').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article8').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN8').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN8').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName8').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId8').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId8').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId8').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres8').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id8_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 9
+             if FieldByName('is9').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres9').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName9').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount9').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode9').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article9').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN9').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN9').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName9').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId9').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId9').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId9').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres9').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id9_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 10
+             if FieldByName('is10').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres10').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName10').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount10').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode10').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article10').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN10').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN10').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId10').AsInteger;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName10').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId10').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId10').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres10').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id10_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+     end;
+  end;
+  procedure my2;
+  begin
+     with fromQuery,Sql do begin
+             // 11
+             if FieldByName('is11').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres11').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName11').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount11').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode11').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article11').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN11').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN11').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName11').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId11').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId11').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId11').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres11').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id11_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+
+                  end;
+             // 12
+             if FieldByName('is12').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres12').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName12').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount12').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode12').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article12').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN12').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN12').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName12').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId12').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId12').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId12').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres12').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id12_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 13
+             if FieldByName('is13').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres13').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName13').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount13').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode13').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article13').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN13').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN13').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName13').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId13').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId13').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId13').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres13').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id13_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 14
+             if FieldByName('is14').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres14').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName14').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount14').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode14').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article14').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN14').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN14').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId14').AsInteger;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName14').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId14').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId14').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres14').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id14_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 15
+             if FieldByName('is15').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres15').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName15').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount15').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode15').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article15').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN15').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN15').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName15').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId15').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId15').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId15').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres15').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id15_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 16
+             if FieldByName('is16').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres16').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName16').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount16').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode16').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article16').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN16').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN16').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName16').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId16').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId16').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId16').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres16').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id16_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 17
+             if FieldByName('is17').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres17').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName17').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount17').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode17').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article17').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN17').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN17').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName17').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId17').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId17').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId17').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres17').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id17_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 18
+             if FieldByName('is18').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres18').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName18').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount18').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode18').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article18').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN18').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN18').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName18').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId18').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId18').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId18').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres18').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id18_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 19
+             if FieldByName('is19').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres19').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName19').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount19').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode19').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article19').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN19').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN19').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName19').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId19').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId19').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId19').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres19').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id19_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 20
+             if FieldByName('is20').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres20').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName20').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount20').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode20').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article20').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN20').AsString;
+                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN20').AsString;
+                       toStoredProc.Params.ParamByName('inGroupName').Value:=FieldByName('GroupName20').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId20').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId20').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId20').AsInteger;
+                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres20').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id20_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+     end;
+  end;
+
 begin
      if (not cbGoodsPropertyValue.Checked)or(not cbGoodsPropertyValue.Enabled) then exit;
      //
@@ -6872,6 +7293,7 @@ begin
         Add('     , zc_rvYes() as zc_rvYes');
         //---------------------------***1***АТБ***GoodsCodeScaner***
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id1_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is1');
+        Add('     , null as GroupName1');
         Add('     , null as ObjectName1');
         Add('     , case when is1=zc_rvNo() then cast (null as TSumm) when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,1,6)='+FormatToVarCharServer_notNULL('230365')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,13,2) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,15,2) else cast (null as TSumm) end as Amount1');
         Add('     , case when is1=zc_rvNo() then null when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,1,6)='+FormatToVarCharServer_notNULL('230365')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,1,12) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner,1,6)+'+FormatToVarCharServer_notNULL('0000000')+' end as BarCode1');
@@ -6884,6 +7306,7 @@ begin
         Add('     , GoodsProperty_Detail.Id1_Postgres as Id_Postgres1');
         //---------------------------***2***Киев ОК***GoodsCodeScaner_byKievOK
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKievOK)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id2_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is2');
+        Add('     , null as GroupName2');
         Add('     , null as ObjectName2');
         Add('     , cast (null as TSumm) as Amount2');
 //        Add('     , CASE WHEN LENGTH(GoodsProperty_Detail.GoodsCodeScaner_byKievOK)=6 THEN '+FormatToVarCharServer_notNULL('28')+'+GoodsProperty_Detail.GoodsCodeScaner_byKievOK ELSE '+FormatToVarCharServer_notNULL('')+' END as BarCode2');
@@ -6898,6 +7321,7 @@ begin
         Add('     , GoodsProperty_Detail.Id2_Postgres as Id_Postgres2');
         //---------------------------***3***Метро***GoodsCodeScaner_byMetro
         Add('     , case when LENGTH(GoodsProperty_Detail.GoodsCodeScaner_byMetro)>3 or isnull(GoodsProperty_Detail.Id3_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is3');
+        Add('     , null as GroupName3');
         Add('     , null as ObjectName3');
         Add('     , case when is3=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,20,2) <> '+FormatToVarCharServer_notNULL('')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,20,2) else cast (null as TSumm) end as Amount3');
         Add('     , SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,6,13) as BarCode3');
@@ -6915,6 +7339,7 @@ begin
                         +' or trim(GoodsProperty_Detail.GoodsName_Client)<>'+FormatToVarCharServer_notNULL('')
                         +' or isnull(GoodsProperty_Detail.Id4_Postgres,0) <> 0'
                         +'  then zc_rvYes() else zc_rvNo() end as is4');
+        Add('     , null as GroupName4');
         Add('     , trim(GoodsProperty_Detail.GoodsName_Client) as ObjectName4');
         Add('     , case when is4=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byTavriya,15,2) else cast (null as TSumm) end as Amount4');
         Add('     , case when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=13 then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,1,13)'
@@ -6936,6 +7361,7 @@ begin
         Add('     , GoodsProperty_Detail.Id4_Postgres as Id_Postgres4');
         //---------------------------***5***Фоззи***GoodsCodeScaner_byFozzi
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byFozzi)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id5_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is5');
+        Add('     , null as GroupName5');
         Add('     , null as ObjectName5');
         Add('     , case when is5=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,15,2) else cast (null as TSumm) end as Amount5');
         Add('     , case when is5=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,1,7)+'+FormatToVarCharServer_notNULL('000000')+' end as BarCode5');
@@ -6953,6 +7379,7 @@ begin
         Add('     , GoodsProperty_Detail.Id5_Postgres as Id_Postgres5');
         //---------------------------***6***Кишени***GoodsCodeScaner_byKisheni
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKisheni)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id6_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is6');
+        Add('     , null as GroupName6');
         Add('     , null as ObjectName6');
         Add('     , case when is6=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2) else cast (null as TSumm) end as Amount6');
         Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) end as BarCode6');
@@ -6970,6 +7397,7 @@ begin
         Add('     , GoodsProperty_Detail.Id6_Postgres as Id_Postgres6');
         //---------------------------***7***Виват***GoodsCodeScaner_byVivat
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byVivat)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id7_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is7');
+        Add('     , null as GroupName7');
         Add('     , null as ObjectName7');
         Add('     , case when is7=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,15,2) else cast (null as TSumm) end as Amount7');
         Add('     , case when is7=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,1,13) end as BarCode7');
@@ -6987,6 +7415,7 @@ begin
         Add('     , GoodsProperty_Detail.Id7_Postgres as Id_Postgres7');
         //---------------------------***8***Билла***GoodsCodeScaner_byBilla
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byBilla)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id8_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is8');
+        Add('     , null as GroupName8');
         Add('     , null as ObjectName8');
         Add('     , case when is8=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byBilla,15,2) else cast (null as TSumm) end as Amount8');
         Add('     , case when is8=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byBilla,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byBilla,1,13) end as BarCode8');
@@ -7004,6 +7433,7 @@ begin
         Add('     , GoodsProperty_Detail.Id8_Postgres as Id_Postgres8');
         //---------------------------***9***Билла-2***Code_byBillaTwo
         Add('     , case when trim (GoodsProperty_Detail.Code_byBillaTwo)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id9_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is9');
+        Add('     , null as GroupName9');
         Add('     , null as ObjectName9');
         Add('     , case when is9=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byBillaTwo,15,2) else cast (null as TSumm) end as Amount9');
         Add('     , case when is9=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byBillaTwo,1,13) else SUBSTR(GoodsProperty_Detail.Code_byBillaTwo,1,13) end as BarCode9');
@@ -7018,6 +7448,7 @@ begin
         Add('     , GoodsProperty_Detail.Id9_Postgres as Id_Postgres9');
         //---------------------------***10***Амстор***GoodsCodeScaner_byAmstor
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byAmstor)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id10_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is10');
+        Add('     , null as GroupName10');
         Add('     , null as ObjectName10');
         Add('     , case when is10=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byAmstor,15,2) else cast (null as TSumm) end as Amount10');
 
@@ -7033,6 +7464,7 @@ begin
         Add('     , GoodsProperty_Detail.Id10_Postgres as Id_Postgres10');
         //---------------------------***11***Омега***GoodsCodeScaner_byOmega
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byOmega)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id11_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is11');
+        Add('     , null as GroupName11');
         Add('     , null as ObjectName11');
         Add('     , case when is11=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then cast (null as TSumm) else cast (null as TSumm) end as Amount11');
 
@@ -7049,6 +7481,7 @@ begin
         Add('     , GoodsProperty_Detail.Id11_Postgres as Id_Postgres11');
         //---------------------------***12***Амстор***GoodsCodeScaner_byVostorg
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byVostorg)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id12_Postgres,0) <> 0  then zc_rvYes() else zc_rvNo() end as is12');
+        Add('     , null as GroupName12');
         Add('     , null as ObjectName12');
         Add('     , case when is12=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVostorg,15,2) else cast (null as TSumm) end as Amount12');
 
@@ -7064,6 +7497,7 @@ begin
         Add('     , GoodsProperty_Detail.Id12_Postgres as Id_Postgres12');
         //---------------------------***13***Ашан***GoodsCodeScaner_byAshan
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byAshan)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id13_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is13');
+        Add('     , null as GroupName13');
         Add('     , null as ObjectName13');
         Add('     , case when is13=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byAshan,15,2) else cast (null as TSumm) end as Amount13');
 
@@ -7081,6 +7515,7 @@ begin
         Add('     , GoodsProperty_Detail.Id13_Postgres as Id_Postgres13');
         //---------------------------***14***Реал***GoodsCodeScaner_byReal
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byReal)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id14_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is14');
+        Add('     , null as GroupName14');
         Add('     , null as ObjectName14');
         Add('     , case when is14=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byReal,15,2) else cast (null as TSumm) end as Amount14');
 
@@ -7098,6 +7533,7 @@ begin
         Add('     , GoodsProperty_Detail.Id14_Postgres as Id_Postgres14');
         //---------------------------***15***ЖД***GoodsName_GD
         Add('     , case when trim (GoodsProperty_Detail.GoodsName_GD)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id15_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is15');
+        Add('     , null as GroupName15');
         Add('     , trim (GoodsProperty_Detail.GoodsName_GD) as ObjectName15');
         Add('     , 0 as Amount15');
 
@@ -7114,6 +7550,7 @@ begin
         Add('     , zc_rvNo() as is16');
         //---------------------------***17***Адвентис***GoodsCodeScaner_byAdventis
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byAdventis)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id17_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is17');
+        Add('     , null as GroupName17');
         Add('     , null as ObjectName17');
         Add('     , case when is17=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then cast (null as TSumm) else cast (null as TSumm) end as Amount17');
 
@@ -7129,6 +7566,7 @@ begin
         Add('     , GoodsProperty_Detail.Id17_Postgres as Id_Postgres17');
         //---------------------------***18***Край***Code_byKray
         Add('     , case when trim (GoodsProperty_Detail.Code_byKray)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id18_Postgres,0) <> 0 then zc_rvYes() else zc_rvNo() end as is18');
+        Add('     , null as GroupName18');
         Add('     , null as ObjectName18');
         Add('     , case when is18=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.Code_byKray,15,2) else cast (null as TSumm) end as Amount18');
 
@@ -7141,6 +7579,35 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId18');
         Add('     , KindPackage.Id_Postgres as GoodsKindId18');
         Add('     , GoodsProperty_Detail.Id18_Postgres as Id_Postgres18');
+
+        //---------------------------***19***Eng_byVED***Eng_byVED
+        Add('     , case when trim (GoodsProperty_Detail.GroupName_byVED)<>'+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.NameEng_byVED)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id19_pg,0) <> 0 then zc_rvYes() else zc_rvNo() end as is19');
+        Add('     , GroupName_byVED as GroupName19');
+        Add('     , NameEng_byVED as ObjectName19');
+        Add('     , cast (null as TSumm) as Amount19');
+
+        Add('     , null as BarCode19');
+        Add('     , null as Article19');
+        Add('     , BarCode19 as BarCodeGLN19');
+        Add('     , Article19 as ArticleGLN19');
+        Add('     , 300422 as GoodsPropertyId19'); // ВЭД Eng
+        Add('     , GoodsProperty.Id_Postgres as GoodsId19');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId19');
+        Add('     , GoodsProperty_Detail.Id19_pg as Id_Postgres19');
+        //---------------------------***20***Rus_byVED***Rus_byVED
+        Add('     , case when trim (GoodsProperty_Detail.GroupName_byVED)<>'+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.NameRus_byVED)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id20_pg,0) <> 0 then zc_rvYes() else zc_rvNo() end as is20');
+        Add('     , GroupName_byVED as GroupName20');
+        Add('     , NameRus_byVED as ObjectName20');
+        Add('     , cast (null as TSumm) as Amount20');
+
+        Add('     , null as BarCode20');
+        Add('     , null as Article20');
+        Add('     , BarCode20 as BarCodeGLN20');
+        Add('     , Article20 as ArticleGLN20');
+        Add('     , 300423 as GoodsPropertyId20'); // ВЭД Рус
+        Add('     , GoodsProperty.Id_Postgres as GoodsId20');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId20');
+        Add('     , GoodsProperty_Detail.Id20_pg as Id_Postgres20');
 
         Add('from dba.GoodsProperty_Detail');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=GoodsProperty_Detail.GoodsPropertyId');
@@ -7189,6 +7656,8 @@ begin
              +' or is16=zc_rvYes()'
              +' or is17=zc_rvYes()'
              +' or is18=zc_rvYes()'
+             +' or is19=zc_rvYes()'
+             +' or is20=zc_rvYes()'
              +'   )'
            );
         Add('order by is7, BarCode7, ObjectId');
@@ -7211,6 +7680,7 @@ begin
         toStoredProc.Params.AddParam ('inArticle',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inBarCodeGLN',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inArticleGLN',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGroupName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
@@ -7220,348 +7690,8 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-             // 1
-             if FieldByName('is1').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres1').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName1').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount1').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article1').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN1').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN1').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres1').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 2
-             if FieldByName('is2').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres2').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName2').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount2').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article2').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN2').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN2').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres2').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 3
-             if FieldByName('is3').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres3').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName3').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount3').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode3').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article3').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN3').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN3').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId3').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId3').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId3').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres3').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 4
-             if FieldByName('is4').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres4').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName4').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount4').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode4').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article4').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN4').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN4').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId4').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId4').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId4').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres4').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id4_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 5
-             if FieldByName('is5').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode5').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article5').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN5').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN5').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId5').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId5').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId5').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres5').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id5_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 6
-             if FieldByName('is6').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article6').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN6').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN6').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId6').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId6').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId6').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres6').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id6_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 7
-             if FieldByName('is7').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article7').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN7').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN7').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId7').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId7').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId7').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres7').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id7_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 8
-             if FieldByName('is8').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres8').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName8').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount8').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode8').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article8').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN8').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN8').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId8').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId8').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId8').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres8').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id8_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 9
-             if FieldByName('is9').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres9').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName9').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount9').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode9').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article9').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN9').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN9').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId9').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId9').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId9').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres9').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id9_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 10
-             if FieldByName('is10').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres10').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName10').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount10').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode10').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article10').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN10').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN10').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId10').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId10').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId10').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres10').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id10_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 11
-             if FieldByName('is11').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres11').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName11').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount11').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode11').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article11').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN11').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN11').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId11').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId11').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId11').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres11').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id11_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 12
-             if FieldByName('is12').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres12').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName12').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount12').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode12').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article12').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN12').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN12').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId12').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId12').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId12').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres12').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id12_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 13
-             if FieldByName('is13').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres13').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName13').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount13').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode13').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article13').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN13').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN13').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId13').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId13').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId13').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres13').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id13_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 14
-             if FieldByName('is14').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres14').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName14').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount14').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode14').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article14').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN14').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN14').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId14').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId14').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId14').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres14').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id14_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 15
-             if FieldByName('is15').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres15').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName15').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount15').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode15').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article15').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN15').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN15').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId15').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId15').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId15').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres15').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id15_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 16
-             if FieldByName('is16').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres16').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName16').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount16').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode16').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article16').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN16').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN16').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId16').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId16').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId16').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres16').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id16_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 17
-             if FieldByName('is17').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres17').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName17').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount17').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode17').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article17').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN17').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN17').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId17').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId17').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId17').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres17').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id17_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
-             // 18
-             if FieldByName('is18').AsInteger=FieldByName('zc_rvYes').AsInteger
-             then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres18').AsInteger;
-                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName18').AsString;
-                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount18').AsFloat;
-                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode18').AsString;
-                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article18').AsString;
-                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN18').AsString;
-                       toStoredProc.Params.ParamByName('inArticleGLN').Value:=FieldByName('ArticleGLN18').AsString;
-                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId18').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId18').AsInteger;
-                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId18').AsInteger;
-                       //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-                       if not myExecToStoredProc then ;//exit;
-                       //
-                       if (1=0)or(FieldByName('Id_Postgres18').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id18_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-                  end;
+             my1;
+             my2;
              //
              Next;
              Application.ProcessMessages;
@@ -11761,8 +11891,19 @@ begin
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_pg').AsInteger;
              toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
-             // !!для НАЛ - все данные из Integer!!!
-             toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                       // !!!для НАЛ - все данные из Integer!!!
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             end
+                  // !!!для НАЛ - все данные из Integer!!!
+             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             ;
+
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -11933,8 +12074,18 @@ begin
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
 
-             // !!для НАЛ - все данные из Integer!!!
-             toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('MovementId_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                       // !!!для НАЛ - все данные из Integer!!!
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             end
+                  // !!!для НАЛ - все данные из Integer!!!
+             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -12087,9 +12238,21 @@ begin
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_pg').AsInteger;
              toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
-             if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
-             then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
-             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked;
+
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                  else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                       then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                       else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             end
+             else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -12256,9 +12419,20 @@ begin
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
 
-             if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
-             then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
-             else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked;
+             // для EDI - IsOnlyUpdateInt = TRUE
+             if (FieldByName('MovementId_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  if toSqlQuery.FieldByName('RetV').AsInteger > 0
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
+                  else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                       then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                       else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             end
+             else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
+                  then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=FALSE
+                  else toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=cbOnlyUpdateInt.Checked
+             ;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -15375,9 +15549,9 @@ begin
              // gc_isDebugMode:=true;
              //
              //!!!УДАЛЯЕМ ВСЕ ЭЛЕМЕНТЫ!!!
-             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
-             then
-                  fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
+             //!!! if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             //!!! then
+             //!!!     fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
              //!!!!!!!!!!!!!!!!!!
              //
              //Номер филиала не должен измениться
@@ -16892,15 +17066,18 @@ begin
              // gc_isDebugMode:=true;
              //
              if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
-                           +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
+                           +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
+                           +'             )or MovementLinkMovement.MovementId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
+                           +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=Movement.Id and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
 
 // if FieldByName('Id_Postgres').AsString = '259257' then showMessage('');
@@ -17003,18 +17180,21 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             if cbOnlyUpdateInt.Checked then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
-                           +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
+                           +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
+                           +'             )or MovementLinkMovement.MovementId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
                            +'      left join Movement on Movement.Id = MovementItem.MovementId'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
+                           +'      left join MovementLinkMovement on MovementLinkMovement.MovementId=MovementItem.MovementId and MovementLinkMovement.DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())'
                            +' where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
 
 
@@ -17359,7 +17539,12 @@ begin
                   if toSqlQuery.FieldByName('FromId').AsInteger>0 then}
                   begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                       if not myExecToStoredProc_two then ;//exit;
+                       if cbCompleteLossNotError.Checked
+                       then try
+                               myExecToStoredProc_two;
+                            except
+                            end
+                       else if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
              //
@@ -17379,6 +17564,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Loss:Integer;
 var ArticleLossId_Defroster:Integer;
+    ToId_pg,ArticleLossId_pg:Integer;
 begin
      if (not cbLoss.Checked)or(not cbLoss.Enabled) then exit;
      //
@@ -17464,13 +17650,29 @@ begin
              //!!!
              if fStop then begin exit;end;
 
-            // Save
+             // ToId_Postgres не должна измениться
+             if (FieldByName('ToId_Postgres').AsInteger=0) and (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select ObjectId AS RetV from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_To()');
+                  ToId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else ToId_pg:=FieldByName('ToId_Postgres').AsInteger;
+
+             // ArticleLossId_pg не должна измениться
+             if (FieldByName('ArticleLossId_pg').AsInteger=0) and (FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery ('select ObjectId AS RetV from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_ArticleLoss()');
+                  ArticleLossId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else ArticleLossId_pg:=FieldByName('ArticleLossId_pg').AsInteger;
+
+             // Save
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inArticleLossId').Value:=FieldByName('ArticleLossId_pg').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=ToId_pg;
+             toStoredProc.Params.ParamByName('inArticleLossId').Value:=ArticleLossId_pg;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -17488,6 +17690,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_Loss(SaveCount:Integer);
+var PartionGoodsId_pg:Integer;
 begin
      if (not cbLoss.Checked)or(not cbLoss.Enabled) then exit;
      //
@@ -17509,6 +17712,11 @@ begin
         Add('     , isnull(BillItems.PartionDate,zc_DateStart()) AS PartionGoodsDate');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
+        Add('     , case when GoodsProperty.InfoMoneyCode between 20200 and 20400 then zc_rvYes()'
+           +'            when GoodsProperty.InfoMoneyCode between 70100 and 70200 then zc_rvYes()'
+           +'            else zc_rvNo()'
+           +'       end as isMNMA');
+        Add('     , isnull(_pgPersonalFrom.Id_Postgres,0) as MemberId_Postgres');
 
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from (select Bill.Id as BillId'
@@ -17524,6 +17732,9 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+
+        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba._pgPersonal as _pgPersonalFrom on _pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres');
 
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
@@ -17556,12 +17767,31 @@ begin
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
+             //
+             // для MNMA
+             if (FieldByName('isMNMA').AsInteger=zc_rvYes)and(FieldByName('MemberId_Postgres').AsInteger>0) then
+             begin
+                  fOpenSqToQuery (' select COALESCE(CLO_PartionGoods.ObjectId, 0) AS RetV'
+                                 +' from Container'
+                                 +'      join ContainerLinkObject AS CLO_Member on CLO_Member.ContainerId=Container.Id'
+                                 + '                                           and CLO_Member.DescId = zc_ContainerLinkObject_Member()'
+                                 + '                                           and CLO_Member.ObjectId = ' + FieldByName('MemberId_Postgres').AsString
+                                 +'      join ContainerLinkObject AS CLO_PartionGoods on CLO_PartionGoods.ContainerId=Container.Id'
+                                 + '                                                 and CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()'
+                                 +' where Container.ObjectId='+FieldByName('GoodsId_Postgres').AsString
+                                 + '  and Container.DescId = zc_Container_Count()'
+                                 + '  and Container.Amount>='+FloatToStr(FieldByName('Amount').AsFloat));
+                  PartionGoodsId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else PartionGoodsId_pg:=0;
+
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
@@ -17575,6 +17805,7 @@ begin
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPartionGoodsId').Value:=PartionGoodsId_pg;
              if not myExecToStoredProc then ;//exit;
              //
              if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
@@ -18170,7 +18401,7 @@ begin
         Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
-        cbOrderExternal.Caption:='7.1. ('+IntToStr(RecordCount)+') Заявки покупателей';
+        cbOrderExternal.Caption:='7.1. ('+IntToStr(RecordCount)+')Заявки покуп.';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -18331,7 +18562,7 @@ begin
         Add('order by 2,3,1');
         Open;
 
-        cbOrderExternal.Caption:='7.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Заявки покупателей';
+        cbOrderExternal.Caption:='7.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Заявки покуп.';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -18393,6 +18624,346 @@ begin
      myDisabledCB(cbOrderExternal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pLoadDocument_WeighingPartner:Integer;
+var ContractId_pg,MovementDescId_pg:Integer;
+    FromId_pg,ToId_pg,PaidKindId_pg,RouteSortingId_pg:Integer;
+begin
+     Result:=0;
+     if (not cbWeighingPartner.Checked)or(not cbWeighingPartner.Enabled) then exit;
+     //
+     myEnabledCB(cbWeighingPartner);
+     //
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ScaleHistory.BillId as ObjectId');
+        Add('     , ScaleHistory.Date_pg as inOperDate');
+        Add('     , isnull(Bill.Id_Postgres,-1*ScaleHistory.BillId) as inParentId');
+
+        Add('     , ScaleHistory.minInsertDate as inStartWeighing');
+        Add('     , ScaleHistory.maxInsertDate as inEndWeighing');
+
+        Add('     , case when ScaleHistory.BillKind=zc_bkIncomeToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_Income()')
+          +'             when ScaleHistory.BillKind=zc_bkReturnToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_ReturnOut()')
+          +'             when ScaleHistory.BillKind=zc_bkSaleToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_Sale()')
+          +'             when ScaleHistory.BillKind=zc_bkReturnToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_ReturnIn()')
+
+          +'             when ScaleHistory.BillKind=zc_bkSendUnitToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_Send()')
+          +'             when ScaleHistory.BillKind=zc_bkProduction() then ' + FormatToVarCharServer_notNULL('zc_Movement_ProductionSeparate()')
+          +'             when ScaleHistory.BillKind=zc_bkProductionInFromReceipt() then ' + FormatToVarCharServer_notNULL('zc_Movement_ProductionUnion()')
+
+          +'             when ScaleHistory.BillKind=zc_bkOut() then ' + FormatToVarCharServer_notNULL('zc_Movement_Loss()')
+          +'             when ScaleHistory.BillKind=zc_bkProductionInZakaz() then ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory()')
+          +'        end as MovementDescName_pg');
+
+
+        Add('     , NULL as inInvNumberTransport');
+        Add('     , fGet_BillNumberAdd_byBillNumber(Bill.BillDate,Bill.BillNumber,Bill.Id) as inWeighingNumber');
+
+        Add('     , trim(Bill.BillNumberClient1) as inInvNumberOrder');
+        Add('     , ScaleHistory.PartionStr_MB as inPartionGoods');
+
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, isnull (pgUnitFrom.Id_Postgres, isnull (_pgPartnerFrom.PartnerId_pg,UnitFrom.Id3_Postgres))) as FromId_pg');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, isnull (pgUnitTo.Id_Postgres, isnull (_pgPartnerTo.PartnerId_pg,UnitTo.Id3_Postgres))) as ToId_pg');
+        Add('     , case when ScaleHistory.BillKind in (zc_bkSendUnitToUnit(),zc_bkProduction(),zc_bkProductionInFromReceipt(),zc_bkOut(),zc_bkProductionInZakaz()) then null'
+           +'            when Bill.MoneyKindId=zc_mkBN() then 3'
+           +'            else 4'
+           +'       end as PaidKindId_pg');
+        Add('     , NULL as RouteSortingId_pg');
+
+        Add('     , _pgUsers.Id_pg as inUserId');
+
+        Add('     , ScaleHistory.isObv');
+        Add('     , ScaleHistory.MovementId_pg as Id_Postgres');
+
+        Add('from (select ScaleHistory.BillId'
+           +'            ,zc_rvNo() as isObv'
+           +'            ,max (isnull(ScaleHistory.UserId,0))as UserId'
+           +'            ,max (isnull(ScaleHistory.FromId,0))as FromId'
+           +'            ,max (isnull(ScaleHistory.ToId,0))as ToId'
+           +'            ,max (isnull(ScaleHistory.BillKind,0))as BillKind'
+           +'            ,max (isnull(ScaleHistory.isRemainsFact,zc_rvNo()))as isRemainsFact'
+           +'            ,min(InsertDate) as minInsertDate'
+           +'            ,max(InsertDate) as maxInsertDate'
+           +'            ,fCalcCurrentBillDate_byPG(maxInsertDate,10) as Date_pg'
+           +'            ,max(isnull(ScaleHistory.PartionStr_MB,'+FormatToVarCharServer_notNULL('')+')) as PartionStr_MB'
+           +'            ,max(isnull(ScaleHistory.MovementId_pg,0))as MovementId_pg'
+           +'      from dba.ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'      group by ScaleHistory.BillId'
+           +'     union'
+           +'      select ScaleHistory.BillId'
+           +'            ,zc_rvYes() as isObv'
+           +'            ,max (isnull(ScaleHistory.UserId,0))as UserId'
+           +'            ,max (isnull(ScaleHistory.FromId,0))as FromId'
+           +'            ,max (isnull(ScaleHistory.ToId,0))as ToId'
+           +'            ,max (isnull(ScaleHistory.BillKind,0))as BillKind'
+           +'            ,max (isnull(ScaleHistory.isRemainsFact,zc_rvNo()))as isRemainsFact'
+           +'            ,min(InsertDate) as minInsertDate'
+           +'            ,max(InsertDate) as maxInsertDate'
+           +'            ,fCalcCurrentBillDate_byPG(maxInsertDate,10) as Date_pg'
+           +'            ,max(isnull(ScaleHistory.PartionStr_MB,'+FormatToVarCharServer_notNULL('')+')) as PartionStr_MB'
+           +'            ,max(isnull(ScaleHistory.MovementId_pg,0))as MovementId_pg'
+           +'      from dba.ScaleHistory_byObvalka as ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'      group by ScaleHistory.BillId'
+           +'     ) as ScaleHistory');
+        Add('     left outer join dba.Bill on Bill.Id = ScaleHistory.BillId');
+
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
+        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+
+        Add('     left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, UnitId from dba._pgPartner where _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by UnitId'
+           +'                     ) as _pgPartnerFrom on _pgPartnerFrom.UnitId = Bill.FromId');
+        Add('     left outer join (select max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg, UnitId from dba._pgPartner where _pgPartner.PartnerId_pg <> 0 and UnitId <>0 and Main <> 0 group by UnitId'
+           +'                     ) as _pgPartnerTo on _pgPartnerTo.UnitId = Bill.ToId');
+
+        Add('     left outer join dba._pgUsers on _pgUsers.UserId = ScaleHistory.UserId');
+
+        Add('where Date_pg between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by inOperDate, ObjectId');
+        Open;
+        Result:=RecordCount;
+        cbWeighingPartner.Caption:='9.1. ('+IntToStr(RecordCount)+')Взвеш.покуп.';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_WeighingPartner_Sybase';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inStartWeighing',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inEndWeighing',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementDescId',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInvNumberTransport',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeighingNumber',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInvNumberOrder',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
+
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUserId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             //находим параметры по документу продажи
+             if (FieldByName('inParentId').AsInteger>0)
+             then begin
+                       fOpenSqToQuery (' select Movement.DescId AS MovementDescId'
+                                      +'      , MovementLinkObject_From.ObjectId AS FromId'
+                                      +'      , COALESCE (MovementLinkObject_ArticleLoss.ObjectId, MovementLinkObject_To.ObjectId) AS ToId'
+                                      +'      , MovementLinkObject_Contract.ObjectId AS ContractId'
+                                      +'      , MovementLinkObject_PaidKind.ObjectId AS PaidKindId'
+                                      +'      , MovementLinkObject_RouteSorting.ObjectId AS RouteSortingId'
+                                      +' from Movement'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_From'
+                                      +'                                   ON MovementLinkObject_From.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_To'
+                                      +'                                   ON MovementLinkObject_To.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss'
+                                      +'                                   ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract'
+                                      +'                                   ON MovementLinkObject_Contract.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind'
+                                      +'                                   ON MovementLinkObject_PaidKind.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()'
+                                      +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting'
+                                      +'                                   ON MovementLinkObject_RouteSorting.MovementId = Movement.Id'
+                                      +'                                  AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()'
+                                      +' where Movement.Id = '+ FieldByName('inParentId').AsString);
+
+                        MovementDescId_pg:=toSqlQuery.FieldByName('MovementDescId').AsInteger;
+                        FromId_pg:=toSqlQuery.FieldByName('FromId').AsInteger;
+                        ToId_pg:=toSqlQuery.FieldByName('ToId').AsInteger;
+                        ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                        PaidKindId_pg:=toSqlQuery.FieldByName('PaidKindId').AsInteger;
+                        RouteSortingId_pg:=toSqlQuery.FieldByName('RouteSortingId').AsInteger;
+                  end
+             else begin if FieldByName('MovementDescName_pg').AsString <> ''
+                        then begin fOpenSqToQuery ('select '+FieldByName('MovementDescName_pg').AsString+' AS RetV');
+                                   MovementDescId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+                        end else MovementDescId_pg:=0;
+                        FromId_pg:=FieldByName('FromId_pg').AsInteger;
+                        ToId_pg:=FieldByName('ToId_pg').AsInteger;
+                        ContractId_pg:=0;
+                        PaidKindId_pg:=FieldByName('PaidKindId_pg').AsInteger;
+                        RouteSortingId_pg:=0;
+                  end;
+             //
+             //сохранение
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('inParentId').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inStartWeighing').Value:=FieldByName('inStartWeighing').AsDateTime;
+             toStoredProc.Params.ParamByName('inEndWeighing').Value:=FieldByName('inEndWeighing').AsDateTime;
+
+             toStoredProc.Params.ParamByName('inMovementDescId').Value:=MovementDescId_pg;
+             toStoredProc.Params.ParamByName('inInvNumberTransport').Value:=FieldByName('inInvNumberTransport').AsInteger;
+             toStoredProc.Params.ParamByName('inWeighingNumber').Value:=FieldByName('inWeighingNumber').AsInteger;
+
+             toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('inInvNumberOrder').AsString;
+             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('inPartionGoods').AsString;
+
+             toStoredProc.Params.ParamByName('inFromId').Value:=FromId_pg;
+             toStoredProc.Params.ParamByName('inToId').Value:=ToId_pg;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=PaidKindId_pg;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=RouteSortingId_pg;
+             toStoredProc.Params.ParamByName('inUserId').Value:=FieldByName('inUserId').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvYes)
+             then fExecSqFromQuery('update dba.ScaleHistory_byObvalka set MovementId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where BillId = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value))
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvNo)
+                 then fExecSqFromQuery('update dba.ScaleHistory set MovementId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where BillId = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbWeighingPartner);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_WeighingPartner(SaveCount:Integer);
+begin
+     if (not cbWeighingPartner.Checked)or(not cbWeighingPartner.Enabled) then exit;
+     myEnabledCB(cbWeighingPartner);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+
+        Add('     , BillItems.ZakazCount1 + BillItems.ZakazCount1 as Amount');
+        Add('     , BillItems.ZakazChange as AmountSecond');
+
+        Add('     , PriceListItems_byHistory.NewPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+isnull(KindPackage.KindPackageName,'+FormatToVarCharServer_notNULL('')+')+'+FormatToVarCharServer_notNULL(')')
+//           +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
+           +'            else '+FormatToVarCharServer_notNULL('')
+           +'       end as errInvNumber');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
+        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
+
+        Add('     left outer join dba.BillItemsZakaz as BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+        Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
+           +'                                           and PriceListItems_byHistory.PriceListID = 2' // ОПТОВЫЕ ЦЕНЫ
+           +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
+           +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
+           +'  and BillItems.Id is not null'
+           +'  and Bill.Id_Postgres>0'
+           );
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        Add('order by 2,3,1');
+        Open;
+
+        cbWeighingPartner.Caption:='9.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Взвеш.покуп.';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_OrderExternal';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountSecond').Value:=FieldByName('AmountSecond').AsFloat;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
+             then fExecSqFromQuery('update dba.BillItemsZakaz set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if (FieldByName('errInvNumber').AsString<>'')
+             then begin
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
+                  if not myExecToStoredProc_two then;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbWeighingPartner);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 
 end.
 
@@ -18420,6 +18991,8 @@ alter table dba.GoodsProperty_Detail add Id15_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id16_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id17_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id18_Postgres integer null;
+alter table dba.GoodsProperty_Detail add Id19_pg integer null;
+alter table dba.GoodsProperty_Detail add Id20_pg integer null;
 
 create table dba.GoodsProperty_Postgres (Id integer not null, Name_PG TVarCharMedium not null, Id_Postgres integer null);
 insert into dba.GoodsProperty_Postgres (Id, Name_PG)

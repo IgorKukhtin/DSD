@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,9 +15,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
+    IN inBoxCount            TFloat    , -- Количество ящиков
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inBoxId               Integer   , -- Ящики
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -40,9 +43,11 @@ BEGIN
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
+                                          , inBoxCount           := inBoxCount
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
+                                          , inBoxId              := inBoxId
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -53,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.10.14                                                       * add box
  08.02.14                                        * была ошибка с lpInsertUpdate_MovementItem_Sale
  04.02.14                        * add lpInsertUpdate_MovementItem_Sale
  08.09.13                                        * add zc_MIFloat_AmountChangePercent

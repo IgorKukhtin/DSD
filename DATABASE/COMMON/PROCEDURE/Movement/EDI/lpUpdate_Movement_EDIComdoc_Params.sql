@@ -49,7 +49,7 @@ BEGIN
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                      AND MovementDate_OperDatePartner.ValueData BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
               INNER JOIN Movement ON Movement.Id = MovementString_InvNumberOrder.MovementId
-                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
                                  AND Movement.DescId = zc_Movement_Sale()
 
               INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -69,13 +69,35 @@ BEGIN
          WHERE MovementString_InvNumberOrder.ValueData = inOrderInvNumber
            AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder();
 
-         --
+         -- Проверка - номер заказа должен быть только у одной накладной
+         IF EXISTS (SELECT Movement.Id
+                    FROM MovementString AS MovementString_InvNumberOrder
+                         INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                 ON MovementDate_OperDatePartner.MovementId =  MovementString_InvNumberOrder.MovementId
+                                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                AND MovementDate_OperDatePartner.ValueData BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                         INNER JOIN Movement ON Movement.Id = MovementString_InvNumberOrder.MovementId
+                                            AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
+                                            AND Movement.DescId = zc_Movement_Sale()
+                                            AND Movement.Id <> vbMovementId_Master
+                    WHERE MovementString_InvNumberOrder.ValueData = inOrderInvNumber
+                      AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder())
+         THEN
+             RAISE EXCEPTION 'Ошибка.№ заявки <%> должен быть установлен только у одной накладной продажи.', inOrderInvNumber;
+         END IF;
+
+         -- удалили связь с Продажа покупателю> !!!только наоборот!!!
+         DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_Sale() AND MovementChildId = inMovementId;
+         -- удалили связь с <Налоговая накладная> !!!только наоборот!!!
+         DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_Tax() AND MovementChildId = inMovementId;
+
+         -- совсем заново
          IF vbMovementId_Master <> 0
          THEN
              -- сохранили связь с <Продажа покупателю> !!!только наоборот!!!
              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), vbMovementId_Master, inMovementId);
          END IF;
-
+         -- совсем заново
          IF vbMovementId_Child <> 0
          THEN
              -- сохранили связь с <Налоговая накладная> !!!только наоборот!!!
@@ -122,13 +144,18 @@ BEGIN
          WHERE MovementString_InvNumberPartner.ValueData = inPartnerInvNumber
            AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner();
 
-         --
+         -- удалили связь с <Возврат покупателю> !!!только наоборот!!!
+         DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_MasterEDI() AND MovementChildId = inMovementId;
+         -- удалили связь с <Корректировка к налоговой накладной> !!!только наоборот!!!
+         DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_ChildEDI() AND MovementChildId = inMovementId;
+
+         -- совсем заново
          IF vbMovementId_Master <> 0
          THEN
              -- сохранили связь с <Возврат покупателю> !!!только наоборот!!!
              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_MasterEDI(), vbMovementId_Master, inMovementId);
          END IF;
-
+         -- совсем заново
          IF vbMovementId_Child <> 0
          THEN
              -- сохранили связь с <Корректировка к налоговой накладной> !!!только наоборот!!!
@@ -139,7 +166,6 @@ BEGIN
          DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_Sale() AND MovementChildId = inMovementId;
          -- удалили связь с <Налоговая накладная> !!!только наоборот!!!
          DELETE FROM MovementLinkMovement WHERE DescId = zc_MovementLinkMovement_Tax() AND MovementChildId = inMovementId;
-
 
      END IF;
 
@@ -164,6 +190,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.10.14                                        * add совсем заново
  07.08.14                                        * add !!!так для возврата!!!
  31.07.14                                        * add !!!так для продажи!!!
  20.07.14                                        *

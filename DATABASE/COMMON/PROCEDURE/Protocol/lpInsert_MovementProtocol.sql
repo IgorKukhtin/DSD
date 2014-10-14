@@ -65,6 +65,13 @@ BEGIN
     FROM MovementLinkObject
          INNER JOIN MovementLinkObjectDesc ON MovementLinkObjectDesc.Id = MovementLinkObject.DescId
     WHERE MovementLinkObject.MovementId = inMovementId
+   UNION
+    SELECT '<Field FieldName = "' || MovementLinkMovementDesc.ItemName || '" FieldValue = "' || COALESCE (MovementLinkMovement.MovementChildId :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+         , 8 AS GroupId
+         , MovementLinkMovement.DescId
+    FROM MovementLinkMovement
+         INNER JOIN MovementLinkMovementDesc ON MovementLinkMovementDesc.Id = MovementLinkMovement.DescId
+    WHERE MovementLinkMovement.MovementId = inMovementId
    ) AS D
     ORDER BY D.GroupId, D.DescId
    ) AS D
@@ -81,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.10.14                                        * add MovementLinkMovement
  07.06.14                                        * add MovementLinkObject
  10.05.14                                        * add ORDER BY
 */

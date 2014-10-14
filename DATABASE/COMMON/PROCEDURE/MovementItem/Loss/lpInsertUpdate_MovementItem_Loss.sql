@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_Loss()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -45,6 +46,9 @@ BEGIN
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
+     -- сохранили связь с <Партии товаров>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+
      IF inGoodsId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
@@ -64,6 +68,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.14                                        * add inPartionGoodsId
  06.09.14                                        *
 */
 

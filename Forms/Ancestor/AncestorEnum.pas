@@ -10,7 +10,8 @@ uses
   dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPCdxBarPopupMenu, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus;
+  dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TAncestorEnumForm = class(TAncestorDBGridForm)

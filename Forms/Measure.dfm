@@ -26,8 +26,6 @@ object MeasureForm: TMeasureForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -57,6 +55,7 @@ object MeasureForm: TMeasureForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
       object clErased: TcxGridDBColumn
@@ -67,6 +66,22 @@ object MeasureForm: TMeasureForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 78
+      end
+      object InternalCode: TcxGridDBColumn
+        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
+        DataBinding.FieldName = 'InternalCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 70
+      end
+      object InternalName: TcxGridDBColumn
+        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'InternalName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -102,8 +117,8 @@ object MeasureForm: TMeasureForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -265,6 +280,7 @@ object MeasureForm: TMeasureForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -312,12 +328,14 @@ object MeasureForm: TMeasureForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -345,6 +363,7 @@ object MeasureForm: TMeasureForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 144
     Top = 104
   end
@@ -355,10 +374,12 @@ object MeasureForm: TMeasureForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 96
     Top = 176
   end

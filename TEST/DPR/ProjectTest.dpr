@@ -71,7 +71,7 @@ uses
   GoodsGroup_Object in '..\..\Forms\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm},
   GoodsKindWeighingTree in '..\..\Forms\Guides\GoodsKindWeighingTree.pas' {GoodsKindWeighingTreeForm},
   ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
-  MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
+  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
   Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
@@ -141,7 +141,7 @@ uses
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm},
   ContractConditionValue in '..\..\Forms\Guides\ContractConditionValue.pas' {ContractConditionValueForm},
   ContractEdit in '..\..\Forms\Guides\ContractEdit.pas' {ContractEditForm},
-  Measure in '..\..\Forms\Measure.pas' {MeasureForm},
+  Box in '..\..\Forms\Box.pas' {BoxForm},
   PriceListItem in '..\..\Forms\Guides\PriceListItem.pas' {PriceListItemForm},
   ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
   ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
@@ -546,7 +546,10 @@ uses
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm};
+  ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm},
+  MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
+  Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
+  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
