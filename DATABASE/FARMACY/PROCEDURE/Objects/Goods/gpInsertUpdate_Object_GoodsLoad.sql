@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLoad(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -8,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLoad(
     IN inMainCode            INTEGER   ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
     IN inObjectId            Integer   ,    -- Торговая сеть
-    IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inNDS                 TFloat     ,    -- НДС
+    IN inMeasureName         TVarChar  ,    -- ссылка на единицу измерения
+    IN inNDS                 TFloat    ,    -- НДС
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -19,6 +20,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbGoodsMainId Integer;
   DECLARE vbLinkId Integer;
+  DECLARE vbMeasureId Integer;
 BEGIN
 
     vbUserId := inSession;
@@ -36,10 +38,19 @@ BEGIN
           AND Object_Goods_View.GoodsCode = inCode;   
     END IF; 
 
-    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, 0, inMeasureId, vbNDSKindId, inObjectId, vbUserId);
+    SELECT Id INTO vbMeasureId
+      FROM Object 
+     WHERE DescId = zc_Object_Measure() AND ValueData = inMeasureName;
 
-     SELECT Id INTO vbGoodsMainId FROM Object_Goods_View
-      WHERE ObjectId IS NULL AND GoodsCodeInt = inMainCode;
+    IF COALESCE(vbMeasureId, 0) = 0 THEN
+       vbMeasureId := gpInsertUpdate_Object_Measure(0, 0, inMeasureName, inSession); 
+    END IF;
+
+
+    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, 0, vbMeasureId, vbNDSKindId, inObjectId, vbUserId);
+
+     SELECT Id INTO vbGoodsMainId FROM Object_Goods_Main_View
+      WHERE GoodsCode = inMainCode;
 
      SELECT Id INTO vbLinkId 
        FROM Object_LinkGoods_View
@@ -59,12 +70,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsLoad(Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.10.14                        *
  28.08.14                        *
  30.07.14                        *
  24.06.14         *

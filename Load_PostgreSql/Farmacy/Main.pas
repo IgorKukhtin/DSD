@@ -169,8 +169,7 @@ begin
         Add('     , GoodsProperty.Code as ObjectCode');
         Add('     , GoodsProperty.GoodsName as ObjectName');
         Add('     , GoodsProperty.NDS as NDS');
-        Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
-        Add('     , Measure.Id_Postgres as MeasureId_Postgres');
+        Add('     , Measure.MeasureName as MeasureName');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('where GoodsProperty.Id > 0 order by ObjectId');
@@ -183,15 +182,17 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpInsertUpdate_Object_MainGoodsLoad';
-        toStoredProc.OutputType := otResult;
+        toStoredProc.OutputType := otMultiExecute;
+        toStoredProc.PackSize := 100;
         toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inNDS',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCode', ftInteger, ptInput, 0);
+        toStoredProc.Params.AddParam ('inName', ftString, ptInput, '');
+        toStoredProc.Params.AddParam ('inMeasureName', ftString, ptInput, '');
+        toStoredProc.Params.AddParam ('inNDS', ftFloat, ptInput, 0);
 
         toTwoStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsLoad';
-        toTwoStoredProc.OutputType := otResult;
+        toTwoStoredProc.OutputType := otMultiExecute;
+        toTwoStoredProc.PackSize := toStoredProc.PackSize;
         toTwoStoredProc.Params.Clear;
 
         toTwoStoredProc.Params.AddParam ('ioId', ftInteger, ptInputOutput, 0);
@@ -199,7 +200,7 @@ begin
         toTwoStoredProc.Params.AddParam ('inMainCode', ftInteger, ptInput, 0);
         toTwoStoredProc.Params.AddParam ('inName', ftString, ptInput, '');
         toTwoStoredProc.Params.AddParam ('inObjectId', ftInteger, ptInput, RetailId);
-        toTwoStoredProc.Params.AddParam ('inMeasureId', ftInteger, ptInput, 0);
+        toTwoStoredProc.Params.AddParam ('inMeasureName', ftString, ptInput, '');
         toTwoStoredProc.Params.AddParam ('inNDS', ftFloat, ptInput, 0);
         //
         while not EOF do
@@ -209,26 +210,25 @@ begin
              //
              toStoredProc.Params.ParamByName('inCode').Value := FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMeasureName').Value := FieldByName('MeasureName').AsString;
              toStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;
              myExecToStoredProc;
 
-             toTwoStoredProc.Params.ParamByName('ioId').Value := FieldByName('Id_Postgres').AsInteger;
+             toTwoStoredProc.Params.ParamByName('ioId').Value := 0;//FieldByName('Id_Postgres').AsInteger;
              toTwoStoredProc.Params.ParamByName('inCode').Value := FieldByName('ObjectCode').AsInteger;
              toTwoStoredProc.Params.ParamByName('inMainCode').Value := FieldByName('ObjectCode').AsInteger;
              toTwoStoredProc.Params.ParamByName('inName').Value := FieldByName('ObjectName').AsString;
-             toTwoStoredProc.Params.ParamByName('inMeasureId').Value := FieldByName('MeasureId_Postgres').AsInteger;
+             toTwoStoredProc.Params.ParamByName('inMeasureName').Value := FieldByName('MeasureName').AsString;
              toTwoStoredProc.Params.ParamByName('inNDS').Value := FieldByName('NDS').AsFloat;
              toTwoStoredProc.Execute;
-
-            if FieldByName('Id_Postgres').AsInteger = 0 then
-               fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toTwoStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
 
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        toStoredProc.Execute(true);
+        toTwoStoredProc.Execute(true);
      end;
      //
      myDisabledCB(cbGoods);
@@ -255,7 +255,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpInsertUpdate_Object_GoodsPartnerCodeLoad';
-        toStoredProc.OutputType := otResult;
+        toStoredProc.OutputType := otMultiExecute;
+        toStoredProc.PackSize := 100;
         toStoredProc.Params.Clear;
 
         toStoredProc.Params.AddParam ('inOKPO',ftString,ptInput, '');
@@ -278,6 +279,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+        toStoredProc.Execute(true);
      end;
      //
      myDisabledCB(cbGoodsPartnerCode);

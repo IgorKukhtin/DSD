@@ -2,12 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpCalculate_ExternalOrder (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpCalculate_ExternalOrder(
-    IN inInternalOrder Integer  ,
-    IN inSession       TVarChar    -- сессия пользователя
-)
-RETURNS VOID
-AS
+-- Function: gpcalculate_externalorder(integer, tvarchar)
+
+-- DROP FUNCTION gpcalculate_externalorder(integer, tvarchar);
+
+CREATE OR REPLACE FUNCTION gpcalculate_externalorder(ininternalorder integer, insession tvarchar)
+  RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
@@ -46,7 +46,10 @@ BEGIN
                     inUserId := vbUserId)
          FROM 
 
-       (WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession)) SELECT * FROM (
+       (WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession)) ,
+            JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (vbObjectId))
+       
+       SELECT * FROM (
 SELECT * FROM (
 SELECT 
 *, MIN(RowNumber) OVER (PARTITION BY MainGoodsId) AS MinRowNumber FROM ( 
@@ -95,6 +98,10 @@ SELECT
    
    JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
 
+   LEFT JOIN JuridicalSettingsPriceList 
+                    ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
+                   AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
+
    LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(vbObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
 
    JOIN OBJECT AS Goods ON Goods.Id = MovementItem.ObjectId
@@ -103,7 +110,7 @@ SELECT
                          ON ObjectFloat_Deferment.ObjectId = LastPriceList_View.ContractId
                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
    
-   WHERE movementItem.MovementId = inInternalOrder) AS ddd
+   WHERE movementItem.MovementId = inInternalOrder AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> true) AS ddd
    
    LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
    
@@ -133,7 +140,7 @@ ORDER BY 4) AS ddd;
     FROM MovementItem  
        JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
        JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
-                                                  /
+
        JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
        
    WHERE MovementItem.MovementId = inInternalOrder)
@@ -141,14 +148,16 @@ ORDER BY 4) AS ddd;
 
 SELECT * FROM MovementItem 
 
-WHERE MovementId = 6 AND Id NOT IN(
+WHERE MovementId = inInternalOrder AND Id NOT IN(
 SELECT Id FROM ddd
- ) AS DDD);
+ )) AS DDD;
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpCalculate_ExternalOrder (Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION gpcalculate_externalorder(integer, tvarchar)
+  OWNER TO postgres;
 
 
 /*

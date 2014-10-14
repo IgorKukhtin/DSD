@@ -77,6 +77,10 @@ BEGIN
                       WHERE MovementId = vbPriceListId);
 
     
+     DELETE FROM LoadPriceListItem WHERE LoadPriceListId = inId;
+
+     DELETE FROM LoadPriceList WHERE Id = inId;
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

@@ -165,6 +165,14 @@
 				<Form>GoodsGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Box.pas">
 				<Form>BoxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -173,7 +181,7 @@
 				<Form>BoxEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\NDSKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\NDSKind.pas">
 				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -336,7 +344,7 @@
 				<Form>ImportGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\FileTypeKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\FileTypeKind.pas">
 				<Form>FileTypeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -459,8 +467,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalSettingsTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
-				<Form>JuridicalSettingsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettingsPriceList.pas">
+				<Form>JuridicalSettingsPriceListForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -487,6 +495,23 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Unit_Object.pas">
 				<Form>Unit_ObjectForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ContactPersonKind.pas">
+				<Form>ContactPersonKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
+				<Form>ContactPersonForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContactPersonEdit.pas">
+				<Form>ContactPersonEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ContactPersonTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
+				<Form>JuridicalSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

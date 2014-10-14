@@ -80,6 +80,10 @@ inherited MainForm: TMainForm
           ItemName = 'bbJuridicalSettings'
         end
         item
+          Visible = True
+          ItemName = 'bbJuridicalSettingsPriceList'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbMeasure'
@@ -162,6 +166,10 @@ inherited MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPerson'
         end>
     end
     object bbDocuments: TdxBarSubItem [6]
@@ -394,6 +402,14 @@ inherited MainForm: TMainForm
       Action = actSaveData
       Category = 0
     end
+    object bbContactPerson: TdxBarButton
+      Action = actContactPerson
+      Category = 0
+    end
+    object bbJuridicalSettingsPriceList: TdxBarButton
+      Action = actJuridicalSettingsPriceList
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     Left = 240
@@ -593,6 +609,27 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actContactPerson: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
+      FormName = 'TContactPersonForm'
+      FormNameParam.Value = 'TContactPersonForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContract: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractForm'
+      FormNameParam.Value = 'TContractForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actGoodsKind: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -722,17 +759,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actContract: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1044#1086#1075#1086#1074#1086#1088#1072
-      FormName = 'TContractForm'
-      FormNameParam.Value = 'TContractForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actOrderExternal: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
@@ -829,6 +855,16 @@ inherited MainForm: TMainForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
       FormName = 'TJuridicalSettingsForm'
       FormNameParam.Value = 'TJuridicalSettingsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actJuridicalSettingsPriceList: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
+      FormName = 'TJuridicalSettingsPriceListForm'
+      FormNameParam.Value = 'TJuridicalSettingsPriceListForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

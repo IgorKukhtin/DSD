@@ -15,6 +15,7 @@ type
     procedure SetUp; override;
   published
     procedure MainFormTest;
+    procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadGoodsGroupFormTest;
@@ -62,6 +63,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSetUserDefaultsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDefaultsKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDefaultsKeyForm');
+end;
+
+procedure TLoadFormTest.LoadContactPersonFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContactPersonForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContactPersonEditForm');
+  //  Вид контакта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindForm');
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;
@@ -277,6 +289,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsPriceListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');

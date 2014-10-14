@@ -1,9 +1,9 @@
-object ContactPersonForm: TContactPersonForm
+object ContactPersonKindForm: TContactPersonKindForm
   Left = 0
   Top = 0
-  Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
-  ClientHeight = 335
-  ClientWidth = 936
+  Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
+  ClientHeight = 332
+  ClientWidth = 440
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object ContactPersonForm: TContactPersonForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
@@ -19,8 +20,8 @@ object ContactPersonForm: TContactPersonForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 936
-    Height = 309
+    Width = 440
+    Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -53,55 +54,13 @@ object ContactPersonForm: TContactPersonForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 82
       end
       object clName: TcxGridDBColumn
-        Caption = #1060#1048#1054
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 208
-      end
-      object clPhone: TcxGridDBColumn
-        Caption = #1058#1077#1083#1077#1092#1086#1085
-        DataBinding.FieldName = 'Phone'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 109
-      end
-      object clMail: TcxGridDBColumn
-        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
-        DataBinding.FieldName = 'Mail'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 114
-      end
-      object clPartnerName: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-        DataBinding.FieldName = 'PartnerName'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 105
-      end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentVert = vaCenter
-        Width = 133
-      end
-      object clContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
-        DataBinding.FieldName = 'ContractName'
-        HeaderAlignmentVert = vaCenter
-        Width = 83
-      end
-      object clContactPersonKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
-        DataBinding.FieldName = 'ContactPersonKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 272
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -109,7 +68,7 @@ object ContactPersonForm: TContactPersonForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -272,7 +231,7 @@ object ContactPersonForm: TContactPersonForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-      RefreshOnTabSetChanges = True
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -280,8 +239,8 @@ object ContactPersonForm: TContactPersonForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TContactPersonEditForm'
-      FormNameParam.Value = 'TContactPersonEditForm'
+      FormName = 'TContactPersonKindEditForm'
+      FormNameParam.Value = 'TContactPersonKindEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -299,8 +258,8 @@ object ContactPersonForm: TContactPersonForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TContactPersonEditForm'
-      FormNameParam.Value = 'TContactPersonEditForm'
+      FormName = 'TContactPersonKindEditForm'
+      FormNameParam.Value = 'TContactPersonKindEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -363,8 +322,8 @@ object ContactPersonForm: TContactPersonForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -377,7 +336,7 @@ object ContactPersonForm: TContactPersonForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContactPerson'
+    StoredProcName = 'gpSelect_Object_ContactPersonKind'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -404,8 +363,8 @@ object ContactPersonForm: TContactPersonForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 360
-    Top = 184
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

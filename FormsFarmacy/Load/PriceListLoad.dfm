@@ -89,7 +89,23 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end
         item
           StoredProc = spLoadPriceList
+        end
+        item
+          StoredProc = spSelect
         end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+      ImageIndex = 27
+      InfoAfterExecute = #1055#1088#1072#1081#1089' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085
+    end
+    object mactLoadPriceList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actLoadPriceList
+        end>
+      View = cxGridDBTableView
+      InfoAfterExecute = #1055#1088#1072#1081#1089' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
     end
@@ -157,6 +173,11 @@ inherited PriceListLoadForm: TPriceListLoadForm
         Action = actOpenPriceList
       end>
     SearchAsFilter = False
+  end
+  inherited PopupMenu: TPopupMenu
+    object N3: TMenuItem
+      Action = mactLoadPriceList
+    end
   end
   object spLoadPriceList: TdsdStoredProc
     StoredProcName = 'gpLoadPriceList'

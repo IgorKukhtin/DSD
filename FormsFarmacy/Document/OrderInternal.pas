@@ -46,7 +46,6 @@ type
     cxSplitter1: TcxSplitter;
     ChildDS: TDataSource;
     ChildCDS: TClientDataSet;
-    spSelect_MovementItem_OrderInternal_Price: TdsdStoredProc;
     coCode: TcxGridDBColumn;
     DBViewChildAddOn: TdsdDBViewAddOn;
     colContractName: TcxGridDBColumn;
@@ -54,6 +53,11 @@ type
     colPercent: TcxGridDBColumn;
     colSuperFinalPrice: TcxGridDBColumn;
     colBonus: TcxGridDBColumn;
+    colPartnerGoodsName: TcxGridDBColumn;
+    coJuridicalName: TcxGridDBColumn;
+    coPrice: TcxGridDBColumn;
+    coContractName: TcxGridDBColumn;
+    coSuperFinalPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

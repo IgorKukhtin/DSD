@@ -19,7 +19,11 @@ $BODY$
    DECLARE vbLoadPriceListItemsId Integer;
    DECLARE vbGoodsId Integer;
 BEGIN
-
+	
+  IF COALESCE(inPrice, 0) = 0 THEN 
+     RETURN;
+  END IF;
+  
   SELECT Id INTO vbLoadPriceListId 
     FROM LoadPriceList
    WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date AND COALESCE(ContractId, 0) = inContractId;

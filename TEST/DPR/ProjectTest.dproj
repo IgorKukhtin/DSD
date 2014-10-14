@@ -428,7 +428,7 @@
 			<DCCReference Include="..\..\Forms\UserEdit.pas">
 				<Form>UserEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\Process.pas">
+			<DCCReference Include="..\..\Forms\Kind\Process.pas">
 				<Form>ProcessForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentAddOnTest.pas"/>
@@ -544,7 +544,7 @@
 			<DCCReference Include="..\..\Forms\ModelService.pas">
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\ModelServiceKind.pas">
 				<Form>NDSKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
@@ -572,7 +572,7 @@
 				<Form>StaffListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\StaffListSummKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\StaffListSummKind.pas">
 				<Form>StaffListSummKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -657,7 +657,7 @@
 			<DCCReference Include="..\..\SOURCE\SimpleGauge.pas">
 				<Form>SimpleGaugeForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\ContractStateKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\ContractStateKind.pas">
 				<Form>ContractStateKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -701,7 +701,7 @@
 				<Form>AncestorGuidesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -714,7 +714,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
-			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind_Object.pas">
+			<DCCReference Include="..\..\Forms\Kind\WorkTimeKind_Object.pas">
 				<Form>WorkTimeKind_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -1056,7 +1056,7 @@
 				<Form>CityKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\ContractConditionKind.pas">
 				<Form>ContractConditionKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -1370,12 +1370,8 @@
 				<Form>ContactPersonEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContactPersonKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\ContactPersonKind.pas">
 				<Form>ContactPersonKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContactPersonKindEdit.pas">
-				<Form>ContactPersonKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartnerAddress.pas">

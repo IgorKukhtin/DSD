@@ -532,8 +532,8 @@ begin
            Param.Value := GetDefaultByFieldType(FieldType)
         else
            Param.Value := FieldByName('DefaultValue').AsString;
+        Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, Param.Value);
       end;
-      Result.StoredProc.Params.AddParam(FieldByName('ParamName').asString, FieldType, ptInput, GetDefaultByFieldType(FieldType));
       Next;
     end;
   end;
