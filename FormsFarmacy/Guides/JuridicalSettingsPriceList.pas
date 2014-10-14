@@ -1,31 +1,24 @@
-unit PriceListLoad;
+unit JuridicalSettingsPriceList;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDBGrid, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxCheckBox;
 
 type
-  TPriceListLoadForm = class(TAncestorDBGridForm)
-    colOperDate: TcxGridDBColumn;
+  TJuridicalSettingsPriceListForm = class(TAncestorEnumForm)
     colJuridicalName: TcxGridDBColumn;
-    actOpenPriceList: TdsdInsertUpdateAction;
-    colNDSinPrice: TcxGridDBColumn;
-    bbOpen: TdxBarButton;
-    spLoadPriceList: TdsdStoredProc;
-    actLoadPriceList: TdsdExecStoredProc;
-    bbLoadPriceList: TdxBarButton;
-    spUpdateGoods: TdsdStoredProc;
-    colContractName: TcxGridDBColumn;
-    mactLoadPriceList: TMultiAction;
-    N3: TMenuItem;
+    colContract: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    UpdateDataSet: TdsdUpdateDataSet;
+    colisPriceClose: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -37,6 +30,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPriceListLoadForm);
+  RegisterClass(TJuridicalSettingsPriceListForm);
 
 end.

@@ -66,7 +66,7 @@ uses
   GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
-  NDSKind in '..\..\Forms\Enum\NDSKind.pas' {NDSKindForm: TParentForm},
+  NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
   UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
@@ -112,7 +112,7 @@ uses
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
   MovementItemsLoad in '..\..\FormsFarmacy\Load\MovementItemsLoad.pas' {MovementItemsLoadForm: TParentForm},
   ImportGroup in '..\..\FormsFarmacy\Load\ImportGroup.pas' {ImportGroupForm: TParentForm},
-  FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
+  FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   AdditionalGoods in '..\..\FormsFarmacy\Guides\AdditionalGoods.pas' {AdditionalGoodsForm: TParentForm},
@@ -161,7 +161,7 @@ uses
   PriceGroupSettingsTest in '..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas',
   PriceGroupSettingsUnit in '..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas' {PriceGroupSettingsForm: TParentForm},
   JuridicalSettingsTest in '..\SOURCE\Objects\All\JuridicalSettingsTest.pas',
-  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
+  JuridicalSettingsPriceList in '..\..\FormsFarmacy\Guides\JuridicalSettingsPriceList.pas' {JuridicalSettingsPriceListForm: TParentForm},
   CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
@@ -171,7 +171,12 @@ uses
   ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas',
   UploadUnloadData in '..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
-  Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm};
+  Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
+  ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
+  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
+  ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
+  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

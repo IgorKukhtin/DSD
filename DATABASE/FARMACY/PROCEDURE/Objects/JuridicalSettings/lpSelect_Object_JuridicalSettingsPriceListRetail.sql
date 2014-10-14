@@ -1,11 +1,11 @@
 -- Function: gpSelect_Object_PriceGroupSettings()
 
-DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsRetail(Integer);
+DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsPriceListRetail(Integer);
                         
-CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalSettingsRetail(
+CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalSettingsPriceListRetail(
     IN inRetailId   Integer       -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, Bonus TFloat) AS
+RETURNS TABLE (JuridicalId Integer, ContractId Integer, isPriceClose boolean) AS
 $BODY$
 BEGIN
 
@@ -14,7 +14,8 @@ BEGIN
 
    RETURN QUERY 
           SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId AS JuridicalId
-               , ObjectFloat_Bonus.ValueData AS Bonus 
+               , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
+               , COALESCE(ObjectBoolean_isPriceClose.ValueData, false) AS isPriceClose 
                  FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
 
                  JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
@@ -23,29 +24,27 @@ BEGIN
 
                  LEFT JOIN ObjectLink AS ObjectLink_JuridicalSettings_Contract 
                                       ON ObjectLink_JuridicalSettings_Contract.DescId = zc_ObjectLink_JuridicalSettings_Contract()                      
-                                     AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Contract.ObjectId 
+                                     AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
 
-                 JOIN ObjectFloat AS ObjectFloat_Bonus 
-                                  ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                 AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
+                 LEFt JOIN ObjectBoolean AS ObjectBoolean_isPriceClose
+                                  ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                 AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
 
                WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = inRetailId
-                 AND COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) = 0
-                 ;
+                 AND ObjectBoolean_isPriceClose.ValueData = true ;
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpSelect_Object_JuridicalSettingsRetail(Integer) OWNER TO postgres;
+ALTER FUNCTION lpSelect_Object_JuridicalSettingsPriceListRetail(Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.10.14                         *
- 02.10.14                         *
 
 */
 

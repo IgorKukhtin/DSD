@@ -40,7 +40,7 @@ BEGIN
       RAISE EXCEPTION 'Тип НДС должен быть определен';
    END IF; 
 
-   vbCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode);
+   vbCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode::integer);
    
    ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId);
 

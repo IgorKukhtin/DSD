@@ -367,6 +367,7 @@ object MainForm: TMainForm
   object toStoredProc: TdsdStoredProc
     DataSets = <>
     Params = <>
+    PackSize = 1
     Left = 120
     Top = 416
   end
@@ -374,6 +375,7 @@ object MainForm: TMainForm
     DataSets = <>
     OutputType = otResult
     Params = <>
+    PackSize = 1
     Left = 72
     Top = 160
   end

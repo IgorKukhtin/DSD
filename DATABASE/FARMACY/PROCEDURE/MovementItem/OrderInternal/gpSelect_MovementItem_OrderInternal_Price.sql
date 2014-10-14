@@ -30,7 +30,8 @@ BEGIN
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
    RETURN QUERY
-       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession))
+       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession)),
+            JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (vbObjectId))
 
        SELECT ddd.Id
             , ddd.Price  
@@ -67,6 +68,9 @@ BEGIN
        FROM MovementItem  
    JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
    JOIN LastPriceList_View ON true 
+   LEFT JOIN JuridicalSettingsPriceList 
+                    ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
+                   AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
    JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
                            AND PriceList.MovementId  = LastPriceList_View.MovementId 
    JOIN MovementItemLinkObject AS MILinkObject_Goods
@@ -88,7 +92,7 @@ BEGIN
                          ON ObjectFloat_Deferment.ObjectId = Contract.Id
                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
    
-   WHERE movementItem.MovementId = inMovementId) AS ddd
+   WHERE movementItem.MovementId = inMovementId AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> true) AS ddd
    
    LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice;
 
@@ -101,6 +105,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal_Price (Integer, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.10.14                         *
  01.10.14                         *
  23.09.14                         *
  18.09.14                         *

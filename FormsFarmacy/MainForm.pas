@@ -97,6 +97,10 @@ type
     bbLoadLoad: TdxBarButton;
     actSaveData: TAction;
     bbSaveData: TdxBarButton;
+    actContactPerson: TdsdOpenForm;
+    bbContactPerson: TdxBarButton;
+    actJuridicalSettingsPriceList: TdsdOpenForm;
+    bbJuridicalSettingsPriceList: TdxBarButton;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

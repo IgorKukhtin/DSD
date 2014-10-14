@@ -1,28 +1,29 @@
 inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
-  ClientWidth = 1072
-  ExplicitWidth = 1080
+  ClientWidth = 1208
+  ExplicitTop = -173
+  ExplicitWidth = 1216
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 1072
+    Width = 1208
     Height = 457
     ExplicitTop = 75
     ExplicitWidth = 1072
     ExplicitHeight = 457
     ClientRectBottom = 457
-    ClientRectRight = 1072
+    ClientRectRight = 1208
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1072
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
-        Width = 425
+        Width = 553
         Height = 433
         Align = alLeft
-        ExplicitWidth = 425
+        ExplicitWidth = 553
         ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -90,6 +91,7 @@ inherited OrderInternalForm: TOrderInternalForm
               Kind = skSum
               Column = colSumm
             end>
+          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -137,16 +139,55 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
+          object colPartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object coJuridicalName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1074#1077#1094
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object coPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object coContractName: TcxGridDBColumn
+            Caption = #1051#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object coSuperFinalPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'SuperFinalPrice'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 428
+        Left = 556
         Top = 0
-        Width = 644
+        Width = 652
         Height = 433
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 428
+        ExplicitWidth = 644
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -215,6 +256,7 @@ inherited OrderInternalForm: TOrderInternalForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -306,16 +348,17 @@ inherited OrderInternalForm: TOrderInternalForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 425
+        Left = 553
         Top = 0
         Width = 3
         Height = 433
         Control = cxGrid
+        ExplicitLeft = 425
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1072
+    Width = 1208
     Height = 49
     TabOrder = 3
     ExplicitWidth = 1072
@@ -417,9 +460,6 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelect_MovementItem_OrderInternal_Price
         end>
       RefreshOnTabSetChanges = True
     end
@@ -513,6 +553,14 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternal'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -534,16 +582,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 248
@@ -671,6 +709,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
+    SearchAsFilter = False
     Left = 510
     Top = 145
   end
@@ -1197,25 +1236,6 @@ inherited OrderInternalForm: TOrderInternalForm
     Left = 944
     Top = 184
   end
-  object spSelect_MovementItem_OrderInternal_Price: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderInternal_Price'
-    DataSet = ChildCDS
-    DataSets = <
-      item
-        DataSet = ChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 1008
-    Top = 168
-  end
   object DBViewChildAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView1
@@ -1233,6 +1253,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
+    SearchAsFilter = False
     Left = 926
     Top = 145
   end
