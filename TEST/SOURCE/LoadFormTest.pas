@@ -38,6 +38,7 @@ type
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
     procedure LoadContactPersonFormTest;
+    procedure LoadCorrespondentAccountFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadCityFormTest;
@@ -155,6 +156,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
 end;
+
+procedure TLoadFormTest.LoadCorrespondentAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrespondentAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCorrespondentAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrespondentAccountEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCorrespondentAccountEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadBankAccountContractFormTest;
 begin

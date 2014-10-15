@@ -1186,8 +1186,8 @@
 				<Form>BankAccount_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
-				<Form>BankAccountEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CorrespondentAccountEdit.pas">
+				<Form>CorrespondentAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLinkPlace.pas">
@@ -1610,8 +1610,8 @@
 				<Form>PeriodCloseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
-				<Form>BankAccountForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CorrespondentAccount.pas">
+				<Form>CorrespondentAccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ProfitLossDirection_Object.pas">
@@ -1628,6 +1628,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartionGoodsChoice.pas">
 				<Form>PartionGoodsChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
