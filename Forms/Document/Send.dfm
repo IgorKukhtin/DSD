@@ -2,6 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
+  ExplicitLeft = -31
   ExplicitWidth = 1072
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -192,7 +193,7 @@ inherited SendForm: TSendForm
             Width = 104
           end
           object colStorageName: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -218,6 +219,22 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 38
+          end
+          object colStorageName_Partion: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'StorageName_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -488,6 +505,19 @@ inherited SendForm: TSendForm
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'Price'
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'StorageName'
+          Component = MasterCDS
+          ComponentItem = 'StorageName_Partion'
+          DataType = ftString
         end>
       isShowModal = True
     end

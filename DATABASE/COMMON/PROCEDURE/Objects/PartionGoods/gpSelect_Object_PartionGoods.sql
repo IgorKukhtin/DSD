@@ -40,7 +40,7 @@ $BODY$BEGIN
                                   
                                WHERE  Container.ObjectId = inGoodsId
                                   AND Container.DescId = zc_Container_Count()
-                                 AND  ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) )
+                                 AND  ((CLO_Unit.ObjectId = inUnitId) OR (CLO_Member.ObjectId = inUnitId) OR inUnitId = 0 )
                                   AND (Container.Amount > 0 OR inShowAll = False)
                                )
 
@@ -71,9 +71,9 @@ $BODY$BEGIN
           JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = ObjectLink_Goods.ObjectId                       -- цена
                                                AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
-          INNER JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId		        -- подразделение
+          LEFT JOIN ObjectLink AS ObjectLink_Unit ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId		        -- подразделение
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                                  AND (ObjectLink_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+                                                  --AND (ObjectLink_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
           JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
                                     
           LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = ObjectLink_Goods.ObjectId		-- склад

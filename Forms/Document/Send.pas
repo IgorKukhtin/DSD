@@ -50,6 +50,8 @@ type
     actUnitChoiceForm: TOpenChoiceForm;
     actStorageChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
+    colPrice: TcxGridDBColumn;
+    colStorageName_Partion: TcxGridDBColumn;
   private
     { Private declarations }
   public

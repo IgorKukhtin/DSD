@@ -2,6 +2,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 496
   ClientWidth = 853
+  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 861
   ExplicitHeight = 530
@@ -62,6 +63,15 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object colAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderGlyphAlignmentVert = vaTop
+            Width = 60
           end
           object clStorageName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
@@ -136,13 +146,16 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           DataType = ftString
         end
         item
-          Value = Null
-          ParamType = ptUnknown
+          Name = 'Price'
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
         end
         item
-          Value = Null
+          Name = 'StorageName'
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
           DataType = ftString
-          ParamType = ptUnknown
         end
         item
           Value = Null
