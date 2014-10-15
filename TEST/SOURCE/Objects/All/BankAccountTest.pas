@@ -16,7 +16,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateBankAccount(Id, Code: Integer; Name: String;
-                            JuridicalId, BankId, CurrencyId: Integer): integer;
+                            JuridicalId, BankId, CurrencyId, CorrespondentBankId, BeneficiarysBankId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -64,13 +64,15 @@ end;
 
 function TBankAccount.InsertDefault: integer;
 var
-  JuridicalId, BankId, CurrencyId: Integer;
+  JuridicalId, BankId, CurrencyId, CorrespondentBankId, BeneficiarysBankId: Integer;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
   BankId:= TBank.Create.GetDefault;
+  CorrespondentBankId:= TBank.Create.GetDefault;
+  BeneficiarysBankId:= TBank.Create.GetDefault;
   CurrencyId:= TCurrency.Create.GetDefault;
 
-  result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
+  result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId, CorrespondentBankId, BeneficiarysBankId);
   inherited;
 end;
 
@@ -83,6 +85,11 @@ begin
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
+  FParams.AddParam('inCorrespondentBankId', ftInteger, ptInput, CorrespondentBankId);
+  FParams.AddParam('inBeneficiarysBankId', ftInteger, ptInput, BeneficiarysBankId);
+  FParams.AddParam('inCorrespondentAccount', ftString, ptInput, '');
+  FParams.AddParam('inBeneficiarysBankAccount', ftString, ptInput, '');
+  FParams.AddParam('inBeneficiarysAccount', ftString, ptInput, '');
   result := InsertUpdate(FParams);
 end;
 

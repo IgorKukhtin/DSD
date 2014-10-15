@@ -465,7 +465,7 @@ uses
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
-  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  CorrespondentAccountTest in '..\SOURCE\Objects\All\CorrespondentAccountTest.pas',
   Storage_Object in '..\..\Forms\Guides\Storage_Object.pas' {Storage_ObjectForm: TParentForm},
   Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
@@ -551,7 +551,8 @@ uses
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
   PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
-  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm};
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
