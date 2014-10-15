@@ -51,4 +51,4 @@ ALTER FUNCTION gpSelect_Object_CorrespondentAccount (TVarChar) OWNER TO postgres
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_CorrespondentAccount('2')
+-- SELECT * FROM gpSelect_Object_CorrespondentAccount('2')
