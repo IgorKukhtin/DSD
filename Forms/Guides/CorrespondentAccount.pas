@@ -17,7 +17,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -31,15 +31,13 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    clJuridicalName: TcxGridDBColumn;
-    clBankName: TcxGridDBColumn;
-    clCurrency: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdGridToExcel: TdsdGridToExcel;
@@ -47,11 +45,7 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    CorrespondentBankName: TcxGridDBColumn;
-    BeneficiarysBankName: TcxGridDBColumn;
-    CorrespondentAccount: TcxGridDBColumn;
-    BeneficiarysBankAccount: TcxGridDBColumn;
-    BeneficiarysAccount: TcxGridDBColumn;
+    BankAccountName: TcxGridDBColumn;
   private
     { Private declarations }
   public

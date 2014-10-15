@@ -27,29 +27,14 @@ type
     dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    dsdJuridicalGuides: TdsdGuides;
     cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
     dsdBankGuides: TdsdGuides;
-    dsdCurrencyGuides: TdsdGuides;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    edJuridical: TcxButtonEdit;
     edBank: TcxButtonEdit;
-    edCurrency: TcxButtonEdit;
     cxPropertiesStore: TcxPropertiesStore;
-    edCorrespondentAccount: TcxTextEdit;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    edBeneficiarysBankAccount: TcxTextEdit;
-    cxLabel7: TcxLabel;
-    edBeneficiarysAccount: TcxTextEdit;
-    cxLabel8: TcxLabel;
-    edCorrespondentBank: TcxButtonEdit;
-    dsdCorrBankGuides: TdsdGuides;
     cxLabel9: TcxLabel;
-    edBeneficiarysBank: TcxButtonEdit;
-    dsdBeneficiarysBankGuides: TdsdGuides;
+    edBankAccount: TcxButtonEdit;
+    dsdBankAccountGuides: TdsdGuides;
   private
     { Private declarations }
   public

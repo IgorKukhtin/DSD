@@ -15,7 +15,7 @@ $BODY$
    DECLARE Code_max Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CorrespondentAccount());
+--   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CorrespondentAccount());
 
 
    -- Если код не установлен, определяем его каи последний+1

@@ -33,7 +33,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = Name
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -46,67 +46,31 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 30
       end
-      object clName: TcxGridDBColumn
-        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+      object Name: TcxGridDBColumn
+        Caption = #1050#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1089#1082#1080#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 134
+        Width = 100
       end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentVert = vaCenter
-        Width = 124
-      end
-      object clBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
+      object BankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' ('#1087#1086#1089#1088#1077#1076#1085#1080#1082')'
         DataBinding.FieldName = 'BankName'
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
-      object clCurrency: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072
-        DataBinding.FieldName = 'CurrencyName'
-        HeaderAlignmentVert = vaCenter
-        Width = 97
-      end
-      object CorrespondentBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082' '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090' '#1076#1083#1103' '#1089#1095#1077#1090#1072
-        DataBinding.FieldName = 'CorrespondentBankName'
+      object BankAccountName: TcxGridDBColumn
+        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        DataBinding.FieldName = 'BankAccountName'
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
-      object CorrespondentAccount: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1074' '#1073#1072#1085#1082#1077' - '#1082#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1077
-        DataBinding.FieldName = 'CorrespondentAccount'
-        HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object BeneficiarysBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
-        DataBinding.FieldName = 'BeneficiarysBankName'
-        HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object BeneficiarysBankAccount: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1073#1072#1085#1082#1072' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
-        DataBinding.FieldName = 'BeneficiarysBankAccount'
-        HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object BeneficiarysAccount: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1073#1077#1085#1077#1092#1080#1094#1080#1072#1088#1072
-        DataBinding.FieldName = 'BeneficiarysAccount'
-        HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object clErased: TcxGridDBColumn
+      object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
@@ -288,8 +252,8 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TBankAccountEditForm'
-      FormNameParam.Value = 'TBankAccountEditForm'
+      FormName = 'TCorrespondentAccountEditForm'
+      FormNameParam.Value = 'TCorrespondentAccountEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -307,8 +271,8 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBankAccountEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TCorrespondentAccountEditForm'
+      FormNameParam.Value = 'TCorrespondentAccountEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -395,7 +359,7 @@ object CorrespondentAccountForm: TCorrespondentAccountForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankAccount'
+    StoredProcName = 'gpSelect_Object_CorrespondentAccount'
     DataSet = MasterCDS
     DataSets = <
       item
