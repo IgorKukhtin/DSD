@@ -57,9 +57,10 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS StorageName
            , 0 ::Integer                AS PartionGoodsId
            , CAST (NULL AS TVarChar)    AS PartionGoodsName
+           , CAST (NULL AS TDateTime)   AS PartionGoodsOperDate
            , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TVarChar)    AS StorageName_Partion
-           , CAST (NULL AS TDateTime)   AS PartionGoodsOperDate
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -124,9 +125,9 @@ BEGIN
            , Object_Storage.ValueData           AS StorageName
            , Object_PartionGoods.Id             AS PartionGoodsId
            , Object_PartionGoods.ValueData      AS PartionGoodsName
+           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
-           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
 
            , MovementItem.isErased              AS isErased
 
@@ -221,9 +222,9 @@ BEGIN
            
            , Object_PartionGoods.Id             AS PartionGoodsId
            , Object_PartionGoods.ValueData      AS PartionGoodsName
+           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
-           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
           
            , MovementItem.isErased              AS isErased
 

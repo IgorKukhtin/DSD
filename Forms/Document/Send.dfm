@@ -2,7 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1072
-  ExplicitLeft = -14
   ExplicitWidth = 1080
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -11,18 +10,20 @@ inherited SendForm: TSendForm
     Top = 126
     Width = 1072
     Height = 542
-    ExplicitTop = 126
-    ExplicitWidth = 1064
+    ExplicitLeft = 8
+    ExplicitTop = 118
+    ExplicitWidth = 1072
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 1072
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1072
         Height = 518
-        ExplicitWidth = 1064
+        ExplicitTop = 16
+        ExplicitWidth = 1072
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -288,7 +289,7 @@ inherited SendForm: TSendForm
     Width = 1072
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 1072
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -535,11 +536,14 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'StorageName_Partion'
           DataType = ftString
+          ParamType = ptInput
         end
         item
-          Name = 'PartionGoodsOperDate'
+          Name = 'OperDatePartion'
           Component = MasterCDS
-          ComponentItem = 'OperDate'
+          ComponentItem = 'PartionGoodsOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
         end>
       isShowModal = True
     end

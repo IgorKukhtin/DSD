@@ -161,11 +161,13 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Name = 'OperDatePartion'
           Component = MasterCDS
           ComponentItem = 'OperDate'
+          DataType = ftDateTime
         end
         item
-          Value = Null
+          Name = 'UnitName'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
-          ParamType = ptUnknown
         end
         item
           Value = Null

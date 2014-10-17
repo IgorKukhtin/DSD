@@ -47,6 +47,9 @@ type
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     colPartionGoodsName: TcxGridDBColumn;
     colPartionGoodsOperDate: TcxGridDBColumn;
+    colStorageName_Partion: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
