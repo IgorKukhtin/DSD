@@ -10,7 +10,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ShortName TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
-               
+               PostalCode TVarChar, ProvinceCityName TVarChar, 
+               CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
+               RegionName TVarChar, ProvinceName TVarChar,
+               StreetKindName TVarChar, StreetKindId Integer,
                JuridicalId Integer, JuridicalName TVarChar, 
               --OKPO TVarChar,
                isErased Boolean
@@ -35,9 +38,18 @@ BEGIN
          , ObjectString_CaseNumber.ValueData  AS CaseNumber
          , ObjectString_RoomNumber.ValueData  AS RoomNumber
 
-         , Object_Street.Id                   AS StreetId 
-         , Object_Street.ValueData            AS StreetName 
-         
+         , Object_Street_View.Id              AS StreetId 
+         , Object_Street_View.Name            AS StreetName 
+         , Object_Street_View.PostalCode      AS PostalCode 
+         , Object_Street_View.ProvinceCityName  AS ProvinceCityName
+         , Object_Street_View.CityName        AS CityName 
+         , Object_CityKind.ValueData          AS CityKindName
+         , Object_CityKind.Id                 AS CityKindId
+         , Object_Region.ValueData            AS RegionName
+         , Object_Province.ValueData          AS ProvinceName
+         , Object_Street_View.StreetKindName  AS StreetKindName
+         , Object_Street_View.StreetKindId    AS StreetKindId
+          
          , Object_Juridical.Id           AS JuridicalId
          , Object_Juridical.ValueData    AS JuridicalName
 
@@ -70,12 +82,27 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
                               ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
-         LEFT JOIN Object AS Object_Street ON Object_Street.Id = ObjectLink_Partner_Street.ChildObjectId
+         LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- ÔÓ ÛÎËˆÂ
+                              ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
+                             AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+         LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+                             ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
+                            AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+        LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                             ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
+                            AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+        LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
         
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
   
@@ -88,6 +115,7 @@ ALTER FUNCTION gpSelect_Object_Partner_Address (integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.10.14         *
  19.06.14         * 
 */
 
