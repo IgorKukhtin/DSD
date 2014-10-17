@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , StorageId Integer, StorageName TVarChar
-             , PartionGoodsId Integer, PartionGoodsName TVarChar
+             , PartionGoodsId Integer, PartionGoodsName TVarChar, PartionGoodsOperDate TDateTime
              , Price TFloat, StorageName_Partion TVarChar
              , isErased Boolean
               )
@@ -59,6 +59,7 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionGoodsName
            , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TVarChar)    AS StorageName_Partion
+           , CAST (NULL AS TDateTime)   AS PartionGoodsOperDate
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -125,6 +126,7 @@ BEGIN
            , Object_PartionGoods.ValueData      AS PartionGoodsName
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
+           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
 
            , MovementItem.isErased              AS isErased
 
@@ -184,7 +186,9 @@ BEGIN
                                                       AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()   
             LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		        -- склад
                                                       AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage() 
-            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId   
+            LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
+            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
+                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()  
             ;
 
 
@@ -219,6 +223,7 @@ BEGIN
            , Object_PartionGoods.ValueData      AS PartionGoodsName
            , ObjectFloat_Price.ValueData        AS Price
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
+           , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
           
            , MovementItem.isErased              AS isErased
 
@@ -275,11 +280,13 @@ BEGIN
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
     
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
+            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                    -- цена
                                                  AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
-            LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		        -- склад
+            LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		         -- склад
                                                       AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage() 
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId      
+            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
+                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
 
             ;
 

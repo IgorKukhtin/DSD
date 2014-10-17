@@ -29,11 +29,11 @@ $BODY$BEGIN
                                 FROM Container 
                                      LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
                                                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                              AND CLO_Unit.ObjectId > 0
+                                                                             -- AND CLO_Unit.ObjectId > 0
                                     
                                      LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = Container.Id
                                                                                 AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
-                                                                                AND CLO_Member.ObjectId > 0
+                                                                              --  AND CLO_Member.ObjectId > 0
                                                                                 
                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()

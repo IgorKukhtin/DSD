@@ -74,7 +74,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Width = 60
           end
           object clStorageName: TcxGridDBColumn
-            Caption = #1057#1082#1083#1072#1076
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Alignment.Horz = taLeftJustify
@@ -158,8 +158,9 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           DataType = ftString
         end
         item
-          Value = Null
-          ParamType = ptUnknown
+          Name = 'OperDatePartion'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
         end
         item
           Value = Null
