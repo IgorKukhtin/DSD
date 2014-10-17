@@ -214,29 +214,45 @@ BEGIN
                          -- очень важное кол-во, для него расчет сумм
                        , tmpMI.OperCount_calc
 
-                       , tmpMI.OperCount_Master
-                       , tmpMI.OperCount_Child
-                       , tmpMI.OperCount_Partner
-                       , tmpMI.OperCount_Packer
-
+                         -- кол-во Master (!!!без тары с ц=0!!!)
                        , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                   THEN tmpMI.OperCount_calc
+                               AND tmpMI.Price = 0
+                                   THEN 0
+                              ELSE tmpMI.OperCount_Master
+                         END AS OperCount_Master
+                         -- кол-во Child (!!!без тары с ц=0!!!)
+                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               AND tmpMI.Price = 0
+                                   THEN 0
+                              ELSE tmpMI.OperCount_Child
+                         END AS OperCount_Child
+                         -- кол-во Partner (!!!без тары с ц=0!!!)
+                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               AND tmpMI.Price = 0
+                                   THEN 0
+                              ELSE tmpMI.OperCount_Partner
+                         END AS OperCount_Partner
+                       , tmpMI.OperCount_Packer
+                         -- тара (если цена=0)
+                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               AND tmpMI.Price = 0
+                                   THEN CASE WHEN tmpMI.MovementDescId = zc_Movement_WeighingPartner()
+                                                  THEN tmpMI.OperCount_Master
+                                             ELSE tmpMI.OperCount_calc
+                                        END
                               ELSE 0
                          END AS OperCount_Tare
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                   THEN 0
-                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                               AND tmpMI.Price <> 0
+                         -- ШТ
+                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                    THEN tmpMI.OperCount_calc
                               ELSE 0
                          END AS OperCount_Sh
-                       , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                   THEN 0
-                              WHEN tmpMI.Price = 0
-                                   THEN 0
-                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                         -- ВЕС
+                       , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                    THEN tmpMI.OperCount_calc * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                              ELSE tmpMI.OperCount_calc
+                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                   THEN tmpMI.OperCount_calc
+                              ELSE 0
                          END AS OperCount_Kg
 
                         -- сумма ввода остатка
@@ -253,7 +269,8 @@ BEGIN
                       , tmpMI.OperSumm_SocialAdd
                       , tmpMI.OperSumm_Child
 
-                  FROM (SELECT MovementItem.DescId
+                  FROM (SELECT Movement.DescId AS MovementDescId
+                             , MovementItem.DescId
                              , MovementItem.ObjectId AS GoodsId
                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                              , CASE WHEN vbDiscountPercent <> 0
@@ -265,7 +282,7 @@ BEGIN
                              , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
                                -- !!!очень важное кол-во, для него расчет сумм!!!
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI())
+                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                          ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                     END) AS OperCount_calc
@@ -355,7 +372,8 @@ BEGIN
                                                         AND Movement.DescId = zc_Movement_PersonalService()
 
                         WHERE Movement.Id = inMovementId
-                        GROUP BY MovementItem.DescId
+                        GROUP BY Movement.DescId
+                               , MovementItem.DescId
                                , MovementItem.ObjectId
                                , MILinkObject_GoodsKind.ObjectId
                                , MIFloat_Price.ValueData
@@ -455,6 +473,6 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
  16.07.13                                        * add COALESCE (MIFloat_AmountPartner... and MIFloat_AmountPacker...
  07.07.13                                        *
 */
-
+-- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
 -- SELECT * FROM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= 162323)

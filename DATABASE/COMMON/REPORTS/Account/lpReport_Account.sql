@@ -66,11 +66,12 @@ BEGIN
                      OR EXISTS (SELECT AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountId = inAccountId AND View_Account.AccountCode > 80000 AND View_Account.AccountId <> zc_Enum_Account_100301()) -- > Кредитование AND <> Прибыль текущего периода
                     )
                    ) OR inIsMovement
+                OR (inProfitLossId <> 0 AND inBusinessId <> 0)-- 8371 - Мясо 
                   ;
 
     --
     RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
+    WITH tmpContainer AS  (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount, ContainerLO_Business.ObjectId AS BusinessId
                            FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
                                                                              AND Object_Account_View.AccountCode NOT IN (100101 -- Собственный капитал + Первоначальный капитал + Первоначальный капитал
                                                                                                                        , 100201 -- Собственный капитал + Дополнительный капитал + Дополнительный капитал
@@ -91,8 +92,13 @@ BEGIN
                                AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0
                                   ))
                                 ) AS tmpAccount -- счет
-                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
-                                              AND Container.DescId = zc_Container_Summ()
+                                INNER JOIN Container ON Container.ObjectId = tmpAccount.AccountId
+                                                    AND Container.DescId = zc_Container_Summ()
+                                LEFT JOIN ContainerLinkObject AS ContainerLO_Business
+                                                              ON ContainerLO_Business.ContainerId = Container.Id
+                                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                                             AND ContainerLO_Business.ObjectId > 0
+                           WHERE ContainerLO_Business.ObjectId = inBusinessId OR COALESCE (inBusinessId, 0) = 0
                          )
     SELECT -- 0 :: Integer AS InvNumber
            zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
@@ -160,7 +166,7 @@ BEGIN
 
    FROM      
        (SELECT ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
-             , ContainerLO_Business.ObjectId AS BusinessId
+             , tmpReport_All.BusinessId
              , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId) AS InfoMoneyId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
              , ContainerLO_Contract.ObjectId  AS ContractId
@@ -191,7 +197,8 @@ BEGIN
 
              , tmpReport_All.OperPrice
         FROM
-            (SELECT tmpContainer.ContainerId
+            (SELECT tmpContainer.BusinessId
+                  , tmpContainer.ContainerId
                   , tmpContainer.AccountId
                   , 0 AS ContainerId_inf
                   , 0 AS AccountId_inf
@@ -213,11 +220,12 @@ BEGIN
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
-             GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.Amount
+             GROUP BY tmpContainer.BusinessId, tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.Amount
              HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                  OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
             UNION ALL
-             SELECT tmpMIReport.ContainerId
+             SELECT tmpMIReport.BusinessId
+                  , tmpMIReport.ContainerId
                   , tmpMIReport.AccountId
                   , tmpMIReport.ContainerId_inf
                   , tmpMIReport.AccountId_inf
@@ -240,7 +248,8 @@ BEGIN
 
                   , tmpMIReport.OperPrice
 
-               FROM (SELECT tmpContainer.ContainerId
+               FROM (SELECT tmpContainer.BusinessId
+                          , tmpContainer.ContainerId
                           , tmpContainer.AccountId
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
                                       THEN MIReport.PassiveContainerId
@@ -308,8 +317,9 @@ BEGIN
                                                            ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
 
-                      WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
-                     GROUP BY tmpContainer.ContainerId
+                     WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
+                     GROUP BY tmpContainer.BusinessId
+                            , tmpContainer.ContainerId
                             , tmpContainer.AccountId
                             , ReportContainerLink.AccountKindId
                             , MIReport.PassiveContainerId
@@ -331,7 +341,8 @@ BEGIN
                             , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN MIReport.Amount / ABS (MIContainer_Count.Amount) ELSE 0 END
 
                      ) AS tmpMIReport
-             GROUP BY tmpMIReport.ContainerId
+             GROUP BY tmpMIReport.BusinessId
+                    , tmpMIReport.ContainerId
                     , tmpMIReport.AccountId
                     , tmpMIReport.ContainerId_inf
                     , tmpMIReport.AccountId_inf
@@ -351,9 +362,6 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = tmpReport_All.ContainerId
                                                                        AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
                                                                        AND ContainerLO_JuridicalBasis.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Business ON ContainerLO_Business.ContainerId = tmpReport_All.ContainerId
-                                                                AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
-                                                                AND ContainerLO_Business.ObjectId > 0
 
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -414,7 +422,7 @@ BEGIN
                                                                   AND ContainerLO_Goods_inf.DescId = zc_ContainerLinkObject_Goods()
                                                                   AND ContainerLO_Goods_inf.ObjectId > 0
         GROUP BY ContainerLO_JuridicalBasis.ObjectId
-               , ContainerLO_Business.ObjectId
+               , tmpReport_All.BusinessId
                , COALESCE (ContainerLO_InfoMoney.ObjectId, ContainerLO_InfoMoney_inf.ObjectId)
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId

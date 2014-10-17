@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Movement_WeighingPartner_Sybase()
+-- Function: gpInsertUpdate_Movement_WeighingPartner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, Integer, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner_Sybase(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Документ родитель
     IN inOperDate            TDateTime , -- Дата документа
@@ -104,4 +104,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_WeighingPartner_Sybase (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', , inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_WeighingPartner (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', , inSession:= '2')

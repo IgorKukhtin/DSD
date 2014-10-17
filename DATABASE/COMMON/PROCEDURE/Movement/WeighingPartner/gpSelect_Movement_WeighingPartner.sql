@@ -11,6 +11,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescName TVarChar, InvNumberOrder TVarChar, PartionGoods TVarChar
+             , PriceWithVAT Boolean
+             , VATPercent TFloat, ChangePercent TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , WeighingNumber TFloat, InvNumberTransport TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -49,6 +53,17 @@ BEGIN
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
              , MovementString_PartionGoods.ValueData      AS PartionGoods
+
+             , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+             , MovementFloat_VATPercent.ValueData             AS VATPercent
+             , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+             , MovementFloat_TotalCount.ValueData             AS TotalCount
+             , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+             , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+             , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+             , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
+             , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+             , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
              , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
@@ -97,6 +112,36 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId =  Movement.Id
                                     AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
+                                    ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

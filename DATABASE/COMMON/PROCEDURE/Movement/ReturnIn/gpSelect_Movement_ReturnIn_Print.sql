@@ -281,7 +281,7 @@ BEGIN
 
 
        WHERE Movement.Id =  inMovementId
---         AND Movement.StatusId = zc_Enum_Status_Complete()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
 

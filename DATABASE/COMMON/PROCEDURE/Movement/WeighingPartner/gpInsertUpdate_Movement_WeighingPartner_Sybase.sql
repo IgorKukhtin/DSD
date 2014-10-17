@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_WeighingPartner_Sybase()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner_Sybase (Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner_Sybase(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -9,6 +9,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner_Sybase(
 
     IN inStartWeighing       TDateTime , -- Протокол начало взвешивания
     IN inEndWeighing         TDateTime , -- Протокол окончание взвешивания
+
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
 
     IN inMovementDescId      TFloat    , -- Вид документа
     IN inInvNumberTransport  TFloat    , -- Номер путевого листа
@@ -34,8 +38,7 @@ $BODY$
    DECLARE vbInvNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
 
      -- определяем ключ доступа
      -- vbAccessKeyId:= ...;
@@ -69,6 +72,13 @@ BEGIN
      -- сохранили свойство <Протокол окончание взвешивания>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), ioId, inEndWeighing);
      
+     -- сохранили свойство <Цена с НДС (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+     -- сохранили свойство <% НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+     -- сохранили свойство <(-)% Скидки (+)% Наценки >
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+
      -- сохранили свойство <Вид документа>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), ioId, inMovementDescId);
      -- сохранили свойство <Номер путевого листа>

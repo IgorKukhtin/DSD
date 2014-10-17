@@ -1,6 +1,5 @@
 ﻿-- Function: gpSelect_Object_Measure()
 
---DROP FUNCTION gpSelect_Object_Measure();
 DROP FUNCTION IF EXISTS gpSelect_Object_Measure (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Measure(
