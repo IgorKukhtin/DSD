@@ -752,8 +752,8 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 552
+    Left = 344
+    Top = 496
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
