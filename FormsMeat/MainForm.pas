@@ -419,6 +419,8 @@ type
     bbPeriodClose_User: TdxBarButton;
     actBox: TdsdOpenForm;
     bbBox: TdxBarButton;
+    actCorrAccount: TdsdOpenForm;
+    bbCorrAccount: TdxBarButton;
   public
     { Public declarations }
   end;
