@@ -386,7 +386,7 @@
       item
         Name = 'BeneficiarysBankName'
         Value = Null
-        Component = dsdBankGuides
+        Component = dsdBeneficiarysBankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
