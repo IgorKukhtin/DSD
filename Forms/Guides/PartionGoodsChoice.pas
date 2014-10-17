@@ -34,6 +34,7 @@ type
     bbShowAll: TdxBarButton;
     colUnitName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    colAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

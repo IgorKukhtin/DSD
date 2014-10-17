@@ -2,8 +2,8 @@ inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 985
-  ExplicitWidth = 1001
-  ExplicitHeight = 703
+  ExplicitWidth = 993
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -19,6 +19,8 @@ inherited LossForm: TLossForm
       inherited cxGrid: TcxGrid
         Width = 985
         Height = 558
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 985
         ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -187,6 +189,7 @@ inherited LossForm: TLossForm
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -195,6 +198,7 @@ inherited LossForm: TLossForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -203,6 +207,7 @@ inherited LossForm: TLossForm
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -210,9 +215,56 @@ inherited LossForm: TLossForm
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 155
+          end
+          object colPartionGoodsName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
+            DataBinding.FieldName = 'PartionGoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 96
+          end
+          object colPartionGoodsOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'PartionGoodsOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colStorageName_Partion: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
+            DataBinding.FieldName = 'StorageName_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
         end
       end
@@ -246,6 +298,7 @@ inherited LossForm: TLossForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 166
+      ExplicitHeight = 22
       Width = 166
     end
     object cxLabel3: TcxLabel
@@ -392,6 +445,61 @@ inherited LossForm: TLossForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPartionGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartionGoodsForm'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'Price'
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'OperDatePartion'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -986,9 +1094,10 @@ inherited LossForm: TLossForm
         ParamType = ptInput
       end
       item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'inPartionGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
       end
       item
         Value = Null

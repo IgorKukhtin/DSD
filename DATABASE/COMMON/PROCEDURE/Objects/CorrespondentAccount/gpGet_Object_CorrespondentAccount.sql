@@ -1,20 +1,36 @@
--- Function: gpSelect_Object_CorrespondentAccount(TVarChar)
+-- Function: gpGet_Object_Account(Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_CorrespondentAccount(TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_CorrespondentAccount(Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_CorrespondentAccount(
+CREATE OR REPLACE FUNCTION gpGet_Object_CorrespondentAccount(
+    IN inId          Integer,       -- ключ объекта <Счета>
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                BankAccountId Integer, BankAccountName TVarChar,
                BankId Integer, BankName TVarChar
                ) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-     RETURN QUERY
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY
+       SELECT
+             CAST (0 as Integer)   AS Id
+           , lfGet_ObjectCode(0, zc_Object_CorrespondentAccount()) AS Code
+           , CAST ('' as TVarChar) AS Name
+           , CAST (NULL AS Boolean)AS isErased
+           , CAST (0 as Integer)   AS BankAccountId
+           , CAST ('' as TVarChar) AS BankAccountName
+           , CAST (0 as Integer)   AS BankId
+           , CAST ('' as TVarChar) AS BankName;
+
+   ELSE
+       RETURN QUERY
        SELECT
              Object_CorrespondentAccount.Id                     AS Id
            , Object_CorrespondentAccount.ObjectCode             AS Code
@@ -34,21 +50,21 @@ $BODY$BEGIN
                             AND OL_CorrespondentAccount_Bank.DescId = zc_ObjectLink_CorrespondentAccount_Bank()
         LEFT JOIN Object AS CorrespondentAccount_BankAccount ON CorrespondentAccount_BankAccount.Id = OL_CorrespondentAccount_BankAccount.ChildObjectId
         LEFT JOIN Object AS CorrespondentAccount_Bank ON CorrespondentAccount_Bank.Id = OL_CorrespondentAccount_Bank.ChildObjectId
-       WHERE Object_CorrespondentAccount.DescId = zc_Object_CorrespondentAccount();
+       WHERE Object_CorrespondentAccount.Id = inId;
+  END IF;
 
-END;$BODY$
+END;
+$BODY$
 
-  LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_CorrespondentAccount (TVarChar) OWNER TO postgres;
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_CorrespondentAccount(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.10.14                                                       *
-
+ 15.10.14                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_CorrespondentAccount('2')
+-- SELECT * FROM gpGet_Object_CorrespondentAccount(1,'2')

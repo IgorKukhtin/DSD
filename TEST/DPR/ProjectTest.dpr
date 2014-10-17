@@ -403,7 +403,7 @@ uses
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   BankAccount_Object in '..\..\Forms\Guides\BankAccount_Object.pas' {BankAccount_ObjectForm: TParentForm},
-  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  CorrespondentAccountEdit in '..\..\Forms\Guides\CorrespondentAccountEdit.pas' {CorrespondentAccountEditForm: TParentForm},
   Partner1CLinkPlace in '..\..\Forms\LOAD1C\Partner1CLinkPlace.pas' {Partner1CLinkPlaceForm: TParentForm},
   TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
@@ -465,7 +465,7 @@ uses
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
-  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  CorrespondentAccountTest in '..\SOURCE\Objects\All\CorrespondentAccountTest.pas',
   Storage_Object in '..\..\Forms\Guides\Storage_Object.pas' {Storage_ObjectForm: TParentForm},
   Storage_ObjectEdit in '..\..\Forms\Guides\Storage_ObjectEdit.pas' {Storage_ObjectEditForm: TParentForm},
   CurrencyMovement in '..\..\Forms\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
@@ -545,11 +545,14 @@ uses
   FounderService in '..\..\Forms\Document\FounderService.pas' {FounderServiceForm: TParentForm},
   FounderServiceJournal in '..\..\Forms\Document\FounderServiceJournal.pas' {FounderServiceJournalForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
-  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  CorrespondentAccount in '..\..\Forms\Guides\CorrespondentAccount.pas' {CorrespondentAccountForm: TParentForm},
   ProfitLossDirection_Object in '..\..\Forms\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
-  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
+  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
+  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
