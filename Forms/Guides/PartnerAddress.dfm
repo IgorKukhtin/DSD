@@ -3,7 +3,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1076#1088#1077#1089' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 464
-  ClientWidth = 834
+  ClientWidth = 1058
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 834
+    Width = 1058
     Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,28 +49,28 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 35
+        Width = 31
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 134
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 134
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 115
+        Width = 101
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -79,35 +80,86 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 52
       end
-      object clStreetName: TcxGridDBColumn
-        Caption = #1059#1083#1080#1094#1072
-        DataBinding.FieldName = 'StreetName'
+      object colRegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 38
+      end
+      object colProvinceName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
+        DataBinding.FieldName = 'ProvinceName'
+        Width = 62
+      end
+      object colPostalCode: TcxGridDBColumn
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+        DataBinding.FieldName = 'PostalCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 57
+      end
+      object colCityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
+        DataBinding.FieldName = 'CityKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = StreetChoiceForm
+            Action = CityKindChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 48
+      end
+      object colCityName: TcxGridDBColumn
+        Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+        DataBinding.FieldName = 'CityName'
+        HeaderAlignmentVert = vaCenter
+        Width = 36
+      end
+      object colProvinceCityName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+        DataBinding.FieldName = 'ProvinceCityName'
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
+      object colStreetKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
+        DataBinding.FieldName = 'StreetKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StreetKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object clStreetName: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072
+        DataBinding.FieldName = 'StreetName'
+        HeaderAlignmentVert = vaCenter
+        Width = 57
       end
       object clHouseNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1084#1072
         DataBinding.FieldName = 'HouseNumber'
-        Width = 88
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clCaseNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1086#1088#1087#1091#1089#1072
         DataBinding.FieldName = 'CaseNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 59
       end
       object clRoomNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1074#1072#1088#1090#1080#1088#1099
         DataBinding.FieldName = 'RoomNumber'
-        Width = 85
+        HeaderAlignmentVert = vaCenter
+        Width = 46
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -118,6 +170,12 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object colShortName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentVert = vaCenter
+        Width = 42
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -130,8 +188,8 @@ object PartnerAddressForm: TPartnerAddressForm
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 279
-    Top = 76
+    Left = 143
+    Top = 36
     Properties.Buttons = <
       item
         Default = True
@@ -434,24 +492,49 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       isShowModal = True
     end
-    object StreetChoiceForm: TOpenChoiceForm
+    object StreetKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'StreetChoiceForm'
-      FormName = 'TStreetForm'
-      FormNameParam.Value = 'TStreetForm'
+      FormName = 'TStreetKindForm'
+      FormNameParam.Value = 'TStreetKindForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'StreetId'
+          ComponentItem = 'StreetKindId'
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'StreetName'
+          ComponentItem = 'StreetKindName'
           DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+    object CityKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'CityKindChoiceForm'
+      FormName = 'TCityKindForm'
+      FormNameParam.Value = 'TCityKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'CityKindId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'CityKindName'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
     end
@@ -522,6 +605,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 80
     Top = 216
   end
@@ -536,6 +620,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 424
     Top = 216
   end
@@ -596,6 +681,60 @@ object PartnerAddressForm: TPartnerAddressForm
         ParamType = ptInput
       end
       item
+        Name = 'inRegionName'
+        Component = MasterCDS
+        ComponentItem = 'RegionName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inProvinceName'
+        Component = MasterCDS
+        ComponentItem = 'ProvinceName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityName'
+        Component = MasterCDS
+        ComponentItem = 'CityName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityKindId'
+        Component = MasterCDS
+        ComponentItem = 'CityKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProvinceCityName'
+        Component = MasterCDS
+        ComponentItem = 'ProvinceCityName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPostalCode'
+        Component = MasterCDS
+        ComponentItem = 'PostalCode'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetName'
+        Component = MasterCDS
+        ComponentItem = 'StreetName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetKindId'
+        Component = MasterCDS
+        ComponentItem = 'StreetKindId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inHouseNumber'
         Component = MasterCDS
         ComponentItem = 'HouseNumber'
@@ -617,11 +756,13 @@ object PartnerAddressForm: TPartnerAddressForm
         ParamType = ptInput
       end
       item
-        Name = 'inStreetId'
+        Name = 'inShortName'
         Component = MasterCDS
-        ComponentItem = 'StreetId'
+        ComponentItem = 'ShortName'
+        DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 88
     Top = 344
   end
