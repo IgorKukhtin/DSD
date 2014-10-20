@@ -220,34 +220,40 @@ BEGIN
            , OH_JuridicalDetails_From.Phone             AS Phone_From
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
-           , Object_BankAccount.Name                    AS BankAccount_ByContract
-           , Object_BankAccount.BankName                AS BankName_ByContract
-           , Object_BankAccount.MFO                     AS BankMFO_ByContract
-           , Object_BankAccount.SWIFT                   AS BankSWIFT_ByContract
-           , Object_BankAccount.IBAN                    AS BankIBAN_ByContract
-           , Object_BankAccount.CorrespondentBankName   AS CorrBankName_ByContract
-           , Object_Bank_View_CorrespondentBank.SWIFT   AS CorrBankSWIFT_ByContract
-           , Object_BankAccount.CorrespondentAccount    AS CorrespondentAccount_ByContract
-
-
-           , OHS_JD_JuridicalAddress_Bank_From.ValueData      AS JuridicalAddressBankFrom
-           , OHS_JD_JuridicalAddress_CorrBank_From.ValueData  AS JuridicalAddressCorrBankFrom
+           , Object_BankAccount.Name                            AS BankAccount_ByContract
+           , Object_BankAccount.BankName                        AS BankName_ByContract
+           , Object_BankAccount.MFO                             AS BankMFO_ByContract
+           , Object_BankAccount.SWIFT                           AS BankSWIFT_ByContract
+           , Object_BankAccount.IBAN                            AS BankIBAN_ByContract
+           , Object_BankAccount.CorrespondentBankName           AS CorrBankName_ByContract
+           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorrBankSWIFT_ByContract
+           , Object_BankAccount.CorrespondentAccount            AS CorrespondentAccount_ByContract
+           , OHS_JD_JuridicalAddress_Bank_From.ValueData        AS JuridicalAddressBankFrom
+           , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
 
 
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0)         AS EDIId
 
+           , BankAccount_To.BankName                            AS BankName_Int
+           , BankAccount_To.Name                                AS BankAccount_Int
 
+           , BankAccount_To.CorrespondentBankName               AS CorBankName_Int
+           , Object_Bank_View_CorrespondentBank.JuridicalName   AS CorBankJuridicalName_Int
+           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorBankSWIFT_Int
 
-           , BankAccount_To.Name                    AS BankAccount_Int
-           , BankAccount_To.BankName                AS BankName_Int
-           , BankAccount_To.MFO                     AS BankMFO_Int
-           , BankAccount_To.SWIFT                   AS BankSWIFT_Int
-           , BankAccount_To.IBAN                    AS BankIBAN_Int
-           , BankAccount_To.JuridicalName           AS JuridicalName_Int
-           , BankAccount_To.BeneficiarysBankName    AS BeneficiarysBankName_Int
+           , BankAccount_To.BeneficiarysBankName                AS BenefBankName_Int
+           , OHS_JD_JuridicalAddress_BenifBank_To.ValueData     AS JuridicalAddressBenifBank_Int
+           , Object_Bank_View_BenifBank.SWIFT                   AS BenifBankSWIFT_Int
+           , BankAccount_To.BeneficiarysBankAccount             AS BenefBankAccount_Int
 
+           , BankAccount_To.MFO                                 AS BankMFO_Int
+           , BankAccount_To.SWIFT                               AS BankSWIFT_Int
+           , BankAccount_To.IBAN                                AS BankIBAN_Int
 
-
+           , Object_Bank_View_To.JuridicalName                  AS BankJuridicalName_Int
+           , OHS_JD_JuridicalAddress_To.ValueData               AS BankJuridicalAddress_Int
+           , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
+           , BankAccount_To.Name                                AS BankAccount_Int
 
 
 
@@ -371,19 +377,22 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
                                                                 ON OH_JuridicalDetails_Bank_From.JuridicalId = Object_BankAccount.BankJuridicalId
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_Bank_From.StartDate AND OH_JuridicalDetails_Bank_From.EndDate
+
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
                                           ON OHS_JD_JuridicalAddress_Bank_From.ObjectHistoryId = OH_JuridicalDetails_Bank_From.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
-                                         --+
-            LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = Object_BankAccount.CorrespondentBankId
+
+            LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank_From ON Object_Bank_View_CorrespondentBank_From.Id = Object_BankAccount.CorrespondentBankId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_CorrBank_From
-                                                                ON OH_JuridicalDetails_CorrBank_From.JuridicalId = Object_Bank_View_CorrespondentBank.JuridicalId
+                                                                ON OH_JuridicalDetails_CorrBank_From.JuridicalId = Object_Bank_View_CorrespondentBank_From.JuridicalId
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_CorrBank_From.StartDate AND OH_JuridicalDetails_CorrBank_From.EndDate
 
             LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_CorrBank_From
                                           ON OHS_JD_JuridicalAddress_CorrBank_From.ObjectHistoryId = OH_JuridicalDetails_CorrBank_From.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_CorrBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
+-- +++++++++++++++++ BANK TO
             LEFT JOIN
                       (SELECT *
                        FROM Object_BankAccount_View
@@ -398,23 +407,26 @@ BEGIN
                       WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId LIMIT 1
                       ) AS BankAccount_To ON 1=1
 
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_To ON Object_Bank_View_To.Id = BankAccount_To.BankId
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_BenifBank_To
+                                                                ON OH_JuridicalDetails_BenifBank_To.JuridicalId = Object_Bank_View_BenifBank.JuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_BenifBank_To.StartDate AND OH_JuridicalDetails_BenifBank_To.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_BenifBank_To
+                                          ON OHS_JD_JuridicalAddress_BenifBank_To.ObjectHistoryId = OH_JuridicalDetails_BenifBank_To.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_BenifBank_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetailsBank_To
+                                                                ON OH_JuridicalDetailsBank_To.JuridicalId = Object_Bank_View_To.JuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetailsBank_To.StartDate AND OH_JuridicalDetailsBank_To.EndDate
 
-
-
-
-/*
-            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
-                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
-                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
-
-            LEFT JOIN ObjectString AS ObjectString_Bank_MFO
-                                   ON ObjectString_Bank_MFO.ObjectId = Object_Bank.Id
-                                  AND ObjectString_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
-*/
-
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_To
+                                          ON OHS_JD_JuridicalAddress_To.ObjectHistoryId = OH_JuridicalDetailsBank_To.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 --
        WHERE Movement.Id =  inMovementId
