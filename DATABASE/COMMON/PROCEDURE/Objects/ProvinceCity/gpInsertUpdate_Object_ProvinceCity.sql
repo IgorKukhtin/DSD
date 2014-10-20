@@ -26,7 +26,25 @@ BEGIN
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProvinceCity());
 
    -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ProvinceCity(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ProvinceCity(), inName);
+
+  -- проверка уникальность <Наименование> для !!!одного!! населенного пункта
+   IF TRIM (inName) <> '' AND COALESCE (inCityId, 0) <> 0 
+   THEN
+       IF EXISTS (SELECT Object.Id
+                  FROM Object
+                       JOIN ObjectLink AS ObjectLink_ProvinceCity_City
+                                       ON ObjectLink_ProvinceCity_City.ObjectId = Object.Id
+                                      AND ObjectLink_ProvinceCity_City.DescId = zc_ObjectLink_ProvinceCity_City()
+                                      AND ObjectLink_ProvinceCity_City.ChildObjectId = inCityId
+                                   
+                  WHERE TRIM (Object.ValueData) = TRIM (inName)
+                   AND Object.Id <> COALESCE (ioId, 0))
+       THEN
+           RAISE EXCEPTION 'Ошибка. Район <%> уже установлен у <%>.', TRIM (inName), lfGet_Object_ValueData (inCityId);
+       END IF;
+   END IF;
+
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ProvinceCity(), vbCode_calc);
 

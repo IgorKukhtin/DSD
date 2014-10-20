@@ -3,7 +3,7 @@ object ProvinceForm: TProvinceForm
   Top = 0
   Caption = #1056#1072#1081#1086#1085
   ClientHeight = 332
-  ClientWidth = 440
+  ClientWidth = 633
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,14 @@ object ProvinceForm: TProvinceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 440
+    Width = 633
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 440
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,13 +54,19 @@ object ProvinceForm: TProvinceForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 100
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 272
+        Width = 270
+      end
+      object colRegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 176
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -67,7 +74,7 @@ object ProvinceForm: TProvinceForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 71
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -342,6 +349,7 @@ object ProvinceForm: TProvinceForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end
@@ -360,6 +368,7 @@ object ProvinceForm: TProvinceForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 360
     Top = 184
   end
