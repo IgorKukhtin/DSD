@@ -367,18 +367,6 @@
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\CashOperationTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\ZakazExternalJournal.pas">
-				<Form>ZakazExternalJournalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ZakazExternal.pas">
-				<Form>ZakazExternalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ZakazInternalJournal.pas">
-				<Form>ZakazInternalJournalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ZakazInternal.pas">
-				<Form>ZakazInternalForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankStatementTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankAccountMovementTest.pas"/>
@@ -621,8 +609,8 @@
 				<Form>AncestorDocumentMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
-				<Form>CashJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\CashJournalUser.pas">
+				<Form>CashJournalUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas">
@@ -681,8 +669,8 @@
 				<Form>BankStatementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
-				<Form>ContractChoicePartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartnerOrder.pas">
+				<Form>ContractChoicePartnerOrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractConditionByContract.pas">
@@ -1639,6 +1627,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
+				<Form>ContractChoicePartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
+				<Form>CashJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

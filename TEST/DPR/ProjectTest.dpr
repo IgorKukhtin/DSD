@@ -146,10 +146,6 @@ uses
   ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
   ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
   CashOperationTest in '..\SOURCE\Movement\All\CashOperationTest.pas',
-  ZakazExternalJournal in '..\..\Forms\Document\ZakazExternalJournal.pas' {ZakazExternalJournalForm},
-  ZakazExternal in '..\..\Forms\Document\ZakazExternal.pas' {ZakazExternalForm},
-  ZakazInternalJournal in '..\..\Forms\Document\ZakazInternalJournal.pas' {ZakazInternalJournalForm},
-  ZakazInternal in '..\..\Forms\Document\ZakazInternal.pas' {ZakazInternalForm},
   CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
   BankStatementTest in '..\SOURCE\Movement\All\BankStatementTest.pas',
   BankAccountMovementTest in '..\SOURCE\Movement\All\BankAccountMovementTest.pas',
@@ -242,7 +238,7 @@ uses
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
-  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
+  CashJournalUser in '..\..\Forms\Document\CashJournalUser.pas' {CashJournalUserForm: TParentForm},
   Report_GoodsMI_OrderExternal_Sale in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas' {Report_GoodsMI_OrderExternal_SaleForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
@@ -258,7 +254,7 @@ uses
   ContractTag in '..\..\Forms\Guides\ContractTag.pas' {ContractTagForm: TParentForm},
   ContractTagEdit in '..\..\Forms\Guides\ContractTagEdit.pas' {ContractTagEditForm: TParentForm},
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
-  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  ContractChoicePartnerOrder in '..\..\Forms\Guides\ContractChoicePartnerOrder.pas' {ContractChoicePartnerOrderForm: TParentForm},
   ContractConditionByContract in '..\..\Forms\Guides\ContractConditionByContract.pas' {ContractConditionByContractForm: TParentForm},
   MoneyPlaceCash_Object in '..\..\Forms\Guides\MoneyPlaceCash_Object.pas' {MoneyPlaceCash_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
@@ -552,7 +548,9 @@ uses
   PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
-  BankTest in '..\SOURCE\Objects\All\BankTest.pas';
+  BankTest in '..\SOURCE\Objects\All\BankTest.pas',
+  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

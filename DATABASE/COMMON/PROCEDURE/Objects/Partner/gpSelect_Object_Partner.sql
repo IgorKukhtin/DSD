@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
-               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, 
+               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, GLNCode_Juridical TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
                PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
@@ -63,6 +63,7 @@ BEGIN
          , Object_Juridical.ObjectCode     AS JuridicalCode
          , Object_Juridical.ValueData      AS JuridicalName
          , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+         , ObjectString_GLNCode_Juridical.ValueData     AS GLNCode_Juridical
          
          , Object_Route.Id           AS RouteId
          , Object_Route.ObjectCode   AS RouteCode
@@ -139,10 +140,14 @@ BEGIN
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
          
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
-                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-        LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_GLNCode_Juridical
+                               ON ObjectString_GLNCode_Juridical.ObjectId = Object_Juridical.Id 
+                              AND ObjectString_GLNCode_Juridical.DescId = zc_ObjectString_Juridical_GLNCode()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
@@ -185,6 +190,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.14                                        * add GLNCode_Juridical
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  16.08.14                                        * add JuridicalGroupName
  01.06.14         * add ShortName,
@@ -203,4 +209,4 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_Partner ('2')
+-- SELECT * FROM gpSelect_Object_Partner (zfCalc_UserAdmin())

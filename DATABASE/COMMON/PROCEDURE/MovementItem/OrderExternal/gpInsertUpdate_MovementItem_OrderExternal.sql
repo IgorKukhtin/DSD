@@ -17,50 +17,23 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderExternal());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Количество дозаказ>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-
-     -- сохранили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
-
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice AS NUMERIC (16, 2))
-                      END;
-
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-     END IF;
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
-
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     -- сохранили
+     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+            INTO ioId, ioCountForPrice, outAmountSumm
+     FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
+                                                   , inMovementId         := inMovementId
+                                                   , inGoodsId            := inGoodsId
+                                                   , inAmount             := inAmount
+                                                   , inAmountSecond      := inAmountSecond
+                                                   , inGoodsKindId        := inGoodsKindId
+                                                   , inPrice              := inPrice
+                                                   , ioCountForPrice      := ioCountForPrice
+                                                   , inUserId             := vbUserId
+                                                    ) AS tmp;
 
 END;
 $BODY$
@@ -69,9 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 25.08.14                                        * add сохранили протокол
- 18.08.14                                                        *
- 06.06.14                                                        *
+ 19.10.14                                        *
 */
 
 -- тест

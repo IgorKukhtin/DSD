@@ -1,4 +1,4 @@
--- Function: gpUpdate_Movement_EDIComdoc_Params()
+-- Function: gpUpdate_Movement_EDIComdoc_Params() - Установить связь с документом (!!!cуществующий!!!)
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_EDIComdoc_Params (Integer, TVarChar);
 
@@ -50,33 +50,38 @@ BEGIN
          -- так для продажи
          IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Sale())
          THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale());
+             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale());
          END IF;
          -- так для налоговой
          IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Tax())
          THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
+             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
          END IF;
      ELSE
-         -- так для возврата
-         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_MasterEDI())
-         THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ReturnIn());
-         END IF;
-         -- так для корректировки
-         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_ChildEDI())
-         THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с документом <%> не установлена', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+         IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
+         THEN
+             -- так для возврата
+             IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_MasterEDI())
+             THEN 
+                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ReturnIn());
+             END IF;
+             -- так для корректировки
+             IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_ChildEDI())
+             THEN 
+                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+             END IF;
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Нельзя обработать документ <%>.', COALESCE ((SELECT MovementDesc.ItemName FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc()), '');
          END IF;
      END IF;
 
 
-     -- сохранили элементы
+     -- сохранили элементы !!!на самом деле только обновили GoodsId and GoodsKindId!!!
      PERFORM lpInsertUpdate_MovementItem (ioId         := MovementItem.Id
                                         , inDescId     := MovementItem.DescId
                                         , inObjectId   := tmpGoodsPropertyValue.GoodsId
                                         , inMovementId := MovementItem.MovementId
-                                        , inAmount     := MovementItem.Amount
+                                        , inAmount     := MovementItem.Amount -- !!!Количество по заявке не должно измениться!!!
                                         , inParentId   := MovementItem.ParentId
                                          )
            , lpInsertUpdate_MovementItemLinkObject (inDescId         := zc_MILinkObject_GoodsKind()

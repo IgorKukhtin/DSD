@@ -13,7 +13,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSumm TFloat
              , OKPO TVarChar, JuridicalName TVarChar
              , GLNCode TVarChar,  GLNPlaceCode TVarChar
-             , JuridicalNameFind TVarChar, PartnerNameFind TVarChar
+             , JuridicalId_Find Integer, JuridicalNameFind TVarChar, PartnerNameFind TVarChar
+
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , UnitId Integer, UnitName TVarChar
 
              , MovementId_Sale Integer
              , OperDatePartner_Sale TDateTime, InvNumber_Sale TVarChar
@@ -62,8 +65,17 @@ BEGIN
 
            , MovementString_GLNCode.ValueData       AS GLNCode
            , MovementString_GLNPlaceCode.ValueData  AS GLNPlaceCode
+           , Object_Juridical.Id                    AS JuridicalId_Find
            , Object_Juridical.ValueData             AS JuridicalNameFind
            , Object_Partner.ValueData               AS PartnerNameFind
+
+           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.ContractCode           AS ContractCode
+           , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
+
+           , Object_Unit.Id            AS UnitId
+           , Object_Unit.ValueData     AS UnitName
 
            , COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId) :: Integer AS MovementId_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
@@ -156,10 +168,15 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
@@ -238,6 +255,7 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.14                                        * add Contract... AND Unit...
  09.10.14                                        * rem --***
  20.07.14                                        * ALL
  15.05.14                         *

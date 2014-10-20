@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, EDI,
   cxSplitter, ChoicePeriod, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit, cxButtonEdit;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
@@ -35,8 +35,8 @@ type
     cxChildGridDBTableView: TcxGridDBTableView;
     clGoodsName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
-    colAmountOrder: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
+    clAmountOrder: TcxGridDBColumn;
+    clAmountPartner: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     clPrice: TcxGridDBColumn;
     clGoodsKind: TcxGridDBColumn;
@@ -141,6 +141,14 @@ type
     EDI5: TMenuItem;
     mactSendReturn: TMultiAction;
     mactSendReturnAndRefresh1: TMenuItem;
+    clUnitName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actChoiceContract: TOpenChoiceForm;
+    actChoiceUnit: TOpenChoiceForm;
+    clAmountOrderEDI: TcxGridDBColumn;
+    clAmountNoticeEDI: TcxGridDBColumn;
+    clAmountNotice: TcxGridDBColumn;
   private
     { Private declarations }
   public

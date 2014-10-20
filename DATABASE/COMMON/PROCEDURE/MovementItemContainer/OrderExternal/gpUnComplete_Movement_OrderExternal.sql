@@ -17,6 +17,11 @@ BEGIN
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
 
+     -- !!!обнуляются свойства в элементах документа!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), MovementItem.Id, 0)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId;
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

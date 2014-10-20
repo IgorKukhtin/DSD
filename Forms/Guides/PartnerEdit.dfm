@@ -674,9 +674,9 @@
   object dsdPersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalTake
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

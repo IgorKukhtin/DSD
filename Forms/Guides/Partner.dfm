@@ -3,7 +3,7 @@ object PartnerForm: TPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 464
-  ClientWidth = 883
+  ClientWidth = 985
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 883
+    Width = 985
     Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 883
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,7 +43,7 @@ object PartnerForm: TPartnerForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceCode: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
@@ -50,14 +51,14 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 35
       end
-      object ceName: TcxGridDBColumn
+      object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
       end
-      object ceAddress: TcxGridDBColumn
+      object clAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
@@ -69,9 +70,10 @@ object PartnerForm: TPartnerForm
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
-      object ceJuridicalName: TcxGridDBColumn
+      object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
@@ -127,7 +129,7 @@ object PartnerForm: TPartnerForm
         Visible = False
         Width = 88
       end
-      object ceisErased: TcxGridDBColumn
+      object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
@@ -136,6 +138,43 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object colRouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colRouteSortingName: TcxGridDBColumn
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteSortingName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object colPersonalTakeName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+        DataBinding.FieldName = 'PersonalTakeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object clGLNCode_Juridical: TcxGridDBColumn
+        Caption = #1050#1086#1076' GLN ('#1102#1088'.'#1083'.)'
+        DataBinding.FieldName = 'GLNCode_Juridical'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object clGLNCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' GLN'
+        DataBinding.FieldName = 'GLNCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -386,6 +425,7 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -437,11 +477,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -458,11 +500,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
@@ -475,23 +519,27 @@ object PartnerForm: TPartnerForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -536,6 +584,7 @@ object PartnerForm: TPartnerForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 80
     Top = 216
   end
@@ -546,10 +595,12 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 424
     Top = 216
   end
@@ -592,18 +643,21 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inAddress'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Address'
         DataType = ftString
@@ -617,6 +671,7 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inPrepareDayCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PrepareDayCount'
         DataType = ftFloat
@@ -624,6 +679,7 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inDocumentDayCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentDayCount'
         DataType = ftFloat
@@ -631,42 +687,49 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTakeId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalTakeId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
@@ -674,11 +737,13 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inEndPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 88
     Top = 344
   end

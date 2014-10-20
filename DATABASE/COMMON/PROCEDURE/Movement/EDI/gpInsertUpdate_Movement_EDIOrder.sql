@@ -5,7 +5,6 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, T
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
-
     IN inGLN                 TVarChar   , -- 
     IN inGLNPlace            TVarChar   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -13,28 +12,39 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
 RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров) 
 AS
 $BODY$
-   DECLARE vbMovementId INTEGER;
+   DECLARE vbMovementId Integer;
    DECLARE vbUserId Integer;
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbPartnerId Integer;
    DECLARE vbJuridicalId Integer;
+   DECLARE vbDescCode TVarChar;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
      vbUserId := inSession;
 
-     vbMovementId := null;
+     vbMovementId := NULL;
 
      SELECT Id INTO vbMovementId 
        FROM Movement WHERE DescId = zc_Movement_EDI() 
         AND OperDate = inOrderOperDate 
         AND InvNumber = inOrderInvNumber;
 
+     -- определяется параметр
+     vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
+     IF vbDescCode IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка в параметре.<%>', inDesc;
+     END IF;
+
+
      -- сохранили <Документ>
      IF COALESCE(vbMovementId, 0) = 0 THEN
         vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), inOrderInvNumber, inOrderOperDate, NULL);
      END IF;
+
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Desc(), vbMovementId, vbDescCode);
 
      IF inGLN <> '' THEN 
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), vbMovementId, inGLN);

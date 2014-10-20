@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpLoadSaleFrom1C()
 
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, TVarChar);
 
@@ -43,20 +43,11 @@ BEGIN
      -- таблица - <Проводки>
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     -- !!!tmp!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer) ON COMMIT DROP;
+     -- !!!tmp!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer) ON COMMIT DROP;
 
-     -- !!!продажи!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-
-     -- !!!продажи!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
-                               , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer
-                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_From Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
-                               , PartionGoodsId Integer
-                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
                   
 
      -- !!!Продажи + Списание!!!
@@ -260,7 +251,7 @@ BEGIN
                PERFORM lpInsertUpdate_MovementItem_Loss (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inCount := 0
                                                        , inHeadCount := 0
-                                                       , inPartionGoodsDate:= NULL, inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
+                                                       , inPartionGoodsDate:= NULL, inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inPartionGoodsId:= 0, inUserId := vbUserId);
                END IF;
                END IF;
 
@@ -270,6 +261,21 @@ BEGIN
 
           IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
           THEN
+              -- !!!удаление!!!
+              DROP TABLE _tmpItemSumm;
+              DROP TABLE _tmpItem;
+              -- !!!продажи!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+              -- !!!продажи!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
+                               , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer
+                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId_From Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
+                               , PartionGoodsId Integer
+                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
                -- Провели существующий документ - Sale
                PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
                                                , inUserId         := vbUserId
@@ -277,6 +283,19 @@ BEGIN
           ELSE
           IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
           THEN
+              -- !!!удаление!!!
+              DROP TABLE _tmpItemSumm;
+              DROP TABLE _tmpItem;
+              -- !!!Loss!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
+              -- !!!Loss!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsId_Item Integer
+                               , OperCount TFloat
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
+                               , PartionGoodsId Integer) ON COMMIT DROP;
                -- Провели существующий документ - Loss
                PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
                                                , inUserId         := vbUserId);
@@ -482,4 +501,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpLoadSaleFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
+-- SELECT * FROM gpLoadSaleFrom1C ('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
