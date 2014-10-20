@@ -229,6 +229,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 

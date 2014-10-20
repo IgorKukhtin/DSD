@@ -609,8 +609,8 @@
 				<Form>AncestorDocumentMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
-				<Form>CashJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\CashJournalUser.pas">
+				<Form>CashJournalUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas">
@@ -1629,6 +1629,10 @@
 			<DCCReference Include="..\SOURCE\Objects\All\BankTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
 				<Form>ContractChoicePartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
+				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

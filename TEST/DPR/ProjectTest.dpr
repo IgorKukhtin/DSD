@@ -238,7 +238,7 @@ uses
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
-  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
+  CashJournalUser in '..\..\Forms\Document\CashJournalUser.pas' {CashJournalUserForm: TParentForm},
   Report_GoodsMI_OrderExternal_Sale in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_Sale.pas' {Report_GoodsMI_OrderExternal_SaleForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
@@ -549,7 +549,8 @@ uses
   BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
-  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm};
+  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
