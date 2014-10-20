@@ -12,12 +12,13 @@ $BODY$
   DECLARE vbOperCount_Master TFloat;
   DECLARE vbOperCount_Child TFloat;
   DECLARE vbOperCount_Partner TFloat;
+  DECLARE vbOperCount_Packer TFloat;
+  DECLARE vbOperCount_Second TFloat;
   DECLARE vbOperCount_Tare TFloat;
   DECLARE vbOperCount_Sh   TFloat;
   DECLARE vbOperCount_Kg   TFloat;
   DECLARE vbOperSumm_Partner TFloat;
   DECLARE vbOperSumm_Packer TFloat;
-  DECLARE vbOperCount_Packer TFloat;
   DECLARE vbOperSumm_MVAT TFloat;
   DECLARE vbOperSumm_PVAT TFloat;
   DECLARE vbOperSumm_Inventory TFloat;
@@ -76,6 +77,8 @@ BEGIN
           , OperCount_Child
             -- Количество по Контрагенту
           , OperCount_Partner
+            -- Количество дозаказ
+          , OperCount_Second
             -- Количество тары !!!по Контрагенту!!!
           , OperCount_Tare
             -- Количество шт !!!по Контрагенту!!!
@@ -163,7 +166,7 @@ BEGIN
           , OperSumm_SocialAdd
           , OperSumm_Child
 
-            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
+            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
      FROM 
@@ -171,6 +174,7 @@ BEGIN
                 , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
                 , SUM (tmpMI.OperCount_Partner) AS OperCount_Partner
                 , SUM (tmpMI.OperCount_Packer)  AS OperCount_Packer
+                , SUM (tmpMI.OperCount_Second)  AS OperCount_Second
 
                 , SUM (tmpMI.OperCount_Tare)     AS OperCount_Tare
                 , SUM (tmpMI.OperCount_Sh)       AS OperCount_Sh
@@ -233,6 +237,7 @@ BEGIN
                               ELSE tmpMI.OperCount_Partner
                          END AS OperCount_Partner
                        , tmpMI.OperCount_Packer
+                       , tmpMI.OperCount_Second
                          -- тара (если цена=0)
                        , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                AND tmpMI.Price = 0
@@ -291,6 +296,7 @@ BEGIN
                              , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Child
                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
                              , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer
+                             , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))  AS OperCount_Second
 
                              , SUM (COALESCE (CASE WHEN Movement.DescId <> zc_Movement_EDI() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
 
@@ -459,7 +465,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 09.08.14                                        * add zc_Movement_PersonalService
+ 19.10.14                                        * add vbOperCount_Second
  09.08.14                                        * add zc_Movement_SendOnPrice
  19.07.14                                        * add zc_Movement_EDI
  22.05.14                                        * modify - очень важное кол-во, для него расчет сумм

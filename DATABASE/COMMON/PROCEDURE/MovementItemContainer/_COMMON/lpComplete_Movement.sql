@@ -26,6 +26,9 @@ BEGIN
   RETURNING OperDate INTO vbOperDate;
 
 
+  -- !!!временно если не НАЛ!!!
+  IF NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_SecondForm())
+  THEN
   -- определяется дата для <Закрытие периода>
   SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END
        , tmp.RoleId
@@ -45,9 +48,11 @@ BEGIN
   -- проверка прав для <Закрытие периода>
   IF vbOperDate < vbCloseDate
   THEN 
-       RAISE EXCEPTION 'Ошибка.Изменения за <%> не возможны.Для роли <%> период закрыт до <%>.', TO_CHAR (vbOperDate, 'DD.MM.YYYY'), lfGet_Object_ValueData (vbRoleId), TO_CHAR (vbCloseDate, 'DD.MM.YYYY');
+      -- RAISE EXCEPTION 'Ошибка.Изменения за <%> не возможны.Для роли <%> период закрыт до <%>.', TO_CHAR (vbOperDate, 'DD.MM.YYYY'), lfGet_Object_ValueData (vbRoleId), TO_CHAR (vbCloseDate, 'DD.MM.YYYY');
+      RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны.Для роли <%> период закрыт до <%>.(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId;
   END IF;
 
+  END IF; -- !!!временно если не НАЛ!!!
 
   -- сохранили протокол
   PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
@@ -60,6 +65,7 @@ ALTER FUNCTION lpComplete_Movement (Integer, Integer, Integer) OWNER TO postgres
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.14                                        * add !!!временно если не НАЛ!!!
  23.09.14                                        * add Object_Role_MovementDesc_View
  25.05.14                                        * add проверка прав для <Закрытие периода>
  10.05.14                                        *

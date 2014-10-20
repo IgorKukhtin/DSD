@@ -17,26 +17,20 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
-
-
+             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
+             , isEDI Boolean
               )
-
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
---     vbUserId:= lpGetUserBySession (inSession);
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -70,6 +64,7 @@ BEGIN
            , Object_PaidKind.Id                             AS PaidKindId
            , Object_PaidKind.ValueData                      AS PaidKindName
            , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.ContractCode           AS ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractName
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
@@ -86,6 +81,9 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCount.ValueData             AS TotalCount
+           , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
+
+           , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -165,6 +163,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSecond
+                                    ON MovementFloat_TotalCountSecond.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSecond.DescId = zc_MovementFloat_TotalCountSecond()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
@@ -174,11 +176,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-
-
-
-
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             ;
 
 END;
@@ -186,14 +186,13 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.10.14                                        * add isEDI
  26.08.14                                                        *
  18.08.14                                                        *
  06.06.14                                                        *
-
 */
 
 -- тест

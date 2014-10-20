@@ -120,8 +120,8 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
-    procedure LoadZakazExternalFormTest;
-    procedure LoadZakazInternalFormTest;
+    //procedure LoadZakazExternalFormTest;
+    //procedure LoadZakazInternalFormTest;
   end;
 
 implementation
@@ -243,12 +243,16 @@ procedure TLoadFormTest.LoadContractFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
@@ -607,6 +611,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
 end;
+{ ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazExternalForm'));
@@ -621,7 +626,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TZakazInternalJournalForm');
 end;
-
+}
 procedure TLoadFormTest.MainFormTest;
 var ActionDataSet: TClientDataSet;
     StoredProc: TdsdStoredProc;

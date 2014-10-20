@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartnerChoice(
     IN inShowAll        Boolean,       --
     IN inSession        TVarChar       -- сесси€ пользовател€
@@ -10,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartnerChoice(
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , ContractTagName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -50,6 +49,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
@@ -112,7 +112,9 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21500() -- ћаркетинг
+     AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+                                                                          , zc_Enum_InfoMoneyDestination_21500() -- ћаркетинг
+                                                                          , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                            )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR vbIsConstraint = FALSE)
@@ -127,6 +129,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode

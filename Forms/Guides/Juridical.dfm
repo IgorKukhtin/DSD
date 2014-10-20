@@ -30,7 +30,6 @@ object JuridicalForm: TJuridicalForm
     Height = 379
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 974
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -305,11 +304,11 @@ object JuridicalForm: TJuridicalForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -424,6 +423,7 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -475,11 +475,13 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RetailId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RetailName'
           DataType = ftString
@@ -496,11 +498,13 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -517,11 +521,13 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListName'
           DataType = ftString
@@ -534,23 +540,27 @@ object JuridicalForm: TJuridicalForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -604,6 +614,7 @@ object JuridicalForm: TJuridicalForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 136
   end
@@ -614,10 +625,12 @@ object JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 152
     Top = 184
   end
@@ -656,30 +669,35 @@ object JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inRetailId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'RetailId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
@@ -687,11 +705,13 @@ object JuridicalForm: TJuridicalForm
       end
       item
         Name = 'inEndPromo'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 120
     Top = 280
   end

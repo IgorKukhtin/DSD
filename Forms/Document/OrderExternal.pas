@@ -75,6 +75,11 @@ type
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    edContractTag: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    ContractTagGuides: TdsdGuides;
+    actDisabled: TOpenChoiceForm;
+    AmountEDI: TcxGridDBColumn;
   private
     { Private declarations }
   public

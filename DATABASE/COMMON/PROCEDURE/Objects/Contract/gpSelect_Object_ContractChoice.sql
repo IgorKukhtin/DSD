@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractChoice(
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , ContractTagName TVarChar, ContractKindName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer
@@ -63,6 +63,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
@@ -144,6 +145,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
@@ -228,6 +230,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
@@ -308,6 +311,7 @@ BEGIN
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
+       , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
