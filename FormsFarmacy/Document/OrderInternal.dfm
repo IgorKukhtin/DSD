@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1208
-  ExplicitTop = -173
   ExplicitWidth = 1216
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -12,12 +11,12 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1208
     Height = 457
     ExplicitTop = 75
-    ExplicitWidth = 1072
+    ExplicitWidth = 1208
     ExplicitHeight = 457
     ClientRectBottom = 457
     ClientRectRight = 1208
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1072
+      ExplicitWidth = 1208
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 553
@@ -126,6 +125,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.IncSearch = False
             Width = 48
           end
           object colSumm: TcxGridDBColumn
@@ -186,8 +186,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 428
-        ExplicitWidth = 644
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -353,7 +351,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 3
         Height = 433
         Control = cxGrid
-        ExplicitLeft = 425
       end
     end
   end
@@ -361,7 +358,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1208
     Height = 49
     TabOrder = 3
-    ExplicitWidth = 1072
+    ExplicitWidth = 1208
     ExplicitHeight = 49
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -542,6 +539,19 @@ inherited OrderInternalForm: TOrderInternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actUpdatePrioritetPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdatePrioritetPartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrioritetPartner
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
+      ImageIndex = 55
+      ShortCut = 32
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -655,6 +665,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrioritetPartner'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -699,6 +713,10 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbPrioritetPartner: TdxBarButton
+      Action = actUpdatePrioritetPartner
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -789,13 +807,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = edInvNumber
       end
       item
-        Name = 'inOperDate'
-        Component = FormParams
-        ComponentItem = 'inOperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
@@ -827,100 +838,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -1197,10 +1114,10 @@ inherited OrderInternalForm: TOrderInternalForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientGridDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1218,7 +1135,7 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end>
     Left = 336
-    Top = 32
+    Top = 112
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
@@ -1256,5 +1173,116 @@ inherited OrderInternalForm: TOrderInternalForm
     SearchAsFilter = False
     Left = 926
     Top = 145
+  end
+  object spUpdatePrioritetPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_OrderInternal_PrioritetPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = ChildCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalName'
+        Component = ChildCDS
+        ComponentItem = 'JuridicalName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = ChildCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractName'
+        Component = ChildCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = ChildCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsCode'
+        Component = ChildCDS
+        ComponentItem = 'GoodsCode'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsName'
+        Component = ChildCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSuperPrice'
+        Component = ChildCDS
+        ComponentItem = 'SuperFinalPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Component = ChildCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalName'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractName'
+        Component = MasterCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+      end
+      item
+        Name = 'GoodsCode'
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsCode'
+        DataType = ftString
+      end
+      item
+        Name = 'GoodsName'
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsName'
+        DataType = ftString
+      end
+      item
+        Name = 'SuperPrice'
+        Component = MasterCDS
+        ComponentItem = 'SuperFinalPrice'
+        DataType = ftFloat
+      end
+      item
+        Name = 'Price'
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 240
   end
 end

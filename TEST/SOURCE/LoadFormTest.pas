@@ -784,8 +784,8 @@ begin
   //  Вид контакта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadPaidKindFormTest;

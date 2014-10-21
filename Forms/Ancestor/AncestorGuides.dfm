@@ -1,5 +1,7 @@
 inherited AncestorGuidesForm: TAncestorGuidesForm
   AddOnFormData.isAlwaysRefresh = False
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,6 +207,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 136
     Top = 152
   end

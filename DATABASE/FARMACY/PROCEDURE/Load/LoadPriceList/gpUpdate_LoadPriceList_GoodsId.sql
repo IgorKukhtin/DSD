@@ -11,6 +11,10 @@ RETURNS VOID AS
 $BODY$
 BEGIN
 
+     IF inGoodsId = 0 THEN 
+        inGoodsId := NULL;
+     END IF; 
+
      UPDATE LoadPriceListItem SET GoodsId = inGoodsId
       WHERE Id = inPriceListItemId;
 

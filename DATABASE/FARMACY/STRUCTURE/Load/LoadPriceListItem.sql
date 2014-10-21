@@ -23,6 +23,7 @@ CREATE TABLE LoadPriceListItem
   ExpirationDate  TDateTime, -- Срок годности
   ProducerName    TVarChar , -- Производитель     
   PackCount       TVarChar , -- Количество в упаковке
+  BarCode         TVarChar , -- Штрих-код
   CONSTRAINT fk_LoadPriceListItem_LoadMovementId FOREIGN KEY (LoadPriceListId)  REFERENCES LoadPriceList (id),
   CONSTRAINT fk_LoadPriceListItem_GoodsId        FOREIGN KEY (GoodsId)          REFERENCES Object (id))
 WITH (
@@ -35,6 +36,7 @@ ALTER TABLE LoadPriceListItem
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId ON LoadPriceListItem(LoadPriceListId);
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_GoodsCode ON LoadPriceListItem(LoadPriceListId, GoodsCode);
 CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_CommonCode ON LoadPriceListItem(LoadPriceListId, CommonCode);
+CREATE INDEX idx_LoadPriceListItem_LoadPriceListId_BarCode ON LoadPriceListItem(LoadPriceListId, BarCode);
 CREATE INDEX idx_LoadPriceListItem_GoodsId         ON LoadPriceListItem(GoodsId); 
 
 

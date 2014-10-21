@@ -1957,6 +1957,12 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 256

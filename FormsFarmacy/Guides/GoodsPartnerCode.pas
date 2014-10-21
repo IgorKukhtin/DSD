@@ -11,7 +11,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel, dsdGuides, cxSplitter;
+  cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
@@ -34,6 +34,8 @@ type
     GoodsLinkDS: TDataSource;
     DBViewAddOnChild: TdsdDBViewAddOn;
     RefreshDispatcher: TRefreshDispatcher;
+    mactDelete: TMultiAction;
+    DataSetDelete: TDataSetDelete;
   private
     { Private declarations }
   public

@@ -131,6 +131,8 @@ implementation
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
      DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows;
 
+const cArchive = 'Archive';
+
 procedure Register;
 begin
   RegisterActions('DSDLib', [TExecuteImportSettingsAction], TExecuteImportSettingsAction);
@@ -437,8 +439,10 @@ begin
                   // Загрузили
                   Load;
                   // Перенесли в Archive
-                  ForceDirectories(ExtractFilePath(saFound[i]) + 'Archive');
-                  RenameFile(saFound[i], ExtractFilePath(saFound[i]) + 'Archive\' + ExtractFileName(saFound[i]));
+                  ForceDirectories(ExtractFilePath(saFound[i]) + cArchive);
+                  RenameFile(saFound[i], ExtractFilePath(saFound[i]) + cArchive + '\' + FormatDateTime('yyyy_mm_dd_', Date) + ExtractFileName(saFound[i]));
+                  if FileExists(saFound[i]) then
+                     SysUtils.DeleteFile(saFound[i]);
                 finally
                   Free;
                 end;
@@ -451,7 +455,7 @@ begin
                 try
                   // Загрузили
                   Load;
-                 finally
+                finally
                   Free;
                 end;
     end;

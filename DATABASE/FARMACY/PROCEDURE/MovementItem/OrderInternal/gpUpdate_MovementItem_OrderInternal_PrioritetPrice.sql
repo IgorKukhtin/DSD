@@ -38,6 +38,7 @@ BEGIN
      -- сохранили связь с <Товаром>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), inId, inGoodsId);
 
+     RETURN QUERY
      SELECT 
           inJuridicalId AS JuridicalId, 
           inJuridicalName AS JuridicalName, 

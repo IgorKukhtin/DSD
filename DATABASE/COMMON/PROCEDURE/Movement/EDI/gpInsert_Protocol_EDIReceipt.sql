@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_EDI()
 
 DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(Boolean, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Protocol_EDIReceipt(Boolean, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
     IN inisOk                Boolean   ,
     IN inTaxNumber           TVarChar  , 
     IN inEDIEvent            TVarChar  , -- Описание события
     IN inOperMonth           TDateTime , 
+    IN inFileName            TVarChar  , -- Имя файла DECLAR
     IN inSession             TVarChar     -- Пользователь
 )                              
 RETURNS VOID AS
@@ -35,11 +37,33 @@ BEGIN
        AND Movement_Tax.OperDate BETWEEN inOperMonth AND (inOperMonth + (interval '1 MONTH'))
        AND MovementString_InvNumberPartner_Tax.valuedata = inTaxNumber;
 
+   IF COALESCE(vbMovementId, 0) = 0 THEN 
+   	
+      SELECT Movement.id, COALESCE(MovementLinkMovement_Tax.MovementId, MovementLinkMovement_ChildEDI.MovementId) INTO vbMovementId, vbTaxMovementId 
+                    FROM MovementString
+        JOIN Movement ON Movement.id = MovementString.movementid AND Movement.descid = zc_Movement_EDI()
+                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                      ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
+                                     AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+
+       WHERE MovementString.DescId = zc_MovementString_FileName()
+         AND UPPER(MovementString.ValueData) LIKE UPPER(inFileName);
+   END IF;
+
+
    IF COALESCE(vbMovementId, 0) <> 0 THEN 
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+
+      IF inisOk THEN 
+         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
+         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+      END IF;
    END IF;
+
+
 
 END;
 $BODY$
@@ -49,6 +73,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.10.14                         * 
  04.08.14                         * 
 
 */

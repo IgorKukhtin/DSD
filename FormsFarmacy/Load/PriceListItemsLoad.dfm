@@ -1,26 +1,27 @@
 inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   ClientHeight = 410
-  ClientWidth = 763
+  ClientWidth = 908
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 771
+  ExplicitTop = -38
+  ExplicitWidth = 916
   ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 763
+    Width = 908
     Height = 335
     ExplicitTop = 75
     ExplicitWidth = 763
     ExplicitHeight = 335
     ClientRectBottom = 335
-    ClientRectRight = 763
+    ClientRectRight = 908
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 763
       ExplicitHeight = 335
       inherited cxGrid: TcxGrid
-        Width = 763
+        Width = 908
         Height = 335
         ExplicitWidth = 763
         ExplicitHeight = 335
@@ -36,35 +37,41 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 76
+          end
+          object colBarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 107
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 82
+            Width = 104
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 133
+            Width = 136
           end
           object colProducerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'ProducerName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 122
+            Width = 124
           end
           object colGoodsNDS: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'GoodsNDS'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 45
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -77,14 +84,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
-            Width = 30
+            Width = 33
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 142
+            Width = 144
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -101,7 +108,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 74
+            Width = 75
           end
         end
       end
@@ -110,11 +117,12 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   object Panel1: TPanel [1]
     Left = 0
     Top = 0
-    Width = 763
+    Width = 908
     Height = 49
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 763
     object cxLabel2: TcxLabel
       Left = 1
       Top = 4
@@ -197,6 +205,40 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Caption = 'actUpdate'
       DataSource = MasterDS
     end
+    object mactGoodsLinkDelete: TMultiAction
+      Category = 'GoodsLinkDelete'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'GoodsId'
+        end
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'Code'
+        end
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'Name'
+        end>
+      ActionList = <
+        item
+          Action = DataSetPost
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      ImageIndex = 2
+    end
+    object DataSetPost: TDataSetPost
+      Category = 'GoodsLinkDelete'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 104
@@ -223,6 +265,37 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbDeleteGoodsLink'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbDeleteGoodsLink: TdxBarButton
+      Action = mactGoodsLinkDelete
+      Category = 0
+    end
   end
   object FormParams: TdsdFormParams
     Params = <

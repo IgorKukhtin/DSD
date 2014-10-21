@@ -139,6 +139,12 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     end
   end
   inherited ActionList: TActionList
+    object DataSetDelete: TDataSetDelete [0]
+      Category = 'Delete'
+      Caption = '&Delete'
+      Hint = 'Delete'
+      DataSource = GoodsLinkDS
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -149,13 +155,31 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
+      ShortCut = 0
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
+      ShortCut = 0
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
       isShowModal = True
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Enabled = False
+      ShortCut = 0
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Category = 'Delete'
+      StoredProc = dsdStoredProc1
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc1
+        end>
+      ImageIndex = -1
+      ShortCut = 0
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -186,7 +210,34 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object mactDelete: TMultiAction
+      Category = 'Delete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdExecStoredProc1
+        end
+        item
+          Action = DataSetDelete
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1079#1080'? '
+      Caption = #1059#1076#1072#1083#1077#1085#1080#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+    end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'Delete'
+      MoveParams = <>
+      StoredProc = dsdStoredProc1
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc1
+        end>
+      Caption = 'dsdExecStoredProc1'
     end
   end
   inherited MasterDS: TDataSource
@@ -212,19 +263,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
         end
         item
           BeginGroup = True
@@ -261,6 +300,18 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           ItemName = 'bbJuridical'
         end>
     end
+    inherited bbInsert: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbEdit: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbErased: TdxBarButton
+      Action = mactDelete
+    end
+    inherited bbUnErased: TdxBarButton
+      Visible = ivNever
+    end
     object bbLabel: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
@@ -296,6 +347,16 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     SearchAsFilter = False
     Left = 448
     Top = 168
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = GoodsLinkCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -394,5 +455,20 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       end>
     Left = 200
     Top = 112
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = GoodsLinkCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 216
   end
 end
