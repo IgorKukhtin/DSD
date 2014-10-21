@@ -39,23 +39,31 @@ BEGIN
 
    IF COALESCE(vbMovementId, 0) = 0 THEN 
    	
-      SELECT Movement.id, MovementLinkMovement_Tax.MovementId INTO vbMovementId, vbTaxMovementId 
+      SELECT Movement.id, COALESCE(MovementLinkMovement_Tax.MovementId, MovementLinkMovement_ChildEDI.MovementId) INTO vbMovementId, vbTaxMovementId 
                     FROM MovementString
         JOIN Movement ON Movement.id = MovementString.movementid AND Movement.descid = zc_Movement_EDI()
-                      JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                       ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
                                      AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
 
        WHERE MovementString.DescId = zc_MovementString_FileName()
-         AND UPPER(MovementString.ValueData) = UPPER(inFileName);
+         AND UPPER(MovementString.ValueData) LIKE UPPER(inFileName);
    END IF;
 
 
    IF COALESCE(vbMovementId, 0) <> 0 THEN 
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
-      PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+
+      IF inisOk THEN 
+         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
+         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+      END IF;
    END IF;
+
+
 
 END;
 $BODY$

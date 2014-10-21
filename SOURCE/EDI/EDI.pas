@@ -1235,7 +1235,7 @@ var
   List, Receipt: TStrings;
   i, j: integer;
   Stream: TStringStream;
-  g: string;
+  g, FileName: string;
 begin
   FTPSetConnection;
   // загружаем файлы с FTP
@@ -1279,9 +1279,10 @@ begin
               spProtocol.ParamByName('inOperMonth').Value :=
                 EncodeDate(StrToInt(copy(List[i], 36, 4)),
                 StrToInt(copy(List[i], 34, 2)), 1);
-              spProtocol.ParamByName('inFileName').Value := Copy(Receipt[0], Pos('FILENAME=', Receipt[0]) + 9, MaxInt);
+              FileName := Copy(Receipt[0], Pos('FILENAME=', Receipt[0]) + 9, MaxInt);
+              spProtocol.ParamByName('inFileName').Value := copy(FileName, 1, 23) + '__' + copy(FileName, 26, MaxInt);
               spProtocol.Execute;
-
+              Receipt.Clear;
               // теперь перенесли файл в директроию Archive
               try
                 FIdFTP.ChangeDir('/archive');
