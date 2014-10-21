@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
@@ -61,6 +61,7 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS PaidKindName
              , 0                     			    AS ContractId
              , CAST ('' AS TVarChar) 			    AS ContractName
+             , CAST ('' AS TVarChar) 			    AS ContractTagName
              , 0                     			    AS RouteSortingId
              , CAST ('' AS TVarChar) 			    AS RouteSortingName
              , ObjectCurrency.Id                            AS CurrencyDocumentId	       -- грн
@@ -107,6 +108,7 @@ BEGIN
            , Object_PaidKind.ValueData         		    AS PaidKindName
            , View_Contract_InvNumber.ContractId    	    AS ContractId
            , View_Contract_InvNumber.InvNumber     	    AS ContractName
+           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_RouteSorting.Id        		    AS RouteSortingId
            , Object_RouteSorting.ValueData 		    AS RouteSortingName
            , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId

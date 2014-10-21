@@ -56,6 +56,7 @@ type
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
+    PriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -78,6 +78,7 @@ type
     spDocument: TdsdStoredProc;
     actDocument: TdsdExecStoredProc;
     bbDocument: TdxBarButton;
+    colContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

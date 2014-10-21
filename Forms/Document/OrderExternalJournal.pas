@@ -57,6 +57,7 @@ type
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

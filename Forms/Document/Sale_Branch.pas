@@ -36,7 +36,6 @@ type
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -122,6 +121,11 @@ type
     BoxName: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     actGoodsBoxChoice: TOpenChoiceForm;
+    cxLabel20: TcxLabel;
+    edContractTag: TcxButtonEdit;
+    ContractTagGuides: TdsdGuides;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

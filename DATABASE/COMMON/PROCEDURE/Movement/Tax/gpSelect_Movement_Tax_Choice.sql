@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_Tax_ByPartner()
+-- Function: gpSelect_Movement_Tax_Choice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_ByPartner(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Choice(
     IN inStartDate      TDateTime , --
     IN inEndDate        TDateTime , --
     IN inIsRegisterDate Boolean ,
@@ -19,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
@@ -69,7 +70,9 @@ BEGIN
            , Object_Partner.ValueData               	AS PartnerName
 
            , View_Contract_InvNumber.ContractId        	AS ContractId
+           , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber         	AS ContractName
+           , View_Contract_InvNumber.ContractTagName
            , Object_TaxKind.Id                		AS TaxKindId
            , Object_TaxKind.ValueData         		AS TaxKindName
            , View_InfoMoney.InfoMoneyGroupName
@@ -180,7 +183,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Tax_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -190,4 +193,4 @@ ALTER FUNCTION gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, B
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Tax_ByPartner (inStartDate:= '30.01.2014', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax_Choice (inStartDate:= '30.01.2014', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

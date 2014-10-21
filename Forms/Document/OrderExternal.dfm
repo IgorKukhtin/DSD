@@ -11,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1236
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1240
+    ExplicitWidth = 1236
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1236
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1240
+      ExplicitWidth = 1236
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1236
         Height = 518
-        ExplicitWidth = 1240
+        ExplicitWidth = 1236
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -314,7 +314,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1236
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1240
+    ExplicitWidth = 1236
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -644,9 +644,6 @@ inherited OrderExternalForm: TOrderExternalForm
         item
         end>
     end
-    inherited actMovementItemContainer: TdsdOpenForm
-      Enabled = False
-    end
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
@@ -670,7 +667,10 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
+    object actRefreshPrice: TdsdDataSetRefresh [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -682,30 +682,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actDisabled: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1054,6 +1030,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end

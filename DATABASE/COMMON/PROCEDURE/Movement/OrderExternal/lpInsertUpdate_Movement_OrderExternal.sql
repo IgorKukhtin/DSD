@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inPriceListId         Integer   , -- Прайс лист
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;

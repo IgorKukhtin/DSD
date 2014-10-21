@@ -1001,14 +1001,6 @@
 				<Form>Report_GoodsTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_Branch.pas">
-				<Form>Sale_BranchForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_BranchJournal.pas">
-				<Form>Sale_BranchJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnOutTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
@@ -1637,6 +1629,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TaxJournalSelect.pas">
 				<Form>TaxJournalSelectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_Branch.pas">
+				<Form>Sale_BranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_BranchJournal.pas">
+				<Form>Sale_BranchJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">

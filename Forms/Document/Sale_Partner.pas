@@ -122,6 +122,9 @@ type
     BoxName: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     actGoodsBoxChoice: TOpenChoiceForm;
+    cxLabel20: TcxLabel;
+    edContractTag: TcxButtonEdit;
+    ContractTagGuides: TdsdGuides;
   private
     { Private declarations }
   public

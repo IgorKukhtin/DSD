@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar, ToId Integer, ToName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child Integer
@@ -68,6 +68,7 @@ WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
            , Object_Partner.ObjectCode                  AS PartnerCode
            , Object_Partner.ValueData               	AS PartnerName
            , View_Contract_InvNumber.ContractId        	AS ContractId
+           , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber         	AS ContractName
            , View_Contract_InvNumber.ContractTagName
            , Object_TaxKind.Id                		    AS TaxKindId
