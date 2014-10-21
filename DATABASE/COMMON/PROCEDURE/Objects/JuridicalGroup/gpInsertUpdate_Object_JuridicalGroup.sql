@@ -15,8 +15,7 @@ $BODY$
    DECLARE vbCode Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- UserId := lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
-   UserId := inSession;
+   UserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_JuridicalGroup());
 
    -- Если код не установлен, определяем его как последний+1
    vbCode:= lfGet_ObjectCode (inCode, zc_Object_JuridicalGroup()); 

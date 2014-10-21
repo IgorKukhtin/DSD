@@ -4,8 +4,8 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,10 +98,6 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -350,24 +346,27 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumberPartner'
           DataType = ftString
         end
         item
           Name = 'OperDate_Tax'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
         end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 7
       DataSource = MasterDS
     end
@@ -555,6 +554,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -573,6 +573,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -585,6 +586,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput

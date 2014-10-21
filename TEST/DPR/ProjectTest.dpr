@@ -328,7 +328,7 @@ uses
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
-  TaxJournalSelect in '..\..\Forms\Document\TaxJournalSelect.pas' {TaxJournalSelectForm: TParentForm},
+  OrderExternalJournalChoice in '..\..\Forms\Document\OrderExternalJournalChoice.pas' {OrderExternalJournalChoiceForm: TParentForm},
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
   AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm: TParentForm},
@@ -352,8 +352,8 @@ uses
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   Report_GoodsTax in '..\..\Forms\Report\Report_GoodsTax.pas' {Report_GoodsTaxForm: TParentForm},
-  Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
-  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
+  Sale_Branch in '..\..\Forms\Document\Sale_Branch.pas' {Sale_BranchForm: TParentForm},
+  Sale_BranchJournal in '..\..\Forms\Document\Sale_BranchJournal.pas' {Sale_BranchJournalForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
@@ -550,7 +550,10 @@ uses
   BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
-  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm};
+  CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
+  TaxJournalSelect in '..\..\Forms\Document\TaxJournalSelect.pas' {TaxJournalSelectForm: TParentForm},
+  Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
+  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -559,6 +562,9 @@ begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TTaxJournalSelectForm, TaxJournalSelectForm);
+  Application.CreateForm(TSale_PartnerForm, Sale_PartnerForm);
+  Application.CreateForm(TSale_PartnerJournalForm, Sale_PartnerJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

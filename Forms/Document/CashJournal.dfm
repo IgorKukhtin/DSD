@@ -247,6 +247,7 @@ inherited CashJournalForm: TCashJournalForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 4
       Width = 203
     end
@@ -287,6 +288,7 @@ inherited CashJournalForm: TCashJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
