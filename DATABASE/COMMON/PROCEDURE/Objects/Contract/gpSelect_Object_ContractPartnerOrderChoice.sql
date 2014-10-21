@@ -30,6 +30,7 @@ $BODY$
 
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
+   DECLARE vbBranchId_Constraint Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractPartnerChoice());
@@ -38,6 +39,7 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
 
@@ -334,7 +336,12 @@ BEGIN
          INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Parent.ObjectId
          LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
    WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+     AND (ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+          OR vbIsConstraint = FALSE)
   ;
 
    END IF;

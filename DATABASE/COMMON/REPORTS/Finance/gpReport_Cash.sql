@@ -26,6 +26,13 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- Из-за прав меняем значение параметра
+     IF COALESCE (inCashId, 0) = 0 AND EXISTS (SELECT AccessKeyId_Guide FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_Guide <> 0 AND UserId = vbUserId)
+     THEN inCashId:= -1;
+     END IF;
+
 
      -- Результат
   RETURN QUERY
