@@ -240,21 +240,21 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inObjectId_Partner'
         Value = ''
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inObjectId_Juridical'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inContractId'
+        Name = 'inObjectId_Contract'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
@@ -267,6 +267,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -286,7 +287,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -373,6 +374,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end
