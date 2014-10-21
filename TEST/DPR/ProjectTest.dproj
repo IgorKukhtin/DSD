@@ -926,8 +926,8 @@
 				<Form>TaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TaxJournalSelect.pas">
-				<Form>TaxJournalSelectForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderExternalJournalChoice.pas">
+				<Form>OrderExternalJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsFuel_Object.pas">
@@ -1001,12 +1001,12 @@
 				<Form>Report_GoodsTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">
-				<Form>Sale_PartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Sale_Branch.pas">
+				<Form>Sale_BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_PartnerJournal.pas">
-				<Form>Sale_PartnerJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Sale_BranchJournal.pas">
+				<Form>Sale_BranchJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnOutTest.pas"/>
@@ -1633,6 +1633,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
 				<Form>CashJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TaxJournalSelect.pas">
+				<Form>TaxJournalSelectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">
+				<Form>Sale_PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_PartnerJournal.pas">
+				<Form>Sale_PartnerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

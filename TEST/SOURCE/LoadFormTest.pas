@@ -476,6 +476,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
@@ -782,8 +784,8 @@ begin
   //  Вид контакта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadPaidKindFormTest;

@@ -1,26 +1,28 @@
-inherited OrderExternalJournalForm: TOrderExternalJournalForm
+inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1080' '#1089#1090#1086#1088#1086#1085#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1110
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1110
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1110
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -437,8 +439,24 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    ExplicitWidth = 1020
+    Width = 1110
+    ExplicitWidth = 1110
+    object cxLabel6: TcxLabel
+      Left = 453
+      Top = 6
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
+    end
+    object edPartner: TcxButtonEdit
+      Left = 523
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 245
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -450,54 +468,42 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
+      FormName = 'TTaxForm'
+      FormNameParam.Value = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
+      FormName = 'TTaxForm'
+      FormNameParam.Value = nil
     end
-    object actPrint: TdsdPrintAction
+    object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
+      MoveParams = <>
       Params = <
         item
-          Name = 'Id'
+          Name = 'Key'
           Value = Null
-          Component = FormParams
+          Component = MasterCDS
           ComponentItem = 'Id'
+          DataType = ftString
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberPartner'
+          DataType = ftString
+        end
+        item
+          Name = 'OperDate_Tax'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -508,7 +514,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderExternal'
+    StoredProcName = 'gpSelect_Movement_OrderExternal_Choice'
     Params = <
       item
         Name = 'instartdate'
@@ -532,15 +538,17 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInput
       end
       item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
-    Left = 136
-    Top = 163
+    Left = 104
+    Top = 171
   end
   inherited BarManager: TdxBarManager
-    Left = 224
+    Left = 168
     Top = 155
     DockControlHeights = (
       0
@@ -550,15 +558,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     inherited Bar: TdxBar
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -581,7 +580,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbSelect'
         end
         item
           Visible = True
@@ -589,41 +588,75 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
+    inherited bbComplete: TdxBarButton
       Visible = ivNever
+    end
+    inherited bbUnComplete: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbDelete: TdxBarButton
+      Visible = ivNever
+    end
+    object bbSelect: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
     Left = 320
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    inherited N3: TMenuItem
+      Visible = False
+    end
+    inherited N2: TMenuItem
+      Visible = False
+    end
+    inherited N4: TMenuItem
+      Visible = False
+    end
+    inherited N5: TMenuItem
+      Visible = False
+    end
+    inherited N7: TMenuItem
+      Visible = False
+    end
+    inherited N8: TMenuItem
+      Visible = False
+    end
+    inherited N9: TMenuItem
+      Visible = False
+    end
+    inherited N10: TMenuItem
+      Visible = False
+    end
+    inherited N11: TMenuItem
+      Visible = False
+    end
+    inherited N12: TMenuItem
+      Visible = False
+    end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 288
+    Left = 240
     Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -637,7 +670,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderExternal'
+    StoredProcName = 'gpComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -656,7 +689,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_OrderExternal'
+    StoredProcName = 'gpUnComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -669,7 +702,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_OrderExternal'
+    StoredProcName = 'gpSetErased_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -701,59 +734,45 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameOrderExternal'
+        Name = 'MasterPartnerId'
         Value = Null
-        DataType = ftString
-        ParamType = ptInput
+        Component = PartnerGuides
+        ComponentItem = 'Key'
       end
       item
-        Name = 'ReportNameOrderExternalTax'
+        Name = 'MasterPartnerName'
         Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
       end>
-    Left = 400
-    Top = 200
+    Left = 304
+    Top = 288
   end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 217
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 270
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderExternal_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
+  object PartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Name = 'Key'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
       end>
-    PackSize = 1
-    Left = 535
-    Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
+    Left = 568
+    Top = 8
   end
 end

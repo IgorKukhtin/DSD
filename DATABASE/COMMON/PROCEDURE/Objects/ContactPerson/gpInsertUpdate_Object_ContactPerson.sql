@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -10,14 +11,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
     IN inPhone                    TVarChar  ,    -- 
     IN inMail                     TVarChar  ,    --
     IN inComment                  TVarChar  ,    --
-    IN inObjectId                 Integer   ,    --   
+    IN inObjectId_Partner         Integer   ,    --   
+    IN inObjectId_Juridical       Integer   ,    --   
+    IN inObjectId_Contract        Integer   ,    --   
     IN inContactPersonKindId      Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_calc Integer; 
+   DECLARE vbObjectId Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContactPerson());
@@ -37,6 +41,23 @@ BEGIN
    -- проверка прав уникальности для свойства <Код > + <Object> 
 --   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContactPerson(), vbCode_calc);
 
+   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Contract, 0)=0) 
+   THEN
+	vbObjectId = COALESCE (inObjectId_Partner, 0);
+   END IF;
+
+   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Contract, 0)=0) 
+   THEN
+	vbObjectId = COALESCE (inObjectId_Juridical, 0);
+   END IF;
+
+   IF COALESCE (inObjectId_Contract, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Juridical, 0)=0) 
+   THEN
+	vbObjectId = COALESCE (inObjectId_Contract, 0);
+   END IF;
+
+   IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не выбран или не верно выбран Объект контакта.'; END IF;
+   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContactPerson(), vbCode_calc, inName);
    -- сохранили св-во <>
@@ -47,7 +68,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Comment(), ioId, inComment);
 
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Object(), ioId, inObjectId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Object(), ioId, vbObjectId);
 
   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_ContactPersonKind(), ioId, inContactPersonKindId);
@@ -64,8 +85,12 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.14         *
  19.06.14                        *
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ContactPerson()
+
+
+--select * from gpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');

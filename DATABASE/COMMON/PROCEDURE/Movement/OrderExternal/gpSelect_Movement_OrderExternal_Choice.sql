@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_OrderExternal()
+-- Function: gpSelect_Movement_OrderExternal_Choice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal_Choice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
@@ -88,7 +88,7 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+--                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -184,7 +184,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -196,4 +196,4 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inSession:= '2')
