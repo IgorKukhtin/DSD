@@ -198,6 +198,7 @@ type
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToVarCharServer_isSpace(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
+    function FormatToDateTimeServer(_Date:TDateTime):string;
 
     function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
@@ -1046,6 +1047,19 @@ begin
      result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.FormatToDateTimeServer(_Date:TDateTime):string;
+var
+  Year, Month, Day: Word;
+  AHour, AMinute, ASecond, MSec: Word;
+begin
+     DecodeDate(_Date,Year,Month,Day);
+     DecodeTime(_Date,AHour, AMinute, ASecond, MSec);
+//     result:=chr(39)+GetStringValue('select zf_FormatToDateServer('+IntToStr(Year)+','+IntToStr(Month)+','+IntToStr(Day)+')as RetV')+chr(39);
+     if Year <= 1900
+     then result:='null'
+     else result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+' '+IntToStr(AHour)+':'+IntToStr(AMinute)+':'+IntToStr(ASecond)+chr(39);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc_ZConnection:Boolean;
 begin
     result:=false;
@@ -1787,6 +1801,9 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Measure;
+var
+    InternalCode_pg:String;
+    InternalName_pg:String;
 begin
      if (not cbMeasure.Checked)or(not cbMeasure.Enabled) then exit;
      //
@@ -1799,6 +1816,7 @@ begin
         Add('     , 0 as ObjectCode');
         Add('     , Measure.MeasureName as ObjectName');
         Add('     , case when Measure.Id = zc_measure_Sht() then zc_rvYes() else zc_rvNo() end as zc_Measure_Sh');
+        Add('     , case when Measure.Id = zc_measure_Kg() then zc_rvYes() else zc_rvNo() end as zc_Measure_Kg');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Measure.Erased as Erased');
@@ -1819,16 +1837,33 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInternalCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInternalName',ftString,ptInput, '');
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
              //
+             fOpenSqToQuery (' select OS_Measure_InternalCode.ValueData  AS InternalCode'
+                           +'       , OS_Measure_InternalName.ValueData  AS InternalName'
+                           +' from Object'
+                           +'         LEFT JOIN ObjectString AS OS_Measure_InternalName'
+                           +'                  ON OS_Measure_InternalName.ObjectId = Object.Id'
+                           +'                 AND OS_Measure_InternalName.DescId = zc_ObjectString_Measure_InternalName()'
+                           +'         LEFT JOIN ObjectString AS OS_Measure_InternalCode'
+                           +'                  ON OS_Measure_InternalCode.ObjectId = Object.Id'
+                           +'                 AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()'
+                           +' where Object.Id='+FieldByName('Id_Postgres').AsString);
+             InternalCode_pg:=toSqlQuery.FieldByName('InternalCode').AsString;
+             InternalName_pg:=toSqlQuery.FieldByName('InternalName').AsString;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inInternalCode').Value:=InternalCode_pg;
+             toStoredProc.Params.ParamByName('inInternalName').Value:=InternalName_pg;
+
              if not myExecToStoredProc then;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
@@ -1837,6 +1872,8 @@ begin
              //
              if FieldByName('zc_Measure_Sh').AsInteger=FieldByName('zc_rvYes').AsInteger
              then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
+             if FieldByName('zc_Measure_Kg').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Measure_Kg() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;
@@ -2059,7 +2096,26 @@ begin
         Add('     , GoodsProperty.GoodsName as ObjectName');
         Add('     , max (case when Goods.ParentId=686 then GoodsProperty.Tare_Weight else GoodsProperty_Detail.Ves_onMeasure end) as Ves_onMeasure');
         Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
-        Add('     , Measure.Id_Postgres as MeasureId_Postgres');
+        Add('     , case when fCheckGoodsParentID(5,Goods.ParentId)=zc_rvYes()'// √œ
+           +'              or fCheckGoodsParentID(5306,Goods.ParentId)=zc_rvYes()' // œ≈–≈œ¿ 
+           +'              or fCheckGoodsParentID(2849,Goods.ParentId)=zc_rvYes()' // —-œ≈–≈–¿¡Œ“ ¿
+           +'              or fCheckGoodsParentID(3251,Goods.ParentId)=zc_rvYes()' // —Œ-Œ¡Ÿ¿ﬂ
+           +'              or fCheckGoodsParentID(3217,Goods.ParentId)=zc_rvYes()' // —Œ-›Ã”À‹—»»
+           +'              or fCheckGoodsParentID(1670,Goods.ParentId)=zc_rvYes()' // —€–
+           +'              or fCheckGoodsParentID(9323,Goods.ParentId)=zc_rvYes()' // “Œ¬¿–€ œ¿¬»À‹ŒÕ€
+           +'              or fCheckGoodsParentID(5874,Goods.ParentId)=zc_rvYes()' // “”ÿ≈Õ ¿
+           +'              or fCheckGoodsParentID(3482,Goods.ParentId)=zc_rvYes()' // ˝ÍÒÔÂËÏÂÌÚ˚
+           +'                 then zc_rvYes()'
+           +'            else zc_rvNo()'
+           +'       end as isMeasure');
+        Add('     , case when isMeasure=zc_rvYes()'
+           +'                 then Measure.Id_Postgres'
+           +'            when Measure.Id=zc_measure_Sht()'
+           +'                 then 301416' // !!!˝ÚÓ ‰Û„ËÂ ¯Ú.!!!
+           +'            when Measure.Id=zc_measure_Kg()'
+           +'                 then 301436' // !!!˝ÚÓ ‰Û„ËÂ Í„.!!!
+           +'            else Measure.Id_Postgres'
+           +'       end as MeasureId_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_Postgres');
         Add('     , case when isPartionCount.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionCount');
@@ -2087,7 +2143,7 @@ begin
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = GoodsProperty.InfoMoneyCode');
         Add('where Goods.HasChildren = zc_hsLeaf()');
 //  Add(' and GoodsProperty.GoodsCode in (7001)');
-        Add('group by ObjectId');
+        Add('group by ObjectId, Goods.ParentId');
         Add('       , ObjectName');
         Add('       , ObjectCode');
         Add('       , Erased');
@@ -11067,7 +11123,8 @@ begin
         Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
-           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           //+'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'               then -1 * BillItems.OperCount '
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
@@ -11942,7 +11999,8 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
-           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           //+'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'               then -1 * BillItems.OperCount '
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
@@ -18409,7 +18467,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_OrderExternal';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_OrderExternal_Sybase';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -18644,6 +18702,10 @@ begin
         Add('     , ScaleHistory.minInsertDate as inStartWeighing');
         Add('     , ScaleHistory.maxInsertDate as inEndWeighing');
 
+        Add('     , isnull(Bill.isNds,zc_rvNo()) as PriceWithVAT');
+        Add('     , isnull(Bill.Nds,20) as inVATPercent');
+        Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else isnull(Bill.DiscountTax,0) end as inChangePercent');
+
         Add('     , case when ScaleHistory.BillKind=zc_bkIncomeToUnit() then ' + FormatToVarCharServer_notNULL('zc_Movement_Income()')
           +'             when ScaleHistory.BillKind=zc_bkReturnToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_ReturnOut()')
           +'             when ScaleHistory.BillKind=zc_bkSaleToClient() then ' + FormatToVarCharServer_notNULL('zc_Movement_Sale()')
@@ -18747,6 +18809,9 @@ begin
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inStartWeighing',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inEndWeighing',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inMovementDescId',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inInvNumberTransport',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inWeighingNumber',ftFloat,ptInput, 0);
@@ -18819,7 +18884,9 @@ begin
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inStartWeighing').Value:=FieldByName('inStartWeighing').AsDateTime;
              toStoredProc.Params.ParamByName('inEndWeighing').Value:=FieldByName('inEndWeighing').AsDateTime;
-
+             if FieldByName('PriceWithVAT').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('inVATPercent').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('inChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inMovementDescId').Value:=MovementDescId_pg;
              toStoredProc.Params.ParamByName('inInvNumberTransport').Value:=FieldByName('inInvNumberTransport').AsInteger;
              toStoredProc.Params.ParamByName('inWeighingNumber').Value:=FieldByName('inWeighingNumber').AsInteger;
@@ -18860,45 +18927,115 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select BillItems.Id as ObjectId');
-        Add('     , Bill.BillDate as BillDate');
+        Add('select ScaleHistory.Id as ObjectId');
+        Add('     , ScaleHistory.Date_pg');
         Add('     , Bill.BillNumber as BillNumber');
-        Add('     , Bill.Id_Postgres as MovementId_Postgres');
-        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+        Add('     , ScaleHistory.InsertDate');
+        Add('     , isnull(ScaleHistory.UpdateDate,zc_DateStart())as UpdateDate');
+        Add('     , zc_DateStart() as zc_DateStart');
+        Add('     , ScaleHistory.MovementId_pg as inMovementId');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
 
-        Add('     , BillItems.ZakazCount1 + BillItems.ZakazCount1 as Amount');
-        Add('     , BillItems.ZakazChange as AmountSecond');
+        Add('     , ScaleHistory.Production_Weight as inAmount');
+        Add('     , case when fIsClient_Fozzi(Bill.ToID)=zc_rvYes() or fIsClient_Kisheni(Bill.ToID)=zc_rvYes() or fIsClient_Vivat(Bill.ToID)=zc_rvYes() or fIsClient_Amstor(Bill.ToID)=zc_rvYes() or fIsClient_Real(Bill.ToID)=zc_rvYes()'
+           +'              or fIsClient_ATB(Bill.ToID)=zc_rvYes() or fIsClient_OK(Bill.ToID)=zc_rvYes()'
+           +'              or fIsClient_Fozzi(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Kisheni(ScaleHistory.ToID)=zc_rvYes()'+'or fIsClient_Vivat(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Amstor(ScaleHistory.ToID)=zc_rvYes() or fIsClient_Real(ScaleHistory.ToID)=zc_rvYes()'
+           +'              or fIsClient_ATB(ScaleHistory.ToID)=zc_rvYes() or fIsClient_OK(ScaleHistory.ToID)=zc_rvYes()'
+           +'                 then zf_MyRound3(ScaleHistory.Production_Weight*(1-ScaleHistory.DiscountWeight/100))'
+           +'            when ScaleHistory.BillKind=zc_bkSaleToClient() and isnull(Bill.BillKind,0)<>zc_bkOut()'
+           +'                 then zf_MyRound(ScaleHistory.Production_Weight*(1-ScaleHistory.DiscountWeight/100))'
+           +'            when ScaleHistory.BillKind in (zc_bkIncomeToUnit(),zc_bkReturnToClient(),zc_bkReturnToUnit())'
+           +'                 then ScaleHistory.Production_Weight'
+           +'            else 0'
+           +'       end as inAmountPartner');
+        Add('     , ScaleHistory.Production_Weight + isnull(ScaleHistory.Tare_Count * ScaleHistory.Tare_Weight,0) as inRealWeight');
+        Add('     , ScaleHistory.DiscountWeight as inChangePercentAmount');
+        Add('     , ScaleHistory.Tare_Count as inCountTare');
+        Add('     , ScaleHistory.Tare_Weight as inWeightTare');
+        Add('     , ScaleHistory.OperCount_Upakovka as inCount');
+        Add('     , case when isnull(Bill.FromId, ScaleHistory.FromID) <> zc_UnitId_StoreSale()'
+           +'             and isnull(Bill.ToId, ScaleHistory.ToID) <> zc_UnitId_StoreSale()'
+           +'                 then ScaleHistory.OperCount_sh'
+           +'            else 0'
+           +'       end as inHeadCount');
+        Add('     , case when isnull(Bill.FromId, ScaleHistory.FromID) = zc_UnitId_StoreSale()'
+           +'              or isnull(Bill.ToId, ScaleHistory.ToID) = zc_UnitId_StoreSale()'
+           +'                 then case when ScaleHistory.NumberTare<>0 then 1 else ScaleHistory.OperCount_sh end'
+           +'            else 0'
+           +'       end as inBoxCount');
+        Add('     , ScaleHistory.NumberTare as inBoxNumber');
+        Add('     , ScaleHistory.NumberLevel as inLevelNumber');
+        Add('     , PriceListItems_byHistory.NewPrice as inPrice');
+        Add('     , 1 as inCountForPrice');
+        Add('     , isnull(ScaleHistory.PartionDate,zc_DateStart()) as inPartionGoodsDate');
 
-        Add('     , PriceListItems_byHistory.NewPrice as Price');
-        Add('     , 1 as CountForPrice');
-        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , KindPackage.Id_Postgres as inGoodsKindId');
+        Add('     , PriceList_byHistory.Id_Postgres as inPriceListId');
+        Add('     , case when inBoxCount <> 0 then 300700 else 0 end as inBoxId');
 
+        Add('     , ScaleHistory.isObv');
+
+        Add('     , case when ScaleHistory.isErased=zc_erasedDel() then zc_rvYes() else zc_rvNo() end as isErased');
         Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡(')+'+GoodsProperty.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+isnull(KindPackage.KindPackageName,'+FormatToVarCharServer_notNULL('')+')+'+FormatToVarCharServer_notNULL(')')
 //           +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ‚Ë‰')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
-        Add('     , zc_rvYes() as zc_rvYes');
-        Add('     , BillItems.Id_Postgres as Id_Postgres');
-        Add('from dba.Bill');
-        Add('     left outer join dba.isUnit AS isUnitFrom on isUnitFrom.UnitId = Bill.FromId');
-        Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
 
-        Add('     left outer join dba.BillItemsZakaz as BillItems on BillItems.BillId = Bill.Id');
-        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     , ScaleHistory.MIId_pg as Id_Postgres');
+        Add('from (select ScaleHistory.Id'
+           +'            ,ScaleHistory.BillId'
+           +'            ,zc_rvNo() as isObv'
+           +'            ,fCalcCurrentBillDate_byPG(InsertDate,10) as Date_pg'
+           +'            ,InsertDate,UpdateDate'
+           +'            ,BillKind,ToId,FromId'
+           +'            ,Production_GoodsId as GoodsPropertyId'
+           +'            ,KindPackageId'
+           +'            ,PriceListId'
+           +'            ,Production_Weight'
+           +'            ,Tare_GoodsId'
+           +'            ,Tare_Weight'
+           +'            ,OperCount_Upakovka,OperCount_sh,NumberTare,NumberLevel,PartionDate'
+           +'            ,isErased'
+           +'            ,Tare_Count'
+           +'            ,DiscountWeight'
+           +'            ,ScaleHistory.MovementId_pg,ScaleHistory.MIId_pg'
+           +'      from dba.ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'        and ScaleHistory.MovementId_pg>0'
+           +'     union'
+           +'      select ScaleHistory.Id'
+           +'            ,ScaleHistory.BillId'
+           +'            ,zc_rvYes() as isObv'
+           +'            ,fCalcCurrentBillDate_byPG(InsertDate,10) as Date_pg'
+           +'            ,InsertDate,UpdateDate'
+           +'            ,BillKind,ToId,FromId'
+           +'            ,Production_GoodsId as GoodsPropertyId'
+           +'            ,KindPackageId'
+           +'            ,PriceListId'
+           +'            ,Production_Weight'
+           +'            ,Tare_GoodsId'
+           +'            ,Tare_Weight'
+           +'            ,OperCount_Upakovka,OperCount_sh,NumberTare,NumberLevel,PartionDate'
+           +'            ,isErased'
+           +'            ,Tare_Count'
+           +'            ,DiscountWeight'
+           +'            ,ScaleHistory.MovementId_pg,ScaleHistory.MIId_pg'
+           +'      from dba.ScaleHistory_byObvalka as ScaleHistory'
+           +'      where InsertDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-1)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+1)
+           +'        and ScaleHistory.BillId>0'
+           +'        and ScaleHistory.MovementId_pg>0'
+           +'     ) as ScaleHistory');
+
+        Add('     left outer join dba.Bill on Bill.Id = ScaleHistory.BillId');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = ScaleHistory.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
-        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = ScaleHistory.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
-        Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=BillItems.GoodsPropertyId'
-           +'                                           and PriceListItems_byHistory.PriceListID = 2' // Œœ“Œ¬€≈ ÷≈Õ€
-           +'                                           and Bill.BillDate between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind = zc_bkProductionInZakaz()'
-           +'  and (isUnitFrom.UnitId is null and isUnitTo.UnitId is not null)'
-           +'  and BillItems.Id is not null'
-           +'  and Bill.Id_Postgres>0'
-           );
-        if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.Id_Postgres,0)=0');
+        Add('     left join dba.PriceList_byHistory on PriceList_byHistory.Id=ScaleHistory.PriceListID');
+        Add('     LEFT JOIN dba.PriceListItems_byHistory on PriceListItems_byHistory.GoodsPropertyId=ScaleHistory.GoodsPropertyId'
+           +'                                           and PriceListItems_byHistory.PriceListID = ScaleHistory.PriceListID' // Œœ“Œ¬€≈ ÷≈Õ€
+           +'                                           and ScaleHistory.Date_pg between PriceListItems_byHistory.StartDate and PriceListItems_byHistory.EndDate');
         Add('order by 2,3,1');
         Open;
 
@@ -18910,17 +19047,29 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_OrderExternal';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_WeighingPartner';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountSecond',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRealWeight',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountTare',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeightTare',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxNumber',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLevelNumber',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoodsDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBoxId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
         toStoredProc_two.OutputType := otResult;
@@ -18934,22 +19083,48 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
+             //
+             if FieldByName('Id_Postgres').AsInteger <> 0
+             then fExecSqToQuery ('select lpSetUnErased_MovementItem('+IntToStr(FieldByName('Id_Postgres').AsInteger)+',5)');
+
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('inAmountSecond').Value:=FieldByName('AmountSecond').AsFloat;
-             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
-             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('inMovementId').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('inAmount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('inAmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inRealWeight').Value:=FieldByName('inRealWeight').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('inChangePercentAmount').AsFloat;
+             toStoredProc.Params.ParamByName('inCountTare').Value:=FieldByName('inCountTare').AsFloat;
+             toStoredProc.Params.ParamByName('inWeightTare').Value:=FieldByName('inWeightTare').AsFloat;
+             toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('inCount').AsFloat;
+             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('inHeadCount').AsFloat;
+             toStoredProc.Params.ParamByName('inBoxCount').Value:=FieldByName('inBoxCount').AsFloat;
+             toStoredProc.Params.ParamByName('inBoxNumber').Value:=FieldByName('inBoxNumber').AsFloat;
+             toStoredProc.Params.ParamByName('inLevelNumber').Value:=FieldByName('inLevelNumber').AsFloat;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('inPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('inCountForPrice').AsFloat;
+             if FieldByName('inPartionGoodsDate').AsDateTime <= StrToDate('01.01.1900')
+             then toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=StrToDate('01.01.1900')
+             else toStoredProc.Params.ParamByName('inPartionGoodsDate').Value:=FieldByName('inPartionGoodsDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('inGoodsKindId').AsInteger;
+             toStoredProc.Params.ParamByName('inPriceListId').Value:=FieldByName('inPriceListId').AsInteger;
+             toStoredProc.Params.ParamByName('inBoxId').Value:=FieldByName('inBoxId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
-             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
-             then fExecSqFromQuery('update dba.BillItemsZakaz set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvYes)
+             then fExecSqFromQuery('update dba.ScaleHistory_byObvalka set MIId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value))
+             else
+                 if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isObv').AsInteger=zc_rvNo)
+                 then fExecSqFromQuery('update dba.ScaleHistory set MIId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             fExecSqToQuery ('select lpInsertUpdate_MovementItemDate(zc_MIDate_Insert(),'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+','+FormatToDateTimeServer(FieldByName('InsertDate').AsDateTime)+')');
+             fExecSqToQuery ('select lpInsertUpdate_MovementItemDate(zc_MIDate_Update(),'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+','+FormatToDateTimeServer(FieldByName('UpdateDate').AsDateTime)+')');
+             if FieldByName('isErased').AsInteger=zc_rvYes
+             then fExecSqToQuery ('select lpSetErased_MovementItem('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+',5)');
              //
              if (FieldByName('errInvNumber').AsString<>'')
              then begin
-                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('inMovementId').AsInteger;
                   toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
                   if not myExecToStoredProc_two then;
              end;

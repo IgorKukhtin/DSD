@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_EDI()
+-- Function: gpInsertUpdate_Movement_EDI() - Перенести данные из EDI в документ !!!только продажа должна уже быть, остальные - создаются/корректируются!!!
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SaleLinkEDI (Integer, Integer, TVarChar);
 
@@ -112,9 +112,9 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ (' || (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale()) || ').', vbUserId);
 
-     END IF; -- !!!так для продажи!!!
+     -- END !!!так для продажи!!!
 
-
+     ELSE
      -- !!!так для возврата!!!
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
      THEN
@@ -123,6 +123,23 @@ BEGIN
                                                       , inUserId        := vbUserId
                                                       , inSession       := inSession
                                                        );
+     -- END !!!так для возврата!!!
+
+     ELSE
+     -- !!!так для заявки!!!
+     IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_OrderExternal() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
+     THEN
+          -- !!!создается док-т <Заявки сторонние>!!!
+          PERFORM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId    := inMovementId_EDI
+                                                         , inUserId        := vbUserId
+                                                         , inSession       := inSession
+                                                          );
+     -- END !!!так для заявки!!!
+
+     ELSE
+         RAISE EXCEPTION 'Ошибка.Нельзя обработать документ <%>.', COALESCE ((SELECT MovementDesc.ItemName FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc()), '');
+     END IF;
+     END IF;
      END IF;
 
 
@@ -133,6 +150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.10.14                                        * add lpInsertUpdate_Movement_EDIComdoc_Order
  01.09.14                                        * add lpInsertUpdate_Movement_EDIComdoc_In
  20.07.14                                        * ALL
  13.05.14                         *

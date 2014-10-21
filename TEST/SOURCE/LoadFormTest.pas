@@ -38,6 +38,7 @@ type
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
     procedure LoadContactPersonFormTest;
+    procedure LoadCorrespondentAccountFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadCityFormTest;
@@ -119,8 +120,8 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
-    procedure LoadZakazExternalFormTest;
-    procedure LoadZakazInternalFormTest;
+    //procedure LoadZakazExternalFormTest;
+    //procedure LoadZakazInternalFormTest;
   end;
 
 implementation
@@ -155,6 +156,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
 end;
+
+procedure TLoadFormTest.LoadCorrespondentAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrespondentAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCorrespondentAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrespondentAccountEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCorrespondentAccountEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadBankAccountContractFormTest;
 begin
@@ -219,6 +229,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 
@@ -233,12 +245,16 @@ procedure TLoadFormTest.LoadContractFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
@@ -597,6 +613,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
 end;
+{ ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazExternalForm'));
@@ -611,7 +628,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TZakazInternalJournalForm');
 end;
-
+}
 procedure TLoadFormTest.MainFormTest;
 var ActionDataSet: TClientDataSet;
     StoredProc: TdsdStoredProc;

@@ -344,6 +344,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 43
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
@@ -532,6 +540,7 @@ inherited SaleJournalForm: TSaleJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -557,6 +566,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -580,6 +590,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -603,6 +614,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -626,6 +638,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -788,6 +801,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
@@ -828,6 +842,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -871,6 +886,7 @@ inherited SaleJournalForm: TSaleJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -1149,6 +1165,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1167,6 +1184,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1179,6 +1197,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1227,12 +1246,14 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1246,21 +1267,25 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'outInvNumberPartner_Master'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 312
   end
@@ -1321,6 +1346,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end
@@ -1352,6 +1378,7 @@ inherited SaleJournalForm: TSaleJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 296
   end
@@ -1383,6 +1410,7 @@ inherited SaleJournalForm: TSaleJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 344
   end
@@ -1405,6 +1433,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 704
     Top = 360
   end
@@ -1427,6 +1456,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'ReportNameSale'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 704
     Top = 416
   end
@@ -1444,10 +1474,12 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameBill'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 536
     Top = 408
   end
@@ -1464,17 +1496,20 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inChecked'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 320
     Top = 435
   end

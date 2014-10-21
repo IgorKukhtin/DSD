@@ -15,8 +15,8 @@ CREATE OR REPLACE VIEW Object_Street_View AS
            , Object_City.Id                 AS CityId
            , Object_City.ValueData          AS CityName
 
-           , View_ProvinceCity.PersonalId   AS ProvinceCityId
-           , View_ProvinceCity.PersonalName AS ProvinceCityName
+           , Object_ProvinceCity.Id         AS ProvinceCityId
+           , Object_ProvinceCity.ValueData  AS ProvinceCityName
            
            , Object_Street.isErased    AS isErased
            
@@ -40,7 +40,7 @@ CREATE OR REPLACE VIEW Object_Street_View AS
             LEFT JOIN ObjectLink AS ObjectLink_Street_ProvinceCity 
                                  ON ObjectLink_Street_ProvinceCity.ObjectId = Object_Street.Id
                                 AND ObjectLink_Street_ProvinceCity.DescId = zc_ObjectLink_Street_ProvinceCity()
-            LEFT JOIN Object_Personal_View AS View_ProvinceCity ON View_ProvinceCity.PersonalId = ObjectLink_Street_ProvinceCity.ChildObjectId
+            LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Street_ProvinceCity.ChildObjectId
             
      WHERE Object_Street.DescId = zc_Object_Street();
 
@@ -51,6 +51,7 @@ ALTER TABLE Object_Street_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.14         * 
  09.06.14                        * 
 */
 

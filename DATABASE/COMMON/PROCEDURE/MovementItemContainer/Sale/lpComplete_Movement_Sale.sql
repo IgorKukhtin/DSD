@@ -1622,17 +1622,18 @@ BEGIN
                                  );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
-     IF EXISTS (SELECT MovementLinkMovement_Master.MovementId
-                FROM MovementLinkMovement AS MovementLinkMovement_Master
-                     INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-                                                                   AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
-                                                   ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id
-                                                  AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                                                  AND MovementLinkObject_DocumentTaxKind_Master.ObjectId = zc_Enum_DocumentTaxKind_Tax()
-                WHERE MovementLinkMovement_Master.MovementId = inMovementId
-                  AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-               )
+     IF inIsLastComplete = FALSE
+        AND EXISTS (SELECT MovementLinkMovement_Master.MovementId
+                    FROM MovementLinkMovement AS MovementLinkMovement_Master
+                         INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+                                                                       AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                         INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
+                                                       ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id
+                                                      AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                      AND MovementLinkObject_DocumentTaxKind_Master.ObjectId = zc_Enum_DocumentTaxKind_Tax()
+                    WHERE MovementLinkMovement_Master.MovementId = inMovementId
+                      AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                   )
      THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                        , inDocumentTaxKindId_inf := NULL
@@ -1647,6 +1648,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.10.14                                        * add inIsLastComplete = FALSE, тогда перепроводим Налоговую
  07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_To
  05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  02.09.14                                        * add vbIsHistoryCost

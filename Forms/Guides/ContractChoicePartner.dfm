@@ -228,67 +228,98 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
+        end
+        item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
         end
         item
+          Name = 'ContractTagId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractTagId'
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+        end
+        item
           Name = 'ChangePercent'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat

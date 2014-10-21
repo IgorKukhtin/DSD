@@ -584,7 +584,7 @@ begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
       FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Налоговая отправлена на FTP';
+        'Корректировочная налоговая отправлена на FTP';
       FInsertEDIEvents.Execute;
     end;
   finally

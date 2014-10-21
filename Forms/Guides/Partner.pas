@@ -52,14 +52,14 @@ type
     dxBarStatic1: TdxBarStatic;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    ceCode: TcxGridDBColumn;
-    ceJuridicalName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    ceName: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    ceAddress: TcxGridDBColumn;
+    clAddress: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -76,6 +76,8 @@ type
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
+    clGLNCode: TcxGridDBColumn;
+    clGLNCode_Juridical: TcxGridDBColumn;
   private
     { Private declarations }
   public

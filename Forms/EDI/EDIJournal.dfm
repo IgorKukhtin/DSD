@@ -1,26 +1,26 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EDI>'
   ClientHeight = 424
-  ClientWidth = 1102
+  ClientWidth = 1166
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1110
-  ExplicitHeight = 451
+  ExplicitWidth = 1182
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 1102
+    Width = 1166
     Height = 367
     ExplicitTop = 57
     ExplicitWidth = 1102
     ExplicitHeight = 367
     ClientRectBottom = 367
-    ClientRectRight = 1102
+    ClientRectRight = 1166
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1102
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
-        Width = 1102
+        Width = 1166
         Height = 209
         Align = alTop
         ExplicitWidth = 1102
@@ -71,7 +71,6 @@ inherited EDIJournalForm: TEDIJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -91,6 +90,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clInvNumber: TcxGridDBColumn
@@ -123,6 +123,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'OperDatePartner_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clOperDate_Tax: TcxGridDBColumn
@@ -131,6 +132,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clOperDate_TaxCorrective: TcxGridDBColumn
@@ -139,6 +141,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clOperDateTax: TcxGridDBColumn
@@ -147,6 +150,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clInvNumberPartner: TcxGridDBColumn
@@ -178,6 +182,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'InvNumberTax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clInvNumberPartner_TaxCorrective: TcxGridDBColumn
@@ -185,6 +190,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'InvNumberPartner_TaxCorrective'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clFromName_Sale: TcxGridDBColumn
@@ -193,6 +199,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object clToName_Sale: TcxGridDBColumn
@@ -200,6 +207,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'ToName_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object clJuridicalName: TcxGridDBColumn
@@ -241,12 +249,59 @@ inherited EDIJournalForm: TEDIJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clPartnerNameFind: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1085#1072#1081#1076#1077#1085')'
             DataBinding.FieldName = 'PartnerNameFind'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' (EDI)'
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceUnit
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. (EDI)'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. (EDI)'
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceContract
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. (EDI)'
+            DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -260,6 +315,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object clTotalCountPartner_Sale: TcxGridDBColumn
@@ -270,6 +326,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object clTotalSumm: TcxGridDBColumn
@@ -280,6 +337,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clTotalSumm_Sale: TcxGridDBColumn
@@ -290,6 +348,7 @@ inherited EDIJournalForm: TEDIJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clDescName: TcxGridDBColumn
@@ -297,6 +356,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'DescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object clmovIsCheck: TcxGridDBColumn
@@ -304,6 +364,7 @@ inherited EDIJournalForm: TEDIJournalForm
             DataBinding.FieldName = 'isCheck'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clisElectron: TcxGridDBColumn
@@ -317,23 +378,25 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1102
+        Width = 1166
         Height = 3
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 1102
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 212
-        Width = 1102
+        Width = 1166
         Height = 155
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 1102
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
-          Width = 785
+          Width = 953
           Height = 155
           Align = alLeft
           PopupMenu = PopupMenu
@@ -344,13 +407,14 @@ inherited EDIJournalForm: TEDIJournalForm
             DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <
               item
+                Format = ',0.####'
                 Kind = skSum
-                Column = colAmountOrder
+                Column = clAmountOrder
               end
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = colAmountPartner
+                Column = clAmountPartner
               end
               item
                 Format = ',0.####'
@@ -366,6 +430,21 @@ inherited EDIJournalForm: TEDIJournalForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = clSummPartnerEDI
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountOrderEDI
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountNotice
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountNoticeEDI
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -374,13 +453,14 @@ inherited EDIJournalForm: TEDIJournalForm
                 Column = clSummPartner
               end
               item
+                Format = ',0.####'
                 Kind = skSum
-                Column = colAmountOrder
+                Column = clAmountOrder
               end
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = colAmountPartner
+                Column = clAmountPartner
               end
               item
                 Format = ',0.####'
@@ -391,6 +471,21 @@ inherited EDIJournalForm: TEDIJournalForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = clSummPartnerEDI
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountOrderEDI
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountNotice
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = clAmountNoticeEDI
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -458,8 +553,8 @@ inherited EDIJournalForm: TEDIJournalForm
               Options.Editing = False
               Width = 45
             end
-            object colAmountOrder: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
+            object clAmountOrder: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'.'
               DataBinding.FieldName = 'AmountOrder'
               Visible = False
               HeaderAlignmentHorz = taCenter
@@ -467,8 +562,32 @@ inherited EDIJournalForm: TEDIJournalForm
               Options.Editing = False
               Width = 55
             end
-            object colAmountPartner: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082'.'
+            object clAmountOrderEDI: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'. (EDI)'
+              DataBinding.FieldName = 'AmountOrderEDI'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 55
+            end
+            object clAmountNotice: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083'. ('#1091#1074#1077#1076#1086#1084#1083'.)'
+              DataBinding.FieldName = 'AmountNotice'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 55
+            end
+            object clAmountNoticeEDI: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083'. ('#1091#1074#1077#1076#1086#1084#1083'. EDI)'
+              DataBinding.FieldName = 'AmountNoticeEDI'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 55
+            end
+            object clAmountPartner: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087'. '
               DataBinding.FieldName = 'AmountPartner'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -476,14 +595,14 @@ inherited EDIJournalForm: TEDIJournalForm
               Width = 55
             end
             object clAmountPartnerEDI: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' (EDI)'
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087'. (EDI)'
               DataBinding.FieldName = 'AmountPartnerEDI'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 55
             end
             object clSummPartner: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' '#1076#1086#1082'.'
+              Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087'.'
               DataBinding.FieldName = 'SummPartner'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -491,7 +610,7 @@ inherited EDIJournalForm: TEDIJournalForm
               Width = 55
             end
             object clSummPartnerEDI: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' (EDI)'
+              Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087'. (EDI)'
               DataBinding.FieldName = 'SummPartnerEDI'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -502,7 +621,7 @@ inherited EDIJournalForm: TEDIJournalForm
               DataBinding.FieldName = 'isCheck'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 45
+              Width = 30
             end
           end
           object cxGridLevel1: TcxGridLevel
@@ -510,13 +629,15 @@ inherited EDIJournalForm: TEDIJournalForm
           end
         end
         object cxProtocolGrid: TcxGrid
-          Left = 786
+          Left = 954
           Top = 0
-          Width = 316
+          Width = 212
           Height = 155
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitLeft = 786
+          ExplicitWidth = 316
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -572,11 +693,12 @@ inherited EDIJournalForm: TEDIJournalForm
           end
         end
         object cxVerticalSplitter: TcxSplitter
-          Left = 785
+          Left = 953
           Top = 0
           Width = 1
           Height = 155
           Control = cxChildGrid
+          ExplicitLeft = 785
         end
       end
     end
@@ -584,10 +706,11 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1102
+    Width = 1166
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1102
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -815,6 +938,7 @@ inherited EDIJournalForm: TEDIJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId_Sale'
         end
@@ -825,6 +949,7 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Name = 'inOperDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDatePartner_Sale'
           DataType = ftDateTime
@@ -852,11 +977,11 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           StoredProc = spInsertUpdate_SaleLinkEDI
         end>
-      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 42
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' EDI '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
     end
     object mactCOMDOC: TMultiAction
       Category = 'EDI COMDOC'
@@ -1015,6 +1140,95 @@ inherited EDIJournalForm: TEDIJournalForm
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
       Caption = 'EDI '#1042#1086#1079#1074#1088#1072#1090
       Hint = 'EDI '#1042#1086#1079#1074#1088#1072#1090
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actChoiceContract: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractCode'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId_Find'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalNameFind'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Unit_ObjectForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1619,12 +1833,14 @@ inherited EDIJournalForm: TEDIJournalForm
     Params = <
       item
         Name = 'inMovementId_EDI'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
@@ -1640,6 +1856,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1662,6 +1879,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
@@ -1696,6 +1914,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
@@ -1796,6 +2015,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId_TaxCorrective'
         ParamType = ptInput
@@ -1809,5 +2029,35 @@ inherited EDIJournalForm: TEDIJournalForm
     PackSize = 1
     Left = 679
     Top = 112
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_EDI_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 160
   end
 end

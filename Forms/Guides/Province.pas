@@ -55,6 +55,7 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    colRegionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

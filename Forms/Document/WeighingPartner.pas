@@ -87,7 +87,6 @@ type
     colUpdateDate: TcxGridDBColumn;
     colRealWeight: TcxGridDBColumn;
     colWeightTare: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colCountTare: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colCount: TcxGridDBColumn;
@@ -162,6 +161,18 @@ type
     ContractGuides: TdsdGuides;
     edContractTag: TcxTextEdit;
     edWeighingNumber: TcxCurrencyEdit;
+    colBoxCount: TcxGridDBColumn;
+    colBoxNumber: TcxGridDBColumn;
+    colLevelNumber: TcxGridDBColumn;
+    colBoxName: TcxGridDBColumn;
+    colHeadCount: TcxGridDBColumn;
+    colAmount_mi: TcxGridDBColumn;
+    colAmountPartner: TcxGridDBColumn;
+    colAmountPartner_mi: TcxGridDBColumn;
+    colCount_mi: TcxGridDBColumn;
+    colHeadCount_mi: TcxGridDBColumn;
+    colBoxCount_mi: TcxGridDBColumn;
+    colAmountChangePercent: TcxGridDBColumn;
   private
   public
   end;

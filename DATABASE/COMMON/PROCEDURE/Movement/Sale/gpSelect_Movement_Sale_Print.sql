@@ -35,11 +35,11 @@ BEGIN
      SELECT Movement.DescId
           , Movement.StatusId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
-          , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END    AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END     AS ExtraChargesPercent
+          , ObjectLink_Juridical_GoodsProperty.ChildObjectId        AS GoodsPropertyId
+          , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId   AS GoodsPropertyId_basis
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -149,6 +149,9 @@ BEGIN
 
      --
     OPEN Cursor1 FOR
+--     WITH tmpObject_GoodsPropertyValue AS
+
+
        SELECT
              Movement.Id                                AS Id
 --           , Movement.InvNumber                         AS InvNumber
@@ -176,14 +179,14 @@ BEGIN
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
-           , Object_From.ValueData             		AS FromName
+           , Object_From.ValueData             		    AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , View_Contract.InvNumber        		AS ContractName
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , View_Contract.InvNumber        		    AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
-           , Object_RouteSorting.ValueData 		AS RouteSortingName
+           , Object_RouteSorting.ValueData 		        AS RouteSortingName
 
            , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
@@ -217,10 +220,41 @@ BEGIN
            , OH_JuridicalDetails_From.Phone             AS Phone_From
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
-           , Object_BankAccount.ValueData               AS BankAccount_ByContract
-           , Object_Bank.ValueData                      AS BankName_ByContract
-           , ObjectString_Bank_MFO.ValueData            AS BankMFO_ByContract
-           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
+           , Object_BankAccount.Name                            AS BankAccount_ByContract
+           , Object_BankAccount.BankName                        AS BankName_ByContract
+           , Object_BankAccount.MFO                             AS BankMFO_ByContract
+           , Object_BankAccount.SWIFT                           AS BankSWIFT_ByContract
+           , Object_BankAccount.IBAN                            AS BankIBAN_ByContract
+           , Object_BankAccount.CorrespondentBankName           AS CorrBankName_ByContract
+           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorrBankSWIFT_ByContract
+           , Object_BankAccount.CorrespondentAccount            AS CorrespondentAccount_ByContract
+           , OHS_JD_JuridicalAddress_Bank_From.ValueData        AS JuridicalAddressBankFrom
+           , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
+
+
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0)         AS EDIId
+
+           , BankAccount_To.BankName                            AS BankName_Int
+           , BankAccount_To.Name                                AS BankAccount_Int
+
+           , BankAccount_To.CorrespondentBankName               AS CorBankName_Int
+           , Object_Bank_View_CorrespondentBank.JuridicalName   AS CorBankJuridicalName_Int
+           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorBankSWIFT_Int
+
+           , BankAccount_To.BeneficiarysBankName                AS BenefBankName_Int
+           , OHS_JD_JuridicalAddress_BenifBank_To.ValueData     AS JuridicalAddressBenifBank_Int
+           , Object_Bank_View_BenifBank.SWIFT                   AS BenifBankSWIFT_Int
+           , BankAccount_To.BeneficiarysBankAccount             AS BenefBankAccount_Int
+
+           , BankAccount_To.MFO                                 AS BankMFO_Int
+           , BankAccount_To.SWIFT                               AS BankSWIFT_Int
+           , BankAccount_To.IBAN                                AS BankIBAN_Int
+
+           , Object_Bank_View_To.JuridicalName                  AS BankJuridicalName_Int
+           , OHS_JD_JuridicalAddress_To.ValueData               AS BankJuridicalAddress_Int
+           , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
+           , BankAccount_To.Name                                AS BankAccount_Int
+
 
 
        FROM Movement
@@ -337,16 +371,63 @@ BEGIN
                       ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!не ошибка!!!, выбирается с пустой УП
                                                                          AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
 
-            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
+            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
 
-            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
-                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
-                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
-            LEFT JOIN ObjectString AS ObjectString_Bank_MFO
-                                   ON ObjectString_Bank_MFO.ObjectId = Object_Bank.Id
-                                  AND ObjectString_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
+                                                                ON OH_JuridicalDetails_Bank_From.JuridicalId = Object_BankAccount.BankJuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_Bank_From.StartDate AND OH_JuridicalDetails_Bank_From.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_Bank_From
+                                          ON OHS_JD_JuridicalAddress_Bank_From.ObjectHistoryId = OH_JuridicalDetails_Bank_From.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
+            LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank_From ON Object_Bank_View_CorrespondentBank_From.Id = Object_BankAccount.CorrespondentBankId
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_CorrBank_From
+                                                                ON OH_JuridicalDetails_CorrBank_From.JuridicalId = Object_Bank_View_CorrespondentBank_From.JuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_CorrBank_From.StartDate AND OH_JuridicalDetails_CorrBank_From.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_CorrBank_From
+                                          ON OHS_JD_JuridicalAddress_CorrBank_From.ObjectHistoryId = OH_JuridicalDetails_CorrBank_From.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_CorrBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
+-- +++++++++++++++++ BANK TO
+            LEFT JOIN
+                      (SELECT *
+                       FROM Object_BankAccount_View
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                    ON MovementLinkObject_To.MovementId = inMovementId
+                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                            ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+
+                      WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId LIMIT 1
+                      ) AS BankAccount_To ON 1=1
+
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
+         LEFT JOIN Object_Bank_View AS Object_Bank_View_To ON Object_Bank_View_To.Id = BankAccount_To.BankId
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_BenifBank_To
+                                                                ON OH_JuridicalDetails_BenifBank_To.JuridicalId = Object_Bank_View_BenifBank.JuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_BenifBank_To.StartDate AND OH_JuridicalDetails_BenifBank_To.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_BenifBank_To
+                                          ON OHS_JD_JuridicalAddress_BenifBank_To.ObjectHistoryId = OH_JuridicalDetails_BenifBank_To.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_BenifBank_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetailsBank_To
+                                                                ON OH_JuridicalDetailsBank_To.JuridicalId = Object_Bank_View_To.JuridicalId
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetailsBank_To.StartDate AND OH_JuridicalDetailsBank_To.EndDate
+
+            LEFT JOIN ObjectHistoryString AS OHS_JD_JuridicalAddress_To
+                                          ON OHS_JD_JuridicalAddress_To.ObjectHistoryId = OH_JuridicalDetailsBank_To.ObjectHistoryId
+                                         AND OHS_JD_JuridicalAddress_To.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+
 --
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -429,6 +510,7 @@ BEGIN
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
+           , OS_Measure_InternalCode.ValueData  AS MeasureIntCode
            , CASE Object_Measure.Id
                   WHEN zc_Measure_Sh() THEN 'PCE'
                   ELSE 'KGM'
@@ -524,6 +606,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN ObjectString AS OS_Measure_InternalCode
+                                   ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
+                                  AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
+
+
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -550,6 +637,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.10.14                                                       *
  13.05.14                                                       * Amount_Weight Amount_Sh
  23.07.14                                        * add ArticleGLN
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
@@ -579,8 +667,9 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 130359, inSession:= '2');
 COMMIT;
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');

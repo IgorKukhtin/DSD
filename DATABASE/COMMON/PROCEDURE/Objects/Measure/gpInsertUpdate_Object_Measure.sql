@@ -1,14 +1,14 @@
-п»ї-- Function: gpInsertUpdate_Object_Measure()
+-- Function: gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Measure();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
- INOUT ioId	          Integer,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р•РґРёРЅРёС†Р° РёР·РјРµСЂРµРЅРёСЏ>
-    IN inCode         Integer,       -- СЃРІРѕР№СЃС‚РІРѕ <РљРѕРґ Р•РґРёРЅРёС†С‹ РёР·РјРµСЂРµРЅРёСЏ>
-    IN inName         TVarChar,      -- РіР»Р°РІРЅРѕРµ РќР°Р·РІР°РЅРёРµ Р•РґРёРЅРёС†С‹ РёР·РјРµСЂРµРЅРёСЏ
+ INOUT ioId	          Integer,   	-- ключ объекта <Единица измерения>
+    IN inCode         Integer,       -- свойство <Код Единицы измерения>
+    IN inName         TVarChar,      -- главное Название Единицы измерения
     IN inInternalCode TVarChar,      --
     IN inInternalName TVarChar,      --
-    IN inSession      TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession      TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -17,11 +17,14 @@ $BODY$
 
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рє РїРѕСЃР»РµРґРЅРёР№+1
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN
        SELECT COALESCE( MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Measure();
@@ -29,37 +32,37 @@ BEGIN
        Code_max := inCode;
    END IF;
 
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р•РґРёРЅРёС†С‹ РёР·РјРµСЂРµРЅРёСЏ>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName);
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ Р•РґРёРЅРёС†С‹ РёР·РјРµСЂРµРЅРёСЏ>
+   -- проверка уникальности для свойства <Наименование Единицы измерения>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); --!!!временно откл.!!! 
+   -- проверка уникальности для свойства <Код Единицы измерения>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Measure(), Code_max);
 
 
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), Code_max, inName);
 
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalCode(), ioId, inInternalCode);
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalName(), ioId, inInternalName);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  09.10.14                                                       *
  13.06.13          *
  16.06.13                                        * COALESCE( MAX (ObjectCode), 0)
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Measure()

@@ -26,10 +26,10 @@ BEGIN
                , vbInvNumberPartner_Tax, vbOperDate_Tax, vbJuridicalId_Tax
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
-                                         ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id
+                                         ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id
                                         AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
-                                         ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id
+                                         ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id
                                         AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
           LEFT JOIN MovementString AS MovementString_InvNumberTax
                                    ON MovementString_InvNumberTax.MovementId =  Movement.Id
@@ -71,7 +71,7 @@ BEGIN
      -- Проверка
      IF COALESCE (vbMovementId_Tax, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ <Налоговая накладная> № <%>  от <%> не найден.', vbInvNumberPartner_Tax, DATE (vbOperDate_Tax);
+         RAISE EXCEPTION 'Ошибка.Документ <Налоговая накладная> № <%> от <%> не найден.', vbInvNumberPartner_Tax, DATE (vbOperDate_Tax);
      END IF;
 
      -- сохранили <Возврат от покупателя>

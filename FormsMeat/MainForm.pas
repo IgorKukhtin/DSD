@@ -419,6 +419,12 @@ type
     bbPeriodClose_User: TdxBarButton;
     actBox: TdsdOpenForm;
     bbBox: TdxBarButton;
+    actCorrAccount: TdsdOpenForm;
+    bbCorrAccount: TdxBarButton;
+    actCashOperationZaporozhye: TdsdOpenForm;
+    actCashOperationDneprOfficial: TdsdOpenForm;
+    bbCashZaporozhye: TdxBarButton;
+    bbCashDneprOfficial: TdxBarButton;
   public
     { Public declarations }
   end;

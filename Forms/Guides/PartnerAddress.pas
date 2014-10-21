@@ -67,7 +67,7 @@ type
     clCaseNumber: TcxGridDBColumn;
     clRoomNumber: TcxGridDBColumn;
     clHouseNumber: TcxGridDBColumn;
-    StreetChoiceForm: TOpenChoiceForm;
+    CityKindChoiceForm: TOpenChoiceForm;
     PriceListPromoChoiceForm: TOpenChoiceForm;
     cxLabel6: TcxLabel;
     JuridicalGuides: TdsdGuides;
@@ -76,6 +76,15 @@ type
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
+    colShortName: TcxGridDBColumn;
+    colPostalCode: TcxGridDBColumn;
+    colCityName: TcxGridDBColumn;
+    colCityKindName: TcxGridDBColumn;
+    colRegionName: TcxGridDBColumn;
+    colProvinceName: TcxGridDBColumn;
+    colStreetKindName: TcxGridDBColumn;
+    StreetKindChoiceForm: TOpenChoiceForm;
+    colProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -20,6 +20,11 @@ BEGIN
      -- проверка - если есть <Child> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
+     -- !!!обнуляются свойства в элементах документа!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), MovementItem.Id, 0)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId;
+
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);

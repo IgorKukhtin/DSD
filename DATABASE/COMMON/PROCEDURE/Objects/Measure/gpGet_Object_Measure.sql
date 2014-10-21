@@ -1,6 +1,5 @@
 ﻿-- Function: gpGet_Object_Measure()
 
---DROP FUNCTION gpGet_Object_Measure();
 DROP FUNCTION IF EXISTS gpGet_Object_Measure (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Measure(
@@ -51,7 +50,6 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Measure(integer, TVarChar)
   OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -60,8 +58,6 @@ ALTER FUNCTION gpGet_Object_Measure(integer, TVarChar)
  13.06.13          *
  00.06.13
  18.06.13                      *  COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-
-
 */
 
 -- тест
