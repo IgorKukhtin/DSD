@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
     IN inLoadPriceListId Integer ,   --
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, CommonCode Integer, GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
+RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
+               GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
                Price TFloat, ProducerName TVarChar, ExpirationDate TDateTime)
 AS
@@ -22,6 +23,7 @@ BEGIN
        SELECT
          LoadPriceListItem.Id, 
          LoadPriceListItem.CommonCode, 
+         LoadPriceListItem.BarCode, 
          LoadPriceListItem.GoodsCode, 
          LoadPriceListItem.GoodsName, 
          LoadPriceListItem.GoodsNDS, 
@@ -45,6 +47,7 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceListItem (Integer, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.10.14                        *                                 
  01.07.14                        *                                 
 
 */

@@ -58,6 +58,9 @@ type
     coPrice: TcxGridDBColumn;
     coContractName: TcxGridDBColumn;
     coSuperFinalPrice: TcxGridDBColumn;
+    spUpdatePrioritetPartner: TdsdStoredProc;
+    actUpdatePrioritetPartner: TdsdExecStoredProc;
+    bbPrioritetPartner: TdxBarButton;
   private
     { Private declarations }
   public

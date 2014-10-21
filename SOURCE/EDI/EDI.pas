@@ -33,6 +33,7 @@ type
     FInsertEDIEvents: TdsdStoredProc;
     FUpdateDeclarAmount: TdsdStoredProc;
     FInsertEDIFile: TdsdStoredProc;
+    FUpdateDeclarFileName: TdsdStoredProc;
     ComSigner: OleVariant;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType;
       spHeader, spList: TdsdStoredProc);
@@ -235,6 +236,13 @@ begin
   FUpdateDeclarAmount.StoredProcName := 'gpUpdate_Movement_DeclarAmount';
   FUpdateDeclarAmount.OutputType := otResult;
 
+  FUpdateDeclarFileName := TdsdStoredProc.Create(nil);
+  FUpdateDeclarFileName.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FUpdateDeclarFileName.Params.AddParam('inFileName', ftString, ptInput, '');
+  FUpdateDeclarFileName.StoredProcName := 'gpUpdate_DeclarFileName';
+  FUpdateDeclarFileName.OutputType := otResult;
+
+
 end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
@@ -338,7 +346,7 @@ begin
   // создать xml файл
   DECLAR := NewDECLAR;
   DECLAR.OwnerDocument.Encoding := 'WINDOWS-1251';
-  DECLAR.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_From').asString;
+  DECLAR.DECLARHEAD.TIN := HeaderDataSet.FieldByName('OKPO_To').asString;
   DECLAR.DECLARHEAD.C_DOC := C_DOC;
   DECLAR.DECLARHEAD.C_DOC_SUB := C_DOC_SUB;
   DECLAR.DECLARHEAD.C_DOC_VER := C_DOC_VER;
@@ -375,21 +383,21 @@ begin
   DECLAR.DECLARBODY.H01G2S := HeaderDataSet.FieldByName('ContractName')
     .asString;
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName
-    ('JuridicalName_From').asString;
-  DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName
     ('JuridicalName_To').asString;
-  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
-  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
+  DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName
+    ('JuridicalName_From').asString;
+  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_To').asString;
+  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').asString;
   DECLAR.DECLARBODY.HLOCSEL := HeaderDataSet.FieldByName
-    ('JuridicalAddress_From').asString;
-  DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName
     ('JuridicalAddress_To').asString;
-  if HeaderDataSet.FieldByName('Phone_From').asString = '' then
-     raise Exception.Create('Не определен телефон Продавца');
-  DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
+  DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName
+    ('JuridicalAddress_From').asString;
   if HeaderDataSet.FieldByName('Phone_To').asString = '' then
+     raise Exception.Create('Не определен телефон Продавца');
+  DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_To').asString;
+  if HeaderDataSet.FieldByName('Phone_From').asString = '' then
      raise Exception.Create('Не определен телефон Покупателя');
-  DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
+  DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_From').asString;
 
   DECLAR.DECLARBODY.H02G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName
     ('InvNumberPartnerEDI').asString + ';DATE:' + FormatDateTime('yyyy-mm-dd',
@@ -467,7 +475,7 @@ begin
     with DECLAR.DECLARBODY.RXXXXG5.Add do
     begin
       ROWNUM := IntToStr(i);
-      NodeValue := gfFloatToStr(HeaderDataSet.FieldByName('Amount').AsFloat);
+      NodeValue := '-' + gfFloatToStr(HeaderDataSet.FieldByName('Amount').AsFloat);
     end;
     inc(i);
     HeaderDataSet.Next;
@@ -519,7 +527,7 @@ begin
     with DECLAR.DECLARBODY.RXXXXG9.Add do
     begin
       ROWNUM := IntToStr(i);
-      NodeValue := StringReplace(FormatFloat('0.00',
+      NodeValue := '-' + StringReplace(FormatFloat('0.00',
         HeaderDataSet.FieldByName('AmountSumm').AsFloat), DecimalSeparator,
         cMainDecimalSeparator, []);
     end;
@@ -528,10 +536,10 @@ begin
   end;
 
   DECLAR.DECLARBODY.R01G9 :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat')
+    '-' + StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummmvat')
     .AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R02G9 :=
-    StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat')
+    '-' + StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('totalsummvat')
     .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
   DECLAR.DECLARBODY.H10G1D := FormatDateTime('ddmmyyyy',
@@ -539,7 +547,7 @@ begin
   DECLAR.DECLARBODY.H10G2S := 'Неграш';
 
   // сохранить на диск
-  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + PAD0(HeaderDataSet.FieldByName('OKPO_From').asString, 10) +
+  XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + PAD0(HeaderDataSet.FieldByName('OKPO_To').asString, 10) +
     C_DOC + C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
     PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
     7), 7) + '1' + FormatDateTime('mmyyyy',
@@ -567,6 +575,11 @@ begin
       FUpdateDeclarAmount.ParamByName('inAmount').Value :=
         StrToInt(C_DOC_TYPE) + 1;
       FUpdateDeclarAmount.Execute;
+
+      FUpdateDeclarFileName.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateDeclarFileName.ParamByName('inFileName').Value := ExtractFileName(XMLFileName);
+      FUpdateDeclarFileName.Execute;
 
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -785,6 +798,11 @@ begin
         StrToInt(C_DOC_TYPE) + 1;
       FUpdateDeclarAmount.Execute;
 
+      FUpdateDeclarFileName.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateDeclarFileName.ParamByName('inFileName').Value := ExtractFileName(XMLFileName);
+      FUpdateDeclarFileName.Execute;
+
       // Записать данные в протокол
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -891,6 +909,7 @@ begin
   FreeAndNil(FInsertEDIEvents);
   FreeAndNil(FUpdateDeclarAmount);
   FreeAndNil(FInsertEDIFile);
+  FreeAndNil(FUpdateDeclarFileName);
   inherited;
 end;
 
@@ -1260,6 +1279,7 @@ begin
               spProtocol.ParamByName('inOperMonth').Value :=
                 EncodeDate(StrToInt(copy(List[i], 36, 4)),
                 StrToInt(copy(List[i], 34, 2)), 1);
+              spProtocol.ParamByName('inFileName').Value := Copy(Receipt[0], Pos('FILENAME=', Receipt[0]) + 9, MaxInt);
               spProtocol.Execute;
 
               // теперь перенесли файл в директроию Archive

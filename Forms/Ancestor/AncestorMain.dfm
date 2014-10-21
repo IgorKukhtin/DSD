@@ -154,6 +154,7 @@ object AncestorMainForm: TAncestorMainForm
         DataType = ftBlob
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 312
     Top = 48
   end
@@ -165,6 +166,7 @@ object AncestorMainForm: TAncestorMainForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 72
     Top = 72
   end

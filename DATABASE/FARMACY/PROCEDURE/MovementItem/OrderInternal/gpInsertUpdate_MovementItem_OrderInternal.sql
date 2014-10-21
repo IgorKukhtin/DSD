@@ -26,7 +26,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
      -- пересчитали Итоговые суммы
---     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 
      -- сохранили протокол

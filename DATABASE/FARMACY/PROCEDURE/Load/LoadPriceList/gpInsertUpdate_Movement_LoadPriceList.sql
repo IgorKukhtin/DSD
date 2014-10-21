@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
     IN inCommonCode          Integer   , 
+    IN inBarCode             TVarChar  , 
     IN inGoodsCode           TVarChar  , 
     IN inGoodsName           TVarChar  , 
     IN inGoodsNDS            TVarChar  , 
@@ -49,14 +50,22 @@ BEGIN
        WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = inCommonCode;
    END IF;
    
-  IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
-     INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
-             VALUES(vbLoadPriceListId, inCommonCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
-  ELSE
-     UPDATE LoadPriceListItem SET GoodsName = inGoodsName, CommonCode = inCommonCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, Price = inPrice, 
-                                  ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
-      WHERE Id = vbLoadPriceListItemsId;
-  END IF;
+   -- Ищем по штрих-коду 
+   IF (COALESCE(vbGoodsId, 0) = 0) AND (inBarCode <> '') THEN
+      SELECT GoodsMainId INTO vbGoodsId
+        FROM Object_LinkGoods_View 
+       WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;
+   END IF;
+
+   IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
+      INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
+             VALUES(vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
+   ELSE
+      UPDATE LoadPriceListItem 
+         SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, 
+             Price = inPrice, ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
+       WHERE Id = vbLoadPriceListItemsId;
+   END IF;
 
 END;
 $BODY$

@@ -75,7 +75,9 @@ begin
      if Assigned(FormSender) then
         if FormSender.GetInterface(IFormAction, FormAction) then
            FormAction.OnFormClose(AddOnFormData.Params.Params);
+  Application.ProcessMessages;
   inherited Close;
+  Application.ProcessMessages;
 end;
 
 constructor TParentForm.Create(AOwner: TComponent);

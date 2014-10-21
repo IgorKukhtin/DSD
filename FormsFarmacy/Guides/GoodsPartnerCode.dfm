@@ -139,13 +139,23 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
       isShowModal = True
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Enabled = False
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Category = 'Delete'
+      ImageIndex = -1
+      ShortCut = 0
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -165,6 +175,27 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           Component = MasterCDS
           ComponentItem = 'Code'
         end>
+    end
+    object mactDelete: TMultiAction
+      Category = 'Delete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdSetErased
+        end
+        item
+          Action = DataSetDelete
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1103#1079#1080'?'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+    end
+    object DataSetDelete: TDataSetDelete
+      Category = 'Delete'
+      Caption = '&Delete'
+      Hint = 'Delete'
+      DataSource = GoodsLinkDS
     end
   end
   inherited MasterDS: TDataSource
@@ -198,23 +229,6 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -246,6 +260,18 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           Visible = True
           ItemName = 'bbJuridical'
         end>
+    end
+    inherited bbInsert: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbEdit: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbErased: TdxBarButton
+      Action = mactDelete
+    end
+    inherited bbUnErased: TdxBarButton
+      Visible = ivNever
     end
     object bbLabel: TdxBarControlContainerItem
       Caption = 'New Item'
@@ -282,6 +308,16 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     SearchAsFilter = False
     Left = 256
     Top = 216
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = GoodsLinkCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'

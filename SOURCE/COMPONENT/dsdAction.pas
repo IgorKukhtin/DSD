@@ -167,6 +167,7 @@ type
     function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property ActionList: TOwnedCollection read FActionList write FActionList;
     // —сылка на элемент отображающий список
@@ -1808,6 +1809,12 @@ begin
   end;
 end;
 
+destructor TMultiAction.Destroy;
+begin
+  FreeAndNil(FActionList);
+  inherited;
+end;
+
 procedure TMultiAction.ListExecute;
 var i: integer;
 begin
@@ -1855,7 +1862,7 @@ var i: integer;
 begin
   try
     for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
          TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := FInfoAfterExecuteList.Strings[i];
   finally
     FInfoAfterExecuteList.Free;
@@ -1867,7 +1874,7 @@ var i: integer;
 begin
   try
     for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
          TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := FQuestionBeforeExecuteList.Strings[i];
   finally
     FQuestionBeforeExecuteList.Free;
@@ -1879,7 +1886,7 @@ var i: integer;
 begin
   FInfoAfterExecuteList := TStringList.Create;
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then begin
          FInfoAfterExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute);
          TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := '';
       end
@@ -1892,7 +1899,7 @@ var i: integer;
 begin
   FQuestionBeforeExecuteList := TStringList.Create;
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then begin
          FQuestionBeforeExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute);
          TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := '';
       end

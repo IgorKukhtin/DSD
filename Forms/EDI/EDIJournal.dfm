@@ -1246,6 +1246,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'GoodsPropertyId'
         Value = Null
       end>
+    PackSize = 1
     Left = 168
     Top = 120
   end
@@ -1282,6 +1283,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 168
     Top = 168
   end
@@ -1307,6 +1309,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 96
     Top = 312
   end
@@ -1436,6 +1439,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Name = 'GoodsPropertyId'
         Value = Null
       end>
+    PackSize = 1
     Left = 240
     Top = 144
   end
@@ -1484,6 +1488,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 192
     Top = 160
   end
@@ -1539,6 +1544,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 840
     Top = 304
   end
@@ -1582,6 +1588,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'Password'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 464
     Top = 48
   end
@@ -1622,6 +1629,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 680
     Top = 144
   end
@@ -1636,6 +1644,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 712
     Top = 152
   end
@@ -1657,6 +1666,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 679
     Top = 16
   end
@@ -1696,6 +1706,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 679
     Top = 72
   end
@@ -1727,7 +1738,14 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 256
     Top = 64
   end
@@ -1741,6 +1759,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 392
     Top = 192
   end
@@ -1759,6 +1778,7 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
       end>
+    PackSize = 1
     Left = 400
     Top = 240
   end
@@ -1786,6 +1806,7 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 679
     Top = 112
   end
