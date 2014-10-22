@@ -3,7 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1250
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -268
   ExplicitWidth = 1266
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -304,15 +303,17 @@ inherited SaleForm: TSaleForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 233
+      Left = 235
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 233
+      ExplicitLeft = 235
+      ExplicitWidth = 102
+      Width = 102
     end
     inherited cxLabel2: TcxLabel
-      Left = 233
+      Left = 235
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-      ExplicitLeft = 233
+      ExplicitLeft = 235
       ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
@@ -341,7 +342,7 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 168
+      Width = 170
     end
     object edTo: TcxButtonEdit
       Left = 515
@@ -405,10 +406,10 @@ inherited SaleForm: TSaleForm
       Left = 171
       Top = 23
       TabOrder = 15
-      Width = 55
+      Width = 61
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 339
+      Left = 340
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -416,7 +417,7 @@ inherited SaleForm: TSaleForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 468
+      Left = 470
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -425,7 +426,7 @@ inherited SaleForm: TSaleForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 468
+      Left = 470
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -462,15 +463,15 @@ inherited SaleForm: TSaleForm
       Width = 170
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 233
+      Left = 235
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 23
-      Width = 100
+      Width = 102
     end
     object cxLabel10: TcxLabel
-      Left = 233
+      Left = 235
       Top = 45
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
