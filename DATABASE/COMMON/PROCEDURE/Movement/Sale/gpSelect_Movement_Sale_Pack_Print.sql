@@ -156,19 +156,25 @@ BEGIN
 --           , OH_JuridicalDetails_From.Phone                                 AS Phone_From
 --           , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode
 
-           , MovementItem.Id                                                AS Id
-           , Object_Goods.ObjectCode                                        AS GoodsCode
+           , MovementItem.Id                                                        AS Id
+           , Object_Goods.ObjectCode                                                AS GoodsCode
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
-           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
-           , Object_GoodsKind.ValueData                                     AS GoodsKindName
-           , Object_Measure.ValueData                                       AS MeasureName
+           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')                       AS GoodsName_Juridical
+           , Object_GoodsKind.ValueData                                             AS GoodsKindName
+           , Object_Measure.ValueData                                               AS MeasureName
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')            AS BarCode_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')                    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')         AS BarCodeGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')                 AS BarCodeGLN_Juridical
 
-           , MovementItem.Amount                                            AS Amount
+           , MovementItem.Amount                                                    AS Amount
+           , COALESCE (MIFloat_AmountPartner.ValueData, 0)                          AS AmountPartner
+           , COALESCE (MIFloat_BoxCount.ValueData, 0)                                         AS Box_Count
+           , COALESCE (OF_Box_Weight.ValueData, 0) * COALESCE (MIFloat_BoxCount.ValueData, 0) AS Box_Weight
+           , CAST ((COALESCE (MIFloat_AmountPartner.ValueData, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Netto_Weight
+           , CAST ((COALESCE (MIFloat_AmountPartner.ValueData, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) + (COALESCE (OF_Box_Weight.ValueData, 0) * COALESCE (MIFloat_BoxCount.ValueData, 0)) AS TFloat) AS Brutto_Weight
+
 
 
        FROM tmpMovement
@@ -178,12 +184,34 @@ BEGIN
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
 */
 
+
             INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount <> 0
 
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+
+
+            LEFT JOIN ObjectFloat AS OF_Box_Weight
+                                  ON OF_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
+                                 AND OF_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -267,7 +295,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print (Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
