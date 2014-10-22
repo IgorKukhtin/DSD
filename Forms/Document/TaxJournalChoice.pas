@@ -1,4 +1,4 @@
-unit TaxJournalSelect;
+unit TaxJournalChoice;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit;
 
 type
-  TTaxJournalSelectForm = class(TAncestorJournalForm)
+  TTaxJournalChoiceForm = class(TAncestorJournalForm)
     colDateRegistered: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
@@ -61,11 +61,11 @@ type
   end;
 
 var
-  TaxJournalSelectForm: TTaxJournalSelectForm;
+  TaxJournalChoiceForm: TTaxJournalChoiceForm;
 
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TTaxJournalSelectForm);
+  RegisterClass(TTaxJournalChoiceForm);
 end.

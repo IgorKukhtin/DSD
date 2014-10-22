@@ -2,15 +2,14 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 1137
-  ExplicitWidth = 1145
-  ExplicitHeight = 702
+  ExplicitWidth = 1153
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1137
     Height = 542
-    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 126
     ExplicitWidth = 1137
     ExplicitHeight = 542
@@ -104,7 +103,7 @@ inherited ReturnInForm: TReturnInForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actTaxJournalSelectChoice
+                Action = actTaxJournalChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -370,7 +369,7 @@ inherited ReturnInForm: TReturnInForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actTaxJournalSelectChoice
+                Action = actTaxJournalChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -521,7 +520,6 @@ inherited ReturnInForm: TReturnInForm
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
-      Enabled = True
       ExplicitLeft = 8
       ExplicitWidth = 74
       Width = 74
@@ -832,9 +830,6 @@ inherited ReturnInForm: TReturnInForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -859,6 +854,7 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteTaxCorrective
       StoredProcList = <
         item
@@ -877,6 +873,7 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedTaxCorrective
       StoredProcList = <
         item
@@ -896,6 +893,7 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteTaxCorrective
       StoredProcList = <
         item
@@ -909,37 +907,6 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 12
       Status = mtComplete
       DataSource = TaxCorrectiveDS
-    end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.ParamType = ptInput
     end
     object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
       Category = 'DSDLib'
@@ -1005,13 +972,36 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
     end
     object mactPrint: TMultiAction [16]
       Category = 'DSDLib'
@@ -1060,6 +1050,14 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
+    inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
+    end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -1068,39 +1066,44 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalSelectChoice: TOpenChoiceForm [21]
+    object actTaxJournalChoice: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'TaxJournalSelectForm'
-      FormName = 'TTaxJournalSelectForm'
-      FormNameParam.Value = 'TTaxJournalSelectForm'
+      FormName = 'TTaxJournalChoiceForm'
+      FormNameParam.Value = 'TTaxJournalChoiceForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'DocumentChildId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'InvNumberPartner_Child'
           DataType = ftString
         end
         item
           Name = 'OperDate_Tax'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'FromId'
           ParamType = ptInput
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'PartnerId'
           ParamType = ptInput
@@ -1390,6 +1393,7 @@ inherited ReturnInForm: TReturnInForm
       end>
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -1463,6 +1467,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1855,6 +1860,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1868,12 +1874,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1881,6 +1889,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
@@ -1888,6 +1897,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1895,6 +1905,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1902,12 +1913,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
@@ -1915,6 +1928,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1922,12 +1936,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
@@ -1952,6 +1968,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1970,6 +1987,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1977,6 +1995,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1984,6 +2003,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
@@ -1996,6 +2016,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -2003,12 +2024,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
@@ -2017,20 +2040,6 @@ inherited ReturnInForm: TReturnInForm
     Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Top = 100
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -2519,12 +2528,14 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
@@ -2539,6 +2550,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inMovement_ChildId'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'DocumentChildId'
         ParamType = ptInput
@@ -2573,6 +2585,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2594,6 +2607,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2609,6 +2623,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCorrectiveCDS
         ComponentItem = 'Id'
         ParamType = ptInput

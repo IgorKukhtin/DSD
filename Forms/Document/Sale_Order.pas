@@ -1,4 +1,4 @@
-unit Sale_Branch;
+unit Sale_Order;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
 
 type
-  TSale_BranchForm = class(TAncestorDocumentForm)
+  TSale_OrderForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
@@ -133,13 +133,13 @@ type
   end;
 
 var
-  Sale_BranchForm: TSale_BranchForm;
+  Sale_OrderForm: TSale_OrderForm;
 
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSale_BranchForm);
+  RegisterClass(TSale_OrderForm);
 
 end.
