@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
+             , MovementId_Order Integer
              , isCOMDOC Boolean
               )
 AS
@@ -75,7 +76,8 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS DocumentTaxKindName
              , 0                     			    AS MovementId_Master
              , CAST ('' AS TVarChar) 			    AS InvNumberPartner_Master
-             , false                                        AS isCOMDOC
+             , 0                     			    AS MovementId_Order
+             , FALSE                                        AS isCOMDOC
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
@@ -87,8 +89,8 @@ BEGIN
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode    				    AS StatusCode
-           , Object_Status.ValueData     				    AS StatusName
+           , Object_Status.ObjectCode    		    AS StatusCode
+           , Object_Status.ValueData     		    AS StatusName
            , MovementBoolean_Checked.ValueData              AS Checked
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
@@ -115,13 +117,26 @@ BEGIN
            , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id                      AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
-           , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
+           , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
+                       THEN MovementString_InvNumberOrder.ValueData
+                  WHEN MovementLinkMovement_Order.MovementChildId IS NOT NULL
+                       THEN CASE WHEN Movement_Order.StatusId IN (zc_Enum_Status_Complete())
+                                      THEN ''
+                                 ELSE '???'
+                            END
+                         || CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner_Order.ValueData, '')) <> ''
+                                      THEN MovementString_InvNumberPartner_Order.ValueData
+                                 ELSE '***' || Movement_Order.InvNumber
+                            END
+             END :: TVarChar AS InvNumberOrder
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
            , Object_TaxKind.Id                		    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
+           , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+
            , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
 
        FROM Movement
@@ -275,8 +290,17 @@ BEGIN
          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                         ON MovementLinkMovement_Sale.MovementId = Movement.Id 
                                        AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-         LEFT JOIN Object as ObjectCurrencycyDocumentInf ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                        ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                       AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+         LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+         LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
+                                  ON MovementString_InvNumberPartner_Order.MovementId =  Movement_Order.Id
+                                 AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
+
+         LEFT JOIN Object AS ObjectCurrencycyDocumentInf ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                                                         AND ObjectCurrencycyDocumentInf.id = 14461
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
      END IF;
