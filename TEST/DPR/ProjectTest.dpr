@@ -553,7 +553,8 @@ uses
   Sale_Branch in '..\..\Forms\Document\Sale_Branch.pas' {Sale_BranchForm: TParentForm},
   Sale_BranchJournal in '..\..\Forms\Document\Sale_BranchJournal.pas' {Sale_BranchJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
-  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm};
+  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
+  ContactPersonChoice in '..\..\Forms\Guides\ContactPersonChoice.pas' {ContactPersonChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,10 +1,8 @@
--- Function: gpGet_Object_ContactPerson (Integer,TVarChar)
+-- Function: gpSelect_Object_ContactPersonChoice (TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_ContactPerson (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Object_ContactPerson (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContactPersonChoice ( Integer , Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_ContactPerson(
-    IN inId                     Integer,       -- ключ объекта <>
+CREATE OR REPLACE FUNCTION gpSelect_Object_ContactPersonChoice(
     IN inPartnerId              Integer ,
     IN inContactPersonKindId    Integer ,
     IN inSession                TVarChar       -- сессия пользователя
@@ -13,47 +11,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , ContactId Integer, ContacttName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyAll Boolean;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_ContactPersonChoice());
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется - может ли пользовать видеть весь справочник
+     vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
-  -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ContactPerson());
-
-   IF COALESCE (inId, 0) = 0
-   THEN
-       RETURN QUERY 
-       SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object_ContactPerson.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           
-           , CAST ('' as TVarChar)  AS Phone
-           , CAST ('' as TVarChar)  AS Mail
-           , CAST ('' as TVarChar)  AS Comment
-
-           , inPartnerId                           AS PartnerId
-           , lfGet_Object_ValueData (inPartnerId)  AS PartnerName
-          
-  
-           , CAST (0 as Integer)    AS JuridicalId
-           , CAST ('' as TVarChar)  AS JuridicalName
-    
-           , CAST (0 as Integer)    AS ContractId
-           , CAST ('' as TVarChar)  AS ContractName
-
-           , inContactPersonKindId                           AS ContactPersonKindId
-           , lfGet_Object_ValueData (inContactPersonKindId)  AS ContactPersonKindName
-
-           , CAST (NULL AS Boolean) AS isErased
-
-       FROM Object AS Object_ContactPerson
-       WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson();
-   ELSE
-       RETURN QUERY 
+     -- Результат
+     RETURN QUERY 
        SELECT 
              Object_ContactPerson.Id          AS Id
            , Object_ContactPerson.ObjectCode  AS Code
@@ -63,6 +36,7 @@ BEGIN
            , ObjectString_Mail.ValueData      AS Mail
            , ObjectString_Comment.ValueData   AS Comment 
          
+
            , CASE ContactPerson_Object.DescId
                  WHEN zc_Object_Partner() THEN ContactPerson_Object.Id                   
                  ELSE 0
@@ -92,10 +66,12 @@ BEGIN
 
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
-          
-           , Object_ContactPerson.isErased AS isErased
+
+           
+           , Object_ContactPerson.isErased    AS isErased
            
        FROM Object AS Object_ContactPerson
+           -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_ContactPerson.AccessKeyId
        
             LEFT JOIN ObjectString AS ObjectString_Phone
                                    ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
@@ -107,30 +83,34 @@ BEGIN
                                    ON ObjectString_Comment.ObjectId = Object_ContactPerson.Id 
                                   AND ObjectString_Comment.DescId = zc_ObjectString_ContactPerson_Comment()
                                                              
-            LEFT JOIN ObjectLink AS ContactPerson_ContactPerson_Object
+            JOIN ObjectLink AS ContactPerson_ContactPerson_Object
                                  ON ContactPerson_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                 AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
-            LEFT JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
+            JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
+                                                    AND ContactPerson_Object.DescId = zc_Object_Partner()
+                                                    AND (ContactPerson_Object.Id = inPartnerId OR inPartnerId = 0)
+            
+            JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                  ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
                                 AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
+                                AND (ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = inContactPersonKindId OR inContactPersonKindId = 0)
             LEFT JOIN Object AS Object_ContactPersonKind ON Object_ContactPersonKind.Id = ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId
-                               
-       WHERE Object_ContactPerson.Id = inId;
-      
-   END IF;
-  
+            
+     WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
+       --AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+    ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Object_ContactPerson (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_ContactPersonChoice(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 31.05.14         *         
+ 22.10.14         * 
+        
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ContactPerson (0,  inPartnerId:= 83665 , inContactPersonKindId := 153273 ,  inSession := '5')
+-- SELECT * FROM gpSelect_Object_ContactPersonChoice (258836, 153273 , zfCalc_UserAdmin())

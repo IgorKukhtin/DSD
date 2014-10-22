@@ -15,9 +15,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RegionName TVarChar, ProvinceName TVarChar,
                StreetKindName TVarChar, StreetKindId Integer,
                JuridicalId Integer, JuridicalName TVarChar, 
-               Zakaz_ContactPersonKindId Integer, Zakaz_Name TVarChar, Zakaz_Mail TVarChar, Zakaz_Phone TVarChar,
-               Doc_ContactPersonKindId Integer, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
-               Act_ContactPersonKindId Integer, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
+               Order_ContactPersonKindId Integer, Order_ContactPersonKindName TVarChar, Order_Name TVarChar, Order_Mail TVarChar, Order_Phone TVarChar,
+               Doc_ContactPersonKindId Integer, Doc_ContactPersonKindName TVarChar, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
+               Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
               --OKPO TVarChar,
                isErased Boolean
               )
@@ -87,17 +87,20 @@ BEGIN
          , Object_Juridical.Id           AS JuridicalId
          , Object_Juridical.ValueData    AS JuridicalName
 
-         , tmpContactPerson_Zakaz.ContactPersonKindId AS Zakaz_ContactPersonKindId
-         , tmpContactPerson_Zakaz.Name   AS Zakaz_Name
-         , tmpContactPerson_Zakaz.Mail   AS Zakaz_Mail
-         , tmpContactPerson_Zakaz.Phone  AS Zakaz_Phone
+         , zc_Enum_ContactPersonKind_CreateOrder()  AS Order_ContactPersonKindId
+         , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CreateOrder()) AS Order_ContactPersonKindName 
+         , tmpContactPerson_Order.Name   AS Order_Name
+         , tmpContactPerson_Order.Mail   AS Order_Mail
+         , tmpContactPerson_Order.Phone  AS Order_Phone
 
-         , tmpContactPerson_Doc.ContactPersonKindId AS Doc_ContactPersonKindId
+         , zc_Enum_ContactPersonKind_CheckDocument()  AS Doc_ContactPersonKindId
+         , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CheckDocument()) AS Doc_ContactPersonKindName
          , tmpContactPerson_Doc.Name    AS Doc_Name
          , tmpContactPerson_Doc.Mail    AS Doc_Mail
          , tmpContactPerson_Doc.Phone   AS Doc_Phone
 
-         , tmpContactPerson_Act.ContactPersonKindId AS Act_ContactPersonKindId
+         , zc_Enum_ContactPersonKind_AktSverki()  AS Act_ContactPersonKindId
+         , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_AktSverki()) AS Act_ContactPersonKindName
          , tmpContactPerson_Act.Name    AS Act_Name
          , tmpContactPerson_Act.Mail    AS Act_Mail
          , tmpContactPerson_Act.Phone   AS Act_Phone
@@ -154,7 +157,7 @@ BEGIN
                             AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
         LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
 
-        LEFT JOIN tmpContactPerson AS tmpContactPerson_Zakaz on tmpContactPerson_Zakaz.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Zakaz.ContactPersonKindId = 153272    --"Формирование заказов"
+        LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
         LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
         LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ" 
         

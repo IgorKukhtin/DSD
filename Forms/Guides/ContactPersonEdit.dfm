@@ -277,9 +277,21 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContactPersonKindId'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'Key'
       end>
     Left = 32
-    Top = 364
+    Top = 356
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ContactPerson'
@@ -291,6 +303,20 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = dsdFormParams
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContactPersonKindId'
+        Value = ''
+        Component = dsdFormParams
+        ComponentItem = 'ContactPersonKindId'
         ParamType = ptInput
       end
       item

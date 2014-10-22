@@ -66,6 +66,13 @@ type
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
     bbPartnerLabel: TdxBarControlContainerItem;
+    bbPartnerGuides: TdxBarControlContainerItem;
+    cxLabel1: TcxLabel;
+    edContactPersonKind: TcxButtonEdit;
+    ContactPersonKindGuides: TdsdGuides;
+    bbContactPersonKindLabel: TdxBarControlContainerItem;
+    bbContactPersonKind: TdxBarControlContainerItem;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
