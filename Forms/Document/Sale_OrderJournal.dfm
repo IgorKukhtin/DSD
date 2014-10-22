@@ -1,5 +1,5 @@
-inherited Sale_BranchJournalForm: TSale_BranchJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+inherited Sale_OrderJournalForm: TSale_OrderJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 535
   ClientWidth = 1020
   ExplicitWidth = 1036
@@ -125,6 +125,10 @@ inherited Sale_BranchJournalForm: TSale_BranchJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -506,8 +510,8 @@ inherited Sale_BranchJournalForm: TSale_BranchJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSale_PartnerForm'
-      FormNameParam.Value = 'TSale_PartnerForm'
+      FormName = 'TSale_OrderForm'
+      FormNameParam.Value = 'TSale_OrderForm'
     end
     object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
@@ -522,8 +526,8 @@ inherited Sale_BranchJournalForm: TSale_BranchJournalForm
       ImageIndex = 58
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSale_PartnerForm'
-      FormNameParam.Value = 'TSale_PartnerForm'
+      FormName = 'TSale_OrderForm'
+      FormNameParam.Value = 'TSale_OrderForm'
     end
     object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'

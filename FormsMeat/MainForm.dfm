@@ -385,6 +385,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbSale_Order'
+        end
+        item
+          Visible = True
           ItemName = 'bbReturnIn'
         end
         item
@@ -465,6 +469,10 @@
     end
     object bbSale_Partner: TdxBarButton
       Action = actSale_Partner
+      Category = 0
+    end
+    object bbSale_Order: TdxBarButton
+      Action = actSale_Order
       Category = 0
     end
     object bbReturnIn: TdxBarButton
@@ -2839,6 +2847,16 @@
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       FormName = 'TSale_PartnerJournalForm'
       FormNameParam.Value = 'TSale_PartnerJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSale_Order: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')'
+      FormName = 'TSale_OrderJournalForm'
+      FormNameParam.Value = 'TSale_OrderJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

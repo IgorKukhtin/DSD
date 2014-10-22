@@ -1,4 +1,4 @@
-unit Sale_BranchJournal;
+unit Sale_OrderJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxButtonEdit, dsdGuides, frxClass, frxDBSet;
 
 type
-  TSale_BranchJournalForm = class(TAncestorJournalForm)
+  TSale_OrderJournalForm = class(TAncestorJournalForm)
     colOperDatePartner: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
@@ -110,11 +110,11 @@ type
   end;
 
 var
-  Sale_BranchJournalForm: TSale_BranchJournalForm;
+  Sale_OrderJournalForm: TSale_OrderJournalForm;
 
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TSale_BranchJournalForm);
+  RegisterClass(TSale_OrderJournalForm);
 end.

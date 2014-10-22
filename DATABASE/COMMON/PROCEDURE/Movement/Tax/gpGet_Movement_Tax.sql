@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InvNumberBranch TVarChar
               )
@@ -53,6 +53,7 @@ BEGIN
              , CAST ('' as TVarChar)           		AS PartnerName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
+             , CAST ('' as TVarChar) 				AS ContractTagName
              , 0                     				AS TaxKindId
              , CAST ('' as TVarChar) 				AS TaxKindName
              , CAST ('' as TVarChar) 				AS InvNumberBranch
@@ -89,6 +90,7 @@ BEGIN
            , Object_Partner.ValueData              		AS PartnerName
            , Object_Contract.ContractId        			AS ContractId
            , Object_Contract.invnumber         			AS ContractName
+           , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
            , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch

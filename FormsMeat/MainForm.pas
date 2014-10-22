@@ -425,6 +425,8 @@ type
     actCashOperationDneprOfficial: TdsdOpenForm;
     bbCashZaporozhye: TdxBarButton;
     bbCashDneprOfficial: TdxBarButton;
+    actSale_Order: TdsdOpenForm;
+    bbSale_Order: TdxBarButton;
   public
     { Public declarations }
   end;

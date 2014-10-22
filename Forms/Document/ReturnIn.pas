@@ -58,7 +58,7 @@ type
     colAmountSumm: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
-    actTaxJournalSelectChoice: TOpenChoiceForm;
+    actTaxJournalChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
     PrintHeaderCDS: TClientDataSet;

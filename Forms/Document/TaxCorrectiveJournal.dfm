@@ -2,8 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1126
-  ExplicitHeight = 569
+  ExplicitWidth = 1134
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -261,6 +261,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
@@ -445,6 +453,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -456,6 +465,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -498,6 +508,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -830,6 +841,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -848,6 +860,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -860,6 +873,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -914,6 +928,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -984,12 +999,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inChecked'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
@@ -1006,12 +1023,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inElectron'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isElectron'
         DataType = ftBoolean
@@ -1028,12 +1047,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'ioIsDocument'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Document'
         DataType = ftBoolean

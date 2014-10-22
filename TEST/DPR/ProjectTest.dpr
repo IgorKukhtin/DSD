@@ -352,8 +352,6 @@ uses
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   Report_GoodsTax in '..\..\Forms\Report\Report_GoodsTax.pas' {Report_GoodsTaxForm: TParentForm},
-  Sale_Branch in '..\..\Forms\Document\Sale_Branch.pas' {Sale_BranchForm: TParentForm},
-  Sale_BranchJournal in '..\..\Forms\Document\Sale_BranchJournal.pas' {Sale_BranchJournalForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
@@ -551,7 +549,9 @@ uses
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  TaxJournalSelect in '..\..\Forms\Document\TaxJournalSelect.pas' {TaxJournalSelectForm: TParentForm},
+  TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm},
+  Sale_Order in '..\..\Forms\Document\Sale_Order.pas' {Sale_OrderForm: TParentForm},
+  Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm};
 
@@ -562,9 +562,6 @@ begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TTaxJournalSelectForm, TaxJournalSelectForm);
-  Application.CreateForm(TSale_PartnerForm, Sale_PartnerForm);
-  Application.CreateForm(TSale_PartnerJournalForm, Sale_PartnerJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

@@ -9,6 +9,30 @@ inherited AncestorDataForm: TAncestorDataForm
           StoredProc = spSelect
         end>
     end
+    object actDisabled: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Enabled = False
+      Caption = 'actDisabled'
+      FormName = 'actDisabled'
+      FormNameParam.Value = 'actDisabled'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -35,8 +59,8 @@ inherited AncestorDataForm: TAncestorDataForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -2,29 +2,27 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1252
-  ExplicitWidth = 1260
-  ExplicitHeight = 702
+  ExplicitWidth = 1268
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1252
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1252
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1248
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1252
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1246
-      ExplicitHeight = 514
+      ExplicitWidth = 1252
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1246
-        Height = 514
-        ExplicitWidth = 1246
-        ExplicitHeight = 514
+        Width = 1252
+        Height = 518
+        ExplicitWidth = 1252
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -179,7 +177,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 80
           end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
@@ -189,7 +187,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -199,7 +197,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 70
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -234,6 +232,16 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 65
           end
+          object BoxCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
+            DataBinding.FieldName = 'BoxCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object BoxName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
@@ -248,16 +256,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object BoxCount: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1103#1097#1080#1082#1086#1074
-            DataBinding.FieldName = 'BoxCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
           end
         end
       end
@@ -299,7 +297,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -315,8 +313,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
-      Width = 168
+      Width = 170
     end
     object edTo: TcxButtonEdit
       Left = 515
@@ -326,6 +325,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 265
     end
@@ -337,14 +337,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object edContract: TcxButtonEdit
       Left = 879
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
-      Width = 106
+      Width = 68
     end
     object cxLabel9: TcxLabel
       Left = 879
@@ -359,12 +360,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object edPaidKind: TcxButtonEdit
       Left = 784
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 89
     end
@@ -377,34 +379,36 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 171
       Top = 23
       TabOrder = 15
-      Width = 55
+      Width = 61
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 339
+      Left = 340
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 16
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 468
-      Top = 63
+      Left = 470
+      Top = 68
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 17
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 468
+      Left = 470
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
       Left = 515
       Top = 63
-      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 19
       Width = 144
     end
@@ -416,19 +420,20 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object cxLabel13: TcxLabel
       Left = 879
       Top = 45
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
+      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     end
     object edRouteSorting: TcxButtonEdit
       Left = 879
       Top = 63
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 22
-      Width = 106
+      Width = 170
     end
     object edOperDatePartner: TcxDateEdit
       Left = 233
@@ -451,7 +456,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 118
     end
     object cxLabel11: TcxLabel
-      Left = 788
+      Left = 784
       Top = 45
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
@@ -463,6 +468,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 27
       Width = 89
     end
@@ -478,30 +484,31 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1126
+      Left = 1186
       Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 30
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1126
+      Left = 1186
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1126
+      Left = 1186
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1126
+      Left = 1186
       Top = 23
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 33
       Width = 114
     end
@@ -509,58 +516,78 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 166
       Top = 63
       Caption = 'COMDOC'
-      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 34
       Width = 68
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 992
+      Left = 1052
       Top = 63
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 35
       Width = 78
     end
     object cxLabel17: TcxLabel
-      Left = 992
+      Left = 1052
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 1075
+      Left = 1135
       Top = 63
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
       TabOrder = 37
       Width = 44
     end
     object cxLabel18: TcxLabel
-      Left = 1075
+      Left = 1135
       Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 992
+      Left = 1052
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 39
       Width = 127
     end
     object cxLabel19: TcxLabel
-      Left = 992
+      Left = 1052
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+    end
+    object cxLabel20: TcxLabel
+      Left = 952
+      Top = 5
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object edContractTag: TcxButtonEdit
+      Left = 952
+      Top = 23
+      Properties.Buttons = <
+        item
+          Action = actDisabled
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 97
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -585,37 +612,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
-    end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
     end
     object actPrint_Invoice: TdsdPrintAction [9]
       Category = 'DSDLib'
@@ -654,20 +650,16 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object actPrint_Pack: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintPack
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintPack
         end>
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090
       ImageIndex = 20
       ShortCut = 16464
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -819,13 +811,36 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ParamType = ptInput
     end
     object actPrint_Bill: TdsdPrintAction [18]
       Category = 'DSDLib'
@@ -862,6 +877,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -917,7 +940,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       isShowModal = True
     end
-    object actSPPrintSaleBillProcName: TdsdExecStoredProc
+    object actSPPrintSaleBillProcName: TdsdExecStoredProc [28]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGetReporNameBill
@@ -927,7 +950,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actSPPrintSaleBillProcName'
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
+    object actSPPrintSaleProcName: TdsdExecStoredProc [29]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGetReportName
@@ -937,7 +960,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
+    object actSPPrintSaleTaxProcName: TdsdExecStoredProc [30]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGetReporNameTax
@@ -947,7 +970,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actSPPrintSaleTaxProcName'
     end
-    object actRefreshPrice: TdsdDataSetRefresh
+    object actRefreshPrice: TdsdDataSetRefresh [31]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -960,7 +983,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actTax: TdsdExecStoredProc
+    object actTax: TdsdExecStoredProc [32]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spTax
@@ -1030,7 +1053,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1371,6 +1394,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -2159,8 +2189,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 928
-    Top = 65528
+    Left = 944
+    Top = 112
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2344,8 +2374,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1040
-    Top = 8
+    Left = 1080
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -2372,5 +2401,52 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end>
     Left = 1008
     Top = 64
+  end
+  object ContractTagGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTag
+    FormNameParam.Value = 'TContractTagForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 987
+    Top = 12
+  end
+  object spSelectPrintPack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 311
+    Top = 472
   end
 end

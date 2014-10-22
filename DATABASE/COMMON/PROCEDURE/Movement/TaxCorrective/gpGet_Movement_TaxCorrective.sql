@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, PartnerId Integer, PartnerName TVarChar, ToId Integer, ToName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, DocumentMasterName TVarChar
              , DocumentChildId Integer, DocumentChildName TVarChar
@@ -54,6 +54,7 @@ BEGIN
              , Object_Juridical_Basis.ValueData		AS ToName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
+             , CAST ('' as TVarChar) 				AS ContractTagName
              , 0                     				AS TaxKindId
              , CAST ('' as TVarChar) 				AS TaxKindName
              , 0                     				AS DocumentMasterId
@@ -94,6 +95,7 @@ BEGIN
            , Object_To.ValueData               			                    AS ToName
            , Object_Contract.ContractId        			                    AS ContractId
            , Object_Contract.invnumber         			                    AS ContractName
+           , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			                    AS TaxKindId
            , Object_TaxKind.ValueData         			                    AS TaxKindName
            , Movement_DocumentMaster.Id                                     AS DocumentMasterId
