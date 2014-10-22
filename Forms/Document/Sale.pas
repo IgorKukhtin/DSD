@@ -138,6 +138,7 @@ type
     edContractTag: TcxButtonEdit;
     cxLabel20: TcxLabel;
     ContractTagGuides: TdsdGuides;
+    spSelectPrintPack: TdsdStoredProc;
   private
     { Private declarations }
   public

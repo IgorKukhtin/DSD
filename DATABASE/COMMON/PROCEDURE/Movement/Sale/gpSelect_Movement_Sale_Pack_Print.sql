@@ -123,38 +123,23 @@ BEGIN
 
            , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
 
+--           , MovementString_InvNumberPartner_Sale.ValueData                             AS SaleInvNumberPartner
+           , Movement_Sale.InvNumber                                        AS SaleInvNumberPartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate)  AS SaleOperDatePartner
+
 
            , View_Contract.InvNumber         		                        AS ContractName
            , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
            , View_Contract.ContractKindName                                 AS ContractKind
-
 
            , ObjectString_FromAddress.ValueData                             AS PartnerAddress_From
            , ObjectString_ToAddress.ValueData                               AS PartnerAddress_To
 
            , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
---           , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
---           , OH_JuridicalDetails_To.INN                                     AS INN_To
---           , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
---           , OH_JuridicalDetails_To.AccounterName                           AS AccounterName_To
---           , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
---           , OH_JuridicalDetails_To.BankName                                AS BankName_To
---           , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
---           , OH_JuridicalDetails_To.Phone                                   AS Phone_To
---           , ObjectString_BuyerGLNCode.ValueData                            AS BuyerGLNCode
 
            , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress                      AS JuridicalAddress_From
---           , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
---           , OH_JuridicalDetails_From.INN                                   AS INN_From
---           , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
---           , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
---           , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
---           , OH_JuridicalDetails_From.BankName                              AS BankName_From
---           , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
---           , OH_JuridicalDetails_From.Phone                                 AS Phone_From
---           , ObjectString_SupplierGLNCode.ValueData                         AS SupplierGLNCode
 
            , MovementItem.Id                                                        AS Id
            , Object_Goods.ObjectCode                                                AS GoodsCode
@@ -286,6 +271,15 @@ BEGIN
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
+-- MOVEMENT Sale
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = Movement.ParentId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement_Sale.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
+                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement_Sale.Id
+                                    AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
+
 
        ORDER BY MovementString_InvNumberPartner.ValueData
       ;
@@ -300,6 +294,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print (Integer, TVarChar) OWNER TO po
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.10.14                                                       *
  21.10.14                                                       *
 */
 
