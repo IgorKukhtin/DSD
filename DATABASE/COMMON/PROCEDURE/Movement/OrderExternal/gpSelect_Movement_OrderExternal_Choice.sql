@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagId Integer, ContractTagName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -51,10 +51,10 @@ BEGIN
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner_Sale
+           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
-           , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '*' || Movement.InvNumber END AS InvNumber_calc
+           , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber_calc
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
            , Object_To.Id                                   AS ToId
@@ -70,6 +70,7 @@ BEGIN
            , View_Contract_InvNumber.ContractId             AS ContractId
            , View_Contract_InvNumber.ContractCode           AS ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_Contract_InvNumber.ContractTagId          AS ContractTagId
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.ValueData                     AS PriceListName

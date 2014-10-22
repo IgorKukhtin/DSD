@@ -1627,16 +1627,16 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TaxJournalSelect.pas">
-				<Form>TaxJournalSelectForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TaxJournalChoice.pas">
+				<Form>TaxJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_Branch.pas">
-				<Form>Sale_BranchForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Sale_Order.pas">
+				<Form>Sale_OrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_BranchJournal.pas">
-				<Form>Sale_BranchJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\Sale_OrderJournal.pas">
+				<Form>Sale_OrderJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">

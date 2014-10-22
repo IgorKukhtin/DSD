@@ -613,6 +613,12 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           DataType = ftString
         end
         item
+          Name = 'ContractTagId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractTagId'
+        end
+        item
           Name = 'ContractTagName'
           Value = Null
           Component = MasterCDS
@@ -809,6 +815,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         Component = PeriodChoice
       end
       item
+        Component = PartnerGuides
       end>
     Left = 408
     Top = 344

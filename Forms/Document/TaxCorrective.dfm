@@ -2,9 +2,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitLeft = -170
-  ExplicitWidth = 1121
-  ExplicitHeight = 702
+  ExplicitLeft = -131
+  ExplicitWidth = 1129
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -440,11 +440,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -646,6 +648,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -725,6 +728,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1063,6 +1067,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1076,12 +1081,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1089,6 +1096,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1096,6 +1104,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1103,12 +1112,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -1147,22 +1158,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 440
-  end
-  inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1406,9 +1401,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   object DocumentTaxGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTax
-    FormNameParam.Value = 'TTaxJournalSelectForm'
+    FormNameParam.Value = 'TTaxJournalChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TTaxJournalSelectForm'
+    FormName = 'TTaxJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

@@ -2,29 +2,27 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1252
-  ExplicitWidth = 1260
-  ExplicitHeight = 702
+  ExplicitWidth = 1268
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1252
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1252
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1248
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1252
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1246
-      ExplicitHeight = 514
+      ExplicitWidth = 1252
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1246
-        Height = 514
-        ExplicitWidth = 1246
-        ExplicitHeight = 514
+        Width = 1252
+        Height = 518
+        ExplicitWidth = 1252
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -299,7 +297,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -317,7 +315,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 168
+      Width = 170
     end
     object edTo: TcxButtonEdit
       Left = 515
@@ -381,10 +379,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 171
       Top = 23
       TabOrder = 15
-      Width = 55
+      Width = 61
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 339
+      Left = 340
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -392,8 +390,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 468
-      Top = 63
+      Left = 470
+      Top = 68
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
@@ -401,7 +399,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 468
+      Left = 470
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -1055,7 +1053,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
