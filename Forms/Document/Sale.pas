@@ -139,6 +139,7 @@ type
     ContractTagGuides: TdsdGuides;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
+    spSelectPrintPack: TdsdStoredProc;
   private
     { Private declarations }
   public
