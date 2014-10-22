@@ -1,3 +1,12 @@
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
+          (Integer, Integer, Integer, 
+           TVarChar, TVarChar, TVarChar, TVarChar,
+           TFloat, TFloat,
+           TDateTime,
+           TVarChar, TVarChar, 
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
@@ -38,11 +47,6 @@ BEGIN
     FROM LoadPriceListItem 
    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
-   -- Ищем по коду и inJuridicalId
-   SELECT GoodsMainId INTO vbGoodsId
-     FROM Object_LinkGoods_View 
-    WHERE ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
-
    -- Ищем по общему коду 
    IF (COALESCE(vbGoodsId, 0) = 0) AND (inCommonCode > 0) THEN
       SELECT GoodsMainId INTO vbGoodsId
@@ -55,6 +59,13 @@ BEGIN
       SELECT GoodsMainId INTO vbGoodsId
         FROM Object_LinkGoods_View 
        WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;
+   END IF;
+
+   -- Ищем по коду и inJuridicalId
+   IF (COALESCE(vbGoodsId, 0) = 0) THEN
+      SELECT GoodsMainId INTO vbGoodsId
+        FROM Object_LinkGoods_View 
+       WHERE ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
    END IF;
 
    IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
@@ -70,3 +81,10 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.10.14                        *   Поменял очередность поиска
+ 18.09.14                        *  
+*/

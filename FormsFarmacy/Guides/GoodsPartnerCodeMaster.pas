@@ -17,11 +17,11 @@ type
   TGoodsPartnerCodeMasterForm = class(TAncestorGuidesForm)
     clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    edJuridical: TcxButtonEdit;
+    edPartnerCode: TcxButtonEdit;
     cxLabel1: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
-    JuridicalGuides: TdsdGuides;
+    PartnerCodeGuides: TdsdGuides;
     clCode: TcxGridDBColumn;
     cxGridGoodsLink: TcxGrid;
     cxGridDBTableViewGoodsLink: TcxGridDBTableView;

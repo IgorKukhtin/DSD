@@ -149,6 +149,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');
 end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;

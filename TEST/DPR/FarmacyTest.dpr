@@ -178,7 +178,8 @@ uses
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
-  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm};
+  JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
+  PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

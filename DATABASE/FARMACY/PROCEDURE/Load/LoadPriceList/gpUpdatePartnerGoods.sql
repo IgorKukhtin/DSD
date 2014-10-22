@@ -76,7 +76,7 @@ BEGIN
    
       -- Выбираем коды Мориона, у которых нет стыковки с главным 
 
-      PERFORM gpInsertUpdate_Object_LinkGoods(
+   /*   PERFORM gpInsertUpdate_Object_LinkGoods(
               0 
             , MainGoodsId -- Главный товар
             , GoodsId      -- Товар для замены
@@ -113,7 +113,7 @@ BEGIN
       WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
                      
       AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())) AS DDD;
-
+     */
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -125,6 +125,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом
  17.10.14                        *  
  03.10.14                        *  
  18.09.14                        *  
@@ -132,3 +133,13 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpLoadSaleFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
+
+/*
+SELECT lpDelete_Object(Id, '') FROM (
+
+SELECT *, MIN(Id) OVER (PARTITION BY GoodsMainId) as MINID FROM Object_LinkGoods_View
+WHERE ObjectId = zc_Enum_GlobalConst_Marion()) AS DDD
+
+WHERE Id <> MinId
+
+*/

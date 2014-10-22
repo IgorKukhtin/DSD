@@ -21,14 +21,17 @@ BEGIN
          , Object_LinkGoods_View.GoodsMainId
          , Object_LinkGoods_View.GoodsId
          , Object_LinkGoods_View.GoodsName
-         , Object_LinkGoods_View.GoodsCode
+         , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar)
          , Juridical.ValueData AS JuridicalName
          
      FROM Object_LinkGoods_View
      JOIN Object AS Juridical ON Juridical.Id = Object_LinkGoods_View.ObjectId
            
 
-     WHERE ((Object_LinkGoods_View.ObjectId in (SELECT Object.Id FROM Object WHERE DescId = zc_Object_Juridical()) AND inPartnerId = 0) OR 
+     WHERE ((Object_LinkGoods_View.ObjectId in 
+                (SELECT Object.Id FROM Object WHERE DescId = zc_Object_Juridical()
+                 UNION SELECT zc_Enum_GlobalConst_BarCode()
+                 UNION SELECT zc_Enum_GlobalConst_Marion()  ) AND inPartnerId = 0) OR 
            (Object_LinkGoods_View.ObjectId = inPartnerId));  
 END;
 $BODY$

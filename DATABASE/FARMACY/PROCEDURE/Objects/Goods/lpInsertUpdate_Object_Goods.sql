@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inNDSKindId           Integer   ,    -- НДС
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
     IN inUserId              Integer   ,    -- Пользователь
+    IN inProducerName        TVarChar  ,    -- 
     IN inCheckName           boolean  DEFAULT true
 )
 RETURNS integer AS

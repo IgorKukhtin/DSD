@@ -2,6 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 790
+  ExplicitTop = -312
   ExplicitWidth = 798
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -105,7 +106,7 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'PartnerGoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 116
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -113,7 +114,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 65
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -121,27 +122,35 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 295
+            Width = 334
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 131
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 130
           end
         end
       end
@@ -776,9 +785,15 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inMainGoodsId'
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsId'
         ParamType = ptInput
       end
       item
@@ -789,53 +804,17 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inSumm'
+        Name = 'inPrice'
         Component = MasterCDS
-        ComponentItem = 'Summ'
+        ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
+        Name = 'outSumm'
+        Component = MasterCDS
+        ComponentItem = 'Summ'
         DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
@@ -907,6 +886,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end

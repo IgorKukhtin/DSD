@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , PartnerGoodsCode TVarChar
+             , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat
              , isErased Boolean
               )
@@ -28,6 +28,7 @@ BEGIN
            , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
            , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
+           , tmpMI.PartnerGoodsId       AS PartnerGoodsId 
            , tmpMI.PartnerGoodsCode     AS PartnerGoodsCode
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
@@ -44,6 +45,7 @@ BEGIN
             FULL JOIN (SELECT 
                               MovementItem.Id 
                             , ObjectString.ValueData             AS PartnerGoodsCode
+                            , MILinkObject_Goods.ObjectId        AS PartnerGoodsId
                             , Object_Goods.ObjectCode            AS GoodsCode
                             , Object_Goods.ValueData             AS GoodsName
                             , MovementItem.Amount                AS Amount

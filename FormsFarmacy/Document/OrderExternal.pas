@@ -43,6 +43,7 @@ type
     cxLabel5: TcxLabel;
     edContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    colPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

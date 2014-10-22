@@ -62,9 +62,9 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           end
         end
       end
-      object edJuridical: TcxButtonEdit
-        Left = 184
-        Top = 63
+      object edPartnerCode: TcxButtonEdit
+        Left = 359
+        Top = 103
         Properties.Buttons = <
           item
             Default = True
@@ -324,7 +324,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edJuridical
+      Control = edPartnerCode
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -358,25 +358,25 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
         ParamType = ptInput
       end>
   end
-  object JuridicalGuides: TdsdGuides
+  object PartnerCodeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = edPartnerCode
+    FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TPartnerCodeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -395,7 +395,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       item
         Name = 'inObjectId'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -451,7 +451,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     RefreshAction = actGoodsLinkRefresh
     ComponentList = <
       item
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
       end>
     Left = 200
     Top = 112

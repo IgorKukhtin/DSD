@@ -17,25 +17,17 @@ type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
     clCodeInt: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    edJuridical: TcxButtonEdit;
+    edPartnerCode: TcxButtonEdit;
     cxLabel1: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
-    JuridicalGuides: TdsdGuides;
+    PartnerCodeGuides: TdsdGuides;
     clCode: TcxGridDBColumn;
-    cxGridGoodsLink: TcxGrid;
-    cxGridDBTableViewGoodsLink: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    spGoodsLink: TdsdStoredProc;
-    cxSplitter: TcxSplitter;
-    GoodsLinkCDS: TClientDataSet;
-    GoodsLinkDS: TDataSource;
-    DBViewAddOnChild: TdsdDBViewAddOn;
     RefreshDispatcher: TRefreshDispatcher;
     mactDelete: TMultiAction;
     DataSetDelete: TDataSetDelete;
+    colGoodsMainName: TcxGridDBColumn;
+    colGoodsMainCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
