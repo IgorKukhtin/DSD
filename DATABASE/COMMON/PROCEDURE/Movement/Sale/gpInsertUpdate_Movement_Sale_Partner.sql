@@ -35,6 +35,21 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
+
+     -- !!!временно
+     SELECT Object_PriceList.ValueData                             AS PriceListName
+          , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
+          , ObjectFloat_VATPercent.ValueData                       AS VATPercent
+            INTO outPriceListName, outPriceWithVAT, outVATPercent
+     FROM Object AS Object_PriceList
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                  ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                                 AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+          LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                               AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+     WHERE Object_PriceList.Id = ioPriceListId;
+
      -- Проверка, т.к. эти параметры менять нельзя
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE MovementId = ioId AND Amount <> 0 AND isErased = FALSE)
                   AND EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_From() AND ObjectId = 8459) -- Склад Реализации
