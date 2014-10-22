@@ -963,7 +963,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'RegionName'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inProvinceName'
@@ -1037,6 +1037,69 @@ object PartnerAddressForm: TPartnerAddressForm
         Name = 'inShortName'
         Component = MasterCDS
         ComponentItem = 'ShortName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrdeName'
+        Component = MasterCDS
+        ComponentItem = 'Order_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrderPhone'
+        Component = MasterCDS
+        ComponentItem = 'Order_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrderMail'
+        Component = MasterCDS
+        ComponentItem = 'Order_Mail'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocName'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocPhone'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocMail'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Mail'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActName'
+        Component = MasterCDS
+        ComponentItem = 'Act_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActPhone'
+        Component = MasterCDS
+        ComponentItem = 'Act_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActMail'
+        Component = MasterCDS
+        ComponentItem = 'Act_Mail'
         DataType = ftString
         ParamType = ptInput
       end>
