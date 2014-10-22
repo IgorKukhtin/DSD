@@ -172,47 +172,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-
--- PriceList Partner
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
-                              ON ObjectDate_PartnerStartPromo.ObjectId = Object_From.Id
-                             AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
-                              ON ObjectDate_PartnerEndPromo.ObjectId = Object_From.Id
-                             AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
-                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_From.Id
-                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
-                             AND Movement.operdate BETWEEN ObjectDate_PartnerStartPromo.valuedata AND ObjectDate_PartnerEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                              ON ObjectLink_Partner_PriceList.ObjectId = Object_From.Id
-                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                             AND ObjectLink_Partner_PriceListPromo.ObjectId IS NULL
--- PriceList Juridical
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
-                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
-                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
-
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
-                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
-                             AND (ObjectLink_Partner_PriceListPromo.ChildObjectId IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
-                             AND Movement.operdate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                             AND ObjectLink_Juridical_PriceListPromo.ObjectId IS NULL
-
-         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis()))
+           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();

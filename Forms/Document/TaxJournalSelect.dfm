@@ -98,13 +98,17 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            Width = 69
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
@@ -124,7 +128,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 126
           end
           object colDateRegistered: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
@@ -184,7 +188,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 125
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)'
@@ -194,7 +198,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 92
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -204,7 +208,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 79
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -255,12 +259,27 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 65
+          end
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -291,7 +310,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 118
           end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
@@ -333,12 +352,29 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
     end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Enabled = False
+    end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -379,7 +415,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax_ByPartner'
+    StoredProcName = 'gpSelect_Movement_Tax_Choice'
     Params = <
       item
         Name = 'instartdate'
@@ -442,18 +478,13 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnComplete'
+          ItemName = 'bbRefresh'
         end
         item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -463,19 +494,15 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbComplete: TdxBarButton

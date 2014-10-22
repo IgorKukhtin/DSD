@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InvNumber_Master TVarChar, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -71,6 +71,7 @@ BEGIN
            , Object_Partner.ValueData               	AS PartnerName
 
            , View_Contract_InvNumber.ContractId        	AS ContractId
+           , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber         	AS ContractName
            , View_Contract_InvNumber.ContractTagName
            , Object_TaxKind.Id                		    AS TaxKindId

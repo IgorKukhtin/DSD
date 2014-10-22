@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, Vcl.ExtCtrls, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
-  dsdGuides, cxCurrencyEdit;
+  dsdGuides, cxCurrencyEdit, Vcl.DBActns;
 
 type
   TPriceListItemsLoadForm = class(TAncestorDBGridForm)
@@ -36,6 +36,10 @@ type
     spUpdatePriceListItem: TdsdStoredProc;
     colCommonCode: TcxGridDBColumn;
     colProducerName: TcxGridDBColumn;
+    bbDeleteGoodsLink: TdxBarButton;
+    mactGoodsLinkDelete: TMultiAction;
+    DataSetPost: TDataSetPost;
+    colBarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

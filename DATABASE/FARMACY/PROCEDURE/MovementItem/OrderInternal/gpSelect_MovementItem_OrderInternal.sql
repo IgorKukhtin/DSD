@@ -26,9 +26,13 @@ BEGIN
 
    CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
              , Price TFloat
-             , GoodsCode TVarChar, GoodsName TVarChar
+             , GoodsId Integer
+             , GoodsCode TVarChar
+             , GoodsName TVarChar
              , MainGoodsName TVarChar
+             , JuridicalId Integer
              , JuridicalName TVarChar
+             , ContractId Integer
              , ContractName TVarChar
              , Deferment Integer
              , Bonus TFloat
@@ -36,76 +40,8 @@ BEGIN
              , SuperFinalPrice TFloat) ON COMMIT DROP;
 
 
+          PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, vbUserId);
 
-
-       WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inSession)),
-            JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (vbObjectId))
-
-       INSERT INTO _tmpMI 
-
-       SELECT row_number() OVER ()
-            , ddd.Id AS MovementItemId 
-            , ddd.Price  
-            , ddd.GoodsCode
-            , ddd.GoodsName
-            , ddd.MainGoodsName 
-            , ddd.JuridicalName 
-            , ddd.ContractName
-            , ddd.Deferment
-            , ddd.Bonus 
-            , CASE ddd.Deferment 
-                   WHEN 0 THEN 0
-                   ELSE PriceSettings.Percent
-              END::TFloat AS Percent
-            , CASE ddd.Deferment 
-                   WHEN 0 THEN FinalPrice
-                   ELSE FinalPrice * (100 - PriceSettings.PERCENt)/100
-              END::TFloat AS SuperFinalPrice   
-         FROM 
-
-     (SELECT movementItem.Id
-          , PriceList.amount AS Price
-          , min(PriceList.amount) OVER (PARTITION BY movementItem.Id) AS MinPrice
-          , (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat AS FinalPrice
-          
-          , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
-          
-          , Object_JuridicalGoods.GoodsCode
-          , Object_JuridicalGoods.GoodsName
-          , MainGoods.valuedata AS MainGoodsName
-          , Juridical.ValueData AS JuridicalName
-          , Contract.ValueData AS ContractName
-          , COALESCE(ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-       FROM MovementItem  
-   JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
-   JOIN LastPriceList_View ON true 
-   LEFT JOIN JuridicalSettingsPriceList 
-                    ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
-                   AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
-   JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
-                           AND PriceList.MovementId  = LastPriceList_View.MovementId 
-   JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                    ON MILinkObject_Goods.MovementItemId = PriceList.Id
-                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-   LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-
-   LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(vbObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
-
-   JOIN OBJECT AS Goods ON Goods.Id = MovementItem.ObjectId
-
-   JOIN OBJECT AS MainGoods ON MainGoods.Id = Object_LinkGoods_View.GoodsMainId
-
-   JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
-
-   LEFT JOIN OBJECT AS Contract ON Contract.Id = LastPriceList_View.ContractId
-
-   LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
-                         ON ObjectFloat_Deferment.ObjectId = Contract.Id
-                        AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
-   
-   WHERE movementItem.MovementId = inMovementId AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> true) AS ddd
-   
-   LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice;
 
      OPEN Cursor1 FOR
        SELECT
@@ -137,24 +73,42 @@ BEGIN
                             , MIFloat_Summ.ValueData             AS Summ
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
-                            , MinPrice.Price
-                            , MinPrice.GoodsCode                 AS PartnerGoodsCode 
-                            , MinPrice.GoodsName                 AS PartnerGoodsName
-                            , MinPrice.JuridicalName 
-                            , MinPrice.ContractName 
-                            , MinPrice.SuperFinalPrice 
+                            , COALESCE(PriceList.Price, MinPrice.Price) AS Price
+                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
+                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)         AS PartnerGoodsName
+                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
+                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)   AS ContractName
+                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice) AS SuperFinalPrice
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
+                       
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
+                                                        ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                                                       AND MILinkObject_Juridical.MovementItemId = MovementItem.id  
+                                                       
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract 
+                                                        ON MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                       AND MILinkObject_Contract.MovementItemId = MovementItem.id  
+
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods 
+                                                        ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                       AND MILinkObject_Goods.MovementItemId = MovementItem.id  
+
+                       LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
+                                                    AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
+                                                    AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
+                                                    AND PriceList.MovementItemId = MovementItem.id 
                                              
-                       LEFT JOIN (SELECT * FROM
-                               (SELECT *
-                                   , MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                   , MIN(Id) OVER(PARTITION BY SuperFinalPrice) AS MinId
-                                 FROM _tmpMI) AS DDD
-                        WHERE DDD.Id = DDD.MinId AND DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS MinPrice
+                       LEFT JOIN (SELECT * FROM 
+                                      (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
+                                           (SELECT *
+                                                , MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                            FROM _tmpMI) AS DDD
+                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS DDD
+                                  WHERE Id = MinId) AS MinPrice
                               ON MinPrice.MovementItemId = MovementItem.Id
                                              
                        JOIN Object_Goods_View AS Object_Goods 

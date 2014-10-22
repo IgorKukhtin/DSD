@@ -52,6 +52,8 @@ type
     colDocument: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
+    ContractTagName: TcxGridDBColumn;
+    colContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

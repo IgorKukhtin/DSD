@@ -1,16 +1,17 @@
 -- Function: gpSelect_Movement_OrderExternal_Choice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal_Choice(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
+    IN inPartnerId     Integer,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, OperDateMark TDateTime
-             , InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, OperDatePartner_Sale TDateTime, OperDateMark TDateTime
+             , InvNumberPartner TVarChar, InvNumber_calc TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
@@ -18,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -49,8 +51,10 @@ BEGIN
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+           , MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
+           , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '*' || Movement.InvNumber END AS InvNumber_calc
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
            , Object_To.Id                                   AS ToId
@@ -67,6 +71,8 @@ BEGIN
            , View_Contract_InvNumber.ContractCode           AS ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractName
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
+           , Object_PriceList.id                            AS PriceListId
+           , Object_PriceList.ValueData                     AS PriceListName
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
@@ -88,7 +94,7 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -115,6 +121,9 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
+                                  ON ObjectFloat_Partner_PrepareDayCount.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -148,6 +157,11 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -179,21 +193,19 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-            ;
+       WHERE MovementLinkObject_From.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
+      ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_OrderExternal_Choice (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 20.10.14                                        * add isEDI
- 26.08.14                                                        *
- 18.08.14                                                        *
- 06.06.14                                                        *
+ 21.10.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')

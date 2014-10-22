@@ -184,6 +184,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -277,6 +281,13 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object colPersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
@@ -468,37 +479,179 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTaxForm'
-      FormNameParam.Value = nil
+      Enabled = False
+      FormName = 'actInsert'
+      FormNameParam.Value = 'actInsert'
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Enabled = False
+      FormName = 'actInsertMask'
+      FormNameParam.Value = 'actInsertMask'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTaxForm'
-      FormNameParam.Value = nil
+      Enabled = False
+      FormName = 'actUpdate'
+      FormNameParam.Value = 'actUpdate'
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actSetErased: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides [19]
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
-          Name = 'Key'
+          Name = 'MovementId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
-          Name = 'TextValue'
+          Name = 'InvNumber_calc'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumberPartner'
+          ComponentItem = 'InvNumber_calc'
           DataType = ftString
         end
         item
-          Name = 'OperDate_Tax'
+          Name = 'OperDatePartner'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'OperDate'
+          ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
+        end
+        item
+          Name = 'OperDatePartner_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDatePartner_Sale'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromId'
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName'
+          DataType = ftString
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end
+        item
+          Name = 'RouteSortingId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingId'
+        end
+        item
+          Name = 'RouteSortingName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingName'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListId'
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceListName'
+          DataType = ftString
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
+        end
+        item
+          Name = 'ChangePercent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ChangePercent'
+          DataType = ftFloat
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -563,18 +716,13 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnComplete'
+          ItemName = 'bbRefresh'
         end
         item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -584,19 +732,15 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbComplete: TdxBarButton

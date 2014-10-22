@@ -165,13 +165,6 @@ BEGIN
                                                                                    AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
                                                                                   )
                                                                                  )
-                                                                             AND ((AccessKeyId IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = inProcessId)
-                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
-                                                                                  )
-                                                                               OR (AccessKeyId NOT IN (SELECT AccessKeyId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService <> 0)
-                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_PersonalService())
-                                                                                  )
-                                                                                 )
              GROUP BY AccessKeyId
             );
   ELSE

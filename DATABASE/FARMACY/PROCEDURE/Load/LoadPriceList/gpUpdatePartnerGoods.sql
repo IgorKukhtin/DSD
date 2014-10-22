@@ -30,6 +30,12 @@ BEGIN
              AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
              AND CommonCode > 0;
 
+     -- Создаем штрих коды, которых еще нет
+
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), 0, BarCode), zc_Enum_GlobalConst_BarCode())
+            FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
+             AND BarCode NOT IN (SELECT GoodsName FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())
+             AND BarCode <> '';
      -- Тут мы меняем или добавляем товары в справочник товаров прайс-листа
 
      PERFORM lpInsertUpdate_Object_Goods(
@@ -88,6 +94,27 @@ BEGIN
                      
       AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())) AS DDD;
 
+      -- Выбираем Штрих-кода, у которых нет стыковки с главным 
+
+      PERFORM gpInsertUpdate_Object_LinkGoods(
+              0 
+            , MainGoodsId -- Главный товар
+            , GoodsId      -- Товар для замены
+            , inSession                 -- сессия пользователя
+            )  
+        FROM(
+        SELECT DISTINCT 
+            LoadPriceListItem.GoodsId AS MainGoodsId 
+          , Object_Goods_View.Id AS GoodsId 
+        FROM Object_Goods_View 
+          JOIN LoadPriceListItem ON LoadPriceListItem.BarCode = Object_Goods_View.GoodsName
+                                AND LoadPriceListItem.LoadPriceListId = inId
+      
+      WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
+                     
+      AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())) AS DDD;
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -98,6 +125,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.10.14                        *  
  03.10.14                        *  
  18.09.14                        *  
 */

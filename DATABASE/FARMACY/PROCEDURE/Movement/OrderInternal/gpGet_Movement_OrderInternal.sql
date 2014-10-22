@@ -1,11 +1,11 @@
 -- Function: gpGet_Movement_OrderInternal()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -26,7 +26,7 @@ BEGIN
          SELECT
                0                                                AS Id
              , CAST (NEXTVAL ('movement_OrderInternal_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
+             , current_date::TDateTime                          AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , 0                     				            AS UnitId
@@ -63,12 +63,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.10.14                         *
  03.07.14                                                        *
 */
 

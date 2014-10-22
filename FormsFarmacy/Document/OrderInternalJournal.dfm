@@ -2,8 +2,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 828
-  ExplicitLeft = -46
-  ExplicitTop = -179
   ExplicitWidth = 836
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -12,17 +10,17 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Width = 828
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 828
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 828
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 828
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 828
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -165,7 +163,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   end
   inherited Panel: TPanel
     Width = 828
-    ExplicitWidth = 1073
+    ExplicitWidth = 828
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -197,6 +195,16 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
@@ -583,6 +591,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end
@@ -597,6 +606,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 712
     Top = 360
   end
