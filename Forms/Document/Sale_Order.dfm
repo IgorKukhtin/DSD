@@ -54,6 +54,11 @@ inherited Sale_OrderForm: TSale_OrderForm
               Format = ',0.####'
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -89,6 +94,11 @@ inherited Sale_OrderForm: TSale_OrderForm
               Format = ',0.####'
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountOrder
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -188,6 +198,14 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colAmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'AmountOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -480,7 +498,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1216
+      Left = 1206
       Top = 63
       Properties.Buttons = <
         item
@@ -492,17 +510,17 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1216
+      Left = 1206
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1216
+      Left = 1206
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1216
+      Left = 1206
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 32
@@ -1019,7 +1037,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Sale'
+    StoredProcName = 'gpSelect_MovementItem_Sale_Order'
     Params = <
       item
         Name = 'inMovementId'
@@ -1510,7 +1528,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale_Partner'
+    StoredProcName = 'gpInsertUpdate_Movement_Sale'
     Params = <
       item
         Name = 'ioId'
@@ -1536,6 +1554,8 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inInvNumberOrder'
         Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
@@ -1561,18 +1581,16 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
       end
       item
-        Name = 'inPriceWithVAT'
+        Name = 'outPriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptInput
       end
       item
-        Name = 'inVATPercent'
+        Name = 'outVATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptInput
       end
       item
         Name = 'inChangePercent'
@@ -1638,6 +1656,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
       end
       item
+        Name = 'inMovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -1652,7 +1677,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
       end
       item
-        Name = 'CurrencyValue'
+        Name = 'outCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
@@ -2183,6 +2208,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
       end>
     Left = 808
   end
@@ -2325,36 +2362,11 @@ inherited Sale_OrderForm: TSale_OrderForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -2362,12 +2374,89 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = Null
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = Null
+        Component = GuidesRouteSorting
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'ChangePercent'
-        Value = 0.000000000000000000
+        Value = '0'
         Component = edChangePercent
         DataType = ftFloat
+        ParamType = ptInput
       end>
     Left = 616
   end
@@ -2459,15 +2548,15 @@ inherited Sale_OrderForm: TSale_OrderForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'MovementId'
-        Value = Null
+        Name = 'Key'
+        Value = ''
         Component = GuidesInvNumberOrder
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'InvNumber_calc'
-        Value = Null
+        Name = 'TextValue'
+        Value = ''
         Component = GuidesInvNumberOrder
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2475,58 +2564,58 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'OperDatePartner'
-        Value = Null
+        Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = Null
+        Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'FromId'
-        Value = Null
-        Component = GuidesFrom
+        Value = ''
+        Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'FromName'
-        Value = Null
-        Component = GuidesFrom
+        Value = ''
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'ToId'
-        Value = Null
-        Component = GuidesTo
+        Value = ''
+        Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ToName'
-        Value = Null
-        Component = GuidesTo
+        Value = ''
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'RouteSortingId'
-        Value = Null
+        Value = ''
         Component = GuidesRouteSorting
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'RouteSortingName'
-        Value = Null
+        Value = ''
         Component = GuidesRouteSorting
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2534,14 +2623,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'PaidKindId'
-        Value = Null
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PaidKindName'
-        Value = Null
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2549,14 +2638,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'ContractId'
-        Value = Null
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ContractName'
-        Value = Null
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2564,14 +2653,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'ContractTagId'
-        Value = Null
+        Value = ''
         Component = ContractTagGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ContractTagName'
-        Value = Null
+        Value = ''
         Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2579,14 +2668,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'PriceListId'
-        Value = Null
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PriceListName'
-        Value = Null
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2594,31 +2683,31 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = Null
+        Value = 'False'
         Component = edPriceWithVAT
         ParamType = ptInput
       end
       item
         Name = 'VATPercent'
-        Value = Null
+        Value = 0.000000000000000000
         Component = edVATPercent
         ParamType = ptInput
       end
       item
         Name = 'ChangePercent'
-        Value = Null
+        Value = 0.000000000000000000
         Component = edChangePercent
         ParamType = ptInput
       end
       item
         Name = 'MasterPartnerId'
-        Value = Null
+        Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'MasterPartnerName'
-        Value = Null
+        Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString

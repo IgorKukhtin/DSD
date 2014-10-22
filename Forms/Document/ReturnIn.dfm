@@ -244,11 +244,6 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = colVATPercent
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = colTotalSummPVAT
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -280,11 +275,6 @@ inherited ReturnInForm: TReturnInForm
               Format = ',0.00'
               Kind = skSum
               Column = colTotalSumm
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colVATPercent
             end
             item
               Format = ',0.00'
@@ -334,6 +324,7 @@ inherited ReturnInForm: TReturnInForm
           object colIsError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'IsError'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -347,8 +338,16 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 50
           end
+          object colTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object clincInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -373,6 +372,7 @@ inherited ReturnInForm: TReturnInForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
@@ -385,14 +385,6 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 53
           end
-          object colTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'TaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
           object colPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
@@ -404,6 +396,7 @@ inherited ReturnInForm: TReturnInForm
           object colOKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_From'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -412,6 +405,7 @@ inherited ReturnInForm: TReturnInForm
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -420,6 +414,7 @@ inherited ReturnInForm: TReturnInForm
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -444,6 +439,7 @@ inherited ReturnInForm: TReturnInForm
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -452,6 +448,7 @@ inherited ReturnInForm: TReturnInForm
           object colVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -460,6 +457,7 @@ inherited ReturnInForm: TReturnInForm
           object colTotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -468,6 +466,7 @@ inherited ReturnInForm: TReturnInForm
           object colTotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -476,10 +475,19 @@ inherited ReturnInForm: TReturnInForm
           object colTotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummPVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -488,6 +496,13 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 43
+          end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085

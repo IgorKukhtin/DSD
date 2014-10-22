@@ -166,9 +166,11 @@ BEGIN
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                            , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
-                                           , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0
+                                           , inContractId:= vbContractId, inRouteSortingId:= 0
                                            , inCurrencyDocumentId:= 14461 -- грн
                                            , inCurrencyPartnerId:= NULL
+                                           , inMovementId_Order := NULL
+                                           , ioPriceListId:= 0
                                            , inUserId := vbUserId
                                             ) AS tmp;
           ELSE
@@ -241,8 +243,8 @@ BEGIN
                -- сохранили Элемент документа - Sale
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
-                                                       , inChangePercentAmount := 0, inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0
-                                                       , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
+                                                       , inChangePercentAmount := 0, inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0, inBoxCount:= 0
+                                                       , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inBoxId:= 0, inUserId := vbUserId);
 
                ELSE
                IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find

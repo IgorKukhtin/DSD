@@ -10,17 +10,17 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Width = 1020
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -365,6 +365,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             Options.Editing = False
             Width = 55
           end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -455,7 +462,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5

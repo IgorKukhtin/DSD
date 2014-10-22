@@ -36,7 +36,6 @@ type
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -138,6 +137,8 @@ type
     edContractTag: TcxButtonEdit;
     cxLabel20: TcxLabel;
     ContractTagGuides: TdsdGuides;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

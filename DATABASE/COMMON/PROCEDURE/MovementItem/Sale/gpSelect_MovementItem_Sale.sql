@@ -1,8 +1,5 @@
 -- Function: gpSelect_MovementItem_Sale()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar);
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
@@ -18,21 +15,18 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
-
              , AmountSumm TFloat, isErased Boolean
               )
 AS
 $BODY$
---  DECLARE vbOperDate TDateTime;
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     -- inShowAll:= TRUE;
 
      IF inShowAll THEN
-
---     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      RETURN QUERY
        SELECT
@@ -102,7 +96,7 @@ BEGIN
 
       UNION ALL
        SELECT
-             MovementItem.Id                        AS idx_childreportcontainerlink_childreportcontainerid_containerid
+             MovementItem.Id                        AS Id
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName

@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar, RouteName TVarChar
+             , PriceListName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
@@ -98,6 +99,7 @@ BEGIN
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
            , Object_Route.ValueData                         AS RouteName
+           , Object_PriceList.ValueData                     AS PriceListName
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
@@ -141,9 +143,6 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
-                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
-                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -236,6 +235,11 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id

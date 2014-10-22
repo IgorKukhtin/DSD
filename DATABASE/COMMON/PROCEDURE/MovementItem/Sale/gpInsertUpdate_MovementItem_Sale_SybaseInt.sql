@@ -39,9 +39,11 @@ BEGIN
                                                , inPrice              := inPrice
                                                , ioCountForPrice      := ioCountForPrice
                                                , inHeadCount          := inHeadCount
+                                               , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
                                                , inPartionGoods       := inPartionGoods
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
+                                               , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
                                                , inSession            := inSession
                                                 ) AS tmp;
      ELSE
@@ -58,9 +60,11 @@ BEGIN
                                                , inPrice              := inPrice
                                                , ioCountForPrice      := ioCountForPrice
                                                , inHeadCount          := inHeadCount
+                                               , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
                                                , inPartionGoods       := inPartionGoods
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
+                                               , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
                                                , inSession            := inSession
                                                 ) AS tmp;
      END IF;

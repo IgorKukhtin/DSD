@@ -126,6 +126,7 @@ type
     ContractTagGuides: TdsdGuides;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
+    colAmountOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1631,10 +1631,6 @@
 				<Form>TaxJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale_Order.pas">
-				<Form>Sale_OrderForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_OrderJournal.pas">
 				<Form>Sale_OrderJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1645,6 +1641,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_PartnerJournal.pas">
 				<Form>Sale_PartnerJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_Order.pas">
+				<Form>Sale_OrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -3,10 +3,16 @@ alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDat
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber_my Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId_pg Integer, RouteSortingId_pg Integer, PersonalId_Postgres Integer
+     , PriceListId_pg Integer
      , isOnlyUpdateInt smallint, isTare smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_Scale(
        BillId Integer
+     , primary key(BillId)
+  ) on commit preserve rows;
+  declare local temporary table _tmpPrice_Scale(
+       BillId Integer
+     , PriceListId Integer
      , primary key(BillId)
   ) on commit preserve rows;
   //
@@ -43,6 +49,22 @@ begin
      , Id_Postgres integer
   ) on commit preserve rows;
    //
+   // 
+   insert into _tmpPrice_Scale (BillId, PriceListId)
+     select BillId, PriceListId
+     from
+      (select BillId, max (isnull(PriceListId, 0)) AS PriceListId
+       from dba.ScaleHistory_byObvalka
+       where InsertDate between @inStartDate-2 and @inEndDate+2
+         and BillId <> 0
+       group by BillId
+     union 
+       select BillId, max (isnull(PriceListId, 0)) AS PriceListId
+       from dba.ScaleHistory
+       where InsertDate between @inStartDate-2 and @inEndDate+2
+         and BillId <> 0
+       group by BillId
+      ) as tmp;
    //
    insert into _tmpBill_Scale(BillId)
      select Id
@@ -323,13 +345,16 @@ from
         , _tmpList.RouteId_pg as RouteId_pg
         , _tmpList.RouteSortingId_pg as RouteSortingId_pg
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
+        , PriceList_byHistory.Id_Postgres as PriceListId_pg
         , _tmpList.isOnlyUpdateInt
         , _tmpList.isTare
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
+        left outer join _tmpPrice_Scale on _tmpPrice_Scale.BillId = _tmpList.ObjectId
+        left outer join dba.PriceList_byHistory on PriceList_byHistory.Id = _tmpPrice_Scale.PriceListId
    group by ObjectId, BillId, InvNumber_my, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
-          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, _tmpList.isOnlyUpdateInt, Id_Postgres
+          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId_pg, RouteSortingId_pg, PersonalId_Postgres, _tmpList.isTare, _tmpList.isOnlyUpdateInt, PriceListId_pg, Id_Postgres
    order by 3, 4, CodeIM, 1
    ;
 

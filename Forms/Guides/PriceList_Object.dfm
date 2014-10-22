@@ -234,15 +234,31 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -265,6 +281,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 248
     Top = 224
   end

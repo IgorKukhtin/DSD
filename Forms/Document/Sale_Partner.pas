@@ -36,7 +36,6 @@ type
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -126,6 +125,8 @@ type
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
     spSelectPrintPack: TdsdStoredProc;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

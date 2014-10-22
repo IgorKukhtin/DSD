@@ -82,7 +82,7 @@ BEGIN
                                   SELECT Object.Id AS UnitId_PersonalService FROM tmpUserAll INNER JOIN Object ON Object.DescId = zc_Object_Unit() AND inShowAll = TRUE
                                  ) AS View_RoleAccessKeyGuide
                                  INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
-                                                                                 AND View_Personal.isErased = FALSE
+                                                                                 -- AND View_Personal.isErased = FALSE
                                  LEFT JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
                                                 AND tmpMI.UnitId     = View_Personal.UnitId
                                                 AND tmpMI.PositionId = View_Personal.PositionId

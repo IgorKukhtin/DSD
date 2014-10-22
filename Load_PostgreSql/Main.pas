@@ -6735,6 +6735,8 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PriceList;
+var inPriceWithVAT:boolean;
+    inVATPercent:Integer;
 begin
      if (not cbPriceList.Checked)or(not cbPriceList.Enabled) then exit;
      //
@@ -6777,11 +6779,23 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //не должен измениться
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                  fOpenSqToQuery ('select ValueData AS RetV from ObjectBoolean where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()');
+                  inPriceWithVAT:=toSqlQuery.FieldByName('RetV').AsBoolean;
+                  fOpenSqToQuery ('select ValueData AS RetV from ObjectFloat where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectFloat_PriceList_VATPercent()');
+                  inVATPercent:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end
+             else begin inPriceWithVAT:=false;
+                        inVATPercent:=20;
+                  end;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=FALSE;
-             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
+             toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=inPriceWithVAT;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=inVATPercent;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
@@ -11912,12 +11926,48 @@ begin
              //!!!!!!!!!!!!!!!!!!
 
              //Прайс-лист не должен измениться
-             if FieldByName('Id_Postgres').AsInteger<>0 then
+             {f FieldByName('Id_Postgres').AsInteger<>0 then
              begin
                   fOpenSqToQuery ('select ObjectId AS PriceListId from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_PriceList()');
                   PriceListId:=toSqlQuery.FieldByName('PriceListId').AsInteger;
              end
-             else PriceListId:=0;
+             else PriceListId:=0;}
+             PriceListId:=FieldByName('PriceListId_pg').AsInteger;
+             if {(PriceListId=0)and}(FieldByName('PriceWithVAT').AsInteger=zc_rvYes)then
+             begin
+                  if PriceListId<>0
+                  then begin
+                            fOpenSqToQuery ('select ObjectId AS RetV from ObjectBoolean where ObjectId='+IntToStr(PriceListId) + ' and DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                            if toSqlQuery.FieldByName('RetV').AsInteger=0
+                            then PriceListId:=302013;
+                       end
+                  else begin //fOpenSqToQuery ('select max (ObjectId) AS RetV from ObjectBoolean where DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                             PriceListId:=302013;//toSqlQuery.FieldByName('RetV').AsInteger;
+                       end;
+                  // еще раз
+                  if PriceListId=0 then
+                  begin //fOpenSqToQuery ('select max (ObjectId) AS RetV from ObjectBoolean where DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                        PriceListId:=302013;//toSqlQuery.FieldByName('RetV').AsInteger;
+                  end;
+
+                  if PriceListId=0 then
+                  begin
+                       ShowMessage('Ошибка-1 PriceListId = 0 BillId = ('+FieldByName('ObjectId').AsString+') Id_pg=('+FieldByName('Id_Postgres').AsString+')');
+                       fStop:=true;
+                       exit;
+                  end;
+             end
+             else if PriceListId<>0 then
+                  begin
+                       fOpenSqToQuery ('select ObjectId AS RetV from ObjectBoolean where ObjectId='+IntToStr(PriceListId) + ' and DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = FALSE');
+                       if toSqlQuery.FieldByName('RetV').AsInteger=0 then
+                       begin
+                            PriceListId:=0;
+                            //ShowMessage('Ошибка-2 PriceListId = 0 BillId = ('+FieldByName('ObjectId').AsString+') Id_pg=('+FieldByName('Id_Postgres').AsString+')');
+                            //fStop:=true;
+                            //exit;
+                       end;
+                  end;
              //
              //находим договор НАЛ or БН
              ContractId_pg:=fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_SecondForm,'');
@@ -12259,12 +12309,48 @@ begin
              //!!!!!!!!!!!!!!!!!!
 
              //Прайс-лист не должен измениться
-             if FieldByName('Id_Postgres').AsInteger<>0 then
+             {if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
                   fOpenSqToQuery ('select ObjectId AS PriceListId from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_PriceList()');
                   PriceListId:=toSqlQuery.FieldByName('PriceListId').AsInteger;
              end
-             else PriceListId:=0;
+             else PriceListId:=0;}
+             PriceListId:=FieldByName('PriceListId_pg').AsInteger;
+             if {(PriceListId=0)and}(FieldByName('PriceWithVAT').AsInteger=zc_rvYes)then
+             begin
+                  if PriceListId<>0
+                  then begin
+                            fOpenSqToQuery ('select ObjectId AS RetV from ObjectBoolean where ObjectId='+IntToStr(PriceListId) + ' and DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                            if toSqlQuery.FieldByName('RetV').AsInteger=0
+                            then PriceListId:=302013;
+                       end
+                  else begin //fOpenSqToQuery ('select max (ObjectId) AS RetV from ObjectBoolean where DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                             PriceListId:=302013;//toSqlQuery.FieldByName('RetV').AsInteger;
+                       end;
+                  // еще раз
+                  if PriceListId=0 then
+                  begin //fOpenSqToQuery ('select max (ObjectId) AS RetV from ObjectBoolean where DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = TRUE');
+                        PriceListId:=302013;//toSqlQuery.FieldByName('RetV').AsInteger;
+                  end;
+
+                  if PriceListId=0 then
+                  begin
+                       ShowMessage('Ошибка-1 PriceListId = 0 BillId = ('+FieldByName('ObjectId').AsString+') Id_pg=('+FieldByName('Id_Postgres').AsString+')');
+                       fStop:=true;
+                       exit;
+                  end;
+             end
+             else if PriceListId<>0 then
+                  begin
+                       fOpenSqToQuery ('select ObjectId AS RetV from ObjectBoolean where ObjectId='+IntToStr(PriceListId) + ' and DescId = zc_ObjectBoolean_PriceList_PriceWithVAT() and ValueData = FALSE');
+                       if toSqlQuery.FieldByName('RetV').AsInteger=0 then
+                       begin
+                            PriceListId:=0;
+                            //ShowMessage('Ошибка-2 PriceListId = 0 BillId = ('+FieldByName('ObjectId').AsString+') Id_pg=('+FieldByName('Id_Postgres').AsString+')');
+                            //fStop:=true;
+                            //exit;
+                       end;
+                  end;
              //
              //находим договор БН
              ContractId_pg:=fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_FirstForm,FieldByName('ContractNumber').AsString);
