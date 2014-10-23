@@ -23,13 +23,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseInt(
 RETURNS RECORD
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
+     vbUserId:= lpGetUserBySession (inSession);
+
      IF inIsOnlyUpdateInt = TRUE
      THEN
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
@@ -44,13 +47,13 @@ BEGIN
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
                                                , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
-                                               , inSession            := inSession
+                                               , inUserId             := vbUserId
                                                 ) AS tmp;
      ELSE
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
@@ -65,7 +68,7 @@ BEGIN
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
                                                , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
-                                               , inSession            := inSession
+                                               , inUserId             := vbUserId
                                                 ) AS tmp;
      END IF;
 

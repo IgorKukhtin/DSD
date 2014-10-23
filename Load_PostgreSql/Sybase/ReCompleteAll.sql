@@ -27,25 +27,113 @@ BEGIN
 -- !!!!!!!!!!!!!!
 -- !!! PG !!!
 -- !!!!!!!!!!!!!!
-CREATE TEMP TABLE _tmp1 (Id Integer) ON COMMIT DROP;
-insert into _tmp1 (Id)
- select Movement.Id from Movement join MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                                         and MovementLinkObject.DescId = zc_MovementLinkObject_PaidKind()
-                                                         and MovementLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm()
- where Movement.OperDate BETWEEN '01.06.2014' AND '30.06.2014' and Movement.DescId IN (zc_Movement_Sale()/*, zc_Movement_ReturnIn()*/) and Movement.StatusId = zc_Enum_Status_Complete()
+CREATE TEMP TABLE _tmp1 (Id Integer, DescId Integer) ON COMMIT DROP;
+insert into _tmp1 (Id, DescId)
+ select Movement.Id, Movement.DescId from Movement
+                                  /*join MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
+                                                                           and MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                                           and MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
+                                  join MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                                     and MLO_From.DescId = zc_MovementLinkObject_From()
+                                                                     and MLO_From.ObjectId = 8411 -- ф. Киев
+ where Movement.OperDate BETWEEN '01.06.2014' AND '30.06.2014' and Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice()) and Movement.StatusId = zc_Enum_Status_Complete()
+union
+ select Movement.Id, Movement.DescId from Movement
+                                 /*join MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
+                                                                          and MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                                          and MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
+                                  join MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                                   and MLO_To.DescId = zc_MovementLinkObject_To()
+                                                                   and MLO_To.ObjectId = 8411 -- ф. Киев
+ where Movement.OperDate BETWEEN '01.06.2014' AND '30.06.2014' and Movement.DescId IN (zc_Movement_ReturnIn()) and Movement.StatusId = zc_Enum_Status_Complete()
 ;
+
+
 -- !!! распроводим все !!!
-select lpUnComplete_Movement (inMovementId := _tmp1.Id
+perform lpUnComplete_Movement (inMovementId := _tmp1.Id
                             , inUserId     := zfCalc_UserAdmin() :: Integer)
 from _tmp1;
+
 
      -- таблица - <Проводки>
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
+
+-- !!!1 - Loss!!!
+              -- !!!Loss!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
+              -- !!!Loss!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsId_Item Integer
+                               , OperCount TFloat
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
+                               , PartionGoodsId Integer) ON COMMIT DROP;
+-- !!! проводим все - Loss !!!
+perform lpComplete_Movement_Loss (inMovementId     := _tmp1.Id
+                                , inUserId         := zfCalc_UserAdmin() :: Integer)
+from _tmp1
+where DescId = zc_Movement_Loss();
+
+
+-- !!!2 - SendOnPrice!!!
+     -- !!!удаление!!!
+     DROP TABLE _tmpItemSumm;
+     DROP TABLE _tmpItem;
+
+     -- !!!SendOnPrice!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, isLossMaterials Boolean, isRestoreAccount_60000 Boolean, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss_20204 Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_60000 Integer, AccountId_60000 Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat, OperSumm_Account_60000 TFloat) ON COMMIT DROP;
+     -- !!!SendOnPrice!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, isLossMaterials Boolean
+                               , MIContainerId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
+                               , InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId_From Integer, BusinessId_To Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
+                               , PartionGoodsId_From Integer, PartionGoodsId_To Integer) ON COMMIT DROP;
+-- !!! проводим все - SendOnPrice !!!
+perform lpComplete_Movement_SendOnPrice (inMovementId     := _tmp1.Id
+                                       , inUserId         := zfCalc_UserAdmin() :: Integer)
+from _tmp1
+where DescId = zc_Movement_SendOnPrice();
+
+
+-- !!!3 - ReturnIn!!!
+     -- !!!удаление!!!
+     DROP TABLE _tmpItemSumm;
+     DROP TABLE _tmpItem;
+
+     -- !!!возвраты!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10800 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+     -- !!!возвраты!!!таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
+                               , ContainerId_ProfitLoss_10700 Integer
+                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId_To Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                               , PartionGoodsId Integer
+                               , Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+-- !!! проводим все - возвраты !!!
+perform lpComplete_Movement_ReturnIn (inMovementId     := _tmp1.Id
+                               , inUserId         := zfCalc_UserAdmin() :: Integer
+                               , inIsLastComplete := TRUE)
+from _tmp1
+where DescId = zc_Movement_ReturnIn();
+
+
+-- !!!4 - Sale!!!
+     -- !!!удаление!!!
+     DROP TABLE _tmpItemSumm;
+     DROP TABLE _tmpItem;
+
+     -- !!!продажи!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-     -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     -- !!!продажи!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
@@ -55,10 +143,12 @@ from _tmp1;
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
                                , PartionGoodsId Integer
                                , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
--- !!! проводим все !!!
+-- !!! проводим все - Продажи !!!
 perform lpComplete_Movement_Sale (inMovementId     := _tmp1.Id
                                , inUserId         := zfCalc_UserAdmin() :: Integer
                                , inIsLastComplete := TRUE)
-from _tmp1;
+from _tmp1
+where DescId = zc_Movement_Sale();
+
 
 END $$;
