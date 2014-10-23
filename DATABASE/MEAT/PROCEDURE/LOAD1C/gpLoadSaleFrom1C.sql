@@ -164,7 +164,7 @@ BEGIN
           -- сохранили Документ - Sale
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
-                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
+                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE --, inPriceWithVAT := FALSE, inVATPercent := 20
                                            , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
                                            , inContractId:= vbContractId, inRouteSortingId:= 0
                                            , inCurrencyDocumentId:= 14461 -- грн
