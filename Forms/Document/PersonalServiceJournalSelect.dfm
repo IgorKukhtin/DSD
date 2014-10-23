@@ -22,6 +22,8 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
       inherited cxGrid: TcxGrid
         Width = 1070
         Height = 477
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1070
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -143,7 +145,7 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 89
           end
           object colTotalSummCash: TcxGridDBColumn
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
@@ -214,6 +216,22 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
   inherited Panel: TPanel
     Width = 1070
     ExplicitWidth = 1070
+  end
+  object cxLabel6: TcxLabel [2]
+    Left = 452
+    Top = 158
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081':'
+  end
+  object edPersonalServiceList: TcxButtonEdit [3]
+    Left = 582
+    Top = 157
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 245
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -323,7 +341,7 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService'
+    StoredProcName = 'gpSelect_Movement_PersonalServiceChoice'
     Params = <
       item
         Name = 'instartdate'
@@ -347,9 +365,11 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
         ParamType = ptInput
       end
       item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Name = 'inPersonalServiceListId'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 136
     Top = 163
@@ -419,6 +439,18 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
         end
         item
           Visible = True
+          ItemName = 'bbPSList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalServiceList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -462,14 +494,28 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbPSList: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbPersonalServiceList: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edPersonalServiceList
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 640
-    Top = 152
+    Left = 624
+    Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288
@@ -546,14 +592,17 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
         ParamType = ptInputOutput
       end
       item
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
+        Name = 'PersonalServiceListId'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
       end
       item
-        Value = Null
+        Name = 'PersonalServiceListName'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 400
     Top = 200
@@ -589,6 +638,7 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end
@@ -597,5 +647,31 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object PersonalServiceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalServiceList
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 728
+    Top = 152
   end
 end

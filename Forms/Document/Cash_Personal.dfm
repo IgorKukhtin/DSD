@@ -21,8 +21,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       inherited cxGrid: TcxGrid
         Width = 1104
         Height = 484
-        ExplicitLeft = 3
-        ExplicitTop = 3
         ExplicitWidth = 1104
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1119,6 +1117,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 319
     Top = 208
   end
