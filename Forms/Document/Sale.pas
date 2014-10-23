@@ -140,6 +140,10 @@ type
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
     spSelectPrintPack: TdsdStoredProc;
+    cbCalcAmountPartner: TcxCheckBox;
+    edChangePercentAmount: TcxCurrencyEdit;
+    bbIsCalcAmountPartner: TdxBarControlContainerItem;
+    bbChangePercentAmount: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

@@ -1622,8 +1622,8 @@ BEGIN
                                  );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
-     IF inIsLastComplete = FALSE
-        AND EXISTS (SELECT MovementLinkMovement_Master.MovementId
+     IF /*inIsLastComplete = FALSE
+        AND*/ EXISTS (SELECT MovementLinkMovement_Master.MovementId
                     FROM MovementLinkMovement AS MovementLinkMovement_Master
                          INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                                        AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()

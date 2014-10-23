@@ -127,6 +127,11 @@ type
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
     colAmountOrder: TcxGridDBColumn;
+    bbChangePercentAmount: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbIsCalcAmountPartner: TdxBarControlContainerItem;
+    edChangePercentAmount: TcxCurrencyEdit;
+    cbCalcAmountPartner: TcxCheckBox;
   private
     { Private declarations }
   public
