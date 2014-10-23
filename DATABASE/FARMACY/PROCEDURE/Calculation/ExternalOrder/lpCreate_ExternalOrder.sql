@@ -66,8 +66,9 @@ BEGIN
                                       AND ((MILinkObject_Goods.ObjectId = inGoodsId AND COALESCE(inGoodsId, 0) <> 0) OR (MILinkObject_Goods.ObjectId IS NULL AND COALESCE(inGoodsId, 0) = 0))
      WHERE MovementItem.movementid = vbMovementId AND MovementItem.objectid = inMainGoodsId;
     
-    PERFORM lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
+    vbMovementItemId := lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
                                                     , inAmount, inPrice, inAmount * inPrice, inUserId);
+    PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(), vbMovementItemId, true);
 
 
 END;

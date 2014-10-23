@@ -28,6 +28,7 @@ type
     DataSetDelete: TDataSetDelete;
     colGoodsMainName: TcxGridDBColumn;
     colGoodsMainCode: TcxGridDBColumn;
+    clMakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

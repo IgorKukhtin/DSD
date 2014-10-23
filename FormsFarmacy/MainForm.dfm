@@ -361,7 +361,6 @@ inherited MainForm: TMainForm
     end
     object bbGoodsPartnerCode: TdxBarButton
       Action = actGoodsPartnerCode
-      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'  '
       Category = 0
     end
     object bbGoodsPartnerCodeMaster: TdxBarButton
@@ -822,7 +821,7 @@ inherited MainForm: TMainForm
     object actGoodsPartnerCode: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       FormName = 'TGoodsPartnerCodeForm'
       FormNameParam.Value = 'TGoodsPartnerCodeForm'
       FormNameParam.DataType = ftString
@@ -832,7 +831,7 @@ inherited MainForm: TMainForm
     object actGoodsPartnerCodeMaster: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1085#1072#1096
       FormName = 'TGoodsPartnerCodeMasterForm'
       FormNameParam.Value = 'TGoodsPartnerCodeMasterForm'
       FormNameParam.DataType = ftString

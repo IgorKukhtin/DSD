@@ -42,6 +42,7 @@ BEGIN
              , MainGoodsName TVarChar
              , JuridicalId Integer
              , JuridicalName TVarChar
+             , MakerName TVarChar
              , ContractId Integer
              , ContractName TVarChar
              , Deferment Integer
@@ -50,7 +51,7 @@ BEGIN
              , SuperFinalPrice TFloat) ON COMMIT DROP;
 
 
-    PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, vbUserId);
+    PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, 0, vbUserId);
    
    -- Просто запрос, где у позиции определяется лучший поставщик. Если поставщика нет, то закинуть в пустой документ. 
 
@@ -94,6 +95,7 @@ BEGIN
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
+              AND MovementItem.Amount > 0 
               AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
 

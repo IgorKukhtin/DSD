@@ -22,6 +22,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 553
         Height = 433
         Align = alLeft
+        ExplicitLeft = -3
         ExplicitWidth = 553
         ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -176,6 +177,13 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
+          object colisCalculated: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 43
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -272,7 +280,13 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 133
+            Width = 122
+          end
+          object colMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Width = 68
           end
           object colBonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
@@ -281,14 +295,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = ',0.## %; ; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 38
           end
           object colContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 70
           end
           object colDeferment: TcxGridDBColumn
             Caption = #1054#1090#1089#1088'.'
@@ -298,14 +312,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = '0; ; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 39
+            Width = 35
           end
           object coCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 51
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -313,14 +327,14 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 85
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 45
           end
           object colPercent: TcxGridDBColumn
             Caption = '% '#1079#1072' '#1086#1090#1089#1088'.'
@@ -329,7 +343,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = ',0.## %; ; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 39
           end
           object colSuperFinalPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103
@@ -338,7 +352,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 85
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -351,6 +365,8 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 3
         Height = 433
         Control = cxGrid
+        ExplicitLeft = 559
+        ExplicitTop = 3
       end
     end
   end

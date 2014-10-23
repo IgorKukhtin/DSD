@@ -40,6 +40,10 @@ type
     DataSetDelete: TDataSetDelete;
     dsdStoredProc1: TdsdStoredProc;
     dsdExecStoredProc1: TdsdExecStoredProc;
+    clMakerName: TcxGridDBColumn;
+    mactListDelete: TMultiAction;
+    N8: TMenuItem;
+    N9: TMenuItem;
   private
     { Private declarations }
   public

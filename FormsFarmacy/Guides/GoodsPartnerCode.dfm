@@ -1,26 +1,26 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
-  ClientWidth = 667
+  ClientWidth = 763
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 675
+  ExplicitWidth = 771
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 667
+    Width = 763
     Height = 397
-    ExplicitWidth = 782
+    ExplicitWidth = 667
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 667
+    ClientRectRight = 763
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 667
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 667
+        Width = 763
         Height = 397
-        ExplicitWidth = 782
+        ExplicitWidth = 667
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -61,7 +61,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 254
+            Width = 205
+          end
+          object clMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
           end
         end
       end

@@ -3,31 +3,48 @@
 -- DROP FUNCTION gpInsertUpdate_MovementItem_OrderInternal();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inSumm                TFloat    , -- Сумма заказа
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS TABLE(Id Integer, Price TFloat, ) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
+   DECLARE vbId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderInternal());
      vbUserId := inSession;
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+     vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, 0, inUserId);
 
-     -- сохранили свойство <Сумма заказа>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+     CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
+             , Price TFloat
+             , GoodsId Integer
+             , GoodsCode TVarChar
+             , GoodsName TVarChar
+             , MainGoodsName TVarChar
+             , JuridicalId Integer
+             , JuridicalName TVarChar
+             , MakerName TVarChar
+             , ContractId Integer
+             , ContractName TVarChar
+             , Deferment Integer
+             , Bonus TFloat
+             , Percent TFloat
+             , SuperFinalPrice TFloat) ON COMMIT DROP;
 
-     -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
+      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, inGoodsId, vbUserId);
+
+
+      -- пересчитали Итоговые суммы
+      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

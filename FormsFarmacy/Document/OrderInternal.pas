@@ -61,6 +61,8 @@ type
     spUpdatePrioritetPartner: TdsdStoredProc;
     actUpdatePrioritetPartner: TdsdExecStoredProc;
     bbPrioritetPartner: TdxBarButton;
+    colMakerName: TcxGridDBColumn;
+    colisCalculated: TcxGridDBColumn;
   private
     { Private declarations }
   public

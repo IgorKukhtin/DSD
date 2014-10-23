@@ -154,6 +154,7 @@ type
     FQuestionBeforeExecuteList: TStringList;
     FInfoAfterExecuteList: TStringList;
     FView: TcxGridTableView;
+    FWithoutNext: boolean;
     procedure ListExecute;
     procedure DataSourceExecute;
     procedure SaveQuestionBeforeExecute;
@@ -181,6 +182,7 @@ type
     property ImageIndex;
     property ShortCut;
     property SecondaryShortCuts;
+    property WithoutNext: boolean read FWithoutNext write FWithoutNext default false;
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
@@ -1764,6 +1766,7 @@ constructor TMultiAction.Create(AOwner: TComponent);
 begin
   inherited;
   FActionList := TOwnedCollection.Create(Self, TActionItem);
+  FWithoutNext := false;
 end;
 
 procedure TMultiAction.DataSourceExecute;
@@ -1785,6 +1788,7 @@ begin
      end;
   end
   else begin
+
     if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
    //    DataSource.DataSet.DisableControls;
        try
@@ -1796,7 +1800,10 @@ begin
                ListExecute;
                IncProgress(1);
                Application.ProcessMessages;
-               DataSource.DataSet.Next;
+               if not WithoutNext then
+                  DataSource.DataSet.Next
+               else
+                  DataSource.DataSet.Delete;
              end;
            finally
              Finish;

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
 RETURNS TABLE (Id Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
+             , MakerName TVarChar
 
 ) AS
 $BODY$
@@ -27,6 +28,7 @@ BEGIN
          , Object_Goods_View.GoodsCodeInt
          , Object_Goods_View.GoodsCode
          , Object_Goods_View.GoodsName
+         , Object_Goods_View.MakerName
 
    FROM Object_Goods_View 
      LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods

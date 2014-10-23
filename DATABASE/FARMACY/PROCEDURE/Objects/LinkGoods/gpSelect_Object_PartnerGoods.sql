@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartnerGoods(
 )
 RETURNS TABLE (Id Integer
              , GoodsMainId Integer             
-             , GoodsId Integer, GoodsName TVarChar, GoodsCode TVarChar, JuridicalName TVarChar
+             , GoodsId Integer, GoodsName TVarChar, GoodsCode TVarChar
+             , JuridicalName TVarChar, MakerName TVarChar
              ) AS
 $BODY$
 BEGIN
@@ -23,6 +24,7 @@ BEGIN
          , Object_LinkGoods_View.GoodsName
          , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar)
          , Juridical.ValueData AS JuridicalName
+         , Object_LinkGoods_View.MakerName
          
      FROM Object_LinkGoods_View
      JOIN Object AS Juridical ON Juridical.Id = Object_LinkGoods_View.ObjectId

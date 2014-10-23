@@ -1,10 +1,12 @@
 -- Function: lpCreateTempTable_OrderInternal()
 
 DROP FUNCTION IF EXISTS lpCreateTempTable_OrderInternal (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpCreateTempTable_OrderInternal(
     IN inMovementId  Integer      , -- ключ Документа
     IN inObjectId    Integer      , 
+    IN inGoodsId     Integer      , 
     IN inUserId      Integer        -- сессия пользователя
 )
 
@@ -18,7 +20,7 @@ BEGIN
             JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (inObjectId)),
             MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId FROM MovementItem    
                                     JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid -- Связь товара сети с общим
-                                    WHERE movementid = inMovementId)
+                                    WHERE movementid = inMovementId  AND ((inGoodsId = 0) OR (inGoodsId = movementItem.objectid)) )
 
        INSERT INTO _tmpMI 
 
@@ -31,6 +33,7 @@ BEGIN
             , ddd.MainGoodsName 
             , ddd.JuridicalId
             , ddd.JuridicalName 
+            , ddd.MakerName
             , ddd.ContractId
             , ddd.ContractName
             , ddd.Deferment
@@ -55,6 +58,7 @@ BEGIN
           , Object_JuridicalGoods.Id AS GoodsId         
           , Object_JuridicalGoods.GoodsCode
           , Object_JuridicalGoods.GoodsName
+          , Object_JuridicalGoods.MakerName
           , MainGoods.valuedata AS MainGoodsName
           , Juridical.ID AS JuridicalId
           , Juridical.ValueData AS JuridicalName
@@ -78,7 +82,7 @@ BEGIN
 
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
-   LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(4) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
+   LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(inObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
 
    
    
@@ -101,12 +105,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.10.14                         *  add inGoodsId
+ 22.10.14                         *  add MakerName
  13.10.14                         *
  15.07.14                                                       *
  15.07.14                                                       *

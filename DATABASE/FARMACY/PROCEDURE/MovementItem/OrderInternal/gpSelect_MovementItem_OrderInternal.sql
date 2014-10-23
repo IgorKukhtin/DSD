@@ -32,6 +32,7 @@ BEGIN
              , MainGoodsName TVarChar
              , JuridicalId Integer
              , JuridicalName TVarChar
+             , MakerName TVarChar
              , ContractId Integer
              , ContractName TVarChar
              , Deferment Integer
@@ -40,7 +41,7 @@ BEGIN
              , SuperFinalPrice TFloat) ON COMMIT DROP;
 
 
-          PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, vbUserId);
+          PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
      OPEN Cursor1 FOR
@@ -58,6 +59,7 @@ BEGIN
            , tmpMI.JuridicalName 
            , tmpMI.ContractName 
            , tmpMI.SuperFinalPrice 
+           , COALESCE(tmpMI.isCalculated, FALSE) AS isCalculated
 
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -73,12 +75,13 @@ BEGIN
                             , MIFloat_Summ.ValueData             AS Summ
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
-                            , COALESCE(PriceList.Price, MinPrice.Price) AS Price
-                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
-                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)         AS PartnerGoodsName
-                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
-                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)   AS ContractName
-                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice) AS SuperFinalPrice
+                            , MIBoolean_Calculated.ValueData     AS isCalculated
+                            , MinPrice.Price AS Price
+                            , MinPrice.GoodsCode         AS PartnerGoodsCode 
+                            , MinPrice.GoodsName         AS PartnerGoodsName
+                            , MinPrice.JuridicalName AS JuridicalName
+                            , MinPrice.ContractName   AS ContractName
+                            , MinPrice.SuperFinalPrice AS SuperFinalPrice 
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -97,11 +100,10 @@ BEGIN
                                                         ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                                        AND MILinkObject_Goods.MovementItemId = MovementItem.id  
 
-                       LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
-                                                    AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
-                                                    AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
-                                                    AND PriceList.MovementItemId = MovementItem.id 
-                                             
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
+                                                     ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                                    AND MIBoolean_Calculated.MovementItemId = MovementItem.id  
+
                        LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
                                            (SELECT *
@@ -134,6 +136,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.10.14                         *
  13.10.14                         *
  15.07.14                                                       *
  15.07.14                                                       *

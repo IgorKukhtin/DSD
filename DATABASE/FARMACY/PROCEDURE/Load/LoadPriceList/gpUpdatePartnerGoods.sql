@@ -47,15 +47,18 @@ BEGIN
                                    0  ,    -- НДС
                         vbJuridicalId ,    -- Юр лицо или торговая сеть
                              vbUserId , 
+                                   0  ,
+       LoadPriceListItem.ProducerName ,     
                                 false )
         FROM LoadPriceListItem
-                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName 
+                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName, MakerName 
                             FROM Object_Goods_View 
                            WHERE ObjectId = vbJuridicalId
                         ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
          WHERE LoadPriceListItem.GoodsId <> 0 
            AND LoadPriceListItem.LoadPriceListId  = inId 
-           AND COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName;
+           AND ((COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName)
+                OR (COALESCE(Object_Goods.MakerName, '') <> LoadPriceListItem.ProducerName));
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
 
@@ -125,7 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом
+ 22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом и добавили производителя
  17.10.14                        *  
  03.10.14                        *  
  18.09.14                        *  

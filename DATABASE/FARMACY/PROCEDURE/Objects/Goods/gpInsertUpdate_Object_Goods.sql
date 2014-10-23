@@ -42,7 +42,7 @@ BEGIN
 
    vbCode := COALESCE((SELECT ObjectCode FROM Object WHERE Id = ioId), inCode::integer);
    
-   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId);
+   ioId := lpInsertUpdate_Object_Goods(ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, vbObjectId, vbUserId, 0, '');
 
    -- Кусок ниже реализован временно пока работает одна сеть
 
@@ -53,7 +53,7 @@ BEGIN
     WHERE Object_Goods_Main_View.GoodsCode = vbCode; 
 
    --
-   vbMainGoodsId := lpInsertUpdate_Object_Goods(vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId);
+   vbMainGoodsId := lpInsertUpdate_Object_Goods(vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId, 0, '');
 
    PERFORM gpInsertUpdate_Object_LinkGoods_Load(inCode, inCode, vbObjectId, inSession);
 
