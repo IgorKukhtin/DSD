@@ -1,15 +1,18 @@
 -- Function: gpReport_MotionGoods()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
-    IN inStartDate    TDateTime , -- 
-    IN inEndDate      TDateTime , --
-    IN inUnitGroupId  Integer,    -- группа подразделений на самом деле это подразделение, 
-    IN inLocationId   Integer,    -- 
-    IN inGoodsGroupId Integer,    -- группа товара 
-    IN inGoodsId      Integer,    -- товар
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate       TDateTime , -- 
+    IN inEndDate         TDateTime , --
+    IN inAccountGroupId  Integer,    --
+    IN inUnitGroupId     Integer,    -- группа подразделений на самом деле это подразделение
+    IN inLocationId      Integer,    -- 
+    IN inGoodsGroupId    Integer,    -- группа товара 
+    IN inGoodsId         Integer,    -- товар
+    IN inIsInfoMoney     Boolean,    -- 
+    IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
@@ -70,6 +73,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar, Account
              , PriceTotalIn TFloat
              , PriceTotalOut TFloat
 
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
                )
 AS
 $BODY$
@@ -250,9 +255,10 @@ BEGIN
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
                                     LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
-                               WHERE View_Account.AccountGroupId = zc_Enum_AccountGroup_20000() -- Запасы
+                               WHERE View_Account.AccountGroupId = inAccountGroupId OR COALESCE (inAccountGroupId, 0) = 0
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
+                                      , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END AS ContainerId_Summ
                                       , tmpContainer_Summ.AccountId
                                       , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
@@ -338,6 +344,7 @@ BEGIN
                                       LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                                         AND MIContainer.OperDate <= inEndDate
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
+                                        , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END
                                         , tmpContainer_Summ.AccountId
                                         , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
@@ -469,8 +476,22 @@ BEGIN
                           THEN tmpMIContainer_group.SummTotalOut / tmpMIContainer_group.CountTotalOut
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
+
+        , View_InfoMoney.InfoMoneyCode
+        , View_InfoMoney.InfoMoneyGroupName
+        , View_InfoMoney.InfoMoneyDestinationName
+        , View_InfoMoney.InfoMoneyName
+        , View_InfoMoney.InfoMoneyName_all
+
+        , View_InfoMoneyDetail.InfoMoneyCode AS InfoMoneyCode_Detail
+        , View_InfoMoneyDetail.InfoMoneyGroupName AS InfoMoneyGroupName_Detail
+        , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
+        , View_InfoMoneyDetail.InfoMoneyName AS InfoMoneyName_Detail
+        , View_InfoMoneyDetail.InfoMoneyName_all AS InfoMoneyName_all_Detail
+
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
+              , tmpMIContainer_all.ContainerId_Summ
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
@@ -531,6 +552,7 @@ BEGIN
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
         FROM (SELECT COALESCE (tmpMIContainer_Summ.ContainerId, tmpMIContainer_Count.ContainerId) AS ContainerId
+                   , COALESCE (tmpMIContainer_Summ.ContainerId_Summ, 0) AS ContainerId_Summ
                    , COALESCE (tmpMIContainer_Summ.AccountId, 0) AS AccountId
                    , COALESCE (tmpMIContainer_Summ.LocationId, tmpMIContainer_Count.LocationId) AS LocationId
                    , COALESCE (tmpMIContainer_Summ.GoodsId, tmpMIContainer_Count.GoodsId) AS GoodsId
@@ -608,6 +630,7 @@ BEGIN
              ) AS tmpMIContainer_Count
                FULL JOIN
              (SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
+                   , tmpMIContainer_Summ.ContainerId_Summ
                    , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
@@ -645,6 +668,7 @@ BEGIN
                  OR tmpMIContainer_Summ.Amount_ProductionIn   <> 0
                  OR tmpMIContainer_Summ.Amount_ProductionOut  <> 0
               GROUP BY tmpMIContainer_Summ.ContainerId_Count
+                     , tmpMIContainer_Summ.ContainerId_Summ
                      , tmpMIContainer_Summ.AccountId
                      , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
@@ -655,6 +679,7 @@ BEGIN
 
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.ContainerId
+                , tmpMIContainer_all.ContainerId_Summ
                 , tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
@@ -663,6 +688,15 @@ BEGIN
                 , tmpMIContainer_all.AssetToId
         ) AS tmpMIContainer_group
       
+        LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                      ON CLO_InfoMoney.ContainerId = tmpMIContainer_group.ContainerId_Summ
+                                     AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CLO_InfoMoney.ObjectId
+        LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
+                                      ON CLO_InfoMoneyDetail.ContainerId = tmpMIContainer_group.ContainerId_Summ
+                                     AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+        LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
+
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
@@ -696,12 +730,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.10.14                                        * add inAccountGroupId and inIsInfoMoney
  23.08.14                                        * add Account...
  12.08.14                                        * add ContainerId
  01.06.14                                        * ALL

@@ -984,6 +984,93 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object InfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
+      object InfoMoneyCode_Detail: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyCode_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object InfoMoneyGroupName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyGroupName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyDestinationName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyDestinationName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object InfoMoneyName_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyName_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object InfoMoneyName_all_Detail: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -997,7 +1084,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Align = alTop
     TabOrder = 5
     object edGoodsGroup: TcxButtonEdit
-      Left = 597
+      Left = 900
       Top = 5
       Properties.Buttons = <
         item
@@ -1027,7 +1114,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 85
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 285
+      Left = 585
       Top = 5
       Properties.Buttons = <
         item
@@ -1039,22 +1126,29 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 154
+      Left = 457
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 507
+      Left = 809
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
-    object cxLabel2: TcxLabel
-      Left = 631
-      Top = 31
-      Caption = #1058#1086#1074#1072#1088':'
-    end
     object edGoods: TcxButtonEdit
-      Left = 597
+      Left = 900
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 192
+    end
+    object edLocation: TcxButtonEdit
+      Left = 585
       Top = 30
       Properties.Buttons = <
         item
@@ -1063,22 +1157,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 192
-    end
-    object edLocation: TcxButtonEdit
-      Left = 285
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 8
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 212
+      Left = 511
       Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
@@ -1091,6 +1173,36 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Left = 6
       Top = 31
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
+    end
+    object cxLabel7: TcxLabel
+      Left = 860
+      Top = 31
+      Caption = #1058#1086#1074#1072#1088':'
+    end
+    object ceAccountGroup: TcxButtonEdit
+      Left = 243
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 200
+    end
+    object cxLabel2: TcxLabel
+      Left = 170
+      Top = 6
+      Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
+    end
+    object cbInfoMoney: TcxCheckBox
+      Left = 243
+      Top = 30
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1059#1055' '#1089#1090#1072#1090#1100#1103#1084
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 166
     end
   end
   object MasterDS: TDataSource
@@ -1107,6 +1219,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = AccountGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = cbInfoMoney
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -1549,6 +1672,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
       end
       item
+        Name = 'inAccountGroupId'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inUnitGroupId'
         Value = ''
         Component = UnitGroupGuides
@@ -1575,7 +1705,15 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsInfoMoney'
+        Value = Null
+        Component = cbInfoMoney
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 168
     Top = 192
   end
@@ -1621,8 +1759,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 752
-    Top = 8
+    Left = 864
+    Top = 65528
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -1648,14 +1786,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 56
+    Left = 496
+    Top = 24
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 200
-    Top = 40
+    Left = 112
+    Top = 120
   end
   object UnitGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1682,8 +1820,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 8
+    Left = 568
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1709,8 +1846,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 752
-    Top = 59
+    Left = 904
+    Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -1718,6 +1855,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = AccountGroupGuides
       end
       item
         Component = UnitGroupGuides
@@ -1733,5 +1873,57 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     Left = 144
     Top = 344
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 21
   end
 end
