@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent         TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
@@ -21,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-    IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId_inf Integer , -- Тип формирования налогового документа
+    IN inMovementId_Order    Integer   , -- ключ Документа
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
    OUT outCurrencyValue      TFloat    , -- курс валюты
@@ -42,8 +42,8 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outCurrencyValue
-            INTO ioId, ioPriceListId, outPriceListName, outCurrencyValue
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent, tmp.outCurrencyValue
+            INTO ioId, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent, outCurrencyValue
      FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
                                       , inInvNumber        := inInvNumber
                                       , inInvNumberPartner := inInvNumberPartner
@@ -51,8 +51,8 @@ BEGIN
                                       , inOperDate         := inOperDate
                                       , inOperDatePartner  := inOperDatePartner
                                       , inChecked          := inChecked
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inVATPercent       := inVATPercent
+                                      -- , inPriceWithVAT     := inPriceWithVAT
+                                      -- , inVATPercent       := inVATPercent
                                       , inChangePercent    := inChangePercent
                                       , inFromId           := inFromId
                                       , inToId             := inToId
@@ -61,6 +61,7 @@ BEGIN
                                       , inRouteSortingId   := inRouteSortingId
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
+                                      , inMovementId_Order := inMovementId_Order
                                       , ioPriceListId      := ioPriceListId
                                       , inUserId           := vbUserId
                                        ) AS tmp;

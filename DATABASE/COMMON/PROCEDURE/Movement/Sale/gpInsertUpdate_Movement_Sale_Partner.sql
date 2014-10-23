@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Sale_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
+   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
+   OUT outVATPercent         TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
@@ -22,7 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-    IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId_inf Integer , -- Тип формирования налогового документа
+    IN inMovementId_Order    Integer   , -- ключ Документа
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
    OUT outCurrencyValue      TFloat    , -- курс валюты
@@ -36,6 +35,21 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
+
+     -- !!!временно
+     SELECT Object_PriceList.ValueData                             AS PriceListName
+          , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
+          , ObjectFloat_VATPercent.ValueData                       AS VATPercent
+            INTO outPriceListName, outPriceWithVAT, outVATPercent
+     FROM Object AS Object_PriceList
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                  ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                                 AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+          LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                               AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+     WHERE Object_PriceList.Id = ioPriceListId;
+
      -- Проверка, т.к. эти параметры менять нельзя
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE MovementId = ioId AND Amount <> 0 AND isErased = FALSE)
                   AND EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_From() AND ObjectId = 8459) -- Склад Реализации
@@ -45,7 +59,7 @@ BEGIN
                              JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                   ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                                                 AND MovementBoolean_PriceWithVAT.ValueData = inPriceWithVAT
+                                                 AND MovementBoolean_PriceWithVAT.ValueData = outPriceWithVAT
                              LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                      ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                                     AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -80,7 +94,7 @@ BEGIN
                         WHERE Movement.Id = ioId
                           AND Movement.OperDate = inOperDate
                           AND Movement.InvNumber = inInvNumber
-                          AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (inVATPercent, 0)
+                          AND COALESCE (MovementFloat_VATPercent.ValueData, 0) = COALESCE (outVATPercent, 0)
                           AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = COALESCE (inChangePercent, 0)
                           AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = COALESCE (inInvNumberOrder, '')
                           AND COALESCE (MovementLinkObject_RouteSorting.ObjectId, 0) = COALESCE (inRouteSortingId, 0)
@@ -97,8 +111,8 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outCurrencyValue
-            INTO ioId, ioPriceListId, outPriceListName, outCurrencyValue
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent, tmp.outCurrencyValue
+            INTO ioId, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent, outCurrencyValue
      FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
                                       , inInvNumber        := inInvNumber
                                       , inInvNumberPartner := inInvNumberPartner
@@ -106,8 +120,8 @@ BEGIN
                                       , inOperDate         := inOperDate
                                       , inOperDatePartner  := inOperDatePartner
                                       , inChecked          := inChecked
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inVATPercent       := inVATPercent
+                                      -- , inPriceWithVAT     := inPriceWithVAT
+                                      -- , inVATPercent       := inVATPercent
                                       , inChangePercent    := inChangePercent
                                       , inFromId           := inFromId
                                       , inToId             := inToId
@@ -116,6 +130,7 @@ BEGIN
                                       , inRouteSortingId   := inRouteSortingId
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
+                                      , inMovementId_Order := inMovementId_Order
                                       , ioPriceListId      := ioPriceListId
                                       , inUserId           := vbUserId
                                        ) AS tmp;

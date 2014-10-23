@@ -507,14 +507,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
       MoveParams = <>
       Params = <
         item
-          Name = 'MovementId'
+          Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
-          Name = 'InvNumber_calc'
+          Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber_calc'

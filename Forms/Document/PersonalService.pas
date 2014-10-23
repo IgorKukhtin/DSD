@@ -65,6 +65,11 @@ type
     spUpdateIsMain: TdsdStoredProc;
     actUpdateIsMain: TdsdExecStoredProc;
     bbUpdateIsMain: TdxBarButton;
+    PersonalServiceJournalForm: TdsdOpenForm;
+    bbPersonalServiceList: TdxBarButton;
+    MultiAction1: TMultiAction;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    dsdStoredProc1: TdsdStoredProc;
   private
     { Private declarations }
   public

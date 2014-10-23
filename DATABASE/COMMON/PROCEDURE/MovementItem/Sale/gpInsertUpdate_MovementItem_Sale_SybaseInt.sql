@@ -23,13 +23,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseInt(
 RETURNS RECORD
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
+     vbUserId:= lpGetUserBySession (inSession);
+
      IF inIsOnlyUpdateInt = TRUE
      THEN
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
@@ -39,16 +42,18 @@ BEGIN
                                                , inPrice              := inPrice
                                                , ioCountForPrice      := ioCountForPrice
                                                , inHeadCount          := inHeadCount
+                                               , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
                                                , inPartionGoods       := inPartionGoods
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
-                                               , inSession            := inSession
+                                               , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
+                                               , inUserId             := vbUserId
                                                 ) AS tmp;
      ELSE
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
@@ -58,10 +63,12 @@ BEGIN
                                                , inPrice              := inPrice
                                                , ioCountForPrice      := ioCountForPrice
                                                , inHeadCount          := inHeadCount
+                                               , inBoxCount           := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_BoxCount()), 0)
                                                , inPartionGoods       := inPartionGoods
                                                , inGoodsKindId        := inGoodsKindId
                                                , inAssetId            := inAssetId
-                                               , inSession            := inSession
+                                               , inBoxId              := COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = ioId AND DescId = zc_MILinkObject_Box()), 0)
+                                               , inUserId             := vbUserId
                                                 ) AS tmp;
      END IF;
 

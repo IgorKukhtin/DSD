@@ -1,26 +1,28 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
-    IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
-    IN inPrice               TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-    IN inHeadCount           TFloat    , -- Количество голов
-    IN inBoxCount            TFloat    , -- Количество ящиков
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inBoxId               Integer   , -- Ящики
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                      Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId              Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                 Integer   , -- Товары
+    IN inAmount                  TFloat    , -- Количество
+ INOUT ioAmountPartner           TFloat    , -- Количество у контрагента
+   OUT outAmountChangePercent    TFloat    , -- Количество c учетом % скидки (!!!расчет!!!)
+    IN inChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из контрола!!!)
+ INOUT ioChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из грида!!!)
+    IN inIsChangePercentAmount   Boolean   , -- Признак - будет ли использоваться из контрола <% скидки для кол-ва>
+    IN inIsCalcAmountPartner     Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
+    IN inPrice                   TFloat    , -- Цена
+ INOUT ioCountForPrice           TFloat    , -- Цена за количество
+   OUT outAmountSumm             TFloat    , -- Сумма расчетная
+    IN inHeadCount               TFloat    , -- Количество голов
+    IN inBoxCount                TFloat    , -- Количество ящиков
+    IN inPartionGoods            TVarChar  , -- Партия товара
+    IN inGoodsKindId             Integer   , -- Виды товаров
+    IN inAssetId                 Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inBoxId                   Integer   , -- Ящики
+    IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -30,6 +32,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
+
+     -- !!!из контрола!!! - % скидки для кол-ва
+     IF inIsChangePercentAmount = TRUE
+     THEN
+         IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
+         THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
+         ELSE ioChangePercentAmount:= 0;
+         END IF;
+     END IF;
+
+     -- !!!расчет!!! - Количество c учетом % скидки
+     outAmountChangePercent:= inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100);
+
+     IF inIsCalcAmountPartner = TRUE
+     THEN
+         ioAmountPartner:= outAmountChangePercent;
+     END IF;
+
+
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
@@ -37,9 +58,9 @@ BEGIN
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
                                           , inAmount             := inAmount
-                                          , inAmountPartner      := inAmountPartner
-                                          , inAmountChangePercent:= inAmountChangePercent
-                                          , inChangePercentAmount:= inChangePercentAmount
+                                          , inAmountPartner      := ioAmountPartner
+                                          , inAmountChangePercent:= outAmountChangePercent
+                                          , inChangePercentAmount:= ioChangePercentAmount
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount

@@ -121,6 +121,8 @@ type
     bbSetErasedTaxCorrective: TdxBarButton;
     bbUnCompleteTaxCorrective: TdxBarButton;
     TaxCorrectiveViewAddOn: TdsdDBViewAddOn;
+    colContractTagName: TcxGridDBColumn;
+    colContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

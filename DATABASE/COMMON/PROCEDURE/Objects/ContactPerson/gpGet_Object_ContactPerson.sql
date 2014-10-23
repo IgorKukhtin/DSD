@@ -1,10 +1,13 @@
 -- Function: gpGet_Object_ContactPerson (Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_ContactPerson (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_ContactPerson (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ContactPerson(
-    IN inId          Integer,       -- ключ объекта <>
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inId                     Integer,       -- ключ объекта <>
+    IN inPartnerId              Integer ,
+    IN inContactPersonKindId    Integer ,
+    IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
@@ -32,8 +35,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS Mail
            , CAST ('' as TVarChar)  AS Comment
 
-           , CAST (0 as Integer)    AS PartnerId
-           , CAST ('' as TVarChar)  AS PartnerName
+           , inPartnerId                           AS PartnerId
+           , lfGet_Object_ValueData (inPartnerId)  AS PartnerName
+          
   
            , CAST (0 as Integer)    AS JuridicalId
            , CAST ('' as TVarChar)  AS JuridicalName
@@ -41,8 +45,8 @@ BEGIN
            , CAST (0 as Integer)    AS ContractId
            , CAST ('' as TVarChar)  AS ContractName
 
-           , CAST (0 as Integer)    AS ContactPersonKindId
-           , CAST ('' as TVarChar)  AS ContactPersonKindName
+           , inContactPersonKindId                           AS ContactPersonKindId
+           , lfGet_Object_ValueData (inContactPersonKindId)  AS ContactPersonKindName
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -120,7 +124,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_ContactPerson (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_ContactPerson (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -129,4 +133,4 @@ ALTER FUNCTION gpGet_Object_ContactPerson (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ContactPerson (2, '')
+-- SELECT * FROM gpGet_Object_ContactPerson (0,  inPartnerId:= 83665 , inContactPersonKindId := 153273 ,  inSession := '5')

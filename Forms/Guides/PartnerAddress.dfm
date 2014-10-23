@@ -25,7 +25,6 @@ object PartnerAddressForm: TPartnerAddressForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,28 +48,28 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 31
+        Width = 23
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 134
+        Width = 97
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 134
+        Width = 98
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 101
+        Width = 73
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -84,18 +83,18 @@ object PartnerAddressForm: TPartnerAddressForm
         Caption = #1054#1073#1083#1072#1089#1090#1100
         DataBinding.FieldName = 'RegionName'
         HeaderAlignmentVert = vaCenter
-        Width = 38
+        Width = 28
       end
       object colProvinceName: TcxGridDBColumn
         Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
         DataBinding.FieldName = 'ProvinceName'
-        Width = 62
+        Width = 45
       end
       object colPostalCode: TcxGridDBColumn
         Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
         DataBinding.FieldName = 'PostalCode'
         HeaderAlignmentVert = vaCenter
-        Width = 57
+        Width = 42
       end
       object colCityKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
@@ -109,19 +108,19 @@ object PartnerAddressForm: TPartnerAddressForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 48
+        Width = 34
       end
       object colCityName: TcxGridDBColumn
         Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
         DataBinding.FieldName = 'CityName'
         HeaderAlignmentVert = vaCenter
-        Width = 36
+        Width = 27
       end
       object colProvinceCityName: TcxGridDBColumn
         Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
         DataBinding.FieldName = 'ProvinceCityName'
         HeaderAlignmentVert = vaCenter
-        Width = 94
+        Width = 68
       end
       object colStreetKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
@@ -135,31 +134,31 @@ object PartnerAddressForm: TPartnerAddressForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 33
       end
       object clStreetName: TcxGridDBColumn
         Caption = #1059#1083#1080#1094#1072
         DataBinding.FieldName = 'StreetName'
         HeaderAlignmentVert = vaCenter
-        Width = 57
+        Width = 41
       end
       object clHouseNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1084#1072
         DataBinding.FieldName = 'HouseNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 44
       end
       object clCaseNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1086#1088#1087#1091#1089#1072
         DataBinding.FieldName = 'CaseNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 43
       end
       object clRoomNumber: TcxGridDBColumn
         Caption = #8470' '#1082#1074#1072#1088#1090#1080#1088#1099
         DataBinding.FieldName = 'RoomNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 46
+        Width = 33
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -175,7 +174,124 @@ object PartnerAddressForm: TPartnerAddressForm
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentVert = vaCenter
-        Width = 42
+        Width = 31
+      end
+      object colOrder_Name: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1060#1048#1054
+        DataBinding.FieldName = 'Order_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 53
+      end
+      object colOrder_Phone: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Order_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 27
+      end
+      object colOrder_Mail: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' email'
+        DataBinding.FieldName = 'Order_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 22
+      end
+      object colDoc_Name: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1060#1048#1054
+        DataBinding.FieldName = 'Doc_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colDoc_Phone: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Doc_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 22
+      end
+      object colDoc_Mail: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' email'
+        DataBinding.FieldName = 'Doc_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 22
+      end
+      object colAct_Name: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1060#1048#1054
+        DataBinding.FieldName = 'Act_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 24
+      end
+      object colAct_Phone: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Act_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 22
+      end
+      object colAct_Mail: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' email'
+        DataBinding.FieldName = 'Act_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 22
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -589,6 +705,168 @@ object PartnerAddressForm: TPartnerAddressForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object ContactPersonChoiceActForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonChoiceForm'
+      FormNameParam.Value = 'TContactPersonChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'PartnerId'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindId'
+          Component = MasterCDS
+          ComponentItem = 'Act_ContactPersonKindId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindName'
+          Component = MasterCDS
+          ComponentItem = 'Act_ContactPersonKindName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Act_Name'
+          DataType = ftString
+        end
+        item
+          Name = 'phone'
+          Component = MasterCDS
+          ComponentItem = 'Act_phone'
+          DataType = ftString
+        end
+        item
+          Name = 'mail'
+          Component = MasterCDS
+          ComponentItem = 'Act_mail'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object ContactPersonChoiceOrderForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonChoiceForm'
+      FormNameParam.Value = 'TContactPersonChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'PartnerId'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindId'
+          Component = MasterCDS
+          ComponentItem = 'Order_ContactPersonKindId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindName'
+          Component = MasterCDS
+          ComponentItem = 'Order_ContactPersonKindName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Order_Name'
+          DataType = ftString
+        end
+        item
+          Name = 'phone'
+          Component = MasterCDS
+          ComponentItem = 'Order_phone'
+          DataType = ftString
+        end
+        item
+          Name = 'mail'
+          Component = MasterCDS
+          ComponentItem = 'Order_mail'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object ContactPersonChoiceDocForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonChoiceForm'
+      FormNameParam.Value = 'TContactPersonChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'PartnerId'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindId'
+          Component = MasterCDS
+          ComponentItem = 'Doc_ContactPersonKindId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContactPersonKindName'
+          Component = MasterCDS
+          ComponentItem = 'Doc_ContactPersonKindName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'doc_Name'
+          DataType = ftString
+        end
+        item
+          Name = 'phone'
+          Component = MasterCDS
+          ComponentItem = 'Doc_phone'
+          DataType = ftString
+        end
+        item
+          Name = 'mail'
+          Component = MasterCDS
+          ComponentItem = 'doc_mail'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -685,7 +963,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'RegionName'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inProvinceName'
@@ -759,6 +1037,69 @@ object PartnerAddressForm: TPartnerAddressForm
         Name = 'inShortName'
         Component = MasterCDS
         ComponentItem = 'ShortName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrdeName'
+        Component = MasterCDS
+        ComponentItem = 'Order_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrderPhone'
+        Component = MasterCDS
+        ComponentItem = 'Order_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrderMail'
+        Component = MasterCDS
+        ComponentItem = 'Order_Mail'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocName'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocPhone'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocMail'
+        Component = MasterCDS
+        ComponentItem = 'Doc_Mail'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActName'
+        Component = MasterCDS
+        ComponentItem = 'Act_Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActPhone'
+        Component = MasterCDS
+        ComponentItem = 'Act_Phone'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inActMail'
+        Component = MasterCDS
+        ComponentItem = 'Act_Mail'
         DataType = ftString
         ParamType = ptInput
       end>

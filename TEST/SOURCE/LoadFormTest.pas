@@ -789,6 +789,9 @@ begin
   //  Вид контакта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContactPersonChoiceForm');
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonKindEditForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;

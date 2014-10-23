@@ -178,8 +178,9 @@ BEGIN
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
                                                            THEN zc_Enum_ProfitLossDirection_50500() -- штрафы в бюджет
 
-                                                      WHEN _tmpItem.ProfitLossDirectionId <> 0
+                                                      /*WHEN _tmpItem.ProfitLossDirectionId <> 0
                                                            THEN _tmpItem.ProfitLossDirectionId -- если уже был определен
+                                                      */
 
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
                                                        AND _tmpItem.UnitId = 0

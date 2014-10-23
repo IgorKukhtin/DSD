@@ -49,6 +49,11 @@ type
     colTotalSummCash: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edPersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
+    bbPSList: TdxBarControlContainerItem;
+    bbPersonalServiceList: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

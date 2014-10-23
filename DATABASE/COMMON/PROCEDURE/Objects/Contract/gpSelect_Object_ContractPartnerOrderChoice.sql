@@ -73,9 +73,7 @@ BEGIN
        , Object_PersonalTake.ValueData AS PersonalTakeName
 
        , Object_InfoMoney_View.InfoMoneyId
-       , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
-       , Object_InfoMoney_View.InfoMoneyDestinationCode
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName

@@ -550,10 +550,11 @@ uses
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   TaxJournalChoice in '..\..\Forms\Document\TaxJournalChoice.pas' {TaxJournalChoiceForm: TParentForm},
-  Sale_Order in '..\..\Forms\Document\Sale_Order.pas' {Sale_OrderForm: TParentForm},
   Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
-  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm};
+  Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
+  Sale_Order in '..\..\Forms\Document\Sale_Order.pas' {Sale_OrderForm: TParentForm},
+  ContactPersonChoice in '..\..\Forms\Guides\ContactPersonChoice.pas' {ContactPersonChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

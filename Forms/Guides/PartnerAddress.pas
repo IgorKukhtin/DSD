@@ -85,6 +85,18 @@ type
     colStreetKindName: TcxGridDBColumn;
     StreetKindChoiceForm: TOpenChoiceForm;
     colProvinceCityName: TcxGridDBColumn;
+    colOrder_Name: TcxGridDBColumn;
+    colOrder_Mail: TcxGridDBColumn;
+    colOrder_Phone: TcxGridDBColumn;
+    colDoc_Name: TcxGridDBColumn;
+    colDoc_Phone: TcxGridDBColumn;
+    colDoc_Mail: TcxGridDBColumn;
+    colAct_Name: TcxGridDBColumn;
+    colAct_Mail: TcxGridDBColumn;
+    colAct_Phone: TcxGridDBColumn;
+    ContactPersonChoiceOrderForm: TOpenChoiceForm;
+    ContactPersonChoiceActForm: TOpenChoiceForm;
+    ContactPersonChoiceDocForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

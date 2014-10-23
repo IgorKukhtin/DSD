@@ -15,10 +15,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractStateKindCode Integer
              , ContractComment TVarChar
-             , InfoMoneyId Integer
-             , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
-             , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , RouteId Integer, RouteName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar
+             , PersonalTakeId Integer, PersonalTakeName TVarChar
+             , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
              , isErased Boolean
@@ -62,10 +62,15 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Route.Id               AS RouteId
+       , Object_Route.ValueData        AS RouteName
+       , Object_RouteSorting.Id        AS RouteSortingId
+       , Object_RouteSorting.ValueData AS RouteSortingName
+       , Object_PersonalTake.Id        AS PersonalTakeId
+       , Object_PersonalTake.ValueData AS PersonalTakeName
+
        , Object_InfoMoney_View.InfoMoneyId
-       , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
-       , Object_InfoMoney_View.InfoMoneyDestinationCode
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
@@ -76,6 +81,21 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
+                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
+         LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
+                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
+         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -142,10 +162,15 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , ObjectString_Comment.ValueData AS ContractComment 
 
+       , Object_Route.Id               AS RouteId
+       , Object_Route.ValueData        AS RouteName
+       , Object_RouteSorting.Id        AS RouteSortingId
+       , Object_RouteSorting.ValueData AS RouteSortingName
+       , Object_PersonalTake.Id        AS PersonalTakeId
+       , Object_PersonalTake.ValueData AS PersonalTakeName
+
        , Object_InfoMoney_View.InfoMoneyId
-       , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
-       , Object_InfoMoney_View.InfoMoneyDestinationCode
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
@@ -156,6 +181,21 @@ BEGIN
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
+                              ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
+         LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
+         
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
+                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
+         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()

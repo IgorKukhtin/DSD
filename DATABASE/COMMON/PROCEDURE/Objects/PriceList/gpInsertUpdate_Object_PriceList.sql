@@ -33,7 +33,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PriceList(), vbCode, inName);
    -- сохранили свойство <Цена с НДС (да/нет)>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPriceWithVAT);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PriceList_PriceWithVAT(), ioId, inPriceWithVAT);
    -- сохранили свойство <% НДС>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PriceList_VATPercent(), ioId, inVATPercent);
    
@@ -54,6 +54,19 @@ ALTER FUNCTION gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Bool
  07.09.13                                        * add PriceWithVAT and VATPercent
  14.06.13          *
 */
-
+/*
+!!!Sybase!!!
+select * 
+from (
+select PriceListId, min (Bill.isNds) as a1, max (Bill.isNds) as a2
+from dba.ScaleHistory_byObvalka
+     join dba.Bill on Bill.Id = BillId
+where ScaleHistory_byObvalka.InsertDate > '2014-01-01' and ScaleHistory_byObvalka.BillKind=zc_bkSaleToClient()
+  and ScaleHistory_byObvalka.BillId <> 0
+group by PriceListId
+having a1 <> a2
+) as tmp
+left join dba.PriceList_byHistory on PriceList_byHistory.Id = tmp.PriceListId
+*/
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_PriceList ()

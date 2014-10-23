@@ -250,7 +250,7 @@ BEGIN
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
                                     LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
-                                                                                 -- AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_20000() -- Запасы
+                               WHERE View_Account.AccountGroupId = zc_Enum_AccountGroup_20000() -- Запасы
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
                                       , tmpContainer_Summ.AccountId
@@ -470,7 +470,7 @@ BEGIN
                      ELSE 0
                 END AS TFloat) AS PriceTotalOut
       FROM 
-        (SELECT MAX  (tmpMIContainer_all.AccountId) AS AccountId
+        (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
@@ -530,13 +530,52 @@ BEGIN
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
-        FROM (SELECT tmpMIContainer_Count.ContainerId
+        FROM (SELECT COALESCE (tmpMIContainer_Summ.ContainerId, tmpMIContainer_Count.ContainerId) AS ContainerId
+                   , COALESCE (tmpMIContainer_Summ.AccountId, 0) AS AccountId
+                   , COALESCE (tmpMIContainer_Summ.LocationId, tmpMIContainer_Count.LocationId) AS LocationId
+                   , COALESCE (tmpMIContainer_Summ.GoodsId, tmpMIContainer_Count.GoodsId) AS GoodsId
+                   , COALESCE (tmpMIContainer_Summ.GoodsKindId, tmpMIContainer_Count.GoodsKindId) AS GoodsKindId
+                   , COALESCE (tmpMIContainer_Summ.PartionGoodsId, tmpMIContainer_Count.PartionGoodsId) AS PartionGoodsId
+                   , COALESCE (tmpMIContainer_Summ.AssetToId, tmpMIContainer_Count.AssetToId) AS AssetToId
+
+                   , COALESCE (tmpMIContainer_Count.CountStart, 0) AS CountStart
+                   , COALESCE (tmpMIContainer_Count.CountEnd, 0) AS CountEnd
+                   , COALESCE (tmpMIContainer_Count.CountIncome, 0) AS CountIncome
+                   , COALESCE (tmpMIContainer_Count.CountReturnOut, 0) AS CountReturnOut
+                   , COALESCE (tmpMIContainer_Count.CountSendIn, 0) AS CountSendIn
+                   , COALESCE (tmpMIContainer_Count.CountSendOut, 0) AS CountSendOut
+                   , COALESCE (tmpMIContainer_Count.CountSendOnPriceIn, 0) AS CountSendOnPriceIn
+                   , COALESCE (tmpMIContainer_Count.CountSendOnPriceOut, 0) AS CountSendOnPriceOut
+                   , COALESCE (tmpMIContainer_Count.CountSale, 0) AS CountSale
+                   , COALESCE (tmpMIContainer_Count.CountReturnIn, 0) AS CountReturnIn
+                   , COALESCE (tmpMIContainer_Count.CountLoss, 0) AS CountLoss
+                   , COALESCE (tmpMIContainer_Count.CountInventory, 0) AS CountInventory
+                   , COALESCE (tmpMIContainer_Count.CountProductionIn, 0) AS CountProductionIn
+                   , COALESCE (tmpMIContainer_Count.CountProductionOut, 0) AS CountProductionOut
+
+                   , COALESCE (tmpMIContainer_Summ.SummStart, 0) AS SummStart
+                   , COALESCE (tmpMIContainer_Summ.SummEnd, 0) AS SummEnd
+                   , COALESCE (tmpMIContainer_Summ.SummIncome, 0) AS SummIncome
+                   , COALESCE (tmpMIContainer_Summ.SummReturnOut, 0) AS SummReturnOut
+                   , COALESCE (tmpMIContainer_Summ.SummSendIn, 0) AS SummSendIn
+                   , COALESCE (tmpMIContainer_Summ.SummSendOut, 0) AS SummSendOut
+                   , COALESCE (tmpMIContainer_Summ.SummSendOnPriceIn, 0) AS SummSendOnPriceIn
+                   , COALESCE (tmpMIContainer_Summ.SummSendOnPriceOut, 0) AS SummSendOnPriceOut
+                   , COALESCE (tmpMIContainer_Summ.SummSale, 0) AS SummSale
+                   , COALESCE (tmpMIContainer_Summ.SummReturnIn, 0) AS SummReturnIn
+                   , COALESCE (tmpMIContainer_Summ.SummLoss, 0) AS SummLoss
+                   , COALESCE (tmpMIContainer_Summ.SummInventory, 0) AS SummInventory
+                   , COALESCE (tmpMIContainer_Summ.SummProductionIn, 0) AS SummProductionIn
+                   , COALESCE (tmpMIContainer_Summ.SummProductionOut, 0) AS SummProductionOut
+              FROM
+             (SELECT tmpMIContainer_Count.ContainerId
                    , 0 AS AccountId
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
                    , tmpMIContainer_Count.PartionGoodsId
                    , tmpMIContainer_Count.AssetToId
+
                    , tmpMIContainer_Count.Amount_Start          AS CountStart
                    , tmpMIContainer_Count.Amount_End            AS CountEnd
                    , tmpMIContainer_Count.Amount_Income         AS CountIncome
@@ -551,20 +590,6 @@ BEGIN
                    , tmpMIContainer_Count.Amount_Inventory      AS CountInventory
                    , tmpMIContainer_Count.Amount_ProductionIn   AS CountProductionIn
                    , tmpMIContainer_Count.Amount_ProductionOut  AS CountProductionOut
-                   , 0 AS SummStart
-                   , 0 AS SummEnd
-                   , 0 AS SummIncome
-                   , 0 AS SummReturnOut
-                   , 0 AS SummSendIn
-                   , 0 AS SummSendOut
-                   , 0 AS SummSendOnPriceIn
-                   , 0 AS SummSendOnPriceOut
-                   , 0 AS SummSale
-                   , 0 AS SummReturnIn
-                   , 0 AS SummLoss
-                   , 0 AS SummInventory
-                   , 0 AS SummProductionIn
-                   , 0 AS SummProductionOut
               FROM tmpMIContainer_Count
               WHERE tmpMIContainer_Count.Amount_Start          <> 0
                  OR tmpMIContainer_Count.Amount_End            <> 0
@@ -580,42 +605,30 @@ BEGIN
                  OR tmpMIContainer_Count.Amount_Inventory      <> 0
                  OR tmpMIContainer_Count.Amount_ProductionIn   <> 0
                  OR tmpMIContainer_Count.Amount_ProductionOut  <> 0
-             UNION ALL
-              SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
+             ) AS tmpMIContainer_Count
+               FULL JOIN
+             (SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
                    , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
                    , tmpMIContainer_Summ.PartionGoodsId
                    , tmpMIContainer_Summ.AssetToId
-                   , 0 AS CountStart
-                   , 0 AS CountEnd
-                   , 0 AS CountIncome
-                   , 0 AS CountReturnOut
-                   , 0 AS CountSendIn
-                   , 0 AS CountSendOut
-                   , 0 AS CountSendOnPriceIn
-                   , 0 AS CountSendOnPriceOut
-                   , 0 AS CountSale
-                   , 0 AS CountReturnIn
-                   , 0 AS CountLoss
-                   , 0 AS CountInventory
-                   , 0 AS CountProductionIn
-                   , 0 AS CountProductionOut
-                   , tmpMIContainer_Summ.Amount_Start          AS SummStart
-                   , tmpMIContainer_Summ.Amount_End            AS SummEnd
-                   , tmpMIContainer_Summ.Amount_Income         AS SummIncome
-                   , tmpMIContainer_Summ.Amount_ReturnOut      AS SummReturnOut
-                   , tmpMIContainer_Summ.Amount_SendIn         AS SummSendIn
-                   , tmpMIContainer_Summ.Amount_SendOut        AS SummSendOut
-                   , tmpMIContainer_Summ.Amount_SendOnPriceIn  AS SummSendOnPriceIn
-                   , tmpMIContainer_Summ.Amount_SendOnPriceOut AS SummSendOnPriceOut
-                   , tmpMIContainer_Summ.Amount_Sale           AS SummSale
-                   , tmpMIContainer_Summ.Amount_ReturnIn       AS SummReturnIn
-                   , tmpMIContainer_Summ.Amount_Loss           AS SummLoss
-                   , tmpMIContainer_Summ.Amount_Inventory      AS SummInventory
-                   , tmpMIContainer_Summ.Amount_ProductionIn   AS SummProductionIn
-                   , tmpMIContainer_Summ.Amount_ProductionOut  AS SummProductionOut
+
+                   , SUM (tmpMIContainer_Summ.Amount_Start)          AS SummStart
+                   , SUM (tmpMIContainer_Summ.Amount_End)            AS SummEnd
+                   , SUM (tmpMIContainer_Summ.Amount_Income)         AS SummIncome
+                   , SUM (tmpMIContainer_Summ.Amount_ReturnOut)      AS SummReturnOut
+                   , SUM (tmpMIContainer_Summ.Amount_SendIn)         AS SummSendIn
+                   , SUM (tmpMIContainer_Summ.Amount_SendOut)        AS SummSendOut
+                   , SUM (tmpMIContainer_Summ.Amount_SendOnPriceIn)  AS SummSendOnPriceIn
+                   , SUM (tmpMIContainer_Summ.Amount_SendOnPriceOut) AS SummSendOnPriceOut
+                   , SUM (tmpMIContainer_Summ.Amount_Sale)           AS SummSale
+                   , SUM (tmpMIContainer_Summ.Amount_ReturnIn)       AS SummReturnIn
+                   , SUM (tmpMIContainer_Summ.Amount_Loss)           AS SummLoss
+                   , SUM (tmpMIContainer_Summ.Amount_Inventory)      AS SummInventory
+                   , SUM (tmpMIContainer_Summ.Amount_ProductionIn)   AS SummProductionIn
+                   , SUM (tmpMIContainer_Summ.Amount_ProductionOut)  AS SummProductionOut
               FROM tmpMIContainer_Summ
               WHERE tmpMIContainer_Summ.Amount_Start          <> 0
                  OR tmpMIContainer_Summ.Amount_End            <> 0
@@ -631,9 +644,18 @@ BEGIN
                  OR tmpMIContainer_Summ.Amount_Inventory      <> 0
                  OR tmpMIContainer_Summ.Amount_ProductionIn   <> 0
                  OR tmpMIContainer_Summ.Amount_ProductionOut  <> 0
+              GROUP BY tmpMIContainer_Summ.ContainerId_Count
+                     , tmpMIContainer_Summ.AccountId
+                     , tmpMIContainer_Summ.LocationId
+                     , tmpMIContainer_Summ.GoodsId
+                     , tmpMIContainer_Summ.GoodsKindId
+                     , tmpMIContainer_Summ.PartionGoodsId
+                     , tmpMIContainer_Summ.AssetToId
+             ) AS tmpMIContainer_Summ ON tmpMIContainer_Summ.ContainerId = tmpMIContainer_Count.ContainerId
+
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.ContainerId
-                -- , tmpMIContainer_all.AccountId
+                , tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId

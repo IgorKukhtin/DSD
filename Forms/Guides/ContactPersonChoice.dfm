@@ -3,7 +3,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
   Top = 0
   Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
   ClientHeight = 335
-  ClientWidth = 936
+  ClientWidth = 990
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,19 +14,19 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 936
+    Width = 990
     Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,13 +54,13 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 56
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 208
+        Width = 220
       end
       object clPhone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
@@ -68,7 +68,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 109
+        Width = 116
       end
       object clMail: TcxGridDBColumn
         Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
@@ -76,7 +76,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 114
+        Width = 120
       end
       object clPartnerName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -84,25 +84,25 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 105
+        Width = 112
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
-        Width = 133
+        Width = 140
       end
       object clContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentVert = vaCenter
-        Width = 83
+        Width = 88
       end
       object clContactPersonKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
         DataBinding.FieldName = 'ContactPersonKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 66
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -110,7 +110,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -130,7 +130,23 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 5
+    Width = 245
+  end
+  object cxLabel1: TcxLabel
+    Left = 412
+    Top = 112
+    Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072':'
+  end
+  object edContactPersonKind: TcxButtonEdit
+    Left = 493
+    Top = 109
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
     Width = 245
   end
   object DataSource: TDataSource
@@ -234,6 +250,22 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbPartnerGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPersonKindLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPersonKind'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -281,11 +313,32 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       Category = 0
     end
     object bbPartnerLabel: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = 'bbPartnerLabel'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartnerLabel'
       Visible = ivAlways
       Control = cxLabel6
+    end
+    object bbPartnerGuides: TdxBarControlContainerItem
+      Caption = 'bbPartnerGuides'
+      Category = 0
+      Hint = 'bbPartnerGuides'
+      Visible = ivAlways
+      Control = edPartner
+    end
+    object bbContactPersonKindLabel: TdxBarControlContainerItem
+      Caption = 'cxLabel1'
+      Category = 0
+      Hint = 'cxLabel1'
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object bbContactPersonKind: TdxBarControlContainerItem
+      Caption = 'bbContactPersonKind'
+      Category = 0
+      Hint = 'bbContactPersonKind'
+      Visible = ivAlways
+      Control = edContactPersonKind
     end
   end
   object ActionList: TActionList
@@ -319,6 +372,18 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'PartnerId'
+          Value = ''
+          Component = PartnerGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'ContactPersonKindId'
+          Value = ''
+          Component = ContactPersonKindGuides
+          ComponentItem = 'Key'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -392,6 +457,18 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+        end
+        item
+          Name = 'Phone'
+          Component = ClientDataSet
+          ComponentItem = 'Phone'
+          DataType = ftString
+        end
+        item
+          Name = 'Mail'
+          Component = ClientDataSet
+          ComponentItem = 'Mail'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -415,7 +492,21 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContactPersonKindId'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -490,7 +581,64 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 80
+    Left = 568
+    Top = 72
+  end
+  object ContactPersonKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContactPersonKind
+    FormNameParam.Value = 'TContactPersonKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContactPersonKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 104
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContactPersonKindId'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContactPersonKindName'
+        Value = ''
+        Component = ContactPersonKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 232
+    Top = 240
   end
 end

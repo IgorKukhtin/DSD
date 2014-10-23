@@ -48,8 +48,8 @@ BEGIN
                                            , inOperDate         := inOperDate
                                            , inOperDatePartner  := (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()) -- inOperDatePartner
                                            , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
-                                           , inPriceWithVAT     := inPriceWithVAT
-                                           , inVATPercent       := inVATPercent
+                                           -- , inPriceWithVAT     := inPriceWithVAT
+                                           -- , inVATPercent       := inVATPercent
                                            , inChangePercent    := inChangePercent
                                            , inFromId           := inFromId
                                            , inToId             := inToId
@@ -66,6 +66,7 @@ BEGIN
                                                                                                     AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                                         WHERE MovementLinkMovement.MovementId = ioId
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                                           , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
                                            , ioPriceListId      := ioPriceListId
                                            , inSession          := inSession
                                             ) AS tmp;
@@ -80,8 +81,8 @@ BEGIN
                                            , inOperDate         := inOperDate
                                            , inOperDatePartner  := inOperDatePartner
                                            , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked)
-                                           , inPriceWithVAT     := inPriceWithVAT
-                                           , inVATPercent       := inVATPercent
+                                           -- , inPriceWithVAT     := inPriceWithVAT
+                                           -- , inVATPercent       := inVATPercent
                                            , inChangePercent    := inChangePercent
                                            , inFromId           := inFromId
                                            , inToId             := inToId
@@ -98,11 +99,17 @@ BEGIN
                                                                                                     AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                                         WHERE MovementLinkMovement.MovementId = ioId
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
+                                           , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
                                            , ioPriceListId      := ioPriceListId
                                            , inSession          := inSession
                                             ) AS tmp;
 
      END IF;
+
+     -- сохранили свойство <Цена с НДС (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+     -- сохранили свойство <% НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
 
      -- сохранили связь с
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);

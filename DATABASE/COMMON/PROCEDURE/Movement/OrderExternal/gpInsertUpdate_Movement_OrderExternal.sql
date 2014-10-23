@@ -47,9 +47,9 @@ BEGIN
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
          FROM lfGet_Object_Partner_PriceList (inPartnerId:= inFromId, inOperDate:= outOperDatePartner);
      ELSE
-         SELECT Object_PriceList.ValueData           AS PriceListName
-              , ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-              , ObjectFloat_VATPercent.ValueData     AS VATPercent
+         SELECT Object_PriceList.ValueData                             AS PriceListName
+              , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
+              , ObjectFloat_VATPercent.ValueData                       AS VATPercent
                 INTO outPriceListName, outPriceWithVAT, outVATPercent
          FROM Object AS Object_PriceList
               LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
