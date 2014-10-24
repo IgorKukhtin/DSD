@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1208
+  ExplicitTop = -176
   ExplicitWidth = 1216
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -22,7 +23,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 553
         Height = 433
         Align = alLeft
-        ExplicitLeft = -3
         ExplicitWidth = 553
         ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -162,7 +162,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 40
           end
           object coContractName: TcxGridDBColumn
-            Caption = #1051#1086#1075#1086#1074#1086#1088
+            Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             Visible = False
             HeaderAlignmentVert = vaCenter
@@ -365,8 +365,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 3
         Height = 433
         Control = cxGrid
-        ExplicitLeft = 559
-        ExplicitTop = 3
       end
     end
   end
@@ -476,6 +474,18 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -531,11 +541,13 @@ inherited OrderInternalForm: TOrderInternalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -738,6 +750,7 @@ inherited OrderInternalForm: TOrderInternalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -1022,6 +1035,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1035,23 +1049,62 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inSumm'
+        Name = 'ioPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPartnerGoodsCode'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioPartnerGoodsName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioJuridicalName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioContractName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
-        ParamType = ptInput
       end>
     Left = 160
     Top = 368
@@ -1061,20 +1114,6 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end
@@ -1181,6 +1220,7 @@ inherited OrderInternalForm: TOrderInternalForm
     ColumnEnterList = <>
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -1197,18 +1237,21 @@ inherited OrderInternalForm: TOrderInternalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalName'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'JuridicalName'
         DataType = ftString
@@ -1216,12 +1259,14 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inContractName'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ContractName'
         DataType = ftString
@@ -1229,12 +1274,14 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsCode'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsCode'
         DataType = ftString
@@ -1242,6 +1289,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsName'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
@@ -1249,6 +1297,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inSuperPrice'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'SuperFinalPrice'
         DataType = ftFloat
@@ -1256,6 +1305,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1263,36 +1313,42 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'JuridicalName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalName'
         DataType = ftString
       end
       item
         Name = 'ContractName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractName'
         DataType = ftString
       end
       item
         Name = 'GoodsCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerGoodsCode'
         DataType = ftString
       end
       item
         Name = 'GoodsName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerGoodsName'
         DataType = ftString
       end
       item
         Name = 'SuperPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SuperFinalPrice'
         DataType = ftFloat
       end
       item
         Name = 'Price'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat

@@ -33,24 +33,6 @@ BEGIN
       WHERE MovementLinkObject_Unit.MovementId = inInternalOrder
         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
 
-
-   CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
-             , Price TFloat
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , MakerName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
-
-
     PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, 0, vbUserId);
    
    -- Просто запрос, где у позиции определяется лучший поставщик. Если поставщика нет, то закинуть в пустой документ. 

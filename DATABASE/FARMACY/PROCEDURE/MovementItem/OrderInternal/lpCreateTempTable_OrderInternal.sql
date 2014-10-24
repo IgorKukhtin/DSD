@@ -10,11 +10,27 @@ CREATE OR REPLACE FUNCTION lpCreateTempTable_OrderInternal(
     IN inUserId      Integer        -- сессия пользователя
 )
 
-RETURNS SETOF refcursor 
+RETURNS VOID
 
 AS
 $BODY$
 BEGIN
+     CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
+             , Price TFloat
+             , GoodsId Integer
+             , GoodsCode TVarChar
+             , GoodsName TVarChar
+             , MainGoodsName TVarChar
+             , JuridicalId Integer
+             , JuridicalName TVarChar
+             , MakerName TVarChar
+             , ContractId Integer
+             , ContractName TVarChar
+             , Deferment Integer
+             , Bonus TFloat
+             , Percent TFloat
+             , SuperFinalPrice TFloat) ON COMMIT DROP;
+
 
        WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)),
             JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (inObjectId)),

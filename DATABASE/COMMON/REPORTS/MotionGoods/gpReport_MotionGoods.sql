@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inGoodsId      Integer,    -- товар
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
+RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
+             , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar

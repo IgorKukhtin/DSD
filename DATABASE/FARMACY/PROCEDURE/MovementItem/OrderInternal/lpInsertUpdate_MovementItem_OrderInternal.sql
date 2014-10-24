@@ -1,14 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_OrderInternal()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal();
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inSumm                TFloat    , -- Сумма заказа
-    IN inUserId             TVarChar    -- сессия пользователя
+    IN inPrice               TFloat    , -- Сумма заказа
+    IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -18,7 +18,7 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
      -- сохранили свойство <Сумма заказа>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
 END;
 $BODY$

@@ -1,19 +1,30 @@
 -- Function: gpInsertUpdate_MovementItem_OrderInternal()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_OrderInternal();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    ,
+    IN inPartnerGoodsCode    TVarChar  ,
+    IN inPartnerGoodsName    TVarChar  ,
+    IN inJuridicalName       TVarChar  ,
+    IN inContractName        TVarChar  ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE(Id Integer, Price TFloat, ) AS
+RETURNS TABLE(ioId Integer, ioPrice TFloat, ioPartnerGoodsCode TVarChar, ioPartnerGoodsName TVarChar
+            , ioJuridicalName TVarChar, ioContractName TVarChar
+            , outSumm TFloat
+) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
+   DECLARE vbSumm TFloat;   
+
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -21,30 +32,42 @@ BEGIN
      vbUserId := inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-     vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, 0, inUserId);
-
-     CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
-             , Price TFloat
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , MakerName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
-
+   IF inJuridicalName = '' THEN 
 
       PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, inGoodsId, vbUserId);
 
+       SELECT MinPrice.Price
+            , MinPrice.GoodsCode
+            , MinPrice.GoodsName
+            , MinPrice.JuridicalName
+            , MinPrice.ContractName   INTO inPrice, inPartnerGoodsCode, inPartnerGoodsName, inJuridicalName, inContractName 
 
-      -- пересчитали Итоговые суммы
-      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+       FROM 
+                                      (SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
+                                           (SELECT *
+                                                , MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                            FROM _tmpMI) AS DDD
+                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS MinPrice
+                                  WHERE MinPrice.Id = MinPrice.MinId;
+
+    END IF;
+  
+     inPrice := COALESCE(inPrice, 0);
+     vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
+     vbSumm := inAmount * inPrice;
+
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+      RETURN 
+        QUERY
+      SELECT vbId
+           , inPrice
+           , inPartnerGoodsCode
+           , inPartnerGoodsName
+           , inJuridicalName
+           , inContractName
+           , vbSumm;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
@@ -57,6 +80,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.10.14                         *
  03.07.14                                                       *
 */
 

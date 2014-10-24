@@ -24,24 +24,7 @@ BEGIN
      vbUserId := inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-   CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
-             , Price TFloat
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , MakerName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
-
-
-          PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
+     PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
      OPEN Cursor1 FOR
@@ -51,7 +34,7 @@ BEGIN
            , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
            , tmpMI.Amount               AS Amount
-           , tmpMI.Summ                 AS Summ
+           , tmpMI.Price * tmpMI.Amount AS Summ
            , FALSE                      AS isErased
            , tmpMI.Price
            , tmpMI.PartnerGoodsCode 
@@ -76,12 +59,12 @@ BEGIN
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
                             , MIBoolean_Calculated.ValueData     AS isCalculated
-                            , MinPrice.Price AS Price
-                            , MinPrice.GoodsCode         AS PartnerGoodsCode 
-                            , MinPrice.GoodsName         AS PartnerGoodsName
-                            , MinPrice.JuridicalName AS JuridicalName
-                            , MinPrice.ContractName   AS ContractName
-                            , MinPrice.SuperFinalPrice AS SuperFinalPrice 
+                            , COALESCE(PriceList.Price, MinPrice.Price) AS Price
+                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
+                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)         AS PartnerGoodsName
+                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
+                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)   AS ContractName
+                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice) AS SuperFinalPrice
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -103,6 +86,11 @@ BEGIN
                        LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
                                                      ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                                     AND MIBoolean_Calculated.MovementItemId = MovementItem.id  
+
+                       LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
+                                                    AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
+                                                    AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
+                                                    AND PriceList.MovementItemId = MovementItem.id 
 
                        LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM

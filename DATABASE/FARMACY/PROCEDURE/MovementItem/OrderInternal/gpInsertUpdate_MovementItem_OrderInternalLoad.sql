@@ -48,7 +48,7 @@ BEGIN
    WHERE MovementItem.MovementId = vbMovementId AND MovementItem.ObjectId = vbGoodsId;
 
    IF COALESCE(vbGoodsId, 0) <> 0 THEN
-      vbMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inSumm, vbUserId);
+      vbMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inSumm / inAmount, vbUserId);
       PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(), vbMovementItemId, true);
    END IF;
 

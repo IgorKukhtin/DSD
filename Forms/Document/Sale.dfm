@@ -3,8 +3,9 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1250
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1266
-  ExplicitHeight = 703
+  ExplicitTop = -68
+  ExplicitWidth = 1258
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2109,6 +2110,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inChangePercentAmount'
+        Value = Null
         Component = edChangePercentAmount
         DataType = ftFloat
         ParamType = ptInput
