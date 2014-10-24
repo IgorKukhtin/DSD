@@ -744,5 +744,5 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inSession:= '2') 
--- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inIsInfoMoney:= FALSE, inSession:= '2') 
+-- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inSession := '5');

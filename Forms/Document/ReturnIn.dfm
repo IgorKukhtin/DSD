@@ -1,27 +1,27 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
-  ClientWidth = 1137
-  ExplicitWidth = 1153
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1137
+    Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1137
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1137
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1137
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1137
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -200,7 +200,7 @@ inherited ReturnInForm: TReturnInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1137
+        Width = 1020
         Height = 518
         Align = alClient
         TabOrder = 0
@@ -528,13 +528,14 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1137
+    Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Properties.ReadOnly = False
       ExplicitLeft = 8
       ExplicitWidth = 74
       Width = 74
@@ -844,15 +845,6 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spSelectTaxCorrective
         end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actInsertUpdateMovement: TdsdExecStoredProc
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = gpUpdateTaxCorrective
-        end>
     end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
