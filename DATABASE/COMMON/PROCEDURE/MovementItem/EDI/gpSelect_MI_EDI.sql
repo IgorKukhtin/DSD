@@ -264,4 +264,4 @@ ALTER FUNCTION gpSelect_MI_EDI (TDateTime, TDateTime, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_EDI (inStartDate:= '01.07.2014', inEndDate:= '31.07.2014', inSession:= '2')
+-- SELECT * FROM gpSelect_MI_EDI (inStartDate:= '08.10.2014', inEndDate:= '08.10.2014', inSession:= '2')
