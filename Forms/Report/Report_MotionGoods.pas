@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)
@@ -93,7 +93,6 @@ type
     cxLabel3: TcxLabel;
     UnitGroupGuides: TdsdGuides;
     cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
     GoodsGuides: TdsdGuides;
     edLocation: TcxButtonEdit;
     cxLabel4: TcxLabel;
@@ -132,6 +131,13 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     dxBarStatic: TdxBarStatic;
+    cxLabel7: TcxLabel;
+    ceAccountGroup: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    AccountGroupGuides: TdsdGuides;
+    cbInfoMoney: TcxCheckBox;
+    InfoMoneyName_all_Detail: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
   public
   end;
