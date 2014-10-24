@@ -608,13 +608,13 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Name = 'ReportNameLoss'
         Value = Null
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'ReportNameLossTax'
         Value = Null
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 400
     Top = 200
@@ -650,6 +650,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end

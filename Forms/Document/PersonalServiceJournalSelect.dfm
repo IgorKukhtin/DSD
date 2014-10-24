@@ -22,8 +22,6 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
       inherited cxGrid: TcxGrid
         Width = 1070
         Height = 477
-        ExplicitLeft = 3
-        ExplicitTop = 3
         ExplicitWidth = 1070
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -334,7 +332,7 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 64
+    Left = 88
     Top = 139
   end
   inherited MasterCDS: TClientDataSet
@@ -569,8 +567,8 @@ inherited PersonalServiceJournalSelectForm: TPersonalServiceJournalSelectForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 376
+    Left = 248
+    Top = 368
   end
   inherited FormParams: TdsdFormParams
     Params = <
