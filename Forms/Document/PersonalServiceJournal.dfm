@@ -612,13 +612,13 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Name = 'ReportNameLoss'
         Value = Null
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'ReportNameLossTax'
         Value = Null
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 400
     Top = 200
