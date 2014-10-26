@@ -468,6 +468,9 @@ inherited TaxJournalForm: TTaxJournalForm
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
     end
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

@@ -10,14 +10,11 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Width = 1073
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -205,6 +202,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -217,8 +215,8 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -345,23 +343,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -433,6 +415,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -451,6 +434,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -463,6 +447,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -535,6 +520,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end

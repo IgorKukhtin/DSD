@@ -5,7 +5,7 @@ from ContainerLinkObject AS ContainerLO_Juridical
                                                       AND ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
   
      JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = ContainerLO_Juridical.ContainerId
-                                              AND MIContainer.OperDate BETWEEN '01.06.2014' AND '30.06.2014'
+                                              AND MIContainer.OperDate BETWEEN '01.06.2014' AND '03.06.2014'
      JOIN Movement ON Movement.Id = MIContainer.MovementId
                 AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_ReturnIn())
      JOIN MovementLinkObject ON MovementLinkObject.MovementId = MIContainer.MovementId
@@ -36,7 +36,7 @@ insert into _tmp1 (Id, DescId)
                                   join MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                      and MLO_From.DescId = zc_MovementLinkObject_From()
                                                                      and MLO_From.ObjectId = 8411 -- ф. Киев
- where Movement.OperDate BETWEEN '01.06.2014' AND '30.06.2014' and Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice()) and Movement.StatusId = zc_Enum_Status_Complete()
+ where Movement.OperDate BETWEEN '01.06.2014' AND '03.06.2014' and Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice()) and Movement.StatusId = zc_Enum_Status_Complete()
 union
  select Movement.Id, Movement.DescId from Movement
                                  /*join MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
@@ -45,7 +45,7 @@ union
                                   join MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                                    and MLO_To.DescId = zc_MovementLinkObject_To()
                                                                    and MLO_To.ObjectId = 8411 -- ф. Киев
- where Movement.OperDate BETWEEN '01.06.2014' AND '30.06.2014' and Movement.DescId IN (zc_Movement_ReturnIn()) and Movement.StatusId = zc_Enum_Status_Complete()
+ where Movement.OperDate BETWEEN '01.06.2014' AND '03.06.2014' and Movement.DescId IN (zc_Movement_ReturnIn()) and Movement.StatusId = zc_Enum_Status_Complete()
 ;
 
 
@@ -121,7 +121,7 @@ where DescId = zc_Movement_SendOnPrice();
 -- !!! проводим все - возвраты !!!
 perform lpComplete_Movement_ReturnIn (inMovementId     := _tmp1.Id
                                , inUserId         := zfCalc_UserAdmin() :: Integer
-                               , inIsLastComplete := TRUE)
+                               , inIsLastComplete := FALSE)
 from _tmp1
 where DescId = zc_Movement_ReturnIn();
 
@@ -146,7 +146,7 @@ where DescId = zc_Movement_ReturnIn();
 -- !!! проводим все - Продажи !!!
 perform lpComplete_Movement_Sale (inMovementId     := _tmp1.Id
                                , inUserId         := zfCalc_UserAdmin() :: Integer
-                               , inIsLastComplete := TRUE)
+                               , inIsLastComplete := FALSE)
 from _tmp1
 where DescId = zc_Movement_Sale();
 

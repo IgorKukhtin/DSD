@@ -77,6 +77,8 @@ type
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
     colUnitForwardingName: TcxGridDBColumn;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

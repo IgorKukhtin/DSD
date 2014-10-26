@@ -138,6 +138,7 @@ type
     cbInfoMoney: TcxCheckBox;
     InfoMoneyName_all_Detail: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    ContainerId_Summ: TcxGridDBColumn;
   private
   public
   end;

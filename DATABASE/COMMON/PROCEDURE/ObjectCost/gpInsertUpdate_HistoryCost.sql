@@ -53,14 +53,20 @@ BEGIN
              , SUM (tmpContainer.StartSumm)
              , SUM (tmpContainer.IncomeCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                                                              THEN tmpContainer.SendOnPriceCountIn_Cost
-                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                          ELSE 0 -- tmpContainer.SendOnPriceCountIn
                                                      END)
              , SUM (tmpContainer.IncomeSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                                                               THEN tmpContainer.SendOnPriceSummIn_Cost
+                                                         ELSE 0 -- tmpContainer.SendOnPriceSummIn
+                                                    END)
+             , SUM (tmpContainer.calcCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
+                                                             THEN 0
+                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                     END)
+             , SUM (tmpContainer.calcSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
+                                                              THEN 0
                                                          ELSE tmpContainer.SendOnPriceSummIn
                                                     END)
-             , SUM (tmpContainer.calcCount)
-             , SUM (tmpContainer.calcSumm)
              , SUM (tmpContainer.OutCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() 
                                                             THEN tmpContainer.SendOnPriceCountOut_Cost
                                                        ELSE tmpContainer.SendOnPriceCountOut
@@ -160,7 +166,7 @@ BEGIN
              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ProductionSeparate())
                              THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
                          WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion())
-                             THEN COALESCE (-MIContainer_Count_Out.Amount, 0)
+                             THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
                          ELSE 0
                     END) AS OperCount
         FROM Movement

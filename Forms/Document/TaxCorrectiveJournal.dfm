@@ -460,6 +460,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       isShowModal = False
     end
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <

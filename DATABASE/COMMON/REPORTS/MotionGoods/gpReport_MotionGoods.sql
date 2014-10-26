@@ -75,7 +75,9 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar, Account
 
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
-               )
+
+             , ContainerId_Summ Integer
+              )
 AS
 $BODY$
 BEGIN
@@ -488,6 +490,8 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
         , View_InfoMoneyDetail.InfoMoneyName AS InfoMoneyName_Detail
         , View_InfoMoneyDetail.InfoMoneyName_all AS InfoMoneyName_all_Detail
+
+        , tmpMIContainer_group.ContainerId_Summ
 
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId

@@ -1,27 +1,27 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
-  ClientWidth = 1030
-  ExplicitWidth = 1038
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 124
-    Width = 1030
-    Height = 608
+    Top = 122
+    Width = 1020
+    Height = 610
     TabOrder = 2
-    ExplicitTop = 124
-    ExplicitWidth = 1030
-    ExplicitHeight = 608
-    ClientRectBottom = 604
-    ClientRectRight = 1026
+    ExplicitTop = 122
+    ExplicitWidth = 1020
+    ExplicitHeight = 610
+    ClientRectBottom = 610
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1024
-      ExplicitHeight = 582
+      ExplicitWidth = 1020
+      ExplicitHeight = 586
       inherited cxGrid: TcxGrid
-        Width = 1024
-        Height = 224
-        ExplicitWidth = 1024
-        ExplicitHeight = 224
+        Width = 1020
+        Height = 228
+        ExplicitWidth = 1020
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -146,10 +146,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 224
-        Width = 1024
-        ExplicitTop = 224
-        ExplicitWidth = 1024
+        Top = 228
+        Width = 1020
+        ExplicitTop = 228
+        ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           object colChildGoodsName: TcxGridDBColumn [1]
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -191,33 +191,12 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1024
-      ExplicitHeight = 582
-      inherited cxGridEntry: TcxGrid
-        Width = 1024
-        Height = 582
-        ExplicitWidth = 1024
-        ExplicitHeight = 582
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
-    Width = 1030
+    Width = 1020
     Height = 96
-    ExplicitWidth = 1030
+    ExplicitWidth = 1020
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 24
-    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -244,11 +223,13 @@ inherited ProductionUnionForm: TProductionUnionForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -265,11 +246,13 @@ inherited ProductionUnionForm: TProductionUnionForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -284,7 +267,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -316,6 +299,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -427,8 +411,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         ParamType = ptUnknown
       end>
-    Left = 418
-    Top = 104
+    Left = 442
+    Top = 136
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
@@ -443,6 +427,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -456,12 +441,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -469,6 +456,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionClose'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionClose'
         DataType = ftBoolean
@@ -476,6 +464,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
@@ -483,6 +472,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inRealWeight'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RealWeight'
         DataType = ftFloat
@@ -490,6 +480,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inCuterCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CuterCount'
         DataType = ftFloat
@@ -497,6 +488,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -504,6 +496,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -511,12 +504,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inReceiptId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ReceiptId'
         ParamType = ptInput
@@ -533,6 +528,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -546,12 +542,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -559,12 +557,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inParentId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
       end
       item
         Name = 'inAmountReceipt'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'AmountReceipt'
         DataType = ftFloat
@@ -572,6 +572,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoodsDate'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -579,6 +580,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -586,6 +588,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -593,6 +596,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput

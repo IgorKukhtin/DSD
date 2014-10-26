@@ -3,17 +3,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 124
-    Height = 608
+    Top = 122
+    Height = 610
     TabOrder = 2
-    ExplicitTop = 124
-    ExplicitHeight = 608
-    ClientRectBottom = 604
+    ExplicitTop = 122
+    ExplicitHeight = 610
+    ClientRectBottom = 610
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 582
+      ExplicitHeight = 586
       inherited cxGrid: TcxGrid
-        Height = 224
-        ExplicitHeight = 224
+        Height = 228
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -73,8 +73,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 224
-        ExplicitTop = 224
+        Top = 228
+        ExplicitTop = 228
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           object colChildGoodsName: TcxGridDBColumn [1]
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -101,29 +101,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
       end
     end
-    inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 929
-      ExplicitHeight = 582
-      inherited cxGridEntry: TcxGrid
-        Height = 582
-        ExplicitHeight = 582
-        inherited cxGridEntryDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
-      end
-    end
   end
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 24
-    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -159,7 +140,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -191,6 +172,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -321,6 +303,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -334,12 +317,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -347,6 +332,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         ParamType = ptInput
@@ -369,6 +355,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -382,12 +369,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -395,12 +384,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inParentId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'HeadCount'
         ParamType = ptInput

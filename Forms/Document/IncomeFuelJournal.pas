@@ -103,6 +103,8 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colTotalCountPartner: TcxGridDBColumn;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

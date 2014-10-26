@@ -273,6 +273,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -289,12 +290,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -373,11 +376,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           ItemName = 'bbDelete'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbReCompleteAll'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -387,15 +390,27 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbReCompleteAll: TdxBarButton
@@ -453,6 +468,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 272
     Top = 224
   end

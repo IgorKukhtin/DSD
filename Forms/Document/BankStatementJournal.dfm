@@ -1,27 +1,19 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 873
-  ExplicitWidth = 881
-  ExplicitHeight = 356
+  ExplicitWidth = 889
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 873
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 873
-    ExplicitHeight = 272
     ClientRectRight = 873
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 873
-      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 873
-        Height = 272
         ExplicitWidth = 873
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -341,6 +333,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDelete'
         end
         item
@@ -394,7 +390,15 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbInsert: TdxBarButton

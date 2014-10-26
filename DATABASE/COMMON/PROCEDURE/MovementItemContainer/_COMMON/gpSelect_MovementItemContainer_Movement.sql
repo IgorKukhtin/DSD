@@ -2,16 +2,24 @@
 -- Function: gpSelect_MovementItemContainer_Movement()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId         Integer      , -- ключ Документа
+    IN inIsDestination      Boolean      , -- 
+    IN inIsParentDetail     Boolean      , -- 
+    IN inIsInfoMoneyDetail  Boolean      , -- 
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (InvNumber Integer, OperDate TDateTime
-             , AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
+             , AccountCode Integer
+             , DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
-             , AccountOnComplete Boolean, DirectionObjectCode Integer, DirectionObjectName TVarChar
+             , AccountOnComplete Boolean
+             , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , BranchCode Integer, BranchName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar
@@ -29,12 +37,258 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MIContainer_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Менется признак
+     inIsDestination:= inIsDestination OR inIsParentDetail OR inIsInfoMoneyDetail;
+     -- Менется признак
+     inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
 
      -- !!!проводки только у Админа!!!
-     IF 1=1 -- OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898)) -- Отчеты (управленческие)
+     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898)) -- Отчеты (управленческие)
      THEN
 
      RETURN QUERY 
+       WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail FROM Movement WHERE Movement.Id = inMovementId
+                           UNION ALL
+                            SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.InvNumber, inIsDestination AS isDestination, inIsParentDetail AS isParentDetail, inIsInfoMoneyDetail AS isInfoMoneyDetail FROM Movement WHERE Movement.ParentId = inMovementId
+                           )
+                    -- все проводки: количественные + суммовые
+                  , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
+                                                , MIContainer.Id
+                                                , MIContainer.MovementItemId
+                                                , MIContainer.ParentId
+                                                , MIContainer.ContainerId
+                                                , MIContainer.OperDate
+                                                , MIContainer.isActive
+                                                , CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() THEN 1 ELSE -1 END * MIContainer.Amount AS Amount
+                                                , tmpMovement.MovementId
+                                                , tmpMovement.MovementDescId
+                                                , tmpMovement.InvNumber
+                                                , tmpMovement.isDestination
+                                                , tmpMovement.isParentDetail
+                                                , tmpMovement.isInfoMoneyDetail
+                                           FROM tmpMovement
+                                                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
+                                          )
+               -- проводки: только суммовые + определяется Счет
+             , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*, Container.ObjectId AS AccountId
+                                           FROM tmpMIContainer_all
+                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                           WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Summ()
+                                          )
+               -- проводки: только количественные + определяется GoodsId + (нужны для расчета цены)
+            , tmpMIContainer_Count_all AS (SELECT tmpMIContainer_all.*
+                                                , COALESCE (Container.ObjectId, 0) AS GoodsId
+                                           FROM tmpMIContainer_all
+                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                           WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Count()
+                                             AND tmpMIContainer_all.isDestination     = TRUE
+                                          )
+                -- проводки: количественные + определяется GoodsKindId
+              , tmpMIContainer_Count_2 AS (SELECT tmpMIContainer_Count_all.GoodsId
+                                                , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                                , tmpMIContainer_Count_all.MovementItemId
+                                                , tmpMIContainer_Count_all.ParentId
+                                                , tmpMIContainer_Count_all.isActive
+                                                , tmpMIContainer_Count_all.Amount AS Amount_Count
+                                                , tmpMIContainer_Count_all.MovementId
+                                                , tmpMIContainer_Count_all.MovementDescId
+                                                , tmpMIContainer_Count_all.InvNumber
+                                                , tmpMIContainer_Count_all.isDestination
+                                                , tmpMIContainer_Count_all.isParentDetail
+                                                , tmpMIContainer_Count_all.isInfoMoneyDetail
+                                           FROM tmpMIContainer_Count_all
+                                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                              ON CLO_GoodsKind.ContainerId = tmpMIContainer_Count_all.ContainerId
+                                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                          )
+                -- проводки: количественные + определяется MovementItemId_Parent + ContainerId_Parent
+              , tmpMIContainer_Count_3 AS (SELECT COALESCE (MIContainer_Parent.MovementItemId, tmpMIContainer_Count_2.MovementItemId) AS MovementItemId_Parent
+                                                , MIContainer_Parent.ContainerId                                                      AS ContainerId_Parent
+                                                , tmpMIContainer_Count_2.GoodsId
+                                                , tmpMIContainer_Count_2.GoodsKindId
+                                                , tmpMIContainer_Count_2.MovementItemId
+                                                , tmpMIContainer_Count_2.isActive
+                                                , tmpMIContainer_Count_2.Amount_Count
+                                                , tmpMIContainer_Count_2.MovementId
+                                                , tmpMIContainer_Count_2.MovementDescId
+                                                , tmpMIContainer_Count_2.InvNumber
+                                                , tmpMIContainer_Count_2.isDestination
+                                                , tmpMIContainer_Count_2.isParentDetail
+                                                , tmpMIContainer_Count_2.isInfoMoneyDetail
+                                           FROM tmpMIContainer_Count_2
+                                                LEFT JOIN MovementItemContainer AS MIContainer_Parent ON MIContainer_Parent.Id = tmpMIContainer_Count_2.ParentId
+                                                                                                     AND tmpMIContainer_Count_2.isParentDetail = TRUE
+                                          )
+                -- проводки: количественные + определяется GoodsId_Parent + GoodsKindId_Parent (нужны для группировки особым образом)
+              , tmpMIContainer_Count_4 AS (SELECT COALESCE (Container.ObjectId, tmpMIContainer_Count_3.GoodsId)         AS GoodsId_Parent
+                                                , COALESCE (CLO_GoodsKind.ObjectId, tmpMIContainer_Count_3.GoodsKindId) AS GoodsKindId_Parent
+                                                , tmpMIContainer_Count_3.MovementItemId_Parent
+                                                , tmpMIContainer_Count_3.GoodsId
+                                                , tmpMIContainer_Count_3.GoodsKindId
+                                                , tmpMIContainer_Count_3.MovementItemId
+                                                , tmpMIContainer_Count_3.isActive
+                                                , tmpMIContainer_Count_3.Amount_Count
+                                                , tmpMIContainer_Count_3.MovementId
+                                                , tmpMIContainer_Count_3.MovementDescId
+                                                , tmpMIContainer_Count_3.InvNumber
+                                                , tmpMIContainer_Count_3.isDestination
+                                                , tmpMIContainer_Count_3.isParentDetail
+                                                , tmpMIContainer_Count_3.isInfoMoneyDetail
+                                           FROM tmpMIContainer_Count_3
+                                                LEFT JOIN Container ON Container.Id = tmpMIContainer_Count_3.ContainerId_Parent
+                                                                   AND tmpMIContainer_Count_3.isParentDetail = TRUE
+                                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                              ON CLO_GoodsKind.ContainerId = tmpMIContainer_Count_3.ContainerId_Parent
+                                                                             AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                                            AND tmpMIContainer_Count_3.isParentDetail = TRUE
+                                          )
+                    -- проводки: количественные + если их нет тогда нужен MovementItemId
+                  , tmpMIContainer_Count AS (SELECT tmpMIContainer_Count_4.MovementItemId        AS MovementItemId
+                                                  , tmpMIContainer_Count_4.MovementItemId_Parent AS MovementItemId_Parent
+                                                  , tmpMIContainer_Count_4.GoodsId_Parent
+                                                  , tmpMIContainer_Count_4.GoodsKindId_Parent
+                                                  , tmpMIContainer_Count_4.GoodsId
+                                                  , tmpMIContainer_Count_4.GoodsKindId
+                                                  , tmpMIContainer_Count_4.isActive
+                                                  , tmpMIContainer_Count_4.Amount_Count
+                                                  , tmpMIContainer_Count_4.MovementId
+                                                  , tmpMIContainer_Count_4.MovementDescId
+                                                  , tmpMIContainer_Count_4.InvNumber
+                                                  , tmpMIContainer_Count_4.isDestination
+                                                  , tmpMIContainer_Count_4.isParentDetail
+                                                  , tmpMIContainer_Count_4.isInfoMoneyDetail
+                                             FROM tmpMIContainer_Count_4
+                                            UNION ALL
+                                             SELECT tmpMIContainer_Summ_all.MovementItemId
+                                                  , NULL AS MovementItemId_Parent
+                                                  , NULL AS GoodsId_Parent
+                                                  , NULL AS GoodsKindId_Parent
+                                                  , NULL AS GoodsId
+                                                  , NULL AS GoodsKindId
+                                                  , tmpMIContainer_Summ_all.isActive
+                                                  , NULL AS Amount_Count
+                                                  , tmpMIContainer_Summ_all.MovementId
+                                                  , tmpMIContainer_Summ_all.MovementDescId
+                                                  , tmpMIContainer_Summ_all.InvNumber
+                                                  , tmpMIContainer_Summ_all.isDestination
+                                                  , tmpMIContainer_Summ_all.isParentDetail
+                                                  , tmpMIContainer_Summ_all.isInfoMoneyDetail
+                                             FROM tmpMIContainer_Summ_all
+                                                  LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementId = tmpMIContainer_Summ_all.MovementId
+                                             WHERE tmpMIContainer_Count_all.MovementId IS NULL
+                                             GROUP BY tmpMIContainer_Summ_all.MovementItemId
+                                                    , tmpMIContainer_Summ_all.isActive
+                                                    , tmpMIContainer_Summ_all.MovementId
+                                                    , tmpMIContainer_Summ_all.MovementDescId
+                                                    , tmpMIContainer_Summ_all.InvNumber
+                                                    , tmpMIContainer_Summ_all.isDestination
+                                                    , tmpMIContainer_Summ_all.isParentDetail
+                                                    , tmpMIContainer_Summ_all.isInfoMoneyDetail
+                                            )
+            -- проводки: к количественным привязываются суммовые !!!по MovementItemId + IsActive!!!
+          , tmpMIContainer AS (SELECT tmpMIContainer_Summ_all.Id
+                                    , tmpMIContainer_Summ_all.MovementItemId
+                                    , tmpMIContainer_Summ_all.ParentId
+                                    , tmpMIContainer_Summ_all.ContainerId
+                                    , tmpMIContainer_Summ_all.AccountId
+                                    , tmpMIContainer_Summ_all.Amount
+                                    , tmpMIContainer_Summ_all.OperDate
+                                    , tmpMIContainer_Summ_all.IsActive
+
+                                    , tmpMIContainer_Count.MovementItemId_Parent
+                                    , tmpMIContainer_Count.GoodsId_Parent
+                                    , tmpMIContainer_Count.GoodsKindId_Parent
+                                    , tmpMIContainer_Count.GoodsId
+                                    , tmpMIContainer_Count.GoodsKindId
+                                    , tmpMIContainer_Count.Amount_Count
+
+                                    , tmpMIContainer_Count.MovementId
+                                    , tmpMIContainer_Count.MovementDescId
+                                    , tmpMIContainer_Count.InvNumber
+                                    , tmpMIContainer_Count.isDestination
+                                    , tmpMIContainer_Count.isParentDetail
+                                    , tmpMIContainer_Count.isInfoMoneyDetail
+                               FROM tmpMIContainer_Count
+                                    INNER JOIN tmpMIContainer_Summ_all ON tmpMIContainer_Summ_all.MovementItemId = tmpMIContainer_Count.MovementItemId
+                                                                      AND tmpMIContainer_Summ_all.IsActive = tmpMIContainer_Count.IsActive
+                              )
+        -- проводки: к суммовым привязываются суммовые "главные" (надо для определения "главного" + что б показать некоторые проперти из проводки-корреспондента)
+     , tmpMIContainer_Summ AS (SELECT tmpMIContainer.Id
+                                    , tmpMIContainer.MovementItemId
+                                    , tmpMIContainer.ParentId
+                                    , tmpMIContainer.ContainerId
+                                    , tmpMIContainer.AccountId
+                                    , tmpMIContainer.Amount
+                                    , tmpMIContainer.OperDate
+                                    , tmpMIContainer.IsActive
+
+                                    , CASE WHEN tmpMIContainer.AccountId = zc_Enum_Account_100301() AND 1 = 0 -- !!!не понятно пока что за проперти из проводки-корреспондента!!!!
+                                                THEN COALESCE (tmpMIContainer_parent.ContainerId, tmpMIContainer.ContainerId)
+                                           ELSE tmpMIContainer.ContainerId
+                                      END AS ContainerId_find
+                                    , COALESCE (tmpMIContainer_parent.MovementItemId_Parent, tmpMIContainer.MovementItemId_Parent) AS MovementItemId_Parent
+                                    , COALESCE (tmpMIContainer_parent.GoodsId_Parent, tmpMIContainer.GoodsId_Parent)               AS GoodsId_Parent
+                                    , COALESCE (tmpMIContainer_parent.GoodsKindId_Parent, tmpMIContainer.GoodsKindId_Parent)       AS GoodsKindId_Parent
+                                    , tmpMIContainer.GoodsId
+                                    , tmpMIContainer.GoodsKindId
+                                    , tmpMIContainer.Amount_Count
+
+                                    , tmpMIContainer.MovementId
+                                    , tmpMIContainer.MovementDescId
+                                    , tmpMIContainer.InvNumber
+                                    , tmpMIContainer.isDestination
+                                    , tmpMIContainer.isParentDetail
+                                    , tmpMIContainer.isInfoMoneyDetail
+                               FROM tmpMIContainer
+                                    LEFT JOIN tmpMIContainer AS tmpMIContainer_parent ON tmpMIContainer_parent.Id = tmpMIContainer.ParentId
+                              )
+                      -- будут Цены: проводки количественные: итоговое кол-ва сгруппированное особым образом (надо для расчета цены только когда inIsParentDetail = TRUE)
+                    , tmpPrice_Parent AS (SELECT tmpMIContainer_Count.GoodsId_Parent
+                                               , tmpMIContainer_Count.GoodsKindId_Parent
+                                               , tmpMIContainer_Count.GoodsId
+                                               , tmpMIContainer_Count.GoodsKindId
+                                               , tmpMIContainer_Count.isActive
+                                               , SUM (tmpMIContainer_Count.Amount_Count) AS Amount_Count
+                                          FROM tmpMIContainer_Count_4 AS tmpMIContainer_Count
+                                          WHERE tmpMIContainer_Count.isParentDetail = TRUE AND tmpMIContainer_Count.isInfoMoneyDetail = FALSE
+                                          GROUP BY tmpMIContainer_Count.GoodsId_Parent
+                                                 , tmpMIContainer_Count.GoodsKindId_Parent
+                                                 , tmpMIContainer_Count.GoodsId
+                                                 , tmpMIContainer_Count.GoodsKindId
+                                                 , tmpMIContainer_Count.isActive
+                                          )
+                             -- будут Цены: проводки количественные: итоговое кол-ва сгруппированное особым образом (надо для расчета цены только когда inIsDestination = TRUE)
+                           , tmpPrice AS (SELECT tmpMIContainer_Count.GoodsId
+                                               , tmpMIContainer_Count.GoodsKindId
+                                               , tmpMIContainer_Count.isActive
+                                               , SUM (tmpMIContainer_Count.Amount_Count) AS Amount_Count
+                                          FROM tmpMIContainer_Count_2 AS tmpMIContainer_Count
+                                          WHERE tmpMIContainer_Count.isDestination = TRUE AND tmpMIContainer_Count.isParentDetail = FALSE
+                                          GROUP BY tmpMIContainer_Count.GoodsId
+                                                 , tmpMIContainer_Count.GoodsKindId
+                                                 , tmpMIContainer_Count.isActive
+                                          )
+            -- Цены: для ProductionSeparate + Расход (т.е. здесь будет итоговая цена расхода)
+          , tmpPrice_ProductionSeparate AS (SELECT -- Id
+                                                   MovementItemId
+                                                 -- , CASE WHEN Amount_Count <> 0 THEN (CASE WHEN isActive = TRUE THEN 1 ELSE -1 END * Amount) / Amount_Count ELSE 0 END AS Price
+                                                 , CASE WHEN Amount_Count <> 0 THEN SUM (CASE WHEN isActive = TRUE THEN 1 ELSE -1 END * Amount) / Amount_Count ELSE 0 END AS Price
+                                            FROM tmpMIContainer
+                                            WHERE isInfoMoneyDetail = TRUE
+                                              AND MovementDescId = zc_Movement_ProductionSeparate()
+                                              AND isActive = FALSE
+                                            GROUP BY MovementItemId, Amount_Count
+                                           )
+            -- Цены: для ProductionSeparate + Расход (т.е. здесь будет итоговая цена расхода)
+          , tmpPriceGroup_ProductionSeparate AS (SELECT tmpMIContainer.GoodsId
+                                                      , tmpMIContainer.GoodsKindId
+                                                      , CASE WHEN Amount_Count <> 0 THEN -1 * Amount / Amount_Count ELSE 0 END AS Price
+                                                 FROM (SELECT GoodsId, GoodsKindId, SUM (Amount_Count) AS Amount_Count FROM tmpMIContainer_Count_2 WHERE MovementDescId = zc_Movement_ProductionSeparate() AND isActive = FALSE AND isParentDetail = TRUE AND isInfoMoneyDetail = FALSE GROUP BY GoodsId, GoodsKindId) AS tmpMIContainer
+                                                      LEFT JOIN (SELECT GoodsId, GoodsKindId, SUM (Amount) AS Amount FROM tmpMIContainer_Summ WHERE MovementDescId = zc_Movement_ProductionSeparate() AND isActive = FALSE AND isParentDetail = TRUE AND isInfoMoneyDetail = FALSE GROUP BY GoodsId, GoodsKindId) AS tmpMIContainerSumm
+                                                               ON tmpMIContainerSumm.GoodsId = tmpMIContainer.GoodsId
+                                                              AND tmpMIContainerSumm.GoodsKindId = tmpMIContainer.GoodsKindId
+                                                )
+
        SELECT
              zfConvert_StringToNumber (tmpMovementItemContainer.InvNumber) AS InvNumber
            , tmpMovementItemContainer.OperDate
@@ -50,7 +304,15 @@ BEGIN
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS KreditAccountName
 
-           , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
+           , CASE WHEN tmpMovementItemContainer.MovementDescId = zc_Movement_ProductionSeparate() AND tmpMovementItemContainer.IsActive = FALSE AND tmpMovementItemContainer.isParentDetail = TRUE AND tmpMovementItemContainer.isInfoMoneyDetail = FALSE
+                       THEN tmpPriceGroup_ProductionSeparate.Price
+                  WHEN tmpMovementItemContainer.isParentDetail = TRUE AND tmpPrice_Parent.Amount_Count <> 0
+                       THEN CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN 1 ELSE -1 END  * tmpMovementItemContainer.Amount / tmpPrice_Parent.Amount_Count
+                  WHEN tmpMovementItemContainer.isDestination = TRUE AND tmpPrice.Amount_Count <> 0
+                       THEN CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN 1 ELSE -1 END  * tmpMovementItemContainer.Amount / tmpPrice.Amount_Count
+                  ELSE tmpMovementItemContainer.Price
+             END :: TFloat AS Price
+
            , Object_Account_View.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.DirectionObjectCode
            , CAST (tmpMovementItemContainer.DirectionObjectName AS TVarChar) AS DirectionObjectName
@@ -75,206 +337,247 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyCode_Detail
            , tmpMovementItemContainer.InfoMoneyName_Detail
        FROM 
-           (SELECT 
-                  Movement.InvNumber
-                , MovementItemContainer.OperDate
-                , SUM (MovementItemContainer.Amount)  AS Amount
-                , MovementItemContainer.isActive
-                , Container.ObjectId
+           (SELECT
+                  tmpMIContainer_Summ.InvNumber
+                , tmpMIContainer_Summ.OperDate
+                , tmpMIContainer_Summ.MovementDescId
+                , tmpMIContainer_Summ.AccountId
+                , SUM (tmpMIContainer_Summ.Amount)  AS Amount
+                , tmpMIContainer_Summ.isActive
 
-                , Object_Direction.ObjectCode AS DirectionObjectCode
+                , tmpMIContainer_Summ.Id
+                , tmpMIContainer_Summ.ContainerId        AS ObjectCostId
+                , SUM (tmpMIContainer_Summ.Amount_Count) AS Amount_Count
+
+                , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+                , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
+                , Object_Business.ObjectCode  AS BusinessCode
+                , Object_Business.ValueData   AS BusinessName
+                , Object_Branch.ObjectCode    AS BranchCode
+                , Object_Branch.ValueData     AS BranchName
+
+                , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
+                            THEN Object_ProfitLoss_View.ProfitLossCode
+                       ELSE Object_Direction.ObjectCode
+                  END AS DirectionObjectCode
                 , CASE WHEN Object_ProfitLoss_View.ProfitLossName_all IS NOT NULL
                             THEN Object_ProfitLoss_View.ProfitLossName_all
                        ELSE Object_Direction.ValueData
                   END AS DirectionObjectName
 
 
-                , Object_Branch.ObjectCode    AS BranchCode
-                , Object_Branch.ValueData     AS BranchName
-                , Object_Business.ObjectCode  AS BusinessCode
-                , Object_Business.ValueData   AS BusinessName
+                , COALESCE (Object_Destination.Id, 0) AS DestinationId
+                , Object_Destination.ObjectCode       AS DestinationObjectCode
+                , Object_Destination.ValueData        AS DestinationObjectName
+                , Object_GoodsGroup.ObjectCode        AS GoodsGroupCode
+                , Object_GoodsGroup.ValueData         AS GoodsGroupName
+                , COALESCE (Object_GoodsKind.Id, 0)   AS GoodsKindId
+                , Object_GoodsKind.ValueData          AS GoodsKindName
 
-                , Object_GoodsGroup.ObjectCode  AS GoodsGroupCode
-                , Object_GoodsGroup.ValueData   AS GoodsGroupName
+                , View_InfoMoney.InfoMoneyCode
+                , View_InfoMoney.InfoMoneyName
+                , View_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+                , View_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
-                , Object_Destination.ObjectCode AS DestinationObjectCode
-                , Object_Destination.ValueData  AS DestinationObjectName
+                , tmpMIContainer_Summ.MovementItemId_Parent AS MIId_Parent
+                , tmpMIContainer_Summ.GoodsId_Parent        AS GoodsId_Parent
+                , tmpMIContainer_Summ.GoodsKindId_parent    AS GoodsKindId_parent
+                , Object_Goods_Parent.ObjectCode            AS GoodsCode_Parent
+                , Object_Goods_Parent.ValueData             AS GoodsName_Parent
+                , Object_GoodsKind_Parent.ValueData         AS GoodsKindName_Parent
 
-                , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
-                , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
-
-                , Object_GoodsKind.ValueData    AS GoodsKindName
-                , ContainerObjectCost.ObjectCostId
-                , COALESCE (MovementItem_Parent.Id, MovementItem.Id) AS MIId_Parent
-                , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
-                , Object_Goods_Parent.ValueData       AS GoodsName_Parent
-                , Object_GoodsKind_Parent.ValueData   AS GoodsKindName_Parent
-                , lfObject_InfoMoney.InfoMoneyCode
-                , lfObject_InfoMoney.InfoMoneyName
-                , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
-                , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
-                , CASE WHEN Movement.DescId = zc_Movement_ProductionSeparate()
-                          THEN tmpSumm_ProductionSeparate.Price
-                       WHEN SUM (MovementItem.Amount) <> 0
-                          THEN -SUM (MovementItemContainer.Amount) / SUM (MovementItem.Amount)
+                , CASE WHEN tmpMIContainer_Summ.MovementDescId = zc_Movement_ProductionSeparate()
+                        AND tmpMIContainer_Summ.isActive = FALSE
+                        AND tmpMIContainer_Summ.isInfoMoneyDetail = TRUE 
+                          THEN tmpPrice_ProductionSeparate.Price
+                       WHEN SUM (tmpMIContainer_Summ.Amount_Count) <> 0
+                          THEN SUM (CASE WHEN tmpMIContainer_Summ.isActive = TRUE THEN 1 ELSE -1 END * tmpMIContainer_Summ.Amount) / SUM (tmpMIContainer_Summ.Amount_Count)
                        ELSE 0
                   END AS Price
-            FROM (SELECT inMovementId AS MovementId UNION ALL SELECT Id AS MovementId FROM Movement WHERE ParentId = inMovementId) AS tmpMovement
-                 JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmpMovement.MovementId
-                                           AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                 LEFT JOIN Container ON Container.Id = MovementItemContainer.ContainerId
 
-                 LEFT JOIN MovementItemContainer AS MIContainer_Parent ON MIContainer_Parent.Id = MovementItemContainer.ParentId
-                                                                      AND Container.ObjectId = zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                , tmpMIContainer_Summ.isDestination
+                , tmpMIContainer_Summ.isParentDetail
+                , tmpMIContainer_Summ.isInfoMoneyDetail
 
-                 LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
-                 LEFT JOIN (SELECT MovementItemContainer.MovementItemId
-                                 , CASE WHEN MovementItem.Amount <> 0 THEN SUM (CASE WHEN MovementItemContainer.isActive THEN 1 ELSE -1 END * MovementItemContainer.Amount) / MovementItem.Amount ELSE 0 END AS Price
-                            FROM MovementItemContainer
-                                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
-                            WHERE MovementItemContainer.MovementId = inMovementId
-                              AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                            GROUP BY MovementItemContainer.MovementItemId, MovementItem.Amount
-                           ) AS tmpSumm_ProductionSeparate ON tmpSumm_ProductionSeparate.MovementItemId = MovementItemContainer.MovementItemId
-                                                          AND Movement.DescId = zc_Movement_ProductionSeparate()
+            FROM
+           (SELECT
+                  tmpMIContainer_Summ.InvNumber
+                , tmpMIContainer_Summ.OperDate
+                , tmpMIContainer_Summ.MovementDescId
+                , tmpMIContainer_Summ.AccountId
+                , tmpMIContainer_Summ.Amount
+                , tmpMIContainer_Summ.isActive
 
-                 LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = MovementItemContainer.ContainerId
-                                              AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
-                                               ON ContainerLinkObject_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
-                                              AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                                              AND ContainerLinkObject_ProfitLoss.ObjectId <> 0
-                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = MovementItemContainer.ContainerId
-                                                                            AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-                                                                            AND ContainerLO_JuridicalBasis.ObjectId > 0
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id             ELSE 0 END AS Id
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId    ELSE 0 END AS ContainerId
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId ELSE 0 END AS MovementItemId
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Amount_Count   ELSE 0 END AS Amount_Count
+
+                , CASE WHEN ContainerLinkObject_ProfitLoss.ObjectId <> 0
+                            THEN ContainerLinkObject_ProfitLoss.ObjectId
+                       WHEN ContainerLinkObject_Cash.ObjectId <> 0
+                            THEN ContainerLinkObject_Cash.ObjectId
+
+                       WHEN ContainerLinkObject_BankAccount.ObjectId <> 0
+                            THEN ContainerLinkObject_BankAccount.ObjectId
+                       WHEN ContainerLinkObject_Juridical.ObjectId <> 0
+                            THEN ContainerLinkObject_Juridical.ObjectId
+                       WHEN ContainerLinkObject_Founder.ObjectId <> 0
+                            THEN ContainerLinkObject_Founder.ObjectId
+
+                       WHEN ContainerLinkObject_Member.ObjectId <> 0
+                            THEN ContainerLinkObject_Member.ObjectId
+                       WHEN ContainerLinkObject_Car.ObjectId <> 0
+                            THEN ContainerLinkObject_Car.ObjectId
+                       WHEN ContainerLinkObject_Unit.ObjectId <> 0
+                            THEN ContainerLinkObject_Unit.ObjectId
+                  END AS DirectionId
+                , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsId ELSE 0 END     AS DestinationId
+                , CASE WHEN tmpMIContainer_Summ.isDestination = TRUE THEN tmpMIContainer_Summ.GoodsKindId ELSE 0 END AS GoodsKindId
+
+                , ContainerLO_JuridicalBasis.ObjectId     AS JuridicalBasisId
+                , ContainerLinkObject_Business.ObjectId   AS BusinessId
+                , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
+                , MILinkObject_Branch.ObjectId            AS BranchId
+
+                , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = FALSE THEN 0 WHEN ContainerLinkObject_InfoMoneyDetail.ObjectId <> 0 THEN ContainerLinkObject_InfoMoneyDetail.ObjectId ELSE ContainerLinkObject_InfoMoney.ObjectId END AS InfoMoneyId_Detail
+
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId_Parent ELSE 0 END AS MovementItemId_Parent
+                , CASE WHEN tmpMIContainer_Summ.isParentDetail = TRUE THEN tmpMIContainer_Summ.GoodsId_Parent ELSE 0 END           AS GoodsId_Parent
+                , CASE WHEN tmpMIContainer_Summ.isParentDetail = TRUE THEN tmpMIContainer_Summ.GoodsKindId_parent ELSE 0 END       AS GoodsKindId_parent
+
+                , tmpMIContainer_Summ.isDestination
+                , tmpMIContainer_Summ.isParentDetail
+                , tmpMIContainer_Summ.isInfoMoneyDetail
+
+            FROM tmpMIContainer_Summ
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                               ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                              AND ContainerLinkObject_Juridical.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Founder
-                                               ON ContainerLinkObject_Founder.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Founder.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Founder.DescId = zc_ContainerLinkObject_Founder()
-                                              AND ContainerLinkObject_Founder.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
-                                               ON ContainerLinkObject_Member.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
-                                              AND ContainerLinkObject_Member.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                               ON ContainerLinkObject_Unit.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                              AND ContainerLinkObject_Unit.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
-                                               ON ContainerLinkObject_Car.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                                              AND ContainerLinkObject_Car.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
-                                               ON ContainerLinkObject_Cash.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
-                                              AND ContainerLinkObject_Cash.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
-                                               ON ContainerLinkObject_BankAccount.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_BankAccount.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
-                                              AND ContainerLinkObject_BankAccount.ObjectId <> 0
-                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Founder.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId)))))))
 
-                 -- вот так "не просто" выбираем филиал
-                 /*LEFT JOIN (SELECT MAX (MovementItemReport.MovementItemId) AS MovementItemId, ReportContainerLink.ContainerId
-                            FROM MovementItemReport
-                                 JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MovementItemReport.ReportContainerId
-                                                         AND ReportContainerLink.AccountId = zc_Enum_Account_100301()
-                            WHERE MovementItemReport.MovementId = inMovementId
-                            GROUP BY ReportContainerLink.ContainerId
-                           ) AS MIReport_MI ON MIReport_MI.ContainerId = MovementItemContainer.ContainerId*/
+                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
+                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
+                                               ON ContainerLinkObject_Business.ContainerId = tmpMIContainer_Summ.ContainerId -- tmpMIContainer_Summ.ContainerId_find
+                                              AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
+                                               ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                  -- вот так "просто" выбираем филиал
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                  ON MILinkObject_Branch.MovementItemId = MovementItemContainer.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
+                                                  ON MILinkObject_Branch.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
                                                  AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                 LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
-
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                               ON ContainerLinkObject_Business.ContainerId = MovementItemContainer.ContainerId -- COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
-                                              AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
-                                              AND ContainerLinkObject_Business.ObjectId <> 0
-                 LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId
-
-                 LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = ContainerLinkObject_ProfitLoss.ObjectId
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                               ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                              -- AND 1=0
-                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
-                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
                                               -- AND 1=0
-                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, 0) = 0 THEN ContainerLinkObject_InfoMoney.ObjectId ELSE ContainerLinkObject_InfoMoneyDetail.ObjectId END
-                                                                                   AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
+           ) AS tmpMIContainer_Summ
 
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
-                                               ON ContainerLinkObject_Goods.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
-                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                              -- AND 1=0
-                 LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = ContainerLinkObject_Goods.ObjectId
+                 LEFT JOIN tmpPrice_ProductionSeparate ON tmpPrice_ProductionSeparate.MovementItemId = tmpMIContainer_Summ.MovementItemId
+                 -- LEFT JOIN tmpPrice_ProductionSeparate ON tmpPrice_ProductionSeparate.Id = tmpMIContainer_Summ.Id
 
-                 LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ContainerLO_JuridicalBasis.ObjectId
+                 LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = tmpMIContainer_Summ.ProfitLossId
+                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpMIContainer_Summ.DirectionId
+                 LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpMIContainer_Summ.DestinationId
+
+                 LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpMIContainer_Summ.JuridicalBasisId
+                 LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpMIContainer_Summ.BusinessId
+                 LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMIContainer_Summ.BranchId
+
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId
+                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpMIContainer_Summ.InfoMoneyId_Detail
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                      ON ObjectLink_Goods_GoodsGroup.ObjectId = ContainerLinkObject_Goods.ObjectId
+                                      ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMIContainer_Summ.DestinationId
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
-                                               ON ContainerLinkObject_GoodsKind.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
-                                              AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                              AND 1=0
-                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
+                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_Summ.GoodsKindId
+                 LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = tmpMIContainer_Summ.GoodsId_Parent
+                 LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = tmpMIContainer_Summ.GoodsKindId_parent
 
-                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+            GROUP BY tmpMIContainer_Summ.InvNumber
+                   , tmpMIContainer_Summ.OperDate
+                   , tmpMIContainer_Summ.isActive
+                   , tmpMIContainer_Summ.AccountId
+                   , tmpMIContainer_Summ.ContainerId
+                   , tmpMIContainer_Summ.MovementItemId_Parent
+                   , tmpMIContainer_Summ.Id
+                   , tmpMIContainer_Summ.MovementDescId
 
-                 LEFT JOIN MovementItemContainer AS MIContainer_Master ON MIContainer_Master.Id = MovementItemContainer.ParentId
-                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MIContainer_Master.MovementItemId
-                 LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
+                   , tmpMIContainer_Summ.GoodsId_Parent
+                   , tmpMIContainer_Summ.GoodsKindId_parent
 
-                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                  ON MILinkObject_GoodsKind.MovementItemId = COALESCE (MIContainer_Master.MovementItemId, MovementItem.Id)
-                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                 LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
-
-            GROUP BY Movement.InvNumber
-                   , MovementItemContainer.OperDate
-                   , Container.ObjectId
-                   , MovementItemContainer.Id
-                   , MovementItemContainer.isActive
                    , Object_Branch.ObjectCode
                    , Object_Branch.ValueData
                    , Object_Business.ObjectCode
                    , Object_Business.ValueData
                    , Object_Direction.ObjectCode
                    , Object_Direction.ValueData
+                   , Object_ProfitLoss_View.ProfitLossCode
                    , Object_ProfitLoss_View.ProfitLossName_all
                    , Object_GoodsGroup.ObjectCode
                    , Object_GoodsGroup.ValueData
+                   , Object_Destination.Id
                    , Object_Destination.ObjectCode
                    , Object_Destination.ValueData
+                   , Object_GoodsKind.Id
                    , Object_GoodsKind.ValueData
-                   , ContainerObjectCost.ObjectCostId
-                   , COALESCE (MovementItem_Parent.Id, MovementItem.Id)
                    , Object_Goods_Parent.ObjectCode
                    , Object_Goods_Parent.ValueData
                    , Object_GoodsKind_Parent.ValueData
                    , Object_JuridicalBasis.ObjectCode
                    , Object_JuridicalBasis.ValueData
-                   , lfObject_InfoMoney.InfoMoneyCode
-                   , lfObject_InfoMoney.InfoMoneyName
-                   , lfObject_InfoMoney_Detail.InfoMoneyCode
-                   , lfObject_InfoMoney_Detail.InfoMoneyName
-                   , Movement.DescId
-                   , tmpSumm_ProductionSeparate.Price
+                   , View_InfoMoney.InfoMoneyCode
+                   , View_InfoMoney.InfoMoneyName
+                   , View_InfoMoney_Detail.InfoMoneyCode
+                   , View_InfoMoney_Detail.InfoMoneyName
+                   , tmpPrice_ProductionSeparate.Price
+
+                   , tmpMIContainer_Summ.isDestination
+                   , tmpMIContainer_Summ.isParentDetail
+                   , tmpMIContainer_Summ.isInfoMoneyDetail
+
            ) AS tmpMovementItemContainer
-           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMovementItemContainer.ObjectId
+
+           LEFT JOIN tmpPrice_Parent ON tmpPrice_Parent.GoodsId_Parent = tmpMovementItemContainer.GoodsId_Parent
+                                    AND tmpPrice_Parent.GoodsKindId_Parent = tmpMovementItemContainer.GoodsKindId_Parent
+                                    AND tmpPrice_Parent.GoodsId = tmpMovementItemContainer.DestinationId
+                                    AND tmpPrice_Parent.GoodsKindId = tmpMovementItemContainer.GoodsKindId
+                                    AND tmpPrice_Parent.isActive = tmpMovementItemContainer.isActive
+           LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpMovementItemContainer.DestinationId
+                             AND tmpPrice.GoodsKindId = tmpMovementItemContainer.GoodsKindId
+                             AND tmpPrice.isActive = tmpMovementItemContainer.isActive
+           LEFT JOIN tmpPriceGroup_ProductionSeparate ON tmpPriceGroup_ProductionSeparate.GoodsId = tmpMovementItemContainer.DestinationId
+                                                     AND tmpPriceGroup_ProductionSeparate.GoodsKindId = tmpMovementItemContainer.GoodsKindId
+
+           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMovementItemContainer.AccountId
            LEFT JOIN ObjectLink AS ObjectLink_AccountKind
-                                ON ObjectLink_AccountKind.ObjectId = tmpMovementItemContainer.ObjectId
+                                ON ObjectLink_AccountKind.ObjectId = tmpMovementItemContainer.AccountId
                                AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
      ;
      END IF;
@@ -282,7 +585,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -311,8 +614,6 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
  03.07.13                                        *
 */
 
--- тест
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 338, inSession:= '2')
 /*
 Код об.напр.
 DirectionObjectCode
@@ -326,3 +627,5 @@ DestinationObjectCode
 Объект назначение
 DestinationObjectName
 */
+-- тест
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 386405, inIsDestination:= FALSE, inIsParentDetail:= FALSE, inIsInfoMoneyDetail:= FALSE, inSession:= zfCalc_UserAdmin())

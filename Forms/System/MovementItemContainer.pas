@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxContainer, cxCheckBox, cxButtonEdit;
 
 type
   TMovementItemContainerForm = class(TAncestorDBGridForm)
@@ -22,6 +22,21 @@ type
     colBranchName: TcxGridDBColumn;
     colJuridicalBasisCode: TcxGridDBColumn;
     colJuridicalBasisName: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    ObjectCostId: TcxGridDBColumn;
+    MIId_Parent: TcxGridDBColumn;
+    GoodsCode_Parent: TcxGridDBColumn;
+    GoodsName_Parent: TcxGridDBColumn;
+    GoodsKindName_Parent: TcxGridDBColumn;
+    cbInfoMoneyDetail: TcxCheckBox;
+    bbIsInfoMoneyDetail: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
+    bbIsDestination: TdxBarControlContainerItem;
+    cbDestination: TcxCheckBox;
+    bbIsParentDetail: TdxBarControlContainerItem;
+    cbParentDetail: TcxCheckBox;
   private
     { Private declarations }
   public

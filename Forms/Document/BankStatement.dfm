@@ -351,38 +351,45 @@ inherited BankStatementForm: TBankStatementForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'ContractName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -399,17 +406,20 @@ inherited BankStatementForm: TBankStatementForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
         end>
@@ -425,38 +435,45 @@ inherited BankStatementForm: TBankStatementForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -473,11 +490,13 @@ inherited BankStatementForm: TBankStatementForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -527,12 +546,14 @@ inherited BankStatementForm: TBankStatementForm
         end
         item
           Name = 'OKPO'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OKPO'
           DataType = ftString
         end
         item
           Name = 'Name'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -574,11 +595,11 @@ inherited BankStatementForm: TBankStatementForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -595,6 +616,18 @@ inherited BankStatementForm: TBankStatementForm
         item
           Visible = True
           ItemName = 'bbInsertJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object BarManagerBar1: TdxBar [1]
@@ -675,6 +708,7 @@ inherited BankStatementForm: TBankStatementForm
         Component = edBankName
         DataType = ftString
       end>
+    PackSize = 1
     Left = 248
     Top = 40
   end
@@ -685,34 +719,40 @@ inherited BankStatementForm: TBankStatementForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'injuridicalid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'LinkJuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'ininfomoneyid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end
       item
         Name = 'incontractid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inunitid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Unitid'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 128
   end
@@ -728,6 +768,7 @@ inherited BankStatementForm: TBankStatementForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 200
     Top = 152
   end
