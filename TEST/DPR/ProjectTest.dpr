@@ -131,8 +131,8 @@ uses
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
-  SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
-  SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
+  SendOnPrice_BranchJournal in '..\..\Forms\Document\SendOnPrice_BranchJournal.pas' {SendOnPrice_BranchJournalForm},
+  SendOnPrice_Branch in '..\..\Forms\Document\SendOnPrice_Branch.pas' {SendOnPrice_BranchForm},
   LossJournal in '..\..\Forms\Document\LossJournal.pas' {LossJournalForm},
   Loss in '..\..\Forms\Document\Loss.pas' {LossForm},
   ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
@@ -299,8 +299,8 @@ uses
   GoodsKindWeighingGroupEdit in '..\..\Forms\Guides\GoodsKindWeighingGroupEdit.pas' {GoodsKindWeighingGroupEditForm: TParentForm},
   GoodsPropertyValue in '..\..\Forms\Guides\GoodsPropertyValue.pas' {GoodsPropertyValueForm: TParentForm},
   ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
-  ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
-  ReturnIn in '..\..\Forms\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
+  ReturnIn_PartnerJournal in '..\..\Forms\Document\ReturnIn_PartnerJournal.pas' {ReturnIn_PartnerJournalForm: TParentForm},
+  ReturnIn_Partner in '..\..\Forms\Document\ReturnIn_Partner.pas' {ReturnIn_PartnerForm: TParentForm},
   Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
@@ -556,7 +556,11 @@ uses
   Sale_Order in '..\..\Forms\Document\Sale_Order.pas' {Sale_OrderForm: TParentForm},
   ContactPersonChoice in '..\..\Forms\Guides\ContactPersonChoice.pas' {ContactPersonChoiceForm: TParentForm},
   Route in '..\..\Forms\Guides\Route.pas' {RouteForm: TParentForm},
-  RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm: TParentForm};
+  RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm: TParentForm},
+  ReturnIn in '..\..\Forms\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
+  ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
+  SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
+  SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -565,6 +569,8 @@ begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TReturnInForm, ReturnInForm);
+  Application.CreateForm(TReturnInJournalForm, ReturnInJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

@@ -493,6 +493,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchJournalForm');
 end;
 
 procedure TLoadFormTest.LoadServiceDocumentFormTest;
@@ -619,6 +624,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;

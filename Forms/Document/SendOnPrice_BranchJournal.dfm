@@ -1,5 +1,5 @@
-inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
+inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')'
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
@@ -319,10 +319,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSendOnPriceForm'
+      FormName = 'TSendOnPrice_BranchForm'
+      FormNameParam.Value = 'TSendOnPrice_BranchForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSendOnPriceForm'
+      FormName = 'TSendOnPrice_BranchForm'
+      FormNameParam.Value = 'TSendOnPrice_BranchForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

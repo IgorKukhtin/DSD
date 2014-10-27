@@ -1,5 +1,5 @@
-inherited ReturnInJournalForm: TReturnInJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
+inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1122
@@ -456,12 +456,12 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction [0]
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
+      FormName = 'TReturnIn_PartnerForm'
+      FormNameParam.Value = 'TReturnIn_PartnerForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction [1]
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
+      FormName = 'TReturnIn_PartnerForm'
+      FormNameParam.Value = 'TReturnIn_PartnerForm'
     end
     inherited actRefresh: TdsdDataSetRefresh [2]
     end

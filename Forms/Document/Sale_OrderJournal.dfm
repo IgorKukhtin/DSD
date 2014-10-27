@@ -411,7 +411,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 55
           end
           object colRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
+            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -419,27 +419,27 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 70
           end
           object colCurrencyValue: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+            Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyValue'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 52
           end
           object colCurrencyDocumentName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
             DataBinding.FieldName = 'CurrencyDocumentName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 54
           end
           object colCurrencyPartnerName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
             DataBinding.FieldName = 'CurrencyPartnerName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 54
           end
           object colChecked: TcxGridDBColumn

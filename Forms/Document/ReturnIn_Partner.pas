@@ -1,4 +1,4 @@
-unit ReturnIn;
+unit ReturnIn_Partner;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, cxImageComboBox;
 
 type
-  TReturnInForm = class(TAncestorDocumentForm)
+  TReturnIn_PartnerForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edTo: TcxButtonEdit;
     edFrom: TcxButtonEdit;
@@ -133,13 +133,13 @@ type
   end;
 
 var
-  ReturnInForm: TReturnInForm;
+  ReturnIn_PartnerForm: TReturnIn_PartnerForm;
 
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReturnInForm);
+  RegisterClass(TReturnIn_PartnerForm);
 
 end.

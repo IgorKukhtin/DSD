@@ -427,6 +427,10 @@ type
     bbCashDneprOfficial: TdxBarButton;
     actSale_Order: TdsdOpenForm;
     bbSale_Order: TdxBarButton;
+    actReturnIn_Partner: TdsdOpenForm;
+    bbReturnIn_Partner: TdxBarButton;
+    actSendOnPrice_Branch: TdsdOpenForm;
+    bbSendOnPrice_Branch: TdxBarButton;
   public
     { Public declarations }
   end;

@@ -393,7 +393,15 @@
         end
         item
           Visible = True
+          ItemName = 'bbReturnIn_Partner'
+        end
+        item
+          Visible = True
           ItemName = 'bbSendOnPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendOnPrice_Branch'
         end
         item
           Visible = True
@@ -479,8 +487,16 @@
       Action = actReturnIn
       Category = 0
     end
+    object bbReturnIn_Partner: TdxBarButton
+      Action = actReturnIn_Partner
+      Category = 0
+    end
     object bbSendOnPrice: TdxBarButton
       Action = actSendOnPrice
+      Category = 0
+    end
+    object bbSendOnPrice_Branch: TdxBarButton
+      Action = actSendOnPrice_Branch
       Category = 0
     end
     object bbProductionSeparate: TdxBarButton
@@ -2864,9 +2880,19 @@
     object actReturnIn: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')'
       FormName = 'TReturnInJournalForm'
       FormNameParam.Value = 'TReturnInJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReturnIn_Partner: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      FormName = 'TReturnIn_PartnerJournalForm'
+      FormNameParam.Value = 'TReturnIn_PartnerJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2888,6 +2914,16 @@
       Hint = #1054#1073#1083#1072#1089#1090#1100
       FormName = 'TRegionForm'
       FormNameParam.Value = 'TRegionForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSendOnPrice_Branch: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')'
+      FormName = 'TSendOnPrice_BranchJournalForm'
+      FormNameParam.Value = 'TSendOnPrice_BranchJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
