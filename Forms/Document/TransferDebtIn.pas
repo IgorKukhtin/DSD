@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox;
 
 type
   TTransferDebtInForm = class(TAncestorDocumentForm)
@@ -81,6 +81,20 @@ type
     cxLabel14: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     edIsChecked: TcxCheckBox;
+    TaxCorrectiveCDS: TClientDataSet;
+    TaxCorrectiveDS: TDataSource;
+    spSelectTaxCorrective: TdsdStoredProc;
+    spMovementSetErasedTaxCorrective: TdsdStoredProc;
+    spMovementCompleteTaxCorrective: TdsdStoredProc;
+    spMovementUnCompleteTaxCorrective: TdsdStoredProc;
+    gpUpdateTaxCorrective: TdsdStoredProc;
+    actUnCompleteTaxCorrective: TdsdChangeMovementStatus;
+    actSetErasedTaxCorrective: TdsdChangeMovementStatus;
+    actCompleteTaxCorrective: TdsdChangeMovementStatus;
+    bbCompleteTaxCorrective: TdxBarButton;
+    bbSetErasedTaxCorrective: TdxBarButton;
+    bbUnCompleteTaxCorrective: TdxBarButton;
+    actTaxJournalChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

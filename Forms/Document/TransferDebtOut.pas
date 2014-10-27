@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox;
 
 type
   TTransferDebtOutForm = class(TAncestorDocumentForm)
@@ -95,6 +95,19 @@ type
     cxLabel13: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     edIsChecked: TcxCheckBox;
+    TaxCDS: TClientDataSet;
+    TaxDS: TDataSource;
+    gpUpdateTax: TdsdStoredProc;
+    spSelectTax: TdsdStoredProc;
+    spMovementSetErasedTax: TdsdStoredProc;
+    spMovementCompleteTax: TdsdStoredProc;
+    spMovementUnCompleteTax: TdsdStoredProc;
+    actUnCompleteTaxCorrective: TdsdChangeMovementStatus;
+    actSetErasedTaxCorrective: TdsdChangeMovementStatus;
+    actCompleteTaxCorrective: TdsdChangeMovementStatus;
+    bbCompleteTaxCorrective: TdxBarButton;
+    bbUnCompleteTaxCorrective: TdxBarButton;
+    bbSetErasedTaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public
