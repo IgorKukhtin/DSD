@@ -569,8 +569,6 @@ begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReturnInForm, ReturnInForm);
-  Application.CreateForm(TReturnInJournalForm, ReturnInJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

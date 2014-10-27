@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -57,6 +57,7 @@ BEGIN
              , CAST ('' as TVarChar)		        AS PaidKindName
              , 0                     		        AS ContractId
              , CAST ('' as TVarChar) 	                AS ContractName
+             , CAST ('' AS TVarChar) 			AS ContractTagName
              , ObjectCurrency.Id                        AS CurrencyDocumentId	-- грн
              , ObjectCurrency.ValueData                 AS CurrencyDocumentName
              , 0                                        AS CurrencyPartnerId
@@ -104,6 +105,7 @@ BEGIN
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
            , View_Contract_InvNumber.InvNumber      AS ContractName
+           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
            , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id              AS CurrencyPartnerId
