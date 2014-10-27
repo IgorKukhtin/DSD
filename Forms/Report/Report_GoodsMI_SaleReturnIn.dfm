@@ -487,8 +487,34 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
       Width = 240
     end
   end
+  object cbPartner: TcxCheckBox [2]
+    Left = 243
+    Top = 151
+    Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 118
+  end
+  object cbGoods: TcxCheckBox [3]
+    Left = 367
+    Top = 151
+    Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 88
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbGoods
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -692,6 +718,20 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 176
     Top = 200
@@ -713,6 +753,18 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods'
         end
         item
           Visible = True
@@ -762,6 +814,20 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     object bbPrint_byStatGroup: TdxBarButton
       Action = actPrint_byStatGroup
       Category = 0
+    end
+    object bbPartner: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Visible = ivAlways
+      Control = cbPartner
+    end
+    object bbGoods: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+      Visible = ivAlways
+      Control = cbGoods
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

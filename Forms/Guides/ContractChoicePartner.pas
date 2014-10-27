@@ -44,6 +44,11 @@ type
     bbShowAll: TdxBarButton;
     colCode: TcxGridDBColumn;
     colContractComment: TcxGridDBColumn;
+    actChoiceRoute: TOpenChoiceForm;
+    actChoiceRouteSorting: TOpenChoiceForm;
+    actChoicePersonalTake: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

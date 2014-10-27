@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_SaleReturnInForm = class(TAncestorReportForm)
@@ -60,6 +60,10 @@ type
     clBranchName: TcxGridDBColumn;
     actPrint_byStatGroup: TdsdPrintAction;
     bbPrint_byStatGroup: TdxBarButton;
+    cbPartner: TcxCheckBox;
+    cbGoods: TcxCheckBox;
+    bbPartner: TdxBarControlContainerItem;
+    bbGoods: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

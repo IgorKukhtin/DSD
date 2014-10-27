@@ -490,9 +490,9 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
       Control = cbDestination
     end
     object bbIsParentDetail: TdxBarControlContainerItem
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088' ('#1075#1083#1072#1074#1085#1099#1081')'
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
       Category = 0
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088' ('#1075#1083#1072#1074#1085#1099#1081')'
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
       Visible = ivAlways
       Control = cbParentDetail
     end

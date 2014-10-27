@@ -2,8 +2,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 542
   ClientWidth = 998
-  ExplicitWidth = 1006
-  ExplicitHeight = 576
+  ExplicitWidth = 1014
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -96,7 +96,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 25
+            Width = 63
           end
           object colChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
@@ -350,37 +350,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = ''
-      Hint = ''
-      ImageIndex = -1
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.ParamType = ptInput
-    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -461,15 +430,38 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spSelectPrint
+        end>
+      Caption = ''
+      Hint = ''
+      ImageIndex = -1
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
+    inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -487,16 +479,26 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
         end>
       isShowModal = True
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
     end
     object actCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -647,6 +649,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -693,6 +703,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -779,6 +790,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1075,6 +1087,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1088,12 +1101,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1101,6 +1116,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1108,6 +1124,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1115,12 +1132,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -1145,6 +1164,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1157,6 +1177,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1164,6 +1185,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1171,12 +1193,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -1185,20 +1209,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Top = 328
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 396
     Top = 228
   end

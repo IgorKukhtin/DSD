@@ -622,10 +622,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   object edChangePercentAmount: TcxCurrencyEdit [2]
     Left = 714
     Top = 199
-    EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 40
   end
@@ -1160,6 +1159,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1208,7 +1215,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbChangePercentAmount'
         end
         item
           Visible = True
@@ -1251,25 +1258,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Action = actPrint_Pack
       Category = 0
     end
-    object bbChangePercentAmount: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = edChangePercentAmount
-    end
     object bbIsCalcAmountPartner: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Category = 0
-      Hint = 'New Item'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Visible = ivAlways
       Control = cbCalcAmountPartner
+    end
+    object bbChangePercentAmount: TdxBarControlContainerItem
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+      Category = 0
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+      Visible = ivAlways
+      Control = edChangePercentAmount
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1421,6 +1422,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
         DataType = ftFloat
       end
       item

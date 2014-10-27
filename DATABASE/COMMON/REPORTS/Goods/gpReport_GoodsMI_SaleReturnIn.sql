@@ -1,6 +1,7 @@
 -- Function: gpReport_Goods_Movement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inStartDate    TDateTime ,  
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inGoodsGroupId Integer   ,
     IN inPaidKindId   Integer   , --
     IN inInfoMoneyId  Integer,    -- Управленческая статья  
+    IN inIsPartner    Boolean,    -- 
+    IN inIsGoods      Boolean,    -- 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -33,7 +36,7 @@ BEGIN
    END IF;*/
    
     -- !!!т.к. нельзя когда много данных в гриде!!!
-    IF inStartDate + (INTERVAL '62 DAY') <= inEndDate
+    IF inStartDate + (INTERVAL '62 DAY') <= inEndDate AND inIsPartner = TRUE AND inIsGoods = TRUE
     THEN
         inStartDate:= inEndDate + (INTERVAL '1 DAY');
     END IF;
@@ -162,19 +165,19 @@ BEGIN
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
-         , CAST ((tmpOperationGroup.Sale_Summ) AS TFloat) AS Sale_Summ
-         , CAST ((tmpOperationGroup.Sale_Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Sale_Amount_Weight 
-         , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Sale_Amount ELSE 0 END) AS TFloat) AS Sale_Amount_Sh 
+         , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
+         , tmpOperationGroup.Sale_Amount_Weight :: TFloat  AS Sale_Amount_Weight
+         , tmpOperationGroup.Sale_Amount_Sh     :: TFloat  AS Sale_Amount_Sh 
 
-         , CAST ((tmpOperationGroup.Sale_AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Sale_AmountPartner_Weight 
-         , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Sale_AmountPartner ELSE 0 END) AS TFloat) AS Sale_AmountPartner_Sh 
+         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight 
+         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh 
 
-         , CAST ((tmpOperationGroup.Return_Summ) AS TFloat) AS Return_Summ
-         , CAST ((tmpOperationGroup.Return_Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Return_Amount_Weight 
-         , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Return_Amount ELSE 0 END) AS TFloat) AS Return_Amount_Sh 
+         , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
+         , tmpOperationGroup.Return_Amount_Weight :: TFloat AS Return_Amount_Weight
+         , tmpOperationGroup.Return_Amount_Sh     :: TFloat AS Return_Amount_Sh
 
-         , CAST ((tmpOperationGroup.Return_AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Return_AmountPartner_Weight 
-         , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Return_AmountPartner ELSE 0 END) AS TFloat) AS Return_AmountPartner_Sh 
+         , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight 
+         , tmpOperationGroup.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh 
 
      FROM (SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId
@@ -185,72 +188,93 @@ BEGIN
                 , tmpOperation.GoodsId
                 , tmpOperation.GoodsKindId
 
-                , (SUM (tmpOperation.Sale_Summ))   AS Sale_Summ
-                , (SUM (tmpOperation.Sale_Amount)) AS Sale_Amount
+                , SUM (tmpOperation.Sale_Summ)          AS Sale_Summ
+                , SUM (tmpOperation.Sale_Amount_Weight) AS Sale_Amount_Weight
+                , SUM (tmpOperation.Sale_Amount_Sh)     AS Sale_Amount_Sh
 
-                , (SUM (tmpOperation.Return_Summ))   AS Return_Summ
-                , (SUM (tmpOperation.Return_Amount)) AS Return_Amount
+                , SUM (tmpOperation.Return_Summ)          AS Return_Summ
+                , SUM (tmpOperation.Return_Amount_Weight) AS Return_Amount_Weight
+                , SUM (tmpOperation.Return_Amount_Sh)     AS Return_Amount_Sh
 
-                , (SUM (tmpOperation.Sale_AmountPartner))   AS Sale_AmountPartner
-                , (SUM (tmpOperation.Return_AmountPartner)) AS Return_AmountPartner
+                , SUM (tmpOperation.Sale_AmountPartner_Weight)   AS Sale_AmountPartner_Weight
+                , SUM (tmpOperation.Sale_AmountPartner_Sh)       AS Sale_AmountPartner_Sh
+                , SUM (tmpOperation.Return_AmountPartner_Weight) AS Return_AmountPartner_Weight
+                , SUM (tmpOperation.Return_AmountPartner_Sh)     AS Return_AmountPartner_Sh
                 
-           FROM (SELECT tmpMovement.JuridicalId 
-                      , tmpMovement.PartnerId
-                      , tmpMovement.ContractId 
+           FROM (SELECT CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END AS JuridicalId
+                      , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END AS PartnerId
+                      , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.BranchId
-                      , tmpMovement.GoodsId
-                      , tmpMovement.GoodsKindId
+                      , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END AS GoodsId
+                      , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END AS GoodsKindId
 
                       , SUM (tmpMovement.Sale_Summ) AS Sale_Summ
                       , SUM (tmpMovement.Return_Summ) AS Return_Summ
 
-                      , 0 AS  Sale_Amount
-                      , 0 AS  Return_Amount
-                      , 0 AS  Sale_AmountPartner
-                      , 0 AS  Return_AmountPartner
+                      , 0 AS  Sale_Amount_Weight
+                      , 0 AS  Sale_Amount_Sh
+                      , 0 AS  Return_Amount_Weight
+                      , 0 AS  Return_Amount_Sh
+
+                      , 0 AS  Sale_AmountPartner_Weight
+                      , 0 AS  Sale_AmountPartner_Sh
+                      , 0 AS  Return_AmountPartner_Weight
+                      , 0 AS  Return_AmountPartner_Sh
                       
                  FROM tmpMovement
-                 GROUP BY tmpMovement.JuridicalId 
-                        , tmpMovement.PartnerId
-                        , tmpMovement.ContractId 
+                 GROUP BY CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END
+                        , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END
+                        , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.BranchId
-                        , tmpMovement.GoodsId
-                        , tmpMovement.GoodsKindId
+                        , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END
+                        , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END
 
                 UNION ALL    
-                 SELECT tmpMovement.JuridicalId 
-                      , tmpMovement.PartnerId
-                      , tmpMovement.ContractId 
+                 SELECT CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END AS JuridicalId
+                      , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END AS PartnerId
+                      , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.BranchId
-                      , tmpMovement.GoodsId
-                      , tmpMovement.GoodsKindId
+                      , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END AS GoodsId
+                      , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END AS GoodsKindId
 
                       , 0 AS Sale_Summ
                       , 0 AS Return_Summ
 
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_Amount
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_Amount
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN -1 * COALESCE (MIContainer.Amount, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Sale_Amount_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_Amount_Sh
 
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Sale_AmountPartner
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Return_AmountPartner
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIContainer.Amount, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Return_Amount_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_Amount_Sh
+
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Sale_AmountPartner_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Sale_AmountPartner_Sh
+
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Return_AmountPartner_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Return_AmountPartner_Sh
 
                  FROM tmpMovement
                       LEFT JOIN MovementItemContainer AS MIContainer 
-                                                 ON MIContainer.MovementItemId = tmpMovement.MovementItemId
-                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      ON MIContainer.MovementItemId = tmpMovement.MovementItemId
+                                                     AND MIContainer.DescId = zc_MIContainer_Count()
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                   ON MIFloat_AmountPartner.MovementItemId = tmpMovement.MovementItemId
                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                 GROUP BY tmpMovement.JuridicalId 
-                        , tmpMovement.ContractId 
-                        , tmpMovement.PartnerId
+                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement.GoodsId
+                                                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                            ON ObjectFloat_Weight.ObjectId = tmpMovement.GoodsId
+                                           AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+                 GROUP BY CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END
+                        , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END
+                        , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.BranchId
-                        , tmpMovement.GoodsId
-                        , tmpMovement.GoodsKindId
+                        , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END
+                        , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END
                 ) AS tmpOperation
 
            GROUP BY tmpOperation.JuridicalId
@@ -293,9 +317,6 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
@@ -318,11 +339,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.10.14                                        * add inIsPartner AND inIsGoods
  13.09.14                                        * add GoodsTagName and GroupStatName and BranchName and JuridicalGroupName
  11.07.14                                        * add RetailName and OKPO
  06.05.14                                        * add GoodsGroupNameFull
@@ -331,4 +353,4 @@ ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inJuridicalId:= 0, inGoodsGroupId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inJuridicalId:= 0, inGoodsGroupId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE,  inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());

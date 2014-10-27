@@ -641,10 +641,9 @@ inherited SaleForm: TSaleForm
   object edChangePercentAmount: TcxCurrencyEdit [7]
     Left = 714
     Top = 199
-    EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 40
   end
@@ -1254,6 +1253,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1354,16 +1361,16 @@ inherited SaleForm: TSaleForm
       Category = 0
     end
     object bbIsCalcAmountPartner: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Category = 0
-      Hint = 'New Item'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Visible = ivAlways
       Control = cbCalcAmountPartner
     end
     object bbChangePercentAmount: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
       Category = 0
-      Hint = 'New Item'
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
       Visible = ivAlways
       Control = edChangePercentAmount
     end
@@ -1517,6 +1524,12 @@ inherited SaleForm: TSaleForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
         DataType = ftFloat
       end
       item
@@ -2109,6 +2122,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'inChangePercentAmount'
+        Value = Null
         Component = edChangePercentAmount
         DataType = ftFloat
         ParamType = ptInput

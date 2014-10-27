@@ -1,9 +1,9 @@
-object RouteSortingForm: TRouteSortingForm
+object Route_ObjectForm: TRoute_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074'>'
-  ClientHeight = 379
-  ClientWidth = 532
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
+  ClientHeight = 395
+  ClientWidth = 823
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object RouteSortingForm: TRouteSortingForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 532
-    Height = 353
+    Width = 823
+    Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -46,7 +46,6 @@ object RouteSortingForm: TRouteSortingForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -54,13 +53,38 @@ object RouteSortingForm: TRouteSortingForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 53
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 286
+        Width = 176
+      end
+      object clBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 127
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 141
+      end
+      object clRouteKind: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteKindName'
+        HeaderAlignmentVert = vaCenter
+        Width = 91
+      end
+      object clFreight: TcxGridDBColumn
+        Caption = #1043#1088#1091#1079
+        DataBinding.FieldName = 'FreightName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 52
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -69,7 +93,7 @@ object RouteSortingForm: TRouteSortingForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 47
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -83,7 +107,6 @@ object RouteSortingForm: TRouteSortingForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 152
@@ -141,23 +164,6 @@ object RouteSortingForm: TRouteSortingForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -194,22 +200,6 @@ object RouteSortingForm: TRouteSortingForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
@@ -243,79 +233,6 @@ object RouteSortingForm: TRouteSortingForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TRouteSortingEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TRouteSortingEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -332,6 +249,52 @@ object RouteSortingForm: TRouteSortingForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          DataType = ftString
+        end
+        item
+          Name = 'RouteKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindId'
+        end
+        item
+          Name = 'RouteKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'FreightId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FreightId'
+        end
+        item
+          Name = 'FreightName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FreightName'
+          DataType = ftString
+        end
+        item
+          Name = 'RouteKindId2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindId'
+        end
+        item
+          Name = 'RouteKindName2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -350,7 +313,7 @@ object RouteSortingForm: TRouteSortingForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_RouteSorting'
+    StoredProcName = 'gpSelect_Object_Route'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -365,22 +328,6 @@ object RouteSortingForm: TRouteSortingForm
     Left = 160
     Top = 152
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 208
-  end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -389,7 +336,6 @@ object RouteSortingForm: TRouteSortingForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -397,7 +343,6 @@ object RouteSortingForm: TRouteSortingForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -407,6 +352,6 @@ object RouteSortingForm: TRouteSortingForm
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 160
-    Top = 224
+    Top = 216
   end
 end

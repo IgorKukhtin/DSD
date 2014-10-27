@@ -70,14 +70,15 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     clPriceListName: TcxGridDBColumn;
-    PriceListChoiceForm: TOpenChoiceForm;
-    PriceListPromoChoiceForm: TOpenChoiceForm;
+    actChoicePriceListForm: TOpenChoiceForm;
+    actChoicePriceListPromoForm: TOpenChoiceForm;
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
-    RetailChoiceForm: TOpenChoiceForm;
+    actChoiceRetailForm: TOpenChoiceForm;
+    actChoiceJuridicalGroup: TOpenChoiceForm;
   private
     { Private declarations }
   public

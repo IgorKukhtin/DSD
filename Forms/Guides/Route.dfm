@@ -3,7 +3,7 @@ object RouteForm: TRouteForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
   ClientHeight = 395
-  ClientWidth = 703
+  ClientWidth = 823
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object RouteForm: TRouteForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 703
+    Width = 823
     Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 703
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -82,6 +83,7 @@ object RouteForm: TRouteForm
       object clFreight: TcxGridDBColumn
         Caption = #1043#1088#1091#1079
         DataBinding.FieldName = 'FreightName'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
@@ -89,6 +91,7 @@ object RouteForm: TRouteForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
@@ -127,8 +130,8 @@ object RouteForm: TRouteForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -177,17 +180,13 @@ object RouteForm: TRouteForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -196,6 +195,18 @@ object RouteForm: TRouteForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -244,6 +255,7 @@ object RouteForm: TRouteForm
     Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -257,10 +269,13 @@ object RouteForm: TRouteForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TRouteEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -269,16 +284,21 @@ object RouteForm: TRouteForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TRouteEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -287,9 +307,11 @@ object RouteForm: TRouteForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -304,6 +326,7 @@ object RouteForm: TRouteForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -319,54 +342,64 @@ object RouteForm: TRouteForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
         end
         item
           Name = 'RouteKindId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
         end
         item
           Name = 'RouteKindName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
         end
         item
           Name = 'FreightId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'FreightId'
         end
         item
           Name = 'FreightName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
         end
         item
           Name = 'RouteKindId2'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
         end
         item
           Name = 'RouteKindName2'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
@@ -378,6 +411,7 @@ object RouteForm: TRouteForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -393,6 +427,7 @@ object RouteForm: TRouteForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end
@@ -407,10 +442,12 @@ object RouteForm: TRouteForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -435,6 +472,10 @@ object RouteForm: TRouteForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 216
   end

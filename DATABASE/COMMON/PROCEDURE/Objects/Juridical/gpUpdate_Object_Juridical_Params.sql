@@ -1,9 +1,11 @@
 -- Function: gpUpdate_Object_Juridical_Params()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
+    IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inRetailId            Integer   ,    -- Торговая сеть
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -16,8 +18,10 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Juridical_Params());
+
+    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
 
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), ioId, inRetailId);
@@ -38,12 +42,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Juridical_Params  (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Object_Juridical_Params  (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.10.14                                        * add inJuridicalGroupId
  25.05.14                                        *
 */
 

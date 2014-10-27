@@ -86,7 +86,7 @@ object JuridicalForm: TJuridicalForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = RetailChoiceForm
+            Action = actChoiceRetailForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -97,10 +97,17 @@ object JuridicalForm: TJuridicalForm
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceJuridicalGroup
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
@@ -170,11 +177,11 @@ object JuridicalForm: TJuridicalForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListChoiceForm
+            Action = actChoicePriceListForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -186,11 +193,11 @@ object JuridicalForm: TJuridicalForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListPromoChoiceForm
+            Action = actChoicePriceListPromoForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -465,7 +472,7 @@ object JuridicalForm: TJuridicalForm
       isSetErased = False
       DataSource = GridDS
     end
-    object RetailChoiceForm: TOpenChoiceForm
+    object actChoiceRetailForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'RetailChoiceForm'
@@ -488,7 +495,7 @@ object JuridicalForm: TJuridicalForm
         end>
       isShowModal = True
     end
-    object PriceListPromoChoiceForm: TOpenChoiceForm
+    object actChoicePriceListPromoForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'PriceListPromoChoiceForm'
@@ -511,7 +518,7 @@ object JuridicalForm: TJuridicalForm
         end>
       isShowModal = True
     end
-    object PriceListChoiceForm: TOpenChoiceForm
+    object actChoicePriceListForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'PriceListChoiceForm'
@@ -588,6 +595,29 @@ object JuridicalForm: TJuridicalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actChoiceJuridicalGroup: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PriceListChoiceForm'
+      FormName = 'TJuridicalGroup_ObjectForm'
+      FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalGroupId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalGroupName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -673,6 +703,13 @@ object JuridicalForm: TJuridicalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inJuridicalGroupId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalGroupId'
+        ParamType = ptInput
       end
       item
         Name = 'inRetailId'

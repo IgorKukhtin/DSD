@@ -114,9 +114,9 @@ uses
   dbTest in '..\SOURCE\dbTest.pas',
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
   TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
-  Route in '..\..\Forms\Guides\Route.pas' {RouteForm},
+  Route_Object in '..\..\Forms\Guides\Route_Object.pas' {Route_ObjectForm},
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
-  RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm},
+  RouteSorting_Object in '..\..\Forms\Guides\RouteSorting_Object.pas' {RouteSorting_ObjectForm},
   RouteSortingEdit in '..\..\Forms\Guides\RouteSortingEdit.pas' {RouteSortingEditForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm},
@@ -554,7 +554,9 @@ uses
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
   Sale_Order in '..\..\Forms\Document\Sale_Order.pas' {Sale_OrderForm: TParentForm},
-  ContactPersonChoice in '..\..\Forms\Guides\ContactPersonChoice.pas' {ContactPersonChoiceForm: TParentForm};
+  ContactPersonChoice in '..\..\Forms\Guides\ContactPersonChoice.pas' {ContactPersonChoiceForm: TParentForm},
+  Route in '..\..\Forms\Guides\Route.pas' {RouteForm: TParentForm},
+  RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

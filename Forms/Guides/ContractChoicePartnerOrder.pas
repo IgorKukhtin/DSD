@@ -47,11 +47,11 @@ type
     clRouteSortingName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     clPersonalTakeName: TcxGridDBColumn;
-    actRouteChoice: TOpenChoiceForm;
+    actChoiceRoute: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    actRouteSortingChoice: TOpenChoiceForm;
-    actPersonalTakeChoice: TOpenChoiceForm;
+    actChoiceRouteSorting: TOpenChoiceForm;
+    actChoicePersonalTake: TOpenChoiceForm;
     clItemName: TcxGridDBColumn;
   private
     { Private declarations }

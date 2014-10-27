@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Order (Integer, Integer, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Order(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
     IN inRouteId             Integer   ,    -- 
@@ -15,7 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_PartnerOrder());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_Order());
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);

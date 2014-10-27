@@ -278,14 +278,14 @@
 			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
 				<Form>TradeMarkEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Route.pas">
-				<Form>RouteForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Route_Object.pas">
+				<Form>Route_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RouteEdit.pas">
 				<Form>RouteEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\RouteSorting.pas">
-				<Form>RouteSortingForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\RouteSorting_Object.pas">
+				<Form>RouteSorting_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
@@ -1649,6 +1649,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContactPersonChoice.pas">
 				<Form>ContactPersonChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Route.pas">
+				<Form>RouteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RouteSorting.pas">
+				<Form>RouteSortingForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

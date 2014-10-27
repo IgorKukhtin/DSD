@@ -67,8 +67,8 @@ type
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
-    PriceListChoiceForm: TOpenChoiceForm;
-    PriceListPromoChoiceForm: TOpenChoiceForm;
+    actChoicePriceListForm: TOpenChoiceForm;
+    actChoicePriceListPromoForm: TOpenChoiceForm;
     cxLabel6: TcxLabel;
     JuridicalGuides: TdsdGuides;
     edJuridical: TcxButtonEdit;
@@ -78,6 +78,9 @@ type
     bbJuridicalGuides: TdxBarControlContainerItem;
     clGLNCode: TcxGridDBColumn;
     clGLNCode_Juridical: TcxGridDBColumn;
+    actChoiceRoute: TOpenChoiceForm;
+    actChoiceRouteSorting: TOpenChoiceForm;
+    actChoicePersonalTake: TOpenChoiceForm;
   private
     { Private declarations }
   public

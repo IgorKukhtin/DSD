@@ -1,5 +1,5 @@
 inherited ContractChoicePartnerForm: TContractChoicePartnerForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 496
   ClientWidth = 853
   ExplicitWidth = 869
@@ -25,7 +25,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -69,6 +68,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clContractTagName: TcxGridDBColumn
@@ -144,6 +144,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actChoiceRoute
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -159,6 +160,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actChoiceRouteSorting
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -174,6 +176,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actChoicePersonalTake
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -248,6 +251,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractComment'
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object colisErased: TcxGridDBColumn
@@ -431,6 +435,86 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object actChoiceRoute: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Route_ObjectForm'
+      FormName = 'TRoute_ObjectForm'
+      FormNameParam.Value = 'TRoute_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceRouteSorting: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'RouteSorting_ObjectForm'
+      FormName = 'TRouteSorting_ObjectForm'
+      FormNameParam.Value = 'TRouteSorting_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePersonalTake: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTakeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTakeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -506,5 +590,42 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   end
   inherited PopupMenu: TPopupMenu
     Left = 160
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner_Order'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteSortingId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalTakeId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 168
   end
 end

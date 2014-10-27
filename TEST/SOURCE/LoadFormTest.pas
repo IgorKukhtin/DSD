@@ -1239,6 +1239,8 @@ procedure TLoadFormTest.LoadRouteFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoute_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoute_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteEditForm');
 end;
@@ -1247,6 +1249,8 @@ procedure TLoadFormTest.LoadRouteSortingFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSorting_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteSorting_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingEditForm');
   // типы маршрутов
