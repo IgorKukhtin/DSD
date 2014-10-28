@@ -2,7 +2,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1200
-  ExplicitLeft = -49
+  ExplicitLeft = -227
   ExplicitWidth = 1208
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -309,29 +309,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 42
           end
-          object clincInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1082#1086#1088#1088'.'
+          object colInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 37
-          end
-          object colInvNumberPartner_Child: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Child'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 46
-          end
-          object colOperDate_Child: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'OperDate_Child'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 53
           end
           object colPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -2539,16 +2523,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-      end
-      item
-        Name = 'inMovement_ChildId'
-        Component = TaxCDS
-        ComponentItem = 'DocumentChildId'
-        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 1003
-    Top = 202
+    Left = 1035
+    Top = 226
   end
   object spSelectTax: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_DocChild'
