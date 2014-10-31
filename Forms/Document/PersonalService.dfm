@@ -2,8 +2,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 709
   ClientWidth = 1112
-  ExplicitWidth = 1120
-  ExplicitHeight = 743
+  ExplicitWidth = 1128
+  ExplicitHeight = 744
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -18,7 +18,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ExplicitHeight = 599
       inherited cxGrid: TcxGrid
         Width = 1112
-        Height = 558
+        Height = 599
         ExplicitWidth = 1112
         ExplicitHeight = 599
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -393,6 +393,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 121
+      ExplicitHeight = 22
       Width = 121
     end
     object deServiceDate: TcxDateEdit
@@ -467,6 +468,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
       RefreshOnTabSetChanges = True
     end
     object actUpdateIsMain: TdsdExecStoredProc [7]
@@ -480,6 +488,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -801,12 +815,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.DataType = ftString
-        DataSummaryItemIndex = -1
-      end>
     Left = 830
     Top = 265
   end
@@ -1383,13 +1391,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
-        Value = Null
         ParamType = ptUnknown
       end>
     Left = 368
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
+    StoredProcName = ''
     Left = 420
     Top = 188
   end
@@ -1543,15 +1551,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId '
-        Value = Null
         Name = 'inMovementId '
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'MaskId'
         Name = 'inMovementMaskId'
         Value = Null
         Component = FormParams

@@ -197,9 +197,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -823,6 +820,15 @@ inherited ReturnInForm: TReturnInForm
     TabOrder = 13
     Width = 127
   end
+  object cbCalcAmountPartner: TcxCheckBox [10]
+    Left = 625
+    Top = 191
+    Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 14
+    Width = 214
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1382,6 +1388,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbCalcAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1426,6 +1440,13 @@ inherited ReturnInForm: TReturnInForm
     object bbUnCompleteTaxCorrective: TdxBarButton
       Action = actUnCompleteTaxCorrective
       Category = 0
+    end
+    object bbCalcAmountPartner: TdxBarControlContainerItem
+      Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Category = 0
+      Hint = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Visible = ivAlways
+      Control = cbCalcAmountPartner
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2091,8 +2112,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 460
-    Top = 132
+    Left = 468
+    Top = 196
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -2280,8 +2301,8 @@ inherited ReturnInForm: TReturnInForm
         Component = edVATPercent
         DataType = ftFloat
       end>
-    Left = 828
-    Top = 72
+    Left = 820
+    Top = 48
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'

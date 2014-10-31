@@ -126,6 +126,8 @@ type
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

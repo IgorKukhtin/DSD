@@ -1973,7 +1973,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Sale_Partner'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
     Params = <
       item
         Name = 'ioId'

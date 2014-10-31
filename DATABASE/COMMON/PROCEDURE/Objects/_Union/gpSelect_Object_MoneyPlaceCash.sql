@@ -13,12 +13,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
 AS
 $BODY$
   DECLARE vbUserId Integer;
+
+  DECLARE vbIsConstraint Boolean;
+  DECLARE vbObjectId_Constraint Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_StoragePlace());
-     vbUserId := inSession;
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_StoragePlace());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- определяется уровень доступа
+     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
+     vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+
+     -- Результат
      RETURN QUERY
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
@@ -113,9 +121,14 @@ BEGIN
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
      WHERE Object_Partner.DescId = zc_Object_Partner()
        AND Object_Partner.isErased = FALSE
        AND View_Contract.isErased = FALSE
+       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+            OR vbIsConstraint = FALSE)
     UNION ALL
      SELECT Object_Founder.Id
           , Object_Founder.ObjectCode     
@@ -143,6 +156,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
     WHERE Object_Founder.DescId = zc_Object_Founder()
       AND Object_Founder.isErased = FALSE
+      AND vbIsConstraint = FALSE
     ;
 
 END;
