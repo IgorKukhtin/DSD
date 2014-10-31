@@ -105,7 +105,8 @@ BEGIN
             JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkMovement_Master.MovementChildId = inDocumentMasterId 
+                                          --AND MovementLinkMovement_Master.MovementChildId = inDocumentMasterId 
+                                          AND MovementLinkMovement_Master.MovementId = inDocumentMasterId 
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId =  Movement.Id
@@ -223,4 +224,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Movement_Tax_DocChild ( inDocumentMasterId:=368680, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Tax_DocChild ( inDocumentMasterId:=368679, inSession:= zfCalc_UserAdmin())
