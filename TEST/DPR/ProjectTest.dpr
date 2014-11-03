@@ -507,7 +507,7 @@ uses
   GoodsGroupStatEdit in '..\..\Forms\Guides\GoodsGroupStatEdit.pas' {GoodsGroupStatEditForm: TParentForm},
   Report_Personal in '..\..\Forms\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
   Report_Founders in '..\..\Forms\Report\Report_Founders.pas' {Report_FoundersForm: TParentForm},
-  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
+  Report_CashUser in '..\..\Forms\Report\Report_CashUser.pas' {Report_CashUserForm: TParentForm},
   Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
@@ -560,7 +560,8 @@ uses
   ReturnIn in '..\..\Forms\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
-  SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm};
+  SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
+  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

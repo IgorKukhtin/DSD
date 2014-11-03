@@ -29,7 +29,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Из-за прав меняем значение параметра
-     IF COALESCE (inCashId, 0) = 0 AND EXISTS (SELECT AccessKeyId_Guide FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_Guide <> 0 AND UserId = vbUserId)
+     IF COALESCE (inCashId, 0) = 0 AND (EXISTS (SELECT AccessKeyId_Guide FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_Guide <> 0 AND UserId = vbUserId)
+                                     OR EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId
+                                                                                                    AND AccessKeyId IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash())
+                                               )
+                                       )
      THEN inCashId:= -1;
      END IF;
 

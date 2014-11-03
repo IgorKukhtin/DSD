@@ -32,6 +32,8 @@ type
     clMemberName: TcxGridDBColumn;
     clPositionName: TcxGridDBColumn;
     clItemName: TcxGridDBColumn;
+    actReport_CashUser: TdsdOpenForm;
+    bbReport_CashUser: TdxBarButton;
   private
     { Private declarations }
   public

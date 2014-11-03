@@ -1492,8 +1492,8 @@
 				<Form>Report_FoundersForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
-				<Form>Report_CashForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_CashUser.pas">
+				<Form>Report_CashUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_BankAccount.pas">
@@ -1673,6 +1673,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
 				<Form>SendOnPriceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
+				<Form>Report_CashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
