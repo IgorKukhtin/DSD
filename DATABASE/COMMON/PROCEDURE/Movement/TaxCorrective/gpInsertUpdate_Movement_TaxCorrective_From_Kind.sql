@@ -171,9 +171,27 @@ BEGIN
 
      IF inIsTaxLink = FALSE OR vbMovementDescId = zc_Movement_PriceCorrective()
      THEN 
-         -- в этом случае не будет привязки 
+          -- в этом случае не будет привязки, но есть поиск !!!одной!!! корректировки что есть у текущего <Возврат от покупателя> или <Перевод долга (приход)>
+          WITH tmpMovement_Corrective AS (SELECT MLM_Master.MovementId AS MovementId_Corrective, COALESCE (MLM_Child.MovementChildId, 0) AS MovementId_Tax
+                                          FROM MovementLinkMovement AS MLM_Master
+                                               INNER JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = MLM_Master.MovementId
+                                                                                            AND Movement_TaxCorrective.StatusId <> zc_Enum_Status_Erased()
+                                               LEFT JOIN MovementLinkMovement AS MLM_Child
+                                                                              ON MLM_Child.MovementId = MLM_Master.MovementId
+                                                                             AND MLM_Child.DescId = zc_MovementLinkMovement_Child()
+                                          WHERE MLM_Master.MovementChildId = inMovementId
+                                            AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+                                          GROUP BY MLM_Master.MovementId, COALESCE (MLM_Child.MovementChildId, 0)
+                                         )
+             , tmpMovement_Corrective_Count AS (SELECT COUNT(*) AS myCOUNT FROM tmpMovement_Corrective)
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
-             SELECT 0, 0, GoodsId, GoodsKindId, Amount, OperPrice FROM _tmpMI_Return;
+             SELECT COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
+                  , COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
+                  , GoodsId, GoodsKindId, Amount, OperPrice
+             FROM _tmpMI_Return
+                  LEFT JOIN tmpMovement_Corrective_Count ON tmpMovement_Corrective_Count.myCOUNT = 1
+                  LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective_Count.myCOUNT IS NOT NULL
+            ;
      ELSE
          -- курсор1 - возвраты
          OPEN curMI_ReturnIn FOR

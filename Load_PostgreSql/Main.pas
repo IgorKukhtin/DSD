@@ -12442,7 +12442,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
 //           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
-           +'               then -1 * BillItems.OperCount '
+           +'               then -1 * BillItems.OperCount'
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');

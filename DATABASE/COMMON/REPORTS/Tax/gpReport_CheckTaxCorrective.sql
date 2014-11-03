@@ -556,14 +556,18 @@ BEGIN
                      , SUM (MovementItem.Amount) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
                 FROM Movement
-                     INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
+                     /*INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                      INNER JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
                                                         AND Movement_Tax.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
                      INNER JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                    ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
                                                   AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                                                  AND MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                                                  AND MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())*/
+
+                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.isErased = FALSE

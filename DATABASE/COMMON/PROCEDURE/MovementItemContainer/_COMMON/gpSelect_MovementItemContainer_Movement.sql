@@ -54,7 +54,7 @@ BEGIN
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
                                                 , MIContainer.Id
-                                                , MIContainer.MovementItemId
+                                                , COALESCE (MIContainer.MovementItemId, 0) AS MovementItemId -- !!!может быть NULL!!!
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
                                                 , MIContainer.OperDate

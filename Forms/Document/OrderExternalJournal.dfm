@@ -496,6 +496,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -504,9 +505,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_OrderExternal'
+      ReportNameParam.Value = 'PrintMovement_OrderExternal'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -622,7 +622,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

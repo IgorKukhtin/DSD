@@ -165,7 +165,9 @@ BEGIN
              , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ProductionSeparate())
                              THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
-                         WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion())
+                         WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
+                             THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
+                         WHEN Movement.DescId IN (zc_Movement_ProductionUnion())
                              THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
                          ELSE 0
                     END) AS OperCount
@@ -192,7 +194,9 @@ BEGIN
                                           AND ContainerObjectCost_In.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN
              (SELECT Movement.Id AS  MovementId
-                   , COALESCE (SUM (-MIContainer_Summ_Out.Amount), 0) AS Summ
+                   , MIContainer_Summ_Out.MovementItemId
+                   , MIContainer_Summ_Out.ContainerId
+                   , COALESCE (SUM (-1 * MIContainer_Summ_Out.Amount), 0) AS Summ
               FROM Movement
                    LEFT JOIN MovementItemContainer AS MIContainer_Summ_Out
                                                    ON MIContainer_Summ_Out.MovementId = Movement.Id
@@ -202,7 +206,11 @@ BEGIN
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
                 AND Movement.StatusId = zc_Enum_Status_Complete()
               GROUP BY Movement.Id
+                     , MIContainer_Summ_Out.MovementItemId
+                     , MIContainer_Summ_Out.ContainerId
              ) AS _tmp ON _tmp.MovementId = Movement.Id
+                      AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
+                      AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
                       AND Movement.DescId = zc_Movement_ProductionSeparate()
         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
           -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())

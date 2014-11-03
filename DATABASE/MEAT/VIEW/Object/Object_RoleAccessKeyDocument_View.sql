@@ -16,6 +16,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                         )
      , tmpAccessKey AS (SELECT tmpProcessAll.*
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_CashDnepr()
+                                              , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                               , zc_Enum_Process_AccessKey_CashKiev()
                                               , zc_Enum_Process_AccessKey_CashZaporozhye()
                                                )
