@@ -144,6 +144,12 @@ type
     edChangePercentAmount: TcxCurrencyEdit;
     bbIsCalcAmountPartner: TdxBarControlContainerItem;
     bbChangePercentAmount: TdxBarControlContainerItem;
+    spSelectPrintPack22: TdsdStoredProc;
+    spSelectPrintPack21: TdsdStoredProc;
+    actPrint_Pack22: TdsdPrintAction;
+    actPrint_Pack21: TdsdPrintAction;
+    bbPrint_Pack21: TdxBarButton;
+    bbPrint_Pack22: TdxBarButton;
   private
     { Private declarations }
   public

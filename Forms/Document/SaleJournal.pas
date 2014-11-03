@@ -94,6 +94,12 @@ type
     bbPrint_Invoice: TdxBarButton;
     bbPrint_Pack: TdxBarButton;
     spSelectPrintPack: TdsdStoredProc;
+    spSelectPrintPack21: TdsdStoredProc;
+    spSelectPrintPack22: TdsdStoredProc;
+    actPrint_Pack22: TdsdPrintAction;
+    actPrint_Pack21: TdsdPrintAction;
+    bbPrint_Pack21: TdxBarButton;
+    bbPrint_Pack22: TdxBarButton;
   private
     { Private declarations }
   public
