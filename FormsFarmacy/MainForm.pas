@@ -101,6 +101,8 @@ type
     bbContactPerson: TdxBarButton;
     actJuridicalSettingsPriceList: TdsdOpenForm;
     bbJuridicalSettingsPriceList: TdxBarButton;
+    actSearchGoods: TdsdOpenForm;
+    bbGoodsSearch: TdxBarButton;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

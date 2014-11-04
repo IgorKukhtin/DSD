@@ -19,16 +19,24 @@ type
     clName: TcxGridDBColumn;
     edPartnerCode: TcxButtonEdit;
     cxLabel1: TcxLabel;
-    bbLabel: TdxBarControlContainerItem;
-    bbJuridical: TdxBarControlContainerItem;
     PartnerCodeGuides: TdsdGuides;
     clCode: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     mactDelete: TMultiAction;
-    DataSetDelete: TDataSetDelete;
     colGoodsMainName: TcxGridDBColumn;
     colGoodsMainCode: TcxGridDBColumn;
     clMakerName: TcxGridDBColumn;
+    spDeleteLink: TdsdStoredProc;
+    actDeleteLink: TdsdExecStoredProc;
+    DataSetPost: TDataSetPost;
+    mactSetLink: TMultiAction;
+    DataSetEdit: TDataSetEdit;
+    OpenChoiceForm: TOpenChoiceForm;
+    spInserUpdateGoodsLink: TdsdStoredProc;
+    actSetLink: TdsdExecStoredProc;
+    bbSetLink: TdxBarButton;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

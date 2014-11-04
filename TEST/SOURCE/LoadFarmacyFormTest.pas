@@ -99,6 +99,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsLiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsLiteForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainLiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsMainLiteForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
@@ -133,6 +136,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemsLoadForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

@@ -1,7 +1,5 @@
-inherited GoodsLiteForm: TGoodsLiteForm
+inherited GoodsMainLiteForm: TGoodsMainLiteForm
   Caption = #1042#1099#1073#1086#1088' '#1090#1086#1074#1072#1088#1086#1074
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,7 +15,7 @@ inherited GoodsLiteForm: TGoodsLiteForm
           Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'CodeInt'
+            DataBinding.FieldName = 'Code'
             Options.Editing = False
             Width = 113
           end
@@ -57,7 +55,7 @@ inherited GoodsLiteForm: TGoodsLiteForm
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods_Lite'
+    StoredProcName = 'gpSelect_Object_GoodsMain_Lite'
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

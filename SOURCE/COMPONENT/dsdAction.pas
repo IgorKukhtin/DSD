@@ -393,7 +393,7 @@ type
   TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction, IFormAction)
   private
     FActionDataLink: TDataSetDataLink;
-    FdsdDataSetRefresh: TdsdDataSetRefresh;
+    FdsdDataSetRefresh: TdsdCustomAction;
     FActionType: TDataSetAcionType;
     FFieldName: string;
     function GetDataSource: TDataSource;
@@ -411,7 +411,7 @@ type
   published
     property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
-    property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
+    property DataSetRefresh: TdsdCustomAction read FdsdDataSetRefresh write FdsdDataSetRefresh;
     property IdFieldName: string read GetFieldName write SetFieldName;
     property PostDataSetBeforeExecute default true;
   end;
@@ -1824,11 +1824,15 @@ end;
 
 procedure TMultiAction.ListExecute;
 var i: integer;
+    State: Boolean;
 begin
   // Выполняем события друг за другом. Если какое-то не выполнено, то отменяются и остальные
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then
-         if not TActionItem(ActionList.Items[i]).Action.Execute then exit;
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
+         State := TActionItem(ActionList.Items[i]).Action.Execute;
+         if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) and (not State) then
+            exit;
+      end;
 end;
 
 function TMultiAction.LocalExecute: boolean;

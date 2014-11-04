@@ -129,7 +129,7 @@ uses
   RetailTest in '..\SOURCE\Objects\All\RetailTest.pas',
   UserTest in '..\SOURCE\Objects\All\UserTest.pas',
   ParentFormTest in '..\SOURCE\Form\ParentFormTest.pas' {TestForm: TParentForm},
-  GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
+  GoodsMainLite in '..\..\FormsFarmacy\Guides\GoodsMainLite.pas' {GoodsMainLiteForm: TParentForm},
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
@@ -179,7 +179,9 @@ uses
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
   JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
-  PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm};
+  PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
+  GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
+  ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

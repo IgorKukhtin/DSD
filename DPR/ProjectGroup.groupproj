@@ -3,10 +3,10 @@
 			<ProjectGuid>{488ED744-5DBB-4405-A88A-94FE3945F0F9}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="ProjectDesignComponent.dproj">
+			<Projects Include="ProjectComponent.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="ProjectComponent.dproj">
+			<Projects Include="ProjectDesignComponent.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="..\TEST\DPR\ProjectTest.dproj">
@@ -38,15 +38,6 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
-		<Target Name="ProjectDesignComponent">
-			<MSBuild Projects="ProjectDesignComponent.dproj"/>
-		</Target>
-		<Target Name="ProjectDesignComponent:Clean">
-			<MSBuild Projects="ProjectDesignComponent.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="ProjectDesignComponent:Make">
-			<MSBuild Projects="ProjectDesignComponent.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="ProjectComponent">
 			<MSBuild Projects="ProjectComponent.dproj"/>
 		</Target>
@@ -55,6 +46,15 @@
 		</Target>
 		<Target Name="ProjectComponent:Make">
 			<MSBuild Projects="ProjectComponent.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="ProjectDesignComponent">
+			<MSBuild Projects="ProjectDesignComponent.dproj"/>
+		</Target>
+		<Target Name="ProjectDesignComponent:Clean">
+			<MSBuild Projects="ProjectDesignComponent.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="ProjectDesignComponent:Make">
+			<MSBuild Projects="ProjectDesignComponent.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="ProjectTest">
 			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj"/>
@@ -120,13 +120,13 @@
 			<MSBuild Projects="Scale.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectDesignComponent;ProjectComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;Scale"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;Scale"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectDesignComponent:Clean;ProjectComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;Scale:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;Scale:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectDesignComponent:Make;ProjectComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;Scale:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;Scale:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

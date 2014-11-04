@@ -49,6 +49,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsSearch'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -407,6 +411,10 @@ inherited MainForm: TMainForm
     end
     object bbJuridicalSettingsPriceList: TdxBarButton
       Action = actJuridicalSettingsPriceList
+      Category = 0
+    end
+    object bbGoodsSearch: TdxBarButton
+      Action = actSearchGoods
       Category = 0
     end
   end
@@ -872,6 +880,16 @@ inherited MainForm: TMainForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
       OnExecute = actSaveDataExecute
+    end
+    object actSearchGoods: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
+      FormName = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
     end
   end
   inherited cxLocalizer: TcxLocalizer

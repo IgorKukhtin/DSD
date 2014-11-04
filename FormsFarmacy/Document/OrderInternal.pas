@@ -63,6 +63,8 @@ type
     bbPrioritetPartner: TdxBarButton;
     colMakerName: TcxGridDBColumn;
     colisCalculated: TcxGridDBColumn;
+    actSetLinkGoodsForm: TdsdOpenForm;
+    bbSetGoodsLink: TdxBarButton;
   private
     { Private declarations }
   public

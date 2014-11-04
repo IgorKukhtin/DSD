@@ -33,7 +33,15 @@ BEGIN
   IF COALESCE(inPrice, 0) = 0 THEN 
      RETURN;
   END IF;
-  
+
+  DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
+    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
+                                    AND OperDate < CURRENT_DATE);
+
+  DELETE FROM LoadPriceList WHERE Id IN
+    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
+                                    AND OperDate < CURRENT_DATE);
+   
   SELECT Id INTO vbLoadPriceListId 
     FROM LoadPriceList
    WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date AND COALESCE(ContractId, 0) = inContractId;
@@ -85,6 +93,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 28.10.14                        *   
  22.10.14                        *   Ïîìåíÿë î÷åðåäíîñòü ïîèñêà
  18.09.14                        *  
 */

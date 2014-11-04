@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1208
-  ExplicitTop = -176
   ExplicitWidth = 1216
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -20,9 +19,8 @@ inherited OrderInternalForm: TOrderInternalForm
       ExplicitWidth = 1208
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
-        Width = 553
-        Height = 433
-        Align = alLeft
+        Width = 1208
+        Height = 205
         ExplicitWidth = 553
         ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -187,11 +185,11 @@ inherited OrderInternalForm: TOrderInternalForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 556
-        Top = 0
-        Width = 652
-        Height = 433
-        Align = alClient
+        Left = 0
+        Top = 208
+        Width = 1208
+        Height = 225
+        Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
@@ -360,11 +358,13 @@ inherited OrderInternalForm: TOrderInternalForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 553
-        Top = 0
-        Width = 3
-        Height = 433
+        Left = 0
+        Top = 205
+        Width = 1208
+        Height = 3
+        AlignSplitter = salBottom
         Control = cxGrid
+        ExplicitTop = -3
       end
     end
   end
@@ -458,8 +458,8 @@ inherited OrderInternalForm: TOrderInternalForm
           'Top'
           'Width')
       end>
-    Left = 40
-    Top = 40
+    Left = 48
+    Top = 120
   end
   inherited ActionList: TActionList
     Left = 55
@@ -580,6 +580,16 @@ inherited OrderInternalForm: TOrderInternalForm
       ImageIndex = 55
       ShortCut = 32
     end
+    object actSetLinkGoodsForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
+      FormName = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -697,6 +707,10 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbSetGoodsLink'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -744,6 +758,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbPrioritetPartner: TdxBarButton
       Action = actUpdatePrioritetPartner
+      Category = 0
+    end
+    object bbSetGoodsLink: TdxBarButton
+      Action = actSetLinkGoodsForm
       Category = 0
     end
   end
@@ -812,13 +830,13 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 88
+    Top = 112
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderInternal'
     Left = 128
-    Top = 56
+    Top = 112
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderInternal'
@@ -1072,6 +1090,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inPartnerGoodsCode'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
       end
