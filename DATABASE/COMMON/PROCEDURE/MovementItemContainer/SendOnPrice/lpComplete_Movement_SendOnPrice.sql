@@ -43,6 +43,15 @@ $BODY$
   DECLARE vbJuridicalId_Basis_To Integer;
   DECLARE vbBusinessId_To Integer;
 BEGIN
+     -- !!!об€зательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+     DELETE FROM _tmpMIReport_insert;
+     -- !!!об€зательно!!! очистили таблицу - суммовые элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+     DELETE FROM _tmpItemSumm;
+     -- !!!об€зательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+     DELETE FROM _tmpItem;
+
+
      -- Ёти параметры нужны дл€ 
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
        INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
@@ -580,7 +589,7 @@ BEGIN
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
           --!!!AND (inIsLastComplete = FALSE OR (_tmpItem.OperCount * HistoryCost.Price) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
-          AND _tmpItem.OperCount * HistoryCost.Price <> 0
+           AND _tmpItem.OperCount * HistoryCost.Price <> 0
           -- AND ((ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()        -- + дл€ этой
           --   AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()) -- + ”ѕ = прибыль текущего периода
           --   OR (_tmpItem.OperCount * HistoryCost.Price) <> 0                               -- + вставл€ть нули !!!Ќ≈ надо!!!

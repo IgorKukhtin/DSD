@@ -51,43 +51,20 @@ type
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
-    cxTabSheetEntry: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colRouteCode: TcxGridDBColumn;
     colRouteName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMIContainer: TdsdStoredProc;
-    cxGridEntryDBTableView: TcxGridDBTableView;
-    cxGridEntryLevel: TcxGridLevel;
-    cxGridEntry: TcxGrid;
-    colDebetAccountName: TcxGridDBColumn;
-    colDebetAmount: TcxGridDBColumn;
-    EntryCDS: TClientDataSet;
-    EntryDS: TDataSource;
-    colKreditAccountName: TcxGridDBColumn;
-    colKreditAmount: TcxGridDBColumn;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrintFrom: TdsdPrintAction;
-    colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionName: TcxGridDBColumn;
-    colAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionName: TcxGridDBColumn;
-    colDirectionObjectCode: TcxGridDBColumn;
-    colDirectionObjectName: TcxGridDBColumn;
-    colDestinationObjectName: TcxGridDBColumn;
     colEndOdometre: TcxGridDBColumn;
     colRouteKindName: TcxGridDBColumn;
     colWeight: TcxGridDBColumn;
-    colAccountOnComplete: TcxGridDBColumn;
     colFreightName: TcxGridDBColumn;
     colStartOdometre: TcxGridDBColumn;
-    colDestinationObjectCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyName_Detail: TcxGridDBColumn;
     cxGridChild: TcxGrid;
     cxGridChildDBTableView: TcxGridDBTableView;
     colñhFuelCode: TcxGridDBColumn;
@@ -141,7 +118,6 @@ type
     bbPrintFrom: TdxBarButton;
     bbStatic: TdxBarStatic;
     bbGridToExel: TdxBarButton;
-    bbEntryToGrid: TdxBarButton;
     bbInsertUpdateMovement: TdxBarButton;
     RefreshAddOn: TRefreshAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -205,7 +181,6 @@ type
     colIsErased: TcxGridDBColumn;
     clincIsErased: TcxGridDBColumn;
     IncomeViewAddOn: TdsdDBViewAddOn;
-    EntryViewAddOn: TdsdDBViewAddOn;
     colchIsMasterFuel: TcxGridDBColumn;
     colDistanceFuelChild: TcxGridDBColumn;
     actUnCompleteIncome: TdsdChangeMovementStatus;
@@ -225,8 +200,6 @@ type
     spChangeStatus: TdsdStoredProc;
     clincChangePrice: TcxGridDBColumn;
     clincContractName: TcxGridDBColumn;
-    colBusinessName: TcxGridDBColumn;
-    colBusinessCode: TcxGridDBColumn;
     colchAmount_Distance_calc: TcxGridDBColumn;
     colchAmount_ColdHour_calc: TcxGridDBColumn;
     colchAmount_ColdDistance_calc: TcxGridDBColumn;
@@ -247,8 +220,6 @@ type
     colRouteKindName_Freight: TcxGridDBColumn;
     RouteKindFreightChoiceForm: TOpenChoiceForm;
     TotalRefresh: TdsdDataSetRefresh;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     spSelectPrintHeader: TdsdStoredProc;
     actPrintTo: TdsdPrintAction;
@@ -261,8 +232,8 @@ type
     clComment: TcxGridDBColumn;
     colWeightTranspor: TcxGridDBColumn;
     colDistanceWeightTransport: TcxGridDBColumn;
-    colBranchCode: TcxGridDBColumn;
-    colBranchName: TcxGridDBColumn;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

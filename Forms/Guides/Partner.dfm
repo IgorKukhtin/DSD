@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 883
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -93,7 +92,7 @@ object PartnerForm: TPartnerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListChoiceForm
+            Action = actChoicePriceListForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -108,7 +107,7 @@ object PartnerForm: TPartnerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListPromoChoiceForm
+            Action = actChoicePriceListPromoForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -142,6 +141,14 @@ object PartnerForm: TPartnerForm
       object colRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceRoute
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -149,6 +156,14 @@ object PartnerForm: TPartnerForm
       object colRouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteSortingName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceRouteSorting
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
@@ -156,6 +171,14 @@ object PartnerForm: TPartnerForm
       object colPersonalTakeName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
         DataBinding.FieldName = 'PersonalTakeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePersonalTake
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
@@ -467,7 +490,7 @@ object PartnerForm: TPartnerForm
       isSetErased = False
       DataSource = DataSource
     end
-    object PriceListPromoChoiceForm: TOpenChoiceForm
+    object actChoicePriceListPromoForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'PriceListPromoChoiceForm'
@@ -490,7 +513,7 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
-    object PriceListChoiceForm: TOpenChoiceForm
+    object actChoicePriceListForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'PriceListChoiceForm'
@@ -568,6 +591,75 @@ object PartnerForm: TPartnerForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actChoiceRoute: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Route_ObjectForm'
+      FormName = 'TRoute_ObjectForm'
+      FormNameParam.Value = 'TRoute_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceRouteSorting: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'RouteSorting_ObjectForm'
+      FormName = 'TRouteSorting_ObjectForm'
+      FormNameParam.Value = 'TRouteSorting_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePersonalTake: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTakeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTakeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner'
@@ -637,7 +729,7 @@ object PartnerForm: TPartnerForm
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Partner'
+    StoredProcName = 'gpUpdate_Object_Partner_PriceList'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -649,47 +741,19 @@ object PartnerForm: TPartnerForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
+        Name = 'inStartPromo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Code'
+        ComponentItem = 'StartPromo'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inAddress'
+        Name = 'inEndPromo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Address'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGLNCode'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrepareDayCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PrepareDayCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentDayCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentDayCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'EndPromo'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -707,7 +771,7 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalTakeId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalTakeId'
@@ -725,22 +789,6 @@ object PartnerForm: TPartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inStartPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StartPromo'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndPromo'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'EndPromo'
-        DataType = ftDateTime
         ParamType = ptInput
       end>
     PackSize = 1

@@ -1,5 +1,5 @@
 inherited ReturnInForm: TReturnInForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
@@ -11,17 +11,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1127
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1127
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1127
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -197,10 +197,13 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
+        Width = 1127
         Height = 518
         Align = alClient
         TabOrder = 0
@@ -531,7 +534,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1127
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -581,6 +584,7 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 132
     end
@@ -592,6 +596,7 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 170
     end
@@ -603,14 +608,15 @@ inherited ReturnInForm: TReturnInForm
     object edContract: TcxButtonEdit
       Left = 788
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
-      Width = 197
+      Width = 98
     end
     object cxLabel9: TcxLabel
       Left = 788
@@ -625,12 +631,13 @@ inherited ReturnInForm: TReturnInForm
     object edPaidKind: TcxButtonEdit
       Left = 664
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
+          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 15
       Width = 118
     end
@@ -638,14 +645,16 @@ inherited ReturnInForm: TReturnInForm
       Left = 344
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 16
-      Width = 129
+      Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 474
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 17
       Width = 40
     end
@@ -657,9 +666,9 @@ inherited ReturnInForm: TReturnInForm
     object edChangePercent: TcxCurrencyEdit
       Left = 525
       Top = 63
-      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 19
       Width = 132
     end
@@ -696,6 +705,7 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 23
       Width = 100
     end
@@ -726,6 +736,24 @@ inherited ReturnInForm: TReturnInForm
       Top = 5
       Caption = #8470' '#1079'.'#1084'.'
     end
+    object cxLabel20: TcxLabel
+      Left = 892
+      Top = 5
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+    end
+    object edContractTag: TcxButtonEdit
+      Left = 892
+      Top = 23
+      Properties.Buttons = <
+        item
+          Action = actDisabled
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 29
+      Width = 97
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 892
@@ -735,8 +763,9 @@ inherited ReturnInForm: TReturnInForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
-    Width = 93
+    Width = 97
   end
   object cxLabel5: TcxLabel [3]
     Left = 892
@@ -744,53 +773,64 @@ inherited ReturnInForm: TReturnInForm
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 993
+    Left = 997
     Top = 45
     Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [5]
-    Left = 993
+    Left = 997
     Top = 63
-    Enabled = False
     Properties.Buttons = <
       item
+        Action = actDisabled
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 78
   end
   object cxLabel16: TcxLabel [6]
-    Left = 1076
+    Left = 1080
     Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [7]
-    Left = 1076
+    Left = 1080
     Top = 63
-    Enabled = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 44
   end
   object cxLabel17: TcxLabel [8]
-    Left = 993
+    Left = 997
     Top = 5
     Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
   end
   object edCurrencyPartner: TcxButtonEdit [9]
-    Left = 993
+    Left = 997
     Top = 23
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 13
     Width = 127
+  end
+  object cbCalcAmountPartner: TcxCheckBox [10]
+    Left = 625
+    Top = 191
+    Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 14
+    Width = 214
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1315,6 +1355,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1336,6 +1384,14 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
@@ -1387,6 +1443,13 @@ inherited ReturnInForm: TReturnInForm
     object bbUnCompleteTaxCorrective: TdxBarButton
       Action = actUnCompleteTaxCorrective
       Category = 0
+    end
+    object bbCalcAmountPartner: TdxBarControlContainerItem
+      Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Category = 0
+      Hint = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Visible = ivAlways
+      Control = cbCalcAmountPartner
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1589,6 +1652,13 @@ inherited ReturnInForm: TReturnInForm
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1813,7 +1883,7 @@ inherited ReturnInForm: TReturnInForm
         Control = edPriceWithVAT
       end
       item
-        Control = edPriceWithVAT
+        Control = edVATPercent
       end
       item
         Control = edChangePercent
@@ -1823,6 +1893,9 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edContract
+      end
+      item
+        Control = edContractTag
       end
       item
         Control = edIsChecked
@@ -1838,11 +1911,6 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edCurrencyValue
-      end
-      item
-        Control = cxGridTaxCorrective
-      end
-      item
       end>
     Left = 224
     Top = 209
@@ -2047,7 +2115,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Top = 100
+    Left = 468
+    Top = 196
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -2195,7 +2264,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 872
+    Left = 936
     Top = 72
   end
   object PriceListGuides: TdsdGuides
@@ -2222,9 +2291,21 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
       end>
-    Left = 748
-    Top = 72
+    Left = 820
+    Top = 48
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -2298,8 +2379,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 792
-    Top = 83
+    Left = 824
+    Top = 11
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2356,9 +2437,9 @@ inherited ReturnInForm: TReturnInForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TStoragePlace_ObjectForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2389,6 +2470,32 @@ inherited ReturnInForm: TReturnInForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagId'
+        Value = Null
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractTagName'
+        Value = Null
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'PartnerId'
         Value = ''
         Component = GuidesFrom
@@ -2411,19 +2518,6 @@ inherited ReturnInForm: TReturnInForm
         Name = 'PaidKindName'
         Value = ''
         Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -2652,5 +2746,32 @@ inherited ReturnInForm: TReturnInForm
     SummaryItemList = <>
     Left = 775
     Top = 388
+  end
+  object ContractTagGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTag
+    FormNameParam.Value = 'TContractTagForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 931
+    Top = 65532
   end
 end

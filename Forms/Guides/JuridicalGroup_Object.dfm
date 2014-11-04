@@ -142,11 +142,6 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
           Visible = True
           ItemName = 'bbChoiceGuide'
         end
@@ -207,11 +202,13 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -230,6 +227,7 @@ object JuridicalGroup_ObjectForm: TJuridicalGroup_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 240
     Top = 208
   end

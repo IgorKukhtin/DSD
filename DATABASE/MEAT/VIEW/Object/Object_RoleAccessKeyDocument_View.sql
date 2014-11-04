@@ -16,6 +16,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                         )
      , tmpAccessKey AS (SELECT tmpProcessAll.*
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_CashDnepr()
+                                              , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                               , zc_Enum_Process_AccessKey_CashKiev()
                                               , zc_Enum_Process_AccessKey_CashZaporozhye()
                                                )
@@ -51,7 +52,12 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                           THEN TRUE
                                      ELSE NULL
                                 END AS isCash
-                              , CASE WHEN Id IN (zc_Enum_Process_InsertUpdate_Movement_OrderExternal())
+                              , CASE WHEN Id IN (zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
+                                               , zc_Enum_Process_InsertUpdate_Movement_Sale()
+                                               , zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()
+                                               , zc_Enum_Process_InsertUpdate_Movement_ReturnIn()
+                                               , zc_Enum_Process_InsertUpdate_Movement_ReturnIn_Partner()
+                                                )
                                           THEN TRUE
                                      ELSE NULL
                                 END AS isMovement

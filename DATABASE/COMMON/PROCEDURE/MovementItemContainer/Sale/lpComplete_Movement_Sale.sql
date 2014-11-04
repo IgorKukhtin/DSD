@@ -674,10 +674,10 @@ BEGIN
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-          AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- !!!
-            OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!! 
-            OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
+          AND vbIsHistoryCost = TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                 -- !!!
+             OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!! 
+             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId
@@ -1622,8 +1622,8 @@ BEGIN
                                  );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
-     IF /*inIsLastComplete = FALSE
-        AND*/ EXISTS (SELECT MovementLinkMovement_Master.MovementId
+     IF inIsLastComplete = TRUE
+        AND EXISTS (SELECT MovementLinkMovement_Master.MovementId
                     FROM MovementLinkMovement AS MovementLinkMovement_Master
                          INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                                        AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()

@@ -10,17 +10,17 @@ inherited ServiceJournalForm: TServiceJournalForm
     Width = 1020
     Height = 592
     TabOrder = 3
-    ExplicitWidth = 1151
+    ExplicitWidth = 1020
     ExplicitHeight = 592
     ClientRectBottom = 592
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1151
+      ExplicitWidth = 1020
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 592
-        ExplicitWidth = 1151
+        ExplicitWidth = 1020
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -215,7 +215,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1151
+    ExplicitWidth = 1020
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -247,6 +247,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -263,12 +264,14 @@ inherited ServiceJournalForm: TServiceJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -347,11 +350,11 @@ inherited ServiceJournalForm: TServiceJournalForm
           ItemName = 'bbDelete'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbReCompleteAll'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -439,6 +442,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 272
     Top = 224
   end

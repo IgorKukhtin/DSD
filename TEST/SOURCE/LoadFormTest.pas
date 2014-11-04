@@ -493,6 +493,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPrice_BranchJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPrice_BranchJournalForm');
 end;
 
 procedure TLoadFormTest.LoadServiceDocumentFormTest;
@@ -619,6 +624,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;
@@ -959,6 +969,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
@@ -1239,6 +1251,8 @@ procedure TLoadFormTest.LoadRouteFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoute_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoute_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteEditForm');
 end;
@@ -1247,6 +1261,8 @@ procedure TLoadFormTest.LoadRouteSortingFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSorting_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteSorting_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingEditForm');
   // типы маршрутов

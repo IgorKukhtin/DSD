@@ -2,7 +2,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1074#1099#1087#1083#1072#1090#1072' '#1079#1087'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 990
+  ExplicitWidth = 998
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,7 +48,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 50
+            Width = 101
           end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False
@@ -78,7 +78,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 148
           end
           object clServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -89,14 +89,14 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 133
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 420
           end
         end
       end
@@ -166,6 +166,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -188,8 +189,8 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 96
+    Left = 72
+    Top = 112
   end
   inherited MasterCDS: TClientDataSet
     Left = 24
@@ -230,67 +231,6 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       0
       26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end>
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 400

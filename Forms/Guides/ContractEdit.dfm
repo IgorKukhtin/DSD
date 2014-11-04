@@ -159,9 +159,9 @@ inherited ContractEditForm: TContractEditForm
   object edCode: TcxCurrencyEdit [21]
     Left = 16
     Top = 38
-    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 19
     Width = 104
   end
@@ -561,14 +561,14 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 51
+    TabOrder = 49
     Width = 328
   end
   object ceisPersonal: TcxCheckBox [50]
     Left = 222
     Top = 10
     Caption = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
-    TabOrder = 53
+    TabOrder = 52
     Width = 122
   end
   object ceIsUnique: TcxCheckBox [51]
@@ -605,7 +605,7 @@ inherited ContractEditForm: TContractEditForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -621,11 +621,13 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
@@ -652,11 +654,13 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -684,11 +688,13 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindName'
           DataType = ftString
@@ -715,7 +721,7 @@ inherited ContractEditForm: TContractEditForm
         item
           StoredProc = spDocumentSelect
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -725,8 +731,8 @@ inherited ContractEditForm: TContractEditForm
       Category = 'DSDLib'
       MoveParams = <>
       Document = Document
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1080
       ImageIndex = 60
     end
     object MultiActionInsertContractCondition: TMultiAction
@@ -739,7 +745,8 @@ inherited ContractEditForm: TContractEditForm
         item
           Action = InsertRecordCCK
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 0
     end
     object MultiActionInsertDocument: TMultiAction
@@ -755,7 +762,8 @@ inherited ContractEditForm: TContractEditForm
         item
           Action = DocumentRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
       ImageIndex = 0
     end
     object spInserUpdateContract: TdsdExecStoredProc
@@ -776,8 +784,8 @@ inherited ContractEditForm: TContractEditForm
         item
           StoredProc = spErasedUnErasedCondition
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -791,8 +799,8 @@ inherited ContractEditForm: TContractEditForm
         item
           StoredProc = spErasedUnErasedCondition
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -810,9 +818,10 @@ inherited ContractEditForm: TContractEditForm
         item
           StoredProc = spDocumentSelect
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
       ImageIndex = 2
-      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1089#1082#1072#1085'-'#1082#1086#1087#1080#1102
     end
     object actGetStateKindUnSigned: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1554,12 +1563,14 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1567,6 +1578,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inValue'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -1581,22 +1593,26 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inContractConditionKindId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBonusKindId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 736
     Top = 72
   end
@@ -1615,6 +1631,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 442
     Top = 63
   end
@@ -1783,6 +1800,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 496
     Top = 320
   end
@@ -1835,6 +1853,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftBlob
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 448
     Top = 344
   end
@@ -1845,10 +1864,12 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'incontractdocumentid'
+        Value = Null
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 584
     Top = 232
   end
@@ -1886,10 +1907,12 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 512
     Top = 80
   end
@@ -1926,10 +1949,12 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 648
     Top = 272
   end
@@ -1956,6 +1981,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 768
     Top = 362
   end
@@ -1982,6 +2008,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 768
     Top = 410
   end
@@ -2008,6 +2035,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 768
     Top = 458
   end
@@ -2034,6 +2062,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 768
     Top = 306
   end

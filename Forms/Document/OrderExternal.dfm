@@ -1,26 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103'>'
   ClientHeight = 668
-  ClientWidth = 1236
-  ExplicitLeft = -271
-  ExplicitWidth = 1252
+  ClientWidth = 1020
+  ExplicitLeft = -55
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1236
+    Width = 1020
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1236
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1236
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1236
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1236
+        Width = 1020
         Height = 518
         ExplicitWidth = 1236
         ExplicitHeight = 518
@@ -34,37 +34,7 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountForPrice
             end
             item
               Format = ',0.####'
@@ -75,10 +45,6 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm_Partner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -94,40 +60,7 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSecond
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = CountForPrice
             end
             item
               Format = ',0.####'
@@ -142,11 +75,11 @@ inherited OrderExternalForm: TOrderExternalForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountEDI
             end
             item
-              Format = ',0.####'
               Kind = skSum
-              Column = AmountEDI
+              Column = Price
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -266,6 +199,7 @@ inherited OrderExternalForm: TOrderExternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -312,7 +246,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1236
+    Width = 1020
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1236
@@ -417,7 +351,6 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = actDisabled
           Default = True
           Kind = bkEllipsis
         end>
@@ -606,8 +539,6 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -616,6 +547,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -624,9 +556,8 @@ inherited OrderExternalForm: TOrderExternalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_OrderExternal'
+      ReportNameParam.Value = 'PrintMovement_OrderExternal'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1418,7 +1349,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_OrderExternal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

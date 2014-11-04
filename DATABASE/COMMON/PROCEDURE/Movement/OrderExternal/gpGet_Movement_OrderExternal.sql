@@ -43,8 +43,8 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS InvNumberPartner
              , 0                     				            AS FromId
              , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     	                        AS ToId
-             , CAST ('' as TVarChar) 	                        AS ToName
+             , Object_To.Id             	                            AS ToId
+             , Object_To.ValueData                                          AS ToName
              , 0                     				            AS PersonalId
              , CAST ('' AS TVarChar) 				            AS PersonalName
              , 0                     				            AS RouteId
@@ -64,7 +64,9 @@ BEGIN
 
 
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 301309 -- ф. Запорожье
+         ;
 
      ELSE
 

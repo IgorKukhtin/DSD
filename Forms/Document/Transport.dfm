@@ -290,7 +290,7 @@
     Height = 421
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 421
     ClientRectRight = 1200
@@ -1257,243 +1257,6 @@
         end
       end
     end
-    object cxTabSheetEntry: TcxTabSheet
-      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
-      ImageIndex = 1
-      object cxGridEntry: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 1200
-        Height = 397
-        Align = alClient
-        TabOrder = 0
-        object cxGridEntryDBTableView: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colDebetAmount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colKreditAmount
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colKreditAmount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colDebetAmount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.HeaderAutoHeight = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colAccountCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
-            DataBinding.FieldName = 'AccountCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object colDebetAccountGroupName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'DebetAccountGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object colDebetAccountDirectionName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
-            DataBinding.FieldName = 'DebetAccountDirectionName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetAccountName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object colKreditAccountGroupName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'KreditAccountGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colKreditAccountDirectionName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
-            DataBinding.FieldName = 'KreditAccountDirectionName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'KreditAccountName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object colDirectionObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
-            DataBinding.FieldName = 'DirectionObjectCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object colDirectionObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'DirectionObjectName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colDestinationObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
-            DataBinding.FieldName = 'DestinationObjectCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object colDestinationObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'DestinationObjectName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colBusinessCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072
-            DataBinding.FieldName = 'BusinessCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object colBusinessName: TcxGridDBColumn
-            Caption = #1041#1080#1079#1085#1077#1089
-            DataBinding.FieldName = 'BusinessName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colBranchCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
-            DataBinding.FieldName = 'BranchCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object colBranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colAccountOnComplete: TcxGridDBColumn
-            Caption = '***'
-            DataBinding.FieldName = 'AccountOnComplete'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 25
-          end
-          object colDebetAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colKreditAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'KreditAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colInfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colInfoMoneyName_Detail: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
-            DataBinding.FieldName = 'InfoMoneyName_Detail'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-        end
-        object cxGridEntryLevel: TcxGridLevel
-          GridView = cxGridEntryDBTableView
-        end
-      end
-    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1625,9 +1388,6 @@
           StoredProc = spSelectMIIncome
         end
         item
-          StoredProc = spSelectMIContainer
-        end
-        item
           TabSheet = cxTabSheetReport
           StoredProc = spSelectMiReport
         end>
@@ -1739,6 +1499,25 @@
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actMIContainer: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1779,7 +1558,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       View = cxGridDBTableView
       Action = RouteChoiceForm
       Params = <>
@@ -1792,7 +1570,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1809,7 +1586,6 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1833,49 +1609,58 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteCode'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
         end
         item
           Name = 'RouteKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId'
         end
         item
           Name = 'RouteKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindName'
           DataType = ftString
         end
         item
           Name = 'FreightId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightId'
         end
         item
           Name = 'FreightName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightName'
           DataType = ftString
         end
         item
           Name = 'RouteKindId2'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId_Freight'
         end
         item
           Name = 'RouteKindName2'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindName_Freight'
           DataType = ftString
@@ -1892,11 +1677,13 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FreightName'
         end>
@@ -1912,11 +1699,13 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindId_Freight'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteKindName_Freight'
           DataType = ftString
@@ -1927,6 +1716,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
       Params = <>
@@ -1939,6 +1729,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIIncome
       StoredProcList = <
         item
@@ -1955,6 +1746,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIIncome
       StoredProcList = <
         item
@@ -1978,71 +1770,84 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'FromId'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'FromCode'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'FromName'
           DataType = ftString
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'InvNumber'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'ContractName'
           DataType = ftString
         end
         item
           Name = 'ChangePrice'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'ChangePrice'
         end
         item
           Name = 'GoodsId'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'GoodsCode'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsCode'
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
           Name = 'FuelName'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'FuelName'
           DataType = ftString
         end
         item
           Name = 'inOperDate'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -2060,11 +1865,13 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -2081,22 +1888,26 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsCode'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
           Name = 'FuelName'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'FuelName'
           DataType = ftString
@@ -2113,11 +1924,13 @@
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'RouteId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = IncomeCDS
           ComponentItem = 'RouteName'
           DataType = ftString
@@ -2128,6 +1941,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteIncome
       StoredProcList = <
         item
@@ -2140,7 +1954,6 @@
           StoredProc = spSelectMiReport
         end
         item
-          StoredProc = spSelectMIContainer
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -2152,6 +1965,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteIncome
       StoredProcList = <
         item
@@ -2164,7 +1978,6 @@
           StoredProc = spSelectMiReport
         end
         item
-          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -2176,6 +1989,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedIncome
       StoredProcList = <
         item
@@ -2188,7 +2002,6 @@
           StoredProc = spSelectMiReport
         end
         item
-          StoredProc = spSelectMIContainer
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -2205,7 +2018,6 @@
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end
         item
           StoredProc = spSelectMiReport
@@ -2225,7 +2037,6 @@
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end
         item
           StoredProc = spSelectMiReport
@@ -2245,7 +2056,6 @@
           StoredProc = spChangeStatus
         end
         item
-          StoredProc = spSelectMIContainer
         end
         item
           StoredProc = spSelectMiReport
@@ -2472,36 +2282,6 @@
       Action = actRefresh
     end
   end
-  object spSelectMIContainer: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItemContainer_Movement'
-    DataSet = EntryCDS
-    DataSets = <
-      item
-        DataSet = EntryCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 106
-    Top = 403
-  end
-  object EntryCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 17
-    Top = 403
-  end
-  object EntryDS: TDataSource
-    DataSet = EntryCDS
-    Left = 46
-    Top = 403
-  end
   object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Master'
     DataSets = <>
@@ -2509,6 +2289,7 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -2522,12 +2303,14 @@
       end
       item
         Name = 'inRouteId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -2535,6 +2318,7 @@
       end
       item
         Name = 'inDistanceFuelChild'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DistanceFuelChild'
         DataType = ftFloat
@@ -2542,6 +2326,7 @@
       end
       item
         Name = 'inDistanceWeightTransport'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DistanceWeightTransport'
         DataType = ftFloat
@@ -2549,6 +2334,7 @@
       end
       item
         Name = 'inWeight'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Weight'
         DataType = ftFloat
@@ -2556,6 +2342,7 @@
       end
       item
         Name = 'inWeightTransport'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'WeightTransport'
         DataType = ftFloat
@@ -2563,6 +2350,7 @@
       end
       item
         Name = 'inStartOdometre'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartOdometre'
         DataType = ftFloat
@@ -2570,6 +2358,7 @@
       end
       item
         Name = 'inEndOdometre'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndOdometre'
         DataType = ftFloat
@@ -2577,24 +2366,28 @@
       end
       item
         Name = 'inFreightId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'FreightId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteKindId_Freight'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteKindId_Freight'
         ParamType = ptInput
       end
       item
         Name = 'inRouteKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteKindId'
         ParamType = ptInput
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -2850,6 +2643,7 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -2863,18 +2657,21 @@
       end
       item
         Name = 'inParentId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
       end
       item
         Name = 'inFuelId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'FuelId'
         ParamType = ptInput
       end
       item
         Name = 'inIsCalculated'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'isCalculated'
         DataType = ftBoolean
@@ -2882,6 +2679,7 @@
       end
       item
         Name = 'inIsMasterFuel'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'isMasterFuel'
         DataType = ftBoolean
@@ -2889,6 +2687,7 @@
       end
       item
         Name = 'ioAmount'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -2896,30 +2695,35 @@
       end
       item
         Name = 'outAmount_calc'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount_calc'
         DataType = ftFloat
       end
       item
         Name = 'outAmount_Distance_calc'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount_Distance_calc'
         DataType = ftFloat
       end
       item
         Name = 'outAmount_ColdHour_calc'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount_ColdHour_calc'
         DataType = ftFloat
       end
       item
         Name = 'outAmount_ColdDistance_calc'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount_ColdDistance_calc'
         DataType = ftFloat
       end
       item
         Name = 'inColdHour'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ColdHour'
         DataType = ftFloat
@@ -2927,6 +2731,7 @@
       end
       item
         Name = 'inColdDistance'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ColdDistance'
         DataType = ftFloat
@@ -2934,6 +2739,7 @@
       end
       item
         Name = 'inAmountFuel'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'AmountFuel'
         DataType = ftFloat
@@ -2941,6 +2747,7 @@
       end
       item
         Name = 'inAmountColdHour'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'AmountColdHour'
         DataType = ftFloat
@@ -2948,6 +2755,7 @@
       end
       item
         Name = 'inAmountColdDistance'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'AmountColdDistance'
         DataType = ftFloat
@@ -2955,6 +2763,7 @@
       end
       item
         Name = 'inNumber'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Number'
         DataType = ftFloat
@@ -2962,6 +2771,7 @@
       end
       item
         Name = 'inRateFuelKindTax'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'RateFuelKindTax'
         DataType = ftFloat
@@ -2969,6 +2779,7 @@
       end
       item
         Name = 'inRateFuelKindId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
         ParamType = ptInput
@@ -3050,8 +2861,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -3142,13 +2953,25 @@
           ItemName = 'bbSetErasedIncome'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -3156,7 +2979,15 @@
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -3164,7 +2995,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbEntryToGrid'
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -3205,10 +3036,6 @@
       Category = 0
       Visible = ivAlways
     end
-    object bbEntryToGrid: TdxBarButton
-      Category = 0
-      Visible = ivAlways
-    end
     object bbAddRoute: TdxBarButton
       Action = InsertRecord
       Category = 0
@@ -3243,6 +3070,10 @@
     end
     object bbSetErasedIncome: TdxBarButton
       Action = actSetErasedIncome
+      Category = 0
+    end
+    object bbMIContainer: TdxBarButton
+      Action = actMIContainer
       Category = 0
     end
   end
@@ -3344,12 +3175,14 @@
       end
       item
         Name = 'ioMovementId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioInvNumber'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
@@ -3364,6 +3197,7 @@
       end
       item
         Name = 'ioOperDatePartner'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
@@ -3371,6 +3205,7 @@
       end
       item
         Name = 'inInvNumberPartner'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
@@ -3378,6 +3213,7 @@
       end
       item
         Name = 'ioPriceWithVAT'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'PriceWithVAT'
         DataType = ftBoolean
@@ -3385,6 +3221,7 @@
       end
       item
         Name = 'ioVATPercent'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'VATPercent'
         DataType = ftFloat
@@ -3392,6 +3229,7 @@
       end
       item
         Name = 'inChangePrice'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'ChangePrice'
         DataType = ftFloat
@@ -3399,6 +3237,7 @@
       end
       item
         Name = 'inFromId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
@@ -3412,12 +3251,14 @@
       end
       item
         Name = 'ioPaidKindId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioPaidKindName'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'PaidKindName'
         DataType = ftString
@@ -3425,12 +3266,14 @@
       end
       item
         Name = 'ioContractId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'ContractId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioContractName'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'ContractName'
         DataType = ftString
@@ -3438,12 +3281,14 @@
       end
       item
         Name = 'ioRouteId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'RouteId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioRouteName'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'RouteName'
         DataType = ftString
@@ -3458,24 +3303,28 @@
       end
       item
         Name = 'ioMovementItemId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioGoodsId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioGoodsCode'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'GoodsCode'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioGoodsName'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
@@ -3483,6 +3332,7 @@
       end
       item
         Name = 'ioFuelName'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'FuelName'
         DataType = ftString
@@ -3490,6 +3340,7 @@
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -3497,6 +3348,7 @@
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -3504,6 +3356,7 @@
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -3511,12 +3364,14 @@
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'outAmountSummTotal'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'AmountSummTotal'
         DataType = ftFloat
@@ -3532,12 +3387,14 @@
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -3553,12 +3410,14 @@
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -3574,12 +3433,14 @@
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -3595,12 +3456,14 @@
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -3623,20 +3486,6 @@
     Left = 271
     Top = 388
   end
-  object EntryViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridEntryDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    Left = 379
-    Top = 282
-  end
   object spMovementCompleteIncome: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Income'
     DataSets = <>
@@ -3644,6 +3493,7 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
@@ -3665,6 +3515,7 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
@@ -3680,6 +3531,7 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = IncomeCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput

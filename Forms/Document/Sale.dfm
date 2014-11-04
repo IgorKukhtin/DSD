@@ -9,22 +9,24 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1250
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1250
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1250
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1246
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1250
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1244
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1250
-        Height = 518
-        ExplicitWidth = 1250
-        ExplicitHeight = 518
+        Width = 1244
+        Height = 514
+        ExplicitWidth = 1244
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -331,7 +333,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -642,10 +644,9 @@ inherited SaleForm: TSaleForm
   object edChangePercentAmount: TcxCurrencyEdit [7]
     Left = 714
     Top = 199
-    EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 40
   end
@@ -1140,6 +1141,64 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = True
     end
+    object actPrint_Pack22: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPack22
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPack22
+        end>
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.2'
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack22'
+      ReportNameParam.Value = 'PrintMovement_SalePack22'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Pack21: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPack21
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPack21
+        end>
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' 2.1'
+      ImageIndex = 23
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SalePack21'
+      ReportNameParam.Value = 'PrintMovement_SalePack21'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1196,7 +1255,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1255,6 +1314,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1288,6 +1355,14 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack21'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Pack22'
         end
         item
           Visible = True
@@ -1355,18 +1430,26 @@ inherited SaleForm: TSaleForm
       Category = 0
     end
     object bbIsCalcAmountPartner: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Category = 0
-      Hint = 'New Item'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Visible = ivAlways
       Control = cbCalcAmountPartner
     end
     object bbChangePercentAmount: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
       Category = 0
-      Hint = 'New Item'
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
       Visible = ivAlways
       Control = edChangePercentAmount
+    end
+    object bbPrint_Pack21: TdxBarButton
+      Action = actPrint_Pack21
+      Category = 0
+    end
+    object bbPrint_Pack22: TdxBarButton
+      Action = actPrint_Pack22
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1518,6 +1601,12 @@ inherited SaleForm: TSaleForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
         DataType = ftFloat
       end
       item
@@ -2528,6 +2617,18 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
       end>
     Left = 804
     Top = 64
@@ -2585,9 +2686,9 @@ inherited SaleForm: TSaleForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -3052,5 +3153,45 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 407
     Top = 496
+  end
+  object spSelectPrintPack22: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 592
+  end
+  object spSelectPrintPack21: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 544
   end
 end

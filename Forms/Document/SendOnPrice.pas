@@ -26,9 +26,6 @@ type
     cxLabel7: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
@@ -54,11 +51,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
   private

@@ -127,6 +127,12 @@ type
     spSelectPrintPack: TdsdStoredProc;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
+    actPrint_Pack21: TdsdPrintAction;
+    bbSalePack21: TdxBarButton;
+    actPrint_Pack22: TdsdPrintAction;
+    bbPrint_Pack22: TdxBarButton;
+    spSelectPrintPack21: TdsdStoredProc;
+    spSelectPrintPack22: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -550,31 +550,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -587,36 +593,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -645,31 +657,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -682,36 +700,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -739,31 +763,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -776,36 +806,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -834,31 +870,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -871,36 +913,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -929,31 +977,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -966,36 +1020,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1024,31 +1084,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1061,36 +1127,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1119,31 +1191,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1156,36 +1234,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1214,31 +1298,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1251,36 +1341,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1309,31 +1405,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1346,36 +1448,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1404,31 +1512,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1441,36 +1555,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1499,31 +1619,37 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1536,36 +1662,42 @@ inherited Report_CashForm: TReport_CashForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1680,7 +1812,6 @@ inherited Report_CashForm: TReport_CashForm
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction
       Category = 0
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1806,6 +1937,7 @@ inherited Report_CashForm: TReport_CashForm
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 232
   end
@@ -2043,6 +2175,7 @@ inherited Report_CashForm: TReport_CashForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 639
     Top = 288
   end

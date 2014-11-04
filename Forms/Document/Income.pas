@@ -51,7 +51,6 @@ type
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
-    cxTabSheetEntry: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
@@ -60,29 +59,10 @@ type
     colPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMovementContainerItem: TdsdStoredProc;
-    cxGridEntryDBTableView: TcxGridDBTableView;
-    cxGridEntryLevel: TcxGridLevel;
-    cxGridEntry: TcxGrid;
-    colDebetAccountName: TcxGridDBColumn;
-    colDebetAmount: TcxGridDBColumn;
-    EntryCDS: TClientDataSet;
-    EntryDS: TDataSource;
-    colKreditAccountName: TcxGridDBColumn;
-    colKreditAmount: TcxGridDBColumn;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionName: TcxGridDBColumn;
-    colAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colDirectionObjectCode: TcxGridDBColumn;
-    colDirectionObjectName: TcxGridDBColumn;
-    colDestinationObjectName: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     colAmountPacker: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
@@ -91,14 +71,11 @@ type
     colLiveWeight: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
-    clenGoodsKindName: TcxGridDBColumn;
-    colAccountOnComplete: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    EntryViewAddOn: TdsdDBViewAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
@@ -112,14 +89,8 @@ type
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    colDestinationObjectCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyName_Detail: TcxGridDBColumn;
-    colPrice_comlete: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
-    EntryToExcel: TdsdGridToExcel;
-    bbEntryToGrid: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
@@ -142,8 +113,6 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
@@ -165,6 +134,8 @@ type
     cxLabel15: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

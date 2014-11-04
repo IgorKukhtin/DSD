@@ -23,16 +23,15 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
+
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-                              )
+        , tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId, Object_RoleAccessKeyGuide_View.UserId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -70,14 +69,12 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
              WHERE inIsPartnerDate = FALSE
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId  AS Id
              FROM MovementDate AS MovementDate_OperDatePartner
                   JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_SendOnPrice()
                   JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -143,14 +140,23 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
-;
+            LEFT JOIN tmpBranch ON tmpBranch.UserId = vbUserId
+
+            LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
+                                 ON ObjectLink_UnitFrom_Branch.ObjectId = Object_From.Id
+                                AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
+                                 ON ObjectLink_UnitTo_Branch.ObjectId = Object_To.Id
+                                AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+       WHERE tmpBranch.UserId IS NULL
+          OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
+          OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
+      ;
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -159,7 +165,6 @@ ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boo
  18.04.14                                                        * all new
  05.09.13                                        * add TotalCountPartner
  12.07.13          *
-
 */
 
 -- тест

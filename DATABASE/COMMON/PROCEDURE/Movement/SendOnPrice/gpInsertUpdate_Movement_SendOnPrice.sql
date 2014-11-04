@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_SendOnPrice()
 
--- DROP FUNCTION gpInsertUpdate_Movement_SendOnPrice();
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice(
@@ -23,7 +22,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SendOnPrice());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SendOnPrice());
 
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
@@ -44,8 +43,7 @@ BEGIN
                                        ) AS tmp;
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -53,7 +51,6 @@ LANGUAGE PLPGSQL VOLATILE;
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  16.07.13                                        * zc_Movement_SendOnPrice
  12.07.13         *
-
 */
 
 -- тест

@@ -2,8 +2,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 336
   ClientWidth = 1212
-  ExplicitWidth = 1220
-  ExplicitHeight = 370
+  ExplicitWidth = 1228
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -247,13 +247,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited Panel: TPanel
     Width = 1212
     ExplicitWidth = 1212
-    inherited deStart: TcxDateEdit
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-    end
-    inherited deEnd: TcxDateEdit
-      Properties.SaveTime = False
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
@@ -262,28 +255,29 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited ActionList: TActionList
     Left = 47
     Top = 274
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTransportServiceForm'
-    end
     object CarChoiceForm: TOpenChoiceForm [3]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CarId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
         end
         item
           Name = 'CarModelName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CarModelName'
           DataType = ftString
@@ -292,23 +286,27 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     end
     object ContractConditionKindChoiceForm: TOpenChoiceForm [4]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
         end
         item
           Name = 'inContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
@@ -317,61 +315,71 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     end
     object RouteChoiceForm: TOpenChoiceForm [5]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
         end>
       isShowModal = True
     end
-    inherited actUpdate: TdsdInsertUpdateAction
+    inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
     end
     object ContractChoiceForm: TOpenChoiceForm [8]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -385,17 +393,20 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     end
     object PaidKindChoiceForm: TOpenChoiceForm [9]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -404,25 +415,32 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm [10]
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
       isShowModal = True
     end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TTransportServiceForm'
+    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -513,18 +531,21 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'iomiid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MIId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ininvnumber'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
@@ -532,6 +553,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inoperdate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -539,6 +561,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'ioAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -546,6 +569,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'indistance'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Distance'
         DataType = ftFloat
@@ -553,6 +577,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inprice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -560,6 +585,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'incountpoint'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountPoint'
         DataType = ftFloat
@@ -567,6 +593,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'intreveltime'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'treveltime'
         DataType = ftFloat
@@ -574,6 +601,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'incomment'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'comment'
         DataType = ftString
@@ -581,52 +609,61 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'injuridicalid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'juridicalid'
         ParamType = ptInput
       end
       item
         Name = 'incontractid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'contractid'
         ParamType = ptInput
       end
       item
         Name = 'ininfomoneyid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'infomoneyid'
         ParamType = ptInput
       end
       item
         Name = 'inpaidkindid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'paidkindid'
         ParamType = ptInput
       end
       item
         Name = 'inrouteid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'routeid'
         ParamType = ptInput
       end
       item
         Name = 'incarid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'carid'
         ParamType = ptInput
       end
       item
         Name = 'inContractConditionKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inUnitForwardingId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitForwardingId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 504
     Top = 164
   end

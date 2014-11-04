@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , CurrencyValue TFloat
@@ -49,6 +49,7 @@ BEGIN
              , CAST (False AS Boolean)                      AS PriceWithVAT
              , CAST (20 AS TFloat)                          AS VATPercent
              , CAST (0 AS TFloat)                           AS ChangePercent
+             , CAST (1 AS TFloat)                           AS ChangePercentAmount
              , CAST (0 AS TFloat)                           AS TotalCount
              , CAST (0 AS TFloat)                           AS TotalSummMVAT
              , CAST (0 AS TFloat)                           AS TotalSummPVAT
@@ -97,6 +98,7 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+           , CAST (1 AS TFloat)                             AS ChangePercentAmount
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT

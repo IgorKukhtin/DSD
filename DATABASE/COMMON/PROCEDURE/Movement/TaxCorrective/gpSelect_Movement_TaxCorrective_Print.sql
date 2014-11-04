@@ -145,12 +145,17 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+        WHERE Object_GoodsPropertyValue.ValueData  <> ''
+           OR ObjectString_BarCode.ValueData       <> ''
+           OR ObjectString_Article.ValueData       <> ''
+           OR ObjectString_BarCodeGLN.ValueData    <> ''
+           OR ObjectString_ArticleGLN.ValueData    <> ''
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -614,4 +619,4 @@ COMMIT;
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
--- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 520880 , inisClientCopy:= FALSE ,inSession:= '2');

@@ -79,6 +79,8 @@ type
     colBusinessName: TcxGridDBColumn;
     colAccountName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

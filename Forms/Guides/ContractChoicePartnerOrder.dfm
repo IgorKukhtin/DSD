@@ -143,7 +143,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actRouteChoice
+                Action = actChoiceRoute
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -159,7 +159,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actRouteSortingChoice
+                Action = actChoiceRouteSorting
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -175,7 +175,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPersonalTakeChoice
+                Action = actChoicePersonalTake
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -461,7 +461,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
-    object actRouteChoice: TOpenChoiceForm
+    object actChoiceRoute: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'Route_ObjectForm'
@@ -484,7 +484,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         end>
       isShowModal = True
     end
-    object actRouteSortingChoice: TOpenChoiceForm
+    object actChoiceRouteSorting: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'RouteSorting_ObjectForm'
@@ -507,7 +507,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         end>
       isShowModal = True
     end
-    object actPersonalTakeChoice: TOpenChoiceForm
+    object actChoicePersonalTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'Member_ObjectForm'
@@ -614,7 +614,8 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
       item
         Name = 'ioId'
         Value = Null
-        ComponentItem = 'Id'
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInputOutput
       end
       item
@@ -635,7 +636,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalId'
+        ComponentItem = 'PersonalTakeId'
         ParamType = ptInput
       end>
     PackSize = 1

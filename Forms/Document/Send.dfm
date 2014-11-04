@@ -2,16 +2,15 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1072
-  ExplicitWidth = 1080
-  ExplicitHeight = 702
+  ExplicitWidth = 1088
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1072
     Height = 542
-    ExplicitLeft = 8
-    ExplicitTop = 118
+    ExplicitTop = 126
     ExplicitWidth = 1072
     ExplicitHeight = 542
     ClientRectBottom = 542
@@ -22,7 +21,6 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1072
         Height = 518
-        ExplicitTop = 16
         ExplicitWidth = 1072
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -321,7 +319,6 @@ inherited SendForm: TSendForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -377,8 +374,6 @@ inherited SendForm: TSendForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -426,11 +421,13 @@ inherited SendForm: TSendForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -460,11 +457,13 @@ inherited SendForm: TSendForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageName'
           DataType = ftString
@@ -481,11 +480,13 @@ inherited SendForm: TSendForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -502,6 +503,7 @@ inherited SendForm: TSendForm
       GuiParams = <
         item
           Name = 'inGoodsId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
         end
@@ -513,12 +515,14 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
@@ -526,6 +530,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'Price'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
@@ -533,6 +538,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'StorageName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageName_Partion'
           DataType = ftString
@@ -540,6 +546,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'OperDatePartion'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -650,6 +657,14 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -659,43 +674,20 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
-    end
-    object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
-      Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
-    end
-    object bbPrintTax: TdxBarButton [6]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
-    end
-    object bbPrintTax_Client: TdxBarButton [7]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
-    end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Visible = ivAlways
-      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -781,6 +773,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1089,6 +1082,7 @@ inherited SendForm: TSendForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1102,12 +1096,14 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1115,6 +1111,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inPartionGoodsDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1122,6 +1119,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
@@ -1129,6 +1127,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
@@ -1136,6 +1135,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'ioPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1143,30 +1143,35 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
         Name = 'inStorageId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StorageId'
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
@@ -1183,20 +1188,6 @@ inherited SendForm: TSendForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end

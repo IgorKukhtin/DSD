@@ -128,7 +128,6 @@ type
     GuidesInvNumberOrder: TdsdGuides;
     colAmountOrder: TcxGridDBColumn;
     bbChangePercentAmount: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
     bbIsCalcAmountPartner: TdxBarControlContainerItem;
     edChangePercentAmount: TcxCurrencyEdit;
     cbCalcAmountPartner: TcxCheckBox;

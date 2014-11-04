@@ -2,6 +2,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1200
+  ExplicitLeft = -227
   ExplicitWidth = 1208
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -10,6 +11,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Top = 131
     Width = 1200
     Height = 537
+    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 131
     ExplicitWidth = 1200
     ExplicitHeight = 537
@@ -144,6 +146,315 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Options.Editing = False
             Width = 80
           end
+        end
+      end
+    end
+    object cxTabSheetTaxCorrective: TcxTabSheet
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
+      ImageIndex = 2
+      object cxGridTaxCorrective: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1200
+        Height = 513
+        Align = alClient
+        TabOrder = 0
+        object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = TaxDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummMVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummPVAT
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummMVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummPVAT
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colStatus: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object colIsError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'IsError'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object clincInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object colInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object colOKPO_From: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_From'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 41
+          end
+          object colFromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object colToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colTotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object colTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'PriceWithVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object colVATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 41
+          end
+          object colTotalSummVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colTotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colTotalSummPVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummPVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 43
+          end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
+          object colDocument: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1072#1085
+            DataBinding.FieldName = 'Document'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 29
+          end
+        end
+        object cxGridTaxCorrectiveLevel: TcxGridLevel
+          GridView = cxGridTaxCorrectiveDBTableView
         end
       end
     end
@@ -409,38 +720,23 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      RefreshOnTabSetChanges = True
-    end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
+          StoredProc = spGet
         end
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
+          StoredProc = spGetTotalSumm
+        end
         item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectTax
         end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
+      RefreshOnTabSetChanges = True
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
@@ -609,13 +905,36 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end
         item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
         end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ParamType = ptInput
     end
     object actPrint_Bill: TdsdPrintAction [17]
       Category = 'DSDLib'
@@ -652,6 +971,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -738,6 +1065,61 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       ImageIndex = 41
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+    end
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementUnCompleteTax
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteTax
+        end
+        item
+          StoredProc = spSelectTax
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = TaxDS
+    end
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementSetErasedTax
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedTax
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = TaxDS
+    end
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementCompleteTax
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteTax
+        end
+        item
+          StoredProc = spSelectTax
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = TaxDS
     end
   end
   inherited MasterDS: TDataSource
@@ -846,7 +1228,31 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Visible = True
+          ItemName = 'bbCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -921,6 +1327,18 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Action = actTax
       Category = 0
     end
+    object bbCompleteTaxCorrective: TdxBarButton
+      Action = actCompleteTaxCorrective
+      Category = 0
+    end
+    object bbUnCompleteTaxCorrective: TdxBarButton
+      Action = actUnCompleteTaxCorrective
+      Category = 0
+    end
+    object bbSetErasedTaxCorrective: TdxBarButton
+      Action = actSetErasedTaxCorrective
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -930,12 +1348,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Param.DataType = ftString
         DataSummaryItemIndex = 2
       end>
-    Left = 830
-    Top = 265
+    Left = 494
+    Top = 553
   end
   inherited PopupMenu: TPopupMenu
-    Left = 776
-    Top = 408
+    Left = 600
+    Top = 440
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1373,18 +1791,18 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 368
+    Top = 392
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TransferDebtOut_SetErased'
-    Left = 718
-    Top = 512
+    Left = 654
+    Top = 560
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TransferDebtOut_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 558
+    Top = 504
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_TransferDebtOut'
@@ -1618,8 +2036,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 848
-    Top = 496
+    Left = 736
+    Top = 568
   end
   object spSelectTax_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1650,8 +2068,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 983
-    Top = 512
+    Left = 343
+    Top = 464
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1682,8 +2100,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 847
-    Top = 448
+    Left = 719
+    Top = 480
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -1720,8 +2138,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 856
-    Top = 400
+    Left = 656
+    Top = 456
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -2070,5 +2488,114 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     Left = 704
     Top = 16
+  end
+  object TaxCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 768
+    Top = 186
+  end
+  object TaxDS: TDataSource
+    DataSet = TaxCDS
+    Left = 869
+    Top = 186
+  end
+  object gpUpdateTax: TdsdStoredProc
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = TaxCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Component = TaxCDS
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 1035
+    Top = 226
+  end
+  object spSelectTax: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Tax_DocChild'
+    DataSet = TaxCDS
+    DataSets = <
+      item
+        DataSet = TaxCDS
+      end>
+    Params = <
+      item
+        Name = 'inDocumentMasterId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 930
+    Top = 226
+  end
+  object spMovementSetErasedTax: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Tax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 281
+  end
+  object spMovementCompleteTax: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Tax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 329
+  end
+  object spMovementUnCompleteTax: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = TaxCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 976
+    Top = 385
   end
 end

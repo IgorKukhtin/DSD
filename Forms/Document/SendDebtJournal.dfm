@@ -26,14 +26,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 41640d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -495,15 +495,27 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -580,6 +592,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
@@ -641,12 +654,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inOperDate'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -724,8 +739,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
     object actMovementItemContainer: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
@@ -733,6 +748,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -762,6 +778,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 104
     Top = 192
   end
@@ -772,10 +789,12 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 64
     Top = 232
   end
@@ -797,10 +816,12 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 272
   end
@@ -815,10 +836,12 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 320
   end
@@ -885,6 +908,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = deEnd
         DataType = ftDateTime
       end>
+    PackSize = 1
     Left = 240
     Top = 288
   end
@@ -895,12 +919,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InvNumber'
         DataType = ftString
@@ -908,6 +934,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -915,30 +942,35 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end
       item
         Name = 'inBusinessId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BusinessId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalBasisId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
       end
       item
         Name = 'ioMasterId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'MI_MasterId'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioChildId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'MI_ChildId'
         ParamType = ptInputOutput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -946,52 +978,61 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end
       item
         Name = 'inJuridicalFromId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalFromId'
         ParamType = ptInput
       end
       item
         Name = 'inContractfromId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractFromId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindFromId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PaidKindFromId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyFromId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InfoMoneyFromId'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalToId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalToId'
         ParamType = ptInput
       end
       item
         Name = 'inContractToId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractToId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindToId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PaidKindToId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyToId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'InfoMoneyToId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 526
     Top = 168
   end

@@ -312,6 +312,43 @@ inherited CashJournalUserForm: TCashJournalUserForm
           ComponentItem = 'Key'
         end>
     end
+    object actReport_CashUser: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
+      ImageIndex = 43
+      FormName = 'TReport_CashUserForm'
+      FormNameParam.Value = 'TReport_CashUserForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'CashId'
+          Value = Null
+          Component = CashGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'CashName'
+          Value = Null
+          Component = CashGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -417,12 +454,24 @@ inherited CashJournalUserForm: TCashJournalUserForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CashUser'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbReport_CashUser: TdxBarButton
+      Action = actReport_CashUser
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

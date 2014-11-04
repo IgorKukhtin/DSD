@@ -32,7 +32,6 @@ type
     colTotalSummPVAT: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
-    bbTax: TdxBarButton;
     colTotalCountTare: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
     colTotalCountKg: TcxGridDBColumn;
@@ -41,9 +40,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    bbPrintTax_Us: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }

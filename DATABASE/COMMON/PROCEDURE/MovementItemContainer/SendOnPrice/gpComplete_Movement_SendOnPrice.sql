@@ -1,4 +1,4 @@
--- Function: gpComplete_Movement_SendOnPrice()
+ -- Function: gpComplete_Movement_SendOnPrice()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_SendOnPrice (Integer, Boolean, TVarChar);
 

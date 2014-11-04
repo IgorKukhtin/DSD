@@ -11,18 +11,18 @@ BEGIN
      THEN
          RETURN (TRUE);
      ELSE
-         RETURN COALESCE ((SELECT TRUE WHERE EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId = zc_Enum_Process_AccessKey_GuideAll())), FALSE);
+         RETURN COALESCE ((SELECT TRUE WHERE EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_GuideAll(), zc_Enum_Process_AccessKey_CashDnepr()))), FALSE);
      END IF;  
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
 ALTER FUNCTION zfCalc_AccessKey_GuideAll (Integer) OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.11.14                                        * add zc_Enum_Process_AccessKey_CashDnepr
  21.12.13                                        * ObjectLink_UserRole_View
  14.12.13                                        *
 */

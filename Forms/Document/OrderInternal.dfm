@@ -2,8 +2,8 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ExplicitWidth = 1080
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -188,7 +188,6 @@ inherited OrderInternalForm: TOrderInternalForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -244,8 +243,6 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -293,11 +290,13 @@ inherited OrderInternalForm: TOrderInternalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -432,14 +431,6 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -481,6 +472,7 @@ inherited OrderInternalForm: TOrderInternalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -566,6 +558,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -874,6 +867,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -887,12 +881,14 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -900,6 +896,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inAmountSecond'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSecond'
         DataType = ftFloat
@@ -907,6 +904,7 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -957,20 +955,6 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end

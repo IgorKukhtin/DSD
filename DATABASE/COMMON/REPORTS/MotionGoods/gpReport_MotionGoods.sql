@@ -4,15 +4,15 @@ DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Int
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
-    IN inStartDate       TDateTime , -- 
-    IN inEndDate         TDateTime , --
-    IN inAccountGroupId  Integer,    --
-    IN inUnitGroupId     Integer,    -- группа подразделений на самом деле это подразделение
-    IN inLocationId      Integer,    -- 
-    IN inGoodsGroupId    Integer,    -- группа товара 
-    IN inGoodsId         Integer,    -- товар
-    IN inIsInfoMoney     Boolean,    -- 
-    IN inSession         TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , -- 
+    IN inEndDate            TDateTime , --
+    IN inAccountGroupId     Integer,    --
+    IN inUnitGroupId        Integer,    -- группа подразделений на самом деле это подразделение
+    IN inLocationId         Integer,    -- 
+    IN inGoodsGroupId       Integer,    -- группа товара 
+    IN inGoodsId            Integer,    -- товар
+    IN inIsInfoMoney        Boolean,    -- 
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
@@ -76,12 +76,23 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
-               )
+
+             , ContainerId_Summ Integer
+              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
+    vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!меняются параметры для филиала!!!
+   IF 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0)
+   THEN
+       inAccountGroupId:= zc_Enum_AccountGroup_20000(); -- Запасы
+       inIsInfoMoney:= FALSE;
+   END IF;
 
     -- таблица - 
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
@@ -112,44 +123,52 @@ BEGIN
         THEN 
             INSERT INTO _tmpLocation (LocationId)
                SELECT inLocationId;
-        ELSE 
+        ELSE
+            WITH tmpBranch AS (SELECT TRUE AS Value WHERE NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
             INSERT INTO _tmpLocation (LocationId)
-               SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit()
               UNION ALL
-               SELECT Id FROM Object WHERE DescId = zc_Object_Member()
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
               UNION ALL
-               SELECT Id FROM Object WHERE DescId = zc_Object_Car();
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
         END IF;      
     END IF;
 
 
       RETURN QUERY 
-    WITH tmpContainer_Count AS (SELECT Container.Id AS ContainerId
-                                     , COALESCE (CLO_Unit.ObjectId, COALESCE (CLO_Car.ObjectId, COALESCE (CLO_Member.ObjectId, 0))) AS LocationId
+           WITH tmpLocation AS (SELECT COALESCE (CLO_Unit.ContainerId, COALESCE (CLO_Car.ContainerId, COALESCE (CLO_Member.ContainerId, 0))) AS ContainerId
+                                     , _tmpLocation.LocationId
+                                FROM _tmpLocation
+                                     LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                              AND CLO_Unit.ObjectId = _tmpLocation.LocationId
+                                     LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.DescId = zc_ContainerLinkObject_Car()
+                                                                             AND CLO_Car.ObjectId = _tmpLocation.LocationId
+                                     LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                                                AND CLO_Member.ObjectId = _tmpLocation.LocationId
+                                WHERE COALESCE (CLO_Unit.ContainerId, COALESCE (CLO_Car.ContainerId, COALESCE (CLO_Member.ContainerId, 0))) > 0
+                                GROUP BY COALESCE (CLO_Unit.ContainerId, COALESCE (CLO_Car.ContainerId, COALESCE (CLO_Member.ContainerId, 0)))
+                                       , _tmpLocation.LocationId
+                               )
+      , tmpContainer_Count2 AS (SELECT Container.*, tmpLocation.LocationId
+                                FROM _tmpGoods AS tmpGoods
+                                     INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
+                                                         AND Container.DescId = zc_Container_Count()
+                                     INNER JOIN tmpLocation ON tmpLocation.ContainerId = Container.Id
+                               )
+       , tmpContainer_Count AS (SELECT Container.Id AS ContainerId
+                                     , Container.LocationId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                      , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                      , COALESCE (CLO_AssetTo.ObjectId, 0) AS AssetToId
                                      , Container.Amount
-                                FROM _tmpGoods AS tmpGoods
-                                     INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
-                                                         AND Container.DescId = zc_Container_Count()
-                                     LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = Container.Id
-                                                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                              AND CLO_Unit.ObjectId > 0
-                                     LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = Container.Id
-                                                                             AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
-                                                                             AND CLO_Car.ObjectId > 0
-                                     LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = Container.Id
-                                                                                AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
-                                                                                AND CLO_Member.ObjectId > 0
+                                FROM tmpContainer_Count2 AS Container
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                                    AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
                                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
-                                     INNER JOIN _tmpLocation ON _tmpLocation.LocationId = COALESCE (CLO_Unit.ObjectId, COALESCE (CLO_Car.ObjectId, CLO_Member.ObjectId))
                                )
        , tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
                                        , tmpContainer_Count.LocationId
@@ -243,20 +262,27 @@ BEGIN
                                          , tmpContainer_Count.AssetToId
                                          , tmpContainer_Count.Amount
                                  )
-       , tmpContainer_Summ AS (SELECT tmpContainer_Count.ContainerId AS ContainerId_Count
+      , tmpContainer_Summ2 AS (SELECT tmpContainer_Count.ContainerId AS ContainerId_Count
                                     , tmpContainer_Count.LocationId
                                     , tmpContainer_Count.GoodsId
                                     , tmpContainer_Count.GoodsKindId
                                     , tmpContainer_Count.PartionGoodsId
                                     , tmpContainer_Count.AssetToId
                                     , Container.Id                         AS ContainerId_Summ
-                                    , COALESCE (View_Account.AccountId, 0) AS AccountId
+                                    , Container.ObjectId                   AS AccountId
                                     , Container.Amount
                                FROM tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
-                                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
-                               WHERE View_Account.AccountGroupId = inAccountGroupId OR COALESCE (inAccountGroupId, 0) = 0
+                              )
+       , tmpAccount AS (SELECT View_Account.AccountId
+                               FROM Object_Account_View AS View_Account
+                               WHERE View_Account.AccountGroupId = inAccountGroupId
+                              )
+       , tmpContainer_Summ AS (SELECT tmpContainer_Summ2.*
+                               FROM tmpContainer_Summ2
+                                    LEFT JOIN tmpAccount ON tmpAccount.AccountId = tmpContainer_Summ2.AccountId
+                               WHERE tmpAccount.AccountId IS NOT NULL OR COALESCE (inAccountGroupId, 0) = 0
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
                                       , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END AS ContainerId_Summ
@@ -489,6 +515,8 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
         , View_InfoMoneyDetail.InfoMoneyName AS InfoMoneyName_Detail
         , View_InfoMoneyDetail.InfoMoneyName_all AS InfoMoneyName_all_Detail
+
+        , tmpMIContainer_group.ContainerId_Summ
 
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
@@ -745,5 +773,5 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inIsInfoMoney:= FALSE, inSession:= '2') 
--- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inSession := '5');
+-- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, ioIsInfoMoney:= FALSE, inSession:= '2') 
+-- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  ioIsInfoMoney:= TRUE, inSession := '5');

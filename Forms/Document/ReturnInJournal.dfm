@@ -1,9 +1,9 @@
 inherited ReturnInJournalForm: TReturnInJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitWidth = 1114
-  ExplicitHeight = 569
+  ExplicitWidth = 1122
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -377,20 +377,26 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Width = 59
           end
           object colCurrencyValue: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+            Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
           object colCurrencyDocumentName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
             DataBinding.FieldName = 'CurrencyDocumentName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
           object colCurrencyPartnerName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
             DataBinding.FieldName = 'CurrencyPartnerName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
@@ -531,6 +537,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -572,6 +579,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -613,6 +621,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -657,6 +666,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actInsertMask: TdsdInsertUpdateAction [18]
     end
+    inherited actDisabled: TOpenChoiceForm [19]
+    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -672,6 +683,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -696,6 +708,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -952,6 +965,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -970,6 +984,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -982,6 +997,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1050,12 +1066,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1075,11 +1093,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
@@ -1188,12 +1208,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1213,11 +1235,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
@@ -1256,12 +1280,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inChecked'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean

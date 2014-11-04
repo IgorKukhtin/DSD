@@ -30,6 +30,24 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
 AS
 $BODY$
 BEGIN
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inStartDate + (INTERVAL '32 DAY') <= inEndDate AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0
+    THEN
+        inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    END IF;
+
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inStartDate + (INTERVAL '65 DAY') <= inEndDate AND (COALESCE (inGoodsGroupId, 0) = 0 OR COALESCE (inJuridicalId, 0) = 0)
+    THEN
+        inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    END IF;
+
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inStartDate + (INTERVAL '150 DAY') <= inEndDate
+    THEN
+        inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    END IF;
+
     -- Ограничения по товарам
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0

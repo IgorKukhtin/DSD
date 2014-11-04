@@ -278,14 +278,14 @@
 			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
 				<Form>TradeMarkEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Route.pas">
-				<Form>RouteForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Route_Object.pas">
+				<Form>Route_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RouteEdit.pas">
 				<Form>RouteEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\RouteSorting.pas">
-				<Form>RouteSortingForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\RouteSorting_Object.pas">
+				<Form>RouteSorting_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
@@ -328,11 +328,11 @@
 				<Form>ProductionSeparateJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
-				<Form>SendOnPriceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SendOnPrice_BranchJournal.pas">
+				<Form>SendOnPrice_BranchJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendOnPrice.pas">
-				<Form>SendOnPriceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SendOnPrice_Branch.pas">
+				<Form>SendOnPrice_BranchForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossJournal.pas">
 				<Form>LossJournalForm</Form>
@@ -834,12 +834,12 @@
 				<Form>ContractChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnInJournal.pas">
-				<Form>ReturnInJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnIn_PartnerJournal.pas">
+				<Form>ReturnIn_PartnerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnIn.pas">
-				<Form>ReturnInForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnIn_Partner.pas">
+				<Form>ReturnIn_PartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalCollation.pas">
@@ -1492,8 +1492,8 @@
 				<Form>Report_FoundersForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
-				<Form>Report_CashForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_CashUser.pas">
+				<Form>Report_CashUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_BankAccount.pas">
@@ -1649,6 +1649,34 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContactPersonChoice.pas">
 				<Form>ContactPersonChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Route.pas">
+				<Form>RouteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RouteSorting.pas">
+				<Form>RouteSortingForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnIn.pas">
+				<Form>ReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnInJournal.pas">
+				<Form>ReturnInJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendOnPrice.pas">
+				<Form>SendOnPriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
+				<Form>SendOnPriceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Cash.pas">
+				<Form>Report_CashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

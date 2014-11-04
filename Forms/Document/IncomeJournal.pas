@@ -100,6 +100,8 @@ type
     colCurrencyValue: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

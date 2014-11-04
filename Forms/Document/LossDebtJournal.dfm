@@ -25,7 +25,6 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -60,7 +59,6 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 711
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -347,7 +345,23 @@ object LossDebtJournalForm: TLossDebtJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -392,6 +406,10 @@ object LossDebtJournalForm: TLossDebtJournalForm
     end
     object bbReCompleteAll: TdxBarButton
       Action = actReCompleteAll
+      Category = 0
+    end
+    object bbMIContainer: TdxBarButton
+      Action = actMIContainer
       Category = 0
     end
   end
@@ -453,6 +471,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -539,6 +558,25 @@ object LossDebtJournalForm: TLossDebtJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
+    object actMIContainer: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_LossDebt'
@@ -562,6 +600,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 24
     Top = 176
   end
@@ -572,10 +611,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 64
     Top = 232
   end
@@ -597,10 +638,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 272
   end
@@ -615,10 +658,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 72
     Top = 320
   end
@@ -679,6 +724,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         Component = deEnd
         DataType = ftDateTime
       end>
+    PackSize = 1
     Left = 240
     Top = 288
   end

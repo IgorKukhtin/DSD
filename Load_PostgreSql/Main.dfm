@@ -1824,6 +1824,22 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 34
     end
+    object cbComplete_List: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 456
+      Width = 184
+      Height = 17
+      Caption = '!!! C'#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' !!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 35
+      OnClick = cbCompleteIncomeBNClick
+    end
   end
   object DataSource: TDataSource
     DataSet = fromQuery

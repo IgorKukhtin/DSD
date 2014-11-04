@@ -76,6 +76,8 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
+    actMIContainer: TdsdOpenForm;
+    bbMIContainer: TdxBarButton;
   private
   public
   end;

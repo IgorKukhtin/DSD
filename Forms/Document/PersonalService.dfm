@@ -1,27 +1,26 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 668
+  ClientHeight = 709
   ClientWidth = 1112
-  ExplicitWidth = 1120
-  ExplicitHeight = 702
+  ExplicitWidth = 1128
+  ExplicitHeight = 744
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1112
-    Height = 582
+    Height = 623
     ExplicitWidth = 1112
-    ExplicitHeight = 582
-    ClientRectBottom = 582
+    ExplicitHeight = 623
+    ClientRectBottom = 623
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1112
-      ExplicitHeight = 558
+      ExplicitHeight = 599
       inherited cxGrid: TcxGrid
         Width = 1112
-        Height = 558
-        ExplicitTop = 3
+        Height = 599
         ExplicitWidth = 1112
-        ExplicitHeight = 558
+        ExplicitHeight = 599
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -200,14 +199,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object colPositionName: TcxGridDBColumn [5]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'GoodsKindForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -477,6 +468,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
       RefreshOnTabSetChanges = True
     end
     object actUpdateIsMain: TdsdExecStoredProc [7]
@@ -490,6 +488,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -511,6 +515,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Params = <
         item
           Name = 'Id'
+          Value = Null
           Component = FormParams
           ComponentItem = 'Id'
         end>
@@ -533,15 +538,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spChangeStatus
         end
         item
-        end>
-    end
-    inherited actMovementItemContainer: TdsdOpenForm
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
         end>
     end
     inherited actAddMask: TdsdExecStoredProc
@@ -570,11 +566,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberName'
           DataType = ftString
@@ -586,10 +584,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       MoveParams = <>
       ActionList = <
         item
-          Action = PersonalServiceJournalForm
+          Action = PersonalServiceJournalChoiceForm
         end
         item
-          Action = dsdExecStoredProc1
+          Action = spUpdateMIIsMaskExecStoredProc
         end
         item
           Action = actRefresh
@@ -597,17 +595,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = 'MultiAction1'
       ImageIndex = 59
     end
-    object PersonalServiceJournalForm: TdsdOpenForm
+    object spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      Hint = #1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      StoredProc = spUpdateMIIsMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIIsMask
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+    end
+    object PersonalServiceJournalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PersonalServiceJournalChoiceForm'
       FormName = 'TPersonalServiceJournalSelectForm'
       FormNameParam.Value = 'TPersonalServiceJournalSelectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'MaskId'
+          Value = Null
           Component = FormParams
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -624,19 +633,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = PersonalServiceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object dsdExecStoredProc1: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc1
-      StoredProcList = <
+        end
         item
-          StoredProc = dsdStoredProc1
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -652,6 +657,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -809,12 +815,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.DataType = ftString
-        DataSummaryItemIndex = -1
-      end>
     Left = 830
     Top = 265
   end
@@ -867,6 +867,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'MaskId'
+        Value = Null
       end>
     Left = 280
     Top = 552
@@ -877,20 +878,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalService'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inStatusCode'
-        Value = ''
-        Component = StatusGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
     Left = 160
     Top = 8
   end
@@ -899,6 +886,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -910,6 +898,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1063,6 +1052,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1232,24 +1222,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
         Name = 'inisMain'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isMain'
         DataType = ftBoolean
@@ -1257,24 +1251,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'outAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
       end
       item
         Name = 'outAmountToPay'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountToPay'
         DataType = ftFloat
       end
       item
         Name = 'outAmountCash'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountCash'
         DataType = ftFloat
       end
       item
         Name = 'inSummService'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummService'
         DataType = ftFloat
@@ -1282,6 +1280,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummCardRecalc'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummCardRecalc'
         DataType = ftFloat
@@ -1289,6 +1288,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummMinus'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummMinus'
         DataType = ftFloat
@@ -1296,6 +1296,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummAdd'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummAdd'
         DataType = ftFloat
@@ -1303,6 +1304,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummSocialIn'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummSocialIn'
         DataType = ftFloat
@@ -1310,6 +1312,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummSocialAdd'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummSocialAdd'
         DataType = ftFloat
@@ -1317,6 +1320,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inSummChild'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'SummChild'
         DataType = ftFloat
@@ -1324,6 +1328,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1331,24 +1336,28 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
         Name = 'inMemberId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberId'
         ParamType = ptInput
@@ -1365,40 +1374,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 368
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
+    StoredProcName = ''
     Left = 420
     Top = 188
   end
@@ -1449,6 +1448,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1529,12 +1529,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Params = <
       item
         Name = 'inId '
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'ioIsMain'
+        Value = Null
         Component = FormParams
         DataType = ftBoolean
         ParamType = ptInputOutput
@@ -1543,22 +1545,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 320
     Top = 403
   end
-  object dsdStoredProc1: TdsdStoredProc
+  object spUpdateMIIsMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMask'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId '
+        Name = 'inMovementId '
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'MaskId'
+        Name = 'inMovementMaskId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'MaskId'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 448

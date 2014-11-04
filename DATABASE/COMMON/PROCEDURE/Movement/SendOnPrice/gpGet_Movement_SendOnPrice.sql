@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_SendOnPrice(
@@ -11,8 +10,6 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_SendOnPrice(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -20,7 +17,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_SendOnPrice());
 
@@ -30,27 +26,31 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_sendonprice_seq') AS TVarChar) AS InvNumber
-             , inOperDate				                    AS OperDate
+             , inOperDate				        AS OperDate
              , Object_Status.Code               	        AS StatusCode
              , Object_Status.Name              		        AS StatusName
-             , inOperDate			     	                AS OperDatePartner
-             , CAST (False AS Boolean)                      AS PriceWithVAT
-             , CAST (20 AS TFloat)                          AS VATPercent
-             , CAST (0 AS TFloat)                           AS ChangePercent
-             , CAST (0 AS TFloat)                           AS TotalCount
-             , CAST (0 AS TFloat)                           AS TotalSummMVAT
-             , CAST (0 AS TFloat)                           AS TotalSummPVAT
-             , CAST (0 AS TFloat)                           AS TotalSumm
+             , inOperDate			     	        AS OperDatePartner
+             , ObjectBoolean_PriceWithVAT.ValueData             AS PriceWithVAT
+             , ObjectFloat_VATPercent.ValueData                 AS VATPercent
+             , CAST (0 AS TFloat)                               AS ChangePercent
              , 0                     				        AS FromId
              , CAST ('' AS TVarChar) 				        AS FromName
              , 0                     				        AS ToId
              , CAST ('' AS TVarChar) 				        AS ToName
              , 0                     				        AS RouteSortingId
              , CAST ('' AS TVarChar) 				        AS RouteSortingName
-             , CAST (0  AS INTEGER)                         AS PriceListId
-             , CAST ('' AS TVarChar) 				        AS PriceListName
+             , Object_PriceList.Id                                      AS PriceListId
+             , Object_PriceList.ValueData 				AS PriceListName
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+               LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                       ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                                      AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+               LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                     ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                                    AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+          ;
      ELSE
 
      RETURN QUERY
@@ -64,10 +64,6 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-           , MovementFloat_TotalCount.ValueData             AS TotalCount
-           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
            , Object_From.Id                    			    AS FromId
            , Object_From.ValueData             			    AS FromName
            , Object_To.Id                      			    AS ToId
@@ -96,22 +92,6 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -122,61 +102,15 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
-                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
---add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-
--- PriceList Partner
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
-                              ON ObjectDate_PartnerStartPromo.ObjectId = Object_To.Id
-                             AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
-                              ON ObjectDate_PartnerEndPromo.ObjectId = Object_To.Id
-                             AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
-                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_To.Id
-                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
-                             AND Movement.operdate BETWEEN ObjectDate_PartnerStartPromo.valuedata AND ObjectDate_PartnerEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                              ON ObjectLink_Partner_PriceList.ObjectId = Object_To.Id
-                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                             AND ObjectLink_Partner_PriceListPromo.ObjectId IS NULL
--- PriceList Juridical
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
-                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
-                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
-
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
-                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
-                             AND (ObjectLink_Partner_PriceListPromo.ChildObjectId IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
-                             AND Movement.operdate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                             AND ObjectLink_Juridical_PriceListPromo.ObjectId IS NULL
-
-         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis()))
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();
@@ -187,7 +121,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
@@ -196,7 +129,6 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar) OWNER T
  09.07.13                                        * Красота
  08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *
-
 */
 
 -- тест

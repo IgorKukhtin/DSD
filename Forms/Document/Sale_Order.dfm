@@ -1,25 +1,25 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
-  ClientWidth = 1252
-  ExplicitWidth = 1268
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1252
+    Width = 1020
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1252
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1252
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1252
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1252
+        Width = 1020
         Height = 518
         ExplicitWidth = 1252
         ExplicitHeight = 518
@@ -283,7 +283,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1252
+    Width = 1020
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1252
@@ -622,10 +622,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   object edChangePercentAmount: TcxCurrencyEdit [2]
     Left = 714
     Top = 199
-    EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 40
   end
@@ -1160,6 +1159,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1208,7 +1215,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbChangePercentAmount'
         end
         item
           Visible = True
@@ -1251,25 +1258,19 @@ inherited Sale_OrderForm: TSale_OrderForm
       Action = actPrint_Pack
       Category = 0
     end
-    object bbChangePercentAmount: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-    end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = edChangePercentAmount
-    end
     object bbIsCalcAmountPartner: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Category = 0
-      Hint = 'New Item'
+      Hint = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
       Visible = ivAlways
       Control = cbCalcAmountPartner
+    end
+    object bbChangePercentAmount: TdxBarControlContainerItem
+      Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+      Category = 0
+      Hint = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+      Visible = ivAlways
+      Control = edChangePercentAmount
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1421,6 +1422,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
         DataType = ftFloat
       end
       item
@@ -1966,7 +1973,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Sale_Partner'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
     Params = <
       item
         Name = 'ioId'
@@ -2424,6 +2431,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
       end>
     Left = 804
     Top = 64
@@ -2481,9 +2500,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

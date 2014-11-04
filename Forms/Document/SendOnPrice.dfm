@@ -1,27 +1,27 @@
 inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
-  ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ClientWidth = 878
+  ExplicitWidth = 894
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1064
+    Width = 878
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1064
+    ExplicitWidth = 878
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1064
+    ClientRectRight = 878
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 878
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1064
+        Width = 878
         Height = 518
-        ExplicitWidth = 1064
+        ExplicitWidth = 878
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -73,10 +73,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Kind = skSum
-              Column = colPrice
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -117,6 +113,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colPartionGoods: TcxGridDBColumn
@@ -132,39 +129,37 @@ inherited SendOnPriceForm: TSendOnPriceForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 25
+            Width = 41
           end
           object colChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 55
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colAmountChangePercent: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -205,10 +200,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 878
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 878
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -225,12 +220,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
+      ExplicitWidth = 85
+      Width = 85
     end
     inherited cxLabel2: TcxLabel
       Left = 89
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+      Caption = #1044#1072#1090#1072' ('#1088#1072#1089#1093#1086#1076')'
       ExplicitLeft = 89
-      ExplicitWidth = 71
+      ExplicitWidth = 77
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -239,120 +236,109 @@ inherited SendOnPriceForm: TSendOnPriceForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 218
+      ExplicitWidth = 257
       ExplicitHeight = 22
-      Width = 218
+      Width = 257
     end
     object cxLabel3: TcxLabel
-      Left = 303
+      Left = 274
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 303
+      Left = 274
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
-      Width = 168
+      Width = 170
     end
     object edTo: TcxButtonEdit
-      Left = 477
+      Left = 452
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 265
     end
     object cxLabel4: TcxLabel
-      Left = 477
+      Left = 452
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 303
+      Left = 274
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 432
+      Left = 404
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 432
+      Left = 404
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 479
+      Left = 454
       Top = 63
-      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 13
       Width = 144
     end
     object cxLabel8: TcxLabel
-      Left = 479
+      Left = 454
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
-    object cxLabel13: TcxLabel
-      Left = 748
-      Top = 5
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
-    end
-    object edRouteSorting: TcxButtonEdit
-      Left = 748
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 16
-      Width = 106
-    end
     object edOperDatePartner: TcxDateEdit
-      Left = 195
+      Left = 180
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 17
-      Width = 100
+      TabOrder = 15
+      Width = 85
     end
     object cxLabel10: TcxLabel
-      Left = 195
+      Left = 180
       Top = 5
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+      Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
     end
     object cxLabel11: TcxLabel
-      Left = 752
+      Left = 606
       Top = 45
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 748
+      Left = 606
       Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 20
-      Width = 89
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 111
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -375,8 +361,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -424,11 +408,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -527,14 +513,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -559,6 +537,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -571,49 +557,18 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
-    end
-    object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
-      Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
-    end
-    object bbPrintTax: TdxBarButton [6]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
-    end
-    object bbPrintTax_Client: TdxBarButton [7]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
-    end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Visible = ivAlways
-      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -699,6 +654,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -775,19 +731,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
-        Name = 'RouteSortingId'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'PriceListId'
         Value = ''
         Component = PriceListGuides
@@ -799,53 +742,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -919,8 +815,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'inRouteSortingId'
         Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -980,10 +874,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
       end
       item
@@ -1002,18 +892,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edVATPercent
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = edPriceList
-      end
-      item
-        Control = edRouteSorting
       end
       item
       end>
@@ -1040,6 +919,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1053,12 +933,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1066,6 +948,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
@@ -1073,6 +956,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inAmountChangePercent'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountChangePercent'
         DataType = ftFloat
@@ -1080,6 +964,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inChangePercentAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercentAmount'
         DataType = ftFloat
@@ -1087,6 +972,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1094,6 +980,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1101,12 +988,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1114,6 +1003,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -1135,20 +1025,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end
@@ -1202,8 +1078,20 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = Null
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
       end>
-    Left = 804
+    Left = 652
     Top = 64
   end
   object spSelectPrint: TdsdStoredProc
@@ -1229,39 +1117,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 319
     Top = 208
   end
-  object GuidesRouteSorting: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 792
-    Top = 16
-  end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1285,41 +1146,25 @@ inherited SendOnPriceForm: TSendOnPriceForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
-      end
       item
         Name = 'Key'
         Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 616
   end

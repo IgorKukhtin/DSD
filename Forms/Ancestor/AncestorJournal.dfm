@@ -183,6 +183,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -297,8 +298,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object actMovementItemContainer: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
@@ -306,6 +307,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -471,15 +473,27 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbInsert: TdxBarButton
@@ -587,10 +601,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 40
     Top = 144
   end
@@ -600,10 +616,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 48
     Top = 176
   end
@@ -613,10 +631,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 136
     Top = 168
   end

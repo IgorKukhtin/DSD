@@ -2,26 +2,26 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 537
   ClientWidth = 841
-  ExplicitWidth = 849
-  ExplicitHeight = 571
+  ExplicitWidth = 857
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 841
     Height = 480
     TabOrder = 3
-    ExplicitWidth = 1070
-    ExplicitHeight = 477
+    ExplicitWidth = 841
+    ExplicitHeight = 480
     ClientRectBottom = 480
     ClientRectRight = 841
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1070
-      ExplicitHeight = 477
+      ExplicitWidth = 841
+      ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 841
         Height = 480
-        ExplicitWidth = 1070
-        ExplicitHeight = 477
+        ExplicitWidth = 841
+        ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -135,7 +135,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 841
-    ExplicitWidth = 1070
+    ExplicitWidth = 841
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -160,6 +160,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -280,11 +281,11 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -361,12 +362,6 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-      end>
     Left = 408
     Top = 344
   end
@@ -375,6 +370,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -392,6 +388,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -404,6 +401,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -476,6 +474,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end

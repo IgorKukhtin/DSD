@@ -73,9 +73,9 @@ BEGIN
          , Object_RouteSorting.ObjectCode   AS RouteSortingCode
          , Object_RouteSorting.ValueData    AS RouteSortingName
          
-         , View_PersonalTake.PersonalId   AS PersonalTakeId
-         , View_PersonalTake.PersonalCode AS PersonalTakeCode
-         , View_PersonalTake.PersonalName AS PersonalTakeName
+         , Object_PersonalTake.Id           AS PersonalTakeId
+         , Object_PersonalTake.ObjectCode   AS PersonalTakeCode
+         , Object_PersonalTake.ValueData    AS PersonalTakeName
                   
          , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -162,7 +162,7 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
                               ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-         LEFT JOIN Object_Personal_View AS View_PersonalTake ON View_PersonalTake.PersonalId = ObjectLink_Partner_PersonalTake.ChildObjectId
+         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
          
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 

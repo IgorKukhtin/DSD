@@ -24,8 +24,8 @@ $BODY$
    DECLARE vbCode Integer;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
+
 
    -- !!! Если код не установлен, определяем его каи последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Juridical());
