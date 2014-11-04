@@ -169,6 +169,7 @@ type
     cbCompleteLossNotError: TCheckBox;
     cbWeighingPartner: TCheckBox;
     cbWeighingProduction: TCheckBox;
+    cbComplete_List: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -241,6 +242,8 @@ type
     procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
 
     procedure pCompleteDocument_Loss(isLastComplete:Boolean);
+
+    procedure pCompleteDocument_List(isBefoHistoryCost:Boolean);
 
     procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
     procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
@@ -1672,6 +1675,7 @@ begin
      OKGuideButton.Enabled:=false;
      OKDocumentButton.Enabled:=false;
      OKCompleteDocumentButton.Enabled:=false;
+     if cbComplete_List.Checked then cbUnComplete.Checked:=cbComplete.Checked;
      //
      Gauge.Visible:=true;
      //
@@ -1708,9 +1712,14 @@ begin
           if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
+          if not fStop then pCompleteDocument_List(TRUE);
      end;
 
      if not fStop then pInsertHistoryCost;
+     //
+     if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
+     then pCompleteDocument_List(FALSE) //
+     else pCompleteDocument_List(FALSE);
      //
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
      if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
@@ -17611,6 +17620,130 @@ begin
      end;
      //
      myDisabledCB(cbLossGuide);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost:Boolean);
+  function myAdd :String;
+  begin
+       result:='';
+       if not toSqlQuery.EOF then
+       with toSqlQuery do
+       result:=' select ' + FieldByName('MovementId').AsString
+              +'       ,' + FormatToDateServer_notNULL(FieldByName('OperDate').AsDateTime)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('InvNumber').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('Code').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('ItemName').AsString);
+       Gauge.Progress:=Gauge.Progress+1;
+  end;
+var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
+    i,SaveRecord:Integer;
+begin
+     if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
+     //
+     myEnabledCB(cbComplete_List);
+     //
+     // !!!заливка в сибасе!!!
+
+     // Get Data
+     if isBefoHistoryCost = TRUE
+     then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+     else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
+     // delete Data on Sybase
+     fExecSqFromQuery('delete dba._pgMovementReComlete');
+
+     SaveRecord:=toSqlQuery.RecordCount;
+     Gauge.Progress:=0;
+     Gauge.MaxValue:=SaveRecord;
+     cbComplete_List.Caption:='('+IntToStr(SaveRecord)+') !!!Cписок накладных!!!';
+
+     with toSqlQuery do
+        while not EOF do
+        begin
+             // insert into Sybase
+             ExecStr1:='insert into dba._pgMovementReComlete(MovementId,OperDate,InvNumber,Code,ItemName)'
+                     +myAdd;
+             ExecStr2:='';
+             ExecStr3:='';
+             ExecStr4:='';
+             for i:=1 to 100 do
+             begin
+                  Next;
+                  addStr:=myAdd;
+                  if addStr <> '' then
+                  if LengTh(ExecStr1) < 3500
+                  then ExecStr1:=ExecStr1 + ' union all ' + addStr
+                  else if LengTh(ExecStr2) < 3500
+                       then ExecStr2:=ExecStr2 + ' union all ' + addStr
+                        else if LengTh(ExecStr3) < 3500
+                             then ExecStr3:=ExecStr3 + ' union all ' + addStr
+                             else ExecStr4:=ExecStr4 + ' union all ' + addStr;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+             end;
+             fExecSqFromQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
+             Next;
+        end;
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select *');
+        Add('from dba._pgMovementReComlete');
+        Add('order by OperDate,InvNumber,MovementId');
+        Open;
+
+        cbComplete_List.Caption:='*.('+IntToStr(SaveRecord)+')('+IntToStr(RecordCount)+') !!!Cписок накладных!!!';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_All_Sybase';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsNoHistoryCost',ftBoolean,ptInput, true);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  begin
+                       toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
+
+                       if not myExecToStoredProc_two then ;//exit;
+                  end;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbComplete_List);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Loss;

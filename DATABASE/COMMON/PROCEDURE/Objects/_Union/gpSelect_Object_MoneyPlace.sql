@@ -22,18 +22,19 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY
-       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+     WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+        , View_InfoMoney_60101 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 60101)
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode     
           , Object_Cash.Valuedata AS Name
           , ObjectDesc.ItemName
           , Object_Cash.isErased
-          , NULL::Integer AS InfoMoneyId
-          , NULL::Integer AS InfoMoneyCode
-          , ''::TVarChar AS InfoMoneyGroupName
-          , ''::TVarChar AS InfoMoneyDestinationName
-          , ''::TVarChar AS InfoMoneyName
-          , ''::TVarChar AS InfoMoneyName_all
+          , View_InfoMoney.InfoMoneyId
+          , View_InfoMoney.InfoMoneyCode
+          , View_InfoMoney.InfoMoneyGroupName
+          , View_InfoMoney.InfoMoneyDestinationName
+          , View_InfoMoney.InfoMoneyName
+          , View_InfoMoney.InfoMoneyName_all
           , NULL::Integer   AS PaidKindId
           , ''::TVarChar AS PaidKindName
           , NULL::Integer AS ContractId
@@ -46,6 +47,7 @@ BEGIN
           , ''::TVarChar AS OKPO
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
+          LEFT JOIN View_InfoMoney_60101 AS View_InfoMoney ON 1 = 1
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
      SELECT Object_BankAccount_View.Id
@@ -53,12 +55,12 @@ BEGIN
           , (Object_BankAccount_View.Name || ' * '|| Object_BankAccount_View.BankName) ::TVarChar AS Name
           , ObjectDesc.ItemName
           , Object_BankAccount_View.isErased
-          , NULL::Integer AS InfoMoneyId
-          , NULL::Integer AS InfoMoneyCode
-          , ''::TVarChar AS InfoMoneyGroupName
-          , ''::TVarChar AS InfoMoneyDestinationName
-          , ''::TVarChar AS InfoMoneyName
-          , ''::TVarChar AS InfoMoneyName_all
+          , View_InfoMoney.InfoMoneyId
+          , View_InfoMoney.InfoMoneyCode
+          , View_InfoMoney.InfoMoneyGroupName
+          , View_InfoMoney.InfoMoneyDestinationName
+          , View_InfoMoney.InfoMoneyName
+          , View_InfoMoney.InfoMoneyName_all
           , NULL::Integer   AS PaidKindId
           , ''::TVarChar AS PaidKindName
           , NULL::Integer
@@ -71,6 +73,7 @@ BEGIN
           , ''::TVarChar    AS OKPO
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
+          LEFT JOIN View_InfoMoney_60101 AS View_InfoMoney ON 1 = 1
      WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
     UNION ALL
      SELECT Object_Member.Id       
@@ -140,7 +143,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

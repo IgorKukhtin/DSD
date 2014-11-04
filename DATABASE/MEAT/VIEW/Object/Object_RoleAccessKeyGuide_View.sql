@@ -143,14 +143,21 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 --                                                                                                   , 30200 -- Административные расходы + Содержание транспорта
 --                                                                                                    )
                                                                                                      )
+
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit()
                                                                      AND UnitCode NOT IN (23010) -- Отдел Маркетинга
-                                                                     AND ProfitLossDirectionCode IN (40300 -- Расходы на сбыт + Общефирменные
-                                                                                                    ))
+                                                                     AND ProfitLossDirectionCode IN (40100 -- Расходы на сбыт + Содержание транспорта
+                                                                                                   , 40200 -- Расходы на сбыт + Содержание филиалов
+                                                                                                   , 40300 -- Расходы на сбыт + Общефирменные
+                                                                                                    )
+                                                                        )
+
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceMarketing()
                                                                      AND UnitCode IN (23010) -- Отдел Маркетинга
                                                                      AND ProfitLossDirectionCode IN (40300 -- Расходы на сбыт + Общефирменные
-                                                                                                    ))
+                                                                                                    )
+                                                                        )
+
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSB()
                                                                      -- AND UnitCode IN (13000, 13010) -- Охрана + Служба безопастности
                                                                      AND ProfitLossDirectionCode IN (30300 -- Административные расходы + Содержание охраны

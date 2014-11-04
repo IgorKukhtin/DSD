@@ -1,27 +1,27 @@
 inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')>'
   ClientHeight = 668
-  ClientWidth = 878
-  ExplicitWidth = 894
+  ClientWidth = 740
+  ExplicitWidth = 756
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 878
+    Width = 740
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 878
+    ExplicitWidth = 740
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 878
+    ClientRectRight = 740
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 878
+      ExplicitWidth = 740
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 878
+        Width = 740
         Height = 518
-        ExplicitWidth = 878
+        ExplicitWidth = 740
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -44,10 +44,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -71,8 +67,8 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
               Column = colAmountSumm
             end
             item
-              Format = ',0.####'
               Kind = skSum
+              Column = colPrice
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -84,7 +80,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -92,15 +88,15 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn
+          object colGoodsKindName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -113,31 +109,36 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Options.Editing = False
+            Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn
+          object colPartionGoods: TcxGridDBColumn [3]
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn
+          object colMeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 41
           end
-          object colChangePercentAmount: TcxGridDBColumn
+          object colChangePercentAmount: TcxGridDBColumn [5]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -145,19 +146,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
-          object colAmountChangePercent: TcxGridDBColumn
+          object colAmountChangePercent: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colAmountPartner: TcxGridDBColumn
+          object colAmountPartner: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -165,9 +168,9 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
-          object colPrice: TcxGridDBColumn
+          object colPrice: TcxGridDBColumn [9]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -175,16 +178,17 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn
+          object colCountForPrice: TcxGridDBColumn [10]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
-          object colAmountSumm: TcxGridDBColumn
+          object colAmountSumm: TcxGridDBColumn [11]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,10 +203,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 878
+    Width = 740
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 878
+    ExplicitWidth = 740
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -215,17 +219,17 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 183
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 183
       ExplicitWidth = 85
       Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
+      Left = 183
       Caption = #1044#1072#1090#1072' ('#1088#1072#1089#1093#1086#1076')'
-      ExplicitLeft = 89
+      ExplicitLeft = 183
       ExplicitWidth = 77
     end
     inherited cxLabel15: TcxLabel
@@ -235,9 +239,9 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 257
+      ExplicitWidth = 168
       ExplicitHeight = 22
-      Width = 257
+      Width = 168
     end
     object cxLabel3: TcxLabel
       Left = 274
@@ -309,34 +313,17 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
-    object cxLabel13: TcxLabel
-      Left = 726
-      Top = 5
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-    end
-    object edRouteSorting: TcxButtonEdit
-      Left = 726
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 16
-      Width = 150
-    end
     object edOperDatePartner: TcxDateEdit
-      Left = 180
-      Top = 23
+      Left = 183
+      Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 17
+      TabOrder = 15
       Width = 85
     end
     object cxLabel10: TcxLabel
-      Left = 180
-      Top = 5
+      Left = 183
+      Top = 45
       Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
     end
     object cxLabel11: TcxLabel
@@ -350,11 +337,30 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 111
+    end
+    object cxLabel5: TcxLabel
+      Left = 87
+      Top = 5
+      Caption = #8470' '#1079#1072#1103#1074#1082#1080
+    end
+    object edInvNumberOrder: TcxButtonEdit
+      Left = 87
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 111
+      Width = 89
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -588,14 +594,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 4
       end>
-    Left = 830
-    Top = 265
+    Left = 534
+    Top = 241
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 504
+    Top = 440
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -747,19 +753,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         DataType = ftString
       end
       item
-        Name = 'RouteSortingId'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'PriceListId'
         Value = ''
         Component = PriceListGuides
@@ -771,59 +764,12 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_SendOnPrice'
+    StoredProcName = 'gpInsertUpdate_Movement_SendOnPrice_Branch'
     Params = <
       item
         Name = 'ioId'
@@ -889,13 +835,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
       end
       item
-        Name = 'inRouteSortingId'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -908,29 +847,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -970,7 +886,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Control = edVATPercent
       end
       item
-        Control = edRouteSorting
       end
       item
         Control = edPriceList
@@ -980,21 +895,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 616
+    Top = 296
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SendOnPrice_SetErased'
-    Left = 718
-    Top = 512
+    Left = 614
+    Top = 488
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SendOnPrice_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 614
+    Top = 440
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_SendOnPrice'
+    StoredProcName = 'gpInsertUpdate_MovementItem_SendOnPrice_Branch'
     Params = <
       item
         Name = 'ioId'
@@ -1196,33 +1111,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Left = 319
     Top = 208
   end
-  object GuidesRouteSorting: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 784
-    Top = 16
-  end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
@@ -1255,7 +1143,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

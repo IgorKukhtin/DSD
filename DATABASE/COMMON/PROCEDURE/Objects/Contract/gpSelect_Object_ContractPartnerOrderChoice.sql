@@ -141,7 +141,18 @@ BEGIN
      AND COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                            )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-          OR vbIsConstraint = FALSE)
+          OR vbIsConstraint = FALSE
+          OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
+                                 , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
+                                 , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
+                                 , 268754 -- ВК №37 Запорожье, Горького, 71 ВЕЛ.КИШ.ФУДМЕРЕЖА
+                                 , 79205 -- ТОВ "РТЦ" Варус-10, Запорожье, ул.Сев.кольц.колб
+                                 , 17795 -- РТЦ ТОВ, Варус-10, Запорожье Варто ТМ
+                                 , 132330 -- РИТЕЙЛ ВЕСТ МЕЛИТОПОЛЬ,ЛЕНИНА,18/2
+                                 , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
+                                 , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
+                                  )
+         )
   UNION ALL
    SELECT
          NULL :: Integer AS Id
@@ -289,7 +300,19 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                            )
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-          OR vbIsConstraint = FALSE)
+          OR vbIsConstraint = FALSE
+          OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
+                                 , 17344 -- Білла 9221,Запорожье,ул.Яценко,2*500239
+                                 , 79360 -- ВК № 37 Вел.Киш.,Запорожье,ГОРЬКОГО,71
+                                 , 268754 -- ВК №37 Запорожье, Горького, 71 ВЕЛ.КИШ.ФУДМЕРЕЖА
+                                 , 79205 -- ТОВ "РТЦ" Варус-10, Запорожье, ул.Сев.кольц.колб
+                                 , 17795 -- РТЦ ТОВ, Варус-10, Запорожье Варто ТМ
+                                 , 132330 -- РИТЕЙЛ ВЕСТ МЕЛИТОПОЛЬ,ЛЕНИНА,18/2
+                                 , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
+                                 , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
+                                  )
+         )
+
   UNION ALL
    SELECT
          NULL :: Integer AS Id
@@ -339,7 +362,8 @@ BEGIN
                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
    WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
      AND (ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
-          OR vbIsConstraint = FALSE)
+          OR vbIsConstraint = FALSE
+         )
   ;
 
    END IF;

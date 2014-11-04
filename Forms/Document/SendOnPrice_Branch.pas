@@ -26,9 +26,6 @@ type
     cxLabel7: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
@@ -57,6 +54,8 @@ type
     PrintItemsCDS: TClientDataSet;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
+    cxLabel5: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
   private
     { Private declarations }
   public

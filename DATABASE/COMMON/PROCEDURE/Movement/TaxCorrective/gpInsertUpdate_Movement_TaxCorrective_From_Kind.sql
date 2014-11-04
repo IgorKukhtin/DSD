@@ -54,7 +54,7 @@ BEGIN
      END IF;
 
      -- 
-     IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Corrective()
+     IF inDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Corrective(), zc_Enum_DocumentTaxKind_CorrectivePrice())
      THEN
          RAISE EXCEPTION 'Ошибка.Неверно указан тип корректировки.';
      END IF;

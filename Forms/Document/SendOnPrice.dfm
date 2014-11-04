@@ -113,6 +113,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colPartionGoods: TcxGridDBColumn
@@ -309,29 +310,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
-    object cxLabel13: TcxLabel
-      Left = 726
-      Top = 5
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-    end
-    object edRouteSorting: TcxButtonEdit
-      Left = 726
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 16
-      Width = 150
-    end
     object edOperDatePartner: TcxDateEdit
       Left = 180
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 17
+      TabOrder = 15
       Width = 85
     end
     object cxLabel10: TcxLabel
@@ -353,7 +337,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 20
+      TabOrder = 18
       Width = 111
     end
   end
@@ -747,19 +731,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
-        Name = 'RouteSortingId'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'PriceListId'
         Value = ''
         Component = PriceListGuides
@@ -771,53 +742,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -891,8 +815,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'inRouteSortingId'
         Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -973,7 +895,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edPriceList
       end
       item
-        Control = edRouteSorting
       end>
     Left = 232
     Top = 193
@@ -1196,33 +1117,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 319
     Top = 208
   end
-  object GuidesRouteSorting: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 784
-    Top = 16
-  end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
@@ -1255,7 +1149,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
