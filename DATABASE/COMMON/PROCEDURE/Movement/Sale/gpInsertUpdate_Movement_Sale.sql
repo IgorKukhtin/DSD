@@ -66,6 +66,12 @@ BEGIN
                                       , inUserId           := vbUserId
                                        ) AS tmp;
 
+
+
+    -- сформировали св€зь у расходной накл. с EDI (такую же как и у за€вки)
+    PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), ioId, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order()));
+
+
     -- в этом случае надо восстановить/удалить Ќалоговую
     IF vbMovementId_Tax <> 0
     THEN

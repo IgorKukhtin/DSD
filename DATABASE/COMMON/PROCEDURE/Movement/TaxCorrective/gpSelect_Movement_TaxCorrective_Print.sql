@@ -249,14 +249,14 @@ BEGIN
                   THEN MovementItem.Amount
                   ELSE NULL  END                                            AS Amount
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
-                  THEN MIFloat_Price.ValueData
+                  THEN MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                   ELSE NULL  END                                            AS Price
 
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MovementItem.Amount
                   ELSE NULL  END                                            AS Amount_for_PriceCor
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
-                  THEN MIFloat_Price.ValueData
+                  THEN MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                   ELSE NULL  END                                            AS Price_for_PriceCor
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0

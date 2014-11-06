@@ -71,8 +71,9 @@ BEGIN
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
-              OR vbIsConstraint = FALSE)
-            OR Object_Unit_View.Id = 8459 -- Склад Реализации
+              OR vbIsConstraint = FALSE
+              OR Object_Unit_View.Id = 8459 -- Склад Реализации
+             )
       ;
 
 END;

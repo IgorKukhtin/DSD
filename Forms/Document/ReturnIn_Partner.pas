@@ -126,6 +126,7 @@ type
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
+    actGoodsKindChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

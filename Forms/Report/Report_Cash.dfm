@@ -2,6 +2,7 @@ inherited Report_CashForm: TReport_CashForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
   ClientHeight = 555
   ClientWidth = 1020
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96

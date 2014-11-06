@@ -363,6 +363,7 @@ BEGIN
    WHERE ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
      AND (ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
+          OR Object_Unit.Id = 8459 -- Склад Реализации
          )
   ;
 

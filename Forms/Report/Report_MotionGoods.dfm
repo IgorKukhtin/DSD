@@ -15,6 +15,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -2007,5 +2008,65 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     Left = 272
     Top = 13
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'IncomeDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnOutDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'SaleDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'MoneyDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ServiceDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'SendDebtDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'OtherDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'SaleRealDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInRealDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'TransferDebtDesc'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 424
+    Top = 224
   end
 end
