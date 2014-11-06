@@ -271,6 +271,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
+  // Регионы (договора)
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContactForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaContactForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContactEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaContactEditForm');
   // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
@@ -1462,6 +1467,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
+    // Торговая сеть (отчет)
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailReportEditForm');
 end;
 
 procedure TLoadFormTest.SetUp;

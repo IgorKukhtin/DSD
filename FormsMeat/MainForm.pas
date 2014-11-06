@@ -431,6 +431,10 @@ type
     bbReturnIn_Partner: TdxBarButton;
     actSendOnPrice_Branch: TdsdOpenForm;
     bbSendOnPrice_Branch: TdxBarButton;
+    actRetailReport: TdsdOpenForm;
+    actAreaContact: TdsdOpenForm;
+    bbAreaContact: TdxBarButton;
+    bbRetailReport: TdxBarButton;
   public
     { Public declarations }
   end;

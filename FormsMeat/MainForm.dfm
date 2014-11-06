@@ -3,15 +3,16 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 281
+  ExplicitLeft = -246
+  ExplicitWidth = 1094
+  ExplicitHeight = 280
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -195,7 +196,15 @@
         end
         item
           Visible = True
+          ItemName = 'bbAreaContact'
+        end
+        item
+          Visible = True
           ItemName = 'bbRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetailReport'
         end
         item
           Visible = True
@@ -1973,6 +1982,14 @@
       Action = actCorrAccount
       Category = 0
     end
+    object bbAreaContact: TdxBarButton
+      Action = actAreaContact
+      Category = 0
+    end
+    object bbRetailReport: TdxBarButton
+      Action = actRetailReport
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -2310,7 +2327,18 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_BankAccount: TdsdOpenForm [20]
+    object actRetailReport: TdsdOpenForm [20]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
+      Hint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      FormName = 'TRetailReportForm'
+      FormNameParam.Value = 'TRetailReportForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_BankAccount: TdsdOpenForm [21]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
@@ -2320,7 +2348,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Cash: TdsdOpenForm [21]
+    object actReport_Cash: TdsdOpenForm [22]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -2330,7 +2358,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Member: TdsdOpenForm [22]
+    object actReport_Member: TdsdOpenForm [23]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
@@ -2347,6 +2375,17 @@
       Hint = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074' '
       FormName = 'TAssetGroupForm'
       FormNameParam.Value = 'TAssetGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAreaContact: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1077#1075#1080#1086#1085#1099' ('#1076#1086#1075#1086#1074#1086#1088#1072')'
+      Hint = #1056#1077#1075#1080#1086#1085#1099
+      FormName = 'TAreaContactForm'
+      FormNameParam.Value = 'TAreaContactForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
