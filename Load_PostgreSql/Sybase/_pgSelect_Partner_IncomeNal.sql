@@ -47,7 +47,7 @@ begin
                  , max (isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode
             from dba.Bill
                  left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
-                 inner join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.OperPrice<>0
+                 inner join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 -- and BillItems.OperPrice<>0
                  left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
             where Bill.BillDate between  @inStartDate and @inEndDate
               and Bill.BillKind=zc_bkReturnToClient()

@@ -56,7 +56,7 @@ BEGIN
                                           , ioCountForPrice      := CASE WHEN vbIsProcess_BranchIn = FALSE
                                                                            OR 0 = COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0)
                                                                               THEN ioCountForPrice
-                                                                         ELSE COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Price()), 1)
+                                                                         ELSE COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_CountForPrice()), 1)
                                                                     END
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := CASE WHEN vbIsProcess_BranchIn = FALSE

@@ -139,6 +139,7 @@ type
     InfoMoneyName_all_Detail: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     ContainerId_Summ: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
   public
   end;

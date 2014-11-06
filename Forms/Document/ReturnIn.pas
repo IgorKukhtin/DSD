@@ -128,6 +128,7 @@ type
     ContractTagGuides: TdsdGuides;
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
+    actGoodsKindChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

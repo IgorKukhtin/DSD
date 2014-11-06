@@ -2,7 +2,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitLeft = -162
   ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -12,17 +11,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1127
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1127
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1127
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -104,7 +103,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actTaxJournalChoice
+                Action = actGoodsKindChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -198,7 +197,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1127
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -206,7 +204,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 518
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1127
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -534,7 +531,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1127
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1206,6 +1203,29 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actGoodsKindChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'TGoodsKind_ObjectForm'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1907,7 +1927,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Partner'
     Params = <
       item
         Name = 'ioId'
@@ -1928,14 +1948,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -2003,7 +2015,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn_Partner'
     Params = <
       item
         Name = 'ioId'
@@ -2022,12 +2034,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
-        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -2091,8 +2097,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 460
-    Top = 132
+    Left = 476
+    Top = 52
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice

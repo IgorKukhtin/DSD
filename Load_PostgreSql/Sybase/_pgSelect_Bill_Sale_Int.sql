@@ -99,10 +99,11 @@ begin
       from
       (select Bill.Id as BillId, min (Bill_find.Id) as BillId_union
             , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
-            , max (isnull(case when BillItems.OperPrice<>0 and BillItems.OperCount<>0 then BillItems.Id else 0 end,0))as findId
+            , max (isnull(case when BillItems2.OperPrice<>0 and BillItems2.OperCount<>0 then BillItems2.Id else 0 end,0))as findId
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
            left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 and BillItems.OperCount<>0 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left join dba.BillItems as BillItems2 on BillItems2.BillId = Bill.Id
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber

@@ -96,6 +96,8 @@ BEGIN
     -- таблица - 
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpContainer_Count (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, Amount TFloat) ON COMMIT DROP;
+
 
     IF inGoodsGroupId <> 0 
     THEN 
@@ -134,7 +136,6 @@ BEGIN
     END IF;
 
 
-      RETURN QUERY 
            WITH tmpLocation AS (SELECT COALESCE (CLO_Unit.ContainerId, COALESCE (CLO_Car.ContainerId, COALESCE (CLO_Member.ContainerId, 0))) AS ContainerId
                                      , _tmpLocation.LocationId
                                 FROM _tmpLocation
@@ -169,7 +170,21 @@ BEGIN
                                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
                                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
                                )
-       , tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
+           INSERT INTO _tmpContainer_Count (ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, Amount)
+             SELECT ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, Amount FROM tmpContainer_Count;
+/*
+     IF (SELECT COUNT(*) FROM _tmpContainer_Count) <= 300
+     THEN 
+  */
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpContainer_Count;
+   
+         -- !!!!!!!!!!!!!!!!!!!!!!!
+         -- !!!старт!!! ЕСЛИ <= 300
+         -- !!!!!!!!!!!!!!!!!!!!!!!
+      RETURN QUERY 
+    WITH tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
                                        , tmpContainer_Count.LocationId
                                        , tmpContainer_Count.GoodsId
                                        , tmpContainer_Count.GoodsKindId
@@ -248,7 +263,7 @@ BEGIN
 
                                        , tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Start
                                        , tmpContainer_Count.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) AS Amount_End
-                                  FROM tmpContainer_Count
+                                  FROM _tmpContainer_Count AS tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
                                        LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
@@ -270,7 +285,7 @@ BEGIN
                                     , Container.Id                         AS ContainerId_Summ
                                     , Container.ObjectId                   AS AccountId
                                     , Container.Amount
-                               FROM tmpContainer_Count
+                               FROM _tmpContainer_Count AS tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
                               )
@@ -754,6 +769,10 @@ BEGIN
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
       ;
+
+         -- !!!!!!!!!!!!!!!!!!!!!!!
+         -- !!!финиш!!! ЕСЛИ <= 300
+         -- !!!!!!!!!!!!!!!!!!!!!!!
 
 END;
 $BODY$

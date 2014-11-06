@@ -15,6 +15,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbMovementDescId           Integer;
+   DECLARE vbMovementId_Sale          Integer;
    DECLARE vbMovementId_Tax           Integer;
    DECLARE vbMovementId_TaxCorrective Integer;
    DECLARE vbOperDate         TDateTime;
@@ -54,7 +55,8 @@ BEGIN
                                           END;
 
       -- определ€ютс€ параметры дл€ <Ќалогового документа>
-      SELECT CASE WHEN Movement.DescId = zc_Movement_Tax() THEN inMovementId ELSE MovementLinkMovement.MovementChildId END AS MovementId_Tax
+      SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN inMovementId ELSE 0 END AS MovementId_Sale
+           , CASE WHEN Movement.DescId = zc_Movement_Tax() THEN inMovementId ELSE MovementLinkMovement.MovementChildId END AS MovementId_Tax
            , Movement.DescId AS MovementDescId
            , CASE WHEN Movement.DescId = zc_Movement_Tax()
                        THEN Movement.InvNumber -- остаетс€ тот что был
@@ -84,7 +86,7 @@ BEGIN
            , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
-             INTO vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+             INTO vbMovementId_Sale, vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
                 , vbDiscountPercent, vbExtraChargesPercent
       FROM Movement
            LEFT JOIN MovementString AS MS_InvNumberPartner
@@ -584,6 +586,11 @@ BEGIN
       FROM _tmpMovement
       WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn());
 
+      IF inDocumentTaxKindId= zc_Enum_DocumentTaxKind_Tax() AND vbMovementId_Sale <> 0
+      THEN
+          -- сформировали св€зь у налоговой накл. с EDI (такую же как и у расходной накл.)
+          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Tax(), vbMovementId_Tax, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = vbMovementId_Sale AND DescId = zc_MovementLinkMovement_Sale()));
+      END IF;
 
       -- удал€ем !!!все!!! строки из Ќалоговой
       PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpMI_Tax.MovementItemId
