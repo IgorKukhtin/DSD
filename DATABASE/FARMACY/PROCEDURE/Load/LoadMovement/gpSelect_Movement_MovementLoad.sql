@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , isAllGoodsConcat Boolean, NDSinPrice Boolean)
+             , TotalCount TFloat, TotalSumm TFloat
+             , isAllGoodsConcat Boolean, isNDSinPrice Boolean)
 
 AS
 $BODY$
@@ -34,11 +35,14 @@ BEGIN
            , LoadMovement.TotalCount           
            , LoadMovement.TotalSumm
            , LoadMovement.isAllGoodsConcat           
-           , LoadMovement.NDSinPrice           
-       FROM LoadPriceList
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = LoadPriceList.UnitId
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId;
+           , LoadMovement.isNDSinPrice           
+           , Object_NdsKind.Id          AS NdsKindId
+           , Object_NdsKind.ValueData   AS NdsKindName
+       FROM LoadMovement
+            LEFT JOIN Object AS Object_NdsKind ON Object_NdsKind.Id = LoadMovement.NDSKindId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = LoadMovement.UnitId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadMovement.JuridicalId
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadMovement.ContractId;
 
 END;
 $BODY$

@@ -7,7 +7,7 @@
 
 -- Table: Movement
 
--- DROP TABLE LoadMovement;
+-- DROP TABLE LoadMovementItem; DROP TABLE LoadMovement;
 
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE LoadMovement
@@ -21,6 +21,7 @@ CREATE TABLE LoadMovement
   ContractId	Integer , -- Договор лица
   UnitId        Integer , -- Подразделения
   NDSKindId	Integer ,  -- Типы НДС
+  isNDSinPrice	boolean ,  -- НДС в цене?
   isAllGoodsConcat Boolean, -- Все ли товары имеют связь
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_ContractId FOREIGN KEY (ContractId)     REFERENCES Object (id),
