@@ -562,7 +562,11 @@ uses
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
   Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
-  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  AreaContact in '..\..\Forms\Guides\AreaContact.pas' {AreaContactForm: TParentForm},
+  AreaContactEdit in '..\..\Forms\Guides\AreaContactEdit.pas' {AreaContactEditForm: TParentForm},
+  RetailReport in '..\..\Forms\Guides\RetailReport.pas' {RetailReportForm: TParentForm},
+  RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

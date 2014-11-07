@@ -39,7 +39,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deEnd: TcxDateEdit
     Left = 176
     Top = 24
-    EditValue = 41608d
+    EditValue = 41640d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 121
@@ -47,7 +47,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deStart: TcxDateEdit
     Left = 16
     Top = 24
-    EditValue = 41579d
+    EditValue = 41640d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 121
@@ -103,22 +103,22 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object cxLabel3: TcxLabel
     Left = 16
     Top = 44
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
   end
   object cxLabel4: TcxLabel
     Left = 16
     Top = 94
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+    Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
   end
   object cxLabel1: TcxLabel
     Left = 177
     Top = 44
-    Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel2: TcxLabel
     Left = 177
     Top = 94
-    Caption = #1058#1086#1074#1072#1088
+    Caption = #1058#1086#1074#1072#1088':'
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbGoodsKindId Integer;
    DECLARE vbPaidKindId Integer;
    DECLARE vbDiscount TFloat;
+   DECLARE vbSumaPDV TFloat;
    DECLARE vbMovementDescId Integer;
    DECLARE vbMovementDescId_find Integer;
    DECLARE vbArticleLossId Integer;
@@ -56,7 +57,7 @@ BEGIN
 
      -- открыли курсор c учетом существующих документов
      OPEN curMovement FOR 
-          SELECT DISTINCT Sale1C.InvNumber
+                   SELECT Sale1C.InvNumber
                         , Sale1C.OperDate
                         , zfGetUnitFromUnitId (Sale1C.UnitId) AS UnitId
                         , Sale1C.UnitId AS UnitId_1C
@@ -70,6 +71,7 @@ BEGIN
                         , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END) AS MovementDescId_find
                         , zfGetPaidKindFrom1CType (Sale1C.VidDoc) AS PaidKindId
                         , round (Sale1C.Tax)
+                        , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id          AS Partner1CLinkId
                           , Object_Partner1CLink.ObjectCode  AS ClientCode
@@ -133,12 +135,26 @@ BEGIN
           WHERE Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
             AND ((Sale1C.VIDDOC = '1') OR (Sale1C.VIDDOC = '2')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
             AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+                 GROUP BY Sale1C.InvNumber
+                        , Sale1C.OperDate
+                        , zfGetUnitFromUnitId (Sale1C.UnitId)
+                        , Sale1C.UnitId
+                        , ObjectLink_Partner1CLink_Partner.ChildObjectId
+                        , tmpPartner1CLink.ContractId
+                        , CASE WHEN Object_To.DescId = zc_Object_ArticleLoss()
+                                    THEN Object_To.Id
+                          END
+                        , Sale.Id
+                        , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END
+                        , COALESCE (Sale.DescId, CASE WHEN Object_To.DescId = zc_Object_Partner() THEN zc_Movement_Sale() ELSE zc_Movement_Loss() END)
+                        , zfGetPaidKindFrom1CType (Sale1C.VidDoc)
+                        , round (Sale1C.Tax)
          ;
 
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbArticleLossId, vbMovementId, vbMovementDescId, vbMovementDescId_find, vbPaidKindId, vbDiscount, vbSumaPDV;
 
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
@@ -170,7 +186,7 @@ BEGIN
                                            , inCurrencyDocumentId:= 14461 -- грн
                                            , inCurrencyPartnerId:= NULL
                                            , inMovementId_Order := NULL
-                                           , ioPriceListId:= 0
+                                           , ioPriceListId:= CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN (SELECT MAX (ObjectBoolean.ObjectId) FROM ObjectBoolean INNER JOIN ObjectFloat ON ObjectFloat.ObjectId = ObjectBoolean.ObjectId AND ObjectFloat.ValueData = 0 AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent() WHERE ObjectBoolean.ValueData = TRUE AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()) ELSE 0 END
                                            , inUserId := vbUserId
                                             ) AS tmp;
           ELSE
@@ -332,7 +348,7 @@ BEGIN
 
      -- открыли курсор
      OPEN curMovement FOR 
-          SELECT DISTINCT Sale1C.InvNumber
+                   SELECT Sale1C.InvNumber
                         , Sale1C.OperDate
                         , zfGetUnitFromUnitId (Sale1C.UnitId) AS vbUnitId
                         , Sale1C.UnitId AS vbUnitId
@@ -341,6 +357,7 @@ BEGIN
                         , MovementReturn.Id
                         , zfGetPaidKindFrom1CType(Sale1C.VidDoc) AS PaidKindId
                         , round(Sale1C.Tax)
+                        , MAX (SumaPDV) AS SumaPDV
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -385,12 +402,22 @@ BEGIN
                          AND MovementReturn.PartnerId = ObjectLink_Partner1CLink_Partner.ChildObjectId
 
           WHERE  Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate AND Sale1C.ClientCode = inClientCode
-            AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
+            AND ((Sale1C.VIDDOC = '4') OR (Sale1C.VIDDOC = '3')) AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+                 GROUP BY Sale1C.InvNumber
+                        , Sale1C.OperDate
+                        , zfGetUnitFromUnitId (Sale1C.UnitId)
+                        , Sale1C.UnitId
+                        , ObjectLink_Partner1CLink_Partner.ChildObjectId
+                        , tmpPartner1CLink.ContractId
+                        , MovementReturn.Id
+                        , zfGetPaidKindFrom1CType(Sale1C.VidDoc)
+                        , round(Sale1C.Tax)
+      ;
 
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId, vbPaidKindId, vbDiscount, vbSumaPDV;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -405,8 +432,11 @@ BEGIN
           -- сохранили Документ
 
           SELECT tmp.ioId INTO vbMovementId
-          FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
-                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
+          FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
+                                                          , inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
+                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE
+                                                          , inPriceWithVAT := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN TRUE ELSE FALSE END
+                                                          , inVATPercent := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN 0 ELSE 20 END
                                                           , inChangePercent := - vbDiscount, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := vbPaidKindId
                                                           , inContractId := vbContractId
                                                           , inCurrencyDocumentId:= 14461 -- грн

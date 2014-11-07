@@ -30,6 +30,7 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
+         WITH tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) AS InvNumber
@@ -71,9 +72,14 @@ BEGIN
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
-               LEFT JOIN Object AS Object_To ON Object_To.Id = 8461 -- !!!Склад Возвратов!!!
-               LEFT JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
-                                                 and ObjectCurrency.id = 14461	                                      -- грн
+               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN 0 = COALESCE ((SELECT BranchId FROM tmpBranch), 0)
+                                                                         THEN 8461 -- !!!Склад Возвратов!!!
+                                                                    WHEN 301310 = (SELECT BranchId FROM tmpBranch) -- филиал Запорожье
+                                                                         THEN 301309 -- !!!ф. Запорожье!!!
+                                                                    ELSE 0
+                                                               END
+               LEFT JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
+                                                 AND ObjectCurrency.id = 14461 -- грн
          ;
      ELSE
 

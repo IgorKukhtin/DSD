@@ -2,6 +2,7 @@ inherited Report_CashUserForm: TReport_CashUserForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077'>'
   ClientHeight = 555
   ClientWidth = 1020
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -503,6 +504,7 @@ inherited Report_CashUserForm: TReport_CashUserForm
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1072#1089#1089#1077' ('#1076#1077#1090#1072#1083#1100#1085#1099#1081')'
@@ -1785,10 +1787,6 @@ inherited Report_CashUserForm: TReport_CashUserForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

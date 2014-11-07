@@ -1,22 +1,23 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inPrice               TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-    IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
+    IN inGoodsId                Integer   , -- Товары
+    IN inAmount                 TFloat    , -- Количество
+ INOUT ioAmountPartner          TFloat    , -- Количество у контрагента
+    IN inIsCalcAmountPartner    Boolean   , -- Признак - будет ли исправлено <Количество у контрагента>
+    IN inPrice                  TFloat    , -- Цена
+ INOUT ioCountForPrice          TFloat    , -- Цена за количество
+   OUT outAmountSumm            TFloat    , -- Сумма расчетная
+    IN inHeadCount              TFloat    , -- Количество голов
+    IN inPartionGoods           TVarChar  , -- Партия товара
+    IN inGoodsKindId            Integer   , -- Виды товаров
+    IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -25,6 +26,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
 
+     -- !!!меняется параметр!!! - Количество у контрагента
+     IF inIsCalcAmountPartner = TRUE
+     THEN
+         ioAmountPartner:= inAmount;
+     END IF;
+
+
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
@@ -32,7 +40,7 @@ BEGIN
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
                                               , inAmount             := inAmount
-                                              , inAmountPartner      := inAmountPartner
+                                              , inAmountPartner      := ioAmountPartner
                                               , inPrice              := inPrice
                                               , ioCountForPrice      := ioCountForPrice
                                               , inHeadCount          := inHeadCount
@@ -41,9 +49,6 @@ BEGIN
                                               , inAssetId            := inAssetId
                                               , inUserId             := vbUserId
                                                ) AS tmp;
-
-
-
 
 END;
 $BODY$

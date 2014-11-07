@@ -43,7 +43,7 @@ BEGIN
      END IF;
 
      -- !!!расчет!!! - Количество c учетом % скидки
-     outAmountChangePercent:= inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100);
+     outAmountChangePercent:= CAST (inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
 
      IF inIsCalcAmountPartner = TRUE
      THEN

@@ -23,7 +23,7 @@ BEGIN
 
      RETURN QUERY
      WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
-        , View_InfoMoney_60101 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 60101)
+        , View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801)
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode     
           , Object_Cash.Valuedata AS Name
@@ -47,7 +47,7 @@ BEGIN
           , ''::TVarChar AS OKPO
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
-          LEFT JOIN View_InfoMoney_60101 AS View_InfoMoney ON 1 = 1
+          LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
      SELECT Object_BankAccount_View.Id
@@ -73,7 +73,7 @@ BEGIN
           , ''::TVarChar    AS OKPO
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
-          LEFT JOIN View_InfoMoney_60101 AS View_InfoMoney ON 1 = 1
+          LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
     UNION ALL
      SELECT Object_Member.Id       

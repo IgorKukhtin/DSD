@@ -14267,7 +14267,7 @@ begin
                        //находим юр.лицо
                        fOpenSqToQuery(' select ObjectLink.ChildObjectId as JuridicalId'
                                      +' from ObjectLink'
-                                     +' where ObjectLink.ObjectId='+FieldByName('ToId_pg_find').AsString
+                                     +' where ObjectLink.ObjectId='+IntToStr(FieldByName('ToId_pg_find').AsInteger)
                                      +'   and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
                                      );
                         PartnerId_pg:=FieldByName('ToId_pg_find').AsInteger;
@@ -17189,6 +17189,7 @@ begin
         Add('select Id as ObjectId');
         Add('     , Id_PG as Id_Postgres');
         Add('from dba._pgBill_delete');
+//Add('where Id_PG=479115');
         Add('order by Id_PG desc');
         Open;
 
@@ -17218,7 +17219,7 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             if cbOnlyUpdateInt.Checked  then addSklad:= ' and MLO.ObjectId=8459 ' else addSklad:= ' and 1=0 ';// Склад Реализации
 
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
@@ -17333,7 +17334,7 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             if cbOnlyUpdateInt.Checked then addSklad:= ' and MLO.ObjectId=8459' else addSklad:= '';// Склад Реализации
+             if cbOnlyUpdateInt.Checked then addSklad:= ' and MLO.ObjectId=8459 ' else addSklad:= ' and 1=0 ';// Склад Реализации
              
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
@@ -17693,7 +17694,7 @@ begin
         Add('order by OperDate,InvNumber,MovementId');
         Open;
 
-        cbComplete_List.Caption:='*.('+IntToStr(SaveRecord)+')('+IntToStr(RecordCount)+') !!!Cписок накладных!!!';
+        cbComplete_List.Caption:='('+IntToStr(SaveRecord)+')('+IntToStr(RecordCount)+') !!!Cписок накладных!!!';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;

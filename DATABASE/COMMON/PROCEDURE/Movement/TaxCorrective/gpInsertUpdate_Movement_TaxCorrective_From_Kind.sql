@@ -128,15 +128,16 @@ BEGIN
 
 
      -- таблица - ƒанные
-     CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, Amount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, CountForPrice TFloat, Amount TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMovement_find (MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
      -- выбрали <¬озврат от покупател€> или <ѕеревод долга (приход)> или < орректировка цены>
-     INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, OperPrice, Amount)
+     INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, OperPrice, CountForPrice, Amount)
         SELECT tmpMI.GoodsId
              , tmpMI.GoodsKindId
              , tmpMI.OperPrice
+             , tmpMI.CountForPrice
              , tmpMI.Amount
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -146,12 +147,16 @@ BEGIN
                                         / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
                           ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
                      END AS OperPrice
+                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                    , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) THEN MovementItem.Amount ELSE 0 END) AS Amount
               FROM MovementItem
                    INNER JOIN MovementItemFloat AS MIFloat_Price
                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                AND MIFloat_Price.ValueData <> 0
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -165,6 +170,7 @@ BEGIN
               GROUP BY MovementItem.ObjectId
                      , MILinkObject_GoodsKind.ObjectId
                      , MIFloat_Price.ValueData 
+                     , MIFloat_CountForPrice.ValueData
              ) AS tmpMI
         WHERE tmpMI.Amount <> 0
        ;
@@ -184,10 +190,10 @@ BEGIN
                                           GROUP BY MLM_Master.MovementId, COALESCE (MLM_Child.MovementChildId, 0)
                                          )
              , tmpMovement_Corrective_Count AS (SELECT COUNT(*) AS myCOUNT FROM tmpMovement_Corrective)
-          INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
+          INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)
              SELECT COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
                   , COALESCE (tmpMovement_Corrective.MovementId_Corrective, 0)
-                  , GoodsId, GoodsKindId, Amount, OperPrice
+                  , GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice
              FROM _tmpMI_Return
                   LEFT JOIN tmpMovement_Corrective_Count ON tmpMovement_Corrective_Count.myCOUNT = 1
                   LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective_Count.myCOUNT IS NOT NULL
@@ -277,14 +283,14 @@ BEGIN
                   IF vbAmount_Tax > vbAmount
                   THEN
                       -- получилось в налоговой больше чем искали, !!!сохран€ем в табл-результата!!!
-                      INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
-                         SELECT 0, vbMovementId_Tax, vbGoodsId, vbGoodsKindId, vbAmount, vbOperPrice;
+                      INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)
+                         SELECT 0, vbMovementId_Tax, vbGoodsId, vbGoodsKindId, vbAmount, vbOperPrice, 1 AS CountForPrice;
                       -- обнул€ем кол-во что бы больше не искать
                       vbAmount:= 0;
                   ELSE
                       -- получилось в налоговой меньше чем искали, !!!сохран€ем в табл-результата!!!
-                      INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
-                         SELECT 0, vbMovementId_Tax, vbGoodsId, vbGoodsKindId, vbAmount_Tax, vbOperPrice;
+                      INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, CountForPrice)
+                         SELECT 0, vbMovementId_Tax, vbGoodsId, vbGoodsKindId, vbAmount_Tax, vbOperPrice, 1 AS CountForPrice;
                       -- уменьшаем на кол-во которое нашли и продолжаем поиск
                       vbAmount:= vbAmount - vbAmount_Tax;
                   END IF;
@@ -417,7 +423,7 @@ BEGIN
                                                       , inGoodsId            := _tmpResult.GoodsId
                                                       , inAmount             := _tmpResult.Amount
                                                       , inPrice              := _tmpResult.OperPrice
-                                                      , ioCountForPrice      := 1
+                                                      , ioCountForPrice      := _tmpResult.CountForPrice
                                                       , inGoodsKindId        := _tmpResult.GoodsKindId
                                                       , inUserId             := vbUserId
                                                        )

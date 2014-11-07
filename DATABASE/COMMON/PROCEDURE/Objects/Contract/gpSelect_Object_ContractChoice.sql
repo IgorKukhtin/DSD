@@ -132,7 +132,9 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE)
+        OR vbIsConstraint = FALSE
+        OR inJuridicalId <> 0
+          )
    ;
 
    ELSE
@@ -217,7 +219,9 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE)
+        OR vbIsConstraint = FALSE
+        OR inJuridicalId <> 0
+          )
    ;
 
    ELSE
@@ -383,7 +387,9 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-        OR vbIsConstraint = FALSE)
+        OR vbIsConstraint = FALSE
+        OR inJuridicalId <> 0
+          )
    ;
    END IF;
    END IF;
