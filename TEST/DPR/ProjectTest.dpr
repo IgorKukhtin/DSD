@@ -566,8 +566,10 @@ uses
   AreaContractEdit in '..\..\Forms\Guides\AreaContractEdit.pas' {AreaContractEditForm: TParentForm},
   RetailReport in '..\..\Forms\Guides\RetailReport.pas' {RetailReportForm: TParentForm},
   RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm},
-  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
-  
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  PartnerTag in '..\..\Forms\Guides\PartnerTag.pas' {PartnerTagForm: TParentForm},
+  PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm};
+
 {$R *.RES}
 {$R DevExpressRus.res}
 
