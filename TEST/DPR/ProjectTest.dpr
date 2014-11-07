@@ -565,7 +565,8 @@ uses
   AreaContract in '..\..\Forms\Guides\AreaContract.pas' {AreaContractForm: TParentForm},
   AreaContractEdit in '..\..\Forms\Guides\AreaContractEdit.pas' {AreaContractEditForm: TParentForm},
   RetailReport in '..\..\Forms\Guides\RetailReport.pas' {RetailReportForm: TParentForm},
-  RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm};
+  RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm},
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
   
 {$R *.RES}
 {$R DevExpressRus.res}
