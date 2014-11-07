@@ -33,24 +33,7 @@ BEGIN
       WHERE MovementLinkObject_Unit.MovementId = inInternalOrder
         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
 
-
-   CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
-             , Price TFloat
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
-
-
-    PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, vbUserId);
+    PERFORM lpCreateTempTable_OrderInternal(ininternalorder, vbObjectId, 0, vbUserId);
    
    -- Просто запрос, где у позиции определяется лучший поставщик. Если поставщика нет, то закинуть в пустой документ. 
 
@@ -63,7 +46,8 @@ BEGIN
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
                     inAmount := MovementItem.Amount, 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
-                    inUserId := vbUserId)
+          inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),  
+                   inUserId := vbUserId)
          FROM  MovementItem 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
                                                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
@@ -94,6 +78,7 @@ BEGIN
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
+              AND MovementItem.Amount > 0 
               AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
 
@@ -109,6 +94,7 @@ BEGIN
                    inGoodsId := ddd.ObjectId,
                     inAmount := ddd.Amount, 
                      inPrice := 0, 
+          inPartionGoodsDate := NULL, 
                     inUserId := vbUserId)
          FROM 
 

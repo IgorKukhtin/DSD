@@ -2,27 +2,27 @@ inherited MovementLoadForm: TMovementLoadForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
   ClientHeight = 399
   ClientWidth = 772
-  ExplicitWidth = 788
-  ExplicitHeight = 438
+  ExplicitWidth = 780
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 772
-    Height = 371
-    ExplicitWidth = 597
-    ExplicitHeight = 371
-    ClientRectBottom = 367
-    ClientRectRight = 768
+    Height = 373
+    ExplicitWidth = 772
+    ExplicitHeight = 373
+    ClientRectBottom = 373
+    ClientRectRight = 772
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 589
-      ExplicitHeight = 363
+      ExplicitWidth = 772
+      ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 764
-        Height = 363
-        ExplicitLeft = -16
-        ExplicitWidth = 764
-        ExplicitHeight = 363
+        Width = 772
+        Height = 373
+        ExplicitWidth = 772
+        ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -31,7 +31,7 @@ inherited MovementLoadForm: TMovementLoadForm
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
-            Width = 54
+            Width = 75
           end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -39,18 +39,6 @@ inherited MovementLoadForm: TMovementLoadForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
-          end
-          object clTotalCount: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'TotalCount'
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object clTotalSumm: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
-            HeaderAlignmentVert = vaCenter
-            Width = 103
           end
           object clJuridicalId: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
@@ -61,6 +49,20 @@ inherited MovementLoadForm: TMovementLoadForm
           object clUnitId: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'UnitId'
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object clTotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'TotalCount'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object clTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
@@ -98,6 +100,7 @@ inherited MovementLoadForm: TMovementLoadForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end>
@@ -125,7 +128,7 @@ inherited MovementLoadForm: TMovementLoadForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

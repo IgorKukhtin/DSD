@@ -244,6 +244,8 @@ initialization
   RegisterClass (TClientDataSet);
   RegisterClass (TDataSetCancel);
   RegisterClass (TDataSetDelete);
+  RegisterClass (TDataSetEdit);
+  RegisterClass (TDataSetInsert);
   RegisterClass (TDataSetPost);
   RegisterClass (TDataSource);
   RegisterClass (TDBGrid);

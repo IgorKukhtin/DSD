@@ -31,6 +31,31 @@ inherited GoodsLiteForm: TGoodsLiteForm
       end
     end
   end
+  inherited ActionList: TActionList
+    inherited ChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
+          DataType = ftString
+        end>
+    end
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_Lite'
   end

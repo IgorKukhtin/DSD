@@ -12,16 +12,17 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE LoadMovementItem
 (
-  Id             serial    NOT NULL PRIMARY KEY,
-  GoodsCode      TVarChar, -- Код товара поставщика
-  GoodsName	 TVarChar, -- Наименование товара поставщика
-  GoodsId        Integer,  -- Товары
-  LoadMovementId Integer,  -- Ссылка на документ LoadMovement
-  Amount         TFloat,   -- Количество
-  PackageAmount  TFloat,   -- Количество в упаковке
-  Price          TFloat,   -- Цена
-  Summ           TFloat,   -- Сумма
-  ExpirationDate TDateTime,-- Срок годности
+  Id              serial    NOT NULL PRIMARY KEY,
+  CommonCode      Integer , -- Общий код
+  BarCode         TVarChar, -- Штрих-код товара поставщика
+  GoodsCode       TVarChar, -- Код товара поставщика
+  GoodsName	  TVarChar, -- Наименование товара поставщика
+  GoodsId         Integer,  -- Товары
+  LoadMovementId  Integer,  -- Ссылка на документ LoadMovement
+  Amount          TFloat,   -- Количество
+  Price           TFloat,   -- Цена
+  Summ            TFloat,   -- Сумма
+  ExpirationDate  TDateTime,-- Срок годности
   CONSTRAINT fk_LoadMovementItem_LoadMovementId FOREIGN KEY (LoadMovementId)  REFERENCES LoadMovement (id),
   CONSTRAINT fk_LoadMovementItem_GoodsId        FOREIGN KEY (GoodsId)         REFERENCES Object (id))
 WITH (

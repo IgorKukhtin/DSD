@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxLocalization, dsdAddOn, dsdDB,
   Data.DB, Datasnap.DBClient, frxExportXML, frxExportXLS, frxClass, frxExportRTF,
   Vcl.ActnList, dxBar, cxClasses, Vcl.StdActns, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus;
 
 type
   TAncestorMainForm = class(TForm)
@@ -24,28 +24,36 @@ type
     actAbout: TAction;
     actUpdateProgram: TAction;
     bbSeparator: TdxBarSeparator;
+    cxPropertiesStore: TcxPropertiesStore;
+    actLookAndFeel: TAction;
+    bbLookAndFillSettings: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure actUpdateProgramExecute(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
+    procedure actLookAndFeelExecute(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
-  public
-    { Public declarations }
   end;
-
 
 implementation
 
 {$R *.dfm}
 
 uses ParentForm, Storage, CommonData, MessagesUnit, UtilConst, Math,
-     AboutBoxUnit, UtilConvert, Menus;
+     AboutBoxUnit, UtilConvert, LookAndFillSettings;
+
+{ TfmBaseForm }
 
 procedure TAncestorMainForm.actAboutExecute(Sender: TObject);
 begin
   TAboutBox.Create(Self).ShowModal;
+end;
+
+procedure TAncestorMainForm.actLookAndFeelExecute(Sender: TObject);
+begin
+  TLookAndFillSettingsForm.Create(nil).Show;
 end;
 
 procedure TAncestorMainForm.actUpdateProgramExecute(Sender: TObject);

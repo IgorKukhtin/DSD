@@ -374,8 +374,8 @@
 				<Form>TestForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
-				<Form>GoodsLiteForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsMainLite.pas">
+				<Form>GoodsMainLiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
@@ -512,6 +512,22 @@
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
 				<Form>JuridicalSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerCode.pas">
+				<Form>PartnerCodeForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
+				<Form>GoodsLiteForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas">
+				<Form>ChoiceGoodsFromPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
+				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

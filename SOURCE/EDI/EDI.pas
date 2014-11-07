@@ -263,7 +263,7 @@ begin
     List := TStringList.Create;
     Stream := TStringStream.Create;
     try
-      FIdFTP.List(List, '', false);
+      FIdFTP.List;//(List, '', false);
       with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
         try
           Start;

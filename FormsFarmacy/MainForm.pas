@@ -6,7 +6,7 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
-  cxLocalization, dsdActionOld, Vcl.Menus;
+  cxLocalization, dsdActionOld, Vcl.Menus, cxPropertiesStore;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -101,6 +101,8 @@ type
     bbContactPerson: TdxBarButton;
     actJuridicalSettingsPriceList: TdsdOpenForm;
     bbJuridicalSettingsPriceList: TdxBarButton;
+    actSearchGoods: TdsdOpenForm;
+    bbGoodsSearch: TdxBarButton;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

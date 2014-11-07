@@ -1,12 +1,14 @@
 object dmMain: TdmMain
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 258
   Width = 304
   object ImageList: TImageList
     Left = 102
     Top = 60
     Bitmap = {
-      494C010149003009300910001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010149005809580910001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003001000001002000000000000030
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2527,7 +2529,7 @@ object dmMain: TdmMain
     Left = 170
     Top = 58
     Bitmap = {
-      494C01011700C408C40820002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01011700EC08EC0820002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000C000000001002000000000000080
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5706,7 +5708,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 140
     Bitmap = {
-      494C01010300EC08EC0810001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103001409140910001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5920,8 +5922,17 @@ object dmMain: TdmMain
       Color = 12369084
       TextColor = clWindowText
     end
+    object cxContentStyle: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+    end
     object cxGridBandedTableViewStyleSheet: TcxGridBandedTableViewStyleSheet
       Caption = #1053#1072#1096' '#1089#1090#1080#1083#1100
+      Styles.Content = cxContentStyle
       Styles.Inactive = cxSelection
       Styles.Selection = cxSelection
       Styles.Footer = cxFooterStyle
@@ -5930,6 +5941,7 @@ object dmMain: TdmMain
     end
     object cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet
       Caption = #1053#1072#1096' '#1089#1090#1080#1083#1100
+      Styles.Content = cxContentStyle
       Styles.Inactive = cxSelection
       Styles.Selection = cxSelection
       Styles.Footer = cxFooterStyle
@@ -5937,6 +5949,7 @@ object dmMain: TdmMain
       BuiltIn = True
     end
     object cxTreeListStyleSheet: TcxTreeListStyleSheet
+      Styles.Content = cxContentStyle
       Styles.Inactive = cxSelection
       Styles.Selection = cxSelection
       Styles.BandHeader = cxHeaderStyle
@@ -5949,7 +5962,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 188
     Bitmap = {
-      494C010116000007000710001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010116002807280710001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6747,5 +6760,33 @@ object dmMain: TdmMain
       800F800F800F800F800F800F800F800F800F800F800F800F800F800F800F800F
       800F800F800F800FFFEFFFEFFFEFFFEF00000000000000000000000000000000
       000000000000}
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cxContentStyle
+        Properties.Strings = (
+          'Font.Name'
+          'Font.Size')
+      end
+      item
+        Component = cxLookAndFeelController
+        Properties.Strings = (
+          'Kind'
+          'NativeStyle'
+          'SkinName')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 40
+    Top = 64
+  end
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 40
+    Top = 16
+  end
+  object cxLookAndFeelController: TcxLookAndFeelController
+    Left = 40
+    Top = 120
   end
 end

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderExternal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
-    IN inSumm                TFloat    , -- Сумма заказа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -22,7 +22,7 @@ BEGIN
      vbUserId := inSession;
 
      PERFORM lpInsertUpdate_MovementItem_OrderExternal(ioId, inMovementId, inMainGoodsId, 
-                 inGoodsId, inAmount, inPrice, inSumm, vbUserId);
+                 inGoodsId, inAmount, inPrice, NULL, vbUserId);
 
 END;
 $BODY$

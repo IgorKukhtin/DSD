@@ -1,7 +1,5 @@
 inherited AncestorGuidesForm: TAncestorGuidesForm
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,7 +15,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     end
   end
   inherited ActionList: TActionList
-    object actInsert: TdsdInsertUpdateAction
+    object actInsert: TInsertUpdateChoiceAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -46,6 +44,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -93,11 +92,13 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -203,6 +204,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput

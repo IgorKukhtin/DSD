@@ -48,7 +48,7 @@ BEGIN
           , Object_Goods.ObjectCode     AS Code
           , Object_Goods.ValueData      AS Name
           
-          , Object_GoodsGroup.Id        AS GoodsGroupId
+          , COALESCE(Object_GoodsGroup.Id, 0)        AS GoodsGroupId
           , Object_GoodsGroup.ValueData AS GoodsGroupName
    
           , Object_Measure.Id           AS MeasureId
@@ -88,6 +88,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.10.14                        *
  24.06.14         *
  20.06.13                        *
 

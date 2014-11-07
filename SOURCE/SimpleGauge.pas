@@ -45,9 +45,12 @@ begin
   inherited Create(AOwner);
   Caption:=ACaption;
   with Gauge do begin
-    Progress:=AMinValue;
-    MinValue:=AMinValue;
-    MaxValue:=AMaxValue;
+    Progress := AMinValue;
+    MinValue := AMinValue;
+    if AMaxValue < AMinValue then
+       MaxValue := AMinValue
+    else
+       MaxValue := AMaxValue;
   end;
 end;
 {------------------------------------------------------------------------------}

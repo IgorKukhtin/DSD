@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
            , Object_NDSKind.ValueData                         AS NDSKindName
            , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
+           , ObjectString_Goods_Maker.ValueData               AS MakerName
 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
@@ -46,6 +47,10 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
                               ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
+        LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                               ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+
        WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
 
 
@@ -56,6 +61,7 @@ ALTER TABLE Object_Goods_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.14                         *
  23.07.14                         *
 */
 

@@ -1,28 +1,28 @@
 inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
-  ClientWidth = 782
+  ClientWidth = 844
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 790
+  ExplicitWidth = 852
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 782
+    Width = 844
     Height = 397
-    ExplicitWidth = 782
+    ExplicitWidth = 844
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 782
+    ClientRectRight = 844
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 844
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
         Left = 356
-        Width = 426
+        Width = 488
         Height = 397
         ExplicitLeft = 356
-        ExplicitWidth = 426
+        ExplicitWidth = 488
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = GoodsLinkDS
@@ -60,11 +60,18 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
+          object clMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 106
+          end
         end
       end
-      object edJuridical: TcxButtonEdit
-        Left = 184
-        Top = 63
+      object edPartnerCode: TcxButtonEdit
+        Left = 359
+        Top = 103
         Properties.Buttons = <
           item
             Default = True
@@ -154,6 +161,20 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
           StoredProc = spGoodsLink
         end>
     end
+    object mactListDelete: TMultiAction [2]
+      Category = 'Delete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdExecStoredProc1
+        end>
+      DataSource = GoodsLinkDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1079#1080'? '
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1082#1086#1076#1086#1074
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      WithoutNext = True
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       ShortCut = 0
@@ -185,17 +206,20 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
         end>
@@ -324,7 +348,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edJuridical
+      Control = edPartnerCode
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -348,35 +372,44 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     Left = 448
     Top = 168
   end
+  inherited PopupMenu: TPopupMenu
+    object N9: TMenuItem [5]
+      Action = mactListDelete
+    end
+    object N8: TMenuItem [6]
+      Caption = '-'
+    end
+  end
   inherited spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoods'
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = GoodsLinkCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
   end
-  object JuridicalGuides: TdsdGuides
+  object PartnerCodeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = edPartnerCode
+    FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TPartnerCodeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -395,7 +428,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
       item
         Name = 'inObjectId'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -451,7 +484,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     RefreshAction = actGoodsLinkRefresh
     ComponentList = <
       item
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
       end>
     Left = 200
     Top = 112
@@ -463,6 +496,7 @@ inherited GoodsPartnerCodeMasterForm: TGoodsPartnerCodeMasterForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = GoodsLinkCDS
         ComponentItem = 'Id'
         ParamType = ptInput

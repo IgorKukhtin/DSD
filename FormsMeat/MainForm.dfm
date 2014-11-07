@@ -1,5 +1,5 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 246
+  ClientHeight = 227
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
@@ -153,6 +153,10 @@
         item
           Visible = True
           ItemName = 'bbService_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLookAndFillSettings'
         end
         item
           Visible = True
@@ -4422,7 +4426,7 @@
     Left = 136
     Top = 112
   end
-  object cxPropertiesStore: TcxPropertiesStore
+  inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = Owner
@@ -4432,9 +4436,5 @@
           'Top'
           'Width')
       end>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 240
-    Top = 56
   end
 end
