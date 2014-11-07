@@ -80,13 +80,13 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
-      object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
+      object clRetailReportName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'RetailReportName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoiceRetailForm
+            Action = actChoiceRetailReportForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -261,8 +261,8 @@ object JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -430,7 +430,6 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -472,25 +471,23 @@ object JuridicalForm: TJuridicalForm
       isSetErased = False
       DataSource = GridDS
     end
-    object actChoiceRetailForm: TOpenChoiceForm
+    object actChoiceRetailReportForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'RetailChoiceForm'
-      FormName = 'TRetailForm'
-      FormNameParam.Value = 'TRetailForm'
+      FormName = 'TRetailReportForm'
+      FormNameParam.Value = 'TRetailReportForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
-          Value = Null
           Component = ClientDataSet
-          ComponentItem = 'RetailId'
+          ComponentItem = 'RetailReportId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ClientDataSet
-          ComponentItem = 'RetailName'
+          ComponentItem = 'RetailReportName'
           DataType = ftString
         end>
       isShowModal = True
@@ -505,13 +502,11 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -528,13 +523,11 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PriceListName'
           DataType = ftString
@@ -547,27 +540,23 @@ object JuridicalForm: TJuridicalForm
       Params = <
         item
           Name = 'Key'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -606,13 +595,11 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'Key'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalGroupId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalGroupName'
           DataType = ftString
@@ -655,7 +642,6 @@ object JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'inObjectId'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -699,42 +685,36 @@ object JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inJuridicalGroupId'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalGroupId'
         ParamType = ptInput
       end
       item
-        Name = 'inRetailId'
-        Value = Null
+        Name = 'inRetailReportId'
         Component = ClientDataSet
-        ComponentItem = 'RetailId'
+        ComponentItem = 'RetailReportId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
@@ -742,7 +722,6 @@ object JuridicalForm: TJuridicalForm
       end
       item
         Name = 'inEndPromo'
-        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndPromo'
         DataType = ftDateTime

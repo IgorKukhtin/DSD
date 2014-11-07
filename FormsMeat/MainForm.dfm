@@ -3,8 +3,9 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -266
   ExplicitWidth = 1094
-  ExplicitHeight = 280
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
