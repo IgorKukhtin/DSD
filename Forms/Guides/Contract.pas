@@ -62,7 +62,7 @@ type
     clInfoMoneyName: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
-    clAreaName: TcxGridDBColumn;
+    clAreaContractName: TcxGridDBColumn;
     clContractArticleName: TcxGridDBColumn;
     clContractStateKindName: TcxGridDBColumn;
     cxGridContractCondition: TcxGrid;

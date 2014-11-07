@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 567
   ClientWidth = 911
   ExplicitWidth = 917
-  ExplicitHeight = 592
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -196,9 +196,9 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel8: TcxLabel [26]
     Left = 184
     Top = 324
-    Caption = #1056#1077#1075#1080#1086#1085
+    Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
-  object edArea: TcxButtonEdit [27]
+  object edAreaContract: TcxButtonEdit [27]
     Left = 184
     Top = 341
     Properties.Buttons = <
@@ -568,7 +568,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 222
     Top = 10
     Caption = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
-    TabOrder = 52
+    TabOrder = 51
     Width = 122
   end
   object ceIsUnique: TcxCheckBox [51]
@@ -621,13 +621,11 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'key'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
@@ -654,13 +652,11 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'Key'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -688,13 +684,11 @@ inherited ContractEditForm: TContractEditForm
       GuiParams = <
         item
           Name = 'key'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'TextValue'
-          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindName'
           DataType = ftString
@@ -799,8 +793,8 @@ inherited ContractEditForm: TContractEditForm
         item
           StoredProc = spErasedUnErasedCondition
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1017,9 +1011,9 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
-        Name = 'inAreaId'
+        Name = 'inAreaContractId'
         Value = ''
-        Component = AreaGuides
+        Component = AreaContractGuides
         ParamType = ptInput
       end
       item
@@ -1221,15 +1215,15 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end
       item
-        Name = 'AreaId'
+        Name = 'AreaContractId'
         Value = ''
-        Component = AreaGuides
+        Component = AreaContractGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'AreaName'
+        Name = 'AreaContractName'
         Value = ''
-        Component = AreaGuides
+        Component = AreaContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1436,18 +1430,18 @@ inherited ContractEditForm: TContractEditForm
     Left = 128
     Top = 328
   end
-  object AreaGuides: TdsdGuides
+  object AreaContractGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edArea
-    FormNameParam.Value = 'TAreaForm'
+    LookupControl = edAreaContract
+    FormNameParam.Value = 'TAreaContractForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAreaForm'
+    FormName = 'TAreaContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = AreaGuides
+        Component = AreaContractGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1455,13 +1449,13 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = AreaGuides
+        Component = AreaContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 349
-    Top = 302
+    Left = 293
+    Top = 334
   end
   object ContractArticleGuides: TdsdGuides
     KeyField = 'Id'
@@ -1563,14 +1557,12 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1578,7 +1570,6 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inValue'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -1593,21 +1584,18 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inContractConditionKindId'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBonusKindId'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
@@ -1638,8 +1626,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1864,7 +1852,6 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'incontractdocumentid'
-        Value = Null
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1907,7 +1894,6 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'inObjectId'
-        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1949,7 +1935,6 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'inId'
-        Value = Null
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput

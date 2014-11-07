@@ -5,7 +5,8 @@ interface
 uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
   cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient,
-  dsdAddOn, cxPropertiesStore, cxLookAndFeels;
+  dsdAddOn, cxPropertiesStore, cxLookAndFeels, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
 

@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inBankAccountId       Integer  ,     -- Расчетный счет (вх.платеж)
     IN inContractTagId       Integer  ,     -- Признак договора
     
-    IN inAreaId              Integer  ,     -- Регион
+    IN inAreaContractId              Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
@@ -199,7 +199,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractTag(), ioId, inContractTagId);
    
    -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Area(), ioId, inAreaId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_AreaContract(), ioId, inAreaContractId);
    -- сохранили связь с <Предмет договора>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractArticle(), ioId, inContractArticleId);
    -- сохранили связь с <Состояние договора>
@@ -227,6 +227,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.11.14         * замана Area  на AreaContract
  21.07.14                                        * add проверка <Номер договора>
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
