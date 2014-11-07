@@ -1,4 +1,4 @@
-unit AreaContact;
+unit AreaContract;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TAreaContactForm = class(TParentForm)
+  TAreaContractForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -67,6 +67,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TAreaContactForm);
+  RegisterClass(TAreaContractForm);
 
 end.

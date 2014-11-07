@@ -1,4 +1,4 @@
-unit AreaContactEdit;
+unit AreaContractEdit;
 
 interface
 
@@ -21,7 +21,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TAreaContactEditForm = class(TParentForm)
+  TAreaContractEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -48,6 +48,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TAreaContactEditForm);
+  RegisterClass(TAreaContractEditForm);
 
 end.

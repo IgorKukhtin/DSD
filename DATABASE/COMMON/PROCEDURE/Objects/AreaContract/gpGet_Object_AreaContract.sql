@@ -1,8 +1,9 @@
--- Function: gpGet_Object_AreaContact()
+-- Function: gpGet_Object_AreaContract()
 
 DROP FUNCTION IF EXISTS gpGet_Object_AreaContact(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_AreaContract(integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_AreaContact(
+CREATE OR REPLACE FUNCTION gpGet_Object_AreaContract(
     IN inId          Integer,       -- ключ объекта <Регионы>
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -18,7 +19,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_AreaContact()) AS Code
+           , lfGet_ObjectCode(0, zc_Object_AreaContract()) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -36,7 +37,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_AreaContact(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_AreaContract(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -47,4 +48,4 @@ ALTER FUNCTION gpGet_Object_AreaContact(integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_AreaContact (0, '2')
+-- SELECT * FROM gpGet_Object_AreaContract (0, '2')

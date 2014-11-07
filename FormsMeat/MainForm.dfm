@@ -3,7 +3,6 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -246
   ExplicitWidth = 1094
   ExplicitHeight = 280
   PixelsPerInch = 96
@@ -2384,8 +2383,8 @@
       MoveParams = <>
       Caption = #1056#1077#1075#1080#1086#1085#1099' ('#1076#1086#1075#1086#1074#1086#1088#1072')'
       Hint = #1056#1077#1075#1080#1086#1085#1099
-      FormName = 'TAreaContactForm'
-      FormNameParam.Value = 'TAreaContactForm'
+      FormName = 'TAreaContractForm'
+      FormNameParam.Value = 'TAreaContractForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
