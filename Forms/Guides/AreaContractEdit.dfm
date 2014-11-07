@@ -1,4 +1,4 @@
-object AreaContactEditForm: TAreaContactEditForm
+object AreaContractEditForm: TAreaContractEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1077#1075#1080#1086#1085'('#1076#1086#1075#1086#1074#1086#1088#1072')>'
@@ -90,7 +90,7 @@ object AreaContactEditForm: TAreaContactEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_AreaContact'
+    StoredProcName = 'gpInsertUpdate_Object_AreaContract'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -129,7 +129,7 @@ object AreaContactEditForm: TAreaContactEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_AreaContact'
+    StoredProcName = 'gpGet_Object_AreaContract'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -171,7 +171,7 @@ object AreaContactEditForm: TAreaContactEditForm
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 48
+    Left = 24
+    Top = 32
   end
 end

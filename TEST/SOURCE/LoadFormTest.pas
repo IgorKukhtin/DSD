@@ -272,10 +272,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
   // Регионы (договора)
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContactForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAreaContactForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContactEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAreaContactEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaContractForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaContractEditForm');
   // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');

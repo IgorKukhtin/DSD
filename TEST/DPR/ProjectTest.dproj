@@ -1679,15 +1679,12 @@
 				<Form>Report_CashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
-				<Form>LookAndFillSettingsForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AreaContact.pas">
-				<Form>AreaContactForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AreaContract.pas">
+				<Form>AreaContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AreaContactEdit.pas">
-				<Form>AreaContactEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AreaContractEdit.pas">
+				<Form>AreaContractEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RetailReport.pas">

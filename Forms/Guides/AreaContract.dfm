@@ -1,4 +1,4 @@
-object AreaContactForm: TAreaContactForm
+object AreaContractForm: TAreaContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1075#1080#1086#1085#1099'('#1076#1086#1075#1086#1074#1086#1088#1072')>'
@@ -236,8 +236,8 @@ object AreaContactForm: TAreaContactForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAreaContactEditForm'
-      FormNameParam.Value = 'TAreaContactEditForm'
+      FormName = 'TAreaContractEditForm'
+      FormNameParam.Value = 'TAreaContractEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -270,8 +270,8 @@ object AreaContactForm: TAreaContactForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAreaContactEditForm'
-      FormNameParam.Value = 'TAreaContactEditForm'
+      FormName = 'TAreaContractEditForm'
+      FormNameParam.Value = 'TAreaContractEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -347,7 +347,7 @@ object AreaContactForm: TAreaContactForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AreaContact'
+    StoredProcName = 'gpSelect_Object_AreaContract'
     DataSet = ClientDataSet
     DataSets = <
       item
