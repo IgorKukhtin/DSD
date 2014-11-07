@@ -288,8 +288,8 @@ type
     FOnDestroy: TNotifyEvent;
     FActive: boolean;
     procedure OnDestroy(Sender: TObject);
-    procedure SaveUserSettings;
   public
+    procedure SaveUserSettings;
     procedure LoadUserSettings;
     constructor Create(AOwner: TComponent); override;
   published
@@ -950,6 +950,8 @@ begin
      ActionOnlyEditingCellOnEnter;
      Key := 0;
   end;
+  if Key = VK_F11 then
+     SearchAsFilter := not SearchAsFilter;
   inherited;
 end;
 

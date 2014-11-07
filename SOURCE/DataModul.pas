@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
-  cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient;
+  cxGridBandedTableView, cxGridTableView, cxTL, Data.DB, Datasnap.DBClient,
+  dsdAddOn, cxPropertiesStore, cxLookAndFeels;
 
 type
 
@@ -22,11 +23,27 @@ type
     cxTreeListStyleSheet: TcxTreeListStyleSheet;
     cxFooterStyle: TcxStyle;
     cxSelection: TcxStyle;
+    cxContentStyle: TcxStyle;
+    cxPropertiesStore: TcxPropertiesStore;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLookAndFeelController: TcxLookAndFeelController;
+    procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
   end;
 
 var dmMain: TdmMain;
 implementation
 
 {$R *.dfm}
+
+procedure TdmMain.DataModuleCreate(Sender: TObject);
+begin
+  UserSettingsStorageAddOn.LoadUserSettings;
+end;
+
+procedure TdmMain.DataModuleDestroy(Sender: TObject);
+begin
+  UserSettingsStorageAddOn.SaveUserSettings;
+end;
 
 end.

@@ -24,6 +24,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -31,11 +32,15 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           object colGoodsMainCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsMainCode'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0; ; '
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object colGoodsMainName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -94,7 +99,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
   end
   inherited ActionList: TActionList
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsert: TInsertUpdateChoiceAction
       Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
@@ -232,6 +237,17 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           StoredProc = spInserUpdateGoodsLink
         end>
       Caption = 'actSetLink'
+    end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInserUpdateGoodsLink
+      StoredProcList = <
+        item
+          StoredProc = spInserUpdateGoodsLink
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource

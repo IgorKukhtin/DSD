@@ -181,7 +181,8 @@ uses
   JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
   PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
   GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
-  ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm};
+  ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -197,6 +198,7 @@ begin
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;
+  gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 

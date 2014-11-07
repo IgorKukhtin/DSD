@@ -44,6 +44,7 @@ type
     edContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     colPrice: TcxGridDBColumn;
+    colPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

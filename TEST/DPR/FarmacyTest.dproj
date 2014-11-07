@@ -526,6 +526,9 @@
 				<Form>ChoiceGoodsFromPriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
+				<Form>LookAndFillSettingsForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

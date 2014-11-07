@@ -22,7 +22,7 @@ BEGIN
      vbUserId := inSession;
 
      PERFORM lpInsertUpdate_MovementItem_OrderExternal(ioId, inMovementId, inMainGoodsId, 
-                 inGoodsId, inAmount, inPrice, vbUserId);
+                 inGoodsId, inAmount, inPrice, NULL, vbUserId);
 
 END;
 $BODY$

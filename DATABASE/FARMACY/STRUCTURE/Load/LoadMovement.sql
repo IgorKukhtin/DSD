@@ -18,10 +18,12 @@ CREATE TABLE LoadMovement
   TotalCount	TFloat  , -- Итого количество
   TotalSumm	TFloat  , -- Итого сумма
   JuridicalId	Integer , -- Юридические лица
+  ContractId	Integer , -- Договор лица
   UnitId        Integer , -- Подразделения
   NDSKindId	Integer ,  -- Типы НДС
   isAllGoodsConcat Boolean, -- Все ли товары имеют связь
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id),
+  CONSTRAINT fk_LoadMovement_ContractId FOREIGN KEY (ContractId)     REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_UnitId      FOREIGN KEY (UnitId)         REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_NDSKindId   FOREIGN KEY (NDSKindId)      REFERENCES Object (id)
 )
@@ -34,6 +36,7 @@ ALTER TABLE LoadMovement
  
 CREATE INDEX idx_LoadMovement_OperDate    ON LoadMovement(OperDate);
 CREATE INDEX idx_LoadMovement_JuridicalId ON LoadMovement(JuridicalId); 
+CREATE INDEX idx_LoadMovement_ContractId  ON LoadMovement(ContractId); 
 CREATE INDEX idx_LoadMovement_UnitId      ON LoadMovement(UnitId); -- констрейнт
 CREATE INDEX idx_LoadMovement_NDSKindId   ON LoadMovement(NDSKindId);
 

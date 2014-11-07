@@ -37,6 +37,7 @@ type
     bbSetLink: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

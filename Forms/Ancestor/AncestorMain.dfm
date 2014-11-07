@@ -94,6 +94,10 @@ object AncestorMainForm: TAncestorMainForm
         end
         item
           Visible = True
+          ItemName = 'bbLookAndFillSettings'
+        end
+        item
+          Visible = True
           ItemName = 'bbAbout'
         end
         item
@@ -110,6 +114,10 @@ object AncestorMainForm: TAncestorMainForm
     object bbSeparator: TdxBarSeparator
       Category = 0
       Visible = ivAlways
+    end
+    object bbLookAndFillSettings: TdxBarButton
+      Action = actLookAndFeel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -132,6 +140,11 @@ object AncestorMainForm: TAncestorMainForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
       ShortCut = 57429
       OnExecute = actUpdateProgramExecute
+    end
+    object actLookAndFeel: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072
+      OnExecute = actLookAndFeelExecute
     end
   end
   object cxLocalizer: TcxLocalizer
@@ -218,5 +231,12 @@ object AncestorMainForm: TAncestorMainForm
     Split = ssNotSplit
     Left = 288
     Top = 104
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 240
+    Top = 56
   end
 end

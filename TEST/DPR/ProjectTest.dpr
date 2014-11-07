@@ -561,7 +561,8 @@ uses
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
-  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm};
+  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -569,6 +570,7 @@ uses
 begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
+  gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;

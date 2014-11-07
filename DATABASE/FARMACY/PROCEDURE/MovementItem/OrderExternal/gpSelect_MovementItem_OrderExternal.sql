@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
-             , Amount TFloat, Price TFloat, Summ TFloat
+             , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
              , isErased Boolean
               )
 AS
@@ -32,7 +32,8 @@ BEGIN
            , tmpMI.PartnerGoodsCode     AS PartnerGoodsCode
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
-           , tmpMI.Summ                 AS Summ
+           , tmpMI.Summ::TFloat         AS Summ
+           , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -50,22 +51,23 @@ BEGIN
                             , Object_Goods.ValueData             AS GoodsName
                             , MovementItem.Amount                AS Amount
                             , MIFloat_Price.ValueData            AS Price
-                            , MIFloat_Summ.ValueData             AS Summ
+                            , MovementItem.Amount * MIFloat_Price.ValueData   AS Summ
                             , MovementItem.isErased              AS isErased
                             , MovementItem.ObjectId              AS GoodsId
+                            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
 
-                       LEFT JOIN MovementItemFloat AS MIFloat_Price
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                       LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                                   ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                                  AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -88,6 +90,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.11.14                         *
  20.10.14                         *
  15.07.14                                                       *
  01.07.14                                                       *

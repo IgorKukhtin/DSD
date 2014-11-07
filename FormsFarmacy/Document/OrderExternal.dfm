@@ -2,7 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 790
-  ExplicitTop = -312
+  ExplicitLeft = 0
   ExplicitWidth = 798
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -97,6 +97,7 @@ inherited OrderExternalForm: TOrderExternalForm
           OptionsData.DeletingConfirmation = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -106,7 +107,7 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'PartnerGoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 116
+            Width = 100
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -114,7 +115,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 55
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -122,7 +123,7 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 334
+            Width = 283
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -132,7 +133,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 131
+            Width = 46
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -140,6 +141,8 @@ inherited OrderExternalForm: TOrderExternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            Width = 73
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -150,7 +153,13 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 130
+            Width = 119
+          end
+          object colPartionGoodsDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
       end
@@ -313,11 +322,13 @@ inherited OrderExternalForm: TOrderExternalForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -501,6 +512,7 @@ inherited OrderExternalForm: TOrderExternalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -586,6 +598,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -773,6 +786,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -786,18 +800,21 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inMainGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerGoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -805,6 +822,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -812,6 +830,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Name = 'outSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
@@ -824,20 +843,6 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end

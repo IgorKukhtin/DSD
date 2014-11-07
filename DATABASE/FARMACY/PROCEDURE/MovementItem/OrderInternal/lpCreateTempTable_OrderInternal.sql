@@ -17,6 +17,7 @@ $BODY$
 BEGIN
      CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
              , Price TFloat
+             , PartionGoodsDate TDateTime
              , GoodsId Integer
              , GoodsCode TVarChar
              , GoodsName TVarChar
@@ -43,6 +44,7 @@ BEGIN
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
             , ddd.Price  
+            , ddd.PartionGoodsDate
             , ddd.GoodsId
             , ddd.GoodsCode
             , ddd.GoodsName
@@ -66,6 +68,7 @@ BEGIN
 
      (SELECT MovementItemOrder.Id
           , PriceList.amount AS Price
+          , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
           , min(PriceList.amount) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , (PriceList.amount * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat AS FinalPrice
           
@@ -85,6 +88,9 @@ BEGIN
          ,  MovementItem AS PriceList  -- Прайс-лист
        JOIN LastPriceList_View  -- Прайс-лист
                     ON PriceList.MovementId  = LastPriceList_View.MovementId 
+   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                              ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
+                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
    LEFT JOIN JuridicalSettingsPriceList 
                     ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
                    AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
@@ -127,6 +133,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.11.14                         *  add PartionGoodsDate
  22.10.14                         *  add inGoodsId
  22.10.14                         *  add MakerName
  13.10.14                         *

@@ -1,17 +1,18 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 246
+  ClientHeight = 227
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
-  ExplicitHeight = 281
+  ExplicitLeft = -288
+  ExplicitWidth = 1094
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      47
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -153,6 +154,10 @@
         item
           Visible = True
           ItemName = 'bbService_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLookAndFillSettings'
         end
         item
           Visible = True
@@ -4384,7 +4389,7 @@
     Left = 136
     Top = 112
   end
-  object cxPropertiesStore: TcxPropertiesStore
+  inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = Owner
@@ -4394,9 +4399,5 @@
           'Top'
           'Width')
       end>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 240
-    Top = 56
   end
 end

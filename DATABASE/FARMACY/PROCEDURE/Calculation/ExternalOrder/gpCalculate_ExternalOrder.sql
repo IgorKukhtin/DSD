@@ -46,7 +46,8 @@ BEGIN
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
                     inAmount := MovementItem.Amount, 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
-                    inUserId := vbUserId)
+          inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),  
+                   inUserId := vbUserId)
          FROM  MovementItem 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
                                                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
@@ -93,6 +94,7 @@ BEGIN
                    inGoodsId := ddd.ObjectId,
                     inAmount := ddd.Amount, 
                      inPrice := 0, 
+          inPartionGoodsDate := NULL, 
                     inUserId := vbUserId)
          FROM 
 
