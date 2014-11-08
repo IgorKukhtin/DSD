@@ -45,6 +45,12 @@ $BODY$
   DECLARE vbJuridicalId_Basis_To Integer;
   DECLARE vbBusinessId_To Integer;
 
+  DECLARE curContainer refcursor;
+  DECLARE vbContainerId_Goods Integer;
+  DECLARE vbContainerId_Summ_Alternative Integer;
+  DECLARE vbContainerDescId Integer;
+  DECLARE vbContainerObjectId Integer;
+
 BEGIN
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
@@ -52,6 +58,8 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
+     -- !!!обязательно!!! очистили таблицу - альтернативные ContainerId
+     DELETE FROM _tmpList_Alternative;
      -- !!!обязательно!!! очистили таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItemSumm;
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -552,7 +560,23 @@ BEGIN
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
                                                                                 , inBranchId               := vbBranchId_To -- эта аналитика нужна для филиала
-                                                                                 );
+                                                                                 )
+                       , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost = 0
+                                                                   THEN 0
+                                        ELSE lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+                                                                                , inUnitId                 := vbUnitId_HistoryCost
+                                                                                , inCarId                  := NULL
+                                                                                , inMemberId               := vbMemberId_To
+                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inGoodsId                := _tmpItem.GoodsId
+                                                                                , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                , inIsPartionCount         := _tmpItem.isPartionCount
+                                                                                , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                , inAssetId                := _tmpItem.AssetId
+                                                                                , inBranchId               := vbBranchId_To -- эта аналитика нужна для филиала
+                                                                                 )
+                                                        END;
+
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, OperCount, vbOperDate, TRUE
@@ -564,14 +588,89 @@ BEGIN
      DELETE FROM _tmpItem WHERE _tmpItem.isTareReturning = TRUE;
 
 
+     -- 1.2.2.
+     OPEN curContainer FOR SELECT ContainerId_Goods, Container_Summ.Id AS ContainerId_Summ_Alternative, Container_Summ.DescId AS ContainerDescId, Container_Summ.ObjectId AS ContainerObjectId
+                           FROM _tmpItem
+                                INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods_Alternative
+                                                                      AND Container_Summ.DescId = zc_Container_Summ()
+                           WHERE ContainerId_Goods_Alternative <> 0
+                             AND InfoMoneyDestinationId        <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+     ;
+     -- начало цикла по курсору
+     LOOP
+          -- данные
+          FETCH curContainer INTO vbContainerId_Goods, vbContainerId_Summ_Alternative, vbContainerDescId, vbContainerObjectId;
+          -- если данных нет, то мы выходим
+          IF NOT FOUND THEN 
+             EXIT;
+          END IF;
+          --
+          WITH tmpJuridical_basis AS (SELECT ObjectId FROM ContainerLinkObject WHERE ContainerId = vbContainerId_Summ_Alternative AND DescId = zc_ContainerLinkObject_JuridicalBasis())
+             , tmpBusiness AS (SELECT ObjectId FROM ContainerLinkObject WHERE ContainerId = vbContainerId_Summ_Alternative AND DescId = zc_ContainerLinkObject_Business())
+             , tmpAll AS (SELECT DescId, ObjectId FROM ContainerLinkObject WHERE ContainerId = vbContainerId_Summ_Alternative AND DescId NOT IN (zc_ContainerLinkObject_JuridicalBasis(), zc_ContainerLinkObject_Business()))
+             , tmpDesc1 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll)
+             , tmpObject1 AS (SELECT ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc1))
+             , tmpDesc2 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc1))
+             , tmpObject2 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc2))
+             , tmpDesc3 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc2))
+             , tmpObject3 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc3))
+             , tmpDesc4 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc3))
+             , tmpObject4 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc4))
+             , tmpDesc5 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc4))
+             , tmpObject5 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc5))
+             , tmpDesc6 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc5))
+             , tmpObject6 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc6))
+             , tmpDesc7 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc6))
+             , tmpObject7 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc7))
+             , tmpDesc8 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc7))
+             , tmpObject8 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc8))
+             , tmpDesc9 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc8))
+             , tmpObject9 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc9))
+             , tmpDesc10 AS (SELECT MIN (tmpAll.DescId) AS DescId FROM tmpAll WHERE tmpAll.DescId > (SELECT DescId FROM tmpDesc9))
+             , tmpObject10 AS (SELECT MIN (ObjectId) AS ObjectId FROM tmpAll WHERE DescId = (SELECT DescId FROM tmpDesc10))
+          --
+          INSERT INTO _tmpList_Alternative (ContainerId_Goods, ContainerId_Summ_Alternative, ContainerId_Summ)
+             SELECT vbContainerId_Goods, vbContainerId_Summ_Alternative
+                  , lpInsertFind_Container (inContainerDescId          := vbContainerDescId
+                                                 , inParentId          := vbContainerId_Goods
+                                                 , inObjectId          := vbContainerObjectId
+                                                 , inJuridicalId_basis := (SELECT ObjectId FROM tmpJuridical_basis)
+                                                 , inBusinessId        := (SELECT ObjectId FROM tmpBusiness)
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1   := (SELECT DescId FROM tmpDesc1)
+                                                 , inObjectId_1 := (SELECT ObjectId FROM tmpObject1)
+                                                 , inDescId_2   := (SELECT DescId FROM tmpDesc2)
+                                                 , inObjectId_2 := (SELECT ObjectId FROM tmpObject2)
+                                                 , inDescId_3   := (SELECT DescId FROM tmpDesc3)
+                                                 , inObjectId_3 := (SELECT ObjectId FROM tmpObject3)
+                                                 , inDescId_4   := (SELECT DescId FROM tmpDesc4)
+                                                 , inObjectId_4 := (SELECT ObjectId FROM tmpObject4)
+                                                 , inDescId_5   := (SELECT DescId FROM tmpDesc5)
+                                                 , inObjectId_5 := (SELECT ObjectId FROM tmpObject5)
+                                                 , inDescId_6   := (SELECT DescId FROM tmpDesc6)
+                                                 , inObjectId_6 := (SELECT ObjectId FROM tmpObject6)
+                                                 , inDescId_7   := (SELECT DescId FROM tmpDesc7)
+                                                 , inObjectId_7 := (SELECT ObjectId FROM tmpObject7)
+                                                 , inDescId_8   := (SELECT DescId FROM tmpDesc8)
+                                                 , inObjectId_8 := (SELECT ObjectId FROM tmpObject8)
+                                                 , inDescId_9   := (SELECT DescId FROM tmpDesc9)
+                                                 , inObjectId_9 := (SELECT ObjectId FROM tmpObject9)
+                                                 , inDescId_10  := (SELECT DescId FROM tmpDesc10)
+                                                 , inObjectId_10:= (SELECT ObjectId FROM tmpObject10)
+                                                  );
+     END LOOP; -- финиш цикла по курсору
+     CLOSE curContainer; -- закрыли курсор
+
+
      -- 1.3.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10800, ContainerId, AccountId, OperSumm, OperSumm_Partner)
         SELECT
               _tmpItem.MovementItemId
             , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с1 - с/с2)
             , 0 AS ContainerId_ProfitLoss_10800 -- Счет - прибыль (ОПиУ - Себестоимость возвратов : с/с2)
-            , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId
-            , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
+            , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (_tmpList_Alternative.ContainerId_Summ, COALESCE (Container_Summ.Id, 0))) AS ContainerId
+            , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ_Alternative.ObjectId, COALESCE (Container_Summ.ObjectId, 0))) AS AccountId
               -- с/с1 - для количества: приход на остаток
             , SUM ((_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
               -- с/с2 - для количества: контрагента
@@ -585,12 +684,15 @@ BEGIN
                                                                                  AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                  AND _tmpItem.isTareReturning                = FALSE
              -- так находим для остальных
+             LEFT JOIN _tmpList_Alternative ON _tmpList_Alternative.ContainerId_Goods = _tmpItem.ContainerId_Goods
+             LEFT JOIN Container AS Container_Summ_Alternative ON Container_Summ_Alternative.Id = _tmpList_Alternative.ContainerId_Summ_Alternative
              LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                   AND Container_Summ.DescId = zc_Container_Summ()
+                                                  AND Container_Summ_Alternative.Id IS NULL
              /*JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                       ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
-             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ_Alternative.Id, Container_Summ.Id)) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
@@ -599,6 +701,8 @@ BEGIN
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId
+               , _tmpList_Alternative.ContainerId_Summ
+               , Container_Summ_Alternative.ObjectId
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId;
 
@@ -1246,6 +1350,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.11.14                                        * add _tmpList_Alternative
  07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_From
  05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)
  02.09.14                                        * add vbIsHistoryCost
@@ -1270,5 +1375,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 10154, inSession:= '2')
--- SELECT * FROM lpComplete_Movement_ReturnIn (inMovementId:= 10154, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_ReturnIn (inMovementId:= 602578, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')

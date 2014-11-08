@@ -327,11 +327,13 @@ BEGIN
      -- !!!удаление!!!
      DROP TABLE _tmpItemSumm;
      DROP TABLE _tmpItem;
+     -- !!!возвраты!!! таблица - альтернативные ContainerId
+     CREATE TEMP TABLE _tmpList_Alternative (ContainerId_Goods Integer, ContainerId_Summ_Alternative Integer, ContainerId_Summ Integer) ON COMMIT DROP;
      -- !!!возвраты!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10800 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
      -- !!!возвраты!!!таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
                                , ContainerId_ProfitLoss_10700 Integer
                                , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -514,6 +516,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.11.14                                        * add _tmpList_Alternative
  07.09.14                                        * add Loss...
  17.08.14                                        * add MovementDescId
  14.08.14                        * новая связь с филиалами

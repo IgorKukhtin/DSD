@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_AreaContract()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AreaContact(Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AreaContract(Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AreaContract(

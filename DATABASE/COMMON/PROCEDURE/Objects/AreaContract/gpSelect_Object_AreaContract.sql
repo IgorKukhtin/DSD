@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_AreaContract()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_AreaContact(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_AreaContract(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_AreaContract(

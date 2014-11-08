@@ -1,6 +1,5 @@
 -- Function: gpGet_Object_AreaContract()
 
-DROP FUNCTION IF EXISTS gpGet_Object_AreaContact(integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_AreaContract(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_AreaContract(

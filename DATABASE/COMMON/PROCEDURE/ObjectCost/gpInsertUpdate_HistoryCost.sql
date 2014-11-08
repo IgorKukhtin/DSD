@@ -517,6 +517,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.14                                        * add zc_ObjectLink_Unit_HistoryCost
  13.08.14                                        * ObjectCostId -> ContainerId
  10.08.14                                        * add SendOnPrice
  15.09.13                                        * add zc_Container_CountSupplier and zc_Enum_Account_20901
@@ -524,6 +525,10 @@ LANGUAGE PLPGSQL VOLATILE;
  10.07.13                                        *
 */
 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8462, 8459); -- Склад Брак -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8459); -- Склад Возвратов -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 256716, 8459); -- Склад УТИЛЬ -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 309599, 301309); -- Склад возвратов ф.Запорожье -> Склад гп ф.Запорожье
 
 -- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
