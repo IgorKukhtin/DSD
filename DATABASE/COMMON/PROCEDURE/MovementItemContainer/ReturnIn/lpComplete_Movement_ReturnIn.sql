@@ -38,6 +38,7 @@ $BODY$
   DECLARE vbBranchId_To Integer;
   DECLARE vbAccountDirectionId_To Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
+  DECLARE vbUnitId_HistoryCost Integer;
 
   DECLARE vbPaidKindId Integer;
   DECLARE vbContractId Integer;
@@ -97,6 +98,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
           , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_To -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
+          , COALESCE (ObjectLink_UnitTo_HistoryCost.ChildObjectId, 0) AS UnitId_HistoryCost
 
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
@@ -107,7 +109,7 @@ BEGIN
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbMovementDescId, vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From , vbMemberId_From, vbInfoMoneyId_From
-               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
+               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit, vbUnitId_HistoryCost
                , vbPaidKindId, vbContractId
                , vbJuridicalId_Basis_To, vbBusinessId_To
      FROM Movement
@@ -149,6 +151,9 @@ BEGIN
                                ON ObjectLink_UnitTo_Business.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
                               AND Object_To.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_HistoryCost
+                               ON ObjectLink_UnitTo_HistoryCost.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_UnitTo_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
 
           LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Member
                                ON ObjectLink_PersonalTo_Member.ObjectId = MovementLinkObject_To.ObjectId

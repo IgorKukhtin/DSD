@@ -17702,7 +17702,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.StoredProcName:='';//gpUnComplete_Movement
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
@@ -17718,11 +17718,11 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
-             if cbUnComplete.Checked then
+             {if cbUnComplete.Checked then
              begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
                   if not myExecToStoredProc then ;//exit;
-             end;
+             end;}
              if cbComplete.Checked then
              begin
                   begin

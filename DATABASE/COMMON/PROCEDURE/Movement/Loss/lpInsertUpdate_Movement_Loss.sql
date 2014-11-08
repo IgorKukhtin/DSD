@@ -22,6 +22,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Loss());
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

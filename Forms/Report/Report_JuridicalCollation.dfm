@@ -544,6 +544,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'StartBalance'
+          Value = Null
           Component = FormParams
           ComponentItem = 'StartBalance'
           DataType = ftFloat
@@ -567,6 +568,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'AccounterName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccounterName'
           DataType = ftString
@@ -609,12 +611,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
         end
         item
           Name = 'inOperDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -683,6 +687,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'StartBalance'
+          Value = Null
           Component = FormParams
           ComponentItem = 'StartBalance'
           DataType = ftFloat
@@ -706,6 +711,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'AccounterName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccounterName'
           DataType = ftString
@@ -758,6 +764,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'StartBalance'
+          Value = Null
           Component = FormParams
           ComponentItem = 'StartBalance'
           DataType = ftFloat
@@ -781,6 +788,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'AccounterName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccounterName'
           DataType = ftString
@@ -840,6 +848,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1019,6 +1034,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
@@ -1030,6 +1046,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'FormName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 120
   end
@@ -1092,16 +1109,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'StartBalance'
+        Value = Null
         Component = FormParams
         ComponentItem = 'StartBalance'
         DataType = ftFloat
       end
       item
         Name = 'OurFirm'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OurFirm'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 112
     Top = 200
   end
@@ -1169,6 +1189,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 576
     Top = 64
   end
@@ -1193,10 +1214,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'AccounterName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AccounterName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 192
   end

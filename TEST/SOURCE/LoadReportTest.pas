@@ -59,7 +59,6 @@ procedure TLoadReportTest.LoadReportFormTest;
 var
  i : integer;
 begin
-
   // Транспорт
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   // Отчеты(Финансы)
@@ -112,7 +111,7 @@ begin
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
 
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
-
+  LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
 
   TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199']);
   for i := Low(OKPO) to High(OKPO) do

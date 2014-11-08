@@ -1,11 +1,13 @@
 -- Function: gpReport_JuridicalCollation()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , --
     IN inJuridicalId      Integer,    -- ﬁË‰Ë˜ÂÒÍÓÂ ÎËˆÓ  
+    IN inPartnerId        Integer,    -- 
     IN inContractId       Integer,    -- ƒÓ„Ó‚Ó
     IN inAccountId        Integer,    -- —˜ÂÚ 
     IN inPaidKindId       Integer   , --
@@ -116,12 +118,15 @@ BEGIN
                INNER JOIN MovementItemContainer AS MIContainer
                                                 ON MIContainer.ContainerId = Container.Id
                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+               LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                             ON CLO_Partner.ContainerId = Container.Id
+                                            AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                              ON CLO_InfoMoney.ContainerId = Container.Id
-                                            AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
+                                            AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                LEFT JOIN ContainerLinkObject AS CLO_Contract
                                              ON CLO_Contract.ContainerId = Container.Id
-                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()  
+                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                              ON CLO_PaidKind.ContainerId = Container.Id
                                             AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -130,6 +135,7 @@ BEGIN
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
             AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
             AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
             AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
@@ -158,6 +164,9 @@ BEGIN
                  0 AS EndSumm
           FROM ContainerLinkObject AS CLO_Juridical
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
+               LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                             ON CLO_Partner.ContainerId = Container.Id
+                                            AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                              ON CLO_InfoMoney.ContainerId = Container.Id
                                             AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
@@ -177,6 +186,7 @@ BEGIN
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
             AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
             AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
             AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
@@ -192,6 +202,9 @@ BEGIN
                  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS EndSumm
           FROM ContainerLinkObject AS CLO_Juridical 
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
+               LEFT JOIN ContainerLinkObject AS CLO_Partner
+                                             ON CLO_Partner.ContainerId = Container.Id
+                                            AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                              ON CLO_InfoMoney.ContainerId = Container.Id
                                             AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
@@ -211,6 +224,7 @@ BEGIN
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
             AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
             AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
             AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
@@ -272,7 +286,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

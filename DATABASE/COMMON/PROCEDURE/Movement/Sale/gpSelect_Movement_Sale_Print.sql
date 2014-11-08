@@ -27,10 +27,15 @@ $BODY$
 
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
+    DECLARE vbTotalCountKg  TFloat;
+    DECLARE vbTotalCountSh  TFloat;
+
+    DECLARE vbIsProcess_BranchIn Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
+
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -72,6 +77,10 @@ BEGIN
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
+     -- Важный параметр - Прихрд на филиала или расход с филиала (в первом слчае вводится только "Дата (приход)")
+     vbIsProcess_BranchIn:= EXISTS (SELECT Id FROM Object_Unit_View WHERE Id = (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To()) AND BranchId = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0))
+                           ;
+
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
@@ -88,7 +97,7 @@ BEGIN
     END IF;
 
 
-    /*IF vbDiscountPercent <> 0
+    IF vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
     THEN
         -- Расчет Сумм
         SELECT CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
@@ -109,13 +118,32 @@ BEGIN
                          -- если цены без НДС
                          THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm) AS NUMERIC (16, 2))
                END AS OperSumm_PVAT
+             , TotalCountKg
+             , TotalCountSh
+
                INTO vbOperSumm_MVAT, vbOperSumm_PVAT
+                  , vbTotalCountKg, vbTotalCountSh
+
         FROM
        (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
                               THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                          ELSE CAST (tmpMI.Amount * tmpMI.Price AS NUMERIC (16, 2))
                     END
                    ) AS OperSumm
+
+                         -- ШТ
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                   THEN tmpMI.Amount
+                              ELSE 0
+                         END) AS TotalCountSh
+                         -- ВЕС
+                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                   THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+                                   THEN tmpMI.Amount
+                              ELSE 0
+                         END) AS TotalCountKg
+
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , CASE WHEN vbDiscountPercent <> 0
@@ -125,7 +153,8 @@ BEGIN
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-                   , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount
+                   , SUM (MovementItem.Amount) AS Amount
+
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                    INNER JOIN MovementItemFloat AS MIFloat_Price
@@ -135,9 +164,6 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -148,8 +174,18 @@ BEGIN
                      , MIFloat_Price.ValueData
                      , MIFloat_CountForPrice.ValueData
              ) AS tmpMI
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                             ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                            ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                            ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
         ) AS tmpMI;
-    END IF;*/
+    END IF;
 
 
      --
@@ -178,12 +214,15 @@ BEGIN
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
-           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
-           , CASE WHEN vbDiscountPercent <> 0 AND 1 = 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
+    DECLARE   TFloat;
+    DECLARE   TFloat;
+
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
            , Object_From.ValueData             		    AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
            , Object_PaidKind.ValueData         		    AS PaidKindName
@@ -579,9 +618,12 @@ BEGIN
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                   ELSE MovementItem.Amount
+                              WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
+                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                              ELSE MovementItem.Amount
+
                          END) AS AmountPartner
              FROM MovementItem
                   INNER JOIN MovementItemFloat AS MIFloat_Price

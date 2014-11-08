@@ -88,7 +88,7 @@ BEGIN
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                 , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis(), 301310) THEN inGoodsKindId ELSE 0 END -- !!!+ филиал Запорожье!!
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                   );
@@ -122,6 +122,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.14                                        * add !!!+ филиал Запорожье!!
  17.08.14                                        * add inPartionGoodsId always
  27.07.14                                        * add МНМА
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200

@@ -21,7 +21,10 @@ BEGIN
          RAISE EXCEPTION 'NOT FIND, inMovementId = %', inMovementId;
      END IF;
 
-     IF vbStatusId = zc_Enum_Status_Complete() THEN RETURN; END IF;
+
+     -- !!! распроведение!!!
+     PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
+
 
      -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;

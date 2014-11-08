@@ -3,7 +3,7 @@ object ArticleLossForm: TArticleLossForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103'>'
   ClientHeight = 282
-  ClientWidth = 759
+  ClientWidth = 471
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object ArticleLossForm: TArticleLossForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 759
+    Width = 471
     Height = 256
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 759
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -67,6 +68,7 @@ object ArticleLossForm: TArticleLossForm
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -90,6 +92,7 @@ object ArticleLossForm: TArticleLossForm
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 136
@@ -97,6 +100,7 @@ object ArticleLossForm: TArticleLossForm
       object clProfitLossDirectionCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'ProfitLossDirectionCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
@@ -112,6 +116,7 @@ object ArticleLossForm: TArticleLossForm
       object clProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ProfitLossDirectionName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -327,6 +332,7 @@ object ArticleLossForm: TArticleLossForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -374,12 +380,14 @@ object ArticleLossForm: TArticleLossForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
         end>
@@ -406,6 +414,7 @@ object ArticleLossForm: TArticleLossForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end
@@ -420,10 +429,12 @@ object ArticleLossForm: TArticleLossForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end

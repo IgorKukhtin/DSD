@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice(
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
+    IN inProcessId           Integer   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -29,7 +31,7 @@ BEGIN
      END IF;
 
      -- определяем ключ доступа
---     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_SendOnPrice());
+     vbAccessKeyId:= lpGetAccessKey (inUserId, inProcessId);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

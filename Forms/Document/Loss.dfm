@@ -2,8 +2,8 @@ inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 985
-  ExplicitWidth = 993
-  ExplicitHeight = 702
+  ExplicitWidth = 1001
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -19,8 +19,6 @@ inherited LossForm: TLossForm
       inherited cxGrid: TcxGrid
         Width = 985
         Height = 558
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 985
         ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -33,28 +31,7 @@ inherited LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -65,31 +42,7 @@ inherited LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -107,7 +60,7 @@ inherited LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 60
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -130,11 +83,12 @@ inherited LossForm: TLossForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 100
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoods'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -142,6 +96,7 @@ inherited LossForm: TLossForm
           object PartionGoodsDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -189,6 +144,7 @@ inherited LossForm: TLossForm
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -215,6 +171,7 @@ inherited LossForm: TLossForm
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -230,6 +187,7 @@ inherited LossForm: TLossForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 96
@@ -237,6 +195,7 @@ inherited LossForm: TLossForm
           object colPartionGoodsOperDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'PartionGoodsOperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -245,6 +204,7 @@ inherited LossForm: TLossForm
           object colStorageName_Partion: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'StorageName_Partion'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -253,6 +213,7 @@ inherited LossForm: TLossForm
           object colPrice: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
             DataBinding.FieldName = 'Price'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -261,6 +222,7 @@ inherited LossForm: TLossForm
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -373,8 +335,6 @@ inherited LossForm: TLossForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -391,9 +351,8 @@ inherited LossForm: TLossForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_Loss'
+      ReportNameParam.Value = 'PrintMovement_Loss'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -422,11 +381,13 @@ inherited LossForm: TLossForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -456,6 +417,7 @@ inherited LossForm: TLossForm
       GuiParams = <
         item
           Name = 'inGoodsId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
         end
@@ -467,12 +429,14 @@ inherited LossForm: TLossForm
         end
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsId'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsName'
           DataType = ftString
@@ -480,6 +444,7 @@ inherited LossForm: TLossForm
         end
         item
           Name = 'Price'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Price'
           DataType = ftFloat
@@ -487,6 +452,7 @@ inherited LossForm: TLossForm
         end
         item
           Name = 'OperDatePartion'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -494,6 +460,7 @@ inherited LossForm: TLossForm
         end
         item
           Name = 'UnitName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
@@ -621,6 +588,10 @@ inherited LossForm: TLossForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbAddMask: TdxBarButton
@@ -630,6 +601,7 @@ inherited LossForm: TLossForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -715,6 +687,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -963,6 +936,9 @@ inherited LossForm: TLossForm
       end
       item
         Guides = GuidesTo
+      end
+      item
+        Guides = GuidesArticleLoss
       end>
     Left = 160
     Top = 192
@@ -973,13 +949,7 @@ inherited LossForm: TLossForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edFrom
@@ -989,22 +959,6 @@ inherited LossForm: TLossForm
       end
       item
         Control = edArticleLoss
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     Left = 232
     Top = 193
@@ -1029,6 +983,7 @@ inherited LossForm: TLossForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1042,12 +997,14 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1055,6 +1012,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
@@ -1062,6 +1020,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
@@ -1069,6 +1028,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inPartionGoodsDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1076,6 +1036,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1083,18 +1044,21 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
@@ -1121,20 +1085,6 @@ inherited LossForm: TLossForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 420
     Top = 188
   end
@@ -1165,7 +1115,7 @@ inherited LossForm: TLossForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Loss_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
