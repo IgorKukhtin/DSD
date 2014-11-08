@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpDelete_Object_LinkGoods(
     IN inId               Integer   , -- ключ объекта <Условия договора>
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS TABLE(Id Integer, GoodsMainCode Integer, GoodsMainName TVarChar) AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -15,6 +15,8 @@ BEGIN
    vbUserId := lpGetUserBySession(inSession);
 
    PERFORM lpDelete_Object(inId, inSession);
+
+   RETURN QUERY SELECT 0 AS Id, 0 AS GoodsMainCode, ''::TVarChar AS GoodsMainName;
    
 END;
 $BODY$

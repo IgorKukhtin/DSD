@@ -1,58 +1,86 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
-  ClientWidth = 782
+  ClientWidth = 763
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 790
+  ExplicitWidth = 771
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 782
+    Width = 763
     Height = 397
-    ExplicitWidth = 782
+    ExplicitWidth = 763
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 782
+    ClientRectRight = 763
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 763
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 377
+        Width = 763
         Height = 397
-        Align = alLeft
-        ExplicitWidth = 377
+        ExplicitWidth = 763
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clCodeInt: TcxGridDBColumn
+          object colGoodsMainCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+            DataBinding.FieldName = 'GoodsMainCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+          end
+          object colGoodsMainName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsMainName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 187
+          end
+          object clCodeInt: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072
+            DataBinding.FieldName = 'GoodsCodeInt'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 42
+            Width = 70
           end
           object clCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1089#1090#1088#1086#1082')'
+            Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072' ('#1089#1090#1088#1086#1082')'
             DataBinding.FieldName = 'GoodsCode'
-            Options.Editing = False
-            Width = 67
-          end
-          object clName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 254
+            Width = 107
+          end
+          object clName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 205
+          end
+          object clMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
           end
         end
       end
-      object edJuridical: TcxButtonEdit
+      object edPartnerCode: TcxButtonEdit
         Left = 184
         Top = 63
         Properties.Buttons = <
@@ -68,89 +96,25 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         Top = 40
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
       end
-      object cxGridGoodsLink: TcxGrid
-        Left = 380
-        Top = 0
-        Width = 402
-        Height = 397
-        Align = alClient
-        PopupMenu = PopupMenu
-        TabOrder = 3
-        object cxGridDBTableViewGoodsLink: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = GoodsLinkDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object cxGridDBColumn1: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCodeInt'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 42
-          end
-          object cxGridDBColumn3: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsMainName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 254
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableViewGoodsLink
-        end
-      end
-      object cxSplitter: TcxSplitter
-        Left = 377
-        Top = 0
-        Width = 3
-        Height = 397
-        Control = cxGrid
-      end
     end
   end
   inherited ActionList: TActionList
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spGoodsLink
-        end>
-    end
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsert: TInsertUpdateChoiceAction
       Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
       isShowModal = True
+      DataSource = nil
     end
     inherited dsdSetUnErased: TdsdUpdateErased
       Enabled = False
+      DataSource = nil
     end
     inherited dsdSetErased: TdsdUpdateErased
       Category = 'Delete'
@@ -161,17 +125,20 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
         end>
@@ -181,21 +148,106 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       MoveParams = <>
       ActionList = <
         item
-          Action = dsdSetErased
+          Action = actDeleteLink
         end
         item
-          Action = DataSetDelete
+          Action = DataSetPost
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1103#1079#1080'?'
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
     end
-    object DataSetDelete: TDataSetDelete
+    object actDeleteLink: TdsdExecStoredProc
       Category = 'Delete'
-      Caption = '&Delete'
-      Hint = 'Delete'
-      DataSource = GoodsLinkDS
+      MoveParams = <>
+      StoredProc = spDeleteLink
+      StoredProcList = <
+        item
+          StoredProc = spDeleteLink
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+    end
+    object DataSetPost: TDataSetPost
+      Category = 'DataSet'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      ImageIndex = 73
+      DataSource = MasterDS
+    end
+    object mactSetLink: TMultiAction
+      Category = 'Insert'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = DataSetEdit
+        end
+        item
+          Action = OpenChoiceForm
+        end
+        item
+          Action = actSetLink
+        end
+        item
+          Action = DataSetPost
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
+      ImageIndex = 1
+    end
+    object DataSetEdit: TDataSetEdit
+      Category = 'DataSet'
+      Caption = '&Edit'
+      Hint = 'Edit'
+      ImageIndex = 74
+    end
+    object OpenChoiceForm: TOpenChoiceForm
+      Category = 'Insert'
+      MoveParams = <>
+      Caption = 'OpenChoiceForm'
+      FormName = 'TGoodsMainLiteForm'
+      FormNameParam.Value = 'TGoodsMainLiteForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainId'
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainCode'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsMainName'
+        end>
+      isShowModal = True
+    end
+    object actSetLink: TdsdExecStoredProc
+      Category = 'Insert'
+      MoveParams = <>
+      StoredProc = spInserUpdateGoodsLink
+      StoredProcList = <
+        item
+          StoredProc = spInserUpdateGoodsLink
+        end>
+      Caption = 'actSetLink'
+    end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInserUpdateGoodsLink
+      StoredProcList = <
+        item
+          StoredProc = spInserUpdateGoodsLink
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -212,7 +264,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       item
         Name = 'inObjectId'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -220,6 +272,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Top = 88
   end
   inherited BarManager: TdxBarManager
+    Top = 48
     DockControlHeights = (
       0
       0
@@ -227,6 +280,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -250,21 +311,18 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridical'
         end>
     end
     inherited bbInsert: TdxBarButton
-      Visible = ivNever
-    end
-    inherited bbEdit: TdxBarButton
       Visible = ivNever
     end
     inherited bbErased: TdxBarButton
@@ -273,19 +331,23 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     inherited bbUnErased: TdxBarButton
       Visible = ivNever
     end
-    object bbLabel: TdxBarControlContainerItem
+    object bbSetLink: TdxBarButton
+      Action = mactSetLink
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
     end
-    object bbJuridical: TdxBarControlContainerItem
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edJuridical
+      Control = edPartnerCode
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -314,30 +376,29 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = GoodsLinkCDS
-        ComponentItem = 'Id'
+        Value = Null
         ParamType = ptInput
       end>
   end
-  object JuridicalGuides: TdsdGuides
+  object PartnerCodeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = edPartnerCode
+    FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TPartnerCodeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -345,76 +406,72 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Left = 288
     Top = 108
   end
-  object spGoodsLink: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_LinkGoodsMain'
-    DataSet = GoodsLinkCDS
-    DataSets = <
-      item
-        DataSet = GoodsLinkCDS
-      end>
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 560
-    Top = 88
-  end
-  object GoodsLinkCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'GoodsId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 424
-    Top = 72
-  end
-  object GoodsLinkDS: TDataSource
-    DataSet = GoodsLinkCDS
-    Left = 464
-    Top = 72
-  end
-  object DBViewAddOnChild: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewGoodsLink
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
-      end>
-    ActionItemList = <
-      item
-        Action = dsdChoiceGuides
-        ShortCut = 13
-      end
-      item
-        Action = actUpdate
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    SearchAsFilter = False
-    Left = 472
-    Top = 232
-  end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = JuridicalGuides
+        Component = PartnerCodeGuides
       end>
     Left = 216
     Top = 112
+  end
+  object spDeleteLink: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_LinkGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'GoodsMainCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainCode'
+      end
+      item
+        Name = 'GoodsMainName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 160
+  end
+  object spInserUpdateGoodsLink: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_LinkGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 248
   end
 end

@@ -561,7 +561,14 @@ uses
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm: TParentForm},
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm: TParentForm},
-  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm};
+  Report_Cash in '..\..\Forms\Report\Report_Cash.pas' {Report_CashForm: TParentForm},
+  AreaContract in '..\..\Forms\Guides\AreaContract.pas' {AreaContractForm: TParentForm},
+  AreaContractEdit in '..\..\Forms\Guides\AreaContractEdit.pas' {AreaContractEditForm: TParentForm},
+  RetailReport in '..\..\Forms\Guides\RetailReport.pas' {RetailReportForm: TParentForm},
+  RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm},
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  PartnerTag in '..\..\Forms\Guides\PartnerTag.pas' {PartnerTagForm: TParentForm},
+  PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -569,6 +576,7 @@ uses
 begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
+  gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;

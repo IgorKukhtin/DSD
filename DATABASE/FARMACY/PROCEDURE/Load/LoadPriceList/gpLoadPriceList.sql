@@ -76,11 +76,6 @@ BEGIN
                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                       WHERE MovementId = vbPriceListId);
 
-    
-     DELETE FROM LoadPriceListItem WHERE LoadPriceListId = inId;
-
-     DELETE FROM LoadPriceList WHERE Id = inId;
-
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -91,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.10.14                        *  
  18.09.14                        *  
  10.09.14                        *  
 */

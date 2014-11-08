@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isCorporate Boolean, 
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
-               RetailId Integer, RetailName TVarChar,
+               RetailReportId Integer, RetailReportName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, 
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
@@ -42,8 +42,8 @@ BEGIN
            , CAST (0 as Integer)    AS GoodsPropertyId 
            , CAST ('' as TVarChar)  AS GoodsPropertyName
  
-           , CAST (0 as Integer)    AS RetailId 
-           , CAST ('' as TVarChar)  AS RetailName 
+           , CAST (0 as Integer)    AS RetailReportId 
+           , CAST ('' as TVarChar)  AS RetailReportName 
            
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST ('' as TVarChar)  AS InfoMoneyName
@@ -74,8 +74,8 @@ BEGIN
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName
 
-           , Object_Retail.Id                AS RetailId
-           , Object_Retail.ValueData         AS RetailName
+           , Object_RetailReport.Id                AS RetailReportId
+           , Object_RetailReport.ValueData         AS RetailReportName
            
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
@@ -116,10 +116,10 @@ BEGIN
                                AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
-                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                                ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id 
+                               AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+           LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
            
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                 ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
@@ -147,6 +147,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.11.14         * ËÁÏÂÌÂÌÓ RetailReport
  23.05.14         * add Retail
  23.01.14                        * 
  12.01.14         * add PriceList,

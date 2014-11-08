@@ -24,23 +24,7 @@ BEGIN
      vbUserId := inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
-   CREATE TEMP TABLE _tmpMI (Id integer, MovementItemId Integer
-             , Price TFloat
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
-
-
-          PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, vbUserId);
+     PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
      OPEN Cursor1 FOR
@@ -50,14 +34,20 @@ BEGIN
            , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
            , tmpMI.Amount               AS Amount
-           , tmpMI.Summ                 AS Summ
+           , tmpMI.Price * tmpMI.Amount AS Summ
            , FALSE                      AS isErased
            , tmpMI.Price
+           , tmpMI.PartionGoodsDate
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
            , tmpMI.JuridicalName 
            , tmpMI.ContractName 
+           , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
+           , COALESCE(tmpMI.isCalculated, FALSE) AS isCalculated
+           , CASE WHEN tmpMI.PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
+                     ELSE 0
+                END AS PartionGoodsDateColor      
 
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -73,7 +63,10 @@ BEGIN
                             , MIFloat_Summ.ValueData             AS Summ
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
+                            , COALESCE(PriceList.MakerName, MinPrice.MakerName) AS MakerName
+                            , MIBoolean_Calculated.ValueData     AS isCalculated
                             , COALESCE(PriceList.Price, MinPrice.Price) AS Price
+                            , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate) AS PartionGoodsDate
                             , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
                             , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)         AS PartnerGoodsName
                             , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
@@ -97,11 +90,15 @@ BEGIN
                                                         ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                                        AND MILinkObject_Goods.MovementItemId = MovementItem.id  
 
+                       LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated 
+                                                     ON MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                                    AND MIBoolean_Calculated.MovementItemId = MovementItem.id  
+
                        LEFT JOIN _tmpMI AS PriceList ON COALESCE(PriceList.ContractId, 0) = COALESCE(MILinkObject_Contract.ObjectId, 0)
                                                     AND PriceList.JuridicalId = MILinkObject_Juridical.ObjectId
                                                     AND PriceList.GoodsId = MILinkObject_Goods.ObjectId
                                                     AND PriceList.MovementItemId = MovementItem.id 
-                                             
+
                        LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
                                            (SELECT *
@@ -121,7 +118,11 @@ BEGIN
      
 
      OPEN Cursor2 FOR
-      SELECT * FROM _tmpMI;
+      SELECT *, CASE WHEN PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
+                     ELSE 0
+                END AS PartionGoodsDateColor      
+
+        FROM _tmpMI;
 
    RETURN NEXT Cursor2;
 
@@ -134,6 +135,8 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 05.11.14                         * add MakerName
+ 22.10.14                         *
  13.10.14                         *
  15.07.14                                                       *
  15.07.14                                                       *

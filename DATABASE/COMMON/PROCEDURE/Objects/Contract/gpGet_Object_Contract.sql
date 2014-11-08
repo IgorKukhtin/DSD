@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
              
-             , AreaId Integer, AreaName TVarChar
+             , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , BankId Integer, BankName TVarChar
@@ -86,8 +86,8 @@ BEGIN
            , 0 :: Integer     AS ContractTagId
            , '' :: TVarChar   AS ContractTagName           
             
-           , 0 :: Integer   AS AreaId
-           , '' :: TVarChar AS AreaName
+           , 0 :: Integer   AS AreaContractId
+           , '' :: TVarChar AS AreaContractName
            , 0 :: Integer   AS ContractArticleId
            , '' :: TVarChar AS ContractArticleName
            , 0 :: Integer   AS ContractStateKindId
@@ -151,8 +151,8 @@ BEGIN
            , Object_Contract_View.ContractTagId
            , Object_Contract_View.ContractTagName
 
-           , Object_Area.Id                     AS AreaId
-           , Object_Area.ValueData              AS AreaName
+           , Object_AreaContract.Id                     AS AreaContractId
+           , Object_AreaContract.ValueData              AS AreaContractName
            , Object_ContractArticle.Id          AS ContractArticleId
            , Object_ContractArticle.ValueData   AS ContractArticleName
            , Object_Contract_View.ContractStateKindId
@@ -232,10 +232,10 @@ BEGIN
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
                 
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
-                                 ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId 
-                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
-            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId                     
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_AreaContract
+                                 ON ObjectLink_Contract_AreaContract.ObjectId = Object_Contract_View.ContractId 
+                                AND ObjectLink_Contract_AreaContract.DescId = zc_ObjectLink_Contract_AreaContract()
+            LEFT JOIN Object AS Object_AreaContract ON Object_AreaContract.Id = ObjectLink_Contract_AreaContract.ChildObjectId                     
             
             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractArticle
                                  ON ObjectLink_Contract_ContractArticle.ObjectId = Object_Contract_View.ContractId
@@ -266,6 +266,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.11.14         * AreaContract
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!! zc_ObjectDate_Contract_Start and zc_ObjectDate_Contract_End and zc_ObjectLink_Contract_ContractKind - ‚ÒÂ„‰‡!!!

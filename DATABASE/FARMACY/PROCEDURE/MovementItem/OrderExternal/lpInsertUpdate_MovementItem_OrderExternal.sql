@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderExternal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal(Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
-    IN inSumm                TFloat    , -- Сумма заказа
+    IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,13 +25,18 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
      -- сохранили свойство <Сумма заказа>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+ --    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
      -- сохранили связь с <Товаром из прайса>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
 
+     IF NOT (inPartionGoodsDate IS NULL) THEN 
+        -- сохранили свойство <Партия товара>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
+     END IF;
+
      -- пересчитали Итоговые суммы
---     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 
      -- сохранили протокол
@@ -43,6 +50,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.11.14                         *
  01.07.14                                                       *
 */
 

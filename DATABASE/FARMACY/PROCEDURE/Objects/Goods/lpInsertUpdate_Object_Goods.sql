@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, INTEGER, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inNDSKindId           Integer   ,    -- НДС
     IN inObjectId            Integer   ,    -- Юр лицо или торговая сеть
     IN inUserId              Integer   ,    -- Пользователь
+    IN inMakerId             Integer   ,    -- Производитель
+    IN inMakerName           TVarChar  ,    -- Производитель
     IN inCheckName           boolean  DEFAULT true
 )
 RETURNS integer AS
@@ -70,18 +73,25 @@ BEGIN
    -- сохранили свойство <НДС>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
 
+   -- сохранили свойство <Производитель>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Maker(), ioId, inMakerId );
+
+   -- сохранили свойство <Производитель>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName );
+
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.10.14                        *
  29.07.14                        *
  26.06.14                        *
  24.06.14         *

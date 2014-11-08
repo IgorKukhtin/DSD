@@ -1,5 +1,4 @@
 inherited AncestorEditDialogForm: TAncestorEditDialogForm
-  ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -50,6 +49,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 264
     Top = 248
   end
@@ -64,6 +64,7 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 224
     Top = 248
   end

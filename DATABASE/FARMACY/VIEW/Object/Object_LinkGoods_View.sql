@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW Object_LinkGoods_View AS
          , Object_Goods.GoodsCodeInt                     AS GoodsCodeInt
          , Object_Goods.GoodsCode                        AS GoodsCode
          , Object_Goods.GoodsName                        AS GoodsName
+         , Object_Goods.MakerName                        AS MakerName
 
          , Object_Goods.ObjectId                         AS ObjectId
          , false                                         AS isErased

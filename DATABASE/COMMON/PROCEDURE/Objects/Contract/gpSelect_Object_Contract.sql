@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
                           
-             , AreaId Integer, AreaName TVarChar
+             , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
              , OKPO TVarChar
@@ -115,8 +115,8 @@ BEGIN
        , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
 
-       , Object_Area.Id                     AS AreaId
-       , Object_Area.ValueData              AS AreaName
+       , Object_AreaContract.Id                     AS AreaContractId
+       , Object_AreaContract.ValueData              AS AreaContractName
 
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
@@ -217,10 +217,10 @@ BEGIN
                             AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
         LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
                 
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
-                             ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId 
-                            AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
-        LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId                     
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_AreaContract
+                             ON ObjectLink_Contract_AreaContract.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_AreaContract.DescId = zc_ObjectLink_Contract_AreaContract()
+        LEFT JOIN Object AS Object_AreaContract ON Object_AreaContract.Id = ObjectLink_Contract_AreaContract.ChildObjectId                     
             
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractArticle
                              ON ObjectLink_Contract_ContractArticle.ObjectId = Object_Contract_View.ContractId

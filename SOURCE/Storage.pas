@@ -235,7 +235,10 @@ begin
     except
       on E: EIdSocketError do begin
          case E.LastError of
-           10060: raise Exception.Create('Нет доступа к серверу. Обратитесь к системному администратору. context ' + E.Message);
+           10051: raise Exception.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+           10054: raise Exception.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+           10060, 11001: raise Exception.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+           10065: raise Exception.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
             else  raise E;
          end;
       end;

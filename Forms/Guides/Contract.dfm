@@ -337,9 +337,9 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object clAreaName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085
-        DataBinding.FieldName = 'AreaName'
+      object clAreaContractName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
+        DataBinding.FieldName = 'AreaContractName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -722,7 +722,7 @@ object ContractForm: TContractForm
     Top = 30
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 6
+    TabOrder = 5
     Width = 218
   end
   object cbEndDate: TcxCheckBox
@@ -778,8 +778,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1474,6 +1474,7 @@ object ContractForm: TContractForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 216
     Top = 224
   end
@@ -1492,6 +1493,7 @@ object ContractForm: TContractForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 160
   end
@@ -1587,6 +1589,7 @@ object ContractForm: TContractForm
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 368
     Top = 416
   end
@@ -1598,6 +1601,7 @@ object ContractForm: TContractForm
         DataSet = ContractConditionCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 650
     Top = 397
   end
@@ -1642,6 +1646,7 @@ object ContractForm: TContractForm
         ComponentItem = 'ContractTagId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 432
     Top = 176
   end

@@ -46,8 +46,8 @@ type
     edPersonal: TcxButtonEdit;
     PersonalGuides: TdsdGuides;
     cxLabel8: TcxLabel;
-    edArea: TcxButtonEdit;
-    AreaGuides: TdsdGuides;
+    edAreaContract: TcxButtonEdit;
+    AreaContractGuides: TdsdGuides;
     cxLabel13: TcxLabel;
     edContractArticle: TcxButtonEdit;
     ContractArticleGuides: TdsdGuides;

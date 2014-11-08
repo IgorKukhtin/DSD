@@ -1679,6 +1679,33 @@
 				<Form>Report_CashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AreaContract.pas">
+				<Form>AreaContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AreaContractEdit.pas">
+				<Form>AreaContractEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RetailReport.pas">
+				<Form>RetailReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RetailReportEdit.pas">
+				<Form>RetailReportEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
+				<Form>LookAndFillSettingsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerTag.pas">
+				<Form>PartnerTagForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerTagEdit.pas">
+				<Form>PartnerTagEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

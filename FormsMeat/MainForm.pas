@@ -9,7 +9,7 @@ uses
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -110,7 +110,6 @@ type
     bbInventory: TdxBarButton;
     bbProductionSeparate: TdxBarButton;
     bbProductionUnion: TdxBarButton;
-    cxPropertiesStore: TcxPropertiesStore;
     actReport_HistoryCost: TdsdOpenForm;
     bbReportProfitLoss: TdxBarButton;
     bbReportHistoryCost: TdxBarButton;
@@ -431,6 +430,12 @@ type
     bbReturnIn_Partner: TdxBarButton;
     actSendOnPrice_Branch: TdsdOpenForm;
     bbSendOnPrice_Branch: TdxBarButton;
+    actRetailReport: TdsdOpenForm;
+    actAreaContract: TdsdOpenForm;
+    bbAreaContact: TdxBarButton;
+    bbRetailReport: TdxBarButton;
+    actPartnerTag: TdsdOpenForm;
+    bbPartnerTag: TdxBarButton;
   public
     { Public declarations }
   end;

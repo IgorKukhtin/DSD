@@ -1,15 +1,16 @@
--- Function: gpSelect_Object_AreaContact()
+-- Function: gpSelect_Object_AreaContract()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_AreaContact(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_AreaContract(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_AreaContact(
+CREATE OR REPLACE FUNCTION gpSelect_Object_AreaContract(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_AreaContact()());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_AreaContract()());
 
    RETURN QUERY 
    SELECT 
@@ -18,13 +19,13 @@ $BODY$BEGIN
    , Object.ValueData  AS Name
    , Object.isErased   AS isErased
    FROM Object
-   WHERE Object.DescId = zc_Object_AreaContact();
+   WHERE Object.DescId = zc_Object_AreaContract();
   
 END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_AreaContact(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_AreaContract(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -36,4 +37,4 @@ ALTER FUNCTION gpSelect_Object_AreaContact(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_AreaContact('2')
+-- SELECT * FROM gpSelect_Object_AreaContract('2')

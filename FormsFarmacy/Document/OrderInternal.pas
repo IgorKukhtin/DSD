@@ -61,6 +61,20 @@ type
     spUpdatePrioritetPartner: TdsdStoredProc;
     actUpdatePrioritetPartner: TdsdExecStoredProc;
     bbPrioritetPartner: TdxBarButton;
+    colMakerName: TcxGridDBColumn;
+    colisCalculated: TcxGridDBColumn;
+    actSetLinkGoodsForm: TdsdOpenForm;
+    bbSetGoodsLink: TdxBarButton;
+    colPartnerGoodsCode: TcxGridDBColumn;
+    clMakerName: TcxGridDBColumn;
+    spDelete_Object_LinkGoodsByGoods: TdsdStoredProc;
+    mactDeleteLink: TMultiAction;
+    actDeleteLink: TdsdExecStoredProc;
+    bbDeleteLink: TdxBarButton;
+    colPartionGoodsDate: TcxGridDBColumn;
+    colPartionGoodsDateColor: TcxGridDBColumn;
+    clPartionGoodsDate: TcxGridDBColumn;
+    clPartionGoodsDateColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

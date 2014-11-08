@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpCreate_ExternalOrder(
     IN inInternalOrder     Integer ,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpCreate_ExternalOrder(
     IN inGoodsId           Integer ,
     IN inAmount            TFloat  , 
     IN inPrice             TFloat  , 
+    IN inPartionGoodsDate  TDateTime , -- Партия товара
     IN inUserId            Integer     -- сессия пользователя
 )
 RETURNS VOID
@@ -66,19 +68,21 @@ BEGIN
                                       AND ((MILinkObject_Goods.ObjectId = inGoodsId AND COALESCE(inGoodsId, 0) <> 0) OR (MILinkObject_Goods.ObjectId IS NULL AND COALESCE(inGoodsId, 0) = 0))
      WHERE MovementItem.movementid = vbMovementId AND MovementItem.objectid = inMainGoodsId;
     
-    PERFORM lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
-                                                    , inAmount, inPrice, inAmount * inPrice, inUserId);
+    vbMovementItemId := lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
+                                                    , inAmount, inPrice, inPartionGoodsDate, inUserId);
+    PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(), vbMovementItemId, true);
 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer) OWNER TO postgres;
+ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.11.14                         *
  02.10.14                         *
  19.09.14                         *
 

@@ -318,9 +318,11 @@ begin
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\Storage\';
   ProcedureLoad;
-  ScriptDirectory := ProcedurePath + 'OBJECTS\AreaContact\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\AreaContract\';
   ProcedureLoad;
   ScriptDirectory := ProcedurePath + 'OBJECTS\RetailReport\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\PartnerTag\';
   ProcedureLoad;
 end;
 

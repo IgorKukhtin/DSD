@@ -25,7 +25,7 @@ BEGIN
 
      -- Создаем общие коды, которых еще нет
 
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, ''), zc_Enum_GlobalConst_Marion())
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), lpInsertUpdate_Object(0, zc_Object_Goods(), CommonCode, LoadPriceListItem.GoodsName), zc_Enum_GlobalConst_Marion())
             FROM LoadPriceListItem WHERE LoadPriceListItem.LoadPriceListId = inId
              AND CommonCode NOT IN (SELECT GoodsCodeInt FROM Object_Goods_View WHERE ObjectId = zc_Enum_GlobalConst_Marion())
              AND CommonCode > 0;
@@ -47,15 +47,18 @@ BEGIN
                                    0  ,    -- НДС
                         vbJuridicalId ,    -- Юр лицо или торговая сеть
                              vbUserId , 
+                                   0  ,
+       LoadPriceListItem.ProducerName ,     
                                 false )
         FROM LoadPriceListItem
-                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName 
+                LEFT JOIN (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode, Object_Goods_View.GoodsName, MakerName 
                             FROM Object_Goods_View 
                            WHERE ObjectId = vbJuridicalId
                         ) AS Object_Goods ON Object_Goods.goodscode = LoadPriceListItem.GoodsCode
          WHERE LoadPriceListItem.GoodsId <> 0 
            AND LoadPriceListItem.LoadPriceListId  = inId 
-           AND COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName;
+           AND ((COALESCE(Object_Goods.GoodsName, '') <> LoadPriceListItem.GoodsName)
+                OR (COALESCE(Object_Goods.MakerName, '') <> LoadPriceListItem.ProducerName));
 
      -- Тут устанавливаем связь между товарами покупателей и главным товаром
 
@@ -76,7 +79,7 @@ BEGIN
    
       -- Выбираем коды Мориона, у которых нет стыковки с главным 
 
-      PERFORM gpInsertUpdate_Object_LinkGoods(
+   /*   PERFORM gpInsertUpdate_Object_LinkGoods(
               0 
             , MainGoodsId -- Главный товар
             , GoodsId      -- Товар для замены
@@ -113,7 +116,7 @@ BEGIN
       WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND LoadPriceListItem.GoodsId <> 0
                      
       AND Object_Goods_View.id NOT IN (SELECT goodsid FROM Object_LinkGoods_View WHERE ObjectId = zc_Enum_GlobalConst_BarCode())) AS DDD;
-
+     */
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -125,6 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.10.14                        *  Пока убрали стыковку с кодами Мориона и штрихкодами автоматом и добавили производителя
  17.10.14                        *  
  03.10.14                        *  
  18.09.14                        *  
@@ -132,3 +136,13 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpLoadSaleFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
+
+/*
+SELECT lpDelete_Object(Id, '') FROM (
+
+SELECT *, MIN(Id) OVER (PARTITION BY GoodsMainId) as MINID FROM Object_LinkGoods_View
+WHERE ObjectId = zc_Enum_GlobalConst_Marion()) AS DDD
+
+WHERE Id <> MinId
+
+*/
