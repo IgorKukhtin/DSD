@@ -146,7 +146,7 @@ end;
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i: integer;
     FormStr: string;
-    EffortCount: integer;
+    AttemptCount: integer;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Не передано название формы');
@@ -173,7 +173,7 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
-    for EffortCount := 1 to 10 do
+    for AttemptCount := 1 to 10 do
       try
         try
           // Создаем форму
@@ -199,7 +199,7 @@ begin
       except
         on E: Exception do begin
           FreeAndNil(Result);
-          if EffortCount > 9 then
+          if AttemptCount > 9 then
              raise Exception.Create(FormName + ' TdsdFormStorage.Load ' + E.Message);
         end;
       end;

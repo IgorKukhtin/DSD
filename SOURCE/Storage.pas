@@ -36,7 +36,7 @@ type
   private
     FErrorCode: string;
   public
-    constructor Create(AMessage, AErrorCode: String);
+    constructor Create(AMessage: String; AErrorCode: String = '');
     property ErrorCode: string read FErrorCode write FErrorCode;
   end;
 
@@ -46,7 +46,7 @@ implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
-     Forms, Log, IdStack;
+     Forms, Log, IdStack, IdExceptionCore;
 
 const
 
@@ -119,6 +119,14 @@ begin
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
     Instance.XMLDocument := TXMLDocument.Create(nil);
+{    try
+      Instance.IdHTTP.Connect;
+    except
+      on E: EIdHostRequired do
+         raise Exception.Create('По указанному адресу Web сервер не найден. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+      on E: Exception do
+         raise E;
+    end;}
   end;
   NewInstance := Instance;
 end;
@@ -221,6 +229,7 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false): Va
   end;
 var
   ResultType: String;
+  AttemptCount: integer;
 begin
   if gc_isDebugMode then
      TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
@@ -229,22 +238,30 @@ begin
   Logger.AddToLog(pData);
   FReceiveStream.Clear;
   IdHTTPWork.FExecOnServer := pExecOnServer;
+  AttemptCount := 0;
   try
-    try
-      idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
-    except
-      on E: EIdSocketError do begin
-         case E.LastError of
-           10051: raise Exception.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-           10054: raise Exception.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
-           10060, 11001: raise Exception.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-           10065: raise Exception.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-            else  raise E;
-         end;
+    for AttemptCount := 1 to 10 do
+      try
+        idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+        break;
+      except
+        on E: EIdSocketError do begin
+           case E.LastError of
+             10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+             10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+             10060: begin
+                       if AttemptCount > 9 then
+                          raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                    end;
+             11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+             10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+              else
+                    raise E;
+           end;
+        end;
+        on E: Exception do
+              raise Exception.Create('Ошибка соединения с Web сервером.');
       end;
-      on E: Exception do
-         raise E;
-    end;
   finally
     if IdHTTPWork.FExecOnServer then
        IdHTTPWork.Gauge.Finish;
@@ -278,7 +295,7 @@ end;
 
 { EStorageException }
 
-constructor EStorageException.Create(AMessage, AErrorCode: String);
+constructor EStorageException.Create(AMessage: String; AErrorCode: String = '');
 begin
   inherited Create(AMessage);
   ErrorCode := AErrorCode;

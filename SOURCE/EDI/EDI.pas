@@ -252,6 +252,7 @@ var
   i, MovementId: integer;
   Stream: TStringStream;
   FileData: string;
+  DocData: TDateTime;
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
 begin
   FTPSetConnection;
@@ -263,7 +264,7 @@ begin
     List := TStringList.Create;
     Stream := TStringStream.Create;
     try
-      FIdFTP.List;//(List, '', false);
+      FIdFTP.List(List, '', false);
       with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
         try
           Start;
@@ -273,9 +274,8 @@ begin
             if (copy(List[i], 1, 6) = 'comdoc') and
               (copy(List[i], Length(List[i]) - 3, 4) = '.p7s') then
             begin
-              if (StartDate <= gfStrFormatToDate(copy(List[i], 8, 8),
-                'yyyymmdd')) and
-                (gfStrFormatToDate(copy(List[i], 8, 8), 'yyyymmdd') <= EndDate)
+              DocData := gfStrFormatToDate(copy(List[i], 8, 8), 'yyyymmdd');
+              if (StartDate <= DocData) and (DocData <= EndDate)
               then
               begin
                 // тянем файл к нам
@@ -918,6 +918,7 @@ begin
   FIdFTP.Username := ConnectionParams.User.asString;
   FIdFTP.Password := ConnectionParams.Password.asString;
   FIdFTP.Host := ConnectionParams.Host.asString;
+  FIdFTP.Passive := true;
   FIdFTP.ListenTimeout := 600;
   FIdFTP.TransferTimeOut := 600;
   FIdFTP.ReadTimeOut := 600000;
@@ -1157,51 +1158,68 @@ var
   i: integer;
   Stream: TStringStream;
   ORDER: IXMLORDERType;
+  DocData: TDateTime;
 begin
-  FTPSetConnection;
-  // загружаем файлы с FTP
-  FIdFTP.Connect;
-  if FIdFTP.Connected then
-  begin
-    FIdFTP.ChangeDir(Directory);
-    List := TStringList.Create;
-    Stream := TStringStream.Create;
-    try
-      FIdFTP.List(List, '', false);
-      if List.Count = 0 then
-        exit;
-      with TGaugeFactory.GetGauge('Загрузка данных', 0, List.Count) do
-        try
-          Start;
-          for i := 0 to List.Count - 1 do
-          begin
-            // если первые буквы файла order а последние .xml
-            if (copy(List[i], 1, 5) = 'order') and
-              (copy(List[i], Length(List[i]) - 3, 4) = '.xml') then
+  try
+    FTPSetConnection;
+    // загружаем файлы с FTP
+    FIdFTP.Connect;
+    if FIdFTP.Connected then
+    begin
+      FIdFTP.ChangeDir(Directory);
+      List := TStringList.Create;
+      Stream := TStringStream.Create;
+      try
+        FIdFTP.List(List, '', false);
+        if List.Count = 0 then
+          exit;
+        with TGaugeFactory.GetGauge('Загрузка данных', 0, List.Count) do
+          try
+            Start;
+            for i := 0 to List.Count - 1 do
             begin
-              if (StartDate <= gfStrFormatToDate(copy(List[i], 7, 8),
-                'yyyymmdd')) and
-                (gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd') <= EndDate)
-              then
+              // если первые буквы файла order а последние .xml
+              if (copy(List[i], 1, 5) = 'order') and
+                (copy(List[i], Length(List[i]) - 3, 4) = '.xml') then
               begin
-                // тянем файл к нам
-                Stream.Clear;
-                FIdFTP.Get(List[i], Stream);
-                ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
-                // загружаем в базенку
-                InsertUpdateOrder(ORDER, spHeader, spList);
+                DocData := gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd');
+                if (StartDate <= DocData) and (DocData <= EndDate)
+                then
+                begin
+                  // тянем файл к нам
+                  Stream.Clear;
+                  if not FIdFTP.Connected then
+                     FIdFTP.Connect;
+                  FIdFTP.ChangeDir(Directory);
+                  FIdFTP.Get(List[i], Stream);
+                  ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
+                  // загружаем в базенку
+                  InsertUpdateOrder(ORDER, spHeader, spList);
+                  // теперь перенесли файл в директроию Archive
+                  if DocData < Date then
+                  try
+                    FIdFTP.ChangeDir('/archive');
+                    FIdFTP.Put(Stream, List[i]);
+                  finally
+                    FIdFTP.ChangeDir(Directory);
+                    FIdFTP.Delete(List[i]);
+                  end;
+                end;
               end;
+              IncProgress;
             end;
-            IncProgress;
+          finally
+            Finish;
           end;
-        finally
-          Finish;
-        end;
-    finally
-      FIdFTP.Quit;
-      List.Free;
-      Stream.Free;
+      finally
+        FIdFTP.Quit;
+        List.Free;
+        Stream.Free;
+      end;
     end;
+  except
+    on E: Exception do
+       raise E;
   end;
 end;
 
