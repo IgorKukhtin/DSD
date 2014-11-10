@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , NdsKindId INTEGER, NdsKindName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , isAllGoodsConcat Boolean, isNDSinPrice Boolean)
 
@@ -32,12 +33,12 @@ BEGIN
            , Object_Contract.ValueData   AS ContractName
            , Object_Unit.Id              AS UnitId
            , Object_Unit.ValueData       AS UnitName
+           , Object_NdsKind.Id           AS NdsKindId
+           , Object_NdsKind.ValueData    AS NdsKindName
            , LoadMovement.TotalCount           
            , LoadMovement.TotalSumm
            , LoadMovement.isAllGoodsConcat           
            , LoadMovement.isNDSinPrice           
-           , Object_NdsKind.Id          AS NdsKindId
-           , Object_NdsKind.ValueData   AS NdsKindName
        FROM LoadMovement
             LEFT JOIN Object AS Object_NdsKind ON Object_NdsKind.Id = LoadMovement.NDSKindId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = LoadMovement.UnitId
