@@ -58,7 +58,8 @@ uses
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -71,7 +72,7 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end
   else

@@ -7,7 +7,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
-    ediReceipt, ediReturnComDoc, ediDeclarReturn);
+    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -43,10 +43,13 @@ type
     procedure InitializeComSigner;
     procedure SignFile(FileName: string; SignType: TSignType);
     procedure PutFileToFTP(FileName: string; Directory: string);
+    procedure PutStreamToFTP(Stream: TStream; FileName: string; Directory: string);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
       Directory: String);
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
@@ -874,17 +877,16 @@ begin
   end;
 
   Stream := TMemoryStream.Create;
-  // Переслать его по ftp
   try
-    DESADV.OwnerDocument.SaveToStream(Stream);
-    FTPSetConnection;
-    FIdFTP.Connect;
-    if FIdFTP.Connected then
+    PutStreamToFTP(DESADV.OwnerDocument.SaveToStream(Stream), 'FileName.xml', '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
-      FIdFTP.ChangeDir('/error');
-      FIdFTP.Put(Stream, 'testDECLAR.xml');
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.Execute;
     end;
-    FIdFTP.Quit;
   finally
     Stream.Free;
   end;
@@ -952,6 +954,11 @@ begin
       ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
       Execute;
     end;
+end;
+
+procedure TEDI.INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
+begin
+
 end;
 
 procedure TEDI.InitializeComSigner;
@@ -1223,6 +1230,76 @@ begin
   end;
 end;
 
+procedure TEDI.ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
+var
+  ORDRSP: IXMLDESADVType;
+  Stream: TStream;
+  i: integer;
+begin
+  ORDRSP := NewDESADV;
+  // Создать XML
+  ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+  ORDRSP.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+
+  ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+    ('DELIVERYPLACEGLNCode').asString;
+  ORDRSP.HEAD.SENDER := ORDRSP.HEAD.SUPPLIER;
+  ORDRSP.HEAD.RECIPIENT := ORDRSP.HEAD.BUYER;
+
+  ORDRSP.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+
+  with ItemsDataSet do
+  begin
+    First;
+    i := 1;
+    while not Eof do
+    begin
+      with ORDRSP.HEAD.PACKINGSEQUENCE.POSITION.Add do
+      begin
+        POSITIONNUMBER := i;
+        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+        PRODUCTIDBUYER := ItemsDataSet.FieldByName
+          ('ArticleGLN_Juridical').asString;
+        DELIVEREDQUANTITY := FormatFloat('0.00',
+          ItemsDataSet.FieldByName('Amount').AsFloat);
+        DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+        ORDEREDQUANTITY := DELIVEREDQUANTITY;
+        COUNTRYORIGIN := 'UA';
+        PRICE := FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat);
+      end;
+      inc(i);
+      Next;
+    end;
+    Close;
+    Free;
+  end;
+
+  Stream := TMemoryStream.Create;
+  try
+    PutStreamToFTP(ORDRSP.OwnerDocument.SaveToStream(Stream), 'FileName.xml', '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ ORDRSP отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+  end;
+end;
+
 procedure TEDI.PutFileToFTP(FileName, Directory: string);
 var i: integer;
 begin
@@ -1245,7 +1322,29 @@ begin
          raise Exception.Create(E.Message);
     end;
   end;
+end;
 
+procedure TEDI.PutStreamToFTP(Stream: TStream; FileName: string; Directory: string);
+var i: integer;
+begin
+  for I := 1 to 10 do begin
+    try
+      FTPSetConnection;
+      FIdFTP.Connect;
+      if FIdFTP.Connected then
+      begin
+        FIdFTP.ChangeDir(Directory);
+        FIdFTP.Put(Stream, FileName);
+      end;
+      FIdFTP.Quit;
+      break;
+    except
+      on E: Exception do begin
+        if i > 9 then
+           raise Exception.Create(E.Message);
+      end;
+    end;
+  end;
 end;
 
 procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
@@ -1423,6 +1522,12 @@ begin
       EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory);
     ediDeclarReturn:
       EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, Directory);
+    ediDesadv:
+      EDI.DesadvSave(HeaderDataSet, ListDataSet);
+    ediOrdrsp:
+      EDI.ORDRSPSave(HeaderDataSet, ListDataSet);
+    ediInvoice:
+      EDI.INVOICESave(HeaderDataSet, ListDataSet);
   end;
   Result := true;
 end;
