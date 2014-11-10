@@ -70,7 +70,7 @@ BEGIN
 
            LEFT JOIN ObjectLink AS ObjectLink_GoodsTag
                                 ON ObjectLink_GoodsTag.ObjectId = Object_GoodsGroup.Id
-                               AND ObjectLink_GoodsTagk.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
+                               AND ObjectLink_GoodsTag.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_GoodsTag.ChildObjectId 
            
        WHERE Object_GoodsGroup.Id = inId;

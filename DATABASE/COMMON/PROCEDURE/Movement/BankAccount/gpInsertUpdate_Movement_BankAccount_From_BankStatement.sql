@@ -42,8 +42,7 @@ BEGIN
                inUnitId := MovementLinkObject_Unit.ObjectId, 
                inCurrencyId := MovementLinkObject_Currency.ObjectId, 
                inParentId := Movement.Id, 
-               inBankAccountPartnerId := 
-      lpInsertFind_BankAccount(MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId),
+               inBankAccountPartnerId:= lpInsertFind_BankAccount (MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId),
                inUserId:= vbUserId)
 
        FROM Movement

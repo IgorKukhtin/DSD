@@ -23,15 +23,15 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
-/*
+
      IF inChangeAmount = FALSE
      THEN
-         inAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0);
+         inAmountPartner:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner()), 0);
      ELSE
          -- !!!!!!!!!!!!!!!
-         inAmount:= inAmountPartner;
+         inAmountPartner:= inAmount;
      END IF;
-*/
+
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

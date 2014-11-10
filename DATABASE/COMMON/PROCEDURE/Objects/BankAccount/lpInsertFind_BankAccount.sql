@@ -18,7 +18,7 @@ BEGIN
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankAccount());
 
    -- Ищем Банк по МФО. Если не находим, то добавляем
-   vbBankId := lpInsertFind_Bank(inBankMFO, inBankName, inUserId);
+   vbBankId := lpInsertFind_Bank (inBankMFO, inBankName, inUserId);
 
     
    SELECT Id INTO vbBankAccountId 
@@ -26,7 +26,10 @@ BEGIN
     WHERE BankId = vbBankId AND JuridicalId = inJuridicalId AND Name = inBankAccount;
 
 
-   IF COALESCE(vbBankAccountId, 0) = 0 THEN
+   IF COALESCE(vbBankAccountId, 0) = 0
+   THEN
+     -- RAISE EXCEPTION 'Ошибка.Расчетный счет <%> у юридического лица <%> не найден.', inBankAccount, lfGet_Object_ValueData (inJuridicalId);
+
      -- сохранили <Объект>
      vbBankAccountId := lpInsertUpdate_Object(vbBankAccountId, zc_Object_BankAccount(), 0, inBankAccount);
 

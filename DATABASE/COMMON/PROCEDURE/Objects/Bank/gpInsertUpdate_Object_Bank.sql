@@ -23,16 +23,29 @@ BEGIN
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Bank());
 
+   -- проверка
+   IF TRIM (COALESCE (inMFO, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.У банка не установлено <МФО>.';
+   END IF;
+
    -- проверка прав уникальности для свойства <Наименование Банка>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Bank(), inName);
    -- проверка прав уникальности для свойства <Код Банка>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Bank(), vbCode_calc);
    -- проверка прав уникальности для свойства <МФО>
    PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_MFO(), inMFO);
+
    -- проверка прав уникальности для свойства <SWIFT>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_SWIFT(), inSWIFT);
+   IF inSWIFT <> ''
+   THEN
+       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_SWIFT(), inSWIFT);
+   END IF;
    -- проверка прав уникальности для свойства <IBAN>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_IBAN(), inIBAN);
+   IF inIBAN <> ''
+   THEN
+       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_IBAN(), inIBAN);
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Bank(), vbCode_calc, inName);
