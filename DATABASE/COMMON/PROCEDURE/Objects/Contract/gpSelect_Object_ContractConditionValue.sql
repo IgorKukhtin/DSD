@@ -170,7 +170,7 @@ BEGIN
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                              ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
+                            AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_AreaContract()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId                     
             
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractArticle

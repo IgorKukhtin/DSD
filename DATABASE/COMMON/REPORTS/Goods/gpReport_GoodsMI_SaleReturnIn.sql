@@ -323,7 +323,7 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_RetailReport()
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup

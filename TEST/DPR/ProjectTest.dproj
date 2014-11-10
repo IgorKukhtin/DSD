@@ -1695,6 +1695,17 @@
 				<Form>RetailReportEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
+				<Form>LookAndFillSettingsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerTag.pas">
+				<Form>PartnerTagForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerTagEdit.pas">
+				<Form>PartnerTagEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

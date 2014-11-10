@@ -80,16 +80,17 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
-      object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
+      object clRetailReportName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'RetailReportName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoiceRetailForm
+            Action = actChoiceRetailReportForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -472,25 +473,25 @@ object JuridicalForm: TJuridicalForm
       isSetErased = False
       DataSource = GridDS
     end
-    object actChoiceRetailForm: TOpenChoiceForm
+    object actChoiceRetailReportForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'RetailChoiceForm'
-      FormName = 'TRetailForm'
-      FormNameParam.Value = 'TRetailForm'
+      FormName = 'TRetailReportForm'
+      FormNameParam.Value = 'TRetailReportForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'RetailId'
+          ComponentItem = 'RetailReportId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'RetailName'
+          ComponentItem = 'RetailReportName'
           DataType = ftString
         end>
       isShowModal = True
@@ -712,10 +713,10 @@ object JuridicalForm: TJuridicalForm
         ParamType = ptInput
       end
       item
-        Name = 'inRetailId'
+        Name = 'inRetailReportId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'RetailId'
+        ComponentItem = 'RetailReportId'
         ParamType = ptInput
       end
       item

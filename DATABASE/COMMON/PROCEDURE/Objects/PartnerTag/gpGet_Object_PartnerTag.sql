@@ -1,8 +1,8 @@
--- Function: gpGet_Object_AreaContract()
+-- Function: gpGet_Object_PartnerTag()
 
-DROP FUNCTION IF EXISTS gpGet_Object_AreaContract(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_PartnerTag(integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_AreaContract(
+CREATE OR REPLACE FUNCTION gpGet_Object_PartnerTag(
     IN inId          Integer,       -- ключ объекта <Регионы>
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -18,7 +18,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_AreaContract()) AS Code
+           , lfGet_ObjectCode(0, zc_Object_PartnerTag()) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -36,15 +36,15 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_AreaContract(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_PartnerTag(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 06.11.14         *
+ 08.11.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_AreaContract (0, '2')
+-- SELECT * FROM gpGet_Object_PartnerTag (0, '2')

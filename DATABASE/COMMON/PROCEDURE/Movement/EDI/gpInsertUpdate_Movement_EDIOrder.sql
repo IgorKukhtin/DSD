@@ -65,10 +65,19 @@ BEGIN
         vbJuridicalId := COALESCE((SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Partner_Juridical() AND ObjectId = vbPartnerId), 0);
      END IF;
 
-     IF COALESCE(vbJuridicalId, 0) <> 0 THEN
+     IF COALESCE (vbJuridicalId, 0) <> 0 THEN
+        -- сохранили <Юр лицо>
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementId, vbJuridicalId);
+
+        -- сохранили <ОКПО>
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), vbMovementId, (SELECT OKPO FROM ObjectHistory_JuridicalDetails_View WHERE JuridicalId = vbJuridicalId));
+
         -- Возвращаем ссылку на классификатор товаров
         vbGoodsPropertyID := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
+
+        -- сохранили <классификатор>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), vbMovementId, vbGoodsPropertyId);
+
      END IF;
 
      PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка ORDER из EDI', vbUserId);

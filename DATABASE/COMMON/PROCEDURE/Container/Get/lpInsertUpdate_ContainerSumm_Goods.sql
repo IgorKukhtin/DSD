@@ -116,7 +116,7 @@ BEGIN
                                                                 , inDescId_3   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                                 , inObjectId_3 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
                                                                 , inDescId_4   := zc_ContainerLinkObject_GoodsKind()
-                                                                , inObjectId_4 := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis()) THEN inGoodsKindId ELSE 0 END
+                                                                , inObjectId_4 := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis(), 301310) THEN inGoodsKindId ELSE 0 END -- !!!+ филиал Запорожье!!
                                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_5 := inInfoMoneyId
                                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
@@ -179,6 +179,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.14                                        * add !!!+ филиал Запорожье!!
  05.09.14                                        * !!!del Old Algoritm!!! err - zc_ObjectCostLink_Member() and zc_ObjectCostLink_Unit()
  17.08.14                                        * add inPartionGoodsId always
  13.08.14                                        * DELETE lpInsertFind_ObjectCost

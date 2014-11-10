@@ -76,8 +76,8 @@ type
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
-    clRetailName: TcxGridDBColumn;
-    actChoiceRetailForm: TOpenChoiceForm;
+    clRetailReportName: TcxGridDBColumn;
+    actChoiceRetailReportForm: TOpenChoiceForm;
     actChoiceJuridicalGroup: TOpenChoiceForm;
   private
     { Private declarations }

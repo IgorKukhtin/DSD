@@ -123,8 +123,8 @@ type
     cxLabel18: TcxLabel;
     edPhone: TcxDBTextEdit;
     cxLabel19: TcxLabel;
-    ceRetail: TcxButtonEdit;
-    RetailGuides: TdsdGuides;
+    ceRetailReport: TcxButtonEdit;
+    RetailReportGuides: TdsdGuides;
   private
     { Private declarations }
   public

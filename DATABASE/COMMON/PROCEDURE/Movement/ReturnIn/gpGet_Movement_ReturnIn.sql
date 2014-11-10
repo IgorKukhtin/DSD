@@ -23,10 +23,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
+     vbUserId:= lpGetUserBySession (inSession);
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
@@ -75,7 +77,7 @@ BEGIN
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN 0 = COALESCE ((SELECT BranchId FROM tmpBranch), 0)
                                                                          THEN 8461 -- !!!Склад Возвратов!!!
                                                                     WHEN 301310 = (SELECT BranchId FROM tmpBranch) -- филиал Запорожье
-                                                                         THEN 301309 -- !!!ф. Запорожье!!!
+                                                                         THEN 309599 -- !!!Склад возвратов ф.Запорожье!!!
                                                                     ELSE 0
                                                                END
                LEFT JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()

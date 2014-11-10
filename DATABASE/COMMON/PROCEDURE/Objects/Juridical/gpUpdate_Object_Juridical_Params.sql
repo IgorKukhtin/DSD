@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Inte
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
-    IN inRetailId            Integer   ,    -- Торговая сеть
+    IN inRetailReportId            Integer   ,    -- Торговая сеть
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
@@ -24,7 +24,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
 
     -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), ioId, inRetailId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_RetailReport(), ioId, inRetailReportId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_PriceList(), ioId, inPriceListId);
@@ -48,6 +48,7 @@ ALTER FUNCTION gpUpdate_Object_Juridical_Params  (Integer, Integer, Integer, Int
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.14         * RetailReport изменено
  27.10.14                                        * add inJuridicalGroupId
  25.05.14                                        *
 */

@@ -423,7 +423,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
                                 ) ON COMMIT DROP;
     select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
                                                      , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                     , inOperDate        :='30.09.2014'
+                                                     , inOperDate        :='31.10.2014'
                                                      , inAmountIn        := 0
                                                      , inAmountOut       := Sum_Bonus
                                                      , inComment         := ''
@@ -437,7 +437,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
                                                      , inisLoad          := TRUE
                                                      , inUserId          := zfCalc_UserAdmin() :: Integer
                                                       )
-    from gpReport_CheckBonus (inStartDate:= '01.09.2014', inEndDate:= '30.09.2014', inSession:= '5') as a
+    from gpReport_CheckBonus (inStartDate:= '01.10.2014', inEndDate:= '31.10.2014', inSession:= '5') as a
     where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест

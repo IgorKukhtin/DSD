@@ -431,9 +431,11 @@ type
     actSendOnPrice_Branch: TdsdOpenForm;
     bbSendOnPrice_Branch: TdxBarButton;
     actRetailReport: TdsdOpenForm;
-    actAreaContact: TdsdOpenForm;
+    actAreaContract: TdsdOpenForm;
     bbAreaContact: TdxBarButton;
     bbRetailReport: TdxBarButton;
+    actPartnerTag: TdsdOpenForm;
+    bbPartnerTag: TdxBarButton;
   public
     { Public declarations }
   end;

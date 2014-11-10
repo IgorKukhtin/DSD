@@ -39,6 +39,7 @@ BEGIN
                                       , inToId             := inToId
                                       , inRouteSortingId   := inRouteSortingId
                                       , ioPriceListId      := ioPriceListId
+                                      , inProcessId        := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                       , inUserId           := vbUserId
                                        ) AS tmp;
 END;
