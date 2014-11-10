@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                              Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                             TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
@@ -21,7 +22,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-    IN inPersonalTakeId      Integer   ,    -- Сотрудник (экспедитор) 
+  
+    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
+    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inAreaId              Integer   ,    -- Регион
+    IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
     
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -71,8 +77,12 @@ BEGIN
                                         , inJuridicalId     := inJuridicalId
                                         , inRouteId         := inRouteId
                                         , inRouteSortingId  := inRouteSortingId
-                                        , inPersonalTakeId  := inPersonalTakeId
-    
+                                        , inMemberTakeId    := inMemberTakeId
+                                        , inMemberId        := inMemberId
+                                        , inMemberTradeId   := inMemberTradeId
+                                        , inAreaId          := inAreaId
+                                        , inPartnerTagId    := inPartnerTageId
+           
                                         , inPriceListId     := inPriceListId
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inStartPromo      := inStartPromo
@@ -86,12 +96,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.11.14         * add redmine
  25.08.14                                        * add lp
  24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm
  16.08.14                                        * add inAddress

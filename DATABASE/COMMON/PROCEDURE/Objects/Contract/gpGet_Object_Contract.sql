@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar, BankAccountExternal TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              
              , ContractKindId Integer, ContractKindName TVarChar
@@ -54,6 +54,7 @@ BEGIN
            , '' :: TVarChar  AS InvNumberArchive
            , '' :: TVarChar  AS Comment
            , '' :: TVarChar  AS BankAccountExternal
+           , '' :: TVarChar  AS GLNCode
 
            , CURRENT_DATE :: TDateTime AS SigningDate
            , CURRENT_DATE :: TDateTime AS StartDate
@@ -119,6 +120,7 @@ BEGIN
            , ObjectString_InvNumberArchive.ValueData AS InvNumberArchive
            , ObjectString_Comment.ValueData          AS Comment
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
+           , ObjectString_GLNCode.ValueData          AS GLNCode
                       
            , ObjectDate_Signing.ValueData AS SigningDate
            , ObjectDate_Start.ValueData   AS StartDate -- Object_Contract_View.StartDate
@@ -195,6 +197,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_BankAccount
                                    ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
+                                  
+            LEFT JOIN ObjectString AS ObjectString_GLNCode
+                                   ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()                                  
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                     ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -266,6 +272,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.11.14         * add GLNCode
  07.11.14         * AreaContract
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique

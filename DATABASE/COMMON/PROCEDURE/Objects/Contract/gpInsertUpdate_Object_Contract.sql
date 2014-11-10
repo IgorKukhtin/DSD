@@ -2,6 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -10,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inInvNumberArchive    TVarChar,      -- Номер архивирования
     IN inComment             TVarChar,      -- Примечание
     IN inBankAccountExternal TVarChar,      -- р.счет (исх.платеж)
+    IN inGLNCode             TVarChar,      -- Код GLN  
     
     IN inSigningDate         TDateTime,     -- Дата заключения договора
     IN inStartDate           TDateTime,     -- Дата с которой действует договор
@@ -27,7 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inBankAccountId       Integer  ,     -- Расчетный счет (вх.платеж)
     IN inContractTagId       Integer  ,     -- Признак договора
     
-    IN inAreaContractId              Integer  ,     -- Регион
+    IN inAreaContractId      Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
@@ -161,6 +165,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccountExternal);
+   -- сохранили свойство <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_GLNCode(), ioId, inGLNCode);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Default(), ioId, inisDefault);
@@ -227,6 +233,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.11.14         * add GLNCode               
  07.11.14         * замана Area  на AreaContract
  21.07.14                                        * add проверка <Номер договора>
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
