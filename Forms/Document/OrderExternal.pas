@@ -79,6 +79,7 @@ type
     cxLabel17: TcxLabel;
     ContractTagGuides: TdsdGuides;
     AmountEDI: TcxGridDBColumn;
+    AmountRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

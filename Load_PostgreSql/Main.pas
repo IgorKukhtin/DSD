@@ -12010,7 +12010,7 @@ begin
              // для EDI - IsOnlyUpdateInt = TRUE
              if (FieldByName('Id_Postgres').AsInteger<>0)then
              begin
-                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  fOpenSqToQuery ('select COALESCE(MovementChildId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
                   if toSqlQuery.FieldByName('RetV').AsInteger > 0
                   then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
                        // !!!для НАЛ - все данные из Integer!!!
@@ -12194,7 +12194,7 @@ begin
              // для EDI - IsOnlyUpdateInt = TRUE
              if (FieldByName('MovementId_Postgres').AsInteger<>0)then
              begin
-                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  fOpenSqToQuery ('select COALESCE(MovementChildId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
                   if toSqlQuery.FieldByName('RetV').AsInteger > 0
                   then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
                        // !!!для НАЛ - все данные из Integer!!!
@@ -12395,7 +12395,7 @@ begin
              // для EDI - IsOnlyUpdateInt = TRUE
              if (FieldByName('Id_Postgres').AsInteger<>0)then
              begin
-                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  fOpenSqToQuery ('select COALESCE(MovementChildId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
                   if toSqlQuery.FieldByName('RetV').AsInteger > 0
                   then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
                   else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
@@ -12575,7 +12575,7 @@ begin
              // для EDI - IsOnlyUpdateInt = TRUE
              if (FieldByName('MovementId_Postgres').AsInteger<>0)then
              begin
-                  fOpenSqToQuery ('select COALESCE(MovementId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
+                  fOpenSqToQuery ('select COALESCE(MovementChildId, 0) AS RetV from MovementLinkMovement where MovementId='+FieldByName('MovementId_Postgres').AsString + ' and DescId IN (zc_MovementLinkMovement_Sale(), zc_MovementLinkMovement_MasterEDI())');
                   if toSqlQuery.FieldByName('RetV').AsInteger > 0
                   then toStoredProc.Params.ParamByName('inIsOnlyUpdateInt').Value:=TRUE
                   else if FieldByName('isOnlyUpdateInt').AsInteger=zc_rvNo
@@ -14961,12 +14961,12 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , zc_rvYes() as IsChangeAmount');
         Add('     , case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())'
            +'             and Bill.BillDate >=zc_def_StartDate_PG()'
-           +'                 then 0'
-           +'            else BillItems.OperCount'
-           +'       end as AmountPartner');
+           +'                 then zc_rvNo()'
+           +'            else zc_rvYes()'
+           +'       end as IsChangeAmount');
+        Add('     , BillItems.OperCount as AmountPartner');
         Add('     , BillItems.OperCount as Amount');
 
         Add('     , BillItems.OperPrice as Price');
@@ -17225,7 +17225,7 @@ begin
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
-                           +'             )or MovementLinkMovement.MovementId is not null'
+                           +'             )or MovementLinkMovement.MovementChildId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
@@ -17341,7 +17341,7 @@ begin
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when (Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
                            +addSklad // Склад Реализации
-                           +'             )or MovementLinkMovement.MovementId is not null'
+                           +'             )or MovementLinkMovement.MovementChildId is not null'
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'

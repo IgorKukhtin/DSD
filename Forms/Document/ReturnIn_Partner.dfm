@@ -77,6 +77,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

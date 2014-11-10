@@ -216,9 +216,6 @@ BEGIN
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
-    DECLARE   TFloat;
-    DECLARE   TFloat;
-
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
@@ -265,12 +262,14 @@ BEGIN
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
            , Object_BankAccount.Name                            AS BankAccount_ByContract
+           , 'российских рублях' :: TVarChar                    AS CurrencyInternalAll_ByContract
+           , Object_BankAccount.CurrencyInternalName            AS CurrencyInternal_ByContract
            , Object_BankAccount.BankName                        AS BankName_ByContract
            , Object_BankAccount.MFO                             AS BankMFO_ByContract
            , Object_BankAccount.SWIFT                           AS BankSWIFT_ByContract
            , Object_BankAccount.IBAN                            AS BankIBAN_ByContract
            , Object_BankAccount.CorrespondentBankName           AS CorrBankName_ByContract
-           , Object_Bank_View_CorrespondentBank.SWIFT           AS CorrBankSWIFT_ByContract
+           , Object_Bank_View_CorrespondentBank_From.SWIFT      AS CorrBankSWIFT_ByContract
            , Object_BankAccount.CorrespondentAccount            AS CorrespondentAccount_ByContract
            , OHS_JD_JuridicalAddress_Bank_From.ValueData        AS JuridicalAddressBankFrom
            , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
@@ -448,7 +447,8 @@ BEGIN
                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
 
-                      WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId LIMIT 1
+                      WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                      LIMIT 1
                       ) AS BankAccount_To ON 1=1
 
          LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId

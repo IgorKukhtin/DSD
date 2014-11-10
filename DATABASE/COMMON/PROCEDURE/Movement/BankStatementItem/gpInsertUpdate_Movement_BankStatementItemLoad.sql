@@ -145,7 +145,7 @@ BEGIN
 
     IF COALESCE(vbJuridicalId, 0) = 0 THEN
        -- ֿûעאולסÿ םאיעט נאסקועםûי סקוע ׂ־ֻÜÊ־ ֲ־ ֲֽ׃ׂ׀ֵָֽֽױ װָ׀ְּױ!!!
-       SELECT Object_BankAccount_View.Id INTO vbJuridicalId
+       SELECT Object_BankAccount_View.JuridicalId INTO vbJuridicalId
          FROM Object_BankAccount_View 
          JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                             ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 

@@ -443,255 +443,6 @@ object WeighingProductionForm: TWeighingProductionForm
         end
       end
     end
-    object cxTabSheetEntry: TcxTabSheet
-      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
-      ImageIndex = 1
-      object cxGridEntry: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 969
-        Height = 312
-        Align = alClient
-        TabOrder = 0
-        object cxGridEntryDBTableView: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = EntryDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colKreditAmount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colDebetAmount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-            DataBinding.FieldName = 'InvNumber'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colAccountCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
-            DataBinding.FieldName = 'AccountCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
-          end
-          object colDebetAccountGroupName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'DebetAccountGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colDebetAccountDirectionName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
-            DataBinding.FieldName = 'DebetAccountDirectionName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetAccountName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colKreditAccountGroupName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'KreditAccountGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colKreditAccountDirectionName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
-            DataBinding.FieldName = 'KreditAccountDirectionName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'KreditAccountName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 88
-          end
-          object colDirectionObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
-            DataBinding.FieldName = 'DirectionObjectCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
-          object colDirectionObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'DirectionObjectName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 98
-          end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colDestinationObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
-            DataBinding.FieldName = 'DestinationObjectCode'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object colDestinationObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'DestinationObjectName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object clenGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colJuridicalBasisCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.('#1075#1083'.)'
-            DataBinding.FieldName = 'JuridicalBasisCode'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colJuridicalBasisName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
-            DataBinding.FieldName = 'JuridicalBasisName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colBusinessCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072
-            DataBinding.FieldName = 'BusinessCode'
-            Visible = False
-            Options.Editing = False
-            Width = 45
-          end
-          object colBusinessName: TcxGridDBColumn
-            Caption = #1041#1080#1079#1085#1077#1089
-            DataBinding.FieldName = 'BusinessName'
-            Options.Editing = False
-            Width = 70
-          end
-          object colBranchCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
-            DataBinding.FieldName = 'BranchCode'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object colBranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colAccountOnComplete: TcxGridDBColumn
-            Caption = '***'
-            DataBinding.FieldName = 'AccountOnComplete'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 32
-          end
-          object colDebetAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 66
-          end
-          object colKreditAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'KreditAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.Nullable = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colPrice_comlete: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;,0.00##; ;'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 58
-          end
-          object colInfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 93
-          end
-          object colInfoMoneyName_Detail: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
-            DataBinding.FieldName = 'InfoMoneyName_Detail'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-        end
-        object cxGridEntryLevel: TcxGridLevel
-          GridView = cxGridEntryDBTableView
-        end
-      end
-    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -740,14 +491,15 @@ object WeighingProductionForm: TWeighingProductionForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 264
     Top = 287
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -820,10 +572,6 @@ object WeighingProductionForm: TWeighingProductionForm
         item
           Visible = True
           ItemName = 'bbGridToExel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
         end>
       OneOnRow = True
       Row = 0
@@ -855,10 +603,6 @@ object WeighingProductionForm: TWeighingProductionForm
       Action = GridToExcel
       Category = 0
     end
-    object bbEntryToGrid: TdxBarButton
-      Action = EntryToExcel
-      Category = 0
-    end
     object bbStatic: TdxBarStatic
       Caption = '     '
       Category = 0
@@ -867,12 +611,10 @@ object WeighingProductionForm: TWeighingProductionForm
     object bbErased: TdxBarButton
       Action = SetErased
       Category = 0
-      Enabled = False
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
       Category = 0
-      Enabled = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -964,9 +706,6 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMovementContainerItem
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1019,16 +758,6 @@ object WeighingProductionForm: TWeighingProductionForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
-    object EntryToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetEntry
-      MoveParams = <>
-      Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -1194,35 +923,6 @@ object WeighingProductionForm: TWeighingProductionForm
       Action = actRefresh
     end
   end
-  object spSelectMovementContainerItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItemContainer_Movement'
-    DataSet = EntryCDS
-    DataSets = <
-      item
-        DataSet = EntryCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 819
-    Top = 312
-  end
-  object EntryCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 16
-    Top = 384
-  end
-  object EntryDS: TDataSource
-    DataSet = EntryCDS
-    Left = 61
-    Top = 384
-  end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -1244,20 +944,6 @@ object WeighingProductionForm: TWeighingProductionForm
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 806
     Top = 263
-  end
-  object EntryViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridEntryDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    Left = 180
-    Top = 360
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1425,6 +1111,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 216
     Top = 224
   end
@@ -1498,16 +1185,19 @@ object WeighingProductionForm: TWeighingProductionForm
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 630
     Top = 224
   end
@@ -1518,16 +1208,19 @@ object WeighingProductionForm: TWeighingProductionForm
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 638
     Top = 288
   end
@@ -1560,6 +1253,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 76
     Top = 24
   end

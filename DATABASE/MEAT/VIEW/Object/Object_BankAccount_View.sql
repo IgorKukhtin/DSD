@@ -17,7 +17,9 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_Bank_View.JuridicalId                       AS BankJuridicalId
            , Object_Bank_View.JuridicalName                     AS BankJuridicalName
            , BankAccount_Currency.ChildObjectId                 AS CurrencyId
+           , Currency.ObjectCode                                AS CurrencyCode
            , Currency.ValueData                                 AS CurrencyName
+           , ObjectString_Currency_InternalName.ValueData       AS CurrencyInternalName
 
            , Object_CorrespondentBank.Id                        AS CorrespondentBankId
            , Object_CorrespondentBank.ValueData                 AS CorrespondentBankName
@@ -43,6 +45,9 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
          ON BankAccount_Currency.ObjectId = Object_BankAccount.Id
         AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
   LEFT JOIN Object AS Currency  ON Currency.Id = BankAccount_Currency.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_Currency_InternalName
+                             ON ObjectString_Currency_InternalName.ObjectId = Currency.Id
+                            AND ObjectString_Currency_InternalName.DescId = zc_ObjectString_Currency_InternalName()
 
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_CorrespondentBank
                              ON ObjectLink_BankAccount_CorrespondentBank.ObjectId = Object_BankAccount.Id

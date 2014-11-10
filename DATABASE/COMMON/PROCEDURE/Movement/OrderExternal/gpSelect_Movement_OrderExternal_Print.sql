@@ -118,6 +118,10 @@ BEGIN
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
 
+           , Object_Personal.ValueData                  AS PersonalName
+           , Object_Route.ValueData                     AS RouteName
+           , Object_RouteSorting.ValueData              AS RouteSortingName
+
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -182,6 +186,20 @@ BEGIN
                                                                 ON OH_JuridicalDetails_To.JuridicalId = View_Contract.JuridicalBasisId
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
+                                         ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
+                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
