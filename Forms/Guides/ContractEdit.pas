@@ -138,6 +138,8 @@ type
     ContractTagGuides: TdsdGuides;
     ceisPersonal: TcxCheckBox;
     ceIsUnique: TcxCheckBox;
+    cxLabel22: TcxLabel;
+    edGLNCode: TcxTextEdit;
   private
     { Private declarations }
   public

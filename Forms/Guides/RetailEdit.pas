@@ -27,6 +27,8 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel3: TcxLabel;
+    edGLNCode: TcxTextEdit;
   private
     { Private declarations }
   public

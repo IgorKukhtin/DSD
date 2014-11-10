@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
-               MemberTakeId Integer, MemberName TVarChar,
+               MemberTakeId Integer, MemberTakeName TVarChar,
                
                MemberId Integer, MemberName TVarChar,
                MemberTradeId Integer, MemberTradeName TVarChar,

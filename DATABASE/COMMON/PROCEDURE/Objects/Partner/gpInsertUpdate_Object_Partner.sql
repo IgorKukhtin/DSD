@@ -81,7 +81,7 @@ BEGIN
                                         , inMemberId        := inMemberId
                                         , inMemberTradeId   := inMemberTradeId
                                         , inAreaId          := inAreaId
-                                        , inPartnerTagId    := inPartnerTageId
+                                        , inPartnerTagId    := inPartnerTagId
            
                                         , inPriceListId     := inPriceListId
                                         , inPriceListPromoId:= inPriceListPromoId
