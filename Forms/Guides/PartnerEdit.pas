@@ -28,8 +28,8 @@ type
     cxLabel7: TcxLabel;
     ceRouteSorting: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    cePersonalTake: TcxButtonEdit;
-    dsdPersonalGuides: TdsdGuides;
+    ceMemberTake: TcxButtonEdit;
+    dsdMemberTakeGuides: TdsdGuides;
     dsdRouteSortingGuides: TdsdGuides;
     dsdRouteGuides: TdsdGuides;
     cePrepareDayCount: TcxCurrencyEdit;
@@ -55,6 +55,38 @@ type
     edHouseNumber: TcxTextEdit;
     edCaseNumber: TcxTextEdit;
     edRoomNumber: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    ceMember: TcxButtonEdit;
+    MemberGuides: TdsdGuides;
+    cxLabel19: TcxLabel;
+    ceMemberTrade: TcxButtonEdit;
+    MemberTradeGuides: TdsdGuides;
+    cxLabel20: TcxLabel;
+    ceArea: TcxButtonEdit;
+    AreaGuides: TdsdGuides;
+    cxLabel21: TcxLabel;
+    cePartnerTag: TcxButtonEdit;
+    PartnerTagGuides: TdsdGuides;
+    cxLabel22: TcxLabel;
+    ceRegion: TcxButtonEdit;
+    RegionGuides: TdsdGuides;
+    cxLabel23: TcxLabel;
+    ceProvince: TcxButtonEdit;
+    ProvinceGuides: TdsdGuides;
+    cxLabel24: TcxLabel;
+    ceCityKind: TcxButtonEdit;
+    CityKindGuides: TdsdGuides;
+    cxLabel25: TcxLabel;
+    ceCity: TcxButtonEdit;
+    CityGuides: TdsdGuides;
+    cxLabel26: TcxLabel;
+    ceProvinceCity: TcxButtonEdit;
+    ProvinceCityGuides: TdsdGuides;
+    cxLabel27: TcxLabel;
+    ceStreetKind: TcxButtonEdit;
+    StreetKindGuides: TdsdGuides;
+    cxLabel28: TcxLabel;
+    edPostalCode: TcxTextEdit;
 
   private
     { Private declarations }

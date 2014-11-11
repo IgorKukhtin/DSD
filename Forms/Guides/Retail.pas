@@ -10,7 +10,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TRetailForm = class(TParentForm)
@@ -43,6 +44,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
+    colGLNCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

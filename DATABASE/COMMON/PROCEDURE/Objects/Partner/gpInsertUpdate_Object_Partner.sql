@@ -2,7 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                              Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                             TDateTime, TDateTime, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                             Integer, TFloat, TFloat, 
+                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                             TDateTime, TDateTime,
+                             TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer,
+                             TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
@@ -21,12 +29,27 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-    IN inPersonalTakeId      Integer   ,    -- Сотрудник (экспедитор) 
+  
+    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
+    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inAreaId              Integer   ,    -- Регион
+    IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
     
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
+
+    IN inRegionName          TVarChar  ,    -- наименование области
+    IN inProvinceName        TVarChar  ,    -- наименование район
+    IN inCityName            TVarChar  ,    -- наименование населенный пункт
+    IN inCityKindId          Integer   ,    -- Вид населенного пункта
+    IN inProvinceCityName    TVarChar  ,    -- наименование района населенного пункта
+    IN inPostalCode          TVarChar  ,    -- индекс
+    IN inStreetName          TVarChar  ,    -- наименование улица
+    IN inStreetKindId        Integer   ,    -- Вид улицы
+
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -71,8 +94,12 @@ BEGIN
                                         , inJuridicalId     := inJuridicalId
                                         , inRouteId         := inRouteId
                                         , inRouteSortingId  := inRouteSortingId
-                                        , inPersonalTakeId  := inPersonalTakeId
-    
+                                        , inMemberTakeId    := inMemberTakeId
+                                        , inMemberId        := inMemberId
+                                        , inMemberTradeId   := inMemberTradeId
+                                        , inAreaId          := inAreaId
+                                        , inPartnerTagId    := inPartnerTagId
+           
                                         , inPriceListId     := inPriceListId
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inStartPromo      := inStartPromo
@@ -80,18 +107,37 @@ BEGIN
 
                                         , inUserId          := vbUserId
                                          );
+
+   -- сохранили
+   ioId := lpUpdate_Object_Partner_Address( ioId                := ioId
+                                          , inCode              := inCode
+                                          , inName              := outPartnerName   
+                                          , inRegionName        := inRegionName
+                                          , inProvinceName      := inProvinceName
+                                          , inCityName          := inCityName
+                                          , inCityKindId        := inCityKindId
+                                          , inProvinceCityName  := inProvinceCityName  
+                                          , inPostalCode        := inPostalCode
+                                          , inStreetName        := inStreetName
+                                          , inStreetKindId      := inStreetKindId
+                                          , inHouseNumber       := inHouseNumber
+                                          , inCaseNumber        := inCaseNumber  
+                                          , inRoomNumber        := inRoomNumber
+                                          , inShortName         := inShortName
+                                          , inSession           := inSession);                                         
    
    
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.11.14         * add redmine
  25.08.14                                        * add lp
  24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm
  16.08.14                                        * add inAddress

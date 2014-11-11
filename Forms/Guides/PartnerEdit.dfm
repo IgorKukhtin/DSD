@@ -1,25 +1,27 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 499
-  ClientWidth = 364
-  ExplicitWidth = 370
-  ExplicitHeight = 524
+  ClientHeight = 446
+  ClientWidth = 727
+  ExplicitWidth = 733
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 69
-    Top = 468
+    Left = 65
+    Top = 413
     TabOrder = 2
-    ExplicitLeft = 69
-    ExplicitTop = 468
+    ExplicitLeft = 65
+    ExplicitTop = 413
   end
   inherited bbCancel: TcxButton
-    Top = 468
-    ExplicitTop = 468
+    Left = 214
+    Top = 413
+    ExplicitLeft = 214
+    ExplicitTop = 413
   end
   object edAddress: TcxTextEdit [2]
     Left = 85
-    Top = 82
+    Top = 78
     TabOrder = 0
     Width = 269
   end
@@ -71,22 +73,22 @@
   end
   object cxLabel4: TcxLabel [10]
     Left = 16
-    Top = 214
+    Top = 172
     Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
   end
   object cxLabel5: TcxLabel [11]
     Left = 16
-    Top = 241
+    Top = 142
     Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084#1083#1103#1077#1090#1089#1103' '#1076#1086#1082'-'#1085#1086
   end
   object cxLabel6: TcxLabel [12]
     Left = 16
-    Top = 271
+    Top = 204
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object ceRoute: TcxButtonEdit [13]
-    Left = 160
-    Top = 269
+    Left = 128
+    Top = 203
     Properties.Buttons = <
       item
         Default = True
@@ -94,16 +96,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 194
+    Width = 226
   end
   object cxLabel7: TcxLabel [14]
     Left = 16
-    Top = 301
+    Top = 244
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteSorting: TcxButtonEdit [15]
     Left = 160
-    Top = 299
+    Top = 242
     Properties.Buttons = <
       item
         Default = True
@@ -115,12 +117,12 @@
   end
   object cxLabel8: TcxLabel [16]
     Left = 16
-    Top = 331
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+    Top = 275
+    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
   end
-  object cePersonalTake: TcxButtonEdit [17]
+  object ceMemberTake: TcxButtonEdit [17]
     Left = 160
-    Top = 329
+    Top = 274
     Properties.Buttons = <
       item
         Default = True
@@ -132,7 +134,7 @@
   end
   object cePrepareDayCount: TcxCurrencyEdit [18]
     Left = 254
-    Top = 212
+    Top = 171
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -143,7 +145,7 @@
   end
   object ceDocumentDayCount: TcxCurrencyEdit [19]
     Left = 254
-    Top = 239
+    Top = 140
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -153,18 +155,18 @@
     Width = 100
   end
   object cxLabel9: TcxLabel [20]
-    Left = 16
-    Top = 361
+    Left = 381
+    Top = 306
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
-    Left = 16
-    Top = 391
+    Left = 381
+    Top = 338
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceList: TcxButtonEdit [22]
-    Left = 160
-    Top = 359
+    Left = 525
+    Top = 305
     Properties.Buttons = <
       item
         Default = True
@@ -175,8 +177,8 @@
     Width = 194
   end
   object cePriceListPromo: TcxButtonEdit [23]
-    Left = 160
-    Top = 389
+    Left = 525
+    Top = 337
     Properties.Buttons = <
       item
         Default = True
@@ -187,18 +189,18 @@
     Width = 194
   end
   object cxLabel11: TcxLabel [24]
-    Left = 54
-    Top = 414
+    Left = 425
+    Top = 367
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel12: TcxLabel [25]
-    Left = 198
-    Top = 414
+    Left = 569
+    Top = 367
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edStartPromo: TcxDateEdit [26]
-    Left = 56
-    Top = 432
+    Left = 427
+    Top = 385
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -207,8 +209,8 @@
     Width = 100
   end
   object edEndPromo: TcxDateEdit [27]
-    Left = 198
-    Top = 432
+    Left = 569
+    Top = 385
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -224,74 +226,250 @@
   object edShortName: TcxTextEdit [29]
     Left = 85
     Top = 111
-    Enabled = False
     TabOrder = 29
     Width = 269
   end
   object cxLabel14: TcxLabel [30]
-    Left = 16
-    Top = 142
+    Left = 381
+    Top = 204
     Caption = #1059#1083#1080#1094#1072
   end
   object cxLabel15: TcxLabel [31]
-    Left = 16
-    Top = 165
+    Left = 382
+    Top = 227
     Caption = #1044#1086#1084
   end
   object cxLabel16: TcxLabel [32]
-    Left = 140
-    Top = 165
+    Left = 506
+    Top = 227
     Caption = #1050#1086#1088#1087#1091#1089
   end
   object cxLabel17: TcxLabel [33]
-    Left = 254
-    Top = 165
+    Left = 620
+    Top = 227
     Caption = #1050#1074#1072#1088#1090#1080#1088#1072
   end
   object ceStreet: TcxButtonEdit [34]
-    Left = 85
-    Top = 140
-    Enabled = False
+    Left = 450
+    Top = 203
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 34
+    Width = 269
+  end
+  object edHouseNumber: TcxTextEdit [35]
+    Left = 382
+    Top = 242
+    TabOrder = 35
+    Width = 100
+  end
+  object edCaseNumber: TcxTextEdit [36]
+    Left = 506
+    Top = 242
+    TabOrder = 36
+    Width = 100
+  end
+  object edRoomNumber: TcxTextEdit [37]
+    Left = 619
+    Top = 242
+    TabOrder = 37
+    Width = 100
+  end
+  object cxLabel18: TcxLabel [38]
+    Left = 381
+    Top = 275
+    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+  end
+  object ceMember: TcxButtonEdit [39]
+    Left = 525
+    Top = 274
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 34
-    Width = 269
+    TabOrder = 39
+    Width = 194
   end
-  object edHouseNumber: TcxTextEdit [35]
+  object cxLabel19: TcxLabel [40]
     Left = 16
-    Top = 182
-    Enabled = False
-    TabOrder = 35
-    Width = 100
+    Top = 306
+    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
   end
-  object edCaseNumber: TcxTextEdit [36]
-    Left = 140
-    Top = 182
-    Enabled = False
-    TabOrder = 36
-    Width = 100
+  object ceMemberTrade: TcxButtonEdit [41]
+    Left = 160
+    Top = 305
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 41
+    Width = 194
   end
-  object edRoomNumber: TcxTextEdit [37]
-    Left = 254
-    Top = 182
-    Enabled = False
-    TabOrder = 37
-    Width = 100
+  object cxLabel20: TcxLabel [42]
+    Left = 16
+    Top = 338
+    Caption = #1056#1077#1075#1080#1086#1085
+  end
+  object ceArea: TcxButtonEdit [43]
+    Left = 160
+    Top = 337
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 43
+    Width = 194
+  end
+  object cxLabel21: TcxLabel [44]
+    Left = 16
+    Top = 370
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
+  end
+  object cePartnerTag: TcxButtonEdit [45]
+    Left = 160
+    Top = 369
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 45
+    Width = 194
+  end
+  object cxLabel22: TcxLabel [46]
+    Left = 490
+    Top = 3
+    Caption = #1054#1073#1083#1072#1089#1090#1100
+  end
+  object ceRegion: TcxButtonEdit [47]
+    Left = 490
+    Top = 21
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 47
+    Width = 229
+  end
+  object cxLabel23: TcxLabel [48]
+    Left = 381
+    Top = 53
+    Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
+  end
+  object ceProvince: TcxButtonEdit [49]
+    Left = 490
+    Top = 51
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 49
+    Width = 227
+  end
+  object cxLabel24: TcxLabel [50]
+    Left = 381
+    Top = 84
+    Caption = #1042#1080#1076' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
+  end
+  object ceCityKind: TcxButtonEdit [51]
+    Left = 484
+    Top = 82
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 51
+    Width = 235
+  end
+  object cxLabel25: TcxLabel [52]
+    Left = 381
+    Top = 113
+    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+  end
+  object ceCity: TcxButtonEdit [53]
+    Left = 484
+    Top = 111
+    Properties.AutoSelect = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 53
+    Width = 235
+  end
+  object cxLabel26: TcxLabel [54]
+    Left = 381
+    Top = 142
+    Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1077
+  end
+  object ceProvinceCity: TcxButtonEdit [55]
+    Left = 484
+    Top = 140
+    Properties.AutoSelect = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 55
+    Width = 235
+  end
+  object cxLabel27: TcxLabel [56]
+    Left = 382
+    Top = 172
+    Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
+  end
+  object ceStreetKind: TcxButtonEdit [57]
+    Left = 506
+    Top = 171
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 57
+    Width = 213
+  end
+  object cxLabel28: TcxLabel [58]
+    Left = 382
+    Top = 3
+    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+  end
+  object edPostalCode: TcxTextEdit [59]
+    Left = 382
+    Top = 21
+    TabOrder = 59
+    Width = 102
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
     Top = 65531
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 443
+    Left = 328
+    Top = 393
   end
   inherited ActionList: TActionList
-    Left = 79
-    Top = 130
+    Left = 295
+    Top = 65535
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -422,30 +600,63 @@
         Name = 'inRouteId'
         Value = ''
         Component = dsdRouteGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
         Value = ''
         Component = dsdRouteSortingGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalTakeId'
+        Name = 'inMemberTakeId'
         Value = ''
-        Component = dsdPersonalGuides
+        Component = dsdMemberTakeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberTradeId'
+        Value = ''
+        Component = MemberTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAreaId'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerTagId'
+        Value = ''
+        Component = PartnerTagGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
         Value = ''
         Component = dsdPriceListGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
         Value = ''
         Component = dsdPriceListPromoGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -461,9 +672,70 @@
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inRegionName'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProvinceName'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityName'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityKindId'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProvinceCityName'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPostalCode'
+        Value = ''
+        Component = edPostalCode
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetName'
+        Value = ''
+        Component = StreetGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetKindId'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
-    Left = 168
-    Top = 443
+    Left = 680
+    Top = 382
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -590,16 +862,68 @@
         DataType = ftString
       end
       item
-        Name = 'PersonalTakeId'
+        Name = 'MemberTakeId'
         Value = ''
-        Component = dsdPersonalGuides
+        Component = dsdMemberTakeGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
-        Name = 'PersonalTakeName'
+        Name = 'MemberTakeName'
         Value = ''
-        Component = dsdPersonalGuides
+        Component = dsdMemberTakeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'MemberId'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'MemberTradeId'
+        Value = ''
+        Component = MemberTradeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MemberTradeName'
+        Value = ''
+        Component = MemberTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'AreaId'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AreaName'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PartnerTagId'
+        Value = ''
+        Component = PartnerTagGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerTagName'
+        Value = ''
+        Component = PartnerTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -640,9 +964,69 @@
         Value = 0d
         Component = edEndPromo
         DataType = ftDateTime
+      end
+      item
+        Name = 'PostalCode'
+        Value = ''
+        Component = edPostalCode
+        DataType = ftString
+      end
+      item
+        Name = 'ProvinceCityName'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityName'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityKindName'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityKindId'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RegionName'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ProvinceName'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StreetKindName'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StreetKindId'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
       end>
-    Left = 240
-    Top = 16
+    Left = 536
+    Top = 387
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -671,9 +1055,9 @@
     Left = 160
     Top = 40
   end
-  object dsdPersonalGuides: TdsdGuides
+  object dsdMemberTakeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePersonalTake
+    LookupControl = ceMemberTake
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TMember_ObjectForm'
@@ -682,7 +1066,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = dsdPersonalGuides
+        Component = dsdMemberTakeGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -690,13 +1074,13 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdPersonalGuides
+        Component = dsdMemberTakeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
-    Top = 299
+    Left = 272
+    Top = 251
   end
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
@@ -722,8 +1106,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 240
-    Top = 267
+    Left = 184
+    Top = 235
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -749,8 +1133,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 184
-    Top = 243
+    Left = 120
+    Top = 192
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -776,8 +1160,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 192
-    Top = 331
+    Left = 520
+    Top = 291
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -803,8 +1187,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 363
+    Left = 608
+    Top = 315
   end
   object StreetGuides: TdsdGuides
     KeyField = 'Id'
@@ -829,7 +1213,271 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 176
-    Top = 115
+    Left = 496
+    Top = 187
+  end
+  object MemberGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 608
+    Top = 259
+  end
+  object MemberTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMemberTrade
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberTradeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 184
+    Top = 283
+  end
+  object AreaGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 248
+    Top = 331
+  end
+  object PartnerTagGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePartnerTag
+    FormNameParam.Value = 'TPartnerTagForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartnerTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerTagGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 355
+  end
+  object RegionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRegion
+    FormNameParam.Value = 'TRegionForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRegionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 616
+    Top = 3
+  end
+  object ProvinceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvince
+    FormNameParam.Value = 'TProvinceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProvinceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 632
+    Top = 43
+  end
+  object CityKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCityKind
+    FormNameParam.Value = 'TCityKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCityKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 552
+    Top = 75
+  end
+  object CityGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCity
+    FormNameParam.Value = 'TCityForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 99
+  end
+  object ProvinceCityGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvinceCity
+    FormNameParam.Value = 'TProvinceCityForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProvinceCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 568
+    Top = 123
+  end
+  object StreetKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStreetKind
+    FormNameParam.Value = 'TStreetKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TStreetKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 648
+    Top = 163
   end
 end

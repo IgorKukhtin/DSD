@@ -129,6 +129,7 @@ type
     cbEndDate: TcxCheckBox;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    colGLNCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

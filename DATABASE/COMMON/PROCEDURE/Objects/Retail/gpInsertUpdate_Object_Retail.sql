@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Retail()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId             Integer   ,     -- ключ объекта <Торговая сеть> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
+    IN inGLNCode        TVarChar  ,     -- Код GLN
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -29,6 +31,9 @@ BEGIN
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Retail(), vbCode_calc);
 
+   -- сохранили св-во <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
+   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Retail(), vbCode_calc, inName);
    
@@ -37,13 +42,14 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Retail (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Retail (Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.11.14         * add GLNCode
  23.05.14         *
 */
 

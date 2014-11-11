@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractKeyId Integer, ContractId_Key Integer, Code_Key Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
-             , Comment TVarChar, BankAccountExternal TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -71,6 +71,7 @@ BEGIN
 
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
+       , ObjectString_GLNCode.ValueData            AS GLNCode 
 
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -115,8 +116,8 @@ BEGIN
        , Object_Contract_View.ContractTagId
        , Object_Contract_View.ContractTagName
 
-       , Object_AreaContract.Id                     AS AreaContractId
-       , Object_AreaContract.ValueData              AS AreaContractName
+       , Object_AreaContract.Id             AS AreaContractId
+       , Object_AreaContract.ValueData      AS AreaContractName
 
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
@@ -173,6 +174,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_BankAccount
                                ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
+                              
+        LEFT JOIN ObjectString AS ObjectString_GLNCode
+                               ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -265,6 +270,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.11.14         * add GLNCode
  18.08.14                                        * add inParams...
  16.08.14                                        * add JuridicalGroupName
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
