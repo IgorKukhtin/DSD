@@ -1,39 +1,39 @@
 -- Function: gpInsertUpdate_Movement_Currency()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (integer, tvarchar, TDateTime, tfloat, tvarchar, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ Курсовая разница>
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
     IN inAmount                   TFloat    , -- курс
+    IN inParValue                 TFloat    , -- Номинал валюты для которой вводится курс
     IN inComment                  TVarChar  , -- Комментарий
     IN inCurrencyFromId           Integer   , -- валюта в которой вводится курc
     IN inCurrencyToId             Integer   , -- валюта для которой вводится курс
+    IN inPaidKindId               Integer   , -- Виды форм оплаты 
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Currency());
-     vbUserId:= inSession;
-     -- определяем ключ доступа
-     --vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Currency());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Currency());
 
      -- 1. Распроводим Документ
-     IF ioId > 0    --AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Currency())
+     IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Currency())
      THEN
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := vbUserId);
      END IF;
 
+
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Currency(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Currency(), inInvNumber, inOperDate, NULL, NULL);
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -44,12 +44,17 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId, ioId, inAmount, NULL);
     
+     -- Номинал валюты для которой вводится курс
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), vbMovementItemId, inParValue);
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyToId);
 
+     -- сохранили связь с <Виды форм оплаты >
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), vbMovementItemId, inPaidKindId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
@@ -68,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.11.14                                        * add inParValue
  28.07.14         *
 */
 

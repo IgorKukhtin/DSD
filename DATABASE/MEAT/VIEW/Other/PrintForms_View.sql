@@ -78,7 +78,7 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
--- Omega_Tavr
+-- Omega+Varus_Tavr
       SELECT
              zc_movement_sale()
            , CAST ('Sale' AS TVarChar)
@@ -89,7 +89,7 @@ AS
            , CAST ('PrintMovement_Sale30982361' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('30982361','32334104','19202597')
+       AND OH_JuridicalDetails.OKPO IN ('30982361', '32334104', '19202597', '33184262')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Furshet

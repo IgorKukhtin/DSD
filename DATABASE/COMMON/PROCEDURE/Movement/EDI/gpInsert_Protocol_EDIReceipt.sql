@@ -54,7 +54,12 @@ BEGIN
    END IF;
 
 
-   IF COALESCE(vbMovementId, 0) <> 0 THEN 
+   IF COALESCE (vbMovementId, 0) <> 0 THEN
+      IF COALESCE (vbTaxMovementId, 0) = 0
+      THEN
+          RAISE EXCEPTION 'Ошибка. Налоговый документ не найден. (%) (%) (%) (%) (%)', inisOk, inTaxNumber, inEDIEvent, inOperMonth, inFileName;
+      END IF;
+
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
 
       IF inisOk THEN 

@@ -27,6 +27,11 @@ type
     ceComment: TcxTextEdit;
     CurrencyFromGuides: TdsdGuides;
     edInvNumber: TcxTextEdit;
+    ceParValue: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

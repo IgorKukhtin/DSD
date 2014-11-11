@@ -82,7 +82,7 @@ BEGIN
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
                        FROM tmpMI_Goods
-                            FULL JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Goods.GoodsId
+                            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Goods.GoodsId
                                                 AND tmpRemains.GoodsKindId = tmpMI_Goods.GoodsKindId
                      )
           , tmpMI_EDI AS (SELECT MovementItem.ObjectId                         AS GoodsId

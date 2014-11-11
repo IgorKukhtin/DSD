@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Currency(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat
+             , Amount TFloat, ParValue TFloat
              , Comment TVarChar
              , CurrencyFromId Integer, CurrencyFromName TVarChar
              , CurrencyToId Integer, CurrencyToName TVarChar
-
+             , PaidKindId Integer, PaidKindName TVarChar
              )
 AS
 $BODY$
@@ -35,17 +35,15 @@ BEGIN
            , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
-        
            , 0::TFloat                        AS Amount
-
+           , 1::TFloat                        AS ParValue
            , ''::TVarChar                     AS Comment
-           
            , 0                                AS CurrencyFromId
            , CAST ('' as TVarChar)            AS CurrencyFromName
-
            , 0                                AS CurrencyToId
            , CAST ('' as TVarChar)            AS CurrencyToName
-
+           , 0                     AS PaidKindId
+           , CAST ('' AS TVarChar) AS PaidKindName
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
      ELSE
@@ -60,6 +58,7 @@ BEGIN
                      
            , MovementItem.Amount AS Amount
 
+           , MIFloat_ParValue.ValueData   AS ParValue
            , MIString_Comment.ValueData   AS Comment
 
            , Object_CurrencyFrom.Id           AS CurrencyFromId
@@ -69,6 +68,9 @@ BEGIN
            , Object_CurrencyTo.Id         AS CurrencyToId
            , Object_CurrencyTo.ValueData  AS CurrencyToName
 
+           , Object_PaidKind.Id                 AS PaidKindId
+           , Object_PaidKind.ValueData          AS PaidKindName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -76,6 +78,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_CurrencyFrom ON Object_CurrencyFrom.Id = MovementItem.ObjectId
  
+            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -85,6 +90,11 @@ BEGIN
                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = MILinkObject_CurrencyTo.ObjectId
         
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;  
@@ -97,9 +107,10 @@ ALTER FUNCTION gpGet_Movement_Currency (Integer, Integer, TDateTime, TVarChar) O
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.11.14                                        * add PaidKind...
+ 10.11.14                                        * add ParValue
  28.07.14         *
-
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_Currency (inMovementId:= 1, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Currency (inMovementId:= 1, inMovementId_Value:= 0, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());

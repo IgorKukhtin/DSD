@@ -19,9 +19,8 @@ type
   TCurrencyJournalForm = class(TAncestorJournalForm)
     clComment: TcxGridDBColumn;
     N13: TMenuItem;
-    actReCompleteAll: TdsdExecStoredProc;
-    spMovementReCompleteAll: TdsdStoredProc;
-    bbReCompleteAll: TdxBarButton;
+    clParValue: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
