@@ -85,6 +85,8 @@ type
     cxLabel27: TcxLabel;
     ceStreetKind: TcxButtonEdit;
     StreetKindGuides: TdsdGuides;
+    cxLabel28: TcxLabel;
+    edPostalCode: TcxTextEdit;
 
   private
     { Private declarations }

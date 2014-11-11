@@ -24,7 +24,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
               
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
-               StartPromo TDateTime, EndPromo TDateTime
+               StartPromo TDateTime, EndPromo TDateTime,
+               
+               PostalCode TVarChar, ProvinceCityName TVarChar, 
+               CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
+               RegionName TVarChar, ProvinceName TVarChar,
+               StreetKindName TVarChar, StreetKindId Integer
+               
                ) AS
 $BODY$
 BEGIN
@@ -87,6 +93,17 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartPromo
            , CURRENT_DATE :: TDateTime AS EndPromo           
            
+           , CAST ('' as TVarChar)       AS PostalCode            
+           , CAST ('' as TVarChar)       AS ProvinceCityName
+           , CAST ('' as TVarChar)       AS CityName 
+           , CAST ('' as TVarChar)       AS CityKindName
+           , CAST (0 as Integer)         AS CityKindId
+           , CAST ('' as TVarChar)       AS RegionName
+           , CAST ('' as TVarChar)       AS ProvinceName
+           , CAST ('' as TVarChar)       AS StreetKindName
+           , CAST (0 as Integer)         AS StreetKindId
+           
+           
            ;
    ELSE
        RETURN QUERY 
@@ -103,8 +120,8 @@ BEGIN
            , ObjectString_CaseNumber.ValueData  AS CaseNumber
            , ObjectString_RoomNumber.ValueData  AS RoomNumber          
 
-           , Object_Street.Id                   AS StreetId 
-           , Object_Street.ValueData            AS StreetName 
+           , Object_Street_View.Id              AS StreetId 
+           , Object_Street_View.Name            AS StreetName 
 
            , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
            , Partner_DocumentDayCount.ValueData AS DocumentDayCount
@@ -140,7 +157,17 @@ BEGIN
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
            , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
-           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo            
+           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo 
+           
+           , Object_Street_View.PostalCode        AS PostalCode            
+           , Object_Street_View.ProvinceCityName  AS ProvinceCityName
+           , Object_Street_View.CityName          AS CityName 
+           , Object_CityKind.ValueData            AS CityKindName
+           , Object_CityKind.Id                   AS CityKindId
+           , Object_Region.ValueData              AS RegionName
+           , Object_Province.ValueData            AS ProvinceName
+           , Object_Street_View.StreetKindName    AS StreetKindName
+           , Object_Street_View.StreetKindId      AS StreetKindId
 
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
@@ -186,7 +213,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
                                 ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
-           LEFT JOIN Object AS Object_Street ON Object_Street.Id = ObjectLink_Partner_Street.ChildObjectId
+           LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
            LEFT JOIN ObjectLink AS Partner_Juridical
                                 ON Partner_Juridical.ObjectId = Object_Partner.Id 
@@ -238,6 +265,22 @@ BEGIN
                                AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
            LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId 
          
+         
+           LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- ÔÓ ÛÎËˆÂ
+                                ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
+                               AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+           LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+                                ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
+                               AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+           LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                                ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
+                               AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+           LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+         
        WHERE Object_Partner.Id = inId;
        
    END IF;
@@ -252,6 +295,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.11.14         * add ÔÓÎˇ ‡‰ÂÒ‡
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street
  24.04.14                                        * add inJuridicalId

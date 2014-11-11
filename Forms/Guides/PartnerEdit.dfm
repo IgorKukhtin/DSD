@@ -347,12 +347,12 @@
     Width = 194
   end
   object cxLabel22: TcxLabel [46]
-    Left = 381
-    Top = 22
+    Left = 490
+    Top = 3
     Caption = #1054#1073#1083#1072#1089#1090#1100
   end
   object ceRegion: TcxButtonEdit [47]
-    Left = 450
+    Left = 490
     Top = 21
     Properties.Buttons = <
       item
@@ -360,7 +360,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 47
-    Width = 269
+    Width = 229
   end
   object cxLabel23: TcxLabel [48]
     Left = 381
@@ -447,6 +447,17 @@
     Properties.ReadOnly = True
     TabOrder = 57
     Width = 213
+  end
+  object cxLabel28: TcxLabel [58]
+    Left = 382
+    Top = 3
+    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+  end
+  object edPostalCode: TcxTextEdit [59]
+    Left = 382
+    Top = 21
+    TabOrder = 59
+    Width = 102
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
@@ -892,6 +903,66 @@
         Value = 0d
         Component = edEndPromo
         DataType = ftDateTime
+      end
+      item
+        Name = 'PostalCode'
+        Value = ''
+        Component = edPostalCode
+        DataType = ftString
+      end
+      item
+        Name = 'ProvinceCityName'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityName'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityKindName'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CityKindId'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RegionName'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ProvinceName'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StreetKindName'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StreetKindId'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
       end>
     Left = 536
     Top = 387
@@ -1215,8 +1286,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 19
+    Left = 616
+    Top = 3
   end
   object ProvinceGuides: TdsdGuides
     KeyField = 'Id'
