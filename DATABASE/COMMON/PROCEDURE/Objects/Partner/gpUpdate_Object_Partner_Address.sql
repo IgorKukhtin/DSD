@@ -1,12 +1,10 @@
 -- Function: gpUpdate_Object_Partner_Address()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar,  TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar,  TVarChar, TVarChar);
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar,  TVarChar, TVarChar
+                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 
@@ -62,7 +60,7 @@ BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := inSession;
+   vbUserId := lpGetUserBySession (inSession);
 
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
@@ -71,7 +69,7 @@ BEGIN
  
    -- сохранили
    ioId := lpUpdate_Object_Partner_Address( ioId                := ioId
-                                          , inCode              := inCode
+                                          , inCode              := vbCode 
                                           , inName              := inName   
                                           , inRegionName        := inRegionName
                                           , inProvinceName      := inProvinceName
@@ -85,7 +83,7 @@ BEGIN
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
                                           , inShortName         := inShortName
-                                          , inUserId            := vbUserId
+                                          , inSession           := inSession);
 
 
   -- Контактные лица 

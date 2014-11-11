@@ -67,6 +67,24 @@ type
     cxLabel21: TcxLabel;
     cePartnerTag: TcxButtonEdit;
     PartnerTagGuides: TdsdGuides;
+    cxLabel22: TcxLabel;
+    ceRegion: TcxButtonEdit;
+    RegionGuides: TdsdGuides;
+    cxLabel23: TcxLabel;
+    ceProvince: TcxButtonEdit;
+    ProvinceGuides: TdsdGuides;
+    cxLabel24: TcxLabel;
+    ceCityKind: TcxButtonEdit;
+    CityKindGuides: TdsdGuides;
+    cxLabel25: TcxLabel;
+    ceCity: TcxButtonEdit;
+    CityGuides: TdsdGuides;
+    cxLabel26: TcxLabel;
+    ceProvinceCity: TcxButtonEdit;
+    ProvinceCityGuides: TdsdGuides;
+    cxLabel27: TcxLabel;
+    ceStreetKind: TcxButtonEdit;
+    StreetKindGuides: TdsdGuides;
 
   private
     { Private declarations }

@@ -2,6 +2,7 @@
 
 
 DROP FUNCTION IF EXISTS lpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar);
 
 
 
@@ -23,10 +24,11 @@ CREATE OR REPLACE FUNCTION lpUpdate_Object_Partner_Address(
     IN inRoomNumber          TVarChar  ,    -- Номер квартиры
     IN inShortName           TVarChar  ,    -- Примечание
 
-    IN inUserId              Integer        -- Пользователь
+    IN inSession             TVarChar        -- Пользователь
 )
   RETURNS integer AS
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
    DECLARE vbAddress TVarChar;
 
@@ -37,6 +39,8 @@ $BODY$
    DECLARE vbProvinceCityId Integer;
    
 BEGIN
+
+   vbUserId := lpGetUserBySession (inSession);
    
    -- область
    IF inRegionName <> ''
@@ -150,11 +154,11 @@ BEGIN
    -- проверка уникальности <Наименование>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName );
    -- проверка уникальности <Код>
-   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode);  END IF;
+   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), inCode);  END IF;
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, inName);
    -- сохранили свойство <краткое наименование>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_ShortName(), ioId, inShortName);
    
@@ -171,7 +175,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Street(), ioId, vbStreetId);
  
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$

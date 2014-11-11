@@ -7,17 +7,17 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 445
-    Top = 409
+    Left = 65
+    Top = 413
     TabOrder = 2
-    ExplicitLeft = 445
-    ExplicitTop = 409
+    ExplicitLeft = 65
+    ExplicitTop = 413
   end
   inherited bbCancel: TcxButton
-    Left = 594
-    Top = 409
-    ExplicitLeft = 594
-    ExplicitTop = 409
+    Left = 214
+    Top = 413
+    ExplicitLeft = 214
+    ExplicitTop = 413
   end
   object edAddress: TcxTextEdit [2]
     Left = 85
@@ -73,22 +73,22 @@
   end
   object cxLabel4: TcxLabel [10]
     Left = 16
-    Top = 214
+    Top = 172
     Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
   end
   object cxLabel5: TcxLabel [11]
-    Left = 381
-    Top = 214
+    Left = 16
+    Top = 142
     Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084#1083#1103#1077#1090#1089#1103' '#1076#1086#1082'-'#1085#1086
   end
   object cxLabel6: TcxLabel [12]
     Left = 16
-    Top = 244
+    Top = 204
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object ceRoute: TcxButtonEdit [13]
     Left = 128
-    Top = 242
+    Top = 203
     Properties.Buttons = <
       item
         Default = True
@@ -99,12 +99,12 @@
     Width = 226
   end
   object cxLabel7: TcxLabel [14]
-    Left = 381
+    Left = 16
     Top = 244
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object ceRouteSorting: TcxButtonEdit [15]
-    Left = 525
+    Left = 160
     Top = 242
     Properties.Buttons = <
       item
@@ -117,7 +117,7 @@
   end
   object cxLabel8: TcxLabel [16]
     Left = 16
-    Top = 276
+    Top = 275
     Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
   end
   object ceMemberTake: TcxButtonEdit [17]
@@ -134,7 +134,7 @@
   end
   object cePrepareDayCount: TcxCurrencyEdit [18]
     Left = 254
-    Top = 212
+    Top = 171
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -144,8 +144,8 @@
     Width = 100
   end
   object ceDocumentDayCount: TcxCurrencyEdit [19]
-    Left = 619
-    Top = 212
+    Left = 254
+    Top = 140
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -155,18 +155,18 @@
     Width = 100
   end
   object cxLabel9: TcxLabel [20]
-    Left = 16
-    Top = 371
+    Left = 381
+    Top = 306
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
     Left = 381
-    Top = 371
+    Top = 338
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceList: TcxButtonEdit [22]
-    Left = 160
-    Top = 369
+    Left = 525
+    Top = 305
     Properties.Buttons = <
       item
         Default = True
@@ -178,7 +178,7 @@
   end
   object cePriceListPromo: TcxButtonEdit [23]
     Left = 525
-    Top = 369
+    Top = 337
     Properties.Buttons = <
       item
         Default = True
@@ -189,18 +189,18 @@
     Width = 194
   end
   object cxLabel11: TcxLabel [24]
-    Left = 54
-    Top = 393
+    Left = 425
+    Top = 367
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel12: TcxLabel [25]
-    Left = 198
-    Top = 393
+    Left = 569
+    Top = 367
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edStartPromo: TcxDateEdit [26]
-    Left = 56
-    Top = 411
+    Left = 427
+    Top = 385
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -209,8 +209,8 @@
     Width = 100
   end
   object edEndPromo: TcxDateEdit [27]
-    Left = 198
-    Top = 411
+    Left = 569
+    Top = 385
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -226,61 +226,55 @@
   object edShortName: TcxTextEdit [29]
     Left = 85
     Top = 111
-    Enabled = False
     TabOrder = 29
     Width = 269
   end
   object cxLabel14: TcxLabel [30]
-    Left = 16
-    Top = 142
+    Left = 381
+    Top = 204
     Caption = #1059#1083#1080#1094#1072
   end
   object cxLabel15: TcxLabel [31]
-    Left = 16
-    Top = 165
+    Left = 382
+    Top = 227
     Caption = #1044#1086#1084
   end
   object cxLabel16: TcxLabel [32]
-    Left = 140
-    Top = 165
+    Left = 506
+    Top = 227
     Caption = #1050#1086#1088#1087#1091#1089
   end
   object cxLabel17: TcxLabel [33]
-    Left = 254
-    Top = 165
+    Left = 620
+    Top = 227
     Caption = #1050#1074#1072#1088#1090#1080#1088#1072
   end
   object ceStreet: TcxButtonEdit [34]
-    Left = 85
-    Top = 140
-    Enabled = False
+    Left = 450
+    Top = 203
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 34
     Width = 269
   end
   object edHouseNumber: TcxTextEdit [35]
-    Left = 16
-    Top = 182
-    Enabled = False
+    Left = 382
+    Top = 242
     TabOrder = 35
     Width = 100
   end
   object edCaseNumber: TcxTextEdit [36]
-    Left = 140
-    Top = 182
-    Enabled = False
+    Left = 506
+    Top = 242
     TabOrder = 36
     Width = 100
   end
   object edRoomNumber: TcxTextEdit [37]
-    Left = 254
-    Top = 182
-    Enabled = False
+    Left = 619
+    Top = 242
     TabOrder = 37
     Width = 100
   end
@@ -336,13 +330,13 @@
     Width = 194
   end
   object cxLabel21: TcxLabel [44]
-    Left = 381
-    Top = 338
+    Left = 16
+    Top = 370
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
   end
   object cePartnerTag: TcxButtonEdit [45]
-    Left = 525
-    Top = 337
+    Left = 160
+    Top = 369
     Properties.Buttons = <
       item
         Default = True
@@ -352,17 +346,119 @@
     TabOrder = 45
     Width = 194
   end
+  object cxLabel22: TcxLabel [46]
+    Left = 381
+    Top = 22
+    Caption = #1054#1073#1083#1072#1089#1090#1100
+  end
+  object ceRegion: TcxButtonEdit [47]
+    Left = 450
+    Top = 21
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 47
+    Width = 269
+  end
+  object cxLabel23: TcxLabel [48]
+    Left = 381
+    Top = 53
+    Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
+  end
+  object ceProvince: TcxButtonEdit [49]
+    Left = 484
+    Top = 51
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 49
+    Width = 235
+  end
+  object cxLabel24: TcxLabel [50]
+    Left = 381
+    Top = 84
+    Caption = #1042#1080#1076' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
+  end
+  object ceCityKind: TcxButtonEdit [51]
+    Left = 484
+    Top = 82
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 51
+    Width = 235
+  end
+  object cxLabel25: TcxLabel [52]
+    Left = 381
+    Top = 113
+    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+  end
+  object ceCity: TcxButtonEdit [53]
+    Left = 484
+    Top = 111
+    Properties.AutoSelect = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 53
+    Width = 235
+  end
+  object cxLabel26: TcxLabel [54]
+    Left = 381
+    Top = 142
+    Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1077
+  end
+  object ceProvinceCity: TcxButtonEdit [55]
+    Left = 484
+    Top = 140
+    Properties.AutoSelect = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 55
+    Width = 235
+  end
+  object cxLabel27: TcxLabel [56]
+    Left = 382
+    Top = 172
+    Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
+  end
+  object ceStreetKind: TcxButtonEdit [57]
+    Left = 506
+    Top = 171
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 57
+    Width = 213
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
     Top = 65531
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 384
-    Top = 398
+    Left = 328
+    Top = 393
   end
   inherited ActionList: TActionList
-    Left = 79
-    Top = 130
+    Left = 295
+    Top = 65535
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -566,8 +662,8 @@
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 398
+    Left = 680
+    Top = 382
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -797,8 +893,8 @@
         Component = edEndPromo
         DataType = ftDateTime
       end>
-    Left = 352
-    Top = 379
+    Left = 536
+    Top = 387
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -878,8 +974,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 520
-    Top = 227
+    Left = 184
+    Top = 235
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -905,8 +1001,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 200
-    Top = 235
+    Left = 120
+    Top = 192
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -932,8 +1028,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 200
-    Top = 371
+    Left = 520
+    Top = 291
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -959,8 +1055,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 371
+    Left = 608
+    Top = 315
   end
   object StreetGuides: TdsdGuides
     KeyField = 'Id'
@@ -985,8 +1081,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 176
-    Top = 115
+    Left = 496
+    Top = 187
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
@@ -1093,7 +1189,163 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
-    Top = 323
+    Left = 192
+    Top = 355
+  end
+  object RegionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRegion
+    FormNameParam.Value = 'TRegionForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRegionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 560
+    Top = 19
+  end
+  object ProvinceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvince
+    FormNameParam.Value = 'TProvinceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProvinceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 632
+    Top = 43
+  end
+  object CityKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCityKind
+    FormNameParam.Value = 'TCityKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCityKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 552
+    Top = 75
+  end
+  object CityGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCity
+    FormNameParam.Value = 'TCityForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 99
+  end
+  object ProvinceCityGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProvinceCity
+    FormNameParam.Value = 'TProvinceCityForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProvinceCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 568
+    Top = 123
+  end
+  object StreetKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStreetKind
+    FormNameParam.Value = 'TStreetKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TStreetKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 648
+    Top = 163
   end
 end
