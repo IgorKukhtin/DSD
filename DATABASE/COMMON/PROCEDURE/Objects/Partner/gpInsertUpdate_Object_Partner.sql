@@ -5,6 +5,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Intege
                              Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                              TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                             Integer, TFloat, TFloat, 
+                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                             TDateTime, TDateTime,
+                             TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer,
+                             TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -33,6 +40,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
+
+    IN inRegionName          TVarChar  ,    -- наименование области
+    IN inProvinceName        TVarChar  ,    -- наименование район
+    IN inCityName            TVarChar  ,    -- наименование населенный пункт
+    IN inCityKindId          Integer   ,    -- Вид населенного пункта
+    IN inProvinceCityName    TVarChar  ,    -- наименование района населенного пункта
+    IN inPostalCode          TVarChar  ,    -- индекс
+    IN inStreetName          TVarChar  ,    -- наименование улица
+    IN inStreetKindId        Integer   ,    -- Вид улицы
+
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -90,13 +107,31 @@ BEGIN
 
                                         , inUserId          := vbUserId
                                          );
+
+   -- сохранили
+   ioId := lpUpdate_Object_Partner_Address( ioId                := ioId
+                                          , inCode              := inCode
+                                          , inName              := outPartnerName   
+                                          , inRegionName        := inRegionName
+                                          , inProvinceName      := inProvinceName
+                                          , inCityName          := inCityName
+                                          , inCityKindId        := inCityKindId
+                                          , inProvinceCityName  := inProvinceCityName  
+                                          , inPostalCode        := inPostalCode
+                                          , inStreetName        := inStreetName
+                                          , inStreetKindId      := inStreetKindId
+                                          , inHouseNumber       := inHouseNumber
+                                          , inCaseNumber        := inCaseNumber  
+                                          , inRoomNumber        := inRoomNumber
+                                          , inShortName         := inShortName
+                                          , inSession           := inSession);                                         
    
    
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

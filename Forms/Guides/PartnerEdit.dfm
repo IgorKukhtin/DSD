@@ -21,7 +21,7 @@
   end
   object edAddress: TcxTextEdit [2]
     Left = 85
-    Top = 82
+    Top = 78
     TabOrder = 0
     Width = 269
   end
@@ -368,7 +368,7 @@
     Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089'.'#1087#1091#1085#1082#1090#1072
   end
   object ceProvince: TcxButtonEdit [49]
-    Left = 484
+    Left = 490
     Top = 51
     Properties.Buttons = <
       item
@@ -376,7 +376,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 49
-    Width = 235
+    Width = 227
   end
   object cxLabel24: TcxLabel [50]
     Left = 381
@@ -671,6 +671,67 @@
         Value = 0d
         Component = edEndPromo
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRegionName'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProvinceName'
+        Value = ''
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityName'
+        Value = ''
+        Component = CityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCityKindId'
+        Value = ''
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProvinceCityName'
+        Value = ''
+        Component = ProvinceCityGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPostalCode'
+        Value = ''
+        Component = edPostalCode
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetName'
+        Value = ''
+        Component = StreetGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStreetKindId'
+        Value = ''
+        Component = StreetKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 680
