@@ -122,7 +122,6 @@
 			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFDataSet.pas"/>
@@ -139,6 +138,9 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

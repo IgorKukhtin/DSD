@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsMI_byMovement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inStartDate    TDateTime ,  
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inInfoMoneyId  Integer   , -- Управленческая статья  
     IN inPaidKindId   Integer   , --
     IN inGoodsGroupId Integer   ,
+    IN inGoodsId      Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
@@ -31,25 +33,25 @@ AS
 $BODY$
 BEGIN
     -- !!!т.к. нельзя когда много данных в гриде!!!
-    IF inStartDate + (INTERVAL '32 DAY') <= inEndDate AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0
+    IF inStartDate + (INTERVAL '1 DAY') < inEndDate AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0
     THEN
         inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    ELSE
+    -- !!!т.к. нельзя когда много данных в гриде!!!
+    IF inStartDate + (INTERVAL '32 DAY') < inEndDate AND COALESCE (inGoodsId, 0) = 0
+    THEN
+        inStartDate:= inEndDate + (INTERVAL '1 DAY');
+    END IF;
     END IF;
 
-    -- !!!т.к. нельзя когда много данных в гриде!!!
-    IF inStartDate + (INTERVAL '65 DAY') <= inEndDate AND (COALESCE (inGoodsGroupId, 0) = 0 OR COALESCE (inJuridicalId, 0) = 0)
-    THEN
-        inStartDate:= inEndDate + (INTERVAL '1 DAY');
-    END IF;
-
-    -- !!!т.к. нельзя когда много данных в гриде!!!
-    IF inStartDate + (INTERVAL '150 DAY') <= inEndDate
-    THEN
-        inStartDate:= inEndDate + (INTERVAL '1 DAY');
-    END IF;
 
     -- Ограничения по товарам
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    IF inGoodsId <> 0
+    THEN
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT inGoodsId;
+    ELSE 
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -57,6 +59,7 @@ BEGIN
     ELSE 
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+    END IF;
     END IF;
 
     -- Ограничения по подразделениям
@@ -136,7 +139,7 @@ BEGIN
                                   INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                  ON ContainerLO_Juridical.ContainerId = ReportContainerLink_child.ContainerId
                                                                 AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                                AND ContainerLO_Juridical.ObjectId = inJuridicalId
+                                                                AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0))
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_child.ContainerId
                                                                 AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -274,11 +277,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.14                                        * add inGoodsId
  18.05.14                                        * all
  06.05.14                                        * add From... and To...
  13.04.14                                        * add zc_MovementFloat_ChangePercent

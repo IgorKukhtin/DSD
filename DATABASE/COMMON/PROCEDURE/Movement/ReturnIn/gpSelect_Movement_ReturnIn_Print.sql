@@ -372,8 +372,8 @@ BEGIN
 
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner_abs
-           , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.AmountPartner            AS AmountPartner
-           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price                     AS Price
+           , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.AmountPartner              AS AmountPartner
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price / tmpMI.CountForPrice AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
@@ -394,14 +394,14 @@ BEGIN
            * CASE WHEN vbPriceWithVAT = TRUE
                   THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
                   ELSE tmpMI.Price
-             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+             END / tmpMI.CountForPrice
              AS PriceNoVAT
 
              -- расчет цены с НДС, до 4 знаков
            , CASE WHEN vbPriceWithVAT <> TRUE
                   THEN CAST (tmpMI.Price + tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
                   ELSE tmpMI.Price
-             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+             END / tmpMI.CountForPrice
              AS PriceWVAT
 
              -- расчет суммы без НДС, до 2 знаков
@@ -427,7 +427,7 @@ BEGIN
                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
-                  , MIFloat_CountForPrice.ValueData AS CountForPrice
+                  , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -457,7 +457,7 @@ BEGIN
                     , MovementItem.MovementId
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
-                    , MIFloat_CountForPrice.ValueData
+                    , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
             ) AS tmpMI
 
             LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId

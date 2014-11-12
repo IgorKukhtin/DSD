@@ -17,7 +17,11 @@ $BODY$
    DECLARE vbInvNumberPartner_Tax     TVarChar;
    DECLARE vbOperDate_Tax             TDateTime;
    DECLARE vbJuridicalId_Tax          Integer;
+   DECLARE vbBranchId                 Integer;
 BEGIN
+
+     -- Определяются филиал
+     vbBranchId:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
 
      -- Определяются параметры
      SELECT MovementLinkMovement_MasterEDI.MovementId, MovementLinkMovement_ChildEDI.MovementId
@@ -87,7 +91,10 @@ BEGIN
                                       , inVATPercent        := MovementFloat_VATPercent.ValueData
                                       , inChangePercent     := (SELECT ValueData FROM MovementFloat WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementFloat_ChangePercent())
                                       , inFromId            := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Partner())
-                                      , inToId              := 8461 -- !!!Склад Возвратов!!!
+                                      , inToId              := CASE WHEN vbBranchId <> 0
+                                                                        THEN 309599 -- !!!Склад возвратов ф.Запорожье!!!
+                                                                    ELSE 8461 -- !!!Склад Возвратов!!!
+                                                               END
                                       , inPaidKindId        := zc_Enum_PaidKind_FirstForm() 
                                       , inContractId        := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementLinkObject_Contract())
                                       , inCurrencyDocumentId:= 14461 -- грн
@@ -133,7 +140,7 @@ BEGIN
            FROM (SELECT 0                                                   AS MovementItemId
                       , MovementItem.ObjectId                               AS GoodsId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                      , 0                                                   AS Amount
+                      , CASE WHEN vbBranchId <> 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END AS Amount
                       , COALESCE (MIFloat_AmountPartner.ValueData, 0)       AS AmountPartner
                       , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                  FROM MovementItem
@@ -153,7 +160,7 @@ BEGIN
                  SELECT MovementItem.Id                                     AS MovementItemId
                       , MovementItem.ObjectId                               AS GoodsId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                      , MovementItem.Amount                                 AS Amount
+                      , CASE WHEN vbBranchId <> 0 THEN 0 ELSE MovementItem.Amount END AS Amount
                       , 0                                                   AS AmountPartner
                       , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                  FROM MovementItem

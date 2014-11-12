@@ -60,6 +60,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -259,18 +260,19 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
     object cxLabel3: TcxLabel
       Left = 416
       Top = 6
-      Caption = #1058#1086#1074#1072#1088
+      Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 464
+      Left = 456
       Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
-      Width = 225
+      Width = 250
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore

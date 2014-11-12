@@ -547,6 +547,36 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
+     , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
+                            , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                            , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                       FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
+                             FROM MovementLinkMovement AS MovementLinkMovement_Order
+                             WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                            ) AS tmpMovement
+                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = FALSE
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                       GROUP BY MovementItem.ObjectId
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                              , COALESCE (MIFloat_Price.ValueData, 0)
+                              , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                         )
        SELECT
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -561,6 +591,7 @@ BEGIN
              END::TVarChar                   AS DELIVEREDUNIT
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
+           , tmpMI_Order.Amount              AS AmountOrder
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
@@ -651,6 +682,9 @@ BEGIN
                     , MIFloat_CountForPrice.ValueData
             ) AS tmpMI
 
+            LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
+                                 AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
@@ -690,6 +724,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.11.14                                        * add AmountOrder
  17.10.14                                                       *
  13.05.14                                                       * Amount_Weight Amount_Sh
  23.07.14                                        * add ArticleGLN
