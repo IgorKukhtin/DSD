@@ -18,6 +18,7 @@ CREATE TABLE LoadPriceList
   ContractId	Integer , -- Договор
   isAllGoodsConcat Boolean, -- Все ли товары имеют связь
   NDSinPrice    Boolean, -- Цена с НДС?
+  isMoved       Boolean, -- Перенесли ли в прайс-листы
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id))
 WITH (
   OIDS=FALSE

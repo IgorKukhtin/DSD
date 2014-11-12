@@ -7,7 +7,7 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
-    ediReceipt, ediReturnComDoc, ediDeclarReturn);
+    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -43,10 +43,13 @@ type
     procedure InitializeComSigner;
     procedure SignFile(FileName: string; SignType: TSignType);
     procedure PutFileToFTP(FileName: string; Directory: string);
+    procedure PutStreamToFTP(Stream: TStream; FileName: string; Directory: string);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
       Directory: String);
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
@@ -82,6 +85,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    // Здесь не нужны Caption, Hint и т.д., так как всегда используется в MultiAction
     property StartDateParam: TdsdParam read FStartDate write FStartDate;
     property EndDateParam: TdsdParam read FEndDate write FEndDate;
     property EDI: TEDI read FEDI write FEDI;
@@ -100,8 +104,8 @@ function lpStrToDateTime(DateTimeString: string): TDateTime;
 implementation
 
 uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge,
-  Variants,
-  UtilConvert, ComObj, DeclarXML, DateUtils, FormStorage, UnilWin;
+     Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
+     FormStorage, UnilWin, OrdrspXML;
 
 procedure Register;
 begin
@@ -860,7 +864,7 @@ begin
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
         DELIVEREDQUANTITY := FormatFloat('0.00',
-          ItemsDataSet.FieldByName('Amount').AsFloat);
+          ItemsDataSet.FieldByName('AmountPartner').AsFloat);
         DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
         ORDEREDQUANTITY := DELIVEREDQUANTITY;
         COUNTRYORIGIN := 'UA';
@@ -869,22 +873,21 @@ begin
       inc(i);
       Next;
     end;
-    Close;
-    Free;
   end;
 
   Stream := TMemoryStream.Create;
-  // Переслать его по ftp
   try
     DESADV.OwnerDocument.SaveToStream(Stream);
-    FTPSetConnection;
-    FIdFTP.Connect;
-    if FIdFTP.Connected then
+    PutStreamToFTP(Stream,
+                   'desadv_' +  FormatDateTime('yyyymmddhhnn', Now) + '_' + DESADV.NUMBER + '.xml', '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
-      FIdFTP.ChangeDir('/error');
-      FIdFTP.Put(Stream, 'testDECLAR.xml');
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ DESADV отправлен на FTP';
+      FInsertEDIEvents.Execute;
     end;
-    FIdFTP.Quit;
   finally
     Stream.Free;
   end;
@@ -952,6 +955,96 @@ begin
       ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
       Execute;
     end;
+end;
+
+procedure TEDI.INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
+var
+  INVOICE: IXMLINVOICEType;
+  Stream: TStream;
+  i: integer;
+begin
+  INVOICE := NewINVOICE;
+  // Создать XML
+  INVOICE.DOCUMENTNAME := '380';
+  INVOICE.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  INVOICE.Date := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  INVOICE.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  INVOICE.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  INVOICE.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+  INVOICE.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  INVOICE.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+
+  INVOICE.GOODSTOTALAMOUNT := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  INVOICE.POSITIONSAMOUNT :=  StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  INVOICE.VATSUM := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  INVOICE.INVOICETOTALAMOUNT := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSumm')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  INVOICE.TAXABLEAMOUNT := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+  INVOICE.VAT := StringReplace(FormatFloat('0', HeaderDataSet.FieldByName('VATPercent')
+    .AsFloat), FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+  INVOICE.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  INVOICE.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  INVOICE.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+    ('DELIVERYPLACEGLNCode').asString;
+  INVOICE.HEAD.SENDER := INVOICE.HEAD.SUPPLIER;
+  INVOICE.HEAD.RECIPIENT := INVOICE.HEAD.BUYER;
+
+  with ItemsDataSet do
+  begin
+    First;
+    i := 1;
+    while not Eof do
+    begin
+      with INVOICE.HEAD.POSITION.Add do
+      begin
+        POSITIONNUMBER := IntToStr(i);
+        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+        PRODUCTIDBUYER := ItemsDataSet.FieldByName
+          ('ArticleGLN_Juridical').asString;
+        INVOICEDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        UNITPRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        AMOUNT := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+        FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        AMOUNTTYPE := '203';
+        TAX.FUNCTION_ := '7';
+        TAX.TAXTYPECODE := 'VAT';
+        TAX.TAXRATE := INVOICE.VAT;
+        TAX.TAXAMOUNT := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        TAX.CATEGORY := 'S';
+      end;
+      inc(i);
+      Next;
+    end;
+  end;
+
+  Stream := TMemoryStream.Create;
+  INVOICE.OwnerDocument.SaveToStream(Stream);
+  try
+    PutStreamToFTP(Stream,
+                   'invoice_' +  FormatDateTime('yyyymmddhhnn', Now) + '_' + INVOICE.NUMBER + '.xml', '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ INVOICE отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+  end;
 end;
 
 procedure TEDI.InitializeComSigner;
@@ -1223,6 +1316,73 @@ begin
   end;
 end;
 
+procedure TEDI.ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
+var
+  ORDRSP: IXMLORDRSPType;
+  Stream: TStream;
+  i: integer;
+begin
+
+  ORDRSP := NewORDRSP;
+  // Создать XML
+  ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+
+  ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+    ('DELIVERYPLACEGLNCode').asString;
+  ORDRSP.HEAD.SENDER := ORDRSP.HEAD.SUPPLIER;
+  ORDRSP.HEAD.RECIPIENT := ORDRSP.HEAD.BUYER;
+
+  with ItemsDataSet do
+  begin
+    First;
+    i := 1;
+    while not Eof do
+    begin
+      with ORDRSP.HEAD.POSITION.Add do
+      begin
+        POSITIONNUMBER := IntToStr(i);
+        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+        PRODUCTIDBUYER := ItemsDataSet.FieldByName
+          ('ArticleGLN_Juridical').asString;
+        PRODUCTTYPE := '1';
+
+        ORDEREDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        ACCEPTEDQUANTITY := ORDEREDQUANTITY;
+      end;
+      inc(i);
+      Next;
+    end;
+  end;
+
+  Stream := TMemoryStream.Create;
+  try
+    ORDRSP.OwnerDocument.SaveToStream(Stream);
+    PutStreamToFTP(Stream,
+                   'ORDRSP_' +  FormatDateTime('yyyymmddhhnn', Now) + '_' + ORDRSP.NUMBER + '.xml', '/outbox');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+        'Документ ORDRSP отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+  end;
+end;
+
 procedure TEDI.PutFileToFTP(FileName, Directory: string);
 var i: integer;
 begin
@@ -1245,7 +1405,29 @@ begin
          raise Exception.Create(E.Message);
     end;
   end;
+end;
 
+procedure TEDI.PutStreamToFTP(Stream: TStream; FileName: string; Directory: string);
+var i: integer;
+begin
+  for I := 1 to 10 do begin
+    try
+      FTPSetConnection;
+      FIdFTP.Connect;
+      if FIdFTP.Connected then
+      begin
+        FIdFTP.ChangeDir(Directory);
+        FIdFTP.Put(Stream, FileName);
+      end;
+      FIdFTP.Quit;
+      break;
+    except
+      on E: Exception do begin
+        if i > 9 then
+           raise Exception.Create(E.Message);
+      end;
+    end;
+  end;
 end;
 
 procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
@@ -1423,6 +1605,12 @@ begin
       EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory);
     ediDeclarReturn:
       EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, Directory);
+    ediDesadv:
+      EDI.DesadvSave(HeaderDataSet, ListDataSet);
+    ediOrdrsp:
+      EDI.ORDRSPSave(HeaderDataSet, ListDataSet);
+    ediInvoice:
+      EDI.INVOICESave(HeaderDataSet, ListDataSet);
   end;
   Result := true;
 end;

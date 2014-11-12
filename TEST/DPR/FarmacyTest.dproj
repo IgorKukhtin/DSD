@@ -152,11 +152,6 @@
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -529,6 +524,13 @@
 			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
 				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\InvoiceXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

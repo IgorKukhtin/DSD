@@ -568,7 +568,9 @@ uses
   RetailReportEdit in '..\..\Forms\Guides\RetailReportEdit.pas' {RetailReportEditForm: TParentForm},
   LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   PartnerTag in '..\..\Forms\Guides\PartnerTag.pas' {PartnerTagForm: TParentForm},
-  PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm};
+  PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm},
+  InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

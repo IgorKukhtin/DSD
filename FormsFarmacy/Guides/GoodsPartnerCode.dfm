@@ -1,24 +1,24 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
-  ClientWidth = 763
+  ClientWidth = 900
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 771
+  ExplicitWidth = 908
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 763
+    Width = 900
     Height = 397
     ExplicitWidth = 763
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 763
+    ClientRectRight = 900
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 763
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 763
+        Width = 900
         Height = 397
         ExplicitWidth = 763
         ExplicitHeight = 397
@@ -69,7 +69,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 205
+            Width = 189
           end
           object clMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
@@ -77,6 +77,15 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
+          end
+          object clMinimumLot: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1087#1072#1082#1086#1074#1082#1072
+            DataBinding.FieldName = 'MinimumLot'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0'
+            HeaderAlignmentVert = vaCenter
+            Width = 134
           end
         end
       end
@@ -245,6 +254,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       StoredProcList = <
         item
           StoredProc = spInserUpdateGoodsLink
+        end
+        item
+          StoredProc = spUpdate_Goods_MinimumLot
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -473,5 +485,29 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 344
     Top = 248
+  end
+  object spUpdate_Goods_MinimumLot: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_MinimumLot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMinimumLot'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MinimumLot'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 288
   end
 end

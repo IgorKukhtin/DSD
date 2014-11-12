@@ -58,7 +58,9 @@ uses
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

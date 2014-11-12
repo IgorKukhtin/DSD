@@ -7,7 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxLocalization, dsdAddOn, dsdDB,
   Data.DB, Datasnap.DBClient, frxExportXML, frxExportXLS, frxClass, frxExportRTF,
   Vcl.ActnList, dxBar, cxClasses, Vcl.StdActns, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus;
+  dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
+  cxEdit, cxLabel;
 
 type
   TAncestorMainForm = class(TForm)
@@ -27,6 +29,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     actLookAndFeel: TAction;
     bbLookAndFillSettings: TdxBarButton;
+    cxLabel1: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);

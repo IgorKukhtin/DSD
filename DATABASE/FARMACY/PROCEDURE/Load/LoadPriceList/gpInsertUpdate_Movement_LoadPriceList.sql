@@ -34,6 +34,22 @@ BEGIN
      RETURN;
   END IF;
 
+  -- Проверка что передано таки Юр лицо и Договор. а не наоборот. 
+
+  IF COALESCE(inJuridicalId, 0) = 0 THEN 
+     RAISE EXCEPTION 'Не установлено значение параметра Юридическое лицо (JuridicalId)';
+  END IF;
+
+  IF (SELECT DescId FROM Object WHERE Id = inJuridicalId) <> zc_Object_Juridical() THEN
+     RAISE EXCEPTION 'Не правильно передается значение параметра Юридическое лицо (JuridicalId)';
+  END IF;
+
+  IF COALESCE(inContractId, 0) <> 0 THEN 
+     IF (SELECT DescId FROM Object WHERE Id = inContractId) <> zc_Object_Contract() THEN
+        RAISE EXCEPTION 'Не правильно передается значение параметра Договор (ContractId)';
+     END IF;
+  END IF;
+
   DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
                                     AND OperDate < CURRENT_DATE);

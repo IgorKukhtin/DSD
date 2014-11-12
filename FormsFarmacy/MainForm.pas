@@ -6,7 +6,9 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
-  cxLocalization, dsdActionOld, Vcl.Menus, cxPropertiesStore;
+  cxLocalization, dsdActionOld, Vcl.Menus, cxPropertiesStore, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
+  Vcl.Controls, cxLabel;
 
 type
   TMainForm = class(TAncestorMainForm)

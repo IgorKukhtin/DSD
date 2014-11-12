@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
 RETURNS TABLE (Id Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
-             , MakerName TVarChar
+             , MakerName TVarChar, MinimumLot TFloat
 
 ) AS
 $BODY$
@@ -29,6 +29,7 @@ BEGIN
          , Object_Goods_View.GoodsCode
          , Object_Goods_View.GoodsName
          , Object_Goods_View.MakerName
+         , Object_Goods_View.MinimumLot
 
    FROM Object_Goods_View 
      LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
@@ -42,24 +43,6 @@ BEGIN
      LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
                          
    WHERE Object_Goods_View.ObjectId = inObjectId;
-
-
-/*   RETURN QUERY 
-   SELECT 
-
-           Object_LinkGoods_View.Id
-         , Object_LinkGoods_View.GoodsMainId
-         , Object_LinkGoods_View.GoodsMainCode
-         , Object_LinkGoods_View.GoodsMainName
-
-         , Object_LinkGoods_View.GoodsId
-         , Object_LinkGoods_View.GoodsCodeInt
-         , Object_LinkGoods_View.GoodsCode
-         , Object_LinkGoods_View.GoodsName
-
-    FROM Object_LinkGoods_View 
-   WHERE Object_LinkGoods_View.ObjectId = inObjectId;
-  */
   
 END;
 $BODY$
@@ -71,6 +54,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Juridical(Integer, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.14                         *
  22.10.14                         *
  24.06.14         *
  20.06.13                         *

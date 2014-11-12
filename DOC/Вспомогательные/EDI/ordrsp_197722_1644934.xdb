@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdb="http://www.borland.com/schemas/delphi/10.0/XMLDataBinding">
+  <element xmlns="http://www.w3.org/2001/XMLSchema" name="ORDRSP" type="ORDRSPType"/>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="ORDRSPType"><annotation>
+      <appinfo xdb:docElement="ORDRSP"/>
+    </annotation>
+    <sequence>
+      <element name="NUMBER" type="xs:integer"/>
+      <element name="DATE" type="xs:string"/>
+      <element name="TIME" type="xs:string"/>
+      <element name="ORDERNUMBER" type="xs:string"/>
+      <element name="ORDERDATE" type="xs:string"/>
+      <element name="DELIVERYDATE" type="xs:string"/>
+      <element name="DELIVERYTIME" type="xs:string"/>
+      <element name="ACTION" type="xs:integer"/>
+      <element name="HEAD" type="HEADType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="HEADType">
+    <sequence>
+      <element name="BUYER" type="xs:integer"/>
+      <element name="SUPPLIER" type="xs:integer"/>
+      <element name="DELIVERYPLACE" type="xs:integer"/>
+      <element name="INVOICEPARTNER" type="xs:integer"/>
+      <element name="SENDER" type="xs:integer"/>
+      <element name="RECIPIENT" type="xs:integer"/>
+      <element name="EDIINTERCHANGEID" type="xs:integer"/>
+      <element name="POSITION" type="POSITIONType" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="POSITIONType"><annotation>
+      <appinfo xdb:repeated="True"/>
+    </annotation>
+    <sequence>
+      <element name="POSITIONNUMBER" type="xs:integer"/>
+      <element name="PRODUCT" type="xs:integer"/>
+      <element name="PRODUCTIDBUYER" type="xs:integer"/>
+      <element name="PRODUCTIDSUPPLIER" type="xs:integer"/>
+      <element name="DESCRIPTION" type="xs:string"/>
+      <element name="VAT" type="xs:integer"/>
+      <element name="PRICE" type="xs:string"/>
+      <element name="PRICEWITHVAT" type="xs:string"/>
+      <element name="GROSSPRICE" type="xs:string"/>
+      <element name="PRODUCTTYPE" type="xs:integer"/>
+      <element name="ORDEREDQUANTITY" type="xs:integer"/>
+      <element name="ACCEPTEDQUANTITY" type="xs:string"/>
+    </sequence>
+  </complexType>
+</xs:schema>
