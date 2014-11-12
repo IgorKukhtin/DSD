@@ -14743,7 +14743,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnIn:Integer;
 var ContractId_pg:Integer;
-    InvNumberMark:String;
+    InvNumberMark,InvNumberPartner:String;
+    OperDate,OperDatePartner:TDateTime;
 begin
      Result:=0;
      if (not cbReturnInInt.Checked)or(not cbReturnInInt.Enabled) then exit;
@@ -14903,10 +14904,26 @@ begin
              //Номер "перекресленої зеленої марки зi складу" не должен измениться
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
-                  fOpenSqToQuery ('select ValueData AS InvNumberMark from MovementString where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementString_InvNumberMark()');
+                  fOpenSqToQuery (' select Movement.OperDate'
+                                 +'      , MD_OperDatePartner.ValueData AS OperDatePartner'
+                                 +'      , MS_InvNumberPartner.ValueData AS InvNumberPartner'
+                                 +'      , MS_InvNumberMark.ValueData AS InvNumberMark'
+                                 +' from Movement'
+                                 +'      left join MovementDate AS MD_OperDatePartner on MD_OperDatePartner.MovementId = Movement.Id and MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()'
+                                 +'      left join MovementString AS MS_InvNumberPartner on MS_InvNumberPartner.MovementId = Movement.Id and MS_InvNumberMark.DescId = zc_MovementString_InvNumberPartner()'
+                                 +'      left join MovementString AS MS_InvNumberMark on MS_InvNumberMark.MovementId = Movement.Id and MS_InvNumberMark.DescId = zc_MovementString_InvNumberMark()'
+                                 +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+                  OperDate:=toSqlQuery.FieldByName('OperDate').AsDateTime;
+                  OperDatePartner:=toSqlQuery.FieldByName('OperDatePartner').AsDateTime;
+                  InvNumberPartner:=toSqlQuery.FieldByName('InvNumberPartner').AsString;
                   InvNumberMark:=toSqlQuery.FieldByName('InvNumberMark').AsString;
+
              end
-             else InvNumberMark:='';
+             else begin OperDate:=FieldByName('OperDate').AsDateTime;
+                        OperDatePartner:=FieldByName('OperDatePartner').AsDateTime;
+                        InvNumberPartner:='';
+                        InvNumberMark:='';
+                  end;
 
              //находим договор БН
              ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,zc_Enum_PaidKind_FirstForm,FieldByName('ContractNumber').AsString);
@@ -14915,10 +14932,11 @@ begin
              if (ContractId_pg=0)and(FieldByName('findId').AsInteger<>0)
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=InvNumberPartner;
              toStoredProc.Params.ParamByName('inInvNumberMark').Value:=InvNumberMark;
 
-             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=OperDate;
+             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=OperDatePartner;
 
              if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
