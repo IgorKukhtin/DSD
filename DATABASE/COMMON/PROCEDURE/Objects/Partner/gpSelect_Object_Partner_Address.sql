@@ -19,6 +19,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Doc_ContactPersonKindId Integer, Doc_ContactPersonKindName TVarChar, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
                Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
               --OKPO TVarChar,
+               MemberTakeId Integer, MemberTakeName TVarChar,
+               MemberId Integer, MemberName TVarChar,
+               MemberTradeId Integer, MemberTradeName TVarChar,
+               AreaId Integer, AreaName TVarChar,
+               PartnerTagId Integer, PartnerTagName TVarChar,
                isErased Boolean
               )
 AS
@@ -108,6 +113,22 @@ BEGIN
 
        --  , ObjectHistory_JuridicalDetails_View.OKPO
 
+           , Object_MemberTake.Id             AS MemberTakeId
+           , Object_MemberTake.ValueData      AS MemberTakeName
+         
+           , Object_Member.Id                 AS MemberId
+           , Object_Member.ValueData          AS MemberName
+         
+           , Object_MemberTrade.Id           AS MemberTradeId
+           , Object_MemberTrade.ValueData    AS MemberTradeName
+         
+           , Object_Area.Id                  AS AreaId
+           , Object_Area.ValueData           AS AreaName
+        
+           , Object_PartnerTag.Id            AS PartnerTagId
+           , Object_PartnerTag.ValueData     AS PartnerTagName           
+
+
          , Object_Partner.isErased   AS isErased
          
      FROM Object AS Object_Partner
@@ -156,6 +177,32 @@ BEGIN
                              ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
                             AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
         LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                                ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
+           LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
+         
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Member
+                                ON ObjectLink_Partner_Member.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_Member.DescId = zc_ObjectLink_Partner_Member()
+           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Partner_Member.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTrade
+                                ON ObjectLink_Partner_MemberTrade.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_MemberTrade.DescId = zc_ObjectLink_Partner_MemberTrade()
+           LEFT JOIN Object AS Object_MemberTrade ON Object_MemberTrade.Id = ObjectLink_Partner_MemberTrade.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                                ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+           LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+
 
         LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
         LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"

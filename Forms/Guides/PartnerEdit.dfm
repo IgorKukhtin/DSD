@@ -376,7 +376,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 49
-    Width = 227
+    Width = 229
   end
   object cxLabel24: TcxLabel [50]
     Left = 381
@@ -683,16 +683,14 @@
       item
         Name = 'inProvinceName'
         Value = ''
-        Component = ProvinceGuides
-        ComponentItem = 'TextValue'
+        Component = ceProvince
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inCityName'
         Value = ''
-        Component = CityGuides
-        ComponentItem = 'TextValue'
+        Component = ceCity
         DataType = ftString
         ParamType = ptInput
       end
@@ -706,8 +704,7 @@
       item
         Name = 'inProvinceCityName'
         Value = ''
-        Component = ProvinceCityGuides
-        ComponentItem = 'TextValue'
+        Component = ceProvinceCity
         DataType = ftString
         ParamType = ptInput
       end
@@ -721,8 +718,7 @@
       item
         Name = 'inStreetName'
         Value = ''
-        Component = StreetGuides
-        ComponentItem = 'TextValue'
+        Component = ceStreet
         DataType = ftString
         ParamType = ptInput
       end

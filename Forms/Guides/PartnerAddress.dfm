@@ -293,6 +293,76 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 22
       end
+      object colMemberTakeName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+        DataBinding.FieldName = 'MemberTakeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberTakeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colMemberTradeName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+        DataBinding.FieldName = 'MemberTradeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberTradeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colMemberName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+        DataBinding.FieldName = 'MemberName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colAreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = AreaChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object colPartnerTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
+        DataBinding.FieldName = 'PartnerTagName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PartnerTagChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -546,6 +616,7 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -597,11 +668,13 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -618,12 +691,14 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StreetKindId'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StreetKindName'
           DataType = ftString
@@ -641,12 +716,14 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CityKindId'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CityKindName'
           DataType = ftString
@@ -660,23 +737,27 @@ object PartnerAddressForm: TPartnerAddressForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -715,12 +796,14 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -728,12 +811,14 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'ContactPersonKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Act_ContactPersonKindId'
           ParamType = ptInput
         end
         item
           Name = 'ContactPersonKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Act_ContactPersonKindName'
           DataType = ftString
@@ -741,18 +826,21 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Act_Name'
           DataType = ftString
         end
         item
           Name = 'phone'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Act_phone'
           DataType = ftString
         end
         item
           Name = 'mail'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Act_mail'
           DataType = ftString
@@ -769,12 +857,14 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -782,12 +872,14 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'ContactPersonKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Order_ContactPersonKindId'
           ParamType = ptInput
         end
         item
           Name = 'ContactPersonKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Order_ContactPersonKindName'
           DataType = ftString
@@ -795,18 +887,21 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Order_Name'
           DataType = ftString
         end
         item
           Name = 'phone'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Order_phone'
           DataType = ftString
         end
         item
           Name = 'mail'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Order_mail'
           DataType = ftString
@@ -823,12 +918,14 @@ object PartnerAddressForm: TPartnerAddressForm
       GuiParams = <
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -836,12 +933,14 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'ContactPersonKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Doc_ContactPersonKindId'
           ParamType = ptInput
         end
         item
           Name = 'ContactPersonKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Doc_ContactPersonKindName'
           DataType = ftString
@@ -849,20 +948,138 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'doc_Name'
           DataType = ftString
         end
         item
           Name = 'phone'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Doc_phone'
           DataType = ftString
         end
         item
           Name = 'mail'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'doc_mail'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MemberTakeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MemberChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MemberTradeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTradeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTradeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object PartnerTagChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'PartnerTagForm'
+      FormName = 'TPartnerTagForm'
+      FormNameParam.Value = 'TPartnerTagForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerTagId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerTagName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object AreaChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'AreaForm'
+      FormName = 'TAreaForm'
+      FormNameParam.Value = 'TAreaForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaName'
           DataType = ftString
         end>
       isShowModal = True
@@ -894,6 +1111,7 @@ object PartnerAddressForm: TPartnerAddressForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -941,18 +1159,21 @@ object PartnerAddressForm: TPartnerAddressForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
@@ -960,6 +1181,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inRegionName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RegionName'
         DataType = ftString
@@ -967,6 +1189,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inProvinceName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ProvinceName'
         DataType = ftString
@@ -974,6 +1197,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inCityName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CityName'
         DataType = ftString
@@ -981,12 +1205,14 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inCityKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CityKindId'
         ParamType = ptInput
       end
       item
         Name = 'inProvinceCityName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ProvinceCityName'
         DataType = ftString
@@ -994,6 +1220,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inPostalCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PostalCode'
         DataType = ftString
@@ -1001,6 +1228,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inStreetName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StreetName'
         DataType = ftString
@@ -1008,12 +1236,14 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inStreetKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StreetKindId'
         ParamType = ptInput
       end
       item
         Name = 'inHouseNumber'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HouseNumber'
         DataType = ftString
@@ -1021,6 +1251,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inCaseNumber'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CaseNumber'
         DataType = ftString
@@ -1028,6 +1259,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inRoomNumber'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RoomNumber'
         DataType = ftString
@@ -1035,6 +1267,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inShortName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ShortName'
         DataType = ftString
@@ -1042,6 +1275,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inOrdeName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Order_Name'
         DataType = ftString
@@ -1049,6 +1283,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inOrderPhone'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Order_Phone'
         DataType = ftString
@@ -1056,6 +1291,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inOrderMail'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Order_Mail'
         DataType = ftString
@@ -1063,6 +1299,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inDocName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Doc_Name'
         DataType = ftString
@@ -1070,6 +1307,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inDocPhone'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Doc_Phone'
         DataType = ftString
@@ -1077,6 +1315,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inDocMail'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Doc_Mail'
         DataType = ftString
@@ -1084,6 +1323,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inActName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Act_Name'
         DataType = ftString
@@ -1091,6 +1331,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inActPhone'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Act_Phone'
         DataType = ftString
@@ -1098,9 +1339,45 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inActMail'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Act_Mail'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberTakeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberTradeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTradeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AreaId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerTagId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerTagId'
         ParamType = ptInput
       end>
     PackSize = 1

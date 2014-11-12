@@ -7,6 +7,15 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarC
                                                        , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar,  TVarChar, TVarChar
+                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer
+                                                       , TVarChar);
+
+
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
@@ -39,6 +48,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inActPhone            TVarChar  ,    --
     IN inActMail             TVarChar  ,    --
     
+    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
+    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inAreaId              Integer   ,    -- Регион
+    IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
+
+
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -207,6 +223,18 @@ BEGIN
    END IF;
 
 
+   -- сохранили связь с <Сотрудник (экспедитор)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
+   -- сохранили связь с <Сотрудник ()>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Member(), ioId, inMemberId);
+   -- сохранили связь с <Сотрудник ()>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTrade(), ioId, inMemberTradeId);
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
+   -- сохранили связь с <Признак торговой точки>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), ioId, inPartnerTagId);
+
+
     -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -219,6 +247,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.14         *
  19.06.14         *
 */
 
