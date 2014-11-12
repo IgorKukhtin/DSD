@@ -20,10 +20,6 @@ object AncestorMainForm: TAncestorMainForm
     Left = 0
     Top = 26
     Align = alClient
-    ExplicitLeft = 448
-    ExplicitTop = 72
-    ExplicitWidth = 7
-    ExplicitHeight = 17
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
