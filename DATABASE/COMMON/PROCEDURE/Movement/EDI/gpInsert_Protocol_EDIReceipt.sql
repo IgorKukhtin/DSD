@@ -57,7 +57,7 @@ BEGIN
    IF COALESCE (vbMovementId, 0) <> 0 THEN
       IF COALESCE (vbTaxMovementId, 0) = 0
       THEN
-          RAISE EXCEPTION 'Ошибка. Налоговый документ не найден. (%) (%) (%) (%) (%)', inisOk, inTaxNumber, inEDIEvent, inOperMonth, inFileName;
+          RAISE EXCEPTION 'Ошибка. Налоговый документ № <%> не найден. (%) (%) (%) (%)', inTaxNumber, inisOk, inEDIEvent, inOperMonth, inFileName;
       END IF;
 
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
@@ -73,7 +73,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

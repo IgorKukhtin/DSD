@@ -676,8 +676,7 @@
       item
         Name = 'inRegionName'
         Value = ''
-        Component = RegionGuides
-        ComponentItem = 'TextValue'
+        Component = ceRegion
         DataType = ftString
         ParamType = ptInput
       end
