@@ -149,6 +149,15 @@ type
     clAmountOrderEDI: TcxGridDBColumn;
     clAmountNoticeEDI: TcxGridDBColumn;
     clAmountNotice: TcxGridDBColumn;
+    actInvoice: TEDIAction;
+    actOrdSpr: TEDIAction;
+    actDesadv: TEDIAction;
+    bbInvoice: TdxBarButton;
+    bbOrderSp: TdxBarButton;
+    bbDecadv: TdxBarButton;
+    mactInvoice: TMultiAction;
+    mactOrdSpr: TMultiAction;
+    mactDesadv: TMultiAction;
   private
     { Private declarations }
   public

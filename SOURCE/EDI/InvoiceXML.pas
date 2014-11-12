@@ -11,12 +11,13 @@ type
   IXMLINVOICEType = interface;
   IXMLHEADType = interface;
   IXMLPOSITIONType = interface;
+  IXMLPOSITIONTypeList = interface;
   IXMLTAXType = interface;
 
 { IXMLINVOICEType }
 
   IXMLINVOICEType = interface(IXMLNode)
-    ['{82FF1468-DD89-4B07-B4E1-1840EA9192A3}']
+    ['{19D5DFF0-6CB5-4D37-A9A8-771EA5B441BD}']
     { Property Accessors }
     function Get_DOCUMENTNAME: UnicodeString;
     function Get_NUMBER: UnicodeString;
@@ -80,14 +81,14 @@ type
 { IXMLHEADType }
 
   IXMLHEADType = interface(IXMLNode)
-    ['{4D5A599F-8694-4119-82BA-D8AB4028F3D3}']
+    ['{C22ACC36-895D-4E99-B1B5-31430F893447}']
     { Property Accessors }
     function Get_SUPPLIER: UnicodeString;
     function Get_BUYER: UnicodeString;
     function Get_DELIVERYPLACE: UnicodeString;
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
-    function Get_POSITION: IXMLPOSITIONType;
+    function Get_POSITION: IXMLPOSITIONTypeList;
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
@@ -99,13 +100,13 @@ type
     property DELIVERYPLACE: UnicodeString read Get_DELIVERYPLACE write Set_DELIVERYPLACE;
     property SENDER: UnicodeString read Get_SENDER write Set_SENDER;
     property RECIPIENT: UnicodeString read Get_RECIPIENT write Set_RECIPIENT;
-    property POSITION: IXMLPOSITIONType read Get_POSITION;
+    property POSITION: IXMLPOSITIONTypeList read Get_POSITION;
   end;
 
 { IXMLPOSITIONType }
 
   IXMLPOSITIONType = interface(IXMLNode)
-    ['{177D1D42-6450-4232-B3C1-872DD63C7320}']
+    ['{6D6E2A35-5997-4800-A197-245C12526045}']
     { Property Accessors }
     function Get_POSITIONNUMBER: UnicodeString;
     function Get_PRODUCT: UnicodeString;
@@ -136,10 +137,22 @@ type
     property TAX: IXMLTAXType read Get_TAX;
   end;
 
+{ IXMLPOSITIONTypeList }
+
+  IXMLPOSITIONTypeList = interface(IXMLNodeCollection)
+    ['{817C04E2-DFE2-4A4E-9200-31A7FB442247}']
+    { Methods & Properties }
+    function Add: IXMLPOSITIONType;
+    function Insert(const Index: Integer): IXMLPOSITIONType;
+
+    function Get_Item(Index: Integer): IXMLPOSITIONType;
+    property Items[Index: Integer]: IXMLPOSITIONType read Get_Item; default;
+  end;
+
 { IXMLTAXType }
 
   IXMLTAXType = interface(IXMLNode)
-    ['{F67010EF-1ADC-40EF-9897-BB84EED5D63C}']
+    ['{5D7C545A-7320-48B1-A59F-1E55F18DA7B6}']
     { Property Accessors }
     function Get_FUNCTION_: UnicodeString;
     function Get_TAXTYPECODE: UnicodeString;
@@ -164,6 +177,7 @@ type
   TXMLINVOICEType = class;
   TXMLHEADType = class;
   TXMLPOSITIONType = class;
+  TXMLPOSITIONTypeList = class;
   TXMLTAXType = class;
 
 { TXMLINVOICEType }
@@ -215,6 +229,8 @@ type
 { TXMLHEADType }
 
   TXMLHEADType = class(TXMLNode, IXMLHEADType)
+  private
+    FPOSITION: IXMLPOSITIONTypeList;
   protected
     { IXMLHEADType }
     function Get_SUPPLIER: UnicodeString;
@@ -222,7 +238,7 @@ type
     function Get_DELIVERYPLACE: UnicodeString;
     function Get_SENDER: UnicodeString;
     function Get_RECIPIENT: UnicodeString;
-    function Get_POSITION: IXMLPOSITIONType;
+    function Get_POSITION: IXMLPOSITIONTypeList;
     procedure Set_SUPPLIER(Value: UnicodeString);
     procedure Set_BUYER(Value: UnicodeString);
     procedure Set_DELIVERYPLACE(Value: UnicodeString);
@@ -256,6 +272,17 @@ type
     procedure Set_AMOUNTTYPE(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
+  end;
+
+{ TXMLPOSITIONTypeList }
+
+  TXMLPOSITIONTypeList = class(TXMLNodeCollection, IXMLPOSITIONTypeList)
+  protected
+    { IXMLPOSITIONTypeList }
+    function Add: IXMLPOSITIONType;
+    function Insert(const Index: Integer): IXMLPOSITIONType;
+
+    function Get_Item(Index: Integer): IXMLPOSITIONType;
   end;
 
 { TXMLTAXType }
@@ -501,6 +528,7 @@ end;
 procedure TXMLHEADType.AfterConstruction;
 begin
   RegisterChildNode('POSITION', TXMLPOSITIONType);
+  FPOSITION := CreateCollection(TXMLPOSITIONTypeList, IXMLPOSITIONType, 'POSITION') as IXMLPOSITIONTypeList;
   inherited;
 end;
 
@@ -554,9 +582,9 @@ begin
   ChildNodes['RECIPIENT'].NodeValue := Value;
 end;
 
-function TXMLHEADType.Get_POSITION: IXMLPOSITIONType;
+function TXMLHEADType.Get_POSITION: IXMLPOSITIONTypeList;
 begin
-  Result := ChildNodes['POSITION'] as IXMLPOSITIONType;
+  Result := FPOSITION;
 end;
 
 { TXMLPOSITIONType }
@@ -650,6 +678,23 @@ end;
 function TXMLPOSITIONType.Get_TAX: IXMLTAXType;
 begin
   Result := ChildNodes['TAX'] as IXMLTAXType;
+end;
+
+{ TXMLPOSITIONTypeList }
+
+function TXMLPOSITIONTypeList.Add: IXMLPOSITIONType;
+begin
+  Result := AddItem(-1) as IXMLPOSITIONType;
+end;
+
+function TXMLPOSITIONTypeList.Insert(const Index: Integer): IXMLPOSITIONType;
+begin
+  Result := AddItem(Index) as IXMLPOSITIONType;
+end;
+
+function TXMLPOSITIONTypeList.Get_Item(Index: Integer): IXMLPOSITIONType;
+begin
+  Result := List[Index] as IXMLPOSITIONType;
 end;
 
 { TXMLTAXType }

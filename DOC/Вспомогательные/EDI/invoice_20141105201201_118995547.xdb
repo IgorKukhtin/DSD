@@ -33,10 +33,12 @@
       <element name="DELIVERYPLACE" type="xs:integer"/>
       <element name="SENDER" type="xs:integer"/>
       <element name="RECIPIENT" type="xs:integer"/>
-      <element name="POSITION" type="POSITIONType"/>
+      <element name="POSITION" type="POSITIONType" maxOccurs="unbounded"/>
     </sequence>
   </complexType>
-  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="POSITIONType">
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="POSITIONType"><annotation>
+      <appinfo xdb:repeated="True"/>
+    </annotation>
     <sequence>
       <element name="POSITIONNUMBER" type="xs:integer"/>
       <element name="PRODUCT" type="xs:integer"/>

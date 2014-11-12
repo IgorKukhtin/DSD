@@ -7,6 +7,11 @@ inherited MainForm: TMainForm
   ExplicitHeight = 193
   PixelsPerInch = 96
   TextHeight = 13
+  inherited cxLabel1: TcxLabel
+    Top = 22
+    ExplicitTop = 22
+    ExplicitWidth = 672
+  end
   inherited dxBarManager: TdxBarManager
     Style = bmsFlat
     Left = 152

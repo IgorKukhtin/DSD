@@ -48,6 +48,7 @@ end;
 procedure TdmUnloadUploadData.DataModuleCreate(Sender: TObject);
 begin
   SendTable := TVKSmartDBF.Create(nil);
+  TVKSmartDBF(SendTable).OEM := true;
 end;
 
 procedure TdmUnloadUploadData.InsertSendTable(EXEC_STR:String);
@@ -74,7 +75,7 @@ begin
             ReplaceStr(UnloadDataCDS.FieldByName('NDS').asString, FormatSettings.DecimalSeparator, '.') + ',' +
             chr(39) + copy(UnloadDataCDS.FieldByName('Name').asString, 1, 20) +
             chr(39) + ',' +chr(39) + UnloadDataCDS.FieldByName('MeasureName').asString +
-            chr(39) + ', false, false);');
+            chr(39) + ', 0, 1);');
         IncProgress;
         UnloadDataCDS.Next;
       end;

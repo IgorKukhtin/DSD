@@ -26,6 +26,7 @@ type
     colContractName: TcxGridDBColumn;
     mactLoadPriceList: TMultiAction;
     N3: TMenuItem;
+    colIsMoved: TcxGridDBColumn;
   private
     { Private declarations }
   public

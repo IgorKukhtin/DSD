@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , Object_NDSKind.ValueData                         AS NDSKindName
            , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
            , ObjectString_Goods_Maker.ValueData               AS MakerName
+           , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
@@ -50,6 +51,10 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
         LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+
+        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                               ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
 
        WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
 

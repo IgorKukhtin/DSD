@@ -55,7 +55,9 @@ uses
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   UploadUnloadData in '..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
-  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -73,7 +75,7 @@ begin
   begin
      TUpdater.AutomaticUpdateProgram;
      Application.CreateForm(TMainForm, MainFormInstance);
-     Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;
 end.

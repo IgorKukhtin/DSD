@@ -67,6 +67,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TChangeStatus)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxButtonEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);

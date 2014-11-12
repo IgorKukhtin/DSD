@@ -57,11 +57,6 @@ uses
   cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
-  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
-  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
-  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
-  EDI in '..\..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
@@ -182,7 +177,14 @@ uses
   PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
   GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
   ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
-  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm};
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

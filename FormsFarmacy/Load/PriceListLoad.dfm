@@ -1,28 +1,29 @@
 inherited PriceListLoadForm: TPriceListLoadForm
   Caption = #1060#1086#1088#1084#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
   ClientHeight = 399
-  ClientWidth = 616
-  ExplicitWidth = 624
+  ClientWidth = 714
+  ExplicitWidth = 722
   ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 616
+    Width = 714
     Height = 373
     ExplicitWidth = 616
     ExplicitHeight = 373
     ClientRectBottom = 373
-    ClientRectRight = 616
+    ClientRectRight = 714
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 616
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 616
+        Width = 714
         Height = 373
         ExplicitWidth = 616
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -55,6 +56,12 @@ inherited PriceListLoadForm: TPriceListLoadForm
             Options.Editing = False
             Width = 88
           end
+          object colIsMoved: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1085#1077#1089#1077#1085#1086
+            DataBinding.FieldName = 'IsMoved'
+            Options.Editing = False
+            Width = 81
+          end
         end
       end
     end
@@ -72,6 +79,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end>
@@ -186,6 +194,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -201,6 +210,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput

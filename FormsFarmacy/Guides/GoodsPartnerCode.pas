@@ -38,6 +38,8 @@ type
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     dsdUpdateDataSet: TdsdUpdateDataSet;
+    clMinimumLot: TcxGridDBColumn;
+    spUpdate_Goods_MinimumLot: TdsdStoredProc;
   private
     { Private declarations }
   public

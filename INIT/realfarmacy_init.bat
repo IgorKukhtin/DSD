@@ -1,0 +1,1 @@
+copy /Y realfarmacy_init.php farmacy_init.php

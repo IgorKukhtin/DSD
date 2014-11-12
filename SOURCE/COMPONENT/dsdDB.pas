@@ -141,7 +141,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     kbmMemTable, kbmMemCSVStreamFormat;
+     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -715,8 +715,10 @@ begin
         result := GetFromCrossDBViewAddOn;
      if Component is TPivotAddOn then
         result := (Component as TPivotAddOn).GetCurrentData;
-     if Component is TcxTextEdit then
+     if Component is TcxCustomTextEdit then
         Result := (Component as TcxTextEdit).Text;
+     if Component is TcxButtonEdit then
+        Result := (Component as TcxButtonEdit).Text;
      if (Component is TDataSet) then
         Result := GetFromDataSet(TDataSet(Component), ComponentItem);
      if (Component is TdsdFormParams) then
@@ -815,6 +817,8 @@ begin
         SetInDataSet(TDataSet(Component), ComponentItem, FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
+     if Component is TcxButtonEdit then
+        (Component as TcxButtonEdit).Text := FValue;
      if Component is TdsdFormParams then
         with (Component as TdsdFormParams) do begin
           if Assigned(ParamByName(FComponentItem)) then

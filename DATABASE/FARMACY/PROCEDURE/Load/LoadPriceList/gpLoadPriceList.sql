@@ -25,6 +25,8 @@ BEGIN
          , LoadPriceList.ContractId INTO vbOperDate, vbJuridicalId, vbContractId
       FROM LoadPriceList WHERE LoadPriceList.Id = inId;
 
+     UPDATE LoadPriceList SET isMoved = true WHERE Id = inId;
+
      -- Если прайс за этот день, юрлицу и договору не найден, то добавляем. А если найден, то сохраняем ИД
      SELECT
             Movement.Id INTO vbPriceListId
@@ -75,6 +77,7 @@ BEGIN
                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                       WHERE MovementId = vbPriceListId);
+
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
