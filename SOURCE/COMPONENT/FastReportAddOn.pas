@@ -2,6 +2,17 @@ unit FastReportAddOn;
 
 interface
 
+
+{Принимает число, род существительного, и три формы,
+например male, рубль, рубля, рублей. Возвращает число прописью}
+//function SpellNumber(n:Int64; g:gender; wrd:wordForms):String;
+
+{Принимает сумму цифрами, вид валюты и необязательный параметр писать ли с большой буквы,
+по умолчанию не писать
+TStas}
+//function CurrencyToStr(x:Currency; d:denezhka; mode:Boolean=true):String;
+
+
 uses Classes;
 
 type
@@ -19,6 +30,22 @@ begin
 end;
 
 type
+  gender = (male, fimale, gay); //Род существительного
+  wordForms = Array[1..3] of String[20];
+  denezhka = (RUR, USD, EUR);
+
+    digit = 0..9;
+    plur = 1..3;
+    thousand = 0..999;
+    razr = record
+      wrd:wordForms; //Формы слова
+      gend:gender; //род слова
+    end;
+    money = record
+      rublik:razr;
+      kopeechka:wordForms;
+    end;
+
   TFunctions = class(TfsRTTIModule)
   private
     function CallMethod(Instance: TObject; ClassType: TClass; const
@@ -26,6 +53,200 @@ MethodName: String; var Params: Variant): Variant;
   public
     constructor Create(AScript: TfsScript); override;
   end;
+
+const
+  handrids:Array[0..9] of String[10] = ('', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот');
+  tens:Array[2..9] of String[15] = ('двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто');
+  teens:Array[0..9] of String[15] = ('десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать');
+  units:Array[3..9] of String[10] = ('три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять');
+
+  tys:razr = (wrd:('тысяча', 'тысячи', 'тысяч'); gend:fimale);
+  mln:razr = (wrd:('миллион', 'миллиона', 'миллионов'); gend:male);
+  mlrd:razr = (wrd:('миллиард', 'миллиарда', 'миллиардов'); gend:male);
+  trln:razr = (wrd:('триллион', 'триллиона', 'триллионов'); gend:male);
+  quln:razr = (wrd:('квадриллион', 'квадриллиона', 'квадриллионов'); gend:male);
+
+  rup:razr = (wrd:('рубль', 'рубля', 'рублей'); gend:male);
+  buck:razr = (wrd:('доллар', 'доллара', 'долларов'); gend:male);
+  evrik:razr = (wrd:('евро', 'евро', 'евро'); gend:gay);
+
+  kopek:wordForms = ('копейка', 'копейки', 'копеек');
+  cent:wordForms = ('цент', 'цента', 'центов');
+
+
+
+
+
+//-------------------------------------------------------------Сумма Евро
+function GetUnitString(n:digit; x:gender):String;
+begin
+case n of
+0: Result:='';
+1:
+  begin
+  case x of
+    male: Result:='один';
+    gay: Result:='одно';
+    fimale: Result:='одна';
+    end;
+  end;
+2:
+  begin
+  case x of
+    male: Result:='два';
+    gay: Result:='два';
+    fimale: Result:='две';
+    end;
+  end;
+else Result:=units[n]
+end; //of case
+end;
+
+function GetPlur(n:Byte):plur;
+var
+  n1, n10:digit;
+begin
+n:=n mod 100;
+n1:=n mod 10;
+n:=n div 10;
+if n10=1 then Result:=3
+else //Если дворой разряд не 1
+  begin
+  case n1 of
+  1: Result:=1;
+  2, 3, 4: Result:=2;
+  else result:=3;
+  end; //of case
+  end;
+end;
+
+function GetThousands(n:thousand; g:Gender; ss:wordForms):String;
+var
+  n1, n10, n100:Digit;
+  pl:plur;
+begin
+if n=0 then
+  begin
+  Result:='';
+  Exit;
+  end;
+n1:=digit(n mod 10);
+n:=n div 10;
+n10:=digit(n mod 10);
+n:=n div 10;
+n100:=digit(n mod 10);
+n:=n div 10;
+
+Result:=handrids[n100]+' ';
+if n10<>1 then
+  begin
+  if n10<>0 then Result:=Result+tens[n10]+' '+GetUnitString(n1, g)
+  else Result:=Result+GetUnitString(n1, g);
+  end
+else //Если 10..19
+  begin
+  Result:=Result+teens[n1];
+  end;
+
+Result:=Result+' '; //Пробел перед словом
+pl:=GetPlur(10*n10+n1);
+Result:=Result+ss[pl];
+end;
+
+function SpellNumber(n:Int64; g:gender; wrd:wordForms):String;
+var
+  n1, n2, n3, n4, n5, n6, m:word;
+  s:String;
+
+begin
+if n=0 then
+  begin
+  Result:='ноль '+wrd[3];
+  Exit;
+  end;
+
+if n<0 then n:=-n;
+
+n1:=n mod 1000;
+n:=n div 1000;
+n2:=n mod 1000;
+n:=n div 1000;
+n3:=n mod 1000;
+n:=n div 1000;
+n4:=n mod 1000;
+n:=n div 1000;
+n5:=n mod 1000;
+n:=n div 1000;
+n6:=n mod 1000;
+n:=n div 1000;
+
+Result:=GetThousands(n1, g, wrd);
+if Result='' then Result:=wrd[3];
+Result:=GetThousands(n2, tys.gend, tys.wrd)+' '+Result;
+Result:=GetThousands(n3, mln.gend, mln.wrd)+' '+Result;
+Result:=GetThousands(n4, mlrd.gend, mlrd.wrd)+' '+Result;
+Result:=GetThousands(n5, trln.gend, trln.wrd)+' '+Result;
+Result:=GetThousands(n6, quln.gend, quln.wrd)+' '+Result;
+
+repeat  //Удаление двойных пробелов
+  begin
+  m:=Pos('  ', Result);
+  if m<>0 then Delete(Result, m, 1);
+  end
+until m=0;
+
+while Result[1]=' ' do Delete(Result, 1, 1); //Удаление передних пробелов
+
+end;
+
+function CurrencyToStr(x:Currency; d:denezhka; mode:Boolean=true):String;
+var
+  ar:Array[denezhka] of money;
+  r:razr;
+  w:wordForms;
+  x1:Int64;
+  b:Byte;
+  s:String;
+  plr:plur;
+begin
+ar[rur].rublik:=rup;
+ar[rur].kopeechka:=kopek;
+ar[usd].rublik:=buck;
+ar[usd].kopeechka:=cent;
+ar[EUR].rublik:=evrik;
+ar[EUR].kopeechka:=cent;
+
+r:=ar[d].rublik;
+w:=ar[d].kopeechka;
+
+x:=abs(x);
+
+x1:=Trunc(x);
+Result:=SpellNumber(x1, r.gend, r.wrd);
+Result:=Result+' '; //Получаю сумму прописью пока без копеек
+
+x:=frac(x)*100;
+b:=Byte(round(x)); //Двузначное число копеек
+
+s:=IntToStr(b);
+if length(s)=1 then s:='0'+s;
+s:=s+' '; //число копеек цифрами
+
+Result:=result+s;
+
+plr:=GetPlur(b);
+s:=w[plr]; //слово "копеек"
+Result:=result+s;
+
+if mode then
+  begin
+  s:=AnsiUppercase(Result[1]);
+  Result[1]:=s[1];
+  end;
+
+end;
+//------------------------------------------------------------------------
+
 
 function SummaToText(n: Double): string;
 const
@@ -365,7 +586,7 @@ begin
     begin
       if i=0 then
         if usd then
-          result:='00 центов США'
+          result:='00 центов'
          else
           result:='00 копеек'
        else
@@ -442,9 +663,10 @@ begin
      Result := MoneyToString(n, true, true)
     else if Curr = 'RUR' then
      Result := MoneyToString(n, true, false)
+    else if Curr = 'EUR' then
+     Result := CurrencyToStr(n, EUR, false)
     else if Curr = 'UAH' then
      Result := SummaToTextRu(n);
-
 end;
 
 

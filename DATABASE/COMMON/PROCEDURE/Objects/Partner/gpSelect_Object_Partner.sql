@@ -14,7 +14,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, GLNCode_Juridical TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
-               PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
+
+               MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
+               MemberId Integer, MemberCode Integer, MemberName TVarChar,
+               MemberTradeId Integer, MemberTradeCode Integer, MemberTradeName TVarChar,
+               AreaId Integer, AreaName TVarChar,
+               PartnerTagId Integer, PartnerTagName TVarChar,
+               
                OKPO TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
@@ -73,9 +79,23 @@ BEGIN
          , Object_RouteSorting.ObjectCode   AS RouteSortingCode
          , Object_RouteSorting.ValueData    AS RouteSortingName
          
-         , Object_PersonalTake.Id           AS PersonalTakeId
-         , Object_PersonalTake.ObjectCode   AS PersonalTakeCode
-         , Object_PersonalTake.ValueData    AS PersonalTakeName
+         , Object_MemberTake.Id             AS MemberTakeId
+         , Object_MemberTake.ObjectCode     AS MemberTakeCode
+         , Object_MemberTake.ValueData      AS MemberTakeName
+         
+         , Object_Member.Id                 AS MemberId
+         , Object_Member.ObjectCode         AS MemberCode
+         , Object_Member.ValueData          AS MemberName
+         
+         , Object_MemberTrade.Id           AS MemberTradeId
+         , Object_MemberTrade.ObjectCode   AS MemberTradeCode
+         , Object_MemberTrade.ValueData    AS MemberTradeName
+         
+         , Object_Area.Id                  AS AreaId
+         , Object_Area.ValueData           AS AreaName
+        
+         , Object_PartnerTag.Id            AS PartnerTagId
+         , Object_PartnerTag.ValueData     AS PartnerTagName
                   
          , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -159,11 +179,31 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
-                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
+         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Member
+                              ON ObjectLink_Partner_Member.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Member.DescId = zc_ObjectLink_Partner_Member()
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Partner_Member.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTrade
+                              ON ObjectLink_Partner_MemberTrade.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTrade.DescId = zc_ObjectLink_Partner_MemberTrade()
+         LEFT JOIN Object AS Object_MemberTrade ON Object_MemberTrade.Id = ObjectLink_Partner_MemberTrade.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+         LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+                  
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
@@ -190,6 +230,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.11.14         * add remine
  19.10.14                                        * add GLNCode_Juridical
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  16.08.14                                        * add JuridicalGroupName

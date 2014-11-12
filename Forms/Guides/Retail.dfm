@@ -19,15 +19,13 @@ object RetailForm: TRetailForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -61,6 +59,12 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 243
+      end
+      object colGLNCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' GLN'
+        DataBinding.FieldName = 'GLNCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 140
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -105,8 +109,8 @@ object RetailForm: TRetailForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -124,7 +128,7 @@ object RetailForm: TRetailForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -323,6 +327,7 @@ object RetailForm: TRetailForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 144
     Top = 152
   end
@@ -337,6 +342,7 @@ object RetailForm: TRetailForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 216
   end

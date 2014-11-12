@@ -2,8 +2,8 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 139
-  ClientWidth = 295
+  ClientHeight = 188
+  ClientWidth = 299
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,12 +24,12 @@ object RetailEditForm: TRetailEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
+    Top = 53
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 154
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 100
+    Top = 154
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,6 +57,17 @@ object RetailEditForm: TRetailEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1050#1086#1076' GLN'
+  end
+  object edGLNCode: TcxTextEdit
+    Left = 11
+    Top = 118
+    TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
@@ -113,7 +124,15 @@ object RetailEditForm: TRetailEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inGLNCode'
+        Value = ''
+        Component = edGLNCode
+        DataType = ftString
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 104
     Top = 56
   end
@@ -149,7 +168,14 @@ object RetailEditForm: TRetailEditForm
         Value = ''
         Component = edName
         DataType = ftString
+      end
+      item
+        Name = 'GLNCode'
+        Value = ''
+        Component = edGLNCode
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 184
     Top = 16
   end
@@ -169,7 +195,7 @@ object RetailEditForm: TRetailEditForm
     Top = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
+    Left = 256
     Top = 48
   end
 end

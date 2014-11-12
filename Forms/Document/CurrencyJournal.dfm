@@ -1,112 +1,110 @@
 inherited CurrencyJournalForm: TCurrencyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
   ClientHeight = 649
-  ClientWidth = 1151
-  ExplicitWidth = 1159
-  ExplicitHeight = 683
+  ClientWidth = 910
+  ExplicitWidth = 926
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1151
+    Width = 910
     Height = 592
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 1151
+    ExplicitWidth = 894
     ExplicitHeight = 592
     ClientRectBottom = 592
-    ClientRectRight = 1151
+    ClientRectRight = 910
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1151
+      ExplicitWidth = 894
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
-        Width = 1151
+        Width = 910
         Height = 592
-        ExplicitLeft = 24
-        ExplicitWidth = 1151
+        ExplicitWidth = 894
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = clAmount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.GroupByBox = True
+          OptionsView.Footer = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 88
           end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 75
           end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clAmount: TcxGridDBColumn
-            Caption = #1050#1091#1088#1089
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taRightJustify
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
           end
           object clCurrencyFromName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1079#1085#1072#1095#1077#1085#1080#1077')'
             DataBinding.FieldName = 'CurrencyFromName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
+          object clParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
+            DataBinding.FieldName = 'ParValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clCurrencyToName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072', '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1084#1072#1103
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
             DataBinding.FieldName = 'CurrencyToName'
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 100
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 81
+            Width = 300
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1151
-    ExplicitWidth = 1151
+    Width = 910
+    ExplicitWidth = 894
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -139,6 +137,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -156,12 +155,14 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -171,20 +172,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
           Component = deStart
           DataType = ftDateTime
         end>
-    end
-    object actReCompleteAll: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spMovementReCompleteAll
-      StoredProcList = <
-        item
-          StoredProc = spMovementReCompleteAll
-        end>
-      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ImageIndex = 10
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
-      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
   end
   inherited MasterDS: TDataSource
@@ -240,10 +227,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
           ItemName = 'bbDelete'
         end
         item
-          Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -277,10 +260,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbReCompleteAll: TdxBarButton
-      Action = actReCompleteAll
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
@@ -291,8 +270,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 216
-    Top = 112
+    Left = 224
+    Top = 168
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Currency'
@@ -316,27 +295,5 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited FormParams: TdsdFormParams
     Left = 384
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_Currency'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    Left = 272
-    Top = 224
   end
 end

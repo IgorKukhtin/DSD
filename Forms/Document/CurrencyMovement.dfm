@@ -1,26 +1,26 @@
 ﻿inherited CurrencyMovementForm: TCurrencyMovementForm
   ActiveControl = ceAmount
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
-  ClientHeight = 264
-  ClientWidth = 310
+  ClientHeight = 257
+  ClientWidth = 300
   AddOnFormData.isSingle = False
-  ExplicitWidth = 316
-  ExplicitHeight = 296
+  ExplicitWidth = 306
+  ExplicitHeight = 282
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 51
+    Left = 30
     Top = 222
     Height = 26
-    ExplicitLeft = 51
+    ExplicitLeft = 30
     ExplicitTop = 222
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 195
+    Left = 174
     Top = 222
     Height = 26
-    ExplicitLeft = 195
+    ExplicitLeft = 174
     ExplicitTop = 222
     ExplicitHeight = 26
   end
@@ -40,23 +40,23 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 129
+    Width = 118
   end
   object ceAmount: TcxCurrencyEdit [5]
-    Left = 152
-    Top = 84
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Left = 8
+    Top = 80
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
     TabOrder = 5
-    Width = 129
+    Width = 118
   end
   object cxLabel7: TcxLabel [6]
-    Left = 152
+    Left = 8
     Top = 61
-    Caption = #1050#1091#1088#1089
+    Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1082#1091#1088#1089#1072
   end
   object ceCurrencyTo: TcxButtonEdit [7]
-    Left = 8
+    Left = 152
     Top = 128
     Properties.Buttons = <
       item
@@ -67,13 +67,13 @@
     Width = 118
   end
   object cxLabel6: TcxLabel [8]
-    Left = 8
+    Left = 152
     Top = 109
-    Caption = #1042#1072#1083#1102#1090#1072', '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1084#1072#1103
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1088#1077#1079#1091#1083#1100#1090#1072#1090')'
   end
   object ceCurrencyFrom: TcxButtonEdit [9]
-    Left = 8
-    Top = 84
+    Left = 152
+    Top = 80
     Properties.Buttons = <
       item
         Default = True
@@ -83,37 +83,68 @@
     Width = 118
   end
   object cxLabel8: TcxLabel [10]
-    Left = 8
+    Left = 152
     Top = 61
-    Caption = #1042#1072#1083#1102#1090#1072
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1079#1085#1072#1095#1077#1085#1080#1077')'
   end
   object cxLabel10: TcxLabel [11]
-    Left = 8
-    Top = 161
+    Left = 152
+    Top = 158
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [12]
-    Left = 8
+    Left = 152
     Top = 179
     TabOrder = 6
-    Width = 271
+    Width = 118
   end
   object edInvNumber: TcxTextEdit [13]
     Left = 8
     Top = 34
-    Enabled = False
     Properties.ReadOnly = True
     TabOrder = 13
     Text = '0'
     Width = 118
+  end
+  object ceParValue: TcxCurrencyEdit [14]
+    Left = 8
+    Top = 128
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.ReadOnly = False
+    TabOrder = 14
+    Width = 118
+  end
+  object cxLabel2: TcxLabel [15]
+    Left = 8
+    Top = 109
+    Caption = #1053#1086#1084#1080#1085#1072#1083
+  end
+  object edPaidKind: TcxButtonEdit [16]
+    Left = 8
+    Top = 179
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 118
+  end
+  object cxLabel3: TcxLabel [17]
+    Left = 8
+    Top = 158
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
     Top = 170
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 160
-    Top = 114
+    Left = 64
+    Top = 98
   end
   inherited ActionList: TActionList
     Left = 247
@@ -137,8 +168,8 @@
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 114
+    Left = 72
+    Top = 154
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Currency'
@@ -172,6 +203,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inParValue'
+        Value = 0d
+        Component = ceParValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'incomment'
         Value = ''
         Component = ceComment
@@ -193,39 +231,11 @@
         ParamType = ptInput
       end
       item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 256
     Top = 168
@@ -249,6 +259,7 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -275,6 +286,12 @@
         Name = 'Amount'
         Value = 0.000000000000000000
         Component = ceAmount
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParValue'
+        Value = ''
+        Component = ceParValue
         DataType = ftFloat
       end
       item
@@ -308,71 +325,22 @@
         Component = CurrencyToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
       end
       item
-        Value = ''
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
       end>
-    Left = 16
-    Top = 176
+    Left = 248
+    Top = 112
   end
   object CurrencyToGuides: TdsdGuides
     KeyField = 'Id'
@@ -395,8 +363,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 56
-    Top = 119
+    Left = 160
+    Top = 71
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -439,7 +407,34 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 48
-    Top = 69
+    Left = 96
+    Top = 13
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 11
+    Top = 176
   end
 end

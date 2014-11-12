@@ -562,13 +562,13 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 49
-    Width = 328
+    Width = 162
   end
   object ceisPersonal: TcxCheckBox [50]
     Left = 222
     Top = 10
     Caption = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
-    TabOrder = 51
+    TabOrder = 50
     Width = 122
   end
   object ceIsUnique: TcxCheckBox [51]
@@ -577,6 +577,17 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
     TabOrder = 55
     Width = 108
+  end
+  object cxLabel22: TcxLabel [52]
+    Left = 185
+    Top = 408
+    Caption = #1050#1086#1076' GLN'
+  end
+  object edGLNCode: TcxTextEdit [53]
+    Left = 184
+    Top = 423
+    TabOrder = 57
+    Width = 160
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -929,6 +940,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inGLNCode'
+        Value = ''
+        Component = edGLNCode
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inSigningDate'
         Value = 0d
         Component = edSigningDate
@@ -1266,6 +1284,12 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end
       item
+        Name = 'GLNCode'
+        Value = ''
+        Component = edGLNCode
+        DataType = ftString
+      end
+      item
         Name = 'JuridicalBasisId'
         Value = ''
         Component = MainJuridicalGuides
@@ -1454,8 +1478,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 293
-    Top = 334
+    Left = 245
+    Top = 326
   end
   object ContractArticleGuides: TdsdGuides
     KeyField = 'Id'
@@ -2156,8 +2180,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 347
-    Top = 385
+    Left = 67
+    Top = 409
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'

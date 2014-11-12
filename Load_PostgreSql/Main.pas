@@ -11270,7 +11270,7 @@ begin
 
         if (cbBill_List.Checked)
         then
-             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.InvNumber'
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.InvNumber_my'
                 +'                           and _pgBillLoad.FromId=Bill.FromId')
         else
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then

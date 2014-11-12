@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Currency(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             
-             , Amount TFloat
+             , Amount TFloat, ParValue TFloat
              , Comment TVarChar
              , CurrencyFromName TVarChar
              , CurrencyToName TVarChar
+             , PaidKindName TVarChar
              )
 AS
 $BODY$
@@ -41,12 +41,15 @@ BEGIN
 
 
            , MovementItem.Amount             AS Amount
+           , MIFloat_ParValue.ValueData   AS ParValue
 
            , MIString_Comment.ValueData      AS Comment
 
            , Object_CurrencyFrom.ValueData   AS CurrencyFromName
            
            , Object_CurrencyTo.ValueData     AS CurrencyToName
+
+           , Object_PaidKind.ValueData       AS PaidKindName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Currency()
@@ -59,6 +62,9 @@ BEGIN
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_CurrencyFrom ON Object_CurrencyFrom.Id = MovementItem.ObjectId
 
+            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -68,6 +74,10 @@ BEGIN
                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = MILinkObject_CurrencyTo.ObjectId
           
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
       ;
   
 END;
@@ -78,6 +88,7 @@ ALTER FUNCTION gpSelect_Movement_Currency (TDateTime, TDateTime, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 10.11.14                                        * add ParValue
  28.07.14         *
 */
 

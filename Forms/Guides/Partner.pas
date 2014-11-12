@@ -81,6 +81,10 @@ type
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
     actChoicePersonalTake: TOpenChoiceForm;
+    colAreaName: TcxGridDBColumn;
+    colPartnerTagName: TcxGridDBColumn;
+    colMemberName: TcxGridDBColumn;
+    colMemberTradeName: TcxGridDBColumn;
   private
     { Private declarations }
   public
