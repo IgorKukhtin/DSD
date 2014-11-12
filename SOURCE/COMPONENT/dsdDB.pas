@@ -715,7 +715,7 @@ begin
         result := GetFromCrossDBViewAddOn;
      if Component is TPivotAddOn then
         result := (Component as TPivotAddOn).GetCurrentData;
-     if Component is TcxCustomTextEdit then
+     if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
      if Component is TcxButtonEdit then
         Result := (Component as TcxButtonEdit).Text;
