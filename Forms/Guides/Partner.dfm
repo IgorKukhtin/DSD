@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 985
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -477,6 +476,7 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -528,11 +528,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
@@ -549,11 +551,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
@@ -566,23 +570,27 @@ object PartnerForm: TPartnerForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -621,11 +629,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
@@ -642,11 +652,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RouteSortingName'
           DataType = ftString
@@ -663,11 +675,13 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalTakeId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalTakeName'
           DataType = ftString
@@ -701,6 +715,7 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -748,12 +763,14 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inStartPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
@@ -761,6 +778,7 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inEndPromo'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
@@ -768,30 +786,35 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inRouteId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalTakeId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput

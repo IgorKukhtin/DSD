@@ -97,6 +97,16 @@ type
     ContactPersonChoiceOrderForm: TOpenChoiceForm;
     ContactPersonChoiceActForm: TOpenChoiceForm;
     ContactPersonChoiceDocForm: TOpenChoiceForm;
+    colMemberTakeName: TcxGridDBColumn;
+    colMemberTradeName: TcxGridDBColumn;
+    colMemberName: TcxGridDBColumn;
+    colAreaName: TcxGridDBColumn;
+    colPartnerTagName: TcxGridDBColumn;
+    MemberTakeChoiceForm: TOpenChoiceForm;
+    MemberTradeChoiceForm: TOpenChoiceForm;
+    MemberChoiceForm: TOpenChoiceForm;
+    AreaChoiceForm: TOpenChoiceForm;
+    PartnerTagChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
