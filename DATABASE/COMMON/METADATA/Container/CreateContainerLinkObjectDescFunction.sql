@@ -112,13 +112,17 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_ServiceDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
-  SELECT 'zc_ContainerLinkObject_ServiceDate', ' Месяц начислений', zc_Object_ServiceDate() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate');
+  SELECT 'zc_ContainerLinkObject_ServiceDate', 'Месяц начислений', zc_Object_ServiceDate() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_ServiceDate');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Currency() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Currency', 'Валюта', zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Currency');
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.11.14                                        * add zc_ContainerLinkObject_Currency
  04.09.14                                                        * + zc_ContainerLinkObject_ServiceDate
  04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch
  04.09.14                                        * add zc_ContainerLinkObject_Founder and zc_ContainerLinkObject_Branch and zc_ContainerLinkObject_ServiceDate

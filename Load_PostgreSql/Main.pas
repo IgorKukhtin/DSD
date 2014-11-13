@@ -14910,7 +14910,7 @@ begin
                                  +'      , MS_InvNumberMark.ValueData AS InvNumberMark'
                                  +' from Movement'
                                  +'      left join MovementDate AS MD_OperDatePartner on MD_OperDatePartner.MovementId = Movement.Id and MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()'
-                                 +'      left join MovementString AS MS_InvNumberPartner on MS_InvNumberPartner.MovementId = Movement.Id and MS_InvNumberMark.DescId = zc_MovementString_InvNumberPartner()'
+                                 +'      left join MovementString AS MS_InvNumberPartner on MS_InvNumberPartner.MovementId = Movement.Id and MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()'
                                  +'      left join MovementString AS MS_InvNumberMark on MS_InvNumberMark.MovementId = Movement.Id and MS_InvNumberMark.DescId = zc_MovementString_InvNumberMark()'
                                  +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
                   OperDate:=toSqlQuery.FieldByName('OperDate').AsDateTime;

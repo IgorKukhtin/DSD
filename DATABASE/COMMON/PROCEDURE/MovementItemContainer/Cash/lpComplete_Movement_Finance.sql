@@ -10,6 +10,8 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
+     IF EXISTS (SELECT CurrencyId FROM _tmpItem WHERE CurrencyId <> 0) THEN RAISE EXCEPTION 'CurrencyId'; END IF;
+
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
