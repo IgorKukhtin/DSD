@@ -99,6 +99,9 @@ type
     JuridicalGroupGuides: TdsdGuides;
     colContractConditionKindName: TcxGridDBColumn;
     colContractConditionValue: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

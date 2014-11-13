@@ -1,26 +1,26 @@
 inherited Report_BankAccountForm: TReport_BankAccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091'>'
   ClientHeight = 555
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 590
+  ClientWidth = 965
+  ExplicitWidth = 973
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1020
+    Width = 965
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
-    ClientRectRight = 1020
+    ClientRectRight = 965
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 965
         Height = 472
         ExplicitWidth = 1020
         ExplicitHeight = 472
@@ -112,6 +112,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -325,7 +326,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 965
     Height = 57
     ExplicitWidth = 1020
     ExplicitHeight = 57
@@ -386,6 +387,23 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       Left = 209
       Top = 6
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+    end
+    object cxLabel10: TcxLabel
+      Left = 837
+      Top = 6
+      Caption = #1042#1072#1083#1102#1090#1072':'
+    end
+    object edCurrency: TcxButtonEdit
+      Left = 837
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 68
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -487,31 +505,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -524,36 +548,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -582,31 +612,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -619,36 +655,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -676,31 +718,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -713,36 +761,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -771,31 +825,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -808,36 +868,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -866,31 +932,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -903,36 +975,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -961,31 +1039,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -998,36 +1082,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1056,31 +1146,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1093,36 +1189,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1151,31 +1253,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1188,36 +1296,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1246,31 +1360,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1283,36 +1403,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1341,31 +1467,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1378,36 +1510,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1436,31 +1574,37 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'PartnerId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'ContractId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'PaidKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
         end
@@ -1473,36 +1617,42 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'PartnerName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
         end
         item
           Name = 'PaidKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1780,6 +1930,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 232
   end
@@ -1983,6 +2134,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 639
     Top = 288
   end
@@ -1997,5 +2149,32 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Params = <>
     Left = 724
     Top = 334
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 856
+    Top = 24
   end
 end

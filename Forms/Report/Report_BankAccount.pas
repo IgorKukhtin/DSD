@@ -61,6 +61,9 @@ type
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
