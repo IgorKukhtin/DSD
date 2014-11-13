@@ -79,6 +79,7 @@ type
     actDocument: TdsdExecStoredProc;
     bbDocument: TdxBarButton;
     colContractCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

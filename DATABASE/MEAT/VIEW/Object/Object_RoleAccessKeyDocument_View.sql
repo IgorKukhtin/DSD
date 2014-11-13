@@ -60,6 +60,11 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                               , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+
+                                               , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                               , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
+                                               , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
                                                 )
                                           THEN TRUE
                                      ELSE NULL

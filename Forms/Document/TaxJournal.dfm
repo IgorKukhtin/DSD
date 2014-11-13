@@ -88,6 +88,7 @@ inherited TaxJournalForm: TTaxJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -96,18 +97,26 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 63
           end
-          object colIsError: TcxGridDBColumn [1]
+          object colBranchName: TcxGridDBColumn [1]
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colIsError: TcxGridDBColumn [2]
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          inherited colOperDate: TcxGridDBColumn [2]
+          inherited colOperDate: TcxGridDBColumn [3]
             HeaderAlignmentHorz = taCenter
             Width = 57
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             Visible = False
             HeaderAlignmentHorz = taCenter

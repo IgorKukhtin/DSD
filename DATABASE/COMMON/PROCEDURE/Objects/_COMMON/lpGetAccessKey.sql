@@ -38,9 +38,13 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut()
                        , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
                        , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
+                       , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                       , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                       , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
+                       , 0
                         )
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)
+           inUserId := (SELECT MAX (Object_Process_User_View.UserId) FROM Object_Process_User_View JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId WHERE Object_Process_User_View.ProcessId = inProcessId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr());
       ELSE
       -- Service
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -62,7 +66,7 @@ BEGIN
       THEN
            inUserId := (SELECT MAX (UserId) FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin());
       ELSE
-          RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+          RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа к документу.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
 
       END IF;
       END IF;
@@ -104,8 +108,12 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Inventory()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
+
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
                                                                                                   )
                                                                                   )
@@ -120,8 +128,12 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Inventory()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
+
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
                                                                                                           )
                                                                                   )
@@ -168,8 +180,12 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Inventory()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
+
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
                                                                                                    )
                                                                                   )
@@ -184,8 +200,12 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Inventory()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
+
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
                                                                                                           )
                                                                                   )
