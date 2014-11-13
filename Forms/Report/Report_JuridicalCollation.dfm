@@ -1,26 +1,26 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 424
+  ClientWidth = 1110
+  ExplicitWidth = 1118
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1020
+    Width = 1110
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1020
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 1020
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1110
         Height = 309
         ExplicitWidth = 1020
         ExplicitHeight = 309
@@ -88,6 +88,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -319,7 +320,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1110
     Height = 54
     ExplicitWidth = 1020
     ExplicitHeight = 54
@@ -448,6 +449,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 180
+    end
+    object cxLabel10: TcxLabel
+      Left = 1029
+      Top = 6
+      Caption = #1042#1072#1083#1102#1090#1072':'
+    end
+    object edCurrency: TcxButtonEdit
+      Left = 1029
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 68
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1395,5 +1413,32 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 720
     Top = 29
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1048
+    Top = 8
   end
 end

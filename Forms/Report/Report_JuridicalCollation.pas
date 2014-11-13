@@ -73,6 +73,9 @@ type
     colOperationSort: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
     colContractComment: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
