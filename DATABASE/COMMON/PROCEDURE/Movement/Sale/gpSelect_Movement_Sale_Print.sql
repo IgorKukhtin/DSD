@@ -406,9 +406,11 @@ BEGIN
                                 AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
             LEFT JOIN (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId
                        FROM ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
-                            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                            JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
                                                  ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
                                                 AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+                                                AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
+
                        WHERE ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
                          AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId IS NULL
                       ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!не ошибка!!!, выбирается с пустой УП
@@ -724,6 +726,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.14                                                       * fix
  12.11.14                                        * add AmountOrder
  17.10.14                                                       *
  13.05.14                                                       * Amount_Weight Amount_Sh
@@ -755,7 +758,8 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 130359, inSession:= '2');
+ SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 570596, inSession:= '5');
+
 COMMIT;
 */
 -- тест
