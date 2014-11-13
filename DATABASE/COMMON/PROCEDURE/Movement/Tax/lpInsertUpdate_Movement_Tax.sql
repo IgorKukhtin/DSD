@@ -23,10 +23,8 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbBranchId Integer;
 BEGIN
-     -- определяем ключ доступа
-     -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
-
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
      THEN
@@ -50,6 +48,9 @@ BEGIN
          ioInvNumberPartner:= lpInsertFind_Object_InvNumberTax (zc_Movement_Tax(), inOperDate) ::TVarChar;
      END IF;
 
+
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -84,6 +85,25 @@ BEGIN
      -- сохранили связь с <Тип формирования налогового документа>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
 
+     -- определяется филиал
+     vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+                  END;
+     -- проверка
+     IF COALESCE (vbBranchId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
+     END IF;
+     -- сохранили связь с <филиал>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
+
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -100,6 +120,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.14                                        * add vbBranchId
+ 13.11.14                                        * add vbAccessKeyId
  02.05.14                                        * add если надо, создаем <Номер документа>
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                       * add inInvNumberBranch

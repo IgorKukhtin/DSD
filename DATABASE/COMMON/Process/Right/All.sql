@@ -38,6 +38,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceDnepr() RETURNS Inte
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -162,32 +163,39 @@ BEGIN
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceKiev');
 
 
-                                   
+
+ -- по Филиалу ограничиваются Документы для товаров
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentAll()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 41
+                                   , inName:= 'Документы товарные все (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentAll');
+
  -- по Филиалу ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentDnepr()
                                    , inDescId:= zc_Object_Process()
-                                   , inCode:= 41
+                                   , inCode:= 42
                                    , inName:= 'Документы товарные Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentDnepr');
 
  -- по Филиалу ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentBread()
                                    , inDescId:= zc_Object_Process()
-                                   , inCode:= 42
+                                   , inCode:= 43
                                    , inName:= 'Документы товарные Хлеб (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentBread');
                                    
  -- по Филиалу ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentKiev()
                                    , inDescId:= zc_Object_Process()
-                                   , inCode:= 43
+                                   , inCode:= 44
                                    , inName:= 'Документы товарные Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentKiev');
 
  -- по Филиалу ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentZaporozhye()
                                    , inDescId:= zc_Object_Process()
-                                   , inCode:= 44
+                                   , inCode:= 45
                                    , inName:= 'Документы товарные Запорожье (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentZaporozhye');
 
@@ -318,6 +326,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  23.09.14                                        * add zc_Enum_Process_AccessKey_PeriodClose...
  17.09.14                                        * add zc_Enum_Process_AccessKey_PersonalServiceFirstForm
  10.09.14                                        * add zc_Enum_Process_AccessKey_PersonalService...

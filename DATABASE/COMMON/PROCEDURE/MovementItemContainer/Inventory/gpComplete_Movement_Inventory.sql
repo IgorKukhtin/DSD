@@ -461,10 +461,6 @@ BEGIN
        WHERE (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) <> 0;
 
 
-     -- для теста-1
-     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItem.MovementItemId, inMovementId, vbOperDate, vbUnitId, vbMemberId, vbBranchId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.OperSumm, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, vbJuridicalId_Basis, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
-     -- return;
-
 
      -- заполняем таблицу - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
@@ -477,16 +473,13 @@ BEGIN
              (SELECT _tmpItem.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
-                     -- есть ошибка, вообще остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
-                   , CASE WHEN Container_Summ.ParentId IS NULL THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   -- есть ошибка, вообще остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
+                   -- , CASE WHEN Container_Summ.ParentId IS NULL THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   , _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS OperSumm
               FROM _tmpItem
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
-                                                        AND 1=0
-                   /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Basis
-                                                 ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                                AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
-                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id -- ContainerObjectCost_Basis.ObjectCostId
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
             UNION ALL
               -- это расчетные остатки (их надо вычесть)

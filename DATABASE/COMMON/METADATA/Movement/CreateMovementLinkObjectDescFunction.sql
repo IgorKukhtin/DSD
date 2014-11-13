@@ -165,8 +165,11 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalServiceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PersonalServiceList', 'Ведомости начисления' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalServiceList');
-
-
+  
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Branch', 'Филиал' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Branch');
+  
 --CREATE OR REPLACE FUNCTION zc_MovementLinkObject_DocumentMaster() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DocumentMaster'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 --INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 --  SELECT 'zc_MovementLinkObject_DocumentMaster', 'Документ' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DocumentMaster');
@@ -178,6 +181,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.14                                        * add zc_MovementLinkObject_Branch
  12.09.14         * add zc_MovementLinkObject_PersonalServiceList() 
  09.02.14                                                       * add zc_MovementLinkObject_ArticleLoss
  23.07.14         * add zc_MovementLinkObject_CurrencyDocument

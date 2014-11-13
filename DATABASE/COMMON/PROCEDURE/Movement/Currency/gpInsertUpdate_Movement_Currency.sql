@@ -60,11 +60,11 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
      -- 5.3. проводим Документ
- --    IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())
- --    THEN
- --         PERFORM lpComplete_Movement_Currency (inMovementId := ioId
- --                                             , inUserId     := vbUserId);
- --    END IF;
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())
+     THEN
+          PERFORM lpComplete_Movement_Currency (inMovementId := ioId
+                                              , inUserId     := vbUserId);
+     END IF;
 
 END;
 $BODY$

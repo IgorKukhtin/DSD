@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child Integer
              , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , InvNumberBranch TVarChar
+             , InvNumberBranch TVarChar, BranchName TVarChar
              , isEDI Boolean
              , isElectron Boolean
               )
@@ -43,6 +43,14 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
+        , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
+        , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                        )
+        , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
+                              )
      SELECT
              Movement.Id                                AS Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -108,20 +116,25 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
-           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
+           , Object_Branch.ValueData                  AS BranchName
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
 
-       FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
-               WHERE inIsRegisterDate = FALSE
-
-             UNION ALL SELECT MovementDate_DateRegistered.movementid  AS Id FROM MovementDate AS MovementDate_DateRegistered
-                        JOIN Movement ON Movement.Id = MovementDate_DateRegistered.MovementId AND Movement.DescId = zc_Movement_TaxCorrective()
-                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                       WHERE inIsRegisterDate = TRUE AND MovementDate_DateRegistered.ValueData BETWEEN inStartDate AND inEndDate
-                         AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+       FROM (SELECT Movement.Id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsRegisterDate = FALSE
+            UNION ALL
+             SELECT MovementDate_DateRegistered.MovementId AS Id
+             FROM MovementDate AS MovementDate_DateRegistered
+                  JOIN Movement ON Movement.Id = MovementDate_DateRegistered.MovementId AND Movement.DescId = zc_Movement_TaxCorrective()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsRegisterDate = TRUE AND MovementDate_DateRegistered.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
             ) AS tmpMovement
 
             JOIN Movement ON Movement.id = tmpMovement.id
@@ -226,6 +239,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
                                          ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                            ON MovementLinkMovement_Child.MovementId = Movement.Id
