@@ -131,6 +131,7 @@ inherited SaleJournalForm: TSaleJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -864,10 +865,10 @@ inherited SaleJournalForm: TSaleJournalForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintInvoice
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintInvoice
         end>
       Caption = #1048#1085#1074#1086#1081#1089
       Hint = #1048#1085#1074#1086#1081#1089
@@ -1676,5 +1677,28 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 359
     Top = 384
+  end
+  object spSelectPrintInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 447
+    Top = 416
   end
 end
