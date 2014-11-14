@@ -1,12 +1,15 @@
 -- Function: gpReport_BankAccount
 
 DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_BankAccount(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
     IN inAccountId        Integer,    -- Счет
     IN inBankAccountId    Integer,    -- Счет банк
+    IN inCurrencyId       Integer   , -- Валюта
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
@@ -145,11 +148,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.11.14         * add inCurrencyId
  27.09.14                                        *
  10.09.14                                                        *
 */

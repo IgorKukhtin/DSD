@@ -12,18 +12,18 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Height = 473
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1044
-    ExplicitHeight = 472
+    ExplicitWidth = 1112
+    ExplicitHeight = 473
     ClientRectBottom = 473
     ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1044
-      ExplicitHeight = 472
+      ExplicitWidth = 1112
+      ExplicitHeight = 473
       inherited cxGrid: TcxGrid
         Width = 1112
         Height = 473
-        ExplicitWidth = 1044
-        ExplicitHeight = 472
+        ExplicitWidth = 1112
+        ExplicitHeight = 473
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -781,7 +781,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   inherited Panel: TPanel
     Width = 1112
     Height = 57
-    ExplicitWidth = 1044
+    ExplicitWidth = 1112
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60
@@ -2498,6 +2498,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Name = 'inJuridicalGroupId'
         Value = ''
         Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
