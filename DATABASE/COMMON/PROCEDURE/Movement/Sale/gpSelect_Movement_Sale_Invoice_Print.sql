@@ -286,9 +286,30 @@ BEGIN
            , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
            , BankAccount_To.Name                                AS BankAccount_Int
 
+           , Object_CurrencyPartner.Id                          AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData                   AS CurrencyPartnerName
+           , Object_Currency_View.InternalName                  AS IntCurShortName
+           , Object_Currency_View.Name                          AS IntCurName
+
+
 
 
        FROM Movement
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+            LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementFloat AS MF_CurrencyPartnerNominalValue
+                                    ON MF_CurrencyPartnerNominalValue.MovementId =  Movement.Id
+                                   AND MF_CurrencyPartnerNominalValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MF_CurrencyPartnerValue
+                                    ON MF_CurrencyPartnerValue.MovementId =  Movement.Id
+                                   AND MF_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+
+
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
