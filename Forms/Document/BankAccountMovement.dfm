@@ -172,7 +172,7 @@
     Top = 60
     Caption = #1050#1091#1088#1089
   end
-  object ceCurrencyValue: TcxCurrencyEdit [23]
+  object ceCurrencyPartnerValue: TcxCurrencyEdit [23]
     Left = 280
     Top = 80
     Properties.DecimalPlaces = 4
@@ -186,7 +186,7 @@
     Top = 60
     Caption = #1053#1086#1084#1080#1085#1072#1083
   end
-  object ceParValue: TcxCurrencyEdit [25]
+  object ceParPartnerValue: TcxCurrencyEdit [25]
     Left = 358
     Top = 80
     EditValue = 1.000000000000000000
@@ -315,6 +315,20 @@
         Value = ''
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyPartnerValue'
+        Value = Null
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParPartnerValue'
+        Value = Null
+        Component = ceParPartnerValue
+        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 456
@@ -453,15 +467,15 @@
         ComponentItem = 'TextValue'
       end
       item
-        Name = 'CurrencyValue'
+        Name = 'CurrencyPartnerValue'
         Value = Null
-        Component = ceCurrencyValue
+        Component = ceCurrencyPartnerValue
         DataType = ftFloat
       end
       item
-        Name = 'ParValue'
+        Name = 'ParPartnerValue'
         Value = Null
-        Component = ceParValue
+        Component = ceParPartnerValue
         DataType = ftFloat
       end>
     Left = 408
@@ -470,9 +484,9 @@
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBankAccount
-    FormNameParam.Value = 'TBankAccountForm'
+    FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBankAccountForm'
+    FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -523,14 +537,14 @@
       item
         Name = 'CurrencyValue'
         Value = Null
-        Component = ceCurrencyValue
+        Component = ceCurrencyPartnerValue
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'ParValue'
         Value = Null
-        Component = ceParValue
+        Component = ceParPartnerValue
         DataType = ftFloat
         ParamType = ptInput
       end

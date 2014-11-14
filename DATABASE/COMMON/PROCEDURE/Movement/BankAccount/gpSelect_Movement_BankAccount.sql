@@ -10,8 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , AmountIn TFloat 
-             , AmountOut TFloat 
+             , AmountIn TFloat
+             , AmountOut TFloat
+             , AmountCurrency TFloat
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
@@ -21,7 +22,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
              , UnitName TVarChar
              , CurrencyName TVarChar
-             , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar)
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -52,10 +56,12 @@ BEGIN
                       0
                   END::TFloat AS AmountIn
            , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
+                       -1 * MovementItem.Amount
                   ELSE
                       0
                   END::TFloat AS AmountOut
+           , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
+
            , MIString_Comment.ValueData        AS Comment
            , Object_BankAccount_View.Name      AS BankAccountName
            , Object_BankAccount_View.BankName  AS BankName
@@ -74,6 +80,10 @@ BEGIN
            , Object_Contract_InvNumber_View.ContractTagName
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
+           , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
+           , MovementFloat_ParValue.ValueData                  AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
            , Partner_BankAccount_View.Name      AS BankAccountName
@@ -84,6 +94,22 @@ BEGIN
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpStatus.StatusId
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id
@@ -123,8 +149,8 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                         ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
@@ -140,6 +166,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 14.11.14                                        * add Currency...
  27.09.14                                        * add ContractTagName
  18.06.14                         * add Object_BankAccount_View
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank

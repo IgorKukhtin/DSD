@@ -39,9 +39,9 @@ type
     CurrencyGuides: TdsdGuides;
     edInvNumber: TcxTextEdit;
     cxLabel11: TcxLabel;
-    ceCurrencyValue: TcxCurrencyEdit;
+    ceCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
-    ceParValue: TcxCurrencyEdit;
+    ceParPartnerValue: TcxCurrencyEdit;
     ceBank: TcxButtonEdit;
     cxLabel13: TcxLabel;
     BankGuides: TdsdGuides;
