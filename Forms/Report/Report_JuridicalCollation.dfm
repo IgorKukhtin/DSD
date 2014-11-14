@@ -2,6 +2,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 1110
+  ExplicitLeft = -120
   ExplicitWidth = 1118
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -12,17 +13,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1110
     ExplicitHeight = 309
     ClientRectBottom = 309
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1110
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 309
-        ExplicitWidth = 1020
+        ExplicitWidth = 1110
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -322,7 +323,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 1110
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1110
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -901,6 +902,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>

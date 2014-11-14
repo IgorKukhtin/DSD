@@ -2,6 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate        TDateTime , -- 
@@ -11,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inContractId       Integer,    -- Договор
     IN inAccountId        Integer,    -- Счет 
     IN inPaidKindId       Integer   , --
-    IN inInfoMoneyId      Integer,    -- Управленческая статья  
+    IN inInfoMoneyId      Integer,    -- Управленческая статья 
+    IN inCurrencyId       Integer   , -- Валюта 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementSumm TFloat, 
@@ -286,11 +290,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.14         * add inCurrencyId
  21.08.14                                        * add ContractComment
  03.07.14                                        * add InvNumberPartner
  16.05.14                                        * add Operation.OperDate

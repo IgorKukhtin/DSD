@@ -12,17 +12,17 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1020
+    ExplicitWidth = 965
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 965
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 965
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 965
         Height = 472
-        ExplicitWidth = 1020
+        ExplicitWidth = 965
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -328,7 +328,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   inherited Panel: TPanel
     Width = 965
     Height = 57
-    ExplicitWidth = 1020
+    ExplicitWidth = 965
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -1736,8 +1736,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         ParamType = ptInput
       end
       item
+        Name = 'inCurrencyId'
         Value = ''
-        ParamType = ptUnknown
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = ''

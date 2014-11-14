@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
@@ -13,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
     IN inJuridicalGroupId Integer   , --
+    IN inCurrencyId       Integer   , -- Валюта
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
@@ -296,11 +299,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.14         * add inCurrencyId
  10.10.14                                        * add tmpContractCondition
  13.09.14                                        * add inJuridicalGroupId
  13.09.14                                        * add PersonalTradeName
