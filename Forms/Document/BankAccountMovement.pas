@@ -34,13 +34,17 @@ type
     ContractGuides: TdsdGuides;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    cxLabel4: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     ceCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
     edInvNumber: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    ceCurrencyValue: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    ceParValue: TcxCurrencyEdit;
+    ceBank: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    BankGuides: TdsdGuides;
   private
     { Private declarations }
   public

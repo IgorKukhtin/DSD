@@ -13,12 +13,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountIn TFloat 
              , AmountOut TFloat 
              , Comment TVarChar
-             , BankAccountId Integer, BankAccountName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar, BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              )
 AS
 $BODY$
@@ -46,6 +48,8 @@ BEGIN
            , ''::TVarChar                                      AS Comment
            , 0                                                 AS BankAccountId
            , '':: TVarChar                                     AS BankAccountName
+           , 0                                                 AS BankId
+           , '':: TVarChar                                     AS BankName
            , 0                                                 AS MoneyPlaceId
            , CAST ('' as TVarChar)                             AS MoneyPlaceName
            , 0                                                 AS InfoMoneyId
@@ -56,6 +60,10 @@ BEGIN
            , CAST ('' as TVarChar)                             AS UnitName
            , 0                                                 AS CurrencyId
            , CAST ('' as TVarChar)                             AS CurrencyName
+           , 0 :: TFloat                                       AS CurrencyValue
+           , 0 :: TFloat                                       AS ParValue
+           , 0 :: TFloat                                       AS CurrencyPartnerValue
+           , 0 :: TFloat                                       AS ParPartnerValue
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
       ;
@@ -86,8 +94,10 @@ BEGIN
 
            , MIString_Comment.ValueData        AS Comment
 
-           , Object_BankAccount.Id             AS BankAccountId
-           , Object_BankAccount.ValueData      AS BankAccountName
+           , View_BankAccount.Id       AS BankAccountId
+           , View_BankAccount.BankName AS BankAccountName
+           , View_BankAccount.BankId
+           , View_BankAccount.BankName
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , View_InfoMoney.InfoMoneyId
@@ -98,12 +108,29 @@ BEGIN
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.Id                AS CurrencyId
            , Object_Currency.ValueData         AS CurrencyName
+           , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
+           , MovementFloat_ParValue.ValueData                  AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = MovementItem.ObjectId
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN Object_BankAccount_View AS View_BankAccount ON View_BankAccount.Id = MovementItem.ObjectId
  
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -151,4 +178,4 @@ ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 0, inMovementId_Value: = 258394, null :: TDateTime, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 0, inMovementId_Value:= 258394, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());

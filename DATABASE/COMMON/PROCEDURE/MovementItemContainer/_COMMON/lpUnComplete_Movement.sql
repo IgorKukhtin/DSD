@@ -22,6 +22,9 @@ BEGIN
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
 
+  -- для Админа  - Все Права
+  IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+  THEN 
   -- проверка прав для <AccessKey>
   IF vbDescId = zc_Movement_Sale()
   THEN 
@@ -54,6 +57,7 @@ BEGIN
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
       END IF;
+  END IF;
   END IF;
   END IF;
   END IF;
