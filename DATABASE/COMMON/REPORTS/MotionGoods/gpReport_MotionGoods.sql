@@ -4,14 +4,14 @@ DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Int
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
-    IN inStartDate          TDateTime , -- 
+    IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
     IN inUnitGroupId        Integer,    -- группа подразделений на самом деле это подразделение
-    IN inLocationId         Integer,    -- 
-    IN inGoodsGroupId       Integer,    -- группа товара 
+    IN inLocationId         Integer,    --
+    IN inGoodsGroupId       Integer,    -- группа товара
     IN inGoodsId            Integer,    -- товар
-    IN inIsInfoMoney        Boolean,    -- 
+    IN inIsInfoMoney        Boolean,    --
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
@@ -78,6 +78,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
              , ContainerId_Summ Integer
+             , LineNum Integer
+
               )
 AS
 $BODY$
@@ -94,21 +96,21 @@ BEGIN
        inIsInfoMoney:= FALSE;
    END IF;
 
-    -- таблица - 
+    -- таблица -
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpContainer_Count (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, Amount TFloat) ON COMMIT DROP;
 
 
-    IF inGoodsGroupId <> 0 
-    THEN 
+    IF inGoodsGroupId <> 0
+    THEN
         INSERT INTO _tmpGoods (GoodsId)
            SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE IF inGoodsId <> 0 
-         THEN 
+    ELSE IF inGoodsId <> 0
+         THEN
              INSERT INTO _tmpGoods (GoodsId)
               SELECT inGoodsId;
-         ELSE 
+         ELSE
              INSERT INTO _tmpGoods (GoodsId)
               SELECT Id FROM Object WHERE DescId = zc_Object_Goods() AND (inUnitGroupId <> 0 OR inLocationId <> 0)
              UNION
@@ -116,13 +118,13 @@ BEGIN
          END IF;
     END IF;
 
-    IF inUnitGroupId <> 0 
-    THEN 
+    IF inUnitGroupId <> 0
+    THEN
         INSERT INTO _tmpLocation (LocationId)
            SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup;
-    ELSE 
-        IF inLocationId <> 0 
-        THEN 
+    ELSE
+        IF inLocationId <> 0
+        THEN
             INSERT INTO _tmpLocation (LocationId)
                SELECT inLocationId;
         ELSE
@@ -133,7 +135,7 @@ BEGIN
                SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
               UNION ALL
                SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
-        END IF;      
+        END IF;
     END IF;
 
 
@@ -175,16 +177,16 @@ BEGIN
              SELECT ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, Amount FROM tmpContainer_Count;
 /*
      IF (SELECT COUNT(*) FROM _tmpContainer_Count) <= 300
-     THEN 
+     THEN
   */
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpContainer_Count;
-   
+
          -- !!!!!!!!!!!!!!!!!!!!!!!
          -- !!!старт!!! ЕСЛИ <= 300
          -- !!!!!!!!!!!!!!!!!!!!!!!
-      RETURN QUERY 
+      RETURN QUERY
     WITH tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
                                        , tmpContainer_Count.LocationId
                                        , tmpContainer_Count.GoodsId
@@ -398,13 +400,12 @@ BEGIN
 
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
         , View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
-
         , ObjectDesc.ItemName            AS LocationDescName
         , Object_Location.ObjectCode     AS LocationCode
         , Object_Location.ValueData      AS LocationName
         , Object_Car.ObjectCode          AS CarCode
         , Object_Car.ValueData           AS CarName
-        , Object_GoodsGroup.ValueData    AS GoodsGroupName 
+        , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
         , Object_Goods.ObjectCode        AS GoodsCode
         , Object_Goods.ValueData         AS GoodsName
@@ -532,8 +533,9 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyName_all AS InfoMoneyName_all_Detail
 
         , tmpMIContainer_group.ContainerId_Summ
+        , CAST (row_number() OVER () AS INTEGER) AS LineNum
 
-      FROM 
+      FROM
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.ContainerId_Summ
               , tmpMIContainer_all.LocationId
@@ -731,7 +733,7 @@ BEGIN
                 , tmpMIContainer_all.PartionGoodsId
                 , tmpMIContainer_all.AssetToId
         ) AS tmpMIContainer_group
-      
+
         LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                       ON CLO_InfoMoney.ContainerId = tmpMIContainer_group.ContainerId_Summ
                                      AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -762,7 +764,7 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+        LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
@@ -783,7 +785,8 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.11.14                                                       * add LineNum
  23.10.14                                        * add inAccountGroupId and inIsInfoMoney
  23.08.14                                        * add Account...
  12.08.14                                        * add ContainerId
@@ -792,5 +795,5 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, ioIsInfoMoney:= FALSE, inSession:= '2') 
+-- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, ioIsInfoMoney:= FALSE, inSession:= '2')
 -- SELECT * from gpReport_MotionGoods (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  ioIsInfoMoney:= TRUE, inSession := '5');

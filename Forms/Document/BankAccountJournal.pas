@@ -43,6 +43,12 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colInfoMoneyName_all: TcxGridDBColumn;
+    colAmountCurrency: TcxGridDBColumn;
+    CurrencyValue: TcxGridDBColumn;
+    ParValue: TcxGridDBColumn;
+    CurrencyPartnerValue: TcxGridDBColumn;
+    ParPartnerValue: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

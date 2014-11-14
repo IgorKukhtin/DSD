@@ -29,6 +29,7 @@ $BODY$
    DECLARE vbToId             Integer;
    DECLARE vbPartnerId        Integer;
    DECLARE vbContractId       Integer;
+   DECLARE vbPaidKindId       Integer;
    DECLARE vbDocumentTaxKindId_TaxCorrective Integer;
 
    DECLARE vbDiscountPercent TFloat;
@@ -84,9 +85,10 @@ BEGIN
            , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END AS ToId
            , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_Partner.ObjectId WHEN Movement.DescId = zc_Movement_Tax() THEN MovementLinkObject_Partner.ObjectId ELSE MovementLinkObject_To.ObjectId END AS PartnerId
            , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
+           , zc_Enum_PaidKind_FirstForm() AS PaidKindId
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
-             INTO vbMovementId_Sale, vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+             INTO vbMovementId_Sale, vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId, vbPaidKindId
                 , vbDiscountPercent, vbExtraChargesPercent
       FROM Movement
            LEFT JOIN MovementString AS MS_InvNumberPartner
@@ -288,6 +290,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                    INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
@@ -347,6 +353,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                    INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
@@ -379,6 +389,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                    INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId
@@ -434,6 +448,10 @@ BEGIN
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                AND MovementLinkObject_PaidKind.ObjectId = vbPaidKindId
                    INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                    INNER JOIN (SELECT zc_Movement_Sale() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId

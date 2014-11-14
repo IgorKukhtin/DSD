@@ -1,49 +1,74 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inAmountIn            TFloat    , -- Сумма прихода
-    IN inAmountOut           TFloat    , -- Сумма расхода
+ INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber            TVarChar  , -- Номер документа
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inAmountIn             TFloat    , -- Сумма прихода
+    IN inAmountOut            TFloat    , -- Сумма расхода
 
-    IN inBankAccountId       Integer   , -- Расчетный счет 	
-    IN inComment             TVarChar  , -- Комментарий 
-    IN inMoneyPlaceId        Integer   , -- Юр лицо, счет, касса  	
-    IN inContractId          Integer   , -- Договора
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inUnitId              Integer   , -- Подразделение
-    IN inCurrencyId          Integer   , -- Валюта 
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inBankAccountId        Integer   , -- Расчетный счет 	
+    IN inComment              TVarChar  , -- Комментарий 
+    IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса  	
+    IN inContractId           Integer   , -- Договора
+    IN inInfoMoneyId          Integer   , -- Статьи назначения 
+    -- IN inUnitId               Integer   , -- Подразделение
+    IN inCurrencyId           Integer   , -- Валюта 
+   OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
+   OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
+    IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
+    IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
+   DECLARE vbAmountCurrency TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
      -- проверка
-     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму прихода или расхода';
+     IF COALESCE (inAmountIn, 0) = 0 AND COALESCE (inAmountOut, 0) = 0 -- AND COALESCE (inCurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
+     THEN
+        RAISE EXCEPTION 'Ошибка.Введите сумму прихода или расхода';
+     END IF;
+     -- проверка
+     IF COALESCE (inAmountIn, 0) <> 0 AND COALESCE (inAmountOut, 0) <> 0 -- AND COALESCE (inCurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
+     THEN
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма - или <Приход> или <Расход>.';
+     END IF;
+
+     -- расчет курса для баланса
+     IF inCurrencyId <> zc_Enum_Currency_Basis()
+     THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyId,  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+     END IF;
+
+     -- !!!очень важный расчет!!!
+     IF inAmountIn <> 0 THEN
+        IF inCurrencyId <> zc_Enum_Currency_Basis()
+        THEN vbAmountCurrency:= inAmountIn;
+             vbAmount := CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+        ELSE vbAmount := inAmountIn;
+        END IF;
+     ELSE
+        IF inCurrencyId <> zc_Enum_Currency_Basis()
+        THEN vbAmountCurrency:= -1 * inAmountOut;
+             vbAmount := CAST (-1 * inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2));
+        ELSE vbAmount := -1 * inAmountOut;
+        END IF;
      END IF;
 
      -- проверка
-     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма - или прихода или расхода.';
+     IF COALESCE (vbAmount, 0) = 0 AND inCurrencyId <> 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Сумма пересчета из валюты <%> в валюту <%> не должна быть = 0.', lfGet_Object_ValueData (inCurrencyId), lfGet_Object_ValueData (zc_Enum_Currency_Basis());
      END IF;
 
-     -- расчет
-     IF inAmountIn <> 0 THEN
-        vbAmount := inAmountIn;
-     ELSE
-        vbAmount := -1 * inAmountOut;
-     END IF;
 
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
@@ -53,12 +78,28 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount
-                                               , inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId
-                                               , (SELECT ParentId FROM Movement WHERE Id = ioId), null
-                                               , vbUserId
+     ioId:= lpInsertUpdate_Movement_BankAccount (ioId                   := ioId
+                                               , inInvNumber            := inInvNumber
+                                               , inOperDate             := inOperDate
+                                               , inAmount               := vbAmount
+                                               , inAmountCurrency       := vbAmountCurrency
+                                               , inBankAccountId        := inBankAccountId
+                                               , inComment              := inComment
+                                               , inMoneyPlaceId         := inMoneyPlaceId
+                                               , inContractId           := inContractId
+                                               , inInfoMoneyId          := inInfoMoneyId
+                                               , inUnitId               := NULL
+                                               , inCurrencyId           := inCurrencyId
+                                               , inCurrencyValue        := outCurrencyValue
+                                               , inParValue             := outParValue
+                                               , inCurrencyPartnerValue := inCurrencyPartnerValue
+                                               , inParPartnerValue      := inParPartnerValue
+                                               , inParentId             := (SELECT ParentId FROM Movement WHERE Id = ioId)
+                                               , inBankAccountPartnerId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id  AND MovementItemLinkObject.DescId = zc_MILinkObject_BankAccount() WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master())
+                                               , inUserId               := vbUserId
                                                 );
                                                 
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 

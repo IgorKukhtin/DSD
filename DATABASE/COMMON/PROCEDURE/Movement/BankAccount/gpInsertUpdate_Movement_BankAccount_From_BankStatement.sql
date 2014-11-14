@@ -30,21 +30,26 @@ BEGIN
 
 
      -- Выбираем все данные и сразу вызываем процедуры
-     PERFORM lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
-               inInvNumber := Movement.InvNumber, 
-               inOperDate := Movement.OperDate, 
-               inAmount := MovementFloat_Amount.ValueData, 
-               inBankAccountId := MovementLinkObject_BankAccount.ObjectId,  
-               inComment := MovementString_Comment.ValueData, 
-               inMoneyPlaceId := MovementLinkObject_Juridical.ObjectId, 
-               inContractId := MovementLinkObject_Contract.ObjectId, 
-               inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
-               inUnitId := MovementLinkObject_Unit.ObjectId, 
-               inCurrencyId := MovementLinkObject_Currency.ObjectId, 
-               inParentId := Movement.Id, 
-               inBankAccountPartnerId:= lpInsertFind_BankAccount (MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId),
-               inUserId:= vbUserId)
-
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE(Movement_BankAccount.Id, 0)
+                                               , inInvNumber            := Movement.InvNumber
+                                               , inOperDate             := Movement.OperDate
+                                               , inAmount               := MovementFloat_Amount.ValueData
+                                               , inAmountCurrency       := MovementFloat_AmountCurrency.ValueData
+                                               , inBankAccountId        := MovementLinkObject_BankAccount.ObjectId
+                                               , inComment              := MovementString_Comment.ValueData
+                                               , inMoneyPlaceId         := MovementLinkObject_Juridical.ObjectId
+                                               , inContractId           := MovementLinkObject_Contract.ObjectId
+                                               , inInfoMoneyId          := MovementLinkObject_InfoMoney.ObjectId
+                                               , inUnitId               := MovementLinkObject_Unit.ObjectId
+                                               , inCurrencyId           := MovementLinkObject_Currency.ObjectId
+                                               , inCurrencyValue        := MovementFloat_CurrencyValue.ValueData
+                                               , inParValue             := MovementFloat_ParValue.ValueData
+                                               , inCurrencyPartnerValue := MovementFloat_CurrencyPartnerValue.ValueData
+                                               , inParPartnerValue      := MovementFloat_ParPartnerValue.ValueData
+                                               , inParentId             := Movement.Id
+                                               , inBankAccountPartnerId := lpInsertFind_BankAccount (MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId)
+                                               , inUserId               := vbUserId
+                                                )
        FROM Movement
             LEFT JOIN Movement AS Movement_BankAccount 
                               ON Movement_BankAccount.ParentId = Movement.Id
@@ -98,6 +103,22 @@ BEGIN
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
  
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
 
