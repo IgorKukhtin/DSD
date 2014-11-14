@@ -1,24 +1,27 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inAmount              TFloat    , -- Сумма операции 
-
-    IN inBankAccountId       Integer   , -- Расчетный счет 	
-    IN inComment             TVarChar  , -- Комментарий 
-    IN inMoneyPlaceId        Integer   , -- Юр лицо, счет, касса  	
-    IN inContractId          Integer   , -- Договора
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inUnitId              Integer   , -- Подразделение
-    IN inCurrencyId          Integer   , -- Валюта 
-    IN inParentId            Integer   , -- 
-    IN inBankAccountPartnerId       Integer   , -- С какого счета нам платили
-    IN inUserId              Integer     -- Пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber             TVarChar  , -- Номер документа
+    IN inOperDate              TDateTime , -- Дата документа
+    IN inAmount                TFloat    , -- Сумма операции 
+    IN inAmountCurrency        TFloat    , -- Сумма в валюте
+    IN inBankAccountId         Integer   , -- Расчетный счет 	
+    IN inComment               TVarChar  , -- Комментарий 
+    IN inMoneyPlaceId          Integer   , -- Юр лицо, счет, касса  	
+    IN inContractId            Integer   , -- Договора
+    IN inInfoMoneyId           Integer   , -- Статьи назначения 
+    IN inUnitId                Integer   , -- Подразделение
+    IN inCurrencyId            Integer   , -- Валюта 
+    IN inCurrencyValue         TFloat    , -- Курс для перевода в валюту баланса
+    IN inParValue              TFloat    , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerValue  TFloat    , -- Курс для расчета суммы операции
+    IN inParPartnerValue       TFloat    , -- Номинал для расчета суммы операции
+    IN inParentId              Integer   , -- 
+    IN inBankAccountPartnerId  Integer   , -- С какого счета нам платили
+    IN inUserId                Integer     -- Пользователь
 )                              
 RETURNS Integer AS
 $BODY$
@@ -29,7 +32,13 @@ BEGIN
      -- проверка (для юр.лица только)
      IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Juridical())
      THEN
-        RAISE EXCEPTION 'Ошибка.<№ договора> не выбран.';
+        RAISE EXCEPTION 'Ошибка.Не выбрано значение <№ договора>.';
+     END IF;
+
+     -- проверка (для юр.лица только)
+     IF COALESCE (inCurrencyId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не выбрано значение <Валюта>.';
      END IF;
 
      -- Проверка установки значений
@@ -84,6 +93,17 @@ BEGIN
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
     
+     -- Сумма в валюте
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, inAmountCurrency);
+     -- Курс для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
+     -- Номинал для перевода в валюту баланса
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, inParValue);
+     -- Курс для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, inCurrencyPartnerValue);
+     -- Номинал для расчета суммы операции
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 

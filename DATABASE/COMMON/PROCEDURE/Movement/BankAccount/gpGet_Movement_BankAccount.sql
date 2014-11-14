@@ -79,6 +79,8 @@ BEGIN
                       
            , CASE WHEN inMovementId = 0 
                        THEN 0
+                  WHEN MILinkObject_Currency.ObjectId <> zc_Enum_Currency_Basis() AND MovementFloat_AmountCurrency.ValueData > 0 THEN
+                       MovementFloat_AmountCurrency.ValueData
                   WHEN MovementItem.Amount > 0 THEN
                        MovementItem.Amount
                   ELSE
@@ -86,8 +88,10 @@ BEGIN
                   END::TFloat AS AmountIn
            , CASE WHEN inMovementId = 0 
                        THEN 0
+                  WHEN MILinkObject_Currency.ObjectId <> zc_Enum_Currency_Basis() AND MovementFloat_AmountCurrency.ValueData < 0 THEN
+                       -1 * MovementFloat_AmountCurrency.ValueData
                   WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
+                       -1 * MovementItem.Amount
                   ELSE
                       0
                   END::TFloat AS AmountOut
@@ -117,17 +121,20 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId = MovementItem.MovementId
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
             LEFT JOIN MovementFloat AS MovementFloat_ParValue
-                                    ON MovementFloat_ParValue.MovementId = MovementItem.MovementId
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                    ON MovementFloat_CurrencyPartnerValue.MovementId = MovementItem.MovementId
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId = MovementItem.MovementId
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN Object_BankAccount_View AS View_BankAccount ON View_BankAccount.Id = MovementItem.ObjectId
@@ -172,6 +179,7 @@ ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 14.11.14                                        * add Currency...
  07.05.14                                        * add inMovementId_Value
  25.01.14                                        * add inOperDate
  17.01.14                                        *

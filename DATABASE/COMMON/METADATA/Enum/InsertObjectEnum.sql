@@ -545,6 +545,9 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70203, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_70203');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80103, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80103');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80105, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80105');
+
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80301, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80301');
 
 END $$;
