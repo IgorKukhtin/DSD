@@ -99,6 +99,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -628,10 +629,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     object actPrint_Invoice: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintInvoice
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintInvoice
         end>
       Caption = #1048#1085#1074#1086#1081#1089
       Hint = #1048#1085#1074#1086#1081#1089
@@ -2839,6 +2840,29 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end>
     PackSize = 1
     Left = 415
+    Top = 520
+  end
+  object spSelectPrintInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
     Top = 520
   end
 end

@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Sale_Print()
+-- Function: gpSelect_Movement_Sale_Invoice_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Invoice_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Invoice_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -195,17 +195,7 @@ BEGIN
 
        SELECT
              Movement.Id                                AS Id
---           , Movement.InvNumber                         AS InvNumber
-           , CASE WHEN Movement.DescId = zc_Movement_Sale()
-                       THEN Movement.InvNumber
-                  WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData <> ''
-                       THEN COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
-                  WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData = ''
-                       THEN Movement.InvNumber
-                  ELSE Movement.InvNumber
-             END AS InvNumber
-
-
+           , Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , Movement.OperDate                          AS OperDate
@@ -275,8 +265,6 @@ BEGIN
            , OHS_JD_JuridicalAddress_CorrBank_From.ValueData    AS JuridicalAddressCorrBankFrom
 
 
-           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0)         AS EDIId
-
            , BankAccount_To.BankName                            AS BankName_Int
            , BankAccount_To.Name                                AS BankAccount_Int
 
@@ -301,10 +289,6 @@ BEGIN
 
 
        FROM Movement
-
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
@@ -364,6 +348,9 @@ BEGIN
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
+            LEFT JOIN ObjectString AS ObjectString_BankAccount --исх счет по дог
+                                   ON ObjectString_BankAccount.ObjectId = View_Contract.ContractId
+                                  AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
@@ -438,8 +425,9 @@ BEGIN
                                          AND OHS_JD_JuridicalAddress_CorrBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 -- +++++++++++++++++ BANK TO
-            LEFT JOIN
-                      (SELECT *
+
+            LEFT JOIN --список счетов.имя = исх счет по дог.знач
+                      (SELECT Object_BankAccount_View.*
                        FROM Object_BankAccount_View
                        LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                     ON MovementLinkObject_To.MovementId = inMovementId
@@ -448,10 +436,10 @@ BEGIN
                                             ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-
                       WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                      LIMIT 1
-                      ) AS BankAccount_To ON 1=1
+--                      LIMIT 1
+                      ) AS BankAccount_To ON BankAccount_To.Name = ObjectString_BankAccount.ValueData
+
 
          LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
          LEFT JOIN Object_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
@@ -651,13 +639,7 @@ BEGIN
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              ELSE MovementItem.Amount
-
-                         END) AS AmountPartner
+                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
              FROM MovementItem
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -721,47 +703,17 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale_Invoice_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.11.14                                                       * fix
- 12.11.14                                        * add AmountOrder
- 17.10.14                                                       *
- 13.05.14                                                       * Amount_Weight Amount_Sh
- 23.07.14                                        * add ArticleGLN
- 16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
- 20.06.14                                                       * change InvNumber
- 05.06.14                                        * restore ContractSigningDate
- 04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
- 20.05.14                                        * add Object_Contract_View
- 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
- 13.05.14                                        * add calc GoodsName
- 13.05.14                                                       * zc_ObjectLink_Contract_BankAccount
- 08.05.14                        * add GLN code
- 08.05.14                                        * all
- 06.05.14                                        * add Object_Partner
- 06.05.14                                                       * zc_Movement_SendOnPrice
- 06.05.14                                        * OperDatePartner
- 05.05.14                                                       *
- 28.04.14                                                       *
- 09.04.14                                        * add JOIN MIFloat_AmountPartner
- 02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
- 01.04.14                                                       *  tmpMI.Price <> 0
- 27.03.14                                                       *
- 24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
- 19.02.14                                                       *  add by juridical
- 07.02.14                                                       *  change to Cursor
- 05.02.14                                                       *
+ 13.11.14                                                       * from sale_print
 */
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 570596, inSession:= '5');
+ SELECT * FROM gpSelect_Movement_Sale_Invoice_Print (inMovementId := 570596, inSession:= '5');
 
 COMMIT;
 */
--- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= '2');
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');

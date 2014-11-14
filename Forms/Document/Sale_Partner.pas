@@ -133,6 +133,7 @@ type
     bbPrint_Pack22: TdxBarButton;
     spSelectPrintPack21: TdsdStoredProc;
     spSelectPrintPack22: TdsdStoredProc;
+    spSelectPrintInvoice: TdsdStoredProc;
   private
     { Private declarations }
   public
