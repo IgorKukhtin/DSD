@@ -679,11 +679,17 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
 
-                  , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) * COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
-                         WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) * COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
-                         ELSE (COALESCE (MIFloat_Price.ValueData, 0) * COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1))
+                  , CASE
+
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                              THEN CAST ( (1 - vbDiscountPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
+
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent = 0 AND vbDiscountPercent = 0
+                              THEN CAST ( (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
+
+                         ELSE 0--(COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1))
                     END AS PriceInCur
 
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -691,12 +697,19 @@ BEGIN
                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
              FROM MovementItem
 /*
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = MovementItem.MovementId
-                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
             LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = MovementLinkObject_CurrencyPartner.ObjectId
 */
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = MovementItem.MovementId
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = MovementItem.MovementId
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+
+            LEFT JOIN Object_Currency_View AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+            LEFT JOIN Object_Currency_View AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
             LEFT JOIN MovementFloat AS MF_CurrencyPartnerNominalValue
                                     ON MF_CurrencyPartnerNominalValue.MovementId =  MovementItem.MovementId
                                    AND MF_CurrencyPartnerNominalValue.DescId = zc_MovementFloat_ParValue()
@@ -730,6 +743,9 @@ BEGIN
                     , MIFloat_CountForPrice.ValueData
                     , MF_CurrencyPartnerValue.ValueData
                     , MF_CurrencyPartnerNominalValue.ValueData
+                    , Object_CurrencyDocument.Id
+                    , Object_CurrencyPartner.Id
+                    , Object_CurrencyDocument.code
 
             ) AS tmpMI
 
