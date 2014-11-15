@@ -140,6 +140,8 @@ BEGIN
                                                     END
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.ObjectId = 76977 -- рассчетный счет AND 26009000250571 ПУАТ "ФІДОБАНК"
                                                THEN zc_Enum_Account_40302() -- рассчетный овердрафт
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                                               THEN zc_Enum_Account_40303() -- расчетный счет валютный
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов

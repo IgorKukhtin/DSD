@@ -98,8 +98,8 @@ BEGIN
 
            , MIString_Comment.ValueData        AS Comment
 
-           , View_BankAccount.Id       AS BankAccountId
-           , View_BankAccount.BankName AS BankAccountName
+           , View_BankAccount.Id               AS BankAccountId
+           , View_BankAccount.Name             AS BankAccountName
            , View_BankAccount.BankId
            , View_BankAccount.BankName
            , Object_MoneyPlace.Id              AS MoneyPlaceId

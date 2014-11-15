@@ -1,31 +1,30 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1250
+  ClientWidth = 1389
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1258
-  ExplicitHeight = 702
+  ExplicitLeft = -412
+  ExplicitWidth = 1405
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
-    Width = 1250
-    Height = 540
-    ExplicitTop = 128
-    ExplicitWidth = 1250
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1246
+    Top = 126
+    Width = 1389
+    Height = 542
+    ExplicitTop = 126
+    ExplicitWidth = 1389
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1389
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1244
-      ExplicitHeight = 514
+      ExplicitWidth = 1389
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1244
-        Height = 514
-        ExplicitWidth = 1244
-        ExplicitHeight = 514
+        Width = 1389
+        Height = 518
+        ExplicitWidth = 1389
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -296,10 +295,10 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1250
+    Width = 1389
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1250
+    ExplicitWidth = 1389
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -333,7 +332,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -514,7 +513,7 @@ inherited SaleForm: TSaleForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1206
+      Left = 1260
       Top = 63
       Properties.Buttons = <
         item
@@ -526,17 +525,17 @@ inherited SaleForm: TSaleForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1206
+      Left = 1260
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 32
@@ -565,7 +564,7 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 35
-      Width = 127
+      Width = 177
     end
     object edContractTag: TcxButtonEdit
       Left = 972
@@ -598,6 +597,21 @@ inherited SaleForm: TSaleForm
       TabOrder = 38
       Width = 81
     end
+    object edParPartnerValue: TcxCurrencyEdit
+      Left = 1202
+      Top = 63
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = False
+      TabOrder = 39
+      Width = 47
+    end
+    object cxLabel21: TcxLabel
+      Left = 1202
+      Top = 44
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
   end
   object cxLabel17: TcxLabel [2]
     Left = 1072
@@ -622,7 +636,7 @@ inherited SaleForm: TSaleForm
     Top = 45
     Caption = #1050#1091#1088#1089
   end
-  object edCurrencyValue: TcxCurrencyEdit [5]
+  object edCurrencyPartnerValue: TcxCurrencyEdit [5]
     Left = 1155
     Top = 63
     Properties.Alignment.Horz = taRightJustify
@@ -1255,7 +1269,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1355,6 +1369,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1610,12 +1628,6 @@ inherited SaleForm: TSaleForm
         DataType = ftFloat
       end
       item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = edCurrencyValue
-        DataType = ftFloat
-      end
-      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1712,6 +1724,18 @@ inherited SaleForm: TSaleForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
       end
       item
         Name = 'MovementId_Order'
@@ -1917,10 +1941,18 @@ inherited SaleForm: TSaleForm
         DataType = ftString
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyPartnerValue'
         Value = Null
-        Component = edCurrencyValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 162
     Top = 312
@@ -1984,13 +2016,16 @@ inherited SaleForm: TSaleForm
         Control = edDocumentTaxKind
       end
       item
-        Control = edCurrencyValue
-      end
-      item
         Control = edCurrencyDocument
       end
       item
         Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edParPartnerValue
       end>
     Left = 232
     Top = 193
@@ -2908,9 +2943,9 @@ inherited SaleForm: TSaleForm
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
-    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.Value = 'TCurrencyValue_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCurrency_ObjectForm'
+    FormName = 'TCurrencyValue_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2928,9 +2963,34 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inCurrencyFromId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
       end>
-    Left = 912
-    Top = 192
+    Left = 1120
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'

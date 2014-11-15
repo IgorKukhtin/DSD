@@ -183,10 +183,12 @@ BEGIN
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE --, inPriceWithVAT := FALSE, inVATPercent := 20
                                            , inChangePercent := - vbDiscount, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= vbPaidKindId
                                            , inContractId:= vbContractId, inRouteSortingId:= 0
-                                           , inCurrencyDocumentId:= 14461 -- грн
+                                           , inCurrencyDocumentId:= NULL
                                            , inCurrencyPartnerId:= NULL
                                            , inMovementId_Order := NULL
                                            , ioPriceListId:= CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN (SELECT MAX (ObjectBoolean.ObjectId) FROM ObjectBoolean INNER JOIN ObjectFloat ON ObjectFloat.ObjectId = ObjectBoolean.ObjectId AND ObjectFloat.ValueData = 0 AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent() WHERE ObjectBoolean.ValueData = TRUE AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()) ELSE 0 END
+                                           , ioCurrencyPartnerValue := NULL
+                                           , ioParPartnerValue      := NULL
                                            , inUserId := vbUserId
                                             ) AS tmp;
           ELSE

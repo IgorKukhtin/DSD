@@ -3,30 +3,34 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
-    IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
-    IN inChecked             Boolean   , -- Проверен
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inContractId          Integer   , -- Договора
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
-    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-    IN inMovementId_Order    Integer   , -- ключ Документа
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
-   OUT outCurrencyValue      TFloat    , -- курс валюты
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber             TVarChar   , -- Номер документа
+    IN inInvNumberPartner      TVarChar   , -- Номер накладной у контрагента
+    IN inInvNumberOrder        TVarChar   , -- Номер заявки контрагента
+    IN inOperDate              TDateTime  , -- Дата документа
+    IN inOperDatePartner       TDateTime  , -- Дата накладной у контрагента
+    IN inChecked               Boolean    , -- Проверен
+   OUT outPriceWithVAT         Boolean    , -- Цена с НДС (да/нет)
+   OUT outVATPercent           TFloat     , -- % НДС
+    IN inChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
+    IN inFromId                Integer    , -- От кого (в документе)
+    IN inToId                  Integer    , -- Кому (в документе)
+    IN inPaidKindId            Integer    , -- Виды форм оплаты
+    IN inContractId            Integer    , -- Договора
+    IN inRouteSortingId        Integer    , -- Сортировки маршрутов
+    IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
+    IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
+    IN inMovementId_Order      Integer    , -- ключ Документа
+ INOUT ioPriceListId           Integer    , -- Прайс лист
+   OUT outPriceListName        TVarChar   , -- Прайс лист
+   OUT outCurrencyValue        TFloat     , -- курс валюты
+   OUT outParValue             TFloat     , -- Номинал для перевода в валюту баланса
+ INOUT ioCurrencyPartnerValue  TFloat     , -- Курс для расчета суммы операции
+ INOUT ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции
+    IN inUserId                Integer      -- пользователь
 )
 RETURNS RECORD
 AS
@@ -45,9 +49,16 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
-     -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
+     -- !!!Меняем параметры!!!
+     IF COALESCE (inCurrencyDocumentId, 0) = 0 THEN inCurrencyDocumentId:= zc_Enum_Currency_Basis(); END IF;
+     -- !!!Меняем параметры!!!
+     IF COALESCE (inCurrencyPartnerId, 0) = 0 THEN inCurrencyPartnerId:= zc_Enum_Currency_Basis(); END IF;
+
+
+     -- Прайс-лист
      IF COALESCE (ioPriceListId, 0) = 0
      THEN
+         -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
          FROM lfGet_Object_Partner_PriceList (inPartnerId:= inToId, inOperDate:= inOperDatePartner);
@@ -92,34 +103,25 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
-     -- рассчитали и сохранили свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
-     THEN
-        SELECT MovementItem.Amount
-       INTO outCurrencyValue  
-        FROM (
-              SELECT max(Movement.OperDate) as maxOperDate
-              FROM Movement 
-                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.ObjectId = inCurrencyDocumentId
-                  JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                              ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                             AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-              WHERE Movement.DescId = zc_Movement_Currency()
-                AND Movement.OperDate <= inOperDate
-                AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-              ) as tmpDate
-         JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                      AND Movement.OperDate = tmpDate.maxOperDate
-                      AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
-         JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                          AND MovementItem.DescId = zc_MI_Master();
+     -- рассчет курса для баланса
+     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+     THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyId,  inPaidKindId:= inPaidKindId);
      END IF;
-     
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);   
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, outParValue);
+
+     -- рассчет курса для перевода из вал. док. в валюту контрагента
+     IF inCurrencyDocumentId <> inCurrencyPartnerId
+     THEN SELECT Amount, ParValue INTO ioCurrencyPartnerValue, ioParPartnerValue
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= inCurrencyDocumentId, inCurrencyToId:= inCurrencyPartnerId,  inPaidKindId:= inPaidKindId);
+     END IF;
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, ioCurrencyPartnerValue);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, ioParPartnerValue);
 
 
      -- сохранили свойство <Номер заявки контрагента>

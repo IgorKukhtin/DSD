@@ -100,4 +100,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BankAccount_Currency(inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_BankAccount_Currency (inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin())

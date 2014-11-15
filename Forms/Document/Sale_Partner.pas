@@ -110,7 +110,7 @@ type
     CurrencyDocumentGuides: TdsdGuides;
     edCurrencyDocument: TcxButtonEdit;
     cxLabel17: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     cxLabel19: TcxLabel;
@@ -134,6 +134,8 @@ type
     spSelectPrintPack21: TdsdStoredProc;
     spSelectPrintPack22: TdsdStoredProc;
     spSelectPrintInvoice: TdsdStoredProc;
+    cxLabel21: TcxLabel;
+    edParPartnerValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public

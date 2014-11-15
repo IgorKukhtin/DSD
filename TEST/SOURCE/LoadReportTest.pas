@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadReportFormTest;
 var
  i : integer;
 begin
+
   // Транспорт
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   // Отчеты(Финансы)
@@ -74,7 +75,7 @@ begin
   LoadReportFromFile('Акт сверки (бухгалтерский) АЛАН', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский) АЛАН.fr3');
   LoadReportFromFile('Отчет Итог по покупателю (Акт сверки)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Обороты из акта сверки', ReportPath + '\Отчеты (финансы)\Обороты из акта сверки.fr3');
-  LoadReportFromFile('Обороты по счету', ReportPath + '\Отчеты (финансы)\Обороты по счету.fr3');
+  LoadReportFromFile('Обороты по расчетному счету', ReportPath + '\Отчеты (финансы)\Обороты по расчетному счету.fr3');
   LoadReportFromFile('Обороты по кассе', ReportPath + '\Отчеты (финансы)\Обороты по кассе.fr3');
   //LoadReportFromFile('Отчет по кассе (детальный)', ReportPath + '\Отчеты (финансы)\Отчет по кассе (детальный).fr3');
 

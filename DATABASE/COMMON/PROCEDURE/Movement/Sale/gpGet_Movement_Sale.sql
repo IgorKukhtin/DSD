@@ -11,9 +11,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
-             , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , CurrencyValue TFloat
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -40,21 +39,22 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
-             , inOperDate				                    AS OperDate
-             , Object_Status.Code               	        AS StatusCode
-             , Object_Status.Name              		        AS StatusName
-             , CAST (FALSE AS Boolean)         		        AS Checked
-             , inOperDate			     	                AS OperDatePartner
+             , inOperDate				    AS OperDate
+             , Object_Status.Code               	    AS StatusCode
+             , Object_Status.Name              		    AS StatusName
+             , CAST (FALSE AS Boolean)         		    AS Checked
+             , inOperDate			     	    AS OperDatePartner
              , CAST ('' AS TVarChar)                        AS InvNumberPartner
              , CAST (False AS Boolean)                      AS PriceWithVAT
              , CAST (20 AS TFloat)                          AS VATPercent
              , CAST (0 AS TFloat)                           AS ChangePercent
              , CAST (1 AS TFloat)                           AS ChangePercentAmount
-             , CAST (0 AS TFloat)                           AS TotalCount
-             , CAST (0 AS TFloat)                           AS TotalSummMVAT
-             , CAST (0 AS TFloat)                           AS TotalSummPVAT
-             , CAST (0 AS TFloat)                           AS TotalSumm
+
              , CAST (0 as TFloat)                           AS CurrencyValue
+             , CAST (0 as TFloat)                           AS ParValue
+             , CAST (0 as TFloat)                           AS CurrencyPartnerValue
+             , CAST (0 as TFloat)                           AS ParPartnerValue
+
              , 0                     		            AS FromId
              , CAST ('' AS TVarChar)                        AS FromName
              , 0                     			    AS ToId
@@ -66,10 +66,10 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS ContractTagName
              , 0                     			    AS RouteSortingId
              , CAST ('' AS TVarChar) 			    AS RouteSortingName
-             , ObjectCurrency.Id                            AS CurrencyDocumentId	       -- грн
+             , ObjectCurrency.Id                            AS CurrencyDocumentId
              , ObjectCurrency.ValueData                     AS CurrencyDocumentName
-             , 0                                            AS CurrencyPartnerId
-             , CAST ('' as TVarChar)                        AS CurrencyPartnerName
+             , ObjectCurrency.Id                            AS CurrencyPartnerId
+             , ObjectCurrency.ValueData                     AS CurrencyPartnerName
              , CAST ('' AS TVarChar) 			    AS InvNumberOrder
              , CAST (0  AS INTEGER)                         AS PriceListId
              , CAST ('' AS TVarChar) 			    AS PriceListName
@@ -81,8 +81,7 @@ BEGIN
              , FALSE                                        AS isCOMDOC
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
-                                                AND ObjectCurrency.id = 14461;	                   -- грн
+              LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.Id = zc_Enum_Currency_Basis();
      ELSE
 
      RETURN QUERY
@@ -99,11 +98,12 @@ BEGIN
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
            , CAST (1 AS TFloat)                             AS ChangePercentAmount
-           , MovementFloat_TotalCount.ValueData             AS TotalCount
-           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+
            , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
+           , MovementFloat_ParValue.ValueData               AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
            , Object_To.Id                      		    AS ToId
@@ -115,8 +115,8 @@ BEGIN
            , View_Contract_InvNumber.ContractTagName        AS ContractTagName
            , Object_RouteSorting.Id        		    AS RouteSortingId
            , Object_RouteSorting.ValueData 		    AS RouteSortingName
-           , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
-           , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
+           , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencyDocumentInf.Id)                AS CurrencyDocumentId
+           , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencyDocumentInf.ValueData)  AS CurrencyDocumentName
            , Object_CurrencyPartner.Id                      AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , CASE WHEN TRIM (COALESCE (MovementString_InvNumberOrder.ValueData, '')) <> ''
@@ -172,25 +172,18 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -300,8 +293,7 @@ BEGIN
                                   ON MovementString_InvNumberPartner_Order.MovementId =  Movement_Order.Id
                                  AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
 
-         LEFT JOIN Object AS ObjectCurrencycyDocumentInf ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
-                                                        AND ObjectCurrencycyDocumentInf.id = 14461
+         LEFT JOIN Object AS ObjectCurrencyDocumentInf ON ObjectCurrencyDocumentInf.Id = zc_Enum_Currency_Basis()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();

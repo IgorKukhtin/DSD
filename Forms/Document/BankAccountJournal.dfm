@@ -439,23 +439,31 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'AccountName;BankName;BankAccountName'
         end>
-      Params = <>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Name = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -568,12 +576,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
   end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 209
-  end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -581,16 +583,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 262
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpReport_Account_Print'
-    DataSet = PrintHeaderCDS
+    StoredProcName = 'gpReport_BankAccount'
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -607,57 +605,24 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inAccountGroupId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAccountDirectionId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inAccountId'
-        Value = ''
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inBusinessId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inBankAccountId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossGroupId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inCurrencyId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossDirectionId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inProfitLossId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inIsDetail'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

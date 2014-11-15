@@ -1,27 +1,28 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1389
+  ExplicitLeft = -412
+  ExplicitWidth = 1405
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1389
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1389
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1389
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1389
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1389
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1389
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -107,6 +108,7 @@ inherited Sale_OrderForm: TSale_OrderForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -283,10 +285,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1389
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1389
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -501,7 +503,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1206
+      Left = 1260
       Top = 63
       Properties.Buttons = <
         item
@@ -513,17 +515,17 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1206
+      Left = 1260
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 32
@@ -555,14 +557,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
-    object edCurrencyValue: TcxCurrencyEdit
+    object edCurrencyPartnerValue: TcxCurrencyEdit
       Left = 1155
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 36
       Width = 44
     end
@@ -581,7 +583,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 127
+      Width = 177
     end
     object cxLabel19: TcxLabel
       Left = 1072
@@ -617,6 +619,21 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 42
       Width = 81
+    end
+    object cxLabel21: TcxLabel
+      Left = 1202
+      Top = 44
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
+    object edParPartnerValue: TcxCurrencyEdit
+      Left = 1202
+      Top = 63
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = False
+      TabOrder = 44
+      Width = 47
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -1431,12 +1448,6 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftFloat
       end
       item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = edCurrencyValue
-        DataType = ftFloat
-      end
-      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1533,6 +1544,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
       end
       item
         Name = 'MovementId_Order'
@@ -1738,10 +1761,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyPartnerValue'
         Value = 0.000000000000000000
-        Component = edCurrencyValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 162
     Top = 312
@@ -1806,6 +1837,18 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = edDocumentTaxKind
+      end
+      item
+        Control = edCurrencyDocument
+      end
+      item
+        Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edParPartnerValue
       end>
     Left = 232
     Top = 193
@@ -2633,9 +2676,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
-    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.Value = 'TCurrencyValue_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCurrency_ObjectForm'
+    FormName = 'TCurrencyValue_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2653,6 +2696,32 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inCurrencyFromId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
       end>
     Left = 1080
   end

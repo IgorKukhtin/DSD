@@ -123,7 +123,7 @@ type
     edCurrencyDocument: TcxButtonEdit;
     CurrencyDocumentGuides: TdsdGuides;
     cxLabel18: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
@@ -151,6 +151,8 @@ type
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
     spSelectPrintInvoice: TdsdStoredProc;
+    edParPartnerValue: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
   private
     { Private declarations }
   public
