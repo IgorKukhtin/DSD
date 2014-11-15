@@ -177,7 +177,7 @@
     Top = 80
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 23
     Width = 68
   end
@@ -192,7 +192,7 @@
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 25
     Width = 47
   end

@@ -17,6 +17,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , AccountCode Integer
              , DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
+             , Amount_Currency TFloat
              , Price TFloat
              , AccountOnComplete Boolean
              , DirectionObjectCode Integer, DirectionObjectName TVarChar
@@ -28,6 +29,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , GoodsKindName TVarChar
              , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
+             , CurrencyName TVarChar
               )
 AS
 $BODY$
@@ -70,9 +72,13 @@ BEGIN
                                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
                                           )
                -- проводки: только суммовые + определяется Счет
-             , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*, Container.ObjectId AS AccountId
+             , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*
+                                                , Container.ObjectId AS AccountId
+                                                , COALESCE (tmpMIContainerCurrency_all.ContainerId, 0) AS ContainerId_Currency, COALESCE (tmpMIContainerCurrency_all.Amount, 0) AS Amount_Currency
                                            FROM tmpMIContainer_all
                                                 LEFT JOIN Container ON Container.Id = tmpMIContainer_all.ContainerId
+                                                LEFT JOIN Container AS Container_Parent ON Container_Parent.ParentId = Container.Id
+                                                LEFT JOIN tmpMIContainer_all AS tmpMIContainerCurrency_all ON tmpMIContainerCurrency_all.ContainerId = Container_Parent.Id
                                            WHERE tmpMIContainer_all.MIContainerDescId = zc_MIContainer_Summ()
                                           )
                -- проводки: только количественные + определяется GoodsId + (нужны для расчета цены)
@@ -205,6 +211,10 @@ BEGIN
                                     , tmpMIContainer_Count.MovementId
                                     , tmpMIContainer_Count.MovementDescId
                                     , tmpMIContainer_Count.InvNumber
+
+                                    , tmpMIContainer_Summ_all.ContainerId_Currency
+                                    , tmpMIContainer_Summ_all.Amount_Currency
+
                                     , tmpMIContainer_Count.isDestination
                                     , tmpMIContainer_Count.isParentDetail
                                     , tmpMIContainer_Count.isInfoMoneyDetail
@@ -236,6 +246,10 @@ BEGIN
                                     , tmpMIContainer.MovementId
                                     , tmpMIContainer.MovementDescId
                                     , tmpMIContainer.InvNumber
+
+                                    , tmpMIContainer.ContainerId_Currency
+                                    , tmpMIContainer.Amount_Currency
+
                                     , tmpMIContainer.isDestination
                                     , tmpMIContainer.isParentDetail
                                     , tmpMIContainer.isInfoMoneyDetail
@@ -304,6 +318,8 @@ BEGIN
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountName_all ELSE NULL END  AS TVarChar) AS KreditAccountName
 
+           , CAST (tmpMovementItemContainer.Amount_Currency AS TFloat) AS Amount_Currency
+
            , CASE WHEN tmpMovementItemContainer.MovementDescId = zc_Movement_ProductionSeparate() AND tmpMovementItemContainer.IsActive = FALSE AND tmpMovementItemContainer.isParentDetail = TRUE AND tmpMovementItemContainer.isInfoMoneyDetail = FALSE
                        THEN tmpPriceGroup_ProductionSeparate.Price
                   WHEN tmpMovementItemContainer.isParentDetail = TRUE AND tmpPrice_Parent.Amount_Count <> 0
@@ -336,6 +352,7 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyName
            , tmpMovementItemContainer.InfoMoneyCode_Detail
            , tmpMovementItemContainer.InfoMoneyName_Detail
+           , Object_Currency.ValueData AS CurrencyName
        FROM 
            (SELECT
                   tmpMIContainer_Summ.InvNumber
@@ -343,6 +360,7 @@ BEGIN
                 , tmpMIContainer_Summ.MovementDescId
                 , tmpMIContainer_Summ.AccountId
                 , SUM (tmpMIContainer_Summ.Amount)  AS Amount
+                , SUM (tmpMIContainer_Summ.Amount_Currency) AS Amount_Currency
                 , tmpMIContainer_Summ.isActive
 
                 , tmpMIContainer_Summ.Id
@@ -373,6 +391,8 @@ BEGIN
                 , Object_GoodsGroup.ValueData         AS GoodsGroupName
                 , COALESCE (Object_GoodsKind.Id, 0)   AS GoodsKindId
                 , Object_GoodsKind.ValueData          AS GoodsKindName
+
+                , tmpMIContainer_Summ.CurrencyId
 
                 , View_InfoMoney.InfoMoneyCode
                 , View_InfoMoney.InfoMoneyName
@@ -406,6 +426,8 @@ BEGIN
                 , tmpMIContainer_Summ.MovementDescId
                 , tmpMIContainer_Summ.AccountId
                 , tmpMIContainer_Summ.Amount
+                , tmpMIContainer_Summ.Amount_Currency
+
                 , tmpMIContainer_Summ.isActive
 
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id             ELSE 0 END AS Id
@@ -440,6 +462,8 @@ BEGIN
                 , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
                 , MILinkObject_Branch.ObjectId            AS BranchId
 
+
+                , ContainerLinkObject_Currency.ObjectId AS CurrencyId
                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                 , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = FALSE THEN 0 WHEN ContainerLinkObject_InfoMoneyDetail.ObjectId <> 0 THEN ContainerLinkObject_InfoMoneyDetail.ObjectId ELSE ContainerLinkObject_InfoMoney.ObjectId END AS InfoMoneyId_Detail
 
@@ -488,6 +512,10 @@ BEGIN
                                                   ON MILinkObject_Branch.MovementItemId = tmpMIContainer_Summ.MovementItemId -- MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
                                                  AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Currency
+                                               ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId
+                                              AND ContainerLinkObject_Currency.DescId = zc_ContainerLinkObject_Currency()
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Summ.ContainerId_find
                                               AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -531,6 +559,8 @@ BEGIN
 
                    , tmpMIContainer_Summ.GoodsId_Parent
                    , tmpMIContainer_Summ.GoodsKindId_parent
+
+                   , tmpMIContainer_Summ.CurrencyId
 
                    , Object_Branch.ObjectCode
                    , Object_Branch.ValueData
@@ -579,6 +609,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_AccountKind
                                 ON ObjectLink_AccountKind.ObjectId = tmpMovementItemContainer.AccountId
                                AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
+           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = tmpMovementItemContainer.CurrencyId
      ;
      END IF;
      
