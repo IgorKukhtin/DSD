@@ -306,8 +306,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
-            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-            LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = MovementLinkObject_CurrencyPartner.ObjectId
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 14461)
+            LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 14461)
             LEFT JOIN MovementFloat AS MF_CurrencyPartnerNominalValue
                                     ON MF_CurrencyPartnerNominalValue.MovementId =  Movement.Id
                                    AND MF_CurrencyPartnerNominalValue.DescId = zc_MovementFloat_ParValue()
@@ -597,6 +597,8 @@ BEGIN
        SELECT
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
+           , Object_GoodsGroup.ValueData     AS GoodsGroupName
+           , Object_TradeMark.ValueData      AS TradeMarkName
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
@@ -685,9 +687,15 @@ BEGIN
                               THEN CAST ( (1 - vbDiscountPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
                          WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
-
                          WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent = 0 AND vbDiscountPercent = 0
                               THEN CAST ( (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
+--
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent = 0 AND vbDiscountPercent = 0
+                              THEN CAST (COALESCE (MIFloat_Price.ValueData, 0)  AS NUMERIC (16, 2))
 
                          ELSE 0--(COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1))
                     END AS PriceInCur
@@ -764,6 +772,14 @@ BEGIN
                                    ON OS_Measure_InternalCode.ObjectId = Object_Measure.Id
                                   AND OS_Measure_InternalCode.DescId = zc_ObjectString_Measure_InternalCode()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                 ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
