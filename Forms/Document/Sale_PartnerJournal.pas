@@ -115,6 +115,8 @@ type
     ParValue: TcxGridDBColumn;
     CurrencyPartnerValue: TcxGridDBColumn;
     ParPartnerValue: TcxGridDBColumn;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

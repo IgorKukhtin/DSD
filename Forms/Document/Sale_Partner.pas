@@ -136,6 +136,8 @@ type
     spSelectPrintInvoice: TdsdStoredProc;
     cxLabel21: TcxLabel;
     edParPartnerValue: TcxCurrencyEdit;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

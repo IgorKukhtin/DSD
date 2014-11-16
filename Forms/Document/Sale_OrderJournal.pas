@@ -107,6 +107,9 @@ type
     ParValue: TcxGridDBColumn;
     CurrencyPartnerValue: TcxGridDBColumn;
     ParPartnerValue: TcxGridDBColumn;
+    spSelectPrintInvoice: TdsdStoredProc;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public
