@@ -597,7 +597,7 @@ BEGIN
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
         FROM (SELECT COALESCE (tmpMIContainer_Summ.ContainerId, tmpMIContainer_Count.ContainerId) AS ContainerId
-                   , COALESCE (tmpMIContainer_Summ.ContainerId_Summ, 0) AS ContainerId_Summ
+                   , COALESCE (tmpMIContainer_Summ.ContainerId_Summ, CASE WHEN inIsInfoMoney = TRUE THEN tmpMIContainer_Count.ContainerId ELSE 0 END) AS ContainerId_Summ
                    , COALESCE (tmpMIContainer_Summ.AccountId, 0) AS AccountId
                    , COALESCE (tmpMIContainer_Summ.LocationId, tmpMIContainer_Count.LocationId) AS LocationId
                    , COALESCE (tmpMIContainer_Summ.GoodsId, tmpMIContainer_Count.GoodsId) AS GoodsId

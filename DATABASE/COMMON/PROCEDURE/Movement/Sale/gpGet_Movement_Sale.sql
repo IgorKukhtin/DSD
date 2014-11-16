@@ -66,10 +66,10 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS ContractTagName
              , 0                     			    AS RouteSortingId
              , CAST ('' AS TVarChar) 			    AS RouteSortingName
-             , ObjectCurrency.Id                            AS CurrencyDocumentId
-             , ObjectCurrency.ValueData                     AS CurrencyDocumentName
-             , ObjectCurrency.Id                            AS CurrencyPartnerId
-             , ObjectCurrency.ValueData                     AS CurrencyPartnerName
+             , Object_Currency.Id                           AS CurrencyDocumentId
+             , Object_Currency.ValueData                    AS CurrencyDocumentName
+             , Object_Currency.Id                           AS CurrencyPartnerId
+             , Object_Currency.ValueData                    AS CurrencyPartnerName
              , CAST ('' AS TVarChar) 			    AS InvNumberOrder
              , CAST (0  AS INTEGER)                         AS PriceListId
              , CAST ('' AS TVarChar) 			    AS PriceListName
@@ -81,7 +81,7 @@ BEGIN
              , FALSE                                        AS isCOMDOC
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              LEFT JOIN Object as ObjectCurrency ON ObjectCurrency.Id = zc_Enum_Currency_Basis();
+              LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
      ELSE
 
      RETURN QUERY

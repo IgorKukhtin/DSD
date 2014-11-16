@@ -182,6 +182,7 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeBNClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -1192,6 +1193,7 @@ procedure TMainForm.cbCompleteIncomeBNClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   Present: TDateTime;
@@ -1203,7 +1205,7 @@ begin
      zc_rvYes:=0;
      zc_rvNo:=1;
      //
-     if ParamCount = 1 then
+     if ParamStr(1)='alan_dp_ua' then
      with toZConnection do begin
         Connected:=false;
         HostName:='integer-srv.alan.dp.ua';
@@ -1219,7 +1221,8 @@ begin
         User:='postgres';
         Password:='postgres';
         //
-        if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
+        //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
+        isGlobalLoad:=zc_rvNo;
      end;
      //
      //cbAllGuide.Checked:=true;
@@ -1241,6 +1244,18 @@ begin
      zc_Enum_PaidKind_FirstForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_FirstForm').AsInteger;
      fOpenSqToQuery ('select zc_Enum_PaidKind_SecondForm from zc_Enum_PaidKind_SecondForm()');
      zc_Enum_PaidKind_SecondForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_SecondForm').AsInteger;
+     //
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+     if ParamStr(2)='auto'
+     then begin
+               cbSendUnitBranch.Checked:=true;
+               StartDateEdit.Text:=DateToStr(Date-1);
+               EndDateEdit.Text:=DateToStr(Date-1);
+               OKDocumentButtonClick(Self);
+          end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -1373,6 +1388,8 @@ var tmpDate1,tmpDate2:TDateTime;
     StrTime:String;
     myRecordCount1,myRecordCount2:Integer;
 begin
+     if ParamStr(2)<>'auto'
+     then
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      {if not cbBeforeSave.Checked
      then begin
@@ -6745,7 +6762,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PriceList;
 var inPriceWithVAT:boolean;
-    inVATPercent:Integer;
+    inVATPercent, inCurrencyId:Integer;
 begin
      if (not cbPriceList.Checked)or(not cbPriceList.Enabled) then exit;
      //
@@ -6782,6 +6799,7 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, FALSE);
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCurrencyId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -6795,9 +6813,14 @@ begin
                   inPriceWithVAT:=toSqlQuery.FieldByName('RetV').AsBoolean;
                   fOpenSqToQuery ('select ValueData AS RetV from ObjectFloat where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectFloat_PriceList_VATPercent()');
                   inVATPercent:=toSqlQuery.FieldByName('RetV').AsInteger;
+                  fOpenSqToQuery ('select ValueData AS RetV from ObjectLink where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectLink_PriceList_Currency()');
+                  if toSqlQuery.FieldByName('RetV').AsInteger<>0
+                  then inCurrencyId:=toSqlQuery.FieldByName('RetV').AsInteger
+                  else inCurrencyId:=14461;//грн
              end
              else begin inPriceWithVAT:=false;
                         inVATPercent:=20;
+                        inCurrencyId:=14461;//грн
                   end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
@@ -6805,6 +6828,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=inPriceWithVAT;
              toStoredProc.Params.ParamByName('inVATPercent').Value:=inVATPercent;
+             toStoredProc.Params.ParamByName('inCurrencyId').Value:=inCurrencyId;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
@@ -17787,12 +17811,12 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind=zc_bkOut()'
            +'  and Bill.Id_Postgres>0'
-           +'  and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
+           //+'  and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()');
         Add('order by OperDate,InvNumber,ObjectId');
         Open;
 
-        cbLoss.Caption:='5.('+IntToStr(RecordCount)+') Списание';
+        cbCompleteLoss.Caption:='5.('+IntToStr(RecordCount)+') Списание';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -17917,7 +17941,7 @@ begin
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkOut()'
-           +'  and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
+           //+'  and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            //+'  and isnull(Bill.KindAuto,0) = 0'
            );
@@ -18021,7 +18045,7 @@ begin
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind = zc_bkOut()'
            +'        and Bill.Id_Postgres>0'
-           +'        and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
+           //+'        and (Bill.BillNumber<>0 or Bill.FromId <> Bill.ToId)'
            +'        and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            );
         Add('      group by Bill.Id'

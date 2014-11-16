@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore, dsdDB,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dxSkinsCore, dsdAddOn, cxCheckBox;
+  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dxSkinsCore, dsdAddOn, cxCheckBox,
+  dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TPriceListEditForm = class(TParentForm)
@@ -29,6 +30,9 @@ type
     edPriceWithVAT: TcxCheckBox;
     cxLabel2: TcxLabel;
     ceVATPercent: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public

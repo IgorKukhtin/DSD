@@ -40,6 +40,11 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
   DECLARE vbChangePrice TFloat;
   DECLARE vbPaidKindId Integer;
+  DECLARE vbCurrencyDocumentId Integer;
+  DECLARE vbCurrencyPartnerId Integer;
+  DECLARE vbCurrencyPartnerValue TFloat;
+  DECLARE vbParPartnerValue TFloat;
+
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -54,7 +59,13 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)
+          , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, 0) AS CurrencyDocumentId
+          , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 0)  AS CurrencyPartnerId
+          , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
+          , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
             INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbPaidKindId
+               , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyPartnerValue, vbParPartnerValue
+
       FROM Movement
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id

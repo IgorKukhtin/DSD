@@ -610,25 +610,42 @@ BEGIN
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.ContainerId
            FROM (SELECT CASE WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                              AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!
                                  THEN CASE WHEN tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_70102() -- Производственное оборудование
                                                      -- !!!временно для первого раза!!!
                                                 THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60201) -- Амортизация + Производственные ОС + Основные средства*****
                                                 -- !!!временно для первого раза!!!
                                            ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
                                       END
-                             WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                             WHEN(tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                               OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                 )
+                              AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!
                                        -- !!!временно для первого раза!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20509) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + ГСМ
 
                              WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                              AND vbOperDate < '01.06.2014' -- !!!временно для первого раза!!!
                                        -- !!!временно для первого раза!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20504) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Продукция
 
+                             WHEN tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                              AND vbOperDate >= '01.06.2014' -- !!!временно!!!
+                                       -- !!!временно!!!
+                                  THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20504) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Продукция
+
                              ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
-                                                                , inProfitLossDirectionId  := vbProfitLossDirectionId
+                                                                , inProfitLossDirectionId  := CASE WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
+                                                                                                                                                                                            , 32032 -- Склад Брак
+                                                                                                                                                                                            , 32033 -- Склад УТИЛЬ
+                                                                                                                                                                                            , 22122 -- Склад возвратов ф.Запорожье
+                                                                                                                                                                                             )
+                                                                                                                    )
+                                                                                                        AND vbOperDate >= '01.06.2014' -- !!!временно кроме первого раза!!!
+                                                                                                        THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = 10900) -- Результат основной деятельности + Утилизация возвратов
+                                                                                                   ELSE vbProfitLossDirectionId
+                                                                                              END
                                                                 , inInfoMoneyDestinationId := tmpItem_group.InfoMoneyDestinationId_calc
                                                                 , inInfoMoneyId            := NULL
                                                                 , inUserId                 := vbUserId
@@ -641,20 +658,25 @@ BEGIN
                  FROM (SELECT _tmpItemSumm.ContainerId
                             , ViewObject_InfoMoney.InfoMoneyDestinationId
                             , ViewObject_InfoMoney.InfoMoneyId
-                            , CASE WHEN (vbAccountDirectionId = zc_Enum_AccountDirection_20100() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на складах ГП AND Доходы + Мясное сырье
-                                     OR (vbAccountDirectionId = zc_Enum_AccountDirection_20700() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на филиалах ГП AND Доходы + Мясное сырье
-                                        THEN zc_Enum_InfoMoneyDestination_30100() -- Общефирменные + Продукция
+                            , CASE WHEN (ContainerLinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
+                                     OR (ContainerLinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                                     OR (ContainerLinkObject_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() AND vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()) -- Запасы + на производстве AND Ирна
+                                     OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Запасы + на производстве AND Доходы + Продукция
+                                     OR (vbAccountDirectionId = zc_Enum_AccountDirection_20400() AND ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Запасы + на производстве AND Доходы + Мясное сырье
+                                        THEN zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                                   WHEN ViewObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                        THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                    ELSE ViewObject_InfoMoney.InfoMoneyDestinationId
                               END AS InfoMoneyDestinationId_calc
                        FROM _tmpItemSumm
+                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
+                                                          ON ContainerLinkObject_GoodsKind.ContainerId = _tmpItemSumm.ContainerId
+                                                         AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                           ON ContainerLinkObject_InfoMoney.ContainerId = _tmpItemSumm.ContainerId
                                                          AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                             LEFT JOIN Object_InfoMoney_View AS ViewObject_InfoMoney ON ViewObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
                        WHERE _tmpItemSumm.OperSumm <> 0
-                       GROUP BY _tmpItemSumm.ContainerId
-                              , ViewObject_InfoMoney.InfoMoneyDestinationId
-                              , ViewObject_InfoMoney.InfoMoneyId
                       ) AS tmpItem_group
                       LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
                                                     ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpItem_group.ContainerId

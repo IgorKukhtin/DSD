@@ -20,10 +20,10 @@ BEGIN
                 UNION SELECT 8417 AS UnitId -- ф. Николаев (Херсон)
                 UNION SELECT 8421 AS UnitId -- ф. Донецк
                 UNION SELECT 8425 AS UnitId -- ф. Харьков
---                UNION SELECT 301309 AS UnitId -- ф. Запорожье
---                UNION SELECT 18341 AS UnitId -- ф. Никополь
---                UNION SELECT 8419 AS UnitId -- ф. Крым
---                UNION SELECT 8423 AS UnitId -- ф. Одесса
+                UNION SELECT 301309 AS UnitId -- ф. Запорожье
+                UNION SELECT 18341 AS UnitId -- ф. Никополь
+                UNION SELECT 8419 AS UnitId -- ф. Крым
+                UNION SELECT 8423 AS UnitId -- ф. Одесса
                )
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
