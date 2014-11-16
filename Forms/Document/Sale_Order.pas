@@ -133,6 +133,12 @@ type
     cbCalcAmountPartner: TcxCheckBox;
     cxLabel21: TcxLabel;
     edParPartnerValue: TcxCurrencyEdit;
+    spSelectPrintInvoice: TdsdStoredProc;
+    spSelectPrintPack: TdsdStoredProc;
+    spSelectPrintPack21: TdsdStoredProc;
+    spSelectPrintPack22: TdsdStoredProc;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

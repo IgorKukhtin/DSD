@@ -3,28 +3,31 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1389
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -412
-  ExplicitWidth = 1405
-  ExplicitHeight = 703
+  ExplicitWidth = 1397
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1389
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1389
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1389
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1385
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1383
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1389
-        Height = 518
-        ExplicitWidth = 1389
-        ExplicitHeight = 518
+        Width = 1383
+        Height = 514
+        ExplicitLeft = 24
+        ExplicitTop = 216
+        ExplicitWidth = 1383
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -332,7 +335,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1083,6 +1086,39 @@ inherited SaleForm: TSaleForm
         end>
       Caption = 'actExecPrintStoredProc'
     end
+    object actPrint_Spec: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoice
+        end>
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleSpec'
+      ReportNameParam.Value = 'PrintMovement_SaleSpec'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object spEDIConnect: TdsdExecStoredProc
       Category = 'EDI'
       MoveParams = <>
@@ -1269,7 +1305,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1365,6 +1401,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Spec'
         end
         item
           Visible = True
@@ -1467,6 +1507,10 @@ inherited SaleForm: TSaleForm
     end
     object bbPrint_Pack22: TdxBarButton
       Action = actPrint_Pack22
+      Category = 0
+    end
+    object bbPrint_Spec: TdxBarButton
+      Action = actPrint_Spec
       Category = 0
     end
   end
