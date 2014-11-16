@@ -57,31 +57,45 @@ BEGIN
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
-          , COALESCE (MovementFloat_ChangePrice.ValueData, 0)
-          , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)
+          , COALESCE (MovementFloat_ChangePrice.ValueData, 0)          AS ChangePrice
+          , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)         AS PaidKindId
           , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, 0) AS CurrencyDocumentId
           , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 0)  AS CurrencyPartnerId
-          , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
-          , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+          , MovementFloat_CurrencyPartnerValue.ValueData               AS CurrencyPartnerValue
+          , MovementFloat_ParPartnerValue.ValueData                    AS ParPartnerValue
             INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyPartnerValue, vbParPartnerValue
 
       FROM Movement
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                    ON MovementFloat_VATPercent.MovementId = Movement.Id
-                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
+           LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                   ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                  AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+           LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                   ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                  AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind())
+                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                        ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                       AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                        ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                       AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+
       WHERE Movement.Id = inMovementId;
 
 

@@ -109,7 +109,27 @@ BEGIN
                                              , inUserId         := zfCalc_UserAdmin() :: Integer
                                              , inIsLastComplete := inIsNoHistoryCost);
      ELSE
+     -- !!!5 - ReturnOut!!!
+     IF vbMovementDescId = zc_Movement_ReturnOut()
+     THEN
+              -- !!!ReturnOut!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_70203 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+              -- !!!ReturnOut!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                                        , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                                        , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
+                                        , ContainerId_ProfitLoss_70203 Integer
+                                        , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                        , BusinessId_From Integer
+                                        , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                                        , PartionGoodsId Integer) ON COMMIT DROP;
+             -- !!! проводим - ReturnOut !!!
+             PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
+                                                  , inUserId         := zfCalc_UserAdmin() :: Integer
+                                                  , inIsLastComplete := inIsNoHistoryCost);
+     ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

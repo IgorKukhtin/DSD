@@ -12,7 +12,6 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -321,6 +320,7 @@ object CurrencyValue_ObjectForm: TCurrencyValue_ObjectForm
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
+        ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
       end

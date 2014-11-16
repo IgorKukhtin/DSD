@@ -635,7 +635,17 @@ BEGIN
                                        -- !!!временно!!!
                                   THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20504) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Продукция
 
-                             ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
+                             ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
+                                                                                                                                                                                            , 32032 -- Склад Брак
+                                                                                                                                                                                            , 32033 -- Склад УТИЛЬ
+                                                                                                                                                                                            , 22122 -- Склад возвратов ф.Запорожье
+                                                                                                                                                                                             )
+                                                                                                                    )
+                                                                                                        AND vbOperDate >= '01.06.2014' -- !!!временно кроме первого раза!!!
+                                                                                                        AND tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                        THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = 10000) -- Результат основной деятельности
+                                                                                                   ELSE vbProfitLossGroupId
+                                                                                              END
                                                                 , inProfitLossDirectionId  := CASE WHEN vbUnitId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND ObjectCode IN (32031 -- Склад Возвратов
                                                                                                                                                                                             , 32032 -- Склад Брак
                                                                                                                                                                                             , 32033 -- Склад УТИЛЬ
@@ -643,6 +653,7 @@ BEGIN
                                                                                                                                                                                              )
                                                                                                                     )
                                                                                                         AND vbOperDate >= '01.06.2014' -- !!!временно кроме первого раза!!!
+                                                                                                        AND tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                         THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = 10900) -- Результат основной деятельности + Утилизация возвратов
                                                                                                    ELSE vbProfitLossDirectionId
                                                                                               END

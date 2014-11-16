@@ -79,7 +79,7 @@ BEGIN
    , tmpCurrency.Amount   :: TFloat AS CurrencyValue
    , tmpCurrency.ParValue :: TFloat AS ParValue
    FROM Object_Currency_View
-        LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_Currency_View.CurrencyId
+        LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_Currency_View.Id
   ;
   
 END;$BODY$

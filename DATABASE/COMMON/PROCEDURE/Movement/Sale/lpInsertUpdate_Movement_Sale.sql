@@ -48,11 +48,22 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
+     -- проверка
+     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyDocumentId <> inCurrencyPartnerId
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверное значение <Валюта (цена)> или <Валюта (покупатель)>';
+     END IF;
 
      -- !!!Меняем параметры!!!
      IF COALESCE (inCurrencyDocumentId, 0) = 0 THEN inCurrencyDocumentId:= zc_Enum_Currency_Basis(); END IF;
      -- !!!Меняем параметры!!!
      IF COALESCE (inCurrencyPartnerId, 0) = 0 THEN inCurrencyPartnerId:= zc_Enum_Currency_Basis(); END IF;
+     -- !!!Меняем параметры!!!
+     IF inCurrencyDocumentId = inCurrencyPartnerId
+     THEN ioCurrencyPartnerValue := 0;
+          ioParPartnerValue:= 0;
+     END IF;
+
 
 
      -- Прайс-лист
@@ -106,7 +117,13 @@ BEGIN
      -- рассчет курса для баланса
      IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
      THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyId,  inPaidKindId:= inPaidKindId);
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= inPaidKindId);
+     ELSE IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
+          THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+               FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+          ELSE outCurrencyValue:= 0;
+               outParValue:=0;
+          END IF;
      END IF;
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
@@ -114,10 +131,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, outParValue);
 
      -- рассчет курса для перевода из вал. док. в валюту контрагента
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
+     /*IF inCurrencyDocumentId <> inCurrencyPartnerId
      THEN SELECT Amount, ParValue INTO ioCurrencyPartnerValue, ioParPartnerValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= inCurrencyDocumentId, inCurrencyToId:= inCurrencyPartnerId,  inPaidKindId:= inPaidKindId);
-     END IF;
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= inCurrencyDocumentId, inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+     END IF;*/
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, ioCurrencyPartnerValue);
      -- сохранили свойство <>
