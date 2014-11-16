@@ -39,6 +39,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     clPrice: TcxGridDBColumn;
+    clChildPrice: TcxGridDBColumn;
+    clPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -14,17 +14,17 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 973
-    ExplicitHeight = 287
+    ExplicitHeight = 370
     ClientRectBottom = 370
     ClientRectRight = 973
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 973
-      ExplicitHeight = 287
+      ExplicitHeight = 370
       inherited cxGrid: TcxGrid
         Width = 973
         Height = 370
         ExplicitWidth = 973
-        ExplicitHeight = 287
+        ExplicitHeight = 370
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -238,6 +238,20 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clChildPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clPercent: TcxGridDBColumn
+            Caption = '% '#1074#1099#1093#1086#1076#1072
+            DataBinding.FieldName = 'Percent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50

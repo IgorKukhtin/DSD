@@ -16,6 +16,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar
              , Amount_Sh TFloat, HeadCount TFloat, Summ TFloat
              , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
              , ChildAmount_Sh TFloat, ChildSumm TFloat, Price TFloat
+             , ChildPrice TFloat, Percent TFloat
              )   
 AS
 $BODY$
@@ -79,6 +80,9 @@ BEGIN
 
            , tmpOperationGroup.ChildSumm :: TFloat AS ChildSumm
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           
+           , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat         AS ChildPrice
+           , CASE WHEN tmpOperationGroup.Amount <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / tmpOperationGroup.Amount) ,0) ELSE 0 END   ::TFloat   AS Percent  
 
       FROM (
             SELECT CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
