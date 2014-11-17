@@ -3,7 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1389
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -424
   ExplicitWidth = 1405
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -877,6 +876,7 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -907,6 +907,7 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1103,6 +1104,9 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
+            ';GoodsKindName'
         end>
       Params = <
         item

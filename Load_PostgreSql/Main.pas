@@ -7341,7 +7341,7 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
                        if (1=0)or(FieldByName('Id_Postgres18').AsInteger=0)
                        then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id18_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
-             // 19
+             // 19 Eng_byVED
              if FieldByName('is19').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
                        toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres19').AsInteger;
@@ -7361,7 +7361,7 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
                        if (1=0)or(FieldByName('Id_Postgres19').AsInteger=0)
                        then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id19_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
-             // 20
+             // 20 Rus_byVED
              if FieldByName('is20').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
                        toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres20').AsInteger;
@@ -7687,10 +7687,10 @@ begin
         Add('     , case when trim (GoodsProperty_Detail.GroupName_byVED)<>'+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.NameEng_byVED)<>'+FormatToVarCharServer_notNULL('')+' or isnull(GoodsProperty_Detail.Id19_pg,0) <> 0 then zc_rvYes() else zc_rvNo() end as is19');
         Add('     , GroupName_byVED as GroupName19');
         Add('     , NameEng_byVED as ObjectName19');
-        Add('     , cast (null as TSumm) as Amount19');
+        Add('     , Amount4 as Amount19');
 
-        Add('     , null as BarCode19');
-        Add('     , null as Article19');
+        Add('     , BarCode4 as BarCode19');
+        Add('     , Article4 as Article19');
         Add('     , BarCode19 as BarCodeGLN19');
         Add('     , Article19 as ArticleGLN19');
         Add('     , 300422 as GoodsPropertyId19'); // ВЭД Eng
@@ -7703,8 +7703,8 @@ begin
         Add('     , NameRus_byVED as ObjectName20');
         Add('     , cast (null as TSumm) as Amount20');
 
-        Add('     , null as BarCode20');
-        Add('     , null as Article20');
+        Add('     , BarCode4 as BarCode20');
+        Add('     , Article4 as Article20');
         Add('     , BarCode20 as BarCodeGLN20');
         Add('     , Article20 as ArticleGLN20');
         Add('     , 300423 as GoodsPropertyId20'); // ВЭД Рус

@@ -505,8 +505,7 @@ BEGIN
              , ObjectFloat_Amount.ValueData         AS Amount
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
-             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
-             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+             , ObjectString_GroupName.ValueData     AS GroupName
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -524,12 +523,9 @@ BEGIN
                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
 
-             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+             LEFT JOIN ObjectString AS ObjectString_GroupName
+                                    ON ObjectString_GroupName.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -540,9 +536,11 @@ BEGIN
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+             , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.Article
-             , tmpObject_GoodsPropertyValue.ArticleGLN
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+             , tmpObject_GoodsPropertyValue.GroupName
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' OR BarCode <> '' OR Article <> '' OR GroupName <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -564,36 +562,6 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-     , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
-                            , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
-                            , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                       FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
-                             FROM MovementLinkMovement AS MovementLinkMovement_Order
-                             WHERE MovementLinkMovement_Order.MovementId = inMovementId
-                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                            ) AS tmpMovement
-                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                                                   AND MovementItem.isErased   = FALSE
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                       GROUP BY MovementItem.ObjectId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                              , COALESCE (MIFloat_Price.ValueData, 0)
-                              , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                         )
        SELECT
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -601,30 +569,23 @@ BEGIN
            , Object_TradeMark.ValueData      AS TradeMarkName
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
-           , Object_GoodsKind.ValueData      AS GoodsKindName
-           , Object_Measure.ValueData        AS MeasureName
+           , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_Measure.ValueData           AS MeasureName
            , OS_Measure_InternalCode.ValueData  AS MeasureIntCode
-           , CASE Object_Measure.Id
-                  WHEN zc_Measure_Sh() THEN 'PCE'
-                  ELSE 'KGM'
-             END::TVarChar                   AS DELIVEREDUNIT
+
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
-           , tmpMI_Order.Amount              AS AmountOrder
 
            , tmpMI.Price                     AS Price
            , tmpMI.PriceInCur                AS PriceInCur
 
-
-
            , tmpMI.CountForPrice             AS CountForPrice
 
+           , COALESCE (tmpObject_GoodsPropertyValue.GroupName, '')  AS GroupName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
              -- сумма по ценам док-та
            , CASE WHEN tmpMI.CountForPrice <> 0
@@ -756,9 +717,6 @@ BEGIN
                     , Object_CurrencyDocument.code
 
             ) AS tmpMI
-
-            LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
-                                 AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
