@@ -52,6 +52,7 @@ type
     CorrespondentAccount: TcxGridDBColumn;
     BeneficiarysBankAccount: TcxGridDBColumn;
     BeneficiarysAccount: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

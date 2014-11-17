@@ -96,7 +96,6 @@ type
     actChecked: TdsdExecStoredProc;
     colIsEDI: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
-    colCurrencyValue: TcxGridDBColumn;
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
     actPrint_Invoice: TdsdPrintAction;
@@ -110,6 +109,14 @@ type
     actPrint_Pack21: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
+    spSelectPrintInvoice: TdsdStoredProc;
+    TotalSummCurrency: TcxGridDBColumn;
+    CurrencyValue: TcxGridDBColumn;
+    ParValue: TcxGridDBColumn;
+    CurrencyPartnerValue: TcxGridDBColumn;
+    ParPartnerValue: TcxGridDBColumn;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

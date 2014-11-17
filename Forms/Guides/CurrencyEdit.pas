@@ -9,7 +9,8 @@ uses
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, cxCheckBox,
   dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
-  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dxSkinsCore, dsdAddOn;
+  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dxSkinsCore, dsdAddOn,
+  dxSkinsDefaultPainters;
 
 type
   TCurrencyEditForm = class(TParentForm)

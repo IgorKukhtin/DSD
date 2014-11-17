@@ -1,7 +1,7 @@
 ﻿object CurrencyEditForm: TCurrencyEditForm
   Left = 0
   Top = 0
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074#1072#1083#1102#1090#1099
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1072#1083#1102#1090#1091'>'
   ClientHeight = 201
   ClientWidth = 338
   Color = clBtnFace
@@ -136,6 +136,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -177,6 +178,7 @@
         Value = ''
         Component = edMFO
       end>
+    PackSize = 1
     Left = 168
     Top = 96
   end

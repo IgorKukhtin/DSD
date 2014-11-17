@@ -1,24 +1,24 @@
 inherited MovementItemContainerForm: TMovementItemContainerForm
   Caption = #1055#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
   ClientHeight = 368
-  ClientWidth = 917
+  ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 933
+  ExplicitWidth = 998
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 917
+    Width = 982
     Height = 342
     ExplicitWidth = 917
     ExplicitHeight = 342
     ClientRectBottom = 342
-    ClientRectRight = 917
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 917
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
-        Width = 917
+        Width = 982
         Height = 342
         ExplicitWidth = 917
         ExplicitHeight = 342
@@ -39,6 +39,11 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Format = ',0.####'
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Currency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -55,11 +60,17 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Format = ',0.####'
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Currency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -268,6 +279,22 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Amount_Currency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            DataBinding.FieldName = 'Amount_Currency'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072

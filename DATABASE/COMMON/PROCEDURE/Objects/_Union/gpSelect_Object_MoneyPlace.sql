@@ -49,6 +49,7 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_Cash.DescId = zc_Object_Cash()
+       AND Object_Cash.isErased = FALSE
     UNION ALL
      SELECT Object_BankAccount_View.Id
           , Object_BankAccount_View.Code     
@@ -75,6 +76,7 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
+       AND Object_BankAccount_View.isErased = FALSE
     UNION ALL
      SELECT Object_Member.Id       
           , Object_Member.ObjectCode     

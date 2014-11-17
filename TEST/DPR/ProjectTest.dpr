@@ -60,7 +60,7 @@ uses
   GoodsKindEdit in '..\..\Forms\Guides\GoodsKindEdit.pas' {GoodsKindEditForm},
   GoodsPropertyEdit in '..\..\Forms\GoodsPropertyEdit.pas' {GoodsPropertyEditForm},
   GoodsProperty in '..\..\Forms\GoodsProperty.pas' {GoodsPropertyForm},
-  CurrencyEdit in '..\..\Forms\CurrencyEdit.pas' {CurencyEditForm},
+  CurrencyEdit in '..\..\Forms\Guides\CurrencyEdit.pas' {CurencyEditForm},
   GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm},
   PriceListEdit in '..\..\Forms\Guides\PriceListEdit.pas' {PriceListEditForm},
   PriceList_Object in '..\..\Forms\Guides\PriceList_Object.pas' {PriceList_ObjectForm},
@@ -73,7 +73,7 @@ uses
   ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
   BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
-  Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
+  Currency in '..\..\Forms\Guides\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   ContractKindEdit in '..\..\Forms\Guides\ContractKindEdit.pas' {ContractKindEditForm},
@@ -457,7 +457,7 @@ uses
   MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
-  Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
+  CurrencyValue_Object in '..\..\Forms\Guides\CurrencyValue_Object.pas' {CurrencyValue_ObjectForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
   CorrespondentAccountTest in '..\SOURCE\Objects\All\CorrespondentAccountTest.pas',
   Storage_Object in '..\..\Forms\Guides\Storage_Object.pas' {Storage_ObjectForm: TParentForm},
@@ -570,7 +570,8 @@ uses
   PartnerTag in '..\..\Forms\Guides\PartnerTag.pas' {PartnerTagForm: TParentForm},
   PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm},
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
-  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
+  Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

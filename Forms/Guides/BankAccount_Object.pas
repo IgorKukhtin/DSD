@@ -43,6 +43,9 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     bbGridToExcel: TdxBarButton;
+    CurrencyValue: TcxGridDBColumn;
+    ParValue: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

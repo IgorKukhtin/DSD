@@ -15,6 +15,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -24,8 +25,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 618
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 588
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,37 +50,58 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object clName: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 134
-      end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentVert = vaCenter
-        Width = 124
-      end
-      object clBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
-        DataBinding.FieldName = 'BankName'
-        HeaderAlignmentVert = vaCenter
-        Width = 96
       end
       object clCurrency: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 55
+      end
+      object CurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089
+        DataBinding.FieldName = 'CurrencyValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object ParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object clJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 124
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
@@ -266,6 +286,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
@@ -273,6 +294,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -280,13 +302,42 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
         end
         item
           Name = 'CurrencyId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyId'
         end
         item
           Name = 'CurrencyName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CurrencyName'
+          DataType = ftString
+        end
+        item
+          Name = 'CurrencyValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyValue'
+          DataType = ftFloat
+        end
+        item
+          Name = 'ParValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ParValue'
+          DataType = ftFloat
+        end
+        item
+          Name = 'BankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -295,13 +346,22 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankAccount'
+    StoredProcName = 'gpSelect_Object_BankAccount_Currency'
     DataSet = MasterCDS
     DataSets = <
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
     Left = 152
     Top = 152
   end
@@ -334,5 +394,16 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     SummaryItemList = <>
     Left = 216
     Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = '0'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 416
+    Top = 152
   end
 end

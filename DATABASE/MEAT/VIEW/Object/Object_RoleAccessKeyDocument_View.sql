@@ -52,7 +52,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                           THEN TRUE
                                      ELSE NULL
                                 END AS isCash
-                              , CASE WHEN Id IN (zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
+                              , CASE WHEN Id IN (zc_Enum_Process_InsertUpdate_Movement_Income()
+                                               , zc_Enum_Process_InsertUpdate_Movement_ReturnOut()
                                                , zc_Enum_Process_InsertUpdate_Movement_Sale()
                                                , zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()
                                                , zc_Enum_Process_InsertUpdate_Movement_ReturnIn()
@@ -60,6 +61,16 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                , zc_Enum_Process_InsertUpdate_Movement_Loss()
+                                               , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+
+                                               , zc_Enum_Process_InsertUpdate_Movement_Tax()
+                                               , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
+                                               , zc_Enum_Process_InsertUpdate_Movement_PriceCorrective()
+                                               , zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn()
+                                               , zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut()
+
+                                               , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
+                                               , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
                                                 )
                                           THEN TRUE
                                      ELSE NULL

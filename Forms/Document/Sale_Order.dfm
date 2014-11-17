@@ -1,27 +1,27 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1389
+  ExplicitWidth = 1405
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1389
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1389
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1389
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1389
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1389
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1389
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -107,6 +107,7 @@ inherited Sale_OrderForm: TSale_OrderForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -283,10 +284,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1389
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1389
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -501,7 +502,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1206
+      Left = 1260
       Top = 63
       Properties.Buttons = <
         item
@@ -513,17 +514,17 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1206
+      Left = 1260
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 32
@@ -555,14 +556,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
-    object edCurrencyValue: TcxCurrencyEdit
+    object edCurrencyPartnerValue: TcxCurrencyEdit
       Left = 1155
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 36
       Width = 44
     end
@@ -581,7 +582,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 127
+      Width = 177
     end
     object cxLabel19: TcxLabel
       Left = 1072
@@ -617,6 +618,21 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 42
       Width = 81
+    end
+    object cxLabel21: TcxLabel
+      Left = 1202
+      Top = 44
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
+    object edParPartnerValue: TcxCurrencyEdit
+      Left = 1202
+      Top = 63
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = False
+      TabOrder = 44
+      Width = 47
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -1048,6 +1064,39 @@ inherited Sale_OrderForm: TSale_OrderForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
+    object actPrint_Spec: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoice
+        end>
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleSpec'
+      ReportNameParam.Value = 'PrintMovement_SaleSpec'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1203,6 +1252,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Spec'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Pack'
         end
         item
@@ -1271,6 +1324,10 @@ inherited Sale_OrderForm: TSale_OrderForm
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
       Visible = ivAlways
       Control = edChangePercentAmount
+    end
+    object bbPrint_Spec: TdxBarButton
+      Action = actPrint_Spec
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1431,12 +1488,6 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftFloat
       end
       item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = edCurrencyValue
-        DataType = ftFloat
-      end
-      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1533,6 +1584,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
       end
       item
         Name = 'MovementId_Order'
@@ -1738,10 +1801,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyPartnerValue'
         Value = 0.000000000000000000
-        Component = edCurrencyValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 162
     Top = 312
@@ -1806,6 +1877,18 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = edDocumentTaxKind
+      end
+      item
+        Control = edCurrencyDocument
+      end
+      item
+        Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edParPartnerValue
       end>
     Left = 232
     Top = 193
@@ -2437,12 +2520,29 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         Component = edPriceWithVAT
         DataType = ftBoolean
+        ParamType = ptInput
       end
       item
         Name = 'VATPercent'
         Value = Null
         Component = edVATPercent
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 804
     Top = 64
@@ -2633,9 +2733,9 @@ inherited Sale_OrderForm: TSale_OrderForm
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
-    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.Value = 'TCurrencyValue_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCurrency_ObjectForm'
+    FormName = 'TCurrencyValue_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2653,6 +2753,32 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inCurrencyFromId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
       end>
     Left = 1080
   end
@@ -2884,5 +3010,88 @@ inherited Sale_OrderForm: TSale_OrderForm
       end>
     Left = 188
     Top = 24
+  end
+  object spSelectPrintInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 511
+    Top = 520
+  end
+  object spSelectPrintPack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 496
+  end
+  object spSelectPrintPack21: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 544
+  end
+  object spSelectPrintPack22: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 592
   end
 end

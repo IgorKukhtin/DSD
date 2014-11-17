@@ -1,31 +1,34 @@
 -- Function: gpInsertUpdate_Movement_Sale_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
-    IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
-    IN inChecked             Boolean   , -- Проверен
-   OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
-   OUT outVATPercent         TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inContractId          Integer   , -- Договора
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
-    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-    IN inDocumentTaxKindId_inf Integer , -- Тип формирования налогового документа
-    IN inMovementId_Order    Integer   , -- ключ Документа
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
-   OUT outCurrencyValue      TFloat    , -- курс валюты
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber             TVarChar   , -- Номер документа
+    IN inInvNumberPartner      TVarChar   , -- Номер накладной у контрагента
+    IN inInvNumberOrder        TVarChar   , -- Номер заявки контрагента
+    IN inOperDate              TDateTime  , -- Дата документа
+    IN inOperDatePartner       TDateTime  , -- Дата накладной у контрагента
+    IN inChecked               Boolean    , -- Проверен
+   OUT outPriceWithVAT         Boolean    , -- Цена с НДС (да/нет)
+   OUT outVATPercent           TFloat     , -- % НДС
+    IN inChangePercent         TFloat     , -- (-)% Скидки (+)% Наценки
+    IN inFromId                Integer    , -- От кого (в документе)
+    IN inToId                  Integer    , -- Кому (в документе)
+    IN inPaidKindId            Integer    , -- Виды форм оплаты
+    IN inContractId            Integer    , -- Договора
+    IN inRouteSortingId        Integer    , -- Сортировки маршрутов
+    IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
+    IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
+    IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
+    IN inMovementId_Order      Integer    , -- ключ Документа
+ INOUT ioPriceListId           Integer    , -- Прайс лист
+   OUT outPriceListName        TVarChar   , -- Прайс лист
+   OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
+   OUT outParValue             TFloat     , -- Номинал для перевода в валюту баланса
+ INOUT ioCurrencyPartnerValue  TFloat     , -- Курс для расчета суммы операции
+ INOUT ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции
+    IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -111,28 +114,32 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent, tmp.outCurrencyValue
-            INTO ioId, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent, outCurrencyValue
-     FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
-                                      , inInvNumber        := inInvNumber
-                                      , inInvNumberPartner := inInvNumberPartner
-                                      , inInvNumberOrder   := inInvNumberOrder
-                                      , inOperDate         := inOperDate
-                                      , inOperDatePartner  := inOperDatePartner
-                                      , inChecked          := inChecked
-                                      -- , inPriceWithVAT     := inPriceWithVAT
-                                      -- , inVATPercent       := inVATPercent
-                                      , inChangePercent    := inChangePercent
-                                      , inFromId           := inFromId
-                                      , inToId             := inToId
-                                      , inPaidKindId       := inPaidKindId
-                                      , inContractId       := inContractId
-                                      , inRouteSortingId   := inRouteSortingId
-                                      , inCurrencyDocumentId := inCurrencyDocumentId
-                                      , inCurrencyPartnerId  := inCurrencyPartnerId
-                                      , inMovementId_Order := inMovementId_Order
-                                      , ioPriceListId      := ioPriceListId
-                                      , inUserId           := vbUserId
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName, tmp.outPriceWithVAT, tmp.outVATPercent
+          , tmp.outCurrencyValue, tmp.outParValue, tmp.ioCurrencyPartnerValue, tmp.ioParPartnerValue
+            INTO ioId, ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
+               , outCurrencyValue, outParValue, ioCurrencyPartnerValue, ioParPartnerValue
+     FROM lpInsertUpdate_Movement_Sale (ioId                   := ioId
+                                      , inInvNumber            := inInvNumber
+                                      , inInvNumberPartner     := inInvNumberPartner
+                                      , inInvNumberOrder       := inInvNumberOrder
+                                      , inOperDate             := inOperDate
+                                      , inOperDatePartner      := inOperDatePartner
+                                      , inChecked              := inChecked
+                                      -- , inPriceWithVAT       := inPriceWithVAT
+                                      -- , inVATPercent         := inVATPercent
+                                      , inChangePercent        := inChangePercent
+                                      , inFromId               := inFromId
+                                      , inToId                 := inToId
+                                      , inPaidKindId           := inPaidKindId
+                                      , inContractId           := inContractId
+                                      , inRouteSortingId       := inRouteSortingId
+                                      , inCurrencyDocumentId   := inCurrencyDocumentId
+                                      , inCurrencyPartnerId    := inCurrencyPartnerId
+                                      , inMovementId_Order     := inMovementId_Order
+                                      , ioPriceListId          := ioPriceListId
+                                      , ioCurrencyPartnerValue := ioCurrencyPartnerValue
+                                      , ioParPartnerValue      := ioParPartnerValue
+                                      , inUserId               := vbUserId
                                        ) AS tmp;
 
 

@@ -38,6 +38,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPriceWithVAT: TcxGridDBColumn;
     clVATPercent: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

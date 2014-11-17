@@ -52,6 +52,7 @@ inherited BankStatementForm: TBankStatementForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellAutoHeight = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -113,7 +114,6 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 65
           end
           object colLinkJuridicalName: TcxGridDBColumn
@@ -438,6 +438,7 @@ inherited BankStatementForm: TBankStatementForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
@@ -445,12 +446,14 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalId'
+          ParamType = ptInput
         end
         item
           Name = 'JuridicalName'
@@ -458,24 +461,41 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          ParamType = ptInput
         end
         item
           Name = 'InfoMoneyName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalName'
           DataType = ftString
         end>
       isShowModal = False

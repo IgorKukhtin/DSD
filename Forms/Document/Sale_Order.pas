@@ -110,7 +110,7 @@ type
     CurrencyDocumentGuides: TdsdGuides;
     edCurrencyDocument: TcxButtonEdit;
     cxLabel17: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     cxLabel19: TcxLabel;
@@ -131,6 +131,14 @@ type
     bbIsCalcAmountPartner: TdxBarControlContainerItem;
     edChangePercentAmount: TcxCurrencyEdit;
     cbCalcAmountPartner: TcxCheckBox;
+    cxLabel21: TcxLabel;
+    edParPartnerValue: TcxCurrencyEdit;
+    spSelectPrintInvoice: TdsdStoredProc;
+    spSelectPrintPack: TdsdStoredProc;
+    spSelectPrintPack21: TdsdStoredProc;
+    spSelectPrintPack22: TdsdStoredProc;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

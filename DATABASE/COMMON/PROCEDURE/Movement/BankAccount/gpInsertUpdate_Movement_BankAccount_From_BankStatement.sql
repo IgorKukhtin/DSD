@@ -30,21 +30,26 @@ BEGIN
 
 
      -- Выбираем все данные и сразу вызываем процедуры
-     PERFORM lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
-               inInvNumber := Movement.InvNumber, 
-               inOperDate := Movement.OperDate, 
-               inAmount := MovementFloat_Amount.ValueData, 
-               inBankAccountId := MovementLinkObject_BankAccount.ObjectId,  
-               inComment := MovementString_Comment.ValueData, 
-               inMoneyPlaceId := MovementLinkObject_Juridical.ObjectId, 
-               inContractId := MovementLinkObject_Contract.ObjectId, 
-               inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
-               inUnitId := MovementLinkObject_Unit.ObjectId, 
-               inCurrencyId := MovementLinkObject_Currency.ObjectId, 
-               inParentId := Movement.Id, 
-               inBankAccountPartnerId:= lpInsertFind_BankAccount (MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId),
-               inUserId:= vbUserId)
-
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE(Movement_BankAccount.Id, 0)
+                                               , inInvNumber            := Movement.InvNumber
+                                               , inOperDate             := Movement.OperDate
+                                               , inAmount               := MovementFloat_Amount.ValueData
+                                               , inAmountCurrency       := MovementFloat_AmountCurrency.ValueData
+                                               , inBankAccountId        := MovementLinkObject_BankAccount.ObjectId
+                                               , inComment              := MovementString_Comment.ValueData
+                                               , inMoneyPlaceId         := MovementLinkObject_Juridical.ObjectId
+                                               , inContractId           := MovementLinkObject_Contract.ObjectId
+                                               , inInfoMoneyId          := MovementLinkObject_InfoMoney.ObjectId
+                                               , inUnitId               := MovementLinkObject_Unit.ObjectId
+                                               , inCurrencyId           := MovementLinkObject_Currency.ObjectId
+                                               , inCurrencyValue        := MovementFloat_CurrencyValue.ValueData
+                                               , inParValue             := MovementFloat_ParValue.ValueData
+                                               , inCurrencyPartnerValue := MovementFloat_CurrencyPartnerValue.ValueData
+                                               , inParPartnerValue      := MovementFloat_ParPartnerValue.ValueData
+                                               , inParentId             := Movement.Id
+                                               , inBankAccountPartnerId := lpInsertFind_BankAccount (MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId)
+                                               , inUserId               := vbUserId
+                                                )
        FROM Movement
             LEFT JOIN Movement AS Movement_BankAccount 
                               ON Movement_BankAccount.ParentId = Movement.Id
@@ -98,25 +103,28 @@ BEGIN
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
  
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
 
 
-     -- 5.1. таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
-
-     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
-                               , MovementItemId Integer, ContainerId Integer
-                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
-                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, PositionId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean, IsMaster Boolean
-                                ) ON COMMIT DROP;
-
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 5.3. проводим Документы
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount())
@@ -156,6 +164,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
  25.05.14                                        * add lpComplete_Movement (... inDescId ...)

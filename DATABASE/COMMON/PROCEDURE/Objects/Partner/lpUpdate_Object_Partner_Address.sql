@@ -85,11 +85,14 @@ BEGIN
                                                                   AND ObjectLink_City_CityKind.ChildObjectId = inCityKindId
                        LEFT JOIN ObjectLink AS ObjectLink_City_Region ON ObjectLink_City_Region.ObjectId = Object_City.Id
                                                                 AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
-                                                                AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (vbRegionId, 0)
+                                                                --AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (vbRegionId, 0)
                        LEFT JOIN ObjectLink AS ObjectLink_City_Province ON ObjectLink_City_Province.ObjectId = Object_City.Id
                                                                   AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
-                                                                  AND COALESCE (ObjectLink_City_Province.ChildObjectId, 0) = COALESCE (vbProvinceId, 0)
-                  WHERE Object_City.DescId = zc_Object_City() AND Object_City.ValueData = inCityName);
+                                                                --AND COALESCE (ObjectLink_City_Province.ChildObjectId, 0) = COALESCE (vbProvinceId, 0)
+                  WHERE Object_City.DescId = zc_Object_City() AND Object_City.ValueData = inCityName
+                    AND COALESCE (ObjectLink_City_Region.ChildObjectId, 0) = COALESCE (vbRegionId, 0)
+                    AND COALESCE (ObjectLink_City_Province.ChildObjectId, 0) = COALESCE (vbProvinceId, 0)
+                  );
       IF COALESCE (vbCityId, 0) = 0
       THEN
           vbCityId := gpInsertUpdate_Object_City (vbCityId, 0, inCityName, inCityKindId, vbRegionId, vbProvinceId, inSession);
@@ -129,8 +132,10 @@ BEGIN
                                                                 AND ObjectLink_Street_City.ChildObjectId  = vbCityId
                        LEFT JOIN ObjectLink AS ObjectLink_Street_ProvinceCity ON ObjectLink_Street_ProvinceCity.ObjectId = Object_Street.Id
                                                                   AND ObjectLink_Street_ProvinceCity.DescId = zc_ObjectLink_Street_ProvinceCity()
-                                                                  AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
-                  WHERE Object_Street.DescId = zc_Object_Street() AND Object_Street.ValueData = inStreetName);
+                                                                  --AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
+                  WHERE Object_Street.DescId = zc_Object_Street() AND Object_Street.ValueData = inStreetName
+                    AND COALESCE (ObjectLink_Street_ProvinceCity.ChildObjectId, 0) = COALESCE (vbProvinceCityId, 0)
+                  );
       IF COALESCE (vbStreetId, 0) = 0
       THEN
           --

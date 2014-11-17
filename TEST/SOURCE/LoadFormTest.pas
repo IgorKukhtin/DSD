@@ -304,9 +304,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
-  // форма для просмотра
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrency_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyValue_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyValue_ObjectForm');
+
 end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;

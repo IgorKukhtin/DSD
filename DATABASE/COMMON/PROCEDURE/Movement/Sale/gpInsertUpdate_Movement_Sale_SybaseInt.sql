@@ -56,8 +56,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
-                                           , inCurrencyDocumentId  := 14461
-                                           , inCurrencyPartnerId   := NULL
+                                           , inCurrencyDocumentId  := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyDocument())
+                                           , inCurrencyPartnerId   := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyPartner())
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
@@ -68,6 +68,8 @@ BEGIN
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
                                            , ioPriceListId      := ioPriceListId
+                                           , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
+                                           , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
                                            , inSession          := inSession
                                             ) AS tmp;
      ELSE
@@ -89,8 +91,8 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
-                                           , inCurrencyDocumentId  := 14461
-                                           , inCurrencyPartnerId   := NULL
+                                           , inCurrencyDocumentId  := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyDocument())
+                                           , inCurrencyPartnerId   := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_CurrencyPartner())
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
                                                                              JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
@@ -101,6 +103,8 @@ BEGIN
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
                                            , ioPriceListId      := ioPriceListId
+                                           , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
+                                           , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
                                            , inSession          := inSession
                                             ) AS tmp;
 

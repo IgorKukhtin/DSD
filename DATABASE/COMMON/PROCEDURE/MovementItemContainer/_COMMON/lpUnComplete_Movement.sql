@@ -9,13 +9,60 @@ CREATE OR REPLACE FUNCTION lpUnComplete_Movement(
   RETURNS VOID
 AS
 $BODY$
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbDescId Integer;
+  DECLARE vbAccessKeyId Integer;
 BEGIN
 
   -- 1. Проверки на "распроведение" / "удаление"
   PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
 
   -- 2. Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId;
+  UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
+  RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+
+
+  -- для Админа  - Все Права
+  IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+  THEN 
+  -- проверка прав для <AccessKey>
+  IF vbDescId = zc_Movement_Sale()
+  THEN 
+      IF lpGetAccessKey (inUserId, COALESCE ((SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
+         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
+      END IF;
+  ELSE
+  IF vbDescId = zc_Movement_ReturnIn()
+  THEN 
+      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_ReturnIn())))
+         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
+      END IF;
+  ELSE
+  IF vbDescId = zc_Movement_Tax()
+  THEN 
+      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Tax())))
+         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
+      END IF;
+  ELSE
+  IF vbDescId = zc_Movement_TaxCorrective()
+  THEN 
+      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_TaxCorrective())))
+         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
+      END IF;
+  END IF;
+  END IF;
+  END IF;
+  END IF;
+  END IF;
+
 
   -- 3.1. Удаляем все проводки
   PERFORM lpDelete_MovementItemContainer (inMovementId);

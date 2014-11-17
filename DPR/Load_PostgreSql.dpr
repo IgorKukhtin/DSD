@@ -30,7 +30,6 @@ uses
   ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
-  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
   VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -46,7 +45,10 @@ uses
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
-  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.res}
 

@@ -37,12 +37,17 @@ type
     colPartnerBankAccount: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
     bbAddBonus: TdxBarButton;
-    PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colInfoMoneyName_all: TcxGridDBColumn;
+    colAmountCurrency: TcxGridDBColumn;
+    CurrencyValue: TcxGridDBColumn;
+    ParValue: TcxGridDBColumn;
+    CurrencyPartnerValue: TcxGridDBColumn;
+    ParPartnerValue: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

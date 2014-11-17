@@ -3,7 +3,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099'>'
   ClientHeight = 376
-  ClientWidth = 457
+  ClientWidth = 517
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 457
+    Width = 517
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -64,6 +64,13 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -259,6 +266,18 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'VATPercent'
           DataType = ftFloat
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyId'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyName'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

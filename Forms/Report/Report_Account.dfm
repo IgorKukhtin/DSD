@@ -898,6 +898,7 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'MovementId'
         end>
@@ -925,28 +926,37 @@ object Report_AccountForm: TReport_AccountForm
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
         end>
+      Enabled = False
       StoredProc = spSelectPrint
       StoredProcList = <
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'AccountName;BankName;BankAccountName'
         end>
-      Params = <>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Name = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1036,6 +1046,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 152
     Top = 248
   end
@@ -1166,6 +1177,7 @@ object Report_AccountForm: TReport_AccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'MovementId'
         ParamType = ptInput
@@ -1177,6 +1189,7 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'FormName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 128
   end
@@ -1679,16 +1692,12 @@ object Report_AccountForm: TReport_AccountForm
     Top = 77
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpReport_Account_Print'
-    DataSet = PrintHeaderCDS
+    StoredProcName = 'gpReport_BankAccount'
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -1705,27 +1714,6 @@ object Report_AccountForm: TReport_AccountForm
         ParamType = ptInput
       end
       item
-        Name = 'inAccountGroupId'
-        Value = ''
-        Component = AccountGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAccountDirectionId'
-        Value = ''
-        Component = AccountDirectionGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
@@ -1733,40 +1721,22 @@ object Report_AccountForm: TReport_AccountForm
         ParamType = ptInput
       end
       item
-        Name = 'inBusinessId'
-        Value = ''
-        Component = BusinessGuides
-        ComponentItem = 'Key'
+        Name = 'inBankAccountId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossGroupId'
-        Value = ''
-        Component = ProfitLossGroupGuides
-        ComponentItem = 'Key'
+        Name = 'inCurrencyId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossDirectionId'
-        Value = ''
-        Component = ProfitLossDirectionGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inProfitLossId'
-        Value = ''
-        Component = ProfitLossGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        Component = BranchGuides
-        ComponentItem = 'Key'
+        Name = 'inIsDetail'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 767
     Top = 232
   end
@@ -1775,11 +1745,5 @@ object Report_AccountForm: TReport_AccountForm
     Params = <>
     Left = 844
     Top = 262
-  end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 844
-    Top = 209
   end
 end

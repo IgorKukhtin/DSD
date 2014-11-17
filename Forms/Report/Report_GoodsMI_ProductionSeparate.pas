@@ -21,7 +21,7 @@ type
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clSumm: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
+    clHeadCount: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
@@ -34,9 +34,13 @@ type
     clChildGoodsGroupName: TcxGridDBColumn;
     clChildGoodsCode: TcxGridDBColumn;
     clChildGoodsName: TcxGridDBColumn;
-    clChildAmount_Weight: TcxGridDBColumn;
     clChildAmount_Sh: TcxGridDBColumn;
     clChildSumm: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    clPrice: TcxGridDBColumn;
+    clChildPrice: TcxGridDBColumn;
+    clPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

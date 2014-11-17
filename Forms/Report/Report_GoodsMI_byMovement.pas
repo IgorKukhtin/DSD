@@ -51,6 +51,9 @@ type
     clUnitCode: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;
     clJuridicalCode: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public

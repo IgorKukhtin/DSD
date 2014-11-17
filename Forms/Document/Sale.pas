@@ -123,7 +123,7 @@ type
     edCurrencyDocument: TcxButtonEdit;
     CurrencyDocumentGuides: TdsdGuides;
     cxLabel18: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
@@ -150,6 +150,11 @@ type
     actPrint_Pack21: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
+    spSelectPrintInvoice: TdsdStoredProc;
+    edParPartnerValue: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    actPrint_Spec: TdsdPrintAction;
+    bbPrint_Spec: TdxBarButton;
   private
     { Private declarations }
   public

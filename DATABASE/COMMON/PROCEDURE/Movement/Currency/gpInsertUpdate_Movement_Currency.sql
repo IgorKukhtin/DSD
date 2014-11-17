@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Currency()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Currency (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Currency(
@@ -24,6 +23,22 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Currency());
 
+     -- проверка
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не установлена <Форма оплаты>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inCurrencyFromId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не установлена <Валюта (значение)>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inCurrencyToId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не установлена <Валюта (результат)>.';
+     END IF;
+
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Currency())
      THEN
@@ -45,6 +60,7 @@ BEGIN
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId, ioId, inAmount, NULL);
     
      -- Номинал валюты для которой вводится курс
+     IF COALESCE (inParValue, 0) = 0 THEN inParValue := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), vbMovementItemId, inParValue);
 
      -- Комментарий
@@ -60,11 +76,11 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
 
      -- 5.3. проводим Документ
- --    IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())
- --    THEN
- --         PERFORM lpComplete_Movement_Currency (inMovementId := ioId
- --                                             , inUserId     := vbUserId);
- --    END IF;
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())
+     THEN
+          PERFORM lpComplete_Movement_Currency (inMovementId := ioId
+                                              , inUserId     := vbUserId);
+     END IF;
 
 END;
 $BODY$

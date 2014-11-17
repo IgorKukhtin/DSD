@@ -113,6 +113,7 @@ inherited Report_CashForm: TReport_CashForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -214,7 +215,7 @@ inherited Report_CashForm: TReport_CashForm
             Width = 90
           end
           object StartAmount: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -277,7 +278,7 @@ inherited Report_CashForm: TReport_CashForm
             Width = 80
           end
           object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2

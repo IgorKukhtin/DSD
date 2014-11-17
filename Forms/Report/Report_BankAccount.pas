@@ -23,27 +23,17 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     StartAmount: TcxGridDBColumn;
     EndAmount: TcxGridDBColumn;
+    StartAmount_Currency: TcxGridDBColumn;
+    EndAmount_Currency: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colInfoMoneyCode: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
-    SaleJournal: TdsdOpenForm;
-    ReturnInJournal: TdsdOpenForm;
-    IncomeJournal: TdsdOpenForm;
-    ReturnOutJournal: TdsdOpenForm;
-    MoneyJournal: TdsdOpenForm;
-    ServiceJournal: TdsdOpenForm;
-    SendDebtJournal: TdsdOpenForm;
-    OtherJournal: TdsdOpenForm;
+    colDebetSumm_Currency: TcxGridDBColumn;
+    colKreditSumm_Currency: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    SaleRealJournal: TdsdOpenForm;
-    ReturnInRealJournal: TdsdOpenForm;
-    TransferDebtJournal: TdsdOpenForm;
-    dsdPrintRealAction: TdsdPrintAction;
-    bbPrintReal: TdxBarButton;
     MoneyPlaceName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
@@ -53,14 +43,21 @@ type
     cxLabel4: TcxLabel;
     BankAccountGuides: TdsdGuides;
     ContractInvNumber: TcxGridDBColumn;
-    spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
     StartAmountD: TcxGridDBColumn;
     StartAmountK: TcxGridDBColumn;
     EndAmountD: TcxGridDBColumn;
     EndAmountK: TcxGridDBColumn;
+    StartAmountD_Currency: TcxGridDBColumn;
+    StartAmountK_Currency: TcxGridDBColumn;
+    EndAmountD_Currency: TcxGridDBColumn;
+    EndAmountK_Currency: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    CurrencyGuides: TdsdGuides;
+    CurrencyName: TcxGridDBColumn;
+    spSelectPrint: TdsdStoredProc;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public

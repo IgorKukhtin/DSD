@@ -46,9 +46,11 @@ begin
           left outer join dba._pgUnit on _pgUnit.Id = Unit.pgUnitId -- and isnull(Unit.ParentId,0) <> 4137 -- MO
           left outer join dba._pgPersonal on _pgPersonal.Id = Unit.PersonalId_Postgres -- and Unit.ParentId = 4137 -- MO
           -- left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = _pgUnit.Id or Unit_find.PersonalId_Postgres = _pgPersonal.Id
-     where (isUnit.UnitId is not null or Unit.ParentId = 4137 or Unit.ParentId = 8217) -- MO + АВТОМОБИЛИ
+     where (isUnit.UnitId is not null
+            or (@inEndDate < '2014-06-01' and (Unit.ParentId = 4137 or Unit.ParentId = 8217)) -- MO + АВТОМОБИЛИ
+           )
+       -- and Unit.Id <> 2791 -- Склад УТИЛЬ
        and Unit.Id <> 2324 -- Склад С/К
-       and Unit.Id <> 2791 -- Склад УТИЛЬ
        and Unit.Id <> 2612 -- Склад-автомат-пересортица
        and Unit.Id <> 2827 -- Цех Упаковки (брак)
        and Unit.Id <> 2826 -- Цех Упаковки (переработка)
@@ -88,6 +90,7 @@ begin
          , zc_rvNo() as isCar
          , (Bill.Id_Postgres) as Id_Postgres
     from dba.Bill
+         inner join _tmpList_Unit on _tmpList_Unit.UnitId = Bill.FromId
          left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
          left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
                                                   -- and UnitFrom.ParentId <> 4137 -- MO

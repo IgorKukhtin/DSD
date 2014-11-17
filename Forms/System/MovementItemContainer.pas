@@ -37,6 +37,8 @@ type
     cbDestination: TcxCheckBox;
     bbIsParentDetail: TdxBarControlContainerItem;
     cbParentDetail: TcxCheckBox;
+    Amount_Currency: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

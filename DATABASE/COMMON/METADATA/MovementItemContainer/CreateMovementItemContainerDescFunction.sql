@@ -10,10 +10,15 @@ CREATE OR REPLACE FUNCTION zc_MIContainer_CountSupplier() RETURNS integer AS $BO
 INSERT INTO MovementItemContainerDesc(Code, ItemName)
   SELECT 'zc_MIContainer_CountSupplier', 'Количественный учет - долги поставщику' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountSupplier');
 
+CREATE OR REPLACE FUNCTION zc_MIContainer_SummCurrency() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummCurrency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc(Code, ItemName)
+  SELECT 'zc_MIContainer_SummCurrency', 'Суммовой учет в валюте' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummCurrency');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.09.13                                        * add zc_Container_CountSupplier
+ 12.11.14                                        * add zc_MIContainer_SummCurrency
+ 14.09.13                                        * add zc_MIContainer_CountSupplier
  10.07.13                                        * rename to zc_MI...
  10.07.13                                        * НОВАЯ СХЕМА2 - Create and Insert
  07.07.13         * НОВАЯ СХЕМА

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
-  ClientHeight = 179
-  ClientWidth = 354
+  ClientHeight = 223
+  ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 146
+    Top = 178
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 146
+    Top = 178
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -62,24 +62,41 @@
     Width = 273
   end
   object edPriceWithVAT: TcxCheckBox
-    Left = 40
-    Top = 106
-    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+    Left = 50
+    Top = 146
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 6
-    Width = 89
+    Width = 131
   end
   object cxLabel2: TcxLabel
-    Left = 160
-    Top = 108
-    Caption = #1053#1044#1057
+    Left = 186
+    Top = 147
+    Caption = '% '#1053#1044#1057
   end
   object ceVATPercent: TcxCurrencyEdit
-    Left = 192
-    Top = 106
+    Left = 228
+    Top = 146
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 8
     Width = 57
+  end
+  object cxLabel19: TcxLabel
+    Left = 40
+    Top = 97
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object edCurrency: TcxButtonEdit
+    Left = 40
+    Top = 115
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 273
   end
   object ActionList: TActionList
     Left = 296
@@ -149,7 +166,15 @@
         Component = ceVATPercent
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -197,7 +222,21 @@
         Value = 0.000000000000000000
         Component = ceVATPercent
         DataType = ftFloat
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 192
     Top = 56
   end
@@ -219,5 +258,32 @@
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 96
     Top = 8
+  end
+  object CurrencyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 145
+    Top = 96
   end
 end

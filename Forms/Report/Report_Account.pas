@@ -105,7 +105,6 @@ type
     ceBranch: TcxButtonEdit;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
-    PrintHeaderCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
   private

@@ -1,28 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1250
+  ClientWidth = 1389
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1266
+  ExplicitLeft = -424
+  ExplicitWidth = 1405
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1250
+    Width = 1389
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1250
+    ExplicitWidth = 1389
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1250
+    ClientRectRight = 1389
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1250
+      ExplicitWidth = 1389
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1250
+        Width = 1389
         Height = 518
-        ExplicitWidth = 1250
+        ExplicitWidth = 1389
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -96,6 +97,7 @@ inherited SaleForm: TSaleForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -293,10 +295,10 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1250
+    Width = 1389
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1250
+    ExplicitWidth = 1389
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -511,7 +513,7 @@ inherited SaleForm: TSaleForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1206
+      Left = 1260
       Top = 63
       Properties.Buttons = <
         item
@@ -523,17 +525,17 @@ inherited SaleForm: TSaleForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1206
+      Left = 1260
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1206
+      Left = 1260
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 32
@@ -562,7 +564,7 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 35
-      Width = 127
+      Width = 177
     end
     object edContractTag: TcxButtonEdit
       Left = 972
@@ -595,6 +597,21 @@ inherited SaleForm: TSaleForm
       TabOrder = 38
       Width = 81
     end
+    object edParPartnerValue: TcxCurrencyEdit
+      Left = 1202
+      Top = 63
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = False
+      TabOrder = 39
+      Width = 47
+    end
+    object cxLabel21: TcxLabel
+      Left = 1202
+      Top = 44
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
   end
   object cxLabel17: TcxLabel [2]
     Left = 1072
@@ -619,7 +636,7 @@ inherited SaleForm: TSaleForm
     Top = 45
     Caption = #1050#1091#1088#1089
   end
-  object edCurrencyValue: TcxCurrencyEdit [5]
+  object edCurrencyPartnerValue: TcxCurrencyEdit [5]
     Left = 1155
     Top = 63
     Properties.Alignment.Horz = taRightJustify
@@ -843,10 +860,10 @@ inherited SaleForm: TSaleForm
     object actPrint_Invoice: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintInvoice
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintInvoice
         end>
       Caption = #1048#1085#1074#1086#1081#1089
       Hint = #1048#1085#1074#1086#1081#1089
@@ -1065,6 +1082,39 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectPrint
         end>
       Caption = 'actExecPrintStoredProc'
+    end
+    object actPrint_Spec: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintInvoice
+        end>
+      Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SaleSpec'
+      ReportNameParam.Value = 'PrintMovement_SaleSpec'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
     object spEDIConnect: TdsdExecStoredProc
       Category = 'EDI'
@@ -1351,7 +1401,15 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Spec'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Pack'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1446,6 +1504,10 @@ inherited SaleForm: TSaleForm
     end
     object bbPrint_Pack22: TdxBarButton
       Action = actPrint_Pack22
+      Category = 0
+    end
+    object bbPrint_Spec: TdxBarButton
+      Action = actPrint_Spec
       Category = 0
     end
   end
@@ -1607,12 +1669,6 @@ inherited SaleForm: TSaleForm
         DataType = ftFloat
       end
       item
-        Name = 'CurrencyValue'
-        Value = 0.000000000000000000
-        Component = edCurrencyValue
-        DataType = ftFloat
-      end
-      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1709,6 +1765,18 @@ inherited SaleForm: TSaleForm
         Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
       end
       item
         Name = 'MovementId_Order'
@@ -1914,10 +1982,18 @@ inherited SaleForm: TSaleForm
         DataType = ftString
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyPartnerValue'
         Value = Null
-        Component = edCurrencyValue
+        Component = edCurrencyPartnerValue
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 162
     Top = 312
@@ -1981,13 +2057,16 @@ inherited SaleForm: TSaleForm
         Control = edDocumentTaxKind
       end
       item
-        Control = edCurrencyValue
-      end
-      item
         Control = edCurrencyDocument
       end
       item
         Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edParPartnerValue
       end>
     Left = 232
     Top = 193
@@ -2382,8 +2461,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1016
-    Top = 64
+    Left = 1312
+    Top = 96
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -2589,8 +2668,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 944
-    Top = 192
+    Left = 992
+    Top = 80
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2621,15 +2700,32 @@ inherited SaleForm: TSaleForm
         Value = Null
         Component = edPriceWithVAT
         DataType = ftBoolean
+        ParamType = ptInput
       end
       item
         Name = 'VATPercent'
         Value = Null
         Component = edVATPercent
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 804
-    Top = 64
+    Left = 836
+    Top = 56
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -2827,8 +2923,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 616
-    Top = 56
+    Left = 672
+    Top = 48
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
@@ -2873,8 +2969,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 696
-    Top = 56
+    Left = 720
+    Top = 16
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -2899,15 +2995,15 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1026
-    Top = 192
+    Left = 1098
+    Top = 80
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
-    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.Value = 'TCurrencyValue_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCurrency_ObjectForm'
+    FormName = 'TCurrencyValue_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2925,9 +3021,34 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inCurrencyFromId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
       end>
-    Left = 912
-    Top = 192
+    Left = 1120
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -3191,5 +3312,28 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 407
     Top = 544
+  end
+  object spSelectPrintInvoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 511
+    Top = 520
   end
 end

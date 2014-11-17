@@ -3,7 +3,7 @@ object PriceListForm: TPriceListForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099'>'
   ClientHeight = 376
-  ClientWidth = 457
+  ClientWidth = 500
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object PriceListForm: TPriceListForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 457
+    Width = 500
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -64,6 +64,13 @@ object PriceListForm: TPriceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -174,11 +181,11 @@ object PriceListForm: TPriceListForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -292,6 +299,7 @@ object PriceListForm: TPriceListForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -339,15 +347,43 @@ object PriceListForm: TPriceListForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+        end
+        item
+          Name = 'PriceWithVAT'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PriceWithVAT'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyId'
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyName'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -370,6 +406,7 @@ object PriceListForm: TPriceListForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 248
     Top = 224
   end
@@ -384,10 +421,12 @@ object PriceListForm: TPriceListForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 160
   end

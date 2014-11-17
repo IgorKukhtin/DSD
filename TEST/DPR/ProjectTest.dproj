@@ -132,7 +132,7 @@
 			<DCCReference Include="..\..\Forms\GoodsProperty.pas">
 				<Form>GoodsPropertyForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\CurrencyEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\CurrencyEdit.pas">
 				<Form>CurencyEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsGroupEdit.pas">
@@ -169,7 +169,7 @@
 			<DCCReference Include="..\..\Forms\Status.pas">
 				<Form>StatusForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Currency.pas">
+			<DCCReference Include="..\..\Forms\Guides\Currency.pas">
 				<Form>CurrencyForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\BankEdit.pas">
@@ -1369,8 +1369,8 @@
 				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Currency_Object.pas">
-				<Form>Currency_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CurrencyValue_Object.pas">
+				<Form>CurrencyValue_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\MeasureTest.pas"/>
@@ -1708,6 +1708,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\InvoiceXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Currency_Object.pas">
+				<Form>Currency_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

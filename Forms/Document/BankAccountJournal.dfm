@@ -10,46 +10,57 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1028
     Height = 320
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 320
     ClientRectBottom = 320
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1028
       ExplicitHeight = 320
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 320
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
         ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colDebet
             end
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colKredit
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colAmountCurrency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colDebet
             end
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colKredit
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colAmountCurrency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -96,7 +107,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -106,11 +117,58 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object colAmountCurrency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            DataBinding.FieldName = 'AmountCurrency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object CurrencyPartnerValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089
+            DataBinding.FieldName = 'CurrencyPartnerValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ParPartnerValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'ParPartnerValue'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object CurrencyValue: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ParValue: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' '#1082#1091#1088#1089' '#1059#1055
+            DataBinding.FieldName = 'ParValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -162,6 +220,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 33
@@ -250,7 +309,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited Panel: TPanel
     Width = 1028
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -302,6 +361,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -317,12 +377,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -347,6 +409,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -376,23 +439,31 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'AccountName;BankName;BankAccountName'
         end>
-      Params = <>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Name = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -505,12 +576,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
   end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 209
-  end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -518,16 +583,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 262
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpReport_Account_Print'
-    DataSet = PrintHeaderCDS
+    StoredProcName = 'gpReport_BankAccount'
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -544,59 +605,27 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inAccountGroupId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAccountDirectionId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inAccountId'
-        Value = ''
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inBusinessId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inBankAccountId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossGroupId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inCurrencyId'
+        Value = 0
         ParamType = ptInput
       end
       item
-        Name = 'inProfitLossDirectionId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inProfitLossId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBranchId'
-        Value = ''
-        ComponentItem = 'Key'
+        Name = 'inIsDetail'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 631
     Top = 232
   end

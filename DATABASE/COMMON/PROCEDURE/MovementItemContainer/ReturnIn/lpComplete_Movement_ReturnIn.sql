@@ -67,8 +67,11 @@ BEGIN
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-        AND inIsLastComplete = FALSE
+     IF (EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+         AND inIsLastComplete = FALSE
+        )
+     -- !!! нужны еще для Запорожья, понятно что временно!!!
+     OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
      THEN vbIsHistoryCost:= TRUE;
      ELSE vbIsHistoryCost:= FALSE;
      END IF;
