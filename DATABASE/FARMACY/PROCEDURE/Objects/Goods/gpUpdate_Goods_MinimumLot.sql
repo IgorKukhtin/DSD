@@ -14,6 +14,10 @@ BEGIN
 
    vbUserId := lpGetUserBySession (inSession);
 
+   IF inMinimumLot = 0 THEN 
+      inMinimumLot := NULL;
+   END IF;   	
+
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), inId, inMinimumLot);
 
    -- сохранили протокол

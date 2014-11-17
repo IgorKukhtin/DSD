@@ -184,7 +184,9 @@ uses
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
-  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

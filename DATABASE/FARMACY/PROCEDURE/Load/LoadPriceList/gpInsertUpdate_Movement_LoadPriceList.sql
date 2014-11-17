@@ -7,6 +7,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList
            Boolean,
            TVarChar);
 
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
+          (Integer, Integer, Integer, 
+           TVarChar, TVarChar, TVarChar,
+           TFloat, TFloat,
+           TDateTime,
+           TVarChar, TVarChar, 
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inContractId          Integer   , -- Договор
@@ -49,7 +59,7 @@ BEGIN
         RAISE EXCEPTION 'Не правильно передается значение параметра Договор (ContractId)';
      END IF;
   END IF;
-
+  
   DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
                                     AND OperDate < CURRENT_DATE);
@@ -109,6 +119,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.11.14                        *   
  28.10.14                        *   
  22.10.14                        *   Поменял очередность поиска
  18.09.14                        *  

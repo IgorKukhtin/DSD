@@ -44,7 +44,8 @@ BEGIN
                     inUnitId := vbUnitId,
                inMainGoodsId := MovementItem.ObjectId,
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
-                    inAmount := MovementItem.Amount, 
+                    inAmount := CEIL(MovementItem.Amount 
+                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1), 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
           inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),  
                    inUserId := vbUserId)
@@ -74,6 +75,8 @@ BEGIN
                                        WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS DDD
                                   WHERE Id = MinId) AS MinPrice
                               ON MinPrice.MovementItemId = MovementItem.Id
+                    LEFT JOIN Object_Goods_View AS Object_Goods 
+                                                ON Object_Goods.Id = MovementItem.ObjectId 
 
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()

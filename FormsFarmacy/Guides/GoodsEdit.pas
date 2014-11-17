@@ -24,6 +24,8 @@ type
     cxLabel6: TcxLabel;
     ceNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
+    edMinimumLot: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

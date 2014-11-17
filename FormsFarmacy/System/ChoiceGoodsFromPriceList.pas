@@ -34,6 +34,7 @@ type
     spGoodsPriceListLink: TdsdStoredProc;
     actSetGoodsLink: TdsdExecStoredProc;
     bbGoodsPriceListLink: TdxBarButton;
+    mactChoiceGoodsForm: TMultiAction;
   private
     { Private declarations }
   public

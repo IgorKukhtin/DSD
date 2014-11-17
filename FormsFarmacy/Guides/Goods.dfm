@@ -1,29 +1,31 @@
 inherited GoodsForm: TGoodsForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 423
-  ClientWidth = 782
+  ClientWidth = 852
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 790
+  ExplicitTop = -67
+  ExplicitWidth = 860
   ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 782
+    Width = 852
     Height = 397
-    ExplicitWidth = 782
+    ExplicitWidth = 852
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 782
+    ClientRectRight = 852
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 852
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 782
+        Width = 852
         Height = 397
-        ExplicitWidth = 782
+        ExplicitWidth = 852
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -66,7 +68,16 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 177
+            Width = 96
+          end
+          object clMinimumLot: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'MinimumLot'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0; ; ;'
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -190,6 +201,13 @@ inherited GoodsForm: TGoodsForm
       Params = <>
       Caption = 'InsertRecord1'
     end
+    object UpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = 'UpdateDataSet'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -293,6 +311,13 @@ inherited GoodsForm: TGoodsForm
         Component = MasterCDS
         ComponentItem = 'NDSKindName'
         DataType = ftString
+      end
+      item
+        Name = 'MinimumLot'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MinimumLot'
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 240
@@ -370,5 +395,29 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 240
     Top = 208
+  end
+  object spUpdate_Goods_MinimumLot: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_MinimumLot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMinimumLot'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MinimumLot'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 288
   end
 end

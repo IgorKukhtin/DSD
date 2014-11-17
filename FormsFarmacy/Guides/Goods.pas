@@ -29,6 +29,9 @@ type
     spGetOnInsert: TdsdStoredProc;
     spRefreshOnInsert: TdsdExecStoredProc;
     InsertRecord1: TInsertRecord;
+    clMinimumLot: TcxGridDBColumn;
+    UpdateDataSet: TdsdUpdateDataSet;
+    spUpdate_Goods_MinimumLot: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1132,6 +1132,8 @@ var
   xml: string;
   FormName: string;
 begin
+  if gc_isSetDefault then
+     exit;
   if Owner is TParentForm then
      FormName := TParentForm(Owner).FormClassName
   else

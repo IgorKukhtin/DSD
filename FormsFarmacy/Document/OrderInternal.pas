@@ -75,6 +75,10 @@ type
     colPartionGoodsDateColor: TcxGridDBColumn;
     clPartionGoodsDate: TcxGridDBColumn;
     clPartionGoodsDateColor: TcxGridDBColumn;
+    clMinimumLot: TcxGridDBColumn;
+    colMinimumLot: TcxGridDBColumn;
+    clCalcAmount: TcxGridDBColumn;
+    colMultiplicity: TcxGridDBColumn;
   private
     { Private declarations }
   public

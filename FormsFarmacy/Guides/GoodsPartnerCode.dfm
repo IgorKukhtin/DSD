@@ -10,17 +10,17 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   inherited PageControl: TcxPageControl
     Width = 900
     Height = 397
-    ExplicitWidth = 763
+    ExplicitWidth = 900
     ExplicitHeight = 397
     ClientRectBottom = 397
     ClientRectRight = 900
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 763
+      ExplicitWidth = 900
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
         Width = 900
         Height = 397
-        ExplicitWidth = 763
+        ExplicitWidth = 900
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True

@@ -16,6 +16,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Width = 798
         ExplicitWidth = 798
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -53,7 +54,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ChoiceGoodsForm
+                Action = mactChoiceGoodsForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -171,7 +172,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           ComponentItem = 'Name'
           DataType = ftString
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -195,6 +196,18 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Caption = 'actSetGoodsLink'
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
+    end
+    object mactChoiceGoodsForm: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ChoiceGoodsForm
+        end
+        item
+          Action = DataSetPost
+        end>
+      Caption = 'mactChoiceGoodsForm'
     end
   end
   inherited MasterDS: TDataSource
