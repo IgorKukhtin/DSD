@@ -3,7 +3,7 @@ object ProvinceCityForm: TProvinceCityForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077'>'
   ClientHeight = 344
-  ClientWidth = 535
+  ClientWidth = 639
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,15 +19,14 @@ object ProvinceCityForm: TProvinceCityForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 535
+    Width = 639
     Height = 318
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 390
-    ExplicitHeight = 350
+    ExplicitWidth = 535
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,20 +52,38 @@ object ProvinceCityForm: TProvinceCityForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 50
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 216
+        Width = 179
+      end
+      object clRegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 112
+      end
+      object clProvinceName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceName'
+        HeaderAlignmentVert = vaCenter
+        Width = 93
+      end
+      object clCityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1085#1072#1089'. '#1087#1091#1085#1082#1090#1072
+        DataBinding.FieldName = 'CityKindName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clCityName: TcxGridDBColumn
         Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
         DataBinding.FieldName = 'CityName'
         HeaderAlignmentVert = vaCenter
-        Width = 247
+        Width = 121
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -274,6 +291,7 @@ object ProvinceCityForm: TProvinceCityForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -290,12 +308,14 @@ object ProvinceCityForm: TProvinceCityForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -354,6 +374,7 @@ object ProvinceCityForm: TProvinceCityForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 144
     Top = 152
   end
@@ -364,10 +385,12 @@ object ProvinceCityForm: TProvinceCityForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 216
   end

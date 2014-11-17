@@ -64,6 +64,9 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     clCityName: TcxGridDBColumn;
+    clCityKindName: TcxGridDBColumn;
+    clProvinceName: TcxGridDBColumn;
+    clRegionName: TcxGridDBColumn;
   private
     { Private declarations }
   public
