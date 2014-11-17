@@ -698,6 +698,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item

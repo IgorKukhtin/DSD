@@ -974,6 +974,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
