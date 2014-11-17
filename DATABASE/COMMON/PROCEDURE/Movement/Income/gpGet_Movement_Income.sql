@@ -91,8 +91,8 @@ BEGIN
              , Object_PaidKind.ValueData             AS PaidKindName
              , View_Contract_InvNumber.ContractId    AS ContractId
              , View_Contract_InvNumber.InvNumber     AS ContractName
-             , View_PersonalPacker.PersonalId        AS PersonalPackerId
-             , View_PersonalPacker.PersonalName      AS PersonalPackerName
+             , Object_Member.Id                      AS PersonalPackerId
+             , Object_Member.ValueData               AS PersonalPackerName
 
              , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
              , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
@@ -147,7 +147,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                                          ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
-            LEFT JOIN Object_Personal_View AS View_PersonalPacker ON View_PersonalPacker.PersonalId = MovementLinkObject_PersonalPacker.ObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_PersonalPacker.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id

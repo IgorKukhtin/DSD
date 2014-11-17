@@ -545,7 +545,7 @@ BEGIN
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
      , tmpObject_GoodsPropertyValue_basis AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
         FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
