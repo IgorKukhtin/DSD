@@ -520,9 +520,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         TabOrder = 1
         Properties.ActivePage = cxTabSheet1
         Properties.CustomButtons.Buttons = <>
-        ExplicitTop = 57
-        ExplicitWidth = 1020
-        ExplicitHeight = 476
         ClientRectBottom = 466
         ClientRectLeft = 2
         ClientRectRight = 1010
@@ -531,8 +528,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 1014
-          ExplicitHeight = 470
           object cxGrid1: TcxGrid
             Left = 0
             Top = 0
@@ -541,8 +536,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 0
-            ExplicitWidth = 1014
-            ExplicitHeight = 470
             object cxGridDBTableView1: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = MasterDS
@@ -1481,6 +1474,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
