@@ -26,7 +26,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clInvNumber: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
@@ -34,7 +34,7 @@ type
     clChildGoodsGroupName: TcxGridDBColumn;
     clChildGoodsCode: TcxGridDBColumn;
     clChildGoodsName: TcxGridDBColumn;
-    clChildAmount_Sh: TcxGridDBColumn;
+    clChildAmount: TcxGridDBColumn;
     clChildSumm: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;

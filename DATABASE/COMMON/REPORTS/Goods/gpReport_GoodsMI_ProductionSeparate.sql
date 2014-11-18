@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
@@ -17,9 +17,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar 
              , GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
-             , Amount_Sh TFloat, HeadCount TFloat, Summ TFloat
+             , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
-             , ChildAmount_Sh TFloat, ChildSumm TFloat, Price TFloat
+             , ChildAmount TFloat, ChildSumm TFloat, Price TFloat
              , ChildPrice TFloat, Percent TFloat
              )   
 AS
@@ -116,6 +116,7 @@ BEGIN
                                          
                                     JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId          --MIMaster
 				                                     AND MovementItem.DescId = zc_MI_Child()
+                                                                     AND MovementItem.Amount <> 0                  -- отбрасываем с кол-вом 0
 		                    JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
 
 		                    LEFT JOIN MovementLinkObject AS MovementLO_From
@@ -223,7 +224,7 @@ BEGIN
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName  
 
-           , tmpOperationGroup.Amount :: TFloat AS Amount_Sh
+           , tmpOperationGroup.Amount :: TFloat AS Amount
            , tmpOperationGroup.HeadCount :: TFloat AS HeadCount
 
            , tmpOperationGroup.Summ :: TFloat AS Summ
@@ -233,7 +234,7 @@ BEGIN
            , Object_GoodsChild.ObjectCode     AS ChildGoodsCode
            , Object_GoodsChild.ValueData      AS ChildGoodsName
 
-           , tmpOperationGroup.ChildAmount  :: TFloat AS ChildAmount_Sh
+           , tmpOperationGroup.ChildAmount  :: TFloat AS ChildAmount
 
            , tmpOperationGroup.ChildSumm :: TFloat AS ChildSumm
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
@@ -323,15 +324,13 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.11.14
  21.08.14         * 
     
 */
---select * from Object where descid = 13   descid = 13 -- группы товаров
+
 -- тест
 
---SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '19.06.2014', inEndDate:= '19.06.2014',  inGoodsGroupId:= 0, inGroupMovement:= True, inSession:= zfCalc_UserAdmin());
---	пр-4218-8992-17.06.2014	20.06.2014		 	 
---SELECT * FROM gpReport_GoodsMI_ProductionSeparate (inStartDate:= '19.06.2014', inEndDate:= '25.06.2014',  inGoodsGroupId:= 0, inGroupMovement:= False, inSession:= zfCalc_UserAdmin());
-
-
 --select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inGoodsGroupId := 2006 , inGroupMovement := 'True' , inGoodsId := 0 , inFromId := 0 , inToId := 0,  inSession := '5');
+--
+--select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inGoodsGroupId := 0 , inGroupMovement := 'True' , inGoodsId := 0 , inFromId := 133049 , inToId := 8444 ,  inSession := '5');

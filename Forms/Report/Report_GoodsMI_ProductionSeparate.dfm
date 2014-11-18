@@ -4,7 +4,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   ClientWidth = 1081
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -9
   ExplicitWidth = 1089
   ExplicitHeight = 461
   PixelsPerInch = 96
@@ -14,19 +13,19 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     Width = 1081
     Height = 328
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 973
-    ExplicitHeight = 370
+    ExplicitTop = 99
+    ExplicitWidth = 1081
+    ExplicitHeight = 328
     ClientRectBottom = 328
     ClientRectRight = 1081
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
-      ExplicitHeight = 370
+      ExplicitWidth = 1081
+      ExplicitHeight = 328
       inherited cxGrid: TcxGrid
         Width = 1081
         Height = 328
-        ExplicitWidth = 973
-        ExplicitHeight = 370
+        ExplicitWidth = 1081
+        ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -46,7 +45,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clAmount
             end
             item
               Format = ',0.####'
@@ -64,7 +63,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clChildAmount_Sh
+              Column = clChildAmount
             end
             item
               Format = ',0.####'
@@ -88,7 +87,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clAmount
             end
             item
               Format = ',0.####'
@@ -106,7 +105,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clChildAmount_Sh
+              Column = clChildAmount
             end
             item
               Format = ',0.####'
@@ -176,9 +175,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'Amount_Sh'
+          object clAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -217,9 +216,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object clChildAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'ChildAmount_Sh'
+          object clChildAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -265,9 +264,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   inherited Panel: TPanel
     Width = 1081
     Height = 73
-    ExplicitLeft = -8
-    ExplicitTop = -8
-    ExplicitWidth = 1037
+    ExplicitWidth = 1081
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 116
@@ -419,6 +416,35 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
