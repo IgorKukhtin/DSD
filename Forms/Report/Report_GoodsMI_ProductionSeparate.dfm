@@ -320,7 +320,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;InvNumber;ChildGoodsGroupName;ChildGoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
