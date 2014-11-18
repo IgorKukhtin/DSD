@@ -2,27 +2,29 @@ inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
   ClientWidth = 878
-  ExplicitWidth = 894
-  ExplicitHeight = 703
+  ExplicitWidth = 886
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 878
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 878
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 878
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 874
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 878
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 872
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 878
-        Height = 518
-        ExplicitWidth = 878
-        ExplicitHeight = 518
+        Width = 872
+        Height = 514
+        ExplicitWidth = 872
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -80,6 +82,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -237,7 +240,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 257
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 257
     end
     object cxLabel3: TcxLabel
@@ -355,6 +358,39 @@ inherited SendOnPriceForm: TSendOnPriceForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actPrintOut: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1056#1072#1089#1093#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SendOnPriceOut'
+      ReportNameParam.Value = 'PrintMovement_SendOnPriceOut'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -377,9 +413,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_SendOnPriceIn'
+      ReportNameParam.Value = 'PrintMovement_SendOnPriceIn'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -398,7 +433,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -490,7 +525,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -553,6 +588,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOut'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -563,6 +602,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbPrintOut: TdxBarButton
+      Action = actPrintOut
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1095,7 +1138,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 64
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

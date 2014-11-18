@@ -2,26 +2,29 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitWidth = 1118
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1110
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1110
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1104
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1110
-        Height = 478
-        ExplicitWidth = 1110
-        ExplicitHeight = 478
+        Width = 1104
+        Height = 470
+        ExplicitWidth = 1104
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -128,6 +131,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -324,6 +328,49 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'
     end
+    object actPrintOut: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1056#1072#1089#1093#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_SendOnPriceOut'
+      ReportNameParam.Value = 'PrintMovement_SendOnPriceOut'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -342,7 +389,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1088#1080#1093#1086#1076
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
@@ -362,9 +409,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_SendOnPriceIn'
+      ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
+      ReportNameParam.Value = 'PrintMovement_SendOnPriceIn'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -416,7 +463,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -476,6 +523,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOut'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -489,6 +540,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrintOut: TdxBarButton
+      Action = actPrintOut
       Category = 0
     end
   end
@@ -607,7 +662,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -626,8 +681,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 535
-    Top = 248
+    Left = 511
+    Top = 344
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
