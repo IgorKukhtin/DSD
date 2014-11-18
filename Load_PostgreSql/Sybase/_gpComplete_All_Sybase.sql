@@ -127,8 +127,36 @@ BEGIN
              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
                                                   , inUserId         := zfCalc_UserAdmin() :: Integer
                                                   , inIsLastComplete := inIsNoHistoryCost);
+
+     ELSE
+     -- !!!6.1. - Send!!!
+     IF vbMovementDescId = zc_Movement_Send()
+     THEN
+             -- !!! проводим - Send !!!
+             PERFORM gpComplete_Movement_Send (inMovementId     := inMovementId
+                                             , inIsLastComplete := NULL
+                                             , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!6.2. - ProductionUnion!!!
+     IF vbMovementDescId = zc_Movement_Send()
+     THEN
+             -- !!! проводим - ProductionUnion !!!
+             PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
+                                                        , inIsLastComplete := NULL
+                                                        , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!6.3. - ProductionSeparate!!!
+     IF vbMovementDescId = zc_Movement_Send()
+     THEN
+             -- !!! проводим - ProductionSeparate !!!
+             PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
+                                                           , inIsLastComplete := NULL
+                                                           , inSession        := zfCalc_UserAdmin());
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;

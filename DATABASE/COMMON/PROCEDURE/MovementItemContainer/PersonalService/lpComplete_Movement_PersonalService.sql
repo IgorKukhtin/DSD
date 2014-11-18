@@ -176,7 +176,7 @@ BEGIN
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
        ;
 
-
+/*
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      -- 2.1. долг сотруднику по Соц.Выпл
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
@@ -239,7 +239,7 @@ BEGIN
                                          AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
               LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60103() -- Заработная плата + Алименты
        ;
-
+*/
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
