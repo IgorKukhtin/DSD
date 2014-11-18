@@ -41,6 +41,15 @@ type
     clPrice: TcxGridDBColumn;
     clChildPrice: TcxGridDBColumn;
     clPercent: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edFromGroup: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    FromGroupGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    edToGroup: TcxButtonEdit;
+    ToGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public
