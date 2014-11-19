@@ -133,6 +133,35 @@ BEGIN
        AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
             OR vbIsConstraint = FALSE)
     UNION ALL
+     SELECT Object_Juridical.Id
+          , Object_Juridical.ObjectCode     
+          , Object_Juridical.ValueData AS Name
+          , ObjectDesc.ItemName
+          , Object_Juridical.isErased
+          , Object_InfoMoney_View.InfoMoneyId
+          , Object_InfoMoney_View.InfoMoneyCode
+          , Object_InfoMoney_View.InfoMoneyGroupName
+          , Object_InfoMoney_View.InfoMoneyDestinationName
+          , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
+          , View_Contract.ContractId 
+          , View_Contract.InvNumber
+          , View_Contract.ContractStateKindCode
+          , View_Contract.StartDate
+          , View_Contract.EndDate
+          , View_Contract.ContractTagName
+          , View_Contract.ContractKindName
+     FROM Object AS Object_Juridical
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
+          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+     WHERE Object_Juridical.DescId = zc_Object_Juridical()
+       AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900()
+       AND View_Contract.isErased = FALSE
+       AND Object_Juridical.isErased = FALSE
+    UNION ALL
      SELECT Object_Founder.Id
           , Object_Founder.ObjectCode     
           , Object_Founder.ValueData
