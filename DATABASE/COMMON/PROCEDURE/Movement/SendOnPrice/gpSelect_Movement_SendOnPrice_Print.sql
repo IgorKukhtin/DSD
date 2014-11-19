@@ -614,8 +614,8 @@ BEGIN
                   WHEN zc_Measure_Sh() THEN 'PCE'
                   ELSE 'KGM'
              END::TVarChar                   AS DELIVEREDUNIT
-           , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
+           , tmpMI.AmountOut                 AS AmountOut
+           , tmpMI.AmountIn                  AS AmountIn
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
@@ -745,7 +745,7 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
-       WHERE tmpMI.AmountPartner <> 0
+       WHERE tmpMI.AmountIn <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 
@@ -759,7 +759,7 @@ ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer,TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 18.11.14                                                       *
+ 19.11.14                                                       *
 */
 
 /*
