@@ -59,7 +59,18 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 114
+  end
+  object cxLabel2: TcxLabel
+    Left = 200
+    Top = 3
+    Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+  end
+  object edShortName: TcxTextEdit
+    Left = 200
+    Top = 26
+    TabOrder = 7
+    Width = 136
   end
   object ActionList: TActionList
     Left = 272
@@ -116,7 +127,15 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inShortName'
+        Value = Null
+        Component = edShortName
+        DataType = ftString
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -136,7 +155,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -152,12 +171,19 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+      end
+      item
+        Name = 'ShortName'
+        Value = Null
+        Component = edShortName
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
+    Left = 104
     Top = 7
   end
   object cxPropertiesStore: TcxPropertiesStore

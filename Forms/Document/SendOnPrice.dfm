@@ -397,6 +397,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           StoredProc = spSelectPrint
         end>
+      Caption = #1055#1088#1080#1093#1086#1076
       DataSets = <
         item
           DataSet = PrintHeaderCDS
