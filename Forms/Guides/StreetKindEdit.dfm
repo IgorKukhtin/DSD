@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
-  ClientHeight = 157
-  ClientWidth = 386
+  ClientHeight = 163
+  ClientWidth = 379
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -59,7 +59,19 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 114
+  end
+  object edShotName: TcxTextEdit
+    Left = 200
+    Top = 26
+    TabOrder = 6
+    Text = 'null'
+    Width = 136
+  end
+  object cxLabel2: TcxLabel
+    Left = 200
+    Top = 3
+    Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 272
@@ -116,7 +128,15 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inShotName'
+        Value = Null
+        Component = edShotName
+        DataType = ftString
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -152,12 +172,19 @@
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+      end
+      item
+        Name = 'ShotName'
+        Value = 'null'
+        Component = edShotName
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
+    Left = 184
     Top = 7
   end
   object cxPropertiesStore: TcxPropertiesStore

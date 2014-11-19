@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_Object_StreetKind(Integer,Integer,TVarChar,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StreetKind(Integer,Integer,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StreetKind(Integer,Integer,TVarChar,TVarChar,TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StreetKind(
  INOUT ioId	             Integer,       -- ключ объекта <Вид (улица, проспект)>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
+    IN inShortName           TVarChar,      -- короткое наименование
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -30,19 +33,23 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StreetKind(), vbCode_calc, inName);
-   
+
+   -- сохранили св-во <Короткое наименование>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_StreetKind_ShortName(), ioId, inShortName);
+      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_StreetKind (Integer,Integer,TVarChar,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_StreetKind (Integer,Integer,TVarChar,TVarChar,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.11.14         * add ShortName               
  31.05.14         * 
 */
 
