@@ -66,7 +66,7 @@
     Top = 3
     Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
   end
-  object edShotName: TcxTextEdit
+  object edShortName: TcxTextEdit
     Left = 200
     Top = 26
     TabOrder = 7
@@ -129,9 +129,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inShotName'
+        Name = 'inShortName'
         Value = Null
-        Component = edShotName
+        Component = edShortName
         DataType = ftString
         ParamType = ptInput
       end>
@@ -155,7 +155,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -173,9 +173,9 @@
         Component = ceCode
       end
       item
-        Name = 'ShotName'
+        Name = 'ShortName'
         Value = Null
-        Component = edShotName
+        Component = edShortName
         DataType = ftString
       end>
     PackSize = 1

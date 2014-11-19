@@ -61,11 +61,10 @@
     TabOrder = 5
     Width = 114
   end
-  object edShotName: TcxTextEdit
+  object edShortName: TcxTextEdit
     Left = 200
     Top = 26
     TabOrder = 6
-    Text = 'null'
     Width = 136
   end
   object cxLabel2: TcxLabel
@@ -130,9 +129,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inShotName'
+        Name = 'inShortName'
         Value = Null
-        Component = edShotName
+        Component = edShortName
         DataType = ftString
         ParamType = ptInput
       end>
@@ -156,7 +155,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -174,9 +173,8 @@
         Component = ceCode
       end
       item
-        Name = 'ShotName'
-        Value = 'null'
-        Component = edShotName
+        Name = 'ShortName'
+        Component = edShortName
         DataType = ftString
       end>
     PackSize = 1
