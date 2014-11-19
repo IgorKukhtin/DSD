@@ -1,30 +1,31 @@
 inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSeparateForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')>'
   ClientHeight = 427
-  ClientWidth = 973
+  ClientWidth = 1081
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 981
+  ExplicitWidth = 1089
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 973
-    Height = 370
+    Top = 99
+    Width = 1081
+    Height = 328
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 973
-    ExplicitHeight = 370
-    ClientRectBottom = 370
-    ClientRectRight = 973
+    ExplicitTop = 99
+    ExplicitWidth = 1081
+    ExplicitHeight = 328
+    ClientRectBottom = 328
+    ClientRectRight = 1081
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
-      ExplicitHeight = 370
+      ExplicitWidth = 1081
+      ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 973
-        Height = 370
-        ExplicitWidth = 973
-        ExplicitHeight = 370
+        Width = 1081
+        Height = 328
+        ExplicitWidth = 1081
+        ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -44,7 +45,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clAmount
             end
             item
               Format = ',0.####'
@@ -62,7 +63,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clChildAmount_Sh
+              Column = clChildAmount
             end
             item
               Format = ',0.####'
@@ -86,7 +87,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = clAmount
             end
             item
               Format = ',0.####'
@@ -104,7 +105,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clChildAmount_Sh
+              Column = clChildAmount
             end
             item
               Format = ',0.####'
@@ -174,9 +175,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'Amount_Sh'
+          object clAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -215,9 +216,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
-          object clChildAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'ChildAmount_Sh'
+          object clChildAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -261,25 +262,41 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
   end
   inherited Panel: TPanel
-    Width = 973
-    ExplicitWidth = 973
+    Width = 1081
+    Height = 73
+    ExplicitWidth = 1081
+    ExplicitHeight = 73
     inherited deStart: TcxDateEdit
+      Left = 116
       EditValue = 41640d
       Properties.SaveTime = False
+      ExplicitLeft = 116
     end
     inherited deEnd: TcxDateEdit
-      Left = 316
+      Left = 116
+      Top = 29
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 316
+      ExplicitLeft = 116
+      ExplicitTop = 29
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 19
+      ExplicitLeft = 19
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 0
+      Top = 30
+      ExplicitLeft = 0
+      ExplicitTop = 30
     end
     object cxLabel4: TcxLabel
-      Left = 413
+      Left = 559
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 501
+      Left = 650
       Top = 5
       Properties.Buttons = <
         item
@@ -291,7 +308,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 730
+      Left = 866
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -305,8 +322,59 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 231
+      Width = 209
     end
+    object cxLabel3: TcxLabel
+      Left = 206
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
+    end
+    object edFromGroup: TcxButtonEdit
+      Left = 344
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 203
+    end
+    object cxLabel5: TcxLabel
+      Left = 220
+      Top = 30
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 650
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 207
+    end
+    object edToGroup: TcxButtonEdit
+      Left = 344
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 203
+    end
+  end
+  object cxLabel7: TcxLabel [2]
+    Left = 610
+    Top = 30
+    Caption = #1058#1086#1074#1072#1088':'
   end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction
@@ -320,7 +388,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;InvNumber;ChildGoodsGroupName;ChildGoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -349,6 +416,35 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
@@ -393,6 +489,27 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         Component = FormParams
         ComponentItem = 'inGroupMovement'
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -485,7 +602,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 600
+    Left = 688
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -504,5 +621,87 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       end>
     Left = 328
     Top = 170
+  end
+  object FromGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFromGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 408
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 776
+    Top = 19
+  end
+  object ToGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edToGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 464
+    Top = 24
   end
 end
