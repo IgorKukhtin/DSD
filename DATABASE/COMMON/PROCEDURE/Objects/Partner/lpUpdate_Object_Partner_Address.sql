@@ -143,12 +143,12 @@ BEGIN
       END IF;
       
 
-
+/*
  
    vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
                         COALESCE(name, '')||', '
                    FROM Object_Street_View  WHERE Id = vbStreetId);
-   vbAddress := vbAddress||inHouseNumber;
+   vbAddress := vbAddress||inHouseNumber;*/
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
    --SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
@@ -159,16 +159,17 @@ BEGIN
    -- проверка уникальности <Наименование>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName );
    -- проверка уникальности <Код>
-   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), inCode);  END IF;
+--   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), inCode);  END IF;
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, inName);
+--   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, inName);
+
    -- сохранили свойство <краткое наименование>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_ShortName(), ioId, inShortName);
    
    -- сохранили свойство <Адрес точки доставки>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
+--   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
    -- сохранили свойство <дом>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
    -- сохранили свойство <корпус>

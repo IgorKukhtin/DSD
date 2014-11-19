@@ -26,9 +26,13 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-     -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     -- !!!
+     IF vbMovementDescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+     THEN
+         -- таблица - Проводки
+         CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     END IF;
 
      -- !!!1 - Loss!!!
      IF vbMovementDescId = zc_Movement_Loss()
@@ -138,7 +142,7 @@ BEGIN
                                              , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!6.2. - ProductionUnion!!!
-     IF vbMovementDescId = zc_Movement_Send()
+     IF vbMovementDescId = zc_Movement_ProductionUnion()
      THEN
              -- !!! проводим - ProductionUnion !!!
              PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
@@ -146,7 +150,7 @@ BEGIN
                                                         , inSession        := zfCalc_UserAdmin());
      ELSE
      -- !!!6.3. - ProductionSeparate!!!
-     IF vbMovementDescId = zc_Movement_Send()
+     IF vbMovementDescId = zc_Movement_ProductionSeparate()
      THEN
              -- !!! проводим - ProductionSeparate !!!
              PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
