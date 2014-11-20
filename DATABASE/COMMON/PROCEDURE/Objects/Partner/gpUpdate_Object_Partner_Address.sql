@@ -49,8 +49,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inActMail             TVarChar  ,    --
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
-    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalId          Integer   ,    -- сотрудник(ответственное лицо)
+    IN inPersonalTradeId     Integer   ,    -- сотрудник(торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
@@ -70,13 +70,9 @@ $BODY$
    DECLARE vbProvinceCityId Integer;
    DECLARE vbContactPersonId Integer;
    DECLARE vbContactPersonKindId Integer;
-   
-   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
@@ -226,9 +222,9 @@ BEGIN
    -- сохранили связь с <Сотрудник (экспедитор)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
    -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Member(), ioId, inMemberId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
    -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTrade(), ioId, inMemberTradeId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
    -- сохранили связь с <Признак торговой точки>

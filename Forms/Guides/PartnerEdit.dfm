@@ -281,9 +281,9 @@
   object cxLabel18: TcxLabel [38]
     Left = 381
     Top = 275
-    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1086#1090#1074#1077#1090#1089#1090#1074'.)'
   end
-  object ceMember: TcxButtonEdit [39]
+  object cePersonal: TcxButtonEdit [39]
     Left = 525
     Top = 274
     Properties.Buttons = <
@@ -298,9 +298,9 @@
   object cxLabel19: TcxLabel [40]
     Left = 16
     Top = 306
-    Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
   end
-  object ceMemberTrade: TcxButtonEdit [41]
+  object cePersonalTrade: TcxButtonEdit [41]
     Left = 160
     Top = 305
     Properties.Buttons = <
@@ -618,16 +618,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = ''
-        Component = MemberGuides
+        Component = PersonalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inMemberTradeId'
+        Name = 'inPersonalTradeId'
         Value = ''
-        Component = MemberTradeGuides
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -871,28 +871,28 @@
         DataType = ftString
       end
       item
-        Name = 'MemberId'
+        Name = 'PersonalId'
         Value = ''
-        Component = MemberGuides
+        Component = PersonalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'MemberName'
+        Name = 'PersonalName'
         Value = ''
-        Component = MemberGuides
+        Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'MemberTradeId'
+        Name = 'PersonalTradeId'
         Value = ''
-        Component = MemberTradeGuides
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'MemberTradeName'
+        Name = 'PersonalTradeName'
         Value = ''
-        Component = MemberTradeGuides
+        Component = PersonalTradeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1211,18 +1211,18 @@
     Left = 496
     Top = 187
   end
-  object MemberGuides: TdsdGuides
+  object PersonalGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceMember
-    FormNameParam.Value = 'TMember_ObjectForm'
+    LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = MemberGuides
+        Component = PersonalGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1230,7 +1230,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = MemberGuides
+        Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1238,18 +1238,18 @@
     Left = 608
     Top = 259
   end
-  object MemberTradeGuides: TdsdGuides
+  object PersonalTradeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceMemberTrade
-    FormNameParam.Value = 'TMember_ObjectForm'
+    LookupControl = cePersonalTrade
+    FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = MemberTradeGuides
+        Component = PersonalTradeGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1257,7 +1257,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = MemberTradeGuides
+        Component = PersonalTradeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

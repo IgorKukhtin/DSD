@@ -20,8 +20,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
               --OKPO TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
-               MemberId Integer, MemberName TVarChar,
-               MemberTradeId Integer, MemberTradeName TVarChar,
+               PersonalId Integer, PersonalName TVarChar,
+               PersonalTradeId Integer, PersonalTradeName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                isErased Boolean
@@ -116,11 +116,11 @@ BEGIN
            , Object_MemberTake.Id             AS MemberTakeId
            , Object_MemberTake.ValueData      AS MemberTakeName
          
-           , Object_Member.Id                 AS MemberId
-           , Object_Member.ValueData          AS MemberName
+           , Object_Personal.PersonalId        AS PersonalId
+           , Object_Personal.PersonalName      AS PersonalName
          
-           , Object_MemberTrade.Id           AS MemberTradeId
-           , Object_MemberTrade.ValueData    AS MemberTradeName
+           , Object_PersonalTrade.PersonalId   AS PersonalTradeId
+           , Object_PersonalTrade.PersonalName AS PersonalTradeName
          
            , Object_Area.Id                  AS AreaId
            , Object_Area.ValueData           AS AreaName
@@ -171,42 +171,41 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_City_Region 
                              ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
                             AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
-        LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+         LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_City_Province
-                             ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
-                            AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
-        LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                              ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
+                             AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+         LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
-                                ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
-           LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
+         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_Member
-                                ON ObjectLink_Partner_Member.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_Member.DescId = zc_ObjectLink_Partner_Member()
-           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Partner_Member.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                              ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+         LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTrade
-                                ON ObjectLink_Partner_MemberTrade.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_MemberTrade.DescId = zc_ObjectLink_Partner_MemberTrade()
-           LEFT JOIN Object AS Object_MemberTrade ON Object_MemberTrade.Id = ObjectLink_Partner_MemberTrade.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+         LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                                ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                                ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
-           LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
-
-
-        LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
-        LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
-        LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ" 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+         LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+ 
+         LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
+         LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
+         LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ" 
         
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
   

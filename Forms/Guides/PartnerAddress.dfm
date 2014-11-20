@@ -38,263 +38,89 @@ object PartnerAddressForm: TPartnerAddressForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 23
+        Width = 30
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 97
+        Width = 120
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 98
+        Width = 120
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 73
+        Width = 120
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         Visible = False
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 52
-      end
-      object colRegionName: TcxGridDBColumn
-        Caption = #1054#1073#1083#1072#1089#1090#1100
-        DataBinding.FieldName = 'RegionName'
-        HeaderAlignmentVert = vaCenter
-        Width = 28
-      end
-      object colProvinceName: TcxGridDBColumn
-        Caption = #1056#1072#1081#1086#1085'  '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
-        DataBinding.FieldName = 'ProvinceName'
-        Width = 45
-      end
-      object colPostalCode: TcxGridDBColumn
-        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
-        DataBinding.FieldName = 'PostalCode'
-        HeaderAlignmentVert = vaCenter
-        Width = 42
-      end
-      object colCityKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
-        DataBinding.FieldName = 'CityKindName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = CityKindChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 34
-      end
-      object colCityName: TcxGridDBColumn
-        Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-        DataBinding.FieldName = 'CityName'
-        HeaderAlignmentVert = vaCenter
-        Width = 27
-      end
-      object colProvinceCityName: TcxGridDBColumn
-        Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
-        DataBinding.FieldName = 'ProvinceCityName'
-        HeaderAlignmentVert = vaCenter
-        Width = 68
-      end
-      object colStreetKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' ('#1091#1083#1080#1094#1072', '#1087#1088#1086#1089#1087#1077#1082#1090')'
-        DataBinding.FieldName = 'StreetKindName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = StreetKindChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 33
-      end
-      object clStreetName: TcxGridDBColumn
-        Caption = #1059#1083#1080#1094#1072
-        DataBinding.FieldName = 'StreetName'
-        HeaderAlignmentVert = vaCenter
-        Width = 41
-      end
-      object clHouseNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1084#1072
-        DataBinding.FieldName = 'HouseNumber'
-        HeaderAlignmentVert = vaCenter
-        Width = 44
-      end
-      object clCaseNumber: TcxGridDBColumn
-        Caption = #8470' '#1082#1086#1088#1087#1091#1089#1072
-        DataBinding.FieldName = 'CaseNumber'
-        HeaderAlignmentVert = vaCenter
-        Width = 43
-      end
-      object clRoomNumber: TcxGridDBColumn
-        Caption = #8470' '#1082#1074#1072#1088#1090#1080#1088#1099
-        DataBinding.FieldName = 'RoomNumber'
-        HeaderAlignmentVert = vaCenter
-        Width = 33
-      end
-      object ceisErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 55
       end
       object colShortName: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 31
+        Width = 80
       end
-      object colOrder_Name: TcxGridDBColumn
-        Caption = #1047#1072#1082#1072#1079' '#1060#1048#1054
-        DataBinding.FieldName = 'Order_Name'
+      object colPersonalName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+        DataBinding.FieldName = 'PersonalName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = ContactPersonChoiceOrderForm
+            Action = PersonalChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 120
       end
-      object colOrder_Phone: TcxGridDBColumn
-        Caption = #1047#1072#1082#1072#1079' '#1090#1077#1083'.'
-        DataBinding.FieldName = 'Order_Phone'
+      object colPersonalTradeName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1058#1055')'
+        DataBinding.FieldName = 'PersonalTradeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = ContactPersonChoiceOrderForm
+            Action = PersonalTradeChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 27
-      end
-      object colOrder_Mail: TcxGridDBColumn
-        Caption = #1047#1072#1082#1072#1079' email'
-        DataBinding.FieldName = 'Order_Mail'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceOrderForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 22
-      end
-      object colDoc_Name: TcxGridDBColumn
-        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1060#1048#1054
-        DataBinding.FieldName = 'Doc_Name'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceDocForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colDoc_Phone: TcxGridDBColumn
-        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1090#1077#1083'.'
-        DataBinding.FieldName = 'Doc_Phone'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceDocForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 22
-      end
-      object colDoc_Mail: TcxGridDBColumn
-        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' email'
-        DataBinding.FieldName = 'Doc_Mail'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceDocForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 22
-      end
-      object colAct_Name: TcxGridDBColumn
-        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1060#1048#1054
-        DataBinding.FieldName = 'Act_Name'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceActForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 24
-      end
-      object colAct_Phone: TcxGridDBColumn
-        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1090#1077#1083'.'
-        DataBinding.FieldName = 'Act_Phone'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceActForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 22
-      end
-      object colAct_Mail: TcxGridDBColumn
-        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' email'
-        DataBinding.FieldName = 'Act_Mail'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContactPersonChoiceActForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentVert = vaCenter
-        Width = 22
+        Width = 120
       end
       object colMemberTakeName: TcxGridDBColumn
-        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+        Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
         DataBinding.FieldName = 'MemberTakeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -304,36 +130,10 @@ object PartnerAddressForm: TPartnerAddressForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colMemberTradeName: TcxGridDBColumn
-        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
-        DataBinding.FieldName = 'MemberTradeName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = MemberTradeChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colMemberName: TcxGridDBColumn
-        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'MemberName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = MemberChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 90
       end
       object colAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
@@ -346,8 +146,9 @@ object PartnerAddressForm: TPartnerAddressForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 100
       end
       object colPartnerTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
@@ -360,7 +161,239 @@ object PartnerAddressForm: TPartnerAddressForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object colRegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object colProvinceName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colCityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1085'.'#1087'.'
+        DataBinding.FieldName = 'CityKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = CityKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object colCityName: TcxGridDBColumn
+        Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+        DataBinding.FieldName = 'CityName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object colProvinceCityName: TcxGridDBColumn
+        Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceCityName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colStreetKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'StreetKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StreetKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object colPostalCode: TcxGridDBColumn
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+        DataBinding.FieldName = 'PostalCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clStreetName: TcxGridDBColumn
+        Caption = #1059#1083#1080#1094#1072
+        DataBinding.FieldName = 'StreetName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clHouseNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1084#1072
+        DataBinding.FieldName = 'HouseNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object clCaseNumber: TcxGridDBColumn
+        Caption = #8470' '#1082#1086#1088#1087'.'
+        DataBinding.FieldName = 'CaseNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object clRoomNumber: TcxGridDBColumn
+        Caption = #8470' '#1082#1074'.'
+        DataBinding.FieldName = 'RoomNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object colOrder_Name: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1060#1048#1054
+        DataBinding.FieldName = 'Order_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colOrder_Phone: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Order_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object colOrder_Mail: TcxGridDBColumn
+        Caption = #1047#1072#1082#1072#1079' Email'
+        DataBinding.FieldName = 'Order_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceOrderForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colDoc_Name: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1060#1048#1054
+        DataBinding.FieldName = 'Doc_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colDoc_Phone: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Doc_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object colDoc_Mail: TcxGridDBColumn
+        Caption = #1055#1077#1088#1074#1080#1095#1082#1072' Email'
+        DataBinding.FieldName = 'Doc_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceDocForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colAct_Name: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1060#1048#1054
+        DataBinding.FieldName = 'Act_Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object colAct_Phone: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1090#1077#1083'.'
+        DataBinding.FieldName = 'Act_Phone'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object colAct_Mail: TcxGridDBColumn
+        Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' Email'
+        DataBinding.FieldName = 'Act_Mail'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContactPersonChoiceActForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
     end
@@ -992,48 +1025,48 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       isShowModal = True
     end
-    object MemberChoiceForm: TOpenChoiceForm
+    object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'Member_ObjectForm'
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberId'
+          ComponentItem = 'PersonalId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberName'
+          ComponentItem = 'PersonalName'
           DataType = ftString
         end>
       isShowModal = True
     end
-    object MemberTradeChoiceForm: TOpenChoiceForm
+    object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'Member_ObjectForm'
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberTradeId'
+          ComponentItem = 'PersonalTradeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberTradeName'
+          ComponentItem = 'PersonalTradeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -1353,17 +1386,17 @@ object PartnerAddressForm: TPartnerAddressForm
         ParamType = ptInput
       end
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberId'
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
-        Name = 'inMemberTradeId'
+        Name = 'inPersonalTradeId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberTradeId'
+        ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
       end
       item

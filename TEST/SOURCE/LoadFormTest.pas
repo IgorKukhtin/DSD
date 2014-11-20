@@ -41,7 +41,6 @@ type
     procedure LoadCorrespondentAccountFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
-    procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEDIForm;
     procedure LoadExternalForm;
@@ -858,9 +857,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-  //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerTagFormTest;
@@ -1206,7 +1202,10 @@ end;
 
 procedure TLoadFormTest.LoadAddressFormTest;
 begin
-  // облатсь
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
+  // область
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRegionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionEditForm'));
@@ -1222,7 +1221,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityKindEditForm');
 
-  // населенный пункт есть ниже   City
+  // населенный пункт
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
 
   // Вид населенного пункта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindForm'));
@@ -1446,13 +1449,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFounderServiceJournalForm');
 end;
 
-procedure TLoadFormTest.LoadCityFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCityForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
-end;
 
  procedure TLoadFormTest.LoadWeighingPartnerFormTest;
  begin

@@ -29,7 +29,7 @@ type
     FormParams: TdsdFormParams;
     clSale_Amount_Sh: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     clReturn_Amount_Sh: TcxGridDBColumn;
     clReturn_Amount_Weight: TcxGridDBColumn;
     clReturn_Summ: TcxGridDBColumn;
@@ -52,18 +52,29 @@ type
     clMeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    clRetailName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
     actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
     clJuridicalGroupName: TcxGridDBColumn;
-    clBranchName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     actPrint_byStatGroup: TdsdPrintAction;
     bbPrint_byStatGroup: TdxBarButton;
     cbPartner: TcxCheckBox;
     cbGoods: TcxCheckBox;
     bbPartner: TdxBarControlContainerItem;
     bbGoods: TdxBarControlContainerItem;
+    AreaName: TcxGridDBColumn;
+    RetailReportName: TcxGridDBColumn;
+    PartnerTagName: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    CityKindName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
+    ProvinceName: TcxGridDBColumn;
+    ProvinceCityName: TcxGridDBColumn;
+    StreetName: TcxGridDBColumn;
+    StreetKindName: TcxGridDBColumn;
+    PartnerId: TcxGridDBColumn;
   private
     { Private declarations }
   public
