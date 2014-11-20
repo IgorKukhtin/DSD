@@ -19,8 +19,11 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , TradeMarkName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , JuridicalGroupName TVarChar
              , BranchCode Integer, BranchName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar
-             , PartnerCode Integer, PartnerName TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
+             , RetailName TVarChar, RetailReportName TVarChar
+             , AreaName TVarChar, PartnerTagName TVarChar
+             , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
@@ -42,15 +45,35 @@ BEGIN
     END IF;
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer, GoodsTagId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0 
     THEN 
-        INSERT INTO _tmpGoods (GoodsId)
+        INSERT INTO _tmpGoods (GoodsId, TradeMarkId, GoodsTagId)
            SELECT lfObject_Goods_byGoodsGroup.GoodsId
-           FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+                , COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0)
+                , COALESCE (ObjectLink_Goods_GoodsTag.ChildObjectId, 0)
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                     ON ObjectLink_Goods_GoodsTag.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+       ;
     ELSE 
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+        INSERT INTO _tmpGoods (GoodsId, TradeMarkId, GoodsTagId)
+           SELECT Object.Id
+                , COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0)
+                , COALESCE (ObjectLink_Goods_GoodsTag.ChildObjectId, 0)
+           FROM Object
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                                     ON ObjectLink_Goods_GoodsTag.ObjectId = Object.Id
+                                    AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+           WHERE Object.DescId = zc_Object_Goods()
+       ;
     END IF;
 
 
@@ -62,6 +85,9 @@ BEGIN
                               , MovementLinkObject_Partner.ObjectId AS PartnerId
                               , tmpListContainer.ContractId 
                               , tmpListContainer.InfoMoneyId
+
+                              , _tmpGoods.TradeMarkId
+                              , _tmpGoods.GoodsTagId
 
                               , MovementItem.Id AS MovementItemId
                               , MovementItem.ObjectId AS GoodsId
@@ -131,7 +157,9 @@ BEGIN
                                 , MovementLinkObject_Partner.ObjectId
                                 , tmpListContainer.ContractId 
                                 , tmpListContainer.InfoMoneyId
-                                , MovementItem.Id 
+                                , _tmpGoods.TradeMarkId
+                                , _tmpGoods.GoodsTagId
+                                , MovementItem.Id
                                 , MovementItem.ObjectId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)
@@ -152,10 +180,38 @@ BEGIN
           , Object_Branch.ValueData     AS BranchName
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
-          , Object_Retail.ValueData     AS RetailName
           , ObjectHistory_JuridicalDetails_View.OKPO
-          , Object_Partner.ObjectCode   AS PartnerCode
-          , Object_Partner.ValueData    AS PartnerName
+
+          , Object_Retail.ValueData       AS RetailName
+          , Object_RetailReport.ValueData AS RetailReportName
+/*
+       , Object_Area.ValueData                AS AreaName
+       , Object_PartnerTag.ValueData          AS PartnerTagName
+       , Object_Region.ValueData              AS RegionName
+       , Object_Province.ValueData            AS ProvinceName
+       , Object_CityKind.ValueData            AS CityKindName
+       , Object_Street_View.CityName          AS CityName
+       , Object_Street_View.ProvinceCityName  AS ProvinceCityName
+       , Object_Street_View.StreetKindName    AS StreetKindName
+       , Object_Street_View.Name              AS StreetName
+
+       , Object_Partner.Id                          AS PartnerId
+       , Object_Partner.ObjectCode                  AS PartnerCode
+       , Object_Partner.ValueData                   AS PartnerName*/
+
+          , View_Partner_Address.AreaName
+          , View_Partner_Address.PartnerTagName
+          , View_Partner_Address.RegionName
+          , View_Partner_Address.ProvinceName
+          , View_Partner_Address.CityKindName
+          , View_Partner_Address.CityName
+          , View_Partner_Address.ProvinceCityName
+          , View_Partner_Address.StreetKindName
+          , View_Partner_Address.StreetName
+
+          , View_Partner_Address.PartnerId
+          , View_Partner_Address.PartnerCode
+          , View_Partner_Address.PartnerName
 
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber              AS ContractNumber
@@ -185,6 +241,9 @@ BEGIN
                 , tmpOperation.InfoMoneyId
                 , tmpOperation.BranchId
 
+                , tmpOperation.TradeMarkId
+                , tmpOperation.GoodsTagId
+
                 , tmpOperation.GoodsId
                 , tmpOperation.GoodsKindId
 
@@ -206,6 +265,8 @@ BEGIN
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.BranchId
+                      , tmpMovement.TradeMarkId
+                      , tmpMovement.GoodsTagId
                       , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END AS GoodsId
                       , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END AS GoodsKindId
 
@@ -228,6 +289,8 @@ BEGIN
                         , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.BranchId
+                        , tmpMovement.TradeMarkId
+                        , tmpMovement.GoodsTagId
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END
 
@@ -237,6 +300,8 @@ BEGIN
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.BranchId
+                      , tmpMovement.TradeMarkId
+                      , tmpMovement.GoodsTagId
                       , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END AS GoodsId
                       , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END AS GoodsKindId
 
@@ -273,6 +338,8 @@ BEGIN
                         , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.BranchId
+                        , tmpMovement.TradeMarkId
+                        , tmpMovement.GoodsTagId
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END
                 ) AS tmpOperation
@@ -282,6 +349,8 @@ BEGIN
                   , tmpOperation.ContractId 
                   , tmpOperation.InfoMoneyId
                   , tmpOperation.BranchId
+                  , tmpOperation.TradeMarkId
+                  , tmpOperation.GoodsTagId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
                   
@@ -291,27 +360,20 @@ BEGIN
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
-                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpOperationGroup.TradeMarkId
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpOperationGroup.GoodsTagId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
           LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                               ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
 
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
@@ -321,10 +383,48 @@ BEGIN
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
+/*
+         LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+         LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
+                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
+         LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                              ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
+                             AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+         LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+                             ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
+                            AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+         LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                              ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
+                             AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+         LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+*/
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
-                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_RetailReport()
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                               ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 

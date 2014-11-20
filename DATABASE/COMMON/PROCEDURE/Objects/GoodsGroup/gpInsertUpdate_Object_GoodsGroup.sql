@@ -122,7 +122,7 @@ BEGIN
                      )
   ;
 
-
+/* !!!больше не надо, т.к. мен€етс€ у товара!!!  
    -- изменили свойство <группа статистики> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupStat(), ObjectLink.ObjectId, inGroupStatId)
    FROM ObjectLink
@@ -191,6 +191,7 @@ BEGIN
                         AND ObjectLink.ChildObjectId = ioId
                      )
   ;
+*/
 
    -- изменили свойство <“оргова€ марка> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, inTradeMarkId)
