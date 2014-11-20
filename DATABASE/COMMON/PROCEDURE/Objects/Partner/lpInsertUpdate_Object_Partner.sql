@@ -24,8 +24,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
-    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalId            Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inPersonalTradeId       Integer   ,    -- Физ лицо(торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки
                         
@@ -93,9 +93,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
    
    -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Member(), ioId, inMemberId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
    -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTrade(), ioId, inMemberTradeId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
    -- сохранили связь с <Признак торговой точки>

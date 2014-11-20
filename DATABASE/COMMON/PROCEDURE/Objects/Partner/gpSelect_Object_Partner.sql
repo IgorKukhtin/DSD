@@ -16,8 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
                MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
-               MemberId Integer, MemberCode Integer, MemberName TVarChar,
-               MemberTradeId Integer, MemberTradeCode Integer, MemberTradeName TVarChar,
+               PersonalId Integer, PersonalCode Integer, PersonalName TVarChar,
+               PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                
@@ -83,13 +83,13 @@ BEGIN
          , Object_MemberTake.ObjectCode     AS MemberTakeCode
          , Object_MemberTake.ValueData      AS MemberTakeName
          
-         , Object_Member.Id                 AS MemberId
-         , Object_Member.ObjectCode         AS MemberCode
-         , Object_Member.ValueData          AS MemberName
+         , Object_Personal.PersonalId        AS PersonalId
+         , Object_Personal.PersonalCode      AS PersonalCode
+         , Object_Personal.PersonalName      AS PersonalName
          
-         , Object_MemberTrade.Id           AS MemberTradeId
-         , Object_MemberTrade.ObjectCode   AS MemberTradeCode
-         , Object_MemberTrade.ValueData    AS MemberTradeName
+         , Object_PersonalTrade.PersonalId   AS PersonalTradeId
+         , Object_PersonalTrade.PersonalCode AS PersonalTradeCode
+         , Object_PersonalTrade.PersonalName AS PersonalTradeName
          
          , Object_Area.Id                  AS AreaId
          , Object_Area.ValueData           AS AreaName
@@ -184,15 +184,15 @@ BEGIN
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Member
-                              ON ObjectLink_Partner_Member.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_Member.DescId = zc_ObjectLink_Partner_Member()
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Partner_Member.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                              ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+         LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTrade
-                              ON ObjectLink_Partner_MemberTrade.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_MemberTrade.DescId = zc_ObjectLink_Partner_MemberTrade()
-         LEFT JOIN Object AS Object_MemberTrade ON Object_MemberTrade.Id = ObjectLink_Partner_MemberTrade.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+         LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
@@ -230,7 +230,8 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 10.11.14         * add remine
+ 20.11.14         * add redmine 
+ 10.11.14         * add redmine
  19.10.14                                        * add GLNCode_Juridical
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  16.08.14                                        * add JuridicalGroupName
