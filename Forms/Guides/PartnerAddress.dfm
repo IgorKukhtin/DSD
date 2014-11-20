@@ -89,13 +89,13 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object colMemberName: TcxGridDBColumn
+      object colPersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'MemberName'
+        DataBinding.FieldName = 'PersonalName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = MemberChoiceForm
+            Action = PersonalChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -104,13 +104,13 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
-      object colMemberTradeName: TcxGridDBColumn
+      object colPersonalTradeName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1058#1055')'
-        DataBinding.FieldName = 'MemberTradeName'
+        DataBinding.FieldName = 'PersonalTradeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = MemberTradeChoiceForm
+            Action = PersonalTradeChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -445,8 +445,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1025,48 +1025,48 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       isShowModal = True
     end
-    object MemberChoiceForm: TOpenChoiceForm
+    object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'Member_ObjectForm'
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberId'
+          ComponentItem = 'PersonalId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberName'
+          ComponentItem = 'PersonalName'
           DataType = ftString
         end>
       isShowModal = True
     end
-    object MemberTradeChoiceForm: TOpenChoiceForm
+    object PersonalTradeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'Member_ObjectForm'
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberTradeId'
+          ComponentItem = 'PersonalTradeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MemberTradeName'
+          ComponentItem = 'PersonalTradeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -1386,17 +1386,17 @@ object PartnerAddressForm: TPartnerAddressForm
         ParamType = ptInput
       end
       item
-        Name = 'inMemberId'
+        Name = 'inPersonalId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberId'
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
-        Name = 'inMemberTradeId'
+        Name = 'inPersonalTradeId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MemberTradeId'
+        ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
       end
       item

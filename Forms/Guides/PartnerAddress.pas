@@ -98,13 +98,13 @@ type
     ContactPersonChoiceActForm: TOpenChoiceForm;
     ContactPersonChoiceDocForm: TOpenChoiceForm;
     colMemberTakeName: TcxGridDBColumn;
-    colMemberTradeName: TcxGridDBColumn;
-    colMemberName: TcxGridDBColumn;
+    colPersonalTradeName: TcxGridDBColumn;
+    colPersonalName: TcxGridDBColumn;
     colAreaName: TcxGridDBColumn;
     colPartnerTagName: TcxGridDBColumn;
     MemberTakeChoiceForm: TOpenChoiceForm;
-    MemberTradeChoiceForm: TOpenChoiceForm;
-    MemberChoiceForm: TOpenChoiceForm;
+    PersonalTradeChoiceForm: TOpenChoiceForm;
+    PersonalChoiceForm: TOpenChoiceForm;
     AreaChoiceForm: TOpenChoiceForm;
     PartnerTagChoiceForm: TOpenChoiceForm;
   private
