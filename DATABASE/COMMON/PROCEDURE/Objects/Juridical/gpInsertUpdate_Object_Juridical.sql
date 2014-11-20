@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
@@ -10,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inisCorporate         Boolean   ,    -- Признак наша ли собственность это юридическое лицо
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
-    IN inRetailReportId            Integer   ,    -- Торговая сеть
+    IN inRetailId            Integer   ,    -- Торговая сеть
+    IN inRetailReportId      Integer   ,    -- Торговая сеть(отчет) 
     IN inInfoMoneyId         Integer   ,    -- Статьи назначения
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -75,6 +78,8 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_GoodsProperty(), ioId, inGoodsPropertyId);
     -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), ioId, inRetailId);
+    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_RetailReport(), ioId, inRetailReportId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_InfoMoney(), ioId, inInfoMoneyId);
@@ -95,13 +100,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.11.14         *
  07.11.14         * изменено RetailReport
  23.05.14         * add Retail
  12.01.14         * add PriceList,

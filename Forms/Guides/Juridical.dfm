@@ -80,6 +80,21 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
+      object clRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceRetailForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object clRetailReportName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
         DataBinding.FieldName = 'RetailReportName'
@@ -262,8 +277,8 @@ object JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -472,6 +487,29 @@ object JuridicalForm: TJuridicalForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = GridDS
+    end
+    object actChoiceRetailForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'RetailChoiceForm'
+      FormName = 'TRetailForm'
+      FormNameParam.Value = 'TRetailForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RetailId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RetailName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actChoiceRetailReportForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -710,6 +748,13 @@ object JuridicalForm: TJuridicalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'JuridicalGroupId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'RetailId'
         ParamType = ptInput
       end
       item
