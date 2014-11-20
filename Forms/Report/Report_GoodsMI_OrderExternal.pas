@@ -74,6 +74,8 @@ type
     actPrint_byRouteItog: TdsdPrintAction;
     bbPrint_byRouteItog: TdxBarButton;
     InfoMoneyName: TcxGridDBColumn;
+    actPrint_byCross: TdsdPrintAction;
+    bbPrint_byCross: TdxBarButton;
   private
     { Private declarations }
   public
