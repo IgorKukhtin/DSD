@@ -70,13 +70,9 @@ $BODY$
    DECLARE vbProvinceCityId Integer;
    DECLARE vbContactPersonId Integer;
    DECLARE vbContactPersonKindId Integer;
-   
-   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
