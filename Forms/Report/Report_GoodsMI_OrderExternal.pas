@@ -76,6 +76,9 @@ type
     InfoMoneyName: TcxGridDBColumn;
     actPrint_byCross: TdsdPrintAction;
     bbPrint_byCross: TdxBarButton;
+    HeaderCDS: TClientDataSet;
+    spSelect_Cross: TdsdStoredProc;
+    ItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public

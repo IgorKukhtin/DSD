@@ -584,6 +584,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Top = 12
     Caption = #1057#1082#1083#1072#1076':'
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+    Top = 320
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -602,6 +606,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           'Key'
           'TextValue')
       end>
+    Left = 48
   end
   inherited ActionList: TActionList
     Left = 599
@@ -824,10 +829,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     object actPrint_byCross: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = spSelect_Cross
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spSelect_Cross
         end>
       Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
       Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
@@ -835,11 +840,13 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
+          DataSet = HeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = ItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'FromName;RouteSortingName;RouteName;GoodsGroupNameFull;GoodsName' +
-            ';GoodsKindName'
+          IndexFieldNames = 'GoodsGroupNameFull;goodsgroupname;goodsname;goodskindname'
         end>
       Params = <
         item
@@ -938,8 +945,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 200
-    Top = 208
+    Left = 408
+    Top = 272
     DockControlHeights = (
       0
       0
@@ -1235,5 +1242,91 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       end>
     Left = 760
     Top = 4
+  end
+  object HeaderCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 288
+    Top = 256
+  end
+  object spSelect_Cross: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_Cross'
+    DataSet = HeaderCDS
+    DataSets = <
+      item
+        DataSet = HeaderCDS
+      end
+      item
+        DataSet = ItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsByDoc'
+        Value = 'False'
+        Component = edByDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 320
+  end
+  object ItemsCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 288
+    Top = 312
   end
 end

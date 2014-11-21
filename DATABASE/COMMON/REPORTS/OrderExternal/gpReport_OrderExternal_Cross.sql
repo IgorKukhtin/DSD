@@ -133,7 +133,7 @@ BEGIN
            , MAX(CASE WHEN Movement.Num = 24 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber24
            , MAX(CASE WHEN Movement.Num = 25 THEN Object_From.valuedata ELSE NULL END)                       AS Name25
            , MAX(CASE WHEN Movement.Num = 25 THEN MovementString_InvNumberPartner.ValueData ELSE NULL END)   AS InvNumber25
-           , MAX(Movement.Num)                                                                               AS ColCount
+           , CAST(MAX(Movement.Num) AS INTEGER)                                                              AS ColCount
 
        FROM tmpMovement AS Movement
 
@@ -347,6 +347,8 @@ ALTER FUNCTION gpReport_OrderExternal_Cross (TDateTime, TDateTime, Integer, Inte
 */
 
 -- тест
+/*
 BEGIN;
  SELECT * FROM gpReport_OrderExternal_Cross (inStartDate:= '05.11.2014', inEndDate:= '05.11.2014', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= '2')
 COMMIT;
+*/
