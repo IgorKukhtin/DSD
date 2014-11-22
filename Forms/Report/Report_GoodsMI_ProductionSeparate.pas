@@ -26,7 +26,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clInvNumber: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
@@ -34,13 +34,22 @@ type
     clChildGoodsGroupName: TcxGridDBColumn;
     clChildGoodsCode: TcxGridDBColumn;
     clChildGoodsName: TcxGridDBColumn;
-    clChildAmount_Sh: TcxGridDBColumn;
+    clChildAmount: TcxGridDBColumn;
     clChildSumm: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     clPrice: TcxGridDBColumn;
     clChildPrice: TcxGridDBColumn;
     clPercent: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edFromGroup: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    FromGroupGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    edToGroup: TcxButtonEdit;
+    ToGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

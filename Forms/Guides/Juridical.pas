@@ -79,6 +79,8 @@ type
     clRetailReportName: TcxGridDBColumn;
     actChoiceRetailReportForm: TOpenChoiceForm;
     actChoiceJuridicalGroup: TOpenChoiceForm;
+    clRetailName: TcxGridDBColumn;
+    actChoiceRetailForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

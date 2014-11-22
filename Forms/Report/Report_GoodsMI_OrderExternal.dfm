@@ -1,21 +1,21 @@
 inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   Caption = #1054#1090#1095#1077#1090' < '#1047#1072#1103#1074#1082#1072' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')> '
-  ClientHeight = 387
+  ClientHeight = 483
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1063
-  ExplicitHeight = 421
+  ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 151
     Width = 1055
-    Height = 236
+    Height = 332
     TabOrder = 3
     ExplicitTop = 151
     ExplicitWidth = 1055
     ExplicitHeight = 236
-    ClientRectBottom = 232
+    ClientRectBottom = 328
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
@@ -24,7 +24,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       ExplicitHeight = 230
       inherited cxGrid: TcxGrid
         Width = 1049
-        Height = 230
+        Height = 326
         ExplicitWidth = 1049
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -200,6 +200,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -583,6 +584,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Top = 12
     Caption = #1057#1082#1083#1072#1076':'
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+    Top = 320
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -601,10 +606,11 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           'Key'
           'TextValue')
       end>
+    Left = 48
   end
   inherited ActionList: TActionList
-    Left = 247
-    Top = 135
+    Left = 599
+    Top = 207
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
     end
@@ -820,6 +826,45 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
       ReportNameParam.DataType = ftString
     end
+    object actPrint_byCross: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_Cross
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Cross
+        end>
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = HeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = ItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;goodsgroupname;goodsname;goodskindname'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1082#1088#1086#1089#1089')'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -900,8 +945,8 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 200
-    Top = 208
+    Left = 408
+    Top = 272
     DockControlHeights = (
       0
       0
@@ -947,6 +992,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byCross'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -980,6 +1029,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
     end
     object bbPrint_byRouteItog: TdxBarButton
       Action = actPrint_byRouteItog
+      Category = 0
+    end
+    object bbPrint_byCross: TdxBarButton
+      Action = actPrint_byCross
       Category = 0
     end
   end
@@ -1189,5 +1242,91 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       end>
     Left = 760
     Top = 4
+  end
+  object HeaderCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 288
+    Top = 256
+  end
+  object spSelect_Cross: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderExternal_Cross'
+    DataSet = HeaderCDS
+    DataSets = <
+      item
+        DataSet = HeaderCDS
+      end
+      item
+        DataSet = ItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteId'
+        Value = ''
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsByDoc'
+        Value = 'False'
+        Component = edByDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 320
+  end
+  object ItemsCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 288
+    Top = 312
   end
 end

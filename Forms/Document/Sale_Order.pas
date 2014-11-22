@@ -139,6 +139,10 @@ type
     spSelectPrintPack22: TdsdStoredProc;
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
+    actPrint_Pack21: TdsdPrintAction;
+    actPrint_Pack22: TdsdPrintAction;
+    bbPrint_Pack21: TdxBarButton;
+    bbPrint_Pack22: TdxBarButton;
   private
     { Private declarations }
   public

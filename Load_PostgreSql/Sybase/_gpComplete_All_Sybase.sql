@@ -26,9 +26,13 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-     -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     -- !!!
+     IF vbMovementDescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+     THEN
+         -- таблица - Проводки
+         CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     END IF;
 
      -- !!!1 - Loss!!!
      IF vbMovementDescId = zc_Movement_Loss()
@@ -127,8 +131,36 @@ BEGIN
              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
                                                   , inUserId         := zfCalc_UserAdmin() :: Integer
                                                   , inIsLastComplete := inIsNoHistoryCost);
+
+     ELSE
+     -- !!!6.1. - Send!!!
+     IF vbMovementDescId = zc_Movement_Send()
+     THEN
+             -- !!! проводим - Send !!!
+             PERFORM gpComplete_Movement_Send (inMovementId     := inMovementId
+                                             , inIsLastComplete := NULL
+                                             , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!6.2. - ProductionUnion!!!
+     IF vbMovementDescId = zc_Movement_ProductionUnion()
+     THEN
+             -- !!! проводим - ProductionUnion !!!
+             PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
+                                                        , inIsLastComplete := NULL
+                                                        , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!6.3. - ProductionSeparate!!!
+     IF vbMovementDescId = zc_Movement_ProductionSeparate()
+     THEN
+             -- !!! проводим - ProductionSeparate !!!
+             PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
+                                                           , inIsLastComplete := NULL
+                                                           , inSession        := zfCalc_UserAdmin());
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;

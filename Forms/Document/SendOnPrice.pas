@@ -54,6 +54,8 @@ type
     PrintItemsCDS: TClientDataSet;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
+    actPrintOut: TdsdPrintAction;
+    bbPrintOut: TdxBarButton;
   private
     { Private declarations }
   public

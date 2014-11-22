@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Name TVarChar
              , StreetKindId Integer, StreetKindName TVarChar
              , CityId Integer, CityName TVarChar
              , ProvinceCityId Integer, ProvinceCityName TVarChar
+             , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -38,10 +39,29 @@ BEGIN
 
            , Object_Street_View.ProvinceCityId
            , Object_Street_View.ProvinceCityName
-           
+
+           , Object_Region.ValueData     AS RegionName 
+           , Object_Province.ValueData   AS ProvinceName  
+           , Object_CityKind.ValueData   AS CityKindName
+
            , Object_Street_View.isErased
            
-       FROM Object_Street_View;
+       FROM Object_Street_View
+            LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+                                ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
+                               AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                                 ON ObjectLink_City_Province.ObjectId = Object_Street_View.CityId
+                                AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+            LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
+                                AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+            LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+       ;
 
 END;
 $BODY$
@@ -51,8 +71,9 @@ ALTER FUNCTION gpSelect_Object_Street(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.11.14         *
  09.06.14                        * 
- 31.05.14          * 
+ 31.05.14         * 
         
 */
 

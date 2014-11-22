@@ -48,26 +48,26 @@ BEGIN
      WITH tmpMovement AS
           (SELECT Movement.Id
            FROM Movement
-           WHERE Movement.ParentId = inMovementId
-             AND Movement.DescId = zc_Movement_WeighingPartner()
+           WHERE Movement.Id = inMovementId
           )
-
-
      , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
-             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
+             , ObjectFloat_Amount.ValueData         AS Amount
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
-             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
-             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+             , ObjectString_GroupName.ValueData     AS GroupName
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
              LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
 
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -76,12 +76,9 @@ BEGIN
                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
 
-             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+             LEFT JOIN ObjectString AS ObjectString_GroupName
+                                    ON ObjectString_GroupName.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_GroupName.DescId = zc_ObjectString_GoodsPropertyValue_GroupName()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -92,14 +89,16 @@ BEGIN
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+             , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.Article
-             , tmpObject_GoodsPropertyValue.ArticleGLN
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+             , tmpObject_GoodsPropertyValue.GroupName
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' OR BarCode <> '' OR Article <> '' OR GroupName <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
      , tmpObject_GoodsPropertyValue_basis AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
         FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
@@ -116,16 +115,9 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-
-      SELECT Movement.Id				                                    AS MovementId
+      SELECT Movement.Id				                                AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
-
---           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
-
---           , MovementString_InvNumberPartner_Sale.ValueData                             AS SaleInvNumberPartner
---           , Movement_Sale.InvNumber                                        AS SaleInvNumberPartner
---           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate)  AS SaleOperDatePartner
 
            , COALESCE(MovementString_InvNumberPartner.ValueData,Movement.InvNumber) AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData                                AS InvNumberOrder
@@ -152,10 +144,12 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')                       AS GoodsName_Juridical
            , Object_GoodsKind.ValueData                                             AS GoodsKindName
            , Object_Measure.ValueData                                               AS MeasureName
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')                    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')                 AS BarCodeGLN_Juridical
+
+           , COALESCE (tmpObject_GoodsPropertyValue.GroupName, '')  AS GroupName_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '')) AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
 
            , MovementItem.Amount                                                    AS Amount
            , COALESCE (MIFloat_AmountPartner.ValueData, 0)                          AS AmountPartner
@@ -220,7 +214,6 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                                  -- AND tmpObject_GoodsPropertyValue.Name <> ''
 
 -- MOVEMENT
             LEFT JOIN Movement ON Movement.Id = inMovementId--MovementItem.MovementId
@@ -276,14 +269,6 @@ BEGIN
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, Object_From.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
 
-            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
-                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
-                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
-            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
-                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
-                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
             LEFT JOIN ObjectString AS ObjectString_FromAddress
                                    ON ObjectString_FromAddress.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
@@ -292,71 +277,6 @@ BEGIN
                                    ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
-
---            LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-/*
-            LEFT JOIN Movement ON Movement.Id = inMovementId--MovementItem.MovementId
-
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
-                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
-                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
-
-            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
-                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
-                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
-            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
-                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
-                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
-            LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-                                AND View_Contract.InvNumber <> '-'
-
-
-            LEFT JOIN ObjectString AS ObjectString_FromAddress
-                                   ON ObjectString_FromAddress.ObjectId = MovementLinkObject_From.ObjectId
-                                  AND ObjectString_FromAddress.DescId = zc_ObjectString_Partner_Address()
-
-            LEFT JOIN ObjectString AS ObjectString_ToAddress
-                                   ON ObjectString_ToAddress.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
-*/
-/*
--- MOVEMENT Sale
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = Movement.ParentId
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement_Sale.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
-                                     ON MovementString_InvNumberPartner_Sale.MovementId =  Movement_Sale.Id
-                                    AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
-*/
       ORDER BY MovementItem.MovementId, MovementItem.Id
 --       ORDER BY MovementString_InvNumberPartner.ValueData
       ;
@@ -381,5 +301,5 @@ BEGIN;
 COMMIT;
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
--- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 185675, ,inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 185675, ,inSession:= '2');

@@ -31,8 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inMemberId            Integer   ,    -- Физ лицо (ответственное лицо)
-    IN inMemberTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalId            Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inPersonalTradeId       Integer   ,    -- Физ лицо(торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
     
@@ -95,8 +95,8 @@ BEGIN
                                         , inRouteId         := inRouteId
                                         , inRouteSortingId  := inRouteSortingId
                                         , inMemberTakeId    := inMemberTakeId
-                                        , inMemberId        := inMemberId
-                                        , inMemberTradeId   := inMemberTradeId
+                                        , inPersonalId      := inPersonalId
+                                        , inPersonalTradeId := inPersonalTradeId
                                         , inAreaId          := inAreaId
                                         , inPartnerTagId    := inPartnerTagId
            
@@ -137,6 +137,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.11.14         * add redmine              
  10.11.14         * add redmine
  25.08.14                                        * add lp
  24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm

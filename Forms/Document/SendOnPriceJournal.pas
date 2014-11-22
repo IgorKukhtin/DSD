@@ -41,6 +41,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    actPrintOut: TdsdPrintAction;
+    bbPrintOut: TdxBarButton;
   private
     { Private declarations }
   public

@@ -928,6 +928,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
+            ';GoodsKindName'
         end>
       Params = <
         item
@@ -971,6 +974,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1011,6 +1015,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -1051,6 +1056,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'goodsname_two'
         end>
       Params = <
         item

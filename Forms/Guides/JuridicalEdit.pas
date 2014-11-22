@@ -125,6 +125,9 @@ type
     cxLabel19: TcxLabel;
     ceRetailReport: TcxButtonEdit;
     RetailReportGuides: TdsdGuides;
+    cxLabel20: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -17,8 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
                
-               MemberId Integer, MemberName TVarChar,
-               MemberTradeId Integer, MemberTradeName TVarChar,
+               PersonalId Integer, PersonalName TVarChar,
+               PersonalTradeId Integer, PersonalTradeName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
               
@@ -69,14 +69,14 @@ BEGIN
            , CAST (0 as Integer)    AS RouteSortingId
            , CAST ('' as TVarChar)  AS RouteSortingName
            
-           , CAST (0 as Integer)    AS MemberTakeId
+           , CAST (0 as Integer)    AS PersonalTakeId
            , CAST ('' as TVarChar)  AS MemberTakeName
            
-           , CAST (0 as Integer)    AS MemberId
-           , CAST ('' as TVarChar)  AS MemberName
+           , CAST (0 as Integer)    AS PersonalId
+           , CAST ('' as TVarChar)  AS PersonalName
          
-           , CAST (0 as Integer)    AS MemberTradeId
-           , CAST ('' as TVarChar)  AS MemberTradeName
+           , CAST (0 as Integer)    AS PersonalTradeId
+           , CAST ('' as TVarChar)  AS PersonalTradeName
          
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
@@ -138,11 +138,11 @@ BEGIN
            , Object_MemberTake.Id             AS MemberTakeId
            , Object_MemberTake.ValueData      AS MemberTakeName
          
-           , Object_Member.Id                 AS MemberId
-           , Object_Member.ValueData          AS MemberName
+           , Object_Personal.PersonalId         AS PersonalId
+           , Object_Personal.PersonalName       AS PersonalName
          
-           , Object_MemberTrade.Id           AS MemberTradeId
-           , Object_MemberTrade.ValueData    AS MemberTradeName
+           , Object_PersonalTrade.PersonalId    AS PersonalTradeId
+           , Object_PersonalTrade.PersonalName  AS PersonalTradeName
          
            , Object_Area.Id                  AS AreaId
            , Object_Area.ValueData           AS AreaName
@@ -235,15 +235,15 @@ BEGIN
                                AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
            LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
          
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_Member
-                                ON ObjectLink_Partner_Member.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_Member.DescId = zc_ObjectLink_Partner_Member()
-           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Partner_Member.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+           LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTrade
-                                ON ObjectLink_Partner_MemberTrade.ObjectId = Object_Partner.Id 
-                               AND ObjectLink_Partner_MemberTrade.DescId = zc_ObjectLink_Partner_MemberTrade()
-           LEFT JOIN Object AS Object_MemberTrade ON Object_MemberTrade.Id = ObjectLink_Partner_MemberTrade.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+           LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                                 ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
@@ -295,6 +295,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.11.14         * add remine 
  11.11.14         * add ÔÓÎˇ ‡‰ÂÒ‡
  01.06.14         * add ShortName,
                         HouseNumber, CaseNumber, RoomNumber, Street

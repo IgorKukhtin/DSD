@@ -26,7 +26,6 @@ type
   TStreetForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
@@ -59,6 +58,9 @@ type
     clStreetKindName: TcxGridDBColumn;
     clCityName: TcxGridDBColumn;
     clProvinceCityName: TcxGridDBColumn;
+    clProvinceName: TcxGridDBColumn;
+    clRegionName: TcxGridDBColumn;
+    clCityKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

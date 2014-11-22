@@ -83,8 +83,8 @@ type
     actChoicePersonalTake: TOpenChoiceForm;
     colAreaName: TcxGridDBColumn;
     colPartnerTagName: TcxGridDBColumn;
-    colMemberName: TcxGridDBColumn;
-    colMemberTradeName: TcxGridDBColumn;
+    clPersonalName: TcxGridDBColumn;
+    clPersonalTradeName: TcxGridDBColumn;
   private
     { Private declarations }
   public

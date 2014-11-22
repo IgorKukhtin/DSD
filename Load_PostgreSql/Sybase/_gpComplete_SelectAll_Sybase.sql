@@ -37,12 +37,9 @@ BEGIN
           , MovementDesc.Code
           , MovementDesc.ItemName
      FROM Movement
-          /*JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                   AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                   AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
           JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                              AND MLO_From.DescId = zc_MovementLinkObject_From()
-          JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId
+          -- !!! JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
@@ -50,24 +47,21 @@ BEGIN
        AND inIsBefoHistoryCost = FALSE
     UNION
      -- 2. From: Loss
-     SELECT Movement.Id AS MovementId
+     /*SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
           , MovementDesc.ItemName
      FROM Movement
-          /*JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                   AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                   AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
           JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                              AND MLO_From.DescId = zc_MovementLinkObject_From()
-          JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId AND isMain = FALSE
+          -- !!! JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId AND isMain = FALSE
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-    UNION
+    UNION*/
      -- 3. To: ReturnIn
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
@@ -75,12 +69,9 @@ BEGIN
           , MovementDesc.Code
           , MovementDesc.ItemName
      FROM Movement
-          /*JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                   AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                   AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
           JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-          JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
+          -- !!! JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
@@ -94,12 +85,9 @@ BEGIN
           , MovementDesc.Code
           , MovementDesc.ItemName
      FROM Movement
-          /*JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                   AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                   AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
           JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
-          JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
+          -- !!! JOIN tmpUnit ON tmpUnit.UnitId = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
@@ -113,17 +101,27 @@ BEGIN
           , MovementDesc.Code
           , MovementDesc.ItemName
      FROM Movement
-          /*JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
-                                                   AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                   AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()*/
           JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                              AND MLO_From.DescId = zc_MovementLinkObject_From()
-          JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId AND isMain = TRUE
+          -- !!! JOIN tmpUnit ON tmpUnit.UnitId = MLO_From.ObjectId AND isMain = TRUE
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnOut())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
+     -- !!!Internal!!!
+    UNION
+     -- 5. Send + ProductionUnion + ProductionSeparate
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , MovementDesc.ItemName
+     FROM Movement
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+       AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
 END;$BODY$
@@ -141,7 +139,7 @@ create table dba._pgMovementReComlete
     ,InvNumber TVarCharMedium
     ,Code  TVarCharMedium
     ,ItemName TVarCharMedium
- ,primary key (MovementId))
+ ,primary key (MovementId)
 */
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014')

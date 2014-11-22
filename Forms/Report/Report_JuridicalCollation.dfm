@@ -2,9 +2,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 1110
-  ExplicitLeft = -120
-  ExplicitWidth = 1118
-  ExplicitHeight = 423
+  ExplicitLeft = -92
+  ExplicitWidth = 1126
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1047,6 +1047,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'TextValue'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

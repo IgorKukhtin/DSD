@@ -946,16 +946,16 @@ object MainForm: TMainForm
     object OKPOEdit: TEdit
       Left = 3
       Top = 640
-      Width = 121
+      Width = 104
       Height = 21
       TabOrder = 21
     end
     object cbOKPO: TCheckBox
       Left = 3
       Top = 621
-      Width = 235
+      Width = 104
       Height = 17
-      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1054#1050#1055#1054
+      Caption = #1058#1086#1083#1100#1082#1086' '#1054#1050#1055#1054
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1266,6 +1266,28 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 42
+    end
+    object cbBranchSendOnPrice: TCheckBox
+      Left = 137
+      Top = 621
+      Width = 110
+      Height = 17
+      Caption = #1050#1086#1076' '#1087'. '#1076#1083#1103' 2.2.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 43
+    end
+    object UnitCodeSendOnPriceEdit: TEdit
+      Left = 129
+      Top = 640
+      Width = 104
+      Height = 21
+      TabOrder = 44
+      Text = '22121'
     end
   end
   object CompleteDocumentPanel: TPanel
