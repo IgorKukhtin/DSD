@@ -139,7 +139,7 @@ create table dba._pgMovementReComlete
     ,InvNumber TVarCharMedium
     ,Code  TVarCharMedium
     ,ItemName TVarCharMedium
- ,primary key (MovementId))
+ ,primary key (MovementId)
 */
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014')

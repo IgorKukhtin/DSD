@@ -279,42 +279,67 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'JuridicalCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyName_all'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName_all'
           DataType = ftString
         end
         item
           Name = 'OKPO'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OKPO'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Value = 0
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerId'
+          Value = 0
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -355,6 +380,7 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 136
   end
