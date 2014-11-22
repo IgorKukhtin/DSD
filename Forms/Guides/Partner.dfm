@@ -174,7 +174,7 @@ object PartnerForm: TPartnerForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoicePersonalTake
+            Action = actChoiceMemberTake
             Default = True
             Kind = bkEllipsis
           end>
@@ -276,8 +276,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -665,7 +665,7 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
-    object actChoicePersonalTake: TOpenChoiceForm
+    object actChoiceMemberTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'Member_ObjectForm'
@@ -677,13 +677,13 @@ object PartnerForm: TPartnerForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -799,10 +799,10 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalTakeId'
+        ComponentItem = 'MemberTakeId'
         ParamType = ptInput
       end
       item

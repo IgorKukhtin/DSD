@@ -25,6 +25,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -175,7 +176,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actChoicePersonalTake
+                Action = actChoiceMemberTake
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -507,7 +508,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         end>
       isShowModal = True
     end
-    object actChoicePersonalTake: TOpenChoiceForm
+    object actChoiceMemberTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'Member_ObjectForm'
@@ -519,13 +520,13 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -633,10 +634,10 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalTakeId'
+        ComponentItem = 'MemberTakeId'
         ParamType = ptInput
       end>
     PackSize = 1

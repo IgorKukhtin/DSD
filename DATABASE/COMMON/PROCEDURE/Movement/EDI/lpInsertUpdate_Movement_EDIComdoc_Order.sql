@@ -23,7 +23,7 @@ $BODY$
 
    DECLARE vbRouteId          Integer;
    DECLARE vbRouteSortingId   Integer;
-   DECLARE vbPersonalId       Integer;
+   DECLARE MemberTakeId       Integer;
 
    DECLARE vbPriceListId      Integer;
    DECLARE vbPriceWithVAT     Boolean;
@@ -45,11 +45,11 @@ BEGIN
           , tmpChangePercent.ChangePercent             AS ChangePercent
           , ObjectLink_Partner_Route.ChildObjectId           AS RouteId
           , ObjectLink_Partner_RouteSorting.ChildObjectId    AS RouteSortingId
-          , ObjectLink_Partner_PersonalTake.ChildObjectId    AS PersonalTakeId
+          , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
             INTO vbMovementId_Order, vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
-               , vbRouteId, vbRouteSortingId, vbPersonalId
+               , vbRouteId, vbRouteSortingId, MemberTakeId
                , vbGoodsPropertyId, vbOKPO
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -99,9 +99,9 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = ObjectString_Partner_GLNCode.ObjectId
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
-                              ON ObjectLink_Partner_PersonalTake.ObjectId = ObjectString_Partner_GLNCode.ObjectId
-                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                              ON ObjectLink_Partner_MemberTake.ObjectId = ObjectString_Partner_GLNCode.ObjectId
+                             AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = ObjectString_Partner_GLNCode.ObjectId
@@ -168,7 +168,7 @@ BEGIN
                                                                , inContractId          := vbContractId
                                                                , inRouteId             := vbRouteId
                                                                , inRouteSortingId      := vbRouteSortingId
-                                                               , inPersonalId          := vbPersonalId
+                                                               , inPersonalId          := vbMemberTakeId
                                                                , inPriceListId         := vbPriceListId
                                                                , inUserId              := inUserId
                                                                 );
