@@ -56,11 +56,11 @@ type
     edCaseNumber: TcxTextEdit;
     edRoomNumber: TcxTextEdit;
     cxLabel18: TcxLabel;
-    ceMember: TcxButtonEdit;
-    MemberGuides: TdsdGuides;
+    cePersonal: TcxButtonEdit;
+    PersonalGuides: TdsdGuides;
     cxLabel19: TcxLabel;
-    ceMemberTrade: TcxButtonEdit;
-    MemberTradeGuides: TdsdGuides;
+    cePersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
     cxLabel20: TcxLabel;
     ceArea: TcxButtonEdit;
     AreaGuides: TdsdGuides;

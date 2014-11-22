@@ -95,6 +95,7 @@ begin
   LoadReportFromFile('Отчет - заявки (по виду товара)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по виду товара).fr3');
   LoadReportFromFile('Отчет - заявки (по Маршрутам-детально)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-детально).fr3');
   LoadReportFromFile('Отчет - заявки (по Маршрутам-итого)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-итого).fr3');
+  LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
 
   // Печатные формы накладных
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
