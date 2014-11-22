@@ -9,17 +9,17 @@ inherited PriceListLoadForm: TPriceListLoadForm
   inherited PageControl: TcxPageControl
     Width = 714
     Height = 373
-    ExplicitWidth = 616
+    ExplicitWidth = 714
     ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 714
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 616
+      ExplicitWidth = 714
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
         Width = 714
         Height = 373
-        ExplicitWidth = 616
+        ExplicitWidth = 714
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -67,6 +67,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     object actOpenPriceList: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -87,6 +88,19 @@ inherited PriceListLoadForm: TPriceListLoadForm
       ActionType = acUpdate
       IdFieldName = 'Id'
     end
+    object actOneLoadPriceList: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateGoods
+      StoredProcList = <
+        item
+          StoredProc = spUpdateGoods
+        end
+        item
+          StoredProc = spLoadPriceList
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+    end
     object actLoadPriceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -105,15 +119,28 @@ inherited PriceListLoadForm: TPriceListLoadForm
       ImageIndex = 27
       InfoAfterExecute = #1055#1088#1072#1081#1089' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085
     end
+    object mactLoadPrice1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOneLoadPriceList
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
+      ImageIndex = 27
+    end
     object mactLoadPriceList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actLoadPriceList
+          Action = mactLoadPrice1
+        end
+        item
+          Action = actRefresh
         end>
-      View = cxGridDBTableView
-      InfoAfterExecute = #1055#1088#1072#1081#1089' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085
+      InfoAfterExecute = #1055#1088#1072#1081#1089#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1074' '#1087#1088#1072#1081#1089#1099
       ImageIndex = 27
     end

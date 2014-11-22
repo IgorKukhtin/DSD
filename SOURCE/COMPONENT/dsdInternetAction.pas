@@ -3,13 +3,15 @@ unit dsdInternetAction;
 interface
 
 uses
-  dsdAction, dsdDB, Classes;
+  dsdAction, dsdDB, Classes, cxGrid;
 
 type
 
+  TArrayOfS = array of string;
+
   TdsdSMTPAction = class(TdsdCustomAction)
   private
-    FBody: String;
+    FBody: TdsdParam;
     FToAddress: TdsdParam;
     FPort: TdsdParam;
     FPassword: TdsdParam;
@@ -18,6 +20,8 @@ type
     FHost: TdsdParam;
     FSubject: TdsdParam;
   protected
+    FAttachments: TArrayOfS;
+    procedure FillAttachments; virtual;
     function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -33,19 +37,31 @@ type
     property ToAddress: TdsdParam read FToAddress write FToAddress;
   end;
 
+  TdsdSMTPGridAction = class(TdsdSMTPAction)
+  private
+    FFileName: string;
+    FcxGrid: TcxGrid;
+  protected
+    procedure FillAttachments; override;
+    function LocalExecute: boolean; override;
+  published
+    property cxGrid: TcxGrid read FcxGrid write FcxGrid;
+  end;
+
   procedure Register;
 
 implementation
 
-uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, VCL.ActnList;
+uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, cxGridExportLink,
+     VCL.ActnList, cxControls;
 
 { TdsdSMTPAction }
 
 procedure Register;
 begin
   RegisterActions('DSDLib', [TdsdSMTPAction], TdsdSMTPAction);
+  RegisterActions('DSDLib', [TdsdSMTPGridAction], TdsdSMTPGridAction);
 end;
-
 
 type
 
@@ -76,6 +92,7 @@ var EMsg: TIdMessage;
     FIdSMTP: TIdSMTP;
     EText: TIdText;
     i: integer;
+    Stream: TFileStream;
 begin
   result := false;
   FIdSMTP := TIdSMTP.Create(nil);
@@ -110,14 +127,24 @@ begin
     EMsg.Body.Clear;
     EMsg.Date := now;
     for i := 0 to high(Attachments) do
-      if FileExists(Trim(Attachments[i])) then
-         TIdAttachmentFile.Create(EMsg.MessageParts, Attachments[i]);
+      if FileExists(Trim(Attachments[i])) then begin
+         Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
+         try
+            with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
+                 FileName := 'Заказ.xls';
+                 LoadFromStream(Stream);
+            end;
+         finally
+            FreeAndNil(Stream);
+         end;
+      end;
     EMsg.AfterConstruction;
 
     FIdSMTP.Connect;
-    if FIdSMTP.Connected then
-          FIdSMTP.Send(EMsg);
-          result := true;
+    if FIdSMTP.Connected then begin
+       FIdSMTP.Send(EMsg);
+       result := true;
+    end;
   finally
     FIdSMTP.Disconnect;
     FreeAndNil(FIdSMTP);
@@ -135,6 +162,7 @@ begin
   FUserName := TdsdParam.Create;
   FHost := TdsdParam.Create;
   FSubject := TdsdParam.Create;
+  FBody := TdsdParam.Create;
 end;
 
 destructor TdsdSMTPAction.Destroy;
@@ -146,20 +174,59 @@ begin
   FreeAndNil(FUserName);
   FreeAndNil(FHost);
   FreeAndNil(FSubject);
+  FreeAndNil(FBody);
   inherited;
 end;
 
-function TdsdSMTPAction.LocalExecute: boolean;
-var Recipients: array of String;
-    Attachments: array of String;
+procedure TdsdSMTPAction.FillAttachments;
 begin
-  SetLength(Recipients, 1);
-  Recipients[0] := ToAddress.Value;
+
+end;
+
+function TdsdSMTPAction.LocalExecute: boolean;
+var Recipients: TArrayOfS;
+    RicipientsList: TStringList;
+    i: integer;
+begin
+  RicipientsList := TStringList.Create;
+  try
+    RicipientsList.DelimitedText := ToAddress.Value;
+    SetLength(Recipients, RicipientsList.Count);
+    for I := 0 to RicipientsList.Count - 1 do
+        Recipients[i] := RicipientsList[i];
+  finally
+    RicipientsList.Free;
+  end;
+  FillAttachments;
   result := TMailer.SendMail(Host.Value, Port.Value,
                              Password.Value, Username.Value,
                              Recipients, FromAddress.Value,
-                             Subject.Value, Body,
-                             Attachments);
+                             Subject.Value, Body.Value,
+                             FAttachments);
+end;
+
+{ TdsdSMTPDBViewAction }
+
+procedure TdsdSMTPGridAction.FillAttachments;
+begin
+  inherited;
+  SetLength(FAttachments, 1);
+  FAttachments[0] := FFileName;
+end;
+
+function TdsdSMTPGridAction.LocalExecute: boolean;
+var GUID: TGuid;
+begin
+  CreateGUID(GUID);
+  FFileName := ExtractFilePath(ParamStr(0)) + GUIDToString(GUID) + '.xls';
+  ExportGridToExcel(FFileName, FcxGrid, IsCtrlPressed);
+  try
+    result := inherited LocalExecute;
+  finally
+    // Обязательно тут грохнуть файл!!!
+    if FileExists(FFileName) then
+       DeleteFile(FFileName);
+  end;
 end;
 
 end.

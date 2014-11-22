@@ -2,7 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1222
-  ExplicitTop = -158
+  ExplicitTop = -88
   ExplicitWidth = 1230
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -116,14 +116,14 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 260
+            Width = 206
           end
           object clCalcAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089' '#1082#1088#1072#1090#1085#1086#1089#1090#1100#1102
             DataBinding.FieldName = 'CalcAmount'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 87
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -167,7 +167,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 65
           end
           object coJuridicalName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1074#1077#1094
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -181,7 +181,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 40
           end
           object coContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             Visible = False
             HeaderAlignmentVert = vaCenter
@@ -319,7 +319,7 @@ inherited OrderInternalForm: TOrderInternalForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1086
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -342,7 +342,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 62
           end
           object colContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -437,41 +437,51 @@ inherited OrderInternalForm: TOrderInternalForm
     ExplicitWidth = 1222
     ExplicitHeight = 49
     inherited edInvNumber: TcxTextEdit
-      Left = 8
-      ExplicitLeft = 8
+      Left = 155
+      Top = 22
+      ExplicitLeft = 155
+      ExplicitTop = 22
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 155
+      Top = 4
+      ExplicitLeft = 155
+      ExplicitTop = 4
     end
     inherited edOperDate: TcxDateEdit
-      Left = 88
+      Left = 238
+      Top = 22
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 88
+      ExplicitLeft = 238
+      ExplicitTop = 22
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      ExplicitLeft = 89
+      Left = 239
+      Top = 4
+      ExplicitLeft = 239
+      ExplicitTop = 4
     end
     inherited cxLabel15: TcxLabel
-      Left = 528
-      Visible = False
-      ExplicitLeft = 528
+      Left = 5
+      Top = 4
+      ExplicitLeft = 5
+      ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 528
-      Visible = False
-      ExplicitLeft = 528
-      ExplicitWidth = 218
+      Left = 5
+      Top = 22
+      ExplicitLeft = 5
+      ExplicitTop = 22
+      ExplicitWidth = 142
       ExplicitHeight = 22
-      Width = 218
+      Width = 142
     end
     object edUnit: TcxButtonEdit
-      Left = 200
-      Top = 23
+      Left = 347
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -481,8 +491,8 @@ inherited OrderInternalForm: TOrderInternalForm
       Width = 270
     end
     object cxLabel4: TcxLabel
-      Left = 200
-      Top = 4
+      Left = 347
+      Top = 3
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
   end
@@ -524,8 +534,35 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 120
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 55
     Top = 303
+    object mactDeleteLinkGroup: TMultiAction [0]
+      Category = 'DeleteLink'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactDeleteLinkDS
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      ImageIndex = 72
+    end
+    object mactDeleteLinkDS: TMultiAction [1]
+      Category = 'DeleteLink'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDeleteLink
+        end>
+      DataSource = ChildDS
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
+      ImageIndex = 72
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -593,7 +630,7 @@ inherited OrderInternalForm: TOrderInternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -646,11 +683,12 @@ inherited OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100
+      ShortCut = 9
       FormName = 'TChoiceGoodsFromPriceListForm'
       FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
-      isShowModal = True
+      isShowModal = False
     end
     object mactDeleteLink: TMultiAction
       Category = 'DeleteLink'
@@ -879,13 +917,13 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 137
   end
   inherited PopupMenu: TPopupMenu
-    Left = 792
-    Top = 368
-    object N2: TMenuItem
-      Action = actMISetErased
+    Left = 40
+    Top = 168
+    object N3: TMenuItem [0]
+      Action = mactDeleteLinkGroup
     end
-    object N3: TMenuItem
-      Action = actMISetUnErased
+    object N2: TMenuItem [1]
+      Caption = '-'
     end
   end
   inherited FormParams: TdsdFormParams
@@ -930,13 +968,13 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 88
-    Top = 112
+    Left = 80
+    Top = 80
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderInternal'
     Left = 128
-    Top = 112
+    Top = 88
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderInternal'
@@ -1134,9 +1172,10 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
-    Left = 912
-    Top = 320
+    FormName = 'OrderInternalJournalForm'
+    DataSet = 'MasterCDS'
+    Left = 121
+    Top = 137
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased'

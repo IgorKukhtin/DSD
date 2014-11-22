@@ -571,7 +571,11 @@ uses
   PartnerTagEdit in '..\..\Forms\Guides\PartnerTagEdit.pas' {PartnerTagEditForm: TParentForm},
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
-  Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm};
+  Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
+  dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  OLAPTest in '..\SOURCE\Component\OLAPTest.pas',
+  dsdOlap in '..\..\SOURCE\COMPONENT\dsdOlap.pas',
+  dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

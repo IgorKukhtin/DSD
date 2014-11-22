@@ -106,6 +106,7 @@ contains
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas';
 
 end.

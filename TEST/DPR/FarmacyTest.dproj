@@ -533,6 +533,19 @@
 			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Member.pas">
+				<Form>MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
+				<Form>Member_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
+				<Form>MemberEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\MemberTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

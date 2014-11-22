@@ -3,39 +3,18 @@ unit MemberEdit;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
-  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, cxCheckBox;
+  Winapi.Windows, DataModul, AncestorEditDialog, cxGraphics, cxLookAndFeels,
+  cxLookAndFeelPainters, Vcl.Menus, cxControls, cxPCdxBarPopupMenu, cxContainer,
+  cxEdit, cxCheckBox, cxCurrencyEdit, cxLabel, cxTextEdit, cxPC, Vcl.Controls,
+  dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
+  Vcl.StdCtrls, cxButtons;
 
 type
-  TMemberEditForm = class(TParentForm)
+  TMemberEditForm = class(TAncestorEditDialogForm)
     edMeasureName: TcxTextEdit;
     cxLabel1: TcxLabel;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
-    ActionList: TActionList;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose: TdsdFormClose;
-    spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
-    spGet: TdsdStoredProc;
-    cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel2: TcxLabel;
     ceINN: TcxTextEdit;
     cxLabel3: TcxLabel;
@@ -43,6 +22,13 @@ type
     ceDriverCertificate: TcxTextEdit;
     ceComment: TcxTextEdit;
     cbOfficial: TcxCheckBox;
+    cxPageControl1: TcxPageControl;
+    tsCommon: TcxTabSheet;
+    tsContact: TcxTabSheet;
+    cxLabel5: TcxLabel;
+    edEmail: TcxTextEdit;
+    spInsertUpdateContact: TdsdStoredProc;
+    spGetMemberContact: TdsdStoredProc;
   private
     { Private declarations }
   public

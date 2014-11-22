@@ -55,7 +55,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
   cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad;
+  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad, dsdInternetAction;
 
 {$R *.dfm}
 
@@ -225,11 +225,11 @@ begin
      AddOnFormData.ChoiceAction.Visible := Assigned(FormSender) and Supports(FormSender, IChoiceCaller);
      AddOnFormData.ChoiceAction.Enabled := AddOnFormData.ChoiceAction.Visible;
      if Supports(FormSender, IChoiceCaller) then begin
-        try
-          TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := nil;
-        except
+      //  try
+      //    TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := nil;
+     //   except
           // пока под стул!!!
-        end;
+     //   end;
         // объединили вызывающий справочник и кнопку выбора!!!
         TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := FormSender as IChoiceCaller;
         (FormSender as IChoiceCaller).Owner := AddOnFormData.ChoiceAction;
@@ -311,6 +311,7 @@ initialization
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdPrintAction);
   RegisterClass (TdsdStoredProc);
+  RegisterClass (TdsdSMTPGridAction);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);

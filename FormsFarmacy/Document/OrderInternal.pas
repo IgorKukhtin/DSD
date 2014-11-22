@@ -3,7 +3,7 @@ unit OrderInternal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -25,7 +25,6 @@ type
     colAmount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
-    N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
@@ -79,6 +78,9 @@ type
     colMinimumLot: TcxGridDBColumn;
     clCalcAmount: TcxGridDBColumn;
     colMultiplicity: TcxGridDBColumn;
+    mactDeleteLinkGroup: TMultiAction;
+    mactDeleteLinkDS: TMultiAction;
+    N2: TMenuItem;
   private
     { Private declarations }
   public

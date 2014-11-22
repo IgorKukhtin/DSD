@@ -1,28 +1,27 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
-  ClientWidth = 790
-  ExplicitLeft = 0
-  ExplicitWidth = 798
+  ClientWidth = 846
+  ExplicitWidth = 854
   ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 73
-    Width = 790
+    Width = 846
     Height = 595
     ExplicitTop = 73
-    ExplicitWidth = 790
+    ExplicitWidth = 846
     ExplicitHeight = 595
     ClientRectBottom = 595
-    ClientRectRight = 790
+    ClientRectRight = 846
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 790
+      ExplicitWidth = 846
       ExplicitHeight = 571
       inherited cxGrid: TcxGrid
-        Width = 790
+        Width = 846
         Height = 571
-        ExplicitWidth = 790
+        ExplicitWidth = 846
         ExplicitHeight = 571
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -166,51 +165,43 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 790
+    Width = 846
     Height = 47
     TabOrder = 3
-    ExplicitWidth = 790
+    ExplicitWidth = 846
     ExplicitHeight = 47
     inherited edInvNumber: TcxTextEdit
-      Left = 8
-      ExplicitLeft = 8
+      Left = 153
+      ExplicitLeft = 153
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 153
+      ExplicitLeft = 153
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 234
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 234
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      ExplicitLeft = 89
-    end
-    inherited cxLabel15: TcxLabel
-      Top = 21
-      Visible = False
-      ExplicitTop = 21
+      Left = 234
+      ExplicitLeft = 234
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 39
-      Visible = False
-      ExplicitTop = 39
-      ExplicitWidth = 218
+      ExplicitWidth = 139
       ExplicitHeight = 22
-      Width = 218
+      Width = 139
     end
     object cxLabel3: TcxLabel
-      Left = 195
+      Left = 338
       Top = 5
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 195
+      Left = 338
       Top = 23
       Properties.Buttons = <
         item
@@ -218,10 +209,10 @@ inherited OrderExternalForm: TOrderExternalForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 222
+      Width = 190
     end
     object edTo: TcxButtonEdit
-      Left = 425
+      Left = 532
       Top = 23
       Properties.Buttons = <
         item
@@ -229,21 +220,21 @@ inherited OrderExternalForm: TOrderExternalForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 212
+      Width = 160
     end
     object cxLabel4: TcxLabel
-      Left = 425
+      Left = 532
       Top = 5
       Caption = #1050#1086#1084#1091
     end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 643
+    Left = 699
     Top = 5
-    Caption = #1044#1086#1075#1086#1074#1086#1088
+    Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
   end
   object edContract: TcxButtonEdit [3]
-    Left = 643
+    Left = 698
     Top = 23
     Properties.Buttons = <
       item
@@ -262,6 +253,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 640
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
@@ -347,6 +339,62 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object SMTPGridAction: TdsdSMTPGridAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host'
+      Port.Value = 25
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port'
+      UserName.Value = Null
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName'
+      Password.Value = Null
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password'
+      Body.Value = Null
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body'
+      Subject.Value = Null
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject'
+      FromAddress.Value = Null
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom'
+      ToAddress.Value = Null
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo'
+      cxGrid = cxGrid
+    end
+    object actGetDocumentDataForEmail: TdsdExecStoredProc
+      Category = 'SendEMail'
+      MoveParams = <>
+      StoredProc = spGetDocumentDataForEmail
+      StoredProcList = <
+        item
+          StoredProc = spGetDocumentDataForEmail
+        end>
+      Caption = 'actGetDocumentDataForEmail'
+    end
+    object mactSMTPSend: TMultiAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDocumentDataForEmail
+        end
+        item
+          Action = SMTPGridAction
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
+      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+      ShortCut = 16467
     end
   end
   inherited MasterDS: TDataSource
@@ -463,6 +511,10 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbSendEMail'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -507,6 +559,10 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Visible = ivAlways
       ImageIndex = 41
+    end
+    object bbSendEMail: TdxBarButton
+      Action = mactSMTPSend
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -568,6 +624,39 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+      end
+      item
+        Name = 'Host'
+        Value = Null
+      end
+      item
+        Name = 'Port'
+        Value = Null
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+      end
+      item
+        Name = 'Password'
+        Value = Null
       end>
     Left = 280
     Top = 552
@@ -578,7 +667,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderExternal'
-    Left = 128
+    Left = 136
     Top = 56
   end
   inherited spGet: TdsdStoredProc
@@ -767,9 +856,10 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
-    Left = 912
-    Top = 320
+    FormName = 'OrderExternalJournalForm'
+    DataSet = 'MasterCDS'
+    Left = 73
+    Top = 105
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
@@ -972,5 +1062,69 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Left = 664
     Top = 40
+  end
+  object spGetDocumentDataForEmail: TdsdStoredProc
+    StoredProcName = 'gpGet_DocumentDataForEmail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Subject'
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Body'
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressFrom'
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressTo'
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Port'
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 160
   end
 end

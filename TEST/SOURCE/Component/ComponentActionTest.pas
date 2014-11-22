@@ -29,8 +29,9 @@ begin
       UserName.Value := 'test@dsd.biz.ua';
       FromAddress.Value := 'test@dsd.biz.ua';
       Password.Value := 'testtest';
-      ToAddress.Value :=  'kukhtinigor@gmail.com';
-      Body := 'Ёто супер письмо!!!';
+      ToAddress.Value :=  'kukhtinigor@gmail.com, igor@dsd.biz.ua';
+      Body.Value := 'Ёто супер письмо!!!';
+      Subject.Value := 'ј вот и заголовок';
       Execute;
     finally
       Free;

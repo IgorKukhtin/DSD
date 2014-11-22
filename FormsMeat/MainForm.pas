@@ -9,7 +9,9 @@ uses
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus;
+  dxSkinsDefaultPainters, AncestorMain, dxSkinsdxBarPainter, Vcl.Menus,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
+  cxEdit, cxLabel;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -436,6 +438,9 @@ type
     bbRetailReport: TdxBarButton;
     actPartnerTag: TdsdOpenForm;
     bbPartnerTag: TdxBarButton;
+    actReport_OLAPSold: TAction;
+    bbReport_OlapSold: TdxBarButton;
+    procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -446,5 +451,16 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TMainForm.actReport_OLAPSoldExecute(Sender: TObject);
+begin
+  inherited;
+  with TFormClass(FindClass('TOLAPSetupForm')).Create(Application) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
 
 end.

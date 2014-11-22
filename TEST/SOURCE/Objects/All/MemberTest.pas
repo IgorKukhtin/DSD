@@ -10,7 +10,7 @@ type
     procedure Test; override;
   end;
 
-   TMember = class(TObjectTest)
+  TMember = class(TObjectTest)
   function InsertDefault: integer; override;
   public
     function InsertUpdateMember(const Id, Code : integer; Name, INN: string): integer;
@@ -20,8 +20,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CarModelTest,
-     InfoMoneyGroupTest, InfoMoneyDestinationTest;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB;
 
 { TMemberTest }
 constructor TMember.Create;
@@ -64,7 +63,7 @@ var Id: integer;
 begin
   ObjectTest := TMember.Create;
   // Получим список
-RecordCount := ObjectTest.GetDataSet.RecordCount;
+  RecordCount := ObjectTest.GetDataSet.RecordCount;
   // Вставка группы
   Id := ObjectTest.InsertDefault;
   try
