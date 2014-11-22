@@ -45,7 +45,7 @@ object PartnerForm: TPartnerForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 31
@@ -53,6 +53,7 @@ object PartnerForm: TPartnerForm
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 133
@@ -60,6 +61,7 @@ object PartnerForm: TPartnerForm
       object clAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 134
@@ -75,6 +77,7 @@ object PartnerForm: TPartnerForm
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 103
@@ -82,6 +85,7 @@ object PartnerForm: TPartnerForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 46
@@ -98,6 +102,7 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
@@ -113,6 +118,7 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
@@ -120,12 +126,16 @@ object PartnerForm: TPartnerForm
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 88
       end
       object clIsErased: TcxGridDBColumn
@@ -186,6 +196,7 @@ object PartnerForm: TPartnerForm
       object clPersonalTradeName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
         DataBinding.FieldName = 'PersonalTradeName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
@@ -193,6 +204,7 @@ object PartnerForm: TPartnerForm
       object clPersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
         DataBinding.FieldName = 'PersonalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
@@ -216,6 +228,7 @@ object PartnerForm: TPartnerForm
       object colAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 79
@@ -223,6 +236,7 @@ object PartnerForm: TPartnerForm
       object colPartnerTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'PartnerTagName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
