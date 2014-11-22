@@ -70,6 +70,7 @@ type
     FChoiceAction: TObject;
     FFormNameParam: TdsdParam;
     FisShowModal: boolean;
+    FDisableGuidesOpen: boolean;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -112,6 +113,8 @@ type
     property KeyField: string read FKeyField write FKeyField;
     // визуальный компонент
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
+    // закрыть выбор из справочников
+    property DisableGuidesOpen: boolean read FDisableGuidesOpen write FDisableGuidesOpen default false;
   end;
 
   // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
@@ -532,6 +535,7 @@ var
   Form: TParentForm;
   DataSet: TDataSet;
 begin
+  if DisableGuidesOpen then exit;
   if FormName = ''  then exit;
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   // Открыли форму
@@ -565,6 +569,7 @@ begin
   PositionDataSet := 'ClientDataSet';
   KeyField := 'Id';
   isShowModal := false;
+  FDisableGuidesOpen := false;
 end;
 
 destructor TCustomGuides.Destroy;

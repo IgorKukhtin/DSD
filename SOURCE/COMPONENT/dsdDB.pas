@@ -31,7 +31,8 @@ type
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     procedure Assign(Source: TPersistent); override;
-    constructor Create(Collection: TCollection); override;
+    constructor Create(Collection: TCollection); overload; override;
+    constructor Create; overload;
   published
     property Name: String read FName write FName;
     property Value: Variant read GetValue write SetValue;
@@ -648,6 +649,14 @@ begin
     ftObject: ;
     ftSingle: ;}
   end;
+end;
+
+constructor TdsdParam.Create;
+begin
+  inherited Create(nil);
+  FValue := Null;
+  FParamType := ptOutput;
+  FDataType := ftInteger;
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);

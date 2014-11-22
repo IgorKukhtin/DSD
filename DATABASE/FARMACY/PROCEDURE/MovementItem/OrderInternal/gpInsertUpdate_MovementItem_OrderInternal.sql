@@ -17,13 +17,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
 )
 RETURNS TABLE(ioId Integer, ioPrice TFloat, ioPartnerGoodsCode TVarChar, ioPartnerGoodsName TVarChar
             , ioJuridicalName TVarChar, ioContractName TVarChar
-            , outSumm TFloat
+            , outSumm TFloat, outCalcAmount TFloat
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
    DECLARE vbSumm TFloat;   
+   DECLARE vbCalcAmount TFloat;   
+   DECLARE vbMinimumLot TFloat;   
 
 BEGIN
 
@@ -54,7 +56,12 @@ BEGIN
   
      inPrice := COALESCE(inPrice, 0);
      vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
-     vbSumm := inAmount * inPrice;
+     
+     SELECT MinimumLot INTO vbMinimumLot
+       FROM Object_Goods_View WHERE Id = inGoodsId;
+
+     vbCalcAmount := CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1);     
+     vbSumm := vbCalcAmount * inPrice;
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -67,7 +74,8 @@ BEGIN
            , inPartnerGoodsName
            , inJuridicalName
            , inContractName
-           , vbSumm;
+           , vbSumm
+           , vbCalcAmount;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

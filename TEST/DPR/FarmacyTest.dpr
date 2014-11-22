@@ -184,7 +184,13 @@ uses
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
-  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
+  Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
+  Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
+  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  MemberTest in '..\SOURCE\Objects\All\MemberTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -16,8 +16,13 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderInternal());
+     vbUserId := inSession; --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderInternal());
 
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_OrderInternal()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
@@ -26,6 +31,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.11.14                        *
  03.07.14                                                       *
 
 */

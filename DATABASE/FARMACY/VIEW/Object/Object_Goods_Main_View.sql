@@ -15,6 +15,7 @@ CREATE OR REPLACE VIEW Object_Goods_Main_View AS
            , Object_Measure.ValueData                         AS MeasureName
            , ObjectLink_Goods_NDSKind.ChildObjectId           AS NDSKindId
            , Object_NDSKind.ValueData                         AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
 
        FROM ObjectBoolean AS ObjectBoolean_Goods_isMain 
 
@@ -40,6 +41,10 @@ CREATE OR REPLACE VIEW Object_Goods_Main_View AS
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
    WHERE ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain();
 

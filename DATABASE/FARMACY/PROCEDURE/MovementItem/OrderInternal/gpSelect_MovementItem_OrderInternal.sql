@@ -33,10 +33,13 @@ BEGIN
            , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
            , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
            , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
+           , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity) AS Multiplicity
+           , tmpMI.CalcAmount
            , tmpMI.Amount               AS Amount
-           , tmpMI.Price * tmpMI.Amount AS Summ
+           , tmpMI.Price * tmpMI.CalcAmount AS Summ
            , FALSE                      AS isErased
            , tmpMI.Price
+           , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
@@ -52,6 +55,7 @@ BEGIN
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
+                  , Object_Goods.MinimumLot                      AS Multiplicity
              FROM Object_Goods_View AS Object_Goods
              WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
                    AND inShowAll = true       
@@ -60,11 +64,16 @@ BEGIN
             FULL JOIN (SELECT MovementItem.Id
                             , MovementItem.ObjectId              AS GoodsId
                             , MovementItem.Amount                AS Amount
+                            , CEIL(MovementItem.Amount 
+                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1) 
+                                                                 AS CalcAmount
                             , MIFloat_Summ.ValueData             AS Summ
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
+                            , Object_Goods.MinimumLot            AS Multiplicity
                             , COALESCE(PriceList.MakerName, MinPrice.MakerName) AS MakerName
                             , MIBoolean_Calculated.ValueData     AS isCalculated
+                            , ObjectFloat_Goods_MinimumLot.valuedata AS MinimumLot
                             , COALESCE(PriceList.Price, MinPrice.Price) AS Price
                             , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate) AS PartionGoodsDate
                             , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
@@ -107,6 +116,10 @@ BEGIN
                                        WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS DDD
                                   WHERE Id = MinId) AS MinPrice
                               ON MinPrice.MovementItemId = MovementItem.Id
+                            
+                       LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                                              ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE(PriceList.GoodsId, MinPrice.GoodsId) 
+                                             AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                                              
                        JOIN Object_Goods_View AS Object_Goods 
                                               ON Object_Goods.Id = MovementItem.ObjectId 
@@ -121,8 +134,12 @@ BEGIN
       SELECT *, CASE WHEN PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor      
+              , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
 
-        FROM _tmpMI;
+        FROM _tmpMI
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                               ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId 
+                              AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot();
 
    RETURN NEXT Cursor2;
 
@@ -135,6 +152,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 12.11.14                         * add MinimumLot
  05.11.14                         * add MakerName
  22.10.14                         *
  13.10.14                         *

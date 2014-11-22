@@ -3,16 +3,21 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -335
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
+  inherited cxLabel1: TcxLabel
+    Top = 45
+    ExplicitTop = 45
+    ExplicitWidth = 1086
+    ExplicitHeight = 182
+  end
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1456,6 +1461,10 @@
         item
           Visible = True
           ItemName = 'bbReportProfitLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_OlapSold'
         end>
     end
     object bbReportMain_Separator: TdxBarSeparator
@@ -2000,6 +2009,10 @@
     end
     object bbPartnerTag: TdxBarButton
       Action = actPartnerTag
+      Category = 0
+    end
+    object bbReport_OlapSold: TdxBarButton
+      Action = actReport_OLAPSold
       Category = 0
     end
   end
@@ -4440,6 +4453,11 @@
           DataType = ftBoolean
         end>
       isShowModal = False
+    end
+    object actReport_OLAPSold: TAction
+      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1054#1051#1040#1055')'
+      OnExecute = actReport_OLAPSoldExecute
     end
   end
   inherited ClientDataSet: TClientDataSet

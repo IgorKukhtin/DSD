@@ -863,10 +863,12 @@ begin
         PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
-        DELIVEREDQUANTITY := FormatFloat('0.00',
-          ItemsDataSet.FieldByName('AmountPartner').AsFloat);
+        DELIVEREDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
         DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
-        ORDEREDQUANTITY := DELIVEREDQUANTITY;
+        ORDEREDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
         COUNTRYORIGIN := 'UA';
         PRICE := FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat);
       end;
@@ -1354,11 +1356,19 @@ begin
         PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
-        PRODUCTTYPE := '1';
+        if ItemsDataSet.FieldByName('AmountOrder').AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+           PRODUCTTYPE := '1';
 
-        ORDEREDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+        if ItemsDataSet.FieldByName('AmountOrder').AsFloat <> ItemsDataSet.FieldByName('AmountPartner').AsFloat then
+           PRODUCTTYPE := '2';
+
+        if ItemsDataSet.FieldByName('AmountOrder').AsFloat =0 then
+           PRODUCTTYPE := '3';
+
+        ORDEREDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountOrder').AsFloat),
                     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
-        ACCEPTEDQUANTITY := ORDEREDQUANTITY;
+        ACCEPTEDQUANTITY := StringReplace(FormatFloat('0.000', ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
       end;
       inc(i);
       Next;
