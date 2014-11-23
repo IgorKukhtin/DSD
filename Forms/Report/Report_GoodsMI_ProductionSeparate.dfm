@@ -370,6 +370,20 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       TabOrder = 11
       Width = 203
     end
+    object cbGroupMovement: TcxCheckBox
+      Left = 866
+      Top = 32
+      Caption = #1087#1086' '#1076#1086#1082'.'
+      TabOrder = 12
+      Width = 63
+    end
+    object cbGroupPartion: TcxCheckBox
+      Left = 962
+      Top = 32
+      Caption = #1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      TabOrder = 13
+      Width = 87
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 610
@@ -486,8 +500,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'inGroupMovement'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inGroupMovement'
+        Component = cbGroupMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGroupPartion'
+        Value = Null
+        Component = cbGroupPartion
         DataType = ftBoolean
         ParamType = ptInput
       end
