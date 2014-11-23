@@ -788,7 +788,7 @@ BEGIN
                    , tmpMIReport.PassiveAccountId
                    , tmpMIReport.ReportContainerId
                    , tmpMIReport.ChildReportContainerId
-                   , _tmpItemSummChild.OperSumm AS Amount
+                   , CASE WHEN _tmpItemSummChild.OperSumm < 0 THEN -1 * _tmpItemSummChild.OperSumm ELSE _tmpItemSummChild.OperSumm END AS Amount
                    , vbOperDate AS OperDate
               FROM _tmpItem
                    JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
@@ -798,6 +798,7 @@ BEGIN
                    , tmpMIReport.ContainerId_From
                    , tmpMIReport.AccountId_To
                    , tmpMIReport.AccountId_From
+                   , tmpMIReport.OperSumm
 
                    , tmpMIReport.ActiveContainerId
                    , tmpMIReport.PassiveContainerId
@@ -817,19 +818,21 @@ BEGIN
                                                       --, inContainerId_1      := NULL
                                                       --, inAccountId_1        := NULL
                                                        ) AS ChildReportContainerId
-              FROM (SELECT tmpCalc.ContainerId_To   AS ActiveContainerId
-                         , tmpCalc.ContainerId_From AS PassiveContainerId
-                         , tmpCalc.AccountId_To     AS ActiveAccountId
-                         , tmpCalc.AccountId_From   AS PassiveAccountId
+              FROM (SELECT CASE WHEN tmpCalc.OperSumm < 0 THEN tmpCalc.ContainerId_From ELSE tmpCalc.ContainerId_To   END AS ActiveContainerId
+                         , CASE WHEN tmpCalc.OperSumm < 0 THEN tmpCalc.ContainerId_To   ELSE tmpCalc.ContainerId_From END AS PassiveContainerId
+                         , CASE WHEN tmpCalc.OperSumm < 0 THEN tmpCalc.AccountId_From   ELSE tmpCalc.AccountId_To     END AS ActiveAccountId
+                         , CASE WHEN tmpCalc.OperSumm < 0 THEN tmpCalc.AccountId_To     ELSE tmpCalc.AccountId_From   END AS PassiveAccountId
 
                          , tmpCalc.ContainerId_To
                          , tmpCalc.ContainerId_From
                          , tmpCalc.AccountId_To
                          , tmpCalc.AccountId_From
+                         , tmpCalc.OperSumm
                     FROM (SELECT _tmpItemSummChild.ContainerId_To
                                , _tmpItemSumm.ContainerId_From
                                , _tmpItemSummChild.AccountId_To
                                , _tmpItemSumm.AccountId_From
+                               , _tmpItemSummChild.OperSumm
                           FROM _tmpItem
                                JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
                                JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
@@ -838,12 +841,14 @@ BEGIN
                                  , _tmpItemSumm.ContainerId_From
                                  , _tmpItemSummChild.AccountId_To
                                  , _tmpItemSumm.AccountId_From
+                                 , _tmpItemSummChild.OperSumm
                          ) AS tmpCalc
                    ) AS tmpMIReport
              ) AS tmpMIReport ON tmpMIReport.ContainerId_To   = _tmpItemSummChild.ContainerId_To
                              AND tmpMIReport.ContainerId_From = _tmpItemSumm.ContainerId_From
                              AND tmpMIReport.AccountId_To     = _tmpItemSummChild.AccountId_To
                              AND tmpMIReport.AccountId_From   = _tmpItemSumm.AccountId_From
+                             AND tmpMIReport.OperSumm         = _tmpItemSummChild.OperSumm
              ) AS tmpMIReport
        ;
 

@@ -207,7 +207,7 @@
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
     TabOrder = 26
-    Width = 100
+    Width = 120
   end
   object edEndPromo: TcxDateEdit [27]
     Left = 569
@@ -217,7 +217,7 @@
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
     TabOrder = 27
-    Width = 100
+    Width = 120
   end
   object cxLabel13: TcxLabel [28]
     Left = 15

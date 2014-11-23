@@ -115,6 +115,7 @@ type
     UnitName_PersonalTrade: TcxGridDBColumn;
     PositionName_PersonalTrade: TcxGridDBColumn;
     BranchName_Personal: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
   private
     { Private declarations }
   public

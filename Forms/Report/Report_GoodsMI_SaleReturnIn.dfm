@@ -321,6 +321,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object UnitName_PersonalTrade: TcxGridDBColumn
@@ -337,6 +338,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             DataBinding.FieldName = 'PersonalTradeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object clTradeMarkName: TcxGridDBColumn
@@ -559,6 +561,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
                 Enabled = False
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Visible = False
             Width = 45
           end
