@@ -1,9 +1,9 @@
 ﻿object ProvinceCityEditForm: TProvinceCityEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1052#1080#1082#1088#1086#1088#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077'>'
   ClientHeight = 200
-  ClientWidth = 377
+  ClientWidth = 476
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,12 @@
     Left = 40
     Top = 71
     TabOrder = 0
-    Width = 296
+    Width = 400
   end
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 79
@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 400
   end
   object ceCity: TcxButtonEdit
     Left = 42
@@ -71,7 +71,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 296
+    Width = 400
   end
   object cxLabel6: TcxLabel
     Left = 42
@@ -141,6 +141,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -190,6 +191,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end

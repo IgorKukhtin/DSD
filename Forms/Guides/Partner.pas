@@ -85,6 +85,8 @@ type
     colPartnerTagName: TcxGridDBColumn;
     clPersonalName: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

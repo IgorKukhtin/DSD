@@ -1,7 +1,7 @@
 object CityForm: TCityForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1086#1088#1086#1076#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090'>'
   ClientHeight = 376
   ClientWidth = 752
   Color = clBtnFace
@@ -26,7 +26,6 @@ object CityForm: TCityForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,18 +53,18 @@ object CityForm: TCityForm
         Options.Editing = False
         Width = 85
       end
+      object clCityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'CityKindName'
+        HeaderAlignmentVert = vaCenter
+        Width = 139
+      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 248
-      end
-      object clCityKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076
-        DataBinding.FieldName = 'CityKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 139
       end
       object clRegionName: TcxGridDBColumn
         Caption = #1054#1073#1083#1072#1089#1090#1100
@@ -123,8 +122,8 @@ object CityForm: TCityForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -173,13 +172,26 @@ object CityForm: TCityForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -188,11 +200,6 @@ object CityForm: TCityForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -225,9 +232,9 @@ object CityForm: TCityForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
+      Caption = '     '
       Category = 0
-      Hint = '       '
+      Hint = '     '
       Visible = ivAlways
     end
     object bbChoice: TdxBarButton
@@ -285,6 +292,7 @@ object CityForm: TCityForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -301,12 +309,14 @@ object CityForm: TCityForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -365,6 +375,7 @@ object CityForm: TCityForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 144
     Top = 152
   end
@@ -375,10 +386,12 @@ object CityForm: TCityForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 216
   end

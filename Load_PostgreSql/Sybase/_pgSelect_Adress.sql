@@ -4821,6 +4821,10 @@ union select 'Шевченко Майя Іванівна' , 'Шевченко Майя Іванівна'
               )
 
 /*
+-- check many adr
+select PartnerId, JurName, PartnerName_old, Name1C, adr from tmpPartner_1 where PartnerId in (select PartnerId  from (select PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1) order by PartnerId
+*/
+/*
 -- !!!insert Object ...Kind and Area and PartnerTag!!!
 --  select CityKindName from tmpPartner group by CityKindName
 --  select StreetKindName from tmpPartner group by StreetKindName
@@ -4857,27 +4861,48 @@ where JurName in (select JurName from (select JuridicalId_curr, JurName from tmp
 order by JurName
 */
 /*
--- check PersonalName
-select tmpPartner .PersonalName
-from tmpPartner
-left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalName
+-- check many Personal
+select tmpPartner.* from tmpPartner 
+where PartnerId in (select PartnerId from (select PartnerId, PersonalName from tmpPartner where PersonalName <> '' group by PartnerId, PersonalName) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, PersonalTradeName from tmpPartner where PersonalTradeName <> '' group by PartnerId, PersonalTradeName) as a group by PartnerId having Count(*) > 1) 
+order by PartnerId
+
+-- check Personal... and insert Personal...
+select tmpPartner .PersonalName, tmpPartner.PartnerId, Object_Personal_View.PersonalId
+--  select lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), tmpPartner.PartnerId, Object_Personal_View.PersonalId) -- сохранили связь с <Сотрудник (супервайзер)>
+from (select PartnerId, max (PersonalName) as PersonalName from tmpPartner where tmpPartner .PersonalName <> '' group by PartnerId) as tmpPartner
+left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalName 
 left join Object_Member_View on trim (Object_Member_View.MemberName) = coalesce (trim (tmpMember.NewName), tmpPartner .PersonalName)
 left join (select MemberId, max (PersonalId) as PersonalId from Object_Personal_View where isMain = TRUE group by MemberId) As Object_Personal_View on Object_Personal_View.MemberId = Object_Member_View.MemberId
-where tmpPartner .PersonalName <> ''
-and Object_Personal_View.MemberId is null
+where Object_Personal_View.PersonalId is null
 union  
-select tmpPartner .PersonalTradeName
-from tmpPartner 
+select tmpPartner .PersonalTradeName, tmpPartner.PartnerId, Object_Personal_View.PersonalId
+--  select lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), tmpPartner.PartnerId, Object_Personal_View.PersonalId) -- сохранили связь с <Сотрудник (торговый)>
+from (select PartnerId, max (PersonalTradeName) as PersonalTradeName from tmpPartner where tmpPartner .PersonalTradeName <> '' group by PartnerId) as tmpPartner 
 left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalTradeName
 left join Object_Member_View on trim (Object_Member_View.MemberName) = coalesce (trim (tmpMember.NewName), tmpPartner .PersonalTradeName)
 left join (select MemberId, max (PersonalId) as PersonalId from Object_Personal_View where isMain = TRUE group by MemberId) As Object_Personal_View on Object_Personal_View.MemberId = Object_Member_View.MemberId
-where tmpPartner .PersonalTradeName <> ''
-and Object_Personal_View.MemberId is null
+where Object_Personal_View.PersonalId is null
 order by 1
 */
 /*
--- check many adr
-select PartnerId, JurName, PartnerName_old, Name1C, adr from tmpPartner_1 where PartnerId in (select PartnerId  from (select PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1) order by PartnerId
+-- check many ContactPerson
+select tmpPartner.* from tmpPartner 
+where PartnerId in (select PartnerId from (select PartnerId, a1, a2, a3 from tmpPartner where a1 <> '' or a2 <> ''  or a3 <> '' group by PartnerId, a1, a2, a3) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, b1, b2, b3 from tmpPartner where b1 <> '' or b2 <> ''  or b3 <> '' group by PartnerId, b1, b2, b3) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, c1, c2, c3 from tmpPartner where c1 <> '' or c2 <> ''  or c3 <> '' group by PartnerId, c1, c2, c3) as a group by PartnerId having Count(*) > 1
+                   )
+order by PartnerId
+
+-- insert ContactPerson...
+select *
+--  select gpInsertUpdate_Object_ContactPerson (0, 0, xx1, xx2, xx3, '', tmpPartner.PartnerId, 0, 0, KindId, zfCalc_UserAdmin())
+from (select PartnerId, max (a1) as xx1, max (a2) as xx2, max (a3) as xx3, zc_Enum_ContactPersonKind_CreateOrder() as KindId from tmpPartner where a1 <> '' or a2 <> ''  or a3 <> '' group by PartnerId
+     union all
+      select PartnerId, max (b1) as xx1, max (b2) as xx2, max (b3) as xx3, zc_Enum_ContactPersonKind_CheckDocument() as KindId  from tmpPartner where b1 <> '' or b2 <> ''  or b3 <> '' group by PartnerId
+     union all
+      select PartnerId, max (c1) as xx1, max (c2) as xx2, max (c3) as xx3, zc_Enum_ContactPersonKind_AktSverki() as KindId  from tmpPartner where c1 <> '' or c2 <> '' or c3 <> '' group by PartnerId
+     ) as tmpPartner;
 */
 
 /*

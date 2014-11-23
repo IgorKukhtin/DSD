@@ -73,6 +73,7 @@ type
     bbContactPersonKindLabel: TdxBarControlContainerItem;
     bbContactPersonKind: TdxBarControlContainerItem;
     FormParams: TdsdFormParams;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

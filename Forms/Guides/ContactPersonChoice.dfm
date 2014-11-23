@@ -1,7 +1,7 @@
 object ContactPersonChoiceForm: TContactPersonChoiceForm
   Left = 0
   Top = 0
-  Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 335
   ClientWidth = 990
   Color = clBtnFace
@@ -89,12 +89,14 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object clContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
@@ -108,6 +110,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 56
@@ -130,7 +133,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    TabOrder = 4
     Width = 245
   end
   object cxLabel1: TcxLabel
@@ -178,8 +181,8 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -228,17 +231,21 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -270,7 +277,11 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -402,6 +413,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -449,23 +461,27 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
         end
         item
           Name = 'Phone'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Phone'
           DataType = ftString
         end
         item
           Name = 'Mail'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Mail'
           DataType = ftString
@@ -522,6 +538,7 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -640,5 +657,17 @@ object ContactPersonChoiceForm: TContactPersonChoiceForm
       end>
     Left = 232
     Top = 240
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PartnerGuides
+      end
+      item
+        Component = ContactPersonKindGuides
+      end>
+    Left = 512
+    Top = 232
   end
 end

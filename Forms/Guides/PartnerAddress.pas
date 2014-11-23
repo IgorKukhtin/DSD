@@ -107,6 +107,14 @@ type
     PersonalChoiceForm: TOpenChoiceForm;
     AreaChoiceForm: TOpenChoiceForm;
     PartnerTagChoiceForm: TOpenChoiceForm;
+    JuridicalGroupName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    UnitName_Personal: TcxGridDBColumn;
+    PositionName_Personal: TcxGridDBColumn;
+    UnitName_PersonalTrade: TcxGridDBColumn;
+    PositionName_PersonalTrade: TcxGridDBColumn;
+    BranchName_Personal: TcxGridDBColumn;
   private
     { Private declarations }
   public

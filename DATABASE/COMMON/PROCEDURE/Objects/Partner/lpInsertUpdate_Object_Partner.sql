@@ -1,31 +1,27 @@
 -- Function: lpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                             Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
-                             TDateTime, TDateTime, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, 
+                                                       TFloat, TFloat,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, 
+                                                       TFloat, TFloat,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
-    IN inPartnerName         TVarChar  ,    -- 
-    IN inAddress             TVarChar  ,    -- 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
-    IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
-    IN inHouseNumber         TVarChar  ,    -- Номер дома
-    IN inCaseNumber          TVarChar  ,    -- Номер корпуса
-    IN inRoomNumber          TVarChar  ,    -- Номер квартиры
-    IN inStreetId            Integer   ,    -- Улица/проспект  
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
     
-    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inPersonalId            Integer   ,    -- Физ лицо (ответственное лицо)
-    IN inPersonalTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
+    IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
+    IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки
                         
@@ -38,7 +34,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
 )
   RETURNS Integer AS
 $BODY$
-   DECLARE vbCode Integer;
 BEGIN
 
    -- Проверка для TPartner1CLinkPlaceForm
@@ -51,32 +46,15 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
    END IF;
    
-   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
 
+   IF COALESCE (ioId, 0) = 0
+   THEN
+       -- сохранили <Объект>
+       ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, '');
+   END IF;
 
-   -- проверка уникальности <Наименование>
-   -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inPartnerName);
-   -- проверка уникальности <Код>
-   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
-
-
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, inPartnerName);
-   -- сохранили свойство <краткое наименование>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_ShortName(), ioId, inShortName);
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
-   -- сохранили свойство <Адрес точки доставки>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
-
-   -- сохранили свойство <дом>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
-   -- сохранили свойство <корпус>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_CaseNumber(), ioId, inCaseNumber);
-   -- сохранили свойство <квартира>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_RoomNumber(), ioId, inRoomNumber);
 
    -- сохранили свойство <За сколько дней принимается заказ>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
@@ -89,20 +67,18 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
    -- сохранили связь с <Сортировки маршрутов>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
-   -- сохранили связь с <Сотрудник (экспедитор)>
+   -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
    
-   -- сохранили связь с <Сотрудник ()>
+   -- сохранили связь с <Сотрудник (супервайзер)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
-   -- сохранили связь с <Сотрудник ()>
+   -- сохранили связь с <Сотрудник (торговый)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
    -- сохранили связь с <Признак торговой точки>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), ioId, inPartnerTagId);
    
-   -- сохранили связь с <Улица>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Street(), ioId, inStreetId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
@@ -113,20 +89,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
       -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
-   
-   
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
+
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
-
+ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.11.14                                        * all
  10.11.14         * add redmine
  25.08.14                                        * set lp
  24.08.14                                        * add Проверка для TPartner1CLinkPlaceForm

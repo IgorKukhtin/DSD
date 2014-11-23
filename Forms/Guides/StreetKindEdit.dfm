@@ -1,7 +1,7 @@
 ﻿object StreetKindEditForm: TStreetKindEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')>'
   ClientHeight = 163
   ClientWidth = 379
   Color = clBtnFace
@@ -20,12 +20,12 @@
     Left = 40
     Top = 71
     TabOrder = 0
-    Width = 296
+    Width = 302
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Top = 50
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 79
@@ -65,12 +65,12 @@
     Left = 200
     Top = 26
     TabOrder = 6
-    Width = 136
+    Width = 142
   end
   object cxLabel2: TcxLabel
     Left = 200
     Top = 3
-    Caption = #1050#1086#1088#1086#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+    Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 272
@@ -174,6 +174,7 @@
       end
       item
         Name = 'ShortName'
+        Value = Null
         Component = edShortName
         DataType = ftString
       end>

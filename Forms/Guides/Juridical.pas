@@ -81,6 +81,7 @@ type
     actChoiceJuridicalGroup: TOpenChoiceForm;
     clRetailName: TcxGridDBColumn;
     actChoiceRetailForm: TOpenChoiceForm;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
