@@ -48,7 +48,8 @@ uses
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas';
 
 {$R *.res}
 

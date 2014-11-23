@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               NDS TFloat
+               NDS TFloat, MinimumLot TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -35,6 +35,7 @@ BEGIN
            , Object_Goods_View.NDSKindId
            , Object_Goods_View.NDSKindName
            , Object_Goods_View.NDS
+           , Object_Goods_View.MinimumLot
 
     FROM Object_Goods_View 
    WHERE Object_Goods_View.ObjectId = vbObjectId;
@@ -50,6 +51,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.11.14                         * Add MinimumLot
  24.06.14         *
  20.06.13                         *
 

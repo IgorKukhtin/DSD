@@ -60,7 +60,13 @@ uses
   MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
-  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  dsdOlap in '..\SOURCE\COMPONENT\dsdOlap.pas',
+  dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
+  dsdOLAPSetup in '..\SOURCE\COMPONENT\dsdOLAPSetup.pas' {OLAPSetupForm},
+  OLAPSales in '..\FormsMeat\Report\OLAP\OLAPSales.pas' {OLAPSalesForm},
+  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

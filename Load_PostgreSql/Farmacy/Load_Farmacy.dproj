@@ -133,10 +133,13 @@
 			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\InvoiceXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

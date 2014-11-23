@@ -52,7 +52,7 @@
 			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;ProjectDesignComponent;adortl;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;ProjectDesignComponent;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -168,6 +168,7 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -216,18 +217,11 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfsADO16.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfsBDE16.bpl">FastScript 1.9 BDE Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfsIBX16.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfsTee16.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxDB16.bpl">FastReport 4.0 DB Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxADO16.bpl">FastReport 4.0 ADO Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxBDE16.bpl">FastReport 4.0 BDE Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxDBX16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
-						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxIBX16.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\VKDBF2009.bpl">VK DBF for Delphi 2009</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dclcxPivotGridOLAPRS16.bpl">ExpressPivotGrid OLAP by Developer Express Inc.</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>

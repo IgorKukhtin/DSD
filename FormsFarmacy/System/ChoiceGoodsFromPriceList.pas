@@ -11,14 +11,12 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
-  cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns;
+  cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls;
 
 type
   TChoiceGoodsFromPriceListForm = class(TAncestorEnumForm)
     edGoodsSearch: TcxTextEdit;
     cxLabel1: TcxLabel;
-    bbLabel: TdxBarControlContainerItem;
-    bbSearchGood: TdxBarControlContainerItem;
     colCommonCode: TcxGridDBColumn;
     colBarCode: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
@@ -34,6 +32,14 @@ type
     spGoodsPriceListLink: TdsdStoredProc;
     actSetGoodsLink: TdsdExecStoredProc;
     bbGoodsPriceListLink: TdxBarButton;
+    mactChoiceGoodsForm: TMultiAction;
+    colContractName: TcxGridDBColumn;
+    colExpirationDate: TcxGridDBColumn;
+    colMinimumLot: TcxGridDBColumn;
+    colNDS: TcxGridDBColumn;
+    colGoodsNDS: TcxGridDBColumn;
+    actRefreshSearch: TdsdExecStoredProc;
+    Panel1: TPanel;
   private
     { Private declarations }
   public

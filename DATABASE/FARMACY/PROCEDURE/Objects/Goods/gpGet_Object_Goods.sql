@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
+               MinimumLot TFloat, 
                isErased boolean
                ) AS
 $BODY$
@@ -28,53 +29,49 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object_Goods.GoodsCodeInt), 0) + 1 AS Code
+           , COALESCE(GoodsCodeIntMax, 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
               
            , CAST (0 as Integer)    AS GoodsGroupId
            , CAST ('' as TVarChar)  AS GoodsGroupName  
-           , CAST (0 as Integer)    AS MeasureId
-           , CAST ('' as TVarChar)  AS MeasureName
-           , CAST (0 as Integer)    AS NDSKindId
-           , CAST ('' as TVarChar)  AS NDSKindName
+           , COALESCE(ObjectMeasure.Id, 0)  AS MeasureId
+           , COALESCE(ObjectMeasure.ValueData, ''::TVarChar)  AS MeasureName
+           , COALESCE(ObjectNDSKind.Id, 0)  AS NDSKindId
+           , COALESCE(ObjectNDSKind.ValueData, ''::TVarChar)  AS NDSKindName
+
+           , 0::TFloat     AS MinimumLot
 
            , CAST (NULL AS Boolean) AS isErased
 
-       FROM Object_Goods_View AS Object_Goods
-       WHERE Object_Goods.ObjectId = vbObjectId;
+       FROM (SELECT MAX (Object_Goods.GoodsCodeInt) AS GoodsCodeIntMax
+
+             FROM Object_Goods_View AS Object_Goods
+            WHERE Object_Goods.ObjectId = vbObjectId) 
+       AS Object_Goods
+                LEFT JOIN Object AS ObjectMeasure ON ObjectMeasure.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_Measure', vbUserId) :: Integer
+                LEFT JOIN Object AS ObjectNDSKind ON ObjectNDSKind.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_NDSKind', vbUserId) :: Integer
+;
    ELSE
      RETURN QUERY 
-     SELECT Object_Goods.Id             AS Id 
-          , Object_Goods.ObjectCode     AS Code
-          , Object_Goods.ValueData      AS Name
+     SELECT Object_Goods_View.Id             AS Id 
+          , Object_Goods_View.GoodsCodeInt   AS Code
+          , Object_Goods_View.GoodsName      AS Name
           
-          , COALESCE(Object_GoodsGroup.Id, 0)        AS GoodsGroupId
-          , Object_GoodsGroup.ValueData AS GoodsGroupName
+          , COALESCE(Object_Goods_View.GoodsGroupId, 0)   AS GoodsGroupId
+          , Object_Goods_View.GoodsGroupName AS GoodsGroupName
    
-          , Object_Measure.Id           AS MeasureId
-          , Object_Measure.ValueData    AS MeasureName
+          , Object_Goods_View.MeasureId      AS MeasureId
+          , Object_Goods_View.MeasureName    AS MeasureName
    
-          , Object_NDSKind.Id               AS NDSKindId
-          , Object_NDSKind.ValueData        AS NDSKindName
+          , Object_Goods_View.NDSKindId      AS NDSKindId
+          , Object_Goods_View.NDSKindName    AS NDSKindName
 
-          , Object_Goods.isErased       AS isErased
+          , Object_Goods_View.MinimumLot     AS MinimumLot
+
+          , Object_Goods_View.isErased       AS isErased
           
-     FROM Object AS Object_Goods
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-        
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-    WHERE Object_Goods.Id = inId;
+     FROM Object_Goods_View
+    WHERE Object_Goods_View.Id = inId;
   END IF;
   
 END;
@@ -88,6 +85,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.11.14                        *  Дефолты
  30.10.14                        *
  24.06.14         *
  20.06.13                        *

@@ -66,8 +66,8 @@ BEGIN
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_PersonalTake.Id        AS PersonalTakeId
-       , Object_PersonalTake.ValueData AS PersonalTakeName
+       , Object_MemberTake.Id        AS PersonalTakeId
+       , Object_MemberTake.ValueData AS PersonalTakeName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -91,10 +91,10 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
-                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
+         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
@@ -177,8 +177,8 @@ BEGIN
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_PersonalTake.Id        AS PersonalTakeId
-       , Object_PersonalTake.ValueData AS PersonalTakeName
+       , Object_MemberTake.Id          AS PersonalTakeId
+       , Object_MemberTake.ValueData   AS PersonalTakeName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -202,10 +202,10 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
-                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
+         LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id

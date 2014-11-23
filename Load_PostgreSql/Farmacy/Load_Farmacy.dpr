@@ -43,10 +43,13 @@ uses
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
-  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
+  InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas';
 
 {$R *.res}
 

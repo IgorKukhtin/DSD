@@ -80,7 +80,7 @@ type
     clGLNCode_Juridical: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
-    actChoicePersonalTake: TOpenChoiceForm;
+    actChoiceMemberTake: TOpenChoiceForm;
     colAreaName: TcxGridDBColumn;
     colPartnerTagName: TcxGridDBColumn;
     clPersonalName: TcxGridDBColumn;

@@ -170,6 +170,8 @@ type
     cbWeighingPartner: TCheckBox;
     cbWeighingProduction: TCheckBox;
     cbComplete_List: TCheckBox;
+    cbBranchSendOnPrice: TCheckBox;
+    UnitCodeSendOnPriceEdit: TEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1248,13 +1250,38 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
+var StartDate:TDateTime;
 begin
      if ParamStr(2)='auto'
      then begin
-               cbSendUnitBranch.Checked:=true;
-               StartDateEdit.Text:=DateToStr(Date-1);
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
+               StartDate:=fromSqlQuery.FieldByName('RetV').AsDateTime;
+
+               StartDateEdit.Text:=DateToStr(StartDate);
                EndDateEdit.Text:=DateToStr(Date-1);
+
+               StartDateCompleteEdit.Text:=DateToStr(StartDate);
+               EndDateCompleteEdit.Text:=DateToStr(Date-1);
+
+               cbSendUnitBranch.Checked:=true;//загрузка док-тов
+               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов
+               cbBranchSendOnPrice.Checked:=true;//только 1код подразделения
+               //значение 1код подразделения
+               if ParamStr(3)<>'' then UnitCodeSendOnPriceEdit.Text:=ParamStr(3)
+               else UnitCodeSendOnPriceEdit.Text:='22121';
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
                OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
           end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1525,7 +1552,10 @@ begin
                StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
      end;
 
-     if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').') else ShowMessage('Документы загружены. Time=('+StrTime+').');
+     if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').')
+     else
+         if ParamStr(2)<>'auto'
+         then ShowMessage('Документы загружены. Time=('+StrTime+').');
      //
      fStop:=true;
 end;
@@ -1657,32 +1687,35 @@ begin
      end;
      //
      //
-     if (cbInsertHistoryCost.Checked)
-     then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-     else
-         if (cbComplete.Checked)and(cbUnComplete.Checked)
-         then if MessageDlg('Действительно Распровести/Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-         else
-             if cbUnComplete.Checked
-             then if MessageDlg('Действительно только Распровести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-             else
-                 if cbComplete.Checked then if MessageDlg('Действительно только Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-                 else if cbBeforeSave.Checked
-                      then if MessageDlg('Действительно только Сохраненить данные?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-                      else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести или Сохранение.'); end;
+     if ParamStr(2)<>'auto'
+     then begin
+               if (cbInsertHistoryCost.Checked)
+               then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+               else
+                   if (cbComplete.Checked)and(cbUnComplete.Checked)
+                   then if MessageDlg('Действительно Распровести/Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+                   else
+                       if cbUnComplete.Checked
+                       then if MessageDlg('Действительно только Распровести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+                       else
+                           if cbComplete.Checked then if MessageDlg('Действительно только Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+                           else if cbBeforeSave.Checked
+                                then if MessageDlg('Действительно только Сохраненить данные?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+                                else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести или Сохранение.'); end;
 
-     //!!!
-     if (not cbBeforeSave.Checked)and(cbUnComplete.Checked)and(not cbInsertHistoryCost.Checked)
-     then begin
-               if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-          end;
-     //!!!Сохранили все данные!!!
-     if cbBeforeSave.Checked
-     then begin
-               fExecSqToQuery ('select * from _lpSaveData_beforeLoad('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
-               if (not cbComplete.Checked)and(not cbUnComplete.Checked)
-               then begin ShowMessage('Сохранение данных за период с <'+StartDateCompleteEdit.Text+'> по <'+EndDateCompleteEdit.Text+'> завершено.');
-                          exit;
+               //!!!
+               if (not cbBeforeSave.Checked)and(cbUnComplete.Checked)and(not cbInsertHistoryCost.Checked)
+               then begin
+                         if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+                    end;
+               //!!!Сохранили все данные!!!
+               if cbBeforeSave.Checked
+               then begin
+                         fExecSqToQuery ('select * from _lpSaveData_beforeLoad('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
+                         if (not cbComplete.Checked)and(not cbUnComplete.Checked)
+                         then begin ShowMessage('Сохранение данных за период с <'+StartDateCompleteEdit.Text+'> по <'+EndDateCompleteEdit.Text+'> завершено.');
+                                    exit;
+                         end;
                end;
      end;
 
@@ -1776,10 +1809,13 @@ begin
                StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
      end;
 
-     if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
-     else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
-     else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
-          else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
+     if ParamStr(2)<>'auto'
+     then begin
+               if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
+               else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
+               else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
+                    else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
+     end;
      //
      fStop:=true;
 end;
@@ -6813,7 +6849,7 @@ begin
                   inPriceWithVAT:=toSqlQuery.FieldByName('RetV').AsBoolean;
                   fOpenSqToQuery ('select ValueData AS RetV from ObjectFloat where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectFloat_PriceList_VATPercent()');
                   inVATPercent:=toSqlQuery.FieldByName('RetV').AsInteger;
-                  fOpenSqToQuery ('select ValueData AS RetV from ObjectLink where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectLink_PriceList_Currency()');
+                  fOpenSqToQuery ('select ObjectId AS RetV from ObjectLink where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectLink_PriceList_Currency()');
                   if toSqlQuery.FieldByName('RetV').AsInteger<>0
                   then inCurrencyId:=toSqlQuery.FieldByName('RetV').AsInteger
                   else inCurrencyId:=14461;//грн
@@ -10923,10 +10959,20 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
+var UnitId_pg:Integer;
 begin
      if (not cbCompleteSendOnPrice.Checked)or(not cbCompleteSendOnPrice.Enabled) then exit;
      //
      myEnabledCB(cbCompleteSendOnPrice);
+     //
+     //ограничение по одному Складу (для Филиала)
+     if cbBranchSendOnPrice.Checked then
+     begin
+          fOpenSqToQuery(' select Id as RetV from Object_Unit_View where Code='+IntToStr(StrToInt(UnitCodeSendOnPriceEdit.Text)));
+          UnitId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+     end
+     else UnitId_pg:=0;
+     //
      //
      with fromQuery,Sql do begin
         Close;
@@ -10955,6 +11001,11 @@ begin
            );
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
+        if UnitId_pg<>0
+        then Add('and (pgUnitFrom.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  or pgUnitTo.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  )'
+                 );
         Add('order by OperDate,ObjectId');
         Open;
         cbCompleteSendOnPrice.Caption:='2.2. ('+IntToStr(RecordCount)+') Перемещение по цене';
@@ -11018,11 +11069,21 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_SendUnitBranch:Integer;
+var UnitId_pg:Integer;
 begin
      Result:=0;
      if (not cbSendUnitBranch.Checked)or(not cbSendUnitBranch.Enabled) then exit;
      //
      myEnabledCB(cbSendUnitBranch);
+     //
+     //ограничение по одному Складу (для Филиала)
+     if cbBranchSendOnPrice.Checked then
+     begin
+          fOpenSqToQuery(' select Id as RetV from Object_Unit_View where Code='+IntToStr(StrToInt(UnitCodeSendOnPriceEdit.Text)));
+          UnitId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+     end
+     else UnitId_pg:=0;
+     //
      //
      with fromQuery,Sql do begin
         Close;
@@ -11077,6 +11138,12 @@ begin
            +'  and not ((isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
            +'       and (isUnitTo.UnitId is not null or (UnitTo.PersonalId_Postgres is not null and Bill.FromId not in (zc_UnitId_StoreSale())) or UnitTo.ParentId in (4137, 8217)))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
            );
+        if UnitId_pg<>0
+        then Add('and (pgUnitFrom.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  or pgUnitTo.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  )'
+                 );
+
         Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
@@ -11154,10 +11221,20 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_SendUnitBranch(SaveCount:Integer);
+var UnitId_pg:Integer;
 begin
      if (not cbSendUnitBranch.Checked)or(not cbSendUnitBranch.Enabled) then exit;
      //
      myEnabledCB(cbSendUnitBranch);
+     //
+     //ограничение по одному Складу (для Филиала)
+     if cbBranchSendOnPrice.Checked then
+     begin
+          fOpenSqToQuery(' select Id as RetV from Object_Unit_View where Code='+IntToStr(StrToInt(UnitCodeSendOnPriceEdit.Text)));
+          UnitId_pg:=toSqlQuery.FieldByName('RetV').AsInteger;
+     end
+     else UnitId_pg:=0;
+     //
      //
      fExecSqFromQuery('call dba._pgInsertClient_byScaleDiscountWeight ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
      //
@@ -11189,6 +11266,8 @@ begin
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
 
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
@@ -11212,6 +11291,11 @@ begin
            +'  and not ((isUnitFrom.UnitId is not null or (UnitFrom.PersonalId_Postgres is not null and Bill.ToId not in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak(),zc_UnitId_StoreReturnUtil())) or UnitFrom.ParentId in (4137, 8217))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
            +'       and (isUnitTo.UnitId is not null or (UnitTo.PersonalId_Postgres is not null and Bill.FromId not in (zc_UnitId_StoreSale())) or UnitTo.ParentId in (4137, 8217)))' // МО ЛИЦА-ВСЕ + АВТОМОБИЛИ
            );
+        if UnitId_pg<>0
+        then Add('and (pgUnitFrom.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  or pgUnitTo.Id_Postgres = '+IntToStr(UnitId_pg)
+                +'  )'
+                 );
         Add('order by Bill.BillDate, ObjectId');
         Open;
         cbSendUnitBranch.Caption:='2.3. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с филиалами';

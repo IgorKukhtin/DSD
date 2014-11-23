@@ -26,6 +26,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadLoadFormTest;
     procedure LoadMeasureFormTest;
+    procedure LoadMemberFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadPriceListFormTest;
@@ -106,7 +107,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
+end;
 
+procedure TLoadFormTest.LoadMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
 end;
 
 procedure TLoadFormTest.LoadMeasureFormTest;

@@ -57,7 +57,8 @@ uses
   UploadUnloadData in '..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
-  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas';
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

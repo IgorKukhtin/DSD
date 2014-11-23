@@ -3,8 +3,8 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-     cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
-     cxGridDBTableView, frxClass, cxGridCustomView, Dialogs;
+  cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
+  cxGridDBTableView, frxClass, cxGridCustomView, Dialogs, Controls;
 
 type
 
@@ -43,10 +43,11 @@ type
     procedure SetItem(Index: Integer; const Value: TdsdStoredProcItem);
   public
     function Add: TdsdStoredProcItem;
-    property Items[Index: Integer]: TdsdStoredProcItem read GetItem write SetItem; default;
+    property Items[Index: Integer]: TdsdStoredProcItem read GetItem
+      write SetItem; default;
   end;
 
-  TAddOnDataSet = class (TdsdDataSetLink)
+  TAddOnDataSet = class(TdsdDataSetLink)
   private
     FIndexFieldNames: String;
     FUserName: String;
@@ -56,10 +57,10 @@ type
     procedure SetDataSet(const Value: TDataSet); override;
   published
     property UserName: String read FUserName write FUserName;
-    property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
+    property IndexFieldNames: String read FIndexFieldNames
+      write FIndexFieldNames;
     property GridView: TcxGridTableView read FGridView write SetGridView;
   end;
-
 
   // Вызываем события при изменении каких параметров датасета
   IDataSetAction = interface
@@ -73,34 +74,45 @@ type
     procedure OnFormClose(Params: TdsdParams);
   end;
 
-  TOnPageChanging = procedure (Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean) of object;
+  TOnPageChanging = procedure(Sender: TObject; NewPage: TcxTabSheet;
+    var AllowChange: Boolean) of object;
 
   // Общий класс нужен для некороторых общих операций. Например учитывать TabSheet
   TdsdCustomAction = class(TCustomAction)
   private
     FOnPageChanging: TOnPageChanging;
     FTabSheet: TcxTabSheet;
-    FPostDataSetBeforeExecute: boolean;
+    FPostDataSetBeforeExecute: Boolean;
     FInfoAfterExecute: string;
     FQuestionBeforeExecute: string;
     FMoveParams: TCollection;
     FCancelAction: TAction;
+    FActiveControl: TWinControl;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
-    property QuestionBeforeExecute: string read FQuestionBeforeExecute write FQuestionBeforeExecute;
-    property InfoAfterExecute: string read FInfoAfterExecute write FInfoAfterExecute;
-    property PostDataSetBeforeExecute: boolean read FPostDataSetBeforeExecute write FPostDataSetBeforeExecute;
+    property QuestionBeforeExecute: string read FQuestionBeforeExecute
+      write FQuestionBeforeExecute;
+    property InfoAfterExecute: string read FInfoAfterExecute
+      write FInfoAfterExecute;
+    property PostDataSetBeforeExecute: Boolean read FPostDataSetBeforeExecute
+      write FPostDataSetBeforeExecute;
     // Делаем Post всем датасетам на форме где стоит Action
     procedure PostDataSet;
-    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); virtual;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; virtual; abstract;
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
+      var AllowChange: Boolean); virtual;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; virtual; abstract;
   public
     constructor Create(AOwner: TComponent); override;
-    function Execute: boolean; override;
+    function Execute: Boolean; override;
   published
+    // Если свойство установлено, то действие вызывается ТОЛЬКО если фокус на этом контроле
+    property ActiveControl: TWinControl read FActiveControl
+      write FActiveControl;
     // При установке данного свойства Action будет активирован только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
+    // задание списка параметров, которые изменяются перед выполнением действия
     property MoveParams: TCollection read FMoveParams write FMoveParams;
     // действие вызывается если результат вызова основного действия false
     property CancelAction: TAction read FCancelAction write FCancelAction;
@@ -111,7 +123,7 @@ type
   private
     FAction: IDataSetAction;
     // вешаем флаг, потому что UpdateData срабатывает ДВАЖДЫ!!!
-    FModified: boolean;
+    FModified: Boolean;
   protected
     procedure EditingChanged; override;
     procedure DataSetChanged; override;
@@ -127,15 +139,17 @@ type
     procedure SetStoredProc(const Value: TdsdStoredProc);
   protected
     procedure DataSetChanged; virtual;
-    procedure UpdateData;     virtual;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure UpdateData; virtual;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
     property StoredProc: TdsdStoredProc read GetStoredProc write SetStoredProc;
-    property StoredProcList: TdsdStoredProcList read FStoredProcList write FStoredProcList;
+    property StoredProcList: TdsdStoredProcList read FStoredProcList
+      write FStoredProcList;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -154,7 +168,7 @@ type
     FQuestionBeforeExecuteList: TStringList;
     FInfoAfterExecuteList: TStringList;
     FView: TcxGridTableView;
-    FWithoutNext: boolean;
+    FWithoutNext: Boolean;
     procedure ListExecute;
     procedure DataSourceExecute;
     procedure SaveQuestionBeforeExecute;
@@ -164,8 +178,9 @@ type
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -182,30 +197,35 @@ type
     property ImageIndex;
     property ShortCut;
     property SecondaryShortCuts;
-    property WithoutNext: boolean read FWithoutNext write FWithoutNext default false;
+    property WithoutNext: Boolean read FWithoutNext write FWithoutNext
+      default false;
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
   private
-    FRefreshOnTabSetChanges: boolean;
+    FRefreshOnTabSetChanges: Boolean;
   protected
-    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); override;
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
+      var AllowChange: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property RefreshOnTabSetChanges: boolean read FRefreshOnTabSetChanges write FRefreshOnTabSetChanges;
+    property RefreshOnTabSetChanges: Boolean read FRefreshOnTabSetChanges
+      write FRefreshOnTabSetChanges;
   end;
 
   // Сохраняет или изменяет значение в справочнике и закрывает форму
-  TdsdInsertUpdateGuides = class (TdsdCustomDataSetAction)
+  TdsdInsertUpdateGuides = class(TdsdCustomDataSetAction)
   private
     FInsertUpdateAction: TCustomAction;
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
-    property InsertUpdateAction: TCustomAction read FInsertUpdateAction write FInsertUpdateAction;
+    property InsertUpdateAction: TCustomAction read FInsertUpdateAction
+      write FInsertUpdateAction;
   end;
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
@@ -223,17 +243,19 @@ type
     FMasterProcedure: TdsdStoredProc;
     function GetXML(StoredProc: TdsdStoredProc): string;
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   published
-    property MasterProcedure: TdsdStoredProc read FMasterProcedure write FMasterProcedure;
+    property MasterProcedure: TdsdStoredProc read FMasterProcedure
+      write FMasterProcedure;
     property QuestionBeforeExecute;
     property InfoAfterExecute;
   end;
 
   TdsdUpdateDataSet = class(TdsdCustomDataSetAction)
   private
-    FAlreadyRun: boolean;
+    FAlreadyRun: Boolean;
     FDataSetDataLink: TDataSetDataLink;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
@@ -246,7 +268,7 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TCustomChangeStatus = class (TdsdCustomDataSetAction)
+  TCustomChangeStatus = class(TdsdCustomDataSetAction)
   private
     FStatus: TdsdMovementStatus;
   public
@@ -256,15 +278,16 @@ type
   end;
 
   // Изменяет статус документа
-  TChangeGuidesStatus = class (TCustomChangeStatus)
+  TChangeGuidesStatus = class(TCustomChangeStatus)
   private
     FGuides: TdsdGuides;
     FOnChange: TNotifyEvent;
     procedure OnChange(Sender: TObject);
     procedure SetGuides(const Value: TdsdGuides);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   published
     property Guides: TdsdGuides read FGuides write SetGuides;
     property QuestionBeforeExecute;
@@ -272,14 +295,14 @@ type
   end;
 
   // Изменяет статус документов в гриде
-  TdsdChangeMovementStatus = class (TCustomChangeStatus)
+  TdsdChangeMovementStatus = class(TCustomChangeStatus)
   private
     FActionDataLink: TDataSetDataLink;
     procedure SetDataSource(const Value: TDataSource);
     function GetDataSource: TDataSource;
   protected
     procedure DataSetChanged; override;
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -292,21 +315,24 @@ type
   TdsdUpdateErased = class(TdsdCustomDataSetAction, IDataSetAction)
   private
     FActionDataLink: TDataSetDataLink;
-    FisSetErased: boolean;
+    FisSetErased: Boolean;
     FErasedFieldName: string;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
-    procedure SetisSetErased(const Value: boolean);
+    procedure SetisSetErased(const Value: Boolean);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     procedure DataSetChanged; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property ErasedFieldName: string read FErasedFieldName write FErasedFieldName;
-    property isSetErased: boolean read FisSetErased write SetisSetErased default true;
+    property ErasedFieldName: string read FErasedFieldName
+      write FErasedFieldName;
+    property isSetErased: Boolean read FisSetErased write SetisSetErased
+      default true;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property QuestionBeforeExecute;
     property InfoAfterExecute;
@@ -316,7 +342,7 @@ type
   private
     FParams: TdsdParams;
     FFormName: string;
-    FisShowModal: boolean;
+    FisShowModal: Boolean;
     FFormNameParam: TdsdParam;
     procedure SetFormName(const Value: string);
     function GetFormName: string;
@@ -324,8 +350,9 @@ type
     procedure BeforeExecute(Form: TForm); virtual;
     procedure OnFormClose(Params: TdsdParams); virtual;
     function ShowForm: TForm;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -338,7 +365,7 @@ type
     property FormName: string read GetFormName write SetFormName;
     property FormNameParam: TdsdParam read FFormNameParam write FFormNameParam;
     property GuiParams: TdsdParams read FParams write FParams;
-    property isShowModal: boolean read FisShowModal write FisShowModal;
+    property isShowModal: Boolean read FisShowModal write FisShowModal;
   end;
 
   // Откываем форму для выбора значения из справочника
@@ -358,9 +385,10 @@ type
     FParams: TdsdParams;
     FBuferParams: TParams;
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
     procedure ChangeDSState; virtual; abstract;
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -390,7 +418,7 @@ type
 
   // Данный класс дополняет поведение класса TdsdOpenForm по работе со справочниками
   // К сожалению наследование самое удобное пока
-  TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction, IFormAction)
+  TdsdInsertUpdateAction = class(TdsdOpenForm, IDataSetAction, IFormAction)
   private
     FActionDataLink: TDataSetDataLink;
     FdsdDataSetRefresh: TdsdCustomAction;
@@ -401,7 +429,8 @@ type
     function GetFieldName: string;
     procedure SetFieldName(const Value: string);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData; virtual;
     procedure OnFormClose(Params: TdsdParams); override;
@@ -409,9 +438,11 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
+    property ActionType: TDataSetAcionType read FActionType write FActionType
+      default acInsert;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
-    property DataSetRefresh: TdsdCustomAction read FdsdDataSetRefresh write FdsdDataSetRefresh;
+    property DataSetRefresh: TdsdCustomAction read FdsdDataSetRefresh
+      write FdsdDataSetRefresh;
     property IdFieldName: string read GetFieldName write SetFieldName;
     property PostDataSetBeforeExecute default true;
   end;
@@ -423,7 +454,7 @@ type
 
   TdsdFormClose = class(TdsdCustomAction)
   protected
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -446,12 +477,14 @@ type
     procedure SetDataSource(const Value: TDataSource);
     procedure SetChoiceCaller(const Value: IChoiceCaller);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData;
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
   public
-    property ChoiceCaller: IChoiceCaller read FChoiceCaller write SetChoiceCaller;
+    property ChoiceCaller: IChoiceCaller read FChoiceCaller
+      write SetChoiceCaller;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -464,13 +497,14 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TdsdGridToExcel = class (TdsdCustomAction)
+  TdsdGridToExcel = class(TdsdCustomAction)
   private
     FGrid: TcxControl;
     procedure SetGrid(const Value: TcxControl);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -492,8 +526,9 @@ type
     function GetReportName: String;
     procedure SetReportName(const Value: String);
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function LocalExecute: boolean; override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -501,14 +536,15 @@ type
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
-    property ReportNameParam: TdsdParam read FReportNameParam write FReportNameParam;
+    property ReportNameParam: TdsdParam read FReportNameParam
+      write FReportNameParam;
     property Caption;
     property Hint;
     property ImageIndex;
     property ShortCut;
   end;
 
-  TBooleanStoredProcAction = class (TdsdCustomDataSetAction)
+  TBooleanStoredProcAction = class(TdsdCustomDataSetAction)
   private
     FImageIndexFalse: TImageIndex;
     FImageIndexTrue: TImageIndex;
@@ -525,7 +561,7 @@ type
     procedure SetHintFalse(const Value: String);
     procedure SetHintTrue(const Value: String);
   protected
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -534,8 +570,10 @@ type
     property HintFalse: String read FHintFalse write SetHintFalse;
     property CaptionTrue: String read FCaptionTrue write SetCaptionTrue;
     property CaptionFalse: String read FCaptionFalse write SetCaptionFalse;
-    property ImageIndexTrue: TImageIndex read FImageIndexTrue write SetImageIndexTrue;
-    property ImageIndexFalse: TImageIndex read FImageIndexFalse write SetImageIndexFalse;
+    property ImageIndexTrue: TImageIndex read FImageIndexTrue
+      write SetImageIndexTrue;
+    property ImageIndexFalse: TImageIndex read FImageIndexFalse
+      write SetImageIndexFalse;
   end;
 
   TFileDialogAction = class(TdsdCustomAction)
@@ -543,45 +581,51 @@ type
     FFileOpenDialog: TFileOpenDialog;
     FParam: TdsdParam;
   protected
-    function LocalExecute: boolean; override;
+    function LocalExecute: Boolean; override;
     procedure SetupDialog;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property FileOpenDialog: TFileOpenDialog read FFileOpenDialog write FFileOpenDialog;
+    property FileOpenDialog: TFileOpenDialog read FFileOpenDialog
+      write FFileOpenDialog;
     property Param: TdsdParam read FParam write FParam;
   end;
 
-  procedure Register;
+procedure Register;
 
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Controls, Menus, cxGridExportLink, ShellApi,
-     frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet,
-     cxGridAddOn, cxTextEdit;
+  Menus, cxGridExportLink, ShellApi,
+  frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
+  cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
+  frxDBSet,
+  cxGridAddOn, cxTextEdit;
 
 procedure Register;
 begin
-  RegisterActions('DSDLib', [TBooleanStoredProcAction], TBooleanStoredProcAction);
+  RegisterActions('DSDLib', [TBooleanStoredProcAction],
+    TBooleanStoredProcAction);
   RegisterActions('DSDLib', [TChangeGuidesStatus], TChangeGuidesStatus);
-  RegisterActions('DSDLib', [TdsdChangeMovementStatus], TdsdChangeMovementStatus);
-  RegisterActions('DSDLib', [TdsdChoiceGuides],   TdsdChoiceGuides);
+  RegisterActions('DSDLib', [TdsdChangeMovementStatus],
+    TdsdChangeMovementStatus);
+  RegisterActions('DSDLib', [TdsdChoiceGuides], TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
-  RegisterActions('DSDLib', [TdsdFormClose],      TdsdFormClose);
-  RegisterActions('DSDLib', [TdsdGridToExcel],    TdsdGridToExcel);
+  RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
+  RegisterActions('DSDLib', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
   RegisterActions('DSDLib', [TdsdInsertUpdateGuides], TdsdInsertUpdateGuides);
-  RegisterActions('DSDLib', [TdsdOpenForm],       TdsdOpenForm);
-  RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
+  RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
+  RegisterActions('DSDLib', [TdsdPrintAction], TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
   RegisterActions('DSDLib', [TFileDialogAction], TFileDialogAction);
-  RegisterActions('DSDLib', [TInsertUpdateChoiceAction], TInsertUpdateChoiceAction);
+  RegisterActions('DSDLib', [TInsertUpdateChoiceAction],
+    TInsertUpdateChoiceAction);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
   RegisterActions('DSDLib', [TMultiAction], TMultiAction);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
@@ -608,68 +652,78 @@ begin
   inherited;
 end;
 
-function TdsdCustomDataSetAction.LocalExecute: boolean;
-var i: integer;
+function TdsdCustomDataSetAction.LocalExecute: Boolean;
+var
+  i: Integer;
 begin
   result := true;
-  for I := 0 to StoredProcList.Count - 1  do
-      if Assigned(StoredProcList[i]) then
-         if Assigned(StoredProcList[i].StoredProc) then begin
-            // Если табшит не установлен, но если установлен, то активен
-            if (not Assigned(StoredProcList[i].TabSheet))
-               or (Assigned(StoredProcList[i].TabSheet) and (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
-                  StoredProcList[i].StoredProc.Execute
-         end;
+  for i := 0 to StoredProcList.Count - 1 do
+    if Assigned(StoredProcList[i]) then
+      if Assigned(StoredProcList[i].StoredProc) then
+      begin
+        // Если табшит не установлен, но если установлен, то активен
+        if (not Assigned(StoredProcList[i].TabSheet)) or
+          (Assigned(StoredProcList[i].TabSheet) and
+          (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i]
+          .TabSheet)) then
+          StoredProcList[i].StoredProc.Execute
+      end;
 end;
-
 
 function TdsdCustomDataSetAction.GetStoredProc: TdsdStoredProc;
 begin
-  if StoredProcList.Count > 0 then begin
-     if Assigned(StoredProcList[0].StoredProc) then
-        result := StoredProcList[0].StoredProc
-     else
-        result := nil
+  if StoredProcList.Count > 0 then
+  begin
+    if Assigned(StoredProcList[0].StoredProc) then
+      result := StoredProcList[0].StoredProc
+    else
+      result := nil
   end
   else
-     result := nil
+    result := nil
 end;
 
 procedure TdsdCustomDataSetAction.Notification(AComponent: TComponent;
   Operation: TOperation);
-var i: integer;
+var
+  i: Integer;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) and Assigned(StoredProcList) then begin
-       if AComponent is TdsdStoredProc then begin
-           for i := 0 to StoredProcList.Count - 1 do
-               if StoredProcList[i].StoredProc = AComponent then
-                  StoredProcList[i].StoredProc := nil;
-           if StoredProc = AComponent then
-              StoredProc := nil
-       end;
-       if AComponent is TcxTabSheet then begin
-           for i := 0 to StoredProcList.Count - 1 do
-               if StoredProcList[i].TabSheet = AComponent then
-                  StoredProcList[i].TabSheet := nil;
-       end;
+    if (Operation = opRemove) and Assigned(StoredProcList) then
+    begin
+      if AComponent is TdsdStoredProc then
+      begin
+        for i := 0 to StoredProcList.Count - 1 do
+          if StoredProcList[i].StoredProc = AComponent then
+            StoredProcList[i].StoredProc := nil;
+        if StoredProc = AComponent then
+          StoredProc := nil
+      end;
+      if AComponent is TcxTabSheet then
+      begin
+        for i := 0 to StoredProcList.Count - 1 do
+          if StoredProcList[i].TabSheet = AComponent then
+            StoredProcList[i].TabSheet := nil;
+      end;
     end;
 end;
 
 procedure TdsdCustomDataSetAction.SetStoredProc(const Value: TdsdStoredProc);
 begin
   // Если устанавливается или
-  if Value <> nil then begin
-     if StoredProcList.Count > 0 then
-        StoredProcList[0].StoredProc := Value
-     else
-        StoredProcList.Add.StoredProc := Value;
-  end
-  else begin
-    //если ставится в NIL
+  if Value <> nil then
+  begin
     if StoredProcList.Count > 0 then
-       StoredProcList.Delete(0);
+      StoredProcList[0].StoredProc := Value
+    else
+      StoredProcList.Add.StoredProc := Value;
+  end
+  else
+  begin
+    // если ставится в NIL
+    if StoredProcList.Count > 0 then
+      StoredProcList.Delete(0);
   end;
 end;
 
@@ -684,8 +738,8 @@ constructor TdsdDataSetRefresh.Create(AOwner: TComponent);
 begin
   inherited;
   Caption := 'Перечитать';
-  Hint:='Обновить данные';
-  ShortCut:=VK_F5
+  Hint := 'Обновить данные';
+  ShortCut := VK_F5
 end;
 
 procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
@@ -693,8 +747,8 @@ procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
 begin
   inherited;
   if not(csDesigning in ComponentState) then
-     if Enabled and RefreshOnTabSetChanges then
-        Execute;
+    if Enabled and RefreshOnTabSetChanges then
+      Execute;
 end;
 
 { TdsdOpenForm }
@@ -725,29 +779,31 @@ function TdsdOpenForm.GetFormName: string;
 begin
   result := FFormNameParam.AsString;
   if result = '' then
-     result := FFormName
+    result := FFormName
 end;
 
-function TdsdOpenForm.LocalExecute: boolean;
-var ModalResult: TModalResult;
+function TdsdOpenForm.LocalExecute: Boolean;
+var
+  ModalResult: TModalResult;
 begin
   inherited;
   result := true;
   ModalResult := ShowForm.ModalResult;
   if isShowModal then
-     result := ModalResult = mrOk;
+    result := ModalResult = mrOk;
 end;
 
 procedure TdsdOpenForm.Notification(AComponent: TComponent;
   Operation: TOperation);
-var i: integer;
+var
+  i: Integer;
 begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and Assigned(FParams) then
-       for i := 0 to GuiParams.Count - 1 do
-           if GuiParams[i].Component = AComponent then
-              GuiParams[i].Component := nil;
+      for i := 0 to GuiParams.Count - 1 do
+        if GuiParams[i].Component = AComponent then
+          GuiParams[i].Component := nil;
 end;
 
 procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
@@ -757,26 +813,27 @@ end;
 
 procedure TdsdOpenForm.SetFormName(const Value: string);
 begin
-  if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
-     ShowMessage('Используйте FormNameParam')
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте FormNameParam')
   else
-     FFormName := Value;
+    FFormName := Value;
 end;
 
 function TdsdOpenForm.ShowForm: TForm;
 begin
-  Result := TdsdFormStorageFactory.GetStorage.Load(FormName);
-  BeforeExecute(Result);
-  if TParentForm(Result).Execute(Self, FParams) then begin
-     if Result.WindowState = wsMinimized then
-        Result.WindowState := wsNormal;
-     if isShowModal then
-        Result.ShowModal
-     else
-        Result.Show
+  result := TdsdFormStorageFactory.GetStorage.Load(FormName);
+  BeforeExecute(result);
+  if TParentForm(result).Execute(Self, FParams) then
+  begin
+    if result.WindowState = wsMinimized then
+      result.WindowState := wsNormal;
+    if isShowModal then
+      result.ShowModal
+    else
+      result.Show
   end
   else
-    Result.Free
+    result.Free
 end;
 
 { TdsdFormClose }
@@ -787,19 +844,20 @@ begin
   FPostDataSetBeforeExecute := false;
 end;
 
-function TdsdFormClose.LocalExecute: boolean;
-var i: integer;
+function TdsdFormClose.LocalExecute: Boolean;
+var
+  i: Integer;
 begin
   result := true;
   // Для начала делаем отмену всем ДатаСетам
   //
-  for I := 0 to Owner.ComponentCount - 1 do
-     if Owner.Components[i] is TDataSet then
-        if TDataSet(Owner.Components[i]).State in dsEditModes then
-           TDataSet(Owner.Components[i]).Cancel;
+  for i := 0 to Owner.ComponentCount - 1 do
+    if Owner.Components[i] is TDataSet then
+      if TDataSet(Owner.Components[i]).State in dsEditModes then
+        TDataSet(Owner.Components[i]).Cancel;
 
   if Owner is TForm then
-     (Owner as TForm).Close;
+    (Owner as TForm).Close;
 end;
 
 { TdsdInsertUpdateAction }
@@ -814,8 +872,9 @@ procedure TdsdInsertUpdateAction.DataSetChanged;
 begin
   Enabled := false;
   if Assigned(DataSource) then
-     if Assigned(DataSource.DataSet) then
-        Enabled := (ActionType = acInsert) or (DataSource.DataSet.RecordCount <> 0)
+    if Assigned(DataSource.DataSet) then
+      Enabled := (ActionType = acInsert) or
+        (DataSource.DataSet.RecordCount <> 0)
 end;
 
 destructor TdsdInsertUpdateAction.Destroy;
@@ -832,9 +891,9 @@ end;
 function TdsdInsertUpdateAction.GetFieldName: string;
 begin
   if FFieldName = '' then
-     result := 'Id'
+    result := 'Id'
   else
-     result := FFieldName
+    result := FFieldName
 end;
 
 procedure TdsdInsertUpdateAction.Notification(AComponent: TComponent;
@@ -843,7 +902,7 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = DataSource) then
-       DataSource := nil;
+      DataSource := nil;
 end;
 
 procedure TdsdInsertUpdateAction.OnFormClose(Params: TdsdParams);
@@ -853,11 +912,12 @@ begin
   // Необходимо в таком случае перечитать запрос и отпозиционироваться в нем
   // тут перечитаем запрос и спозиционируемся на нем
   if Assigned(DataSetRefresh) then
-     DataSetRefresh.Execute;
+    DataSetRefresh.Execute;
   if Assigned(DataSource) then
-     if Assigned(DataSource.DataSet) then
-        if Assigned(Params) then
-           DataSource.DataSet.Locate(IdFieldName, Params.ParamByName('Id').Value, []);
+    if Assigned(DataSource.DataSet) then
+      if Assigned(Params) then
+        DataSource.DataSet.Locate(IdFieldName, Params.ParamByName('Id')
+          .Value, []);
 end;
 
 procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
@@ -887,21 +947,21 @@ procedure TDataSetDataLink.DataSetChanged;
 begin
   inherited;
   if Assigned(FAction) then
-     FAction.DataSetChanged;
+    FAction.DataSetChanged;
 end;
 
 procedure TDataSetDataLink.EditingChanged;
 begin
   inherited;
   if Assigned(DataSource) and (DataSource.State in [dsEdit, dsInsert]) then
-     FModified := true;
+    FModified := true;
 end;
 
 procedure TDataSetDataLink.UpdateData;
 begin
   inherited;
   if Assigned(FAction) and FModified then
-     FAction.UpdateData;
+    FAction.UpdateData;
   FModified := false;
 end;
 
@@ -919,15 +979,15 @@ procedure TdsdUpdateErased.DataSetChanged;
 begin
   Enabled := false;
   if Assigned(DataSource) then
-     if Assigned(DataSource.DataSet) then
-        if DataSource.DataSet.RecordCount = 0 then
-           Enabled := false
+    if Assigned(DataSource.DataSet) then
+      if DataSource.DataSet.RecordCount = 0 then
+        Enabled := false
+      else if Assigned(DataSource.DataSet.FindField(ErasedFieldName)) then
+        if FisSetErased then
+          Enabled := not DataSource.DataSet.FieldByName(ErasedFieldName)
+            .AsBoolean
         else
-        if Assigned(DataSource.DataSet.FindField(ErasedFieldName)) then
-           if FisSetErased then
-              Enabled := not DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
-           else
-              Enabled := DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
+          Enabled := DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
 end;
 
 destructor TdsdUpdateErased.Destroy;
@@ -936,21 +996,23 @@ begin
   inherited;
 end;
 
-function TdsdUpdateErased.LocalExecute: boolean;
-var lDataSet: TDataSet;
+function TdsdUpdateErased.LocalExecute: Boolean;
+var
+  lDataSet: TDataSet;
 begin
   result := inherited LocalExecute;
-  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
-     lDataSet := DataSource.DataSet;
-     // Что бы не вызывались события после на Post
-     DataSource.DataSet := nil;
-     try
-       lDataSet.Edit;
-       lDataSet.FieldByName(ErasedFieldName).AsBoolean := isSetErased;
-       lDataSet.Post;
-     finally
-       DataSource.DataSet := lDataSet;
-     end;
+  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then
+  begin
+    lDataSet := DataSource.DataSet;
+    // Что бы не вызывались события после на Post
+    DataSource.DataSet := nil;
+    try
+      lDataSet.Edit;
+      lDataSet.FieldByName(ErasedFieldName).AsBoolean := isSetErased;
+      lDataSet.Post;
+    finally
+      DataSource.DataSet := lDataSet;
+    end;
   end;
 end;
 
@@ -965,7 +1027,7 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = DataSource) then
-       DataSource := nil;
+      DataSource := nil;
 end;
 
 procedure TdsdUpdateErased.SetDataSource(const Value: TDataSource);
@@ -973,20 +1035,20 @@ begin
   FActionDataLink.DataSource := Value
 end;
 
-procedure TdsdUpdateErased.SetisSetErased(const Value: boolean);
+procedure TdsdUpdateErased.SetisSetErased(const Value: Boolean);
 begin
   FisSetErased := Value;
   if csDesigning in ComponentState then
     if FisSetErased then
     begin
       Caption := 'Удалить';
-      Hint:='Удалить данные';
-      ShortCut:=VK_DELETE
+      Hint := 'Удалить данные';
+      ShortCut := VK_DELETE
     end
     else
     begin
       Caption := 'Восстановить';
-      Hint:='Восстановить данные';
+      Hint := 'Восстановить данные';
     end;
 end;
 
@@ -999,7 +1061,7 @@ end;
 
 function TdsdStoredProcList.GetItem(Index: Integer): TdsdStoredProcItem;
 begin
-  Result := TdsdStoredProcItem(inherited GetItem(Index))
+  result := TdsdStoredProcItem(inherited GetItem(Index))
 end;
 
 procedure TdsdStoredProcList.SetItem(Index: Integer;
@@ -1024,8 +1086,8 @@ begin
   Enabled := false;
   // Если инициализирован выбор
   if Assigned(DataSource) and Assigned(FChoiceCaller) then
-     if Assigned(DataSource.DataSet) then
-        Enabled := (DataSource.DataSet.RecordCount <> 0)
+    if Assigned(DataSource.DataSet) then
+      Enabled := (DataSource.DataSet.RecordCount <> 0)
 end;
 
 destructor TdsdChoiceGuides.Destroy;
@@ -1035,13 +1097,15 @@ begin
   inherited;
 end;
 
-function TdsdChoiceGuides.LocalExecute: boolean;
+function TdsdChoiceGuides.LocalExecute: Boolean;
 begin
   result := true;
-  if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
-     FChoiceCaller.AfterChoice(FParams, TForm(Owner))
+  if Assigned(FParams.ParamByName('Key')) and
+    Assigned(FParams.ParamByName('TextValue')) then
+    FChoiceCaller.AfterChoice(FParams, TForm(Owner))
   else
-     raise Exception.Create('Не определены параметры возврата значений при выборе из справочника');
+    raise Exception.Create
+      ('Не определены параметры возврата значений при выборе из справочника');
 end;
 
 function TdsdChoiceGuides.GetDataSource: TDataSource;
@@ -1051,17 +1115,19 @@ end;
 
 procedure TdsdChoiceGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
-var i: integer;
+var
+  i: Integer;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-       if Assigned(Params) then
-         for i := 0 to Params.Count - 1 do
-             if Params[i].Component = AComponent then
-                Params[i].Component := nil;
-       if (AComponent = DataSource) then
-           DataSource := nil;
+    if (Operation = opRemove) then
+    begin
+      if Assigned(Params) then
+        for i := 0 to Params.Count - 1 do
+          if Params[i].Component = AComponent then
+            Params[i].Component := nil;
+      if (AComponent = DataSource) then
+        DataSource := nil;
     end;
 end;
 
@@ -1089,11 +1155,12 @@ begin
 end;
 
 procedure TdsdChangeMovementStatus.DataSetChanged;
-var Field: TField;
+var
+  Field: TField;
 begin
   Field := DataSource.DataSet.FindField('StatusCode');
-  Enabled := Assigned(Field) and (DataSource.DataSet.RecordCount > 0)
-    and (Field.AsInteger <> (Integer(Status) + 1));
+  Enabled := Assigned(Field) and (DataSource.DataSet.RecordCount > 0) and
+    (Field.AsInteger <> (Integer(Status) + 1));
 end;
 
 destructor TdsdChangeMovementStatus.Destroy;
@@ -1102,37 +1169,40 @@ begin
   inherited;
 end;
 
-function TdsdChangeMovementStatus.LocalExecute: boolean;
-var lDataSet: TDataSet;
-    ID: Integer;
-    IdField: TField;
+function TdsdChangeMovementStatus.LocalExecute: Boolean;
+var
+  lDataSet: TDataSet;
+  ID: Integer;
+  IdField: TField;
 begin
   IdField := nil;
   if Assigned(DataSource.DataSet.FindField('Id')) then
-     IdField := DataSource.DataSet.FieldByName('Id');
+    IdField := DataSource.DataSet.FieldByName('Id');
   if Assigned(DataSource.DataSet.FindField('MovementId')) then
-     IdField := DataSource.DataSet.FieldByName('MovementId');
+    IdField := DataSource.DataSet.FieldByName('MovementId');
 
   if Assigned(IdField) then
-     Id := IdField.AsInteger
+    ID := IdField.AsInteger
   else
-     Id := 0;
+    ID := 0;
 
   result := inherited LocalExecute;
 
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then
-     if Assigned(IdField) AND DataSource.DataSet.Locate(IdField.FieldName, Id, []) then begin
-        lDataSet := DataSource.DataSet;
-         // Что бы не вызывались события после на Post
-         DataSource.DataSet := nil;
-         try
-           lDataSet.Edit;
-           lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
-           lDataSet.Post;
-         finally
-           DataSource.DataSet := lDataSet;
-         end;
-     end;
+    if Assigned(IdField) AND DataSource.DataSet.Locate(IdField.FieldName, ID, [])
+    then
+    begin
+      lDataSet := DataSource.DataSet;
+      // Что бы не вызывались события после на Post
+      DataSource.DataSet := nil;
+      try
+        lDataSet.Edit;
+        lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
+        lDataSet.Post;
+      finally
+        DataSource.DataSet := lDataSet;
+      end;
+    end;
 end;
 
 function TdsdChangeMovementStatus.GetDataSource: TDataSource;
@@ -1172,21 +1242,22 @@ begin
 end;
 
 procedure TdsdUpdateDataSet.UpdateData;
-var i: integer;
+var
+  i: Integer;
 begin
   // Убираем цикл
   if FAlreadyRun then
-     exit;
+    exit;
   FAlreadyRun := true;
   try
     // Ничего лучшего не нашел пока. Если ячейка грида находится в редиме редактирования
     // и выполняется Post, то вот тут данных в датасете еще нифига нет!
     // Поэтому надо дернуть грид и уговорить его поставить
-    for I := 0 to Owner.ComponentCount - 1 do
-        if Owner.Components[i] is TcxGridDBTableView then
-           with TcxGridDBTableView(Owner.Components[i]) do
-             DataController.UpdateData;
-    {}
+    for i := 0 to Owner.ComponentCount - 1 do
+      if Owner.Components[i] is TcxGridDBTableView then
+        with TcxGridDBTableView(Owner.Components[i]) do
+          DataController.UpdateData;
+    { }
     Execute;
   finally
     FAlreadyRun := false;
@@ -1204,18 +1275,21 @@ begin
   PostDataSetBeforeExecute := true
 end;
 
-function TdsdGridToExcel.LocalExecute: boolean;
+function TdsdGridToExcel.LocalExecute: Boolean;
 begin
   result := true;
-  if not Assigned(FGrid) then begin
-     ShowMessage('Не установлено свойство Grid');
-     exit;
+  if not Assigned(FGrid) then
+  begin
+    ShowMessage('Не установлено свойство Grid');
+    exit;
   end;
   if FGrid is TcxGrid then
-     ExportGridToExcel('#$#$#$.xls', TcxGrid(FGrid));
+    ExportGridToExcel('#$#$#$.xls', TcxGrid(FGrid), IsCtrlPressed);
   if FGrid is TcxCustomPivotGrid then
-     cxExportPivotGridToExcel('#$#$#$.xls', TcxCustomPivotGrid(FGrid));
-  ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil, SW_SHOWNORMAL);
+    cxExportPivotGridToExcel('#$#$#$.xls', TcxCustomPivotGrid(FGrid),
+      IsCtrlPressed);
+  ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil,
+    SW_SHOWNORMAL);
 end;
 
 procedure TdsdGridToExcel.Notification(AComponent: TComponent;
@@ -1224,14 +1298,15 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = FGrid) then
-       FGrid := nil;
+      FGrid := nil;
 end;
 
 procedure TdsdGridToExcel.SetGrid(const Value: TcxControl);
 begin
-  if not ((Value is TcxGrid) or (Value is TcxCustomPivotGrid)) then begin
-     ShowMessage('Компонент может быть только типа TcxGrid или TcxPivotGrid');
-     exit;
+  if not((Value is TcxGrid) or (Value is TcxCustomPivotGrid)) then
+  begin
+    ShowMessage('Компонент может быть только типа TcxGrid или TcxPivotGrid');
+    exit;
   end;
   FGrid := Value;
 end;
@@ -1261,26 +1336,28 @@ function TdsdPrintAction.GetReportName: String;
 begin
   result := FReportNameParam.AsString;
   if result = '' then
-     result := FReportName
+    result := FReportName
 end;
 
-function TdsdPrintAction.LocalExecute: boolean;
-var i: integer;
-    Stream: TStringStream;
-    FReport: TfrxReport;
-    lActiveControl: TWinControl;
-    ViewToMemTable: TcxViewToMemTable;
-    MemTableList: TList;
+function TdsdPrintAction.LocalExecute: Boolean;
+var
+  i: Integer;
+  Stream: TStringStream;
+  FReport: TfrxReport;
+  lActiveControl: TWinControl;
+  ViewToMemTable: TcxViewToMemTable;
+  MemTableList: TList;
 begin
   // Перед вызовом печати попробуем у формы поменять фокус, что бы вызвалась процеура сохранения
 
   if Assigned(Owner) then
-     if Owner is TForm then begin
-        lActiveControl := TForm(Owner).ActiveControl;
-        TForm(Owner).ActiveControl := nil;
-        if not (lActiveControl.ClassType = TcxCustomInnerTextEdit) then
-           TForm(Owner).ActiveControl := lActiveControl;
-     end;
+    if Owner is TForm then
+    begin
+      lActiveControl := TForm(Owner).ActiveControl;
+      TForm(Owner).ActiveControl := nil;
+      if not(lActiveControl.ClassType = TcxCustomInnerTextEdit) then
+        TForm(Owner).ActiveControl := lActiveControl;
+    end;
 
   inherited;
 
@@ -1292,79 +1369,97 @@ begin
   MemTableList := TList.Create;
   try
     FReport := TfrxReport.Create(nil);
-    for I := 0 to DataSets.Count - 1 do begin
-        FDataSetList.Add(TfrxDBDataset.Create(nil));
-        with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do begin
-          UserName := TAddOnDataSet(DataSets[i]).UserName;
-          if Assigned(Self.DataSets[i].DataSet) then begin
-             if Self.DataSets[i].DataSet is TClientDataSet then
-                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
-             DataSet := DataSets[i].DataSet;
-          end;
-          if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then begin
-             MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(Self.DataSets[i]).GridView));
-             DataSet := MemTableList[MemTableList.Count - 1];
-          end;
-          if not DataSet.Active then
-             raise Exception.Create('Датасет с данными ' + DataSet.Name + ' не открыт');
+    for i := 0 to DataSets.Count - 1 do
+    begin
+      FDataSetList.Add(TfrxDBDataset.Create(nil));
+      with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do
+      begin
+        UserName := TAddOnDataSet(DataSets[i]).UserName;
+        if Assigned(Self.DataSets[i].DataSet) then
+        begin
+          if Self.DataSets[i].DataSet is TClientDataSet then
+            TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
+              TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+          DataSet := DataSets[i].DataSet;
         end;
+        if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
+        begin
+          MemTableList.Add
+            (ViewToMemTable.LoadData(TAddOnDataSet(Self.DataSets[i]).GridView));
+          DataSet := MemTableList[MemTableList.Count - 1];
+        end;
+        if not DataSet.Active then
+          raise Exception.Create('Датасет с данными ' + DataSet.Name +
+            ' не открыт');
+      end;
     end;
     with FReport do
-    try
-      if ShiftDown then begin
-         LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
-         for i := 0 to Params.Count - 1 do begin
-             if Params[i].DataType in [ftString, ftDate, ftDateTime] then
-                Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39)
-             else
-                Variables[Params[i].Name] := Params[i].Value
+      try
+        if ShiftDown then
+        begin
+          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport
+            (ReportName));
+          for i := 0 to Params.Count - 1 do
+          begin
+            if Params[i].DataType in [ftString, ftDate, ftDateTime] then
+              Variables[Params[i].Name] := chr(39) + Params[i]
+                .AsString + chr(39)
+            else
+              Variables[Params[i].Name] := Params[i].Value
           end;
-         DesignReport;
-         Stream.Clear;
-         SaveToStream(Stream);
-         Stream.Position := 0;
-         TdsdFormStorageFactory.GetStorage.SaveReport(Stream, ReportName);
-      end
-      else begin
-         LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
-         for i := 0 to Params.Count - 1 do begin
-             case Params[i].DataType of
-                ftString, ftDate, ftDateTime: Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
-                ftFloat, ftCurrency:
-                   case VarType(Params[i].Value) of
-                      varDouble: Variables[Params[i].Name] := ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
-                      else
-                        Variables[Params[i].Name] := Params[i].Value;
-                   end;
+          DesignReport;
+          Stream.Clear;
+          SaveToStream(Stream);
+          Stream.Position := 0;
+          TdsdFormStorageFactory.GetStorage.SaveReport(Stream, ReportName);
+        end
+        else
+        begin
+          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport
+            (ReportName));
+          for i := 0 to Params.Count - 1 do
+          begin
+            case Params[i].DataType of
+              ftString, ftDate, ftDateTime:
+                Variables[Params[i].Name] := chr(39) + Params[i].AsString
+                  + chr(39);
+              ftFloat, ftCurrency:
+                case VarType(Params[i].Value) of
+                  varDouble:
+                    Variables[Params[i].Name] :=
+                      ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
                 else
-                   Variables[Params[i].Name] := Params[i].Value
-             end;
-         end;
+                  Variables[Params[i].Name] := Params[i].Value;
+                end;
+            else
+              Variables[Params[i].Name] := Params[i].Value
+            end;
+          end;
 
-         if Assigned(Self.Owner) then
-            for I := 0 to Self.Owner.ComponentCount - 1 do
+          if Assigned(Self.Owner) then
+            for i := 0 to Self.Owner.ComponentCount - 1 do
+              if Self.Owner.Components[i] is TDataSet then
+                TDataSet(Self.Owner.Components[i]).DisableControls;
+          try
+            // Вдруг что!
+            // FReport.PreviewOptions.modal := false;
+            ShowReport;
+          finally
+            if Assigned(Self.Owner) then
+              for i := 0 to Self.Owner.ComponentCount - 1 do
                 if Self.Owner.Components[i] is TDataSet then
-                   TDataSet(Self.Owner.Components[i]).DisableControls;
-         try
-           // Вдруг что!
-          // FReport.PreviewOptions.modal := false;
-           ShowReport;
-         finally
-           if Assigned(Self.Owner) then
-              for I := 0 to Self.Owner.ComponentCount - 1 do
-                  if Self.Owner.Components[i] is TDataSet then
-                     TDataSet(Self.Owner.Components[i]).EnableControls;
-         end;
-      end;
-    finally
-      for I := 0 to FDataSetList.Count - 1 do
+                  TDataSet(Self.Owner.Components[i]).EnableControls;
+          end;
+        end;
+      finally
+        for i := 0 to FDataSetList.Count - 1 do
           TObject(FDataSetList.Items[i]).Free;
-      FDataSetList.Free;
-      Free;
-    end;
+        FDataSetList.Free;
+        Free;
+      end;
   finally
-    for I := 0 to MemTableList.Count - 1 do
-        TObject(MemTableList[i]).Free;
+    for i := 0 to MemTableList.Count - 1 do
+      TObject(MemTableList[i]).Free;
     MemTableList.Free;
     ViewToMemTable.Free;
     Stream.Free
@@ -1373,22 +1468,23 @@ end;
 
 procedure TdsdPrintAction.Notification(AComponent: TComponent;
   Operation: TOperation);
-var i: integer;
+var
+  i: Integer;
 begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and Assigned(Params) then
-       for i := 0 to Params.Count - 1 do
-           if Params[i].Component = AComponent then
-              Params[i].Component := nil;
+      for i := 0 to Params.Count - 1 do
+        if Params[i].Component = AComponent then
+          Params[i].Component := nil;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);
 begin
-  if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
-     ShowMessage('Используйте ReportNameParam')
+  if (csDesigning in ComponentState) and not(csLoading in ComponentState) then
+    ShowMessage('Используйте ReportNameParam')
   else
-     FReportName := Value;
+    FReportName := Value;
 end;
 
 { TdsdInsertUpdateGuides }
@@ -1400,7 +1496,7 @@ begin
   PostDataSetBeforeExecute := false
 end;
 
-function TdsdInsertUpdateGuides.LocalExecute: boolean;
+function TdsdInsertUpdateGuides.LocalExecute: Boolean;
 begin
   // Делаем post всем
   try
@@ -1420,7 +1516,7 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (FInsertUpdateAction = AComponent) then
-       FInsertUpdateAction := nil
+      FInsertUpdateAction := nil
 end;
 
 { TBooleanStoredProcAction }
@@ -1437,7 +1533,7 @@ begin
   FValue := false;
 end;
 
-function TBooleanStoredProcAction.LocalExecute: boolean;
+function TBooleanStoredProcAction.LocalExecute: Boolean;
 begin
   Value := not Value;
   result := inherited;
@@ -1482,15 +1578,17 @@ end;
 procedure TBooleanStoredProcAction.SetValue(const Value: Boolean);
 begin
   FValue := Value;
-  if Value then begin
-     ImageIndex := ImageIndexTrue;
-     Caption := CaptionTrue;
-     Hint := HintTrue;
+  if Value then
+  begin
+    ImageIndex := ImageIndexTrue;
+    Caption := CaptionTrue;
+    Hint := HintTrue;
   end
-  else begin
-     ImageIndex := ImageIndexFalse;
-     Caption := CaptionFalse;
-     Hint := HintFalse;
+  else
+  begin
+    ImageIndex := ImageIndexFalse;
+    Caption := CaptionFalse;
+    Hint := HintFalse;
   end;
 end;
 
@@ -1503,24 +1601,31 @@ begin
   FMoveParams := TCollection.Create(TParamMoveItem);
 end;
 
-function TdsdCustomAction.Execute: boolean;
-var i: integer;
+function TdsdCustomAction.Execute: Boolean;
+var
+  i: Integer;
 begin
   result := false;
+  if Assigned(ActiveControl) then
+    if not ActiveControl.Focused then
+      exit;
   if QuestionBeforeExecute <> '' then
-     if MessageDlg(QuestionBeforeExecute, mtInformation, mbOKCancel, 0) <> mrOk  then
-        exit;
+    if MessageDlg(QuestionBeforeExecute, mtInformation, mbOKCancel, 0) <> mrOk
+    then
+      exit;
   if PostDataSetBeforeExecute then
-     PostDataSet;
-  for I := 0 to MoveParams.Count - 1 do
-      TParamMoveItem(MoveParams.Items[i]).ToParam.Value := TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
+    PostDataSet;
+  for i := 0 to MoveParams.Count - 1 do
+    TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
+      TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
   if not result then
-     if Assigned(CancelAction) then
-        CancelAction.Execute;
-  if result and (InfoAfterExecute <> '') then begin
-     Application.ProcessMessages;
-     ShowMessage(InfoAfterExecute);
+    if Assigned(CancelAction) then
+      CancelAction.Execute;
+  if result and (InfoAfterExecute <> '') then
+  begin
+    Application.ProcessMessages;
+    ShowMessage(InfoAfterExecute);
   end;
 end;
 
@@ -1530,36 +1635,40 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = TabSheet) then
-       TabSheet := nil;
+      TabSheet := nil;
+  if (Operation = opRemove) and (AComponent = ActiveControl) then
+    ActiveControl := nil;
 end;
 
 procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
   var AllowChange: Boolean);
 begin
   if Assigned(FOnPageChanging) then
-     FOnPageChanging(Sender, NewPage, AllowChange);
+    FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
   Visible := Enabled;
 end;
 
 procedure TdsdCustomAction.PostDataSet;
-var i: integer;
+var
+  i: Integer;
 begin
   if Assigned(Owner) then
-     for i := 0 to Owner.ComponentCount - 1 do
-         if Owner.Components[i] is TDataSet then
-            if TDataSet(Owner.Components[i]).State in dsEditModes then
-               TDataSet(Owner.Components[i]).Post;
+    for i := 0 to Owner.ComponentCount - 1 do
+      if Owner.Components[i] is TDataSet then
+        if TDataSet(Owner.Components[i]).State in dsEditModes then
+          TDataSet(Owner.Components[i]).Post;
 end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
 begin
   FTabSheet := Value;
-  if Assigned(FTabSheet) then begin
-     FOnPageChanging := FTabSheet.PageControl.OnPageChanging;
-     FTabSheet.PageControl.OnPageChanging := OnPageChanging;
-     Enabled := TabSheet = FTabSheet.PageControl.ActivePage;
-     Visible := Enabled
+  if Assigned(FTabSheet) then
+  begin
+    FOnPageChanging := FTabSheet.PageControl.OnPageChanging;
+    FTabSheet.PageControl.OnPageChanging := OnPageChanging;
+    Enabled := TabSheet = FTabSheet.PageControl.ActivePage;
+    Visible := Enabled
   end;
 end;
 
@@ -1568,10 +1677,11 @@ end;
 procedure TdsdStoredProcItem.Assign(Source: TPersistent);
 begin
   if Source is TdsdStoredProcItem then
-     with TdsdStoredProcItem(Source) do begin
-          Self.TabSheet := TabSheet;
-          Self.StoredProc := StoredProc;
-     end
+    with TdsdStoredProcItem(Source) do
+    begin
+      Self.TabSheet := TabSheet;
+      Self.StoredProc := StoredProc;
+    end
   else
     inherited Assign(Source);
 end;
@@ -1580,15 +1690,16 @@ function TdsdStoredProcItem.GetDisplayName: string;
 begin
   result := inherited;
   if Assigned(FStoredProc) then
-     result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
+    result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
 end;
 
 procedure TdsdStoredProcItem.SetStoredProc(const Value: TdsdStoredProc);
 begin
-  if FStoredProc <> Value then begin
-     if Assigned(Collection) and Assigned(Value) then
-        Value.FreeNotification(TComponent(Collection.Owner));
-     FStoredProc := Value;
+  if FStoredProc <> Value then
+  begin
+    if Assigned(Collection) and Assigned(Value) then
+      Value.FreeNotification(TComponent(Collection.Owner));
+    FStoredProc := Value;
   end;
 end;
 
@@ -1605,7 +1716,7 @@ begin
   Self.GuiParams.AssignParams(Params);
   Form.Close;
   if isShowModal then
-     Form.ModalResult := mrOk;
+    Form.ModalResult := mrOk;
 end;
 
 { TDataSetAction }
@@ -1625,46 +1736,49 @@ begin
   inherited;
 end;
 
-function TDSAction.LocalExecute: boolean;
-var i: integer;
+function TDSAction.LocalExecute: Boolean;
+var
+  i: Integer;
 begin
   result := true;
-  if Assigned(FView.Owner)
-     and (FView.Owner is TForm) then
-        TForm(FView.Owner).ActiveControl := FView.Control;
+  if Assigned(FView.Owner) and (FView.Owner is TForm) then
+    TForm(FView.Owner).ActiveControl := FView.Control;
   if Assigned(FView) then
-     if Assigned(FView.DataController.DataSource) then
-        if FView.DataController.DataSource.State in [dsInsert, dsEdit] then
-           FView.DataController.DataSource.DataSet.Post;
+    if Assigned(FView.DataController.DataSource) then
+      if FView.DataController.DataSource.State in [dsInsert, dsEdit] then
+        FView.DataController.DataSource.DataSet.Post;
   FBuferParams.Clear;
-  for I := 0 to Params.Count - 1 do
-      FBuferParams.CreateParam(Params[i].DataType, Params[i].Name, Params[i].ParamType).Value := Params[i].Value;
+  for i := 0 to Params.Count - 1 do
+    FBuferParams.CreateParam(Params[i].DataType, Params[i].Name,
+      Params[i].ParamType).Value := Params[i].Value;
   inherited;
   ChangeDSState;
-  //расставляем значения по датасету
-  for I := 0 to FBuferParams.Count - 1 do
-      FView.DataController.DataSource.DataSet.FieldByName(FBuferParams[i].Name).Value := FBuferParams[i].Value;
+  // расставляем значения по датасету
+  for i := 0 to FBuferParams.Count - 1 do
+    FView.DataController.DataSource.DataSet.FieldByName(FBuferParams[i].Name)
+      .Value := FBuferParams[i].Value;
 
   // Этот кусок кода написан как подарок Костянычу! :-)
-  for I := 0 to FView.ColumnCount - 1 do
-      if FView.Columns[i].Visible and FView.Columns[i].Editable then begin
-         FView.Columns[i].Focused := true;
-         break;
-      end;
+  for i := 0 to FView.ColumnCount - 1 do
+    if FView.Columns[i].Visible and FView.Columns[i].Editable then
+    begin
+      FView.Columns[i].Focused := true;
+      break;
+    end;
   // конец подарка
   if Assigned(FAction) then
-     FAction.Execute;
+    FAction.Execute;
 end;
 
-procedure TDSAction.Notification(AComponent: TComponent;
-  Operation: TOperation);
+procedure TDSAction.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited;
-  if (Operation = opRemove) then begin
+  if (Operation = opRemove) then
+  begin
     if AComponent = FView then
-       FView := nil;
+      FView := nil;
     if AComponent = FAction then
-       FAction := nil;
+      FAction := nil;
   end;
 end;
 
@@ -1684,12 +1798,14 @@ end;
 procedure TInsertRecord.ChangeDSState;
 begin
   if Assigned(FView) then
-     if Assigned(FView.DataController.DataSource) then begin
-        if FView.DataController.DataSource.State = dsInactive then
-           raise Exception.Create('DataSet ' + FView.DataController.DataSource.DataSet.Name + ' не открыт. Добавление не возможно');
-        if FView.DataController.DataSource.State = dsBrowse then
-           FView.DataController.DataSource.DataSet.Insert;
-     end;
+    if Assigned(FView.DataController.DataSource) then
+    begin
+      if FView.DataController.DataSource.State = dsInactive then
+        raise Exception.Create('DataSet ' + FView.DataController.DataSource.
+          DataSet.Name + ' не открыт. Добавление не возможно');
+      if FView.DataController.DataSource.State = dsBrowse then
+        FView.DataController.DataSource.DataSet.Insert;
+    end;
 end;
 
 { TUpdateRecord }
@@ -1697,12 +1813,14 @@ end;
 procedure TUpdateRecord.ChangeDSState;
 begin
   if Assigned(FView) then
-     if Assigned(FView.DataController.DataSource) then begin
-        if FView.DataController.DataSource.State = dsInactive then
-           raise Exception.Create('DataSet ' + FView.DataController.DataSource.DataSet.Name + ' не открыт. Редактирование не возможно');
-        if FView.DataController.DataSource.State = dsBrowse then
-           FView.DataController.DataSource.DataSet.Edit;
-     end;
+    if Assigned(FView.DataController.DataSource) then
+    begin
+      if FView.DataController.DataSource.State = dsInactive then
+        raise Exception.Create('DataSet ' + FView.DataController.DataSource.
+          DataSet.Name + ' не открыт. Редактирование не возможно');
+      if FView.DataController.DataSource.State = dsBrowse then
+        FView.DataController.DataSource.DataSet.Edit;
+    end;
 end;
 
 { TCustomChangeStatus }
@@ -1716,18 +1834,21 @@ end;
 
 { TChangeGuidesStatus }
 
-function TChangeGuidesStatus.LocalExecute: boolean;
-var OldKey: string;
+function TChangeGuidesStatus.LocalExecute: Boolean;
+var
+  OldKey: string;
 begin
-  if Assigned(FGuides) then begin
-     OldKey := FGuides.Key;
-     FGuides.Key := IntToStr(Integer(Status) + 1);
+  if Assigned(FGuides) then
+  begin
+    OldKey := FGuides.Key;
+    FGuides.Key := IntToStr(Integer(Status) + 1);
   end;
   try
     result := inherited LocalExecute;
-    if Assigned(FGuides) then begin
-       FGuides.Key := IntToStr(Integer(Status) + 1);
-       FGuides.TextValue := MovementStatus[Status];
+    if Assigned(FGuides) then
+    begin
+      FGuides.Key := IntToStr(Integer(Status) + 1);
+      FGuides.TextValue := MovementStatus[Status];
     end;
   except
     FGuides.Key := OldKey;
@@ -1741,22 +1862,23 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = FGuides) then
-       FGuides := nil;
+      FGuides := nil;
 end;
 
 procedure TChangeGuidesStatus.OnChange(Sender: TObject);
 begin
   Enabled := StrToInt(TdsdGuides(Sender).Key) <> (Integer(Status) + 1);
   if Assigned(FOnChange) then
-     FOnChange(Sender)
+    FOnChange(Sender)
 end;
 
 procedure TChangeGuidesStatus.SetGuides(const Value: TdsdGuides);
 begin
   FGuides := Value;
-  if Assigned(FGuides) then begin
-     FOnChange := FGuides.OnChange;
-     FGuides.OnChange := OnChange;
+  if Assigned(FGuides) then
+  begin
+    FOnChange := FGuides.OnChange;
+    FGuides.OnChange := OnChange;
   end;
 end;
 
@@ -1770,48 +1892,59 @@ begin
 end;
 
 procedure TMultiAction.DataSourceExecute;
-var i: integer;
+var
+  i: Integer;
 begin
-  if Assigned(View) then begin
-     with TGaugeFactory.GetGauge(Caption, 0, View.DataController.FilteredRecordCount) do begin
-        Start;
-        try
-           for i := 0 to View.DataController.FilteredRecordCount - 1 do begin
-               View.DataController.FocusedRecordIndex := View.DataController.FilteredRecordIndex[i];
-               ListExecute;
-               IncProgress(1);
-               Application.ProcessMessages;
-            end;
-         finally
-           Finish;
-         end;
-     end;
+  if Assigned(View) then
+  begin
+    with TGaugeFactory.GetGauge(Caption, 0,
+      View.DataController.FilteredRecordCount) do
+    begin
+      Start;
+      try
+        for i := 0 to View.DataController.FilteredRecordCount - 1 do
+        begin
+          View.DataController.FocusedRecordIndex :=
+            View.DataController.FilteredRecordIndex[i];
+          ListExecute;
+          IncProgress(1);
+          Application.ProcessMessages;
+        end;
+      finally
+        Finish;
+      end;
+    end;
   end
-  else begin
+  else
+  begin
 
-    if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
-   //    DataSource.DataSet.DisableControls;
-       try
-         DataSource.DataSet.First;
-         with TGaugeFactory.GetGauge(Caption, 0, DataSource.DataSet.RecordCount) do
-           try
-             Start;
-             while not DataSource.DataSet.Eof do begin
-               ListExecute;
-               IncProgress(1);
-               Application.ProcessMessages;
-               if not WithoutNext then
-                  DataSource.DataSet.Next
-               else
-                  DataSource.DataSet.Delete;
-             end;
-           finally
-             Finish;
-           end;
-       finally
-         Application.ProcessMessages;
-  //       DataSource.DataSet.EnableControls;
-       end;
+    if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and
+      (DataSource.DataSet.RecordCount > 0) then
+    begin
+      // DataSource.DataSet.DisableControls;
+      try
+        DataSource.DataSet.First;
+        with TGaugeFactory.GetGauge(Caption, 0,
+          DataSource.DataSet.RecordCount) do
+          try
+            Start;
+            while not DataSource.DataSet.Eof do
+            begin
+              ListExecute;
+              IncProgress(1);
+              Application.ProcessMessages;
+              if not WithoutNext then
+                DataSource.DataSet.Next
+              else
+                DataSource.DataSet.Delete;
+            end;
+          finally
+            Finish;
+          end;
+      finally
+        Application.ProcessMessages;
+        // DataSource.DataSet.EnableControls;
+      end;
     end;
   end;
 end;
@@ -1823,115 +1956,138 @@ begin
 end;
 
 procedure TMultiAction.ListExecute;
-var i: integer;
-    State: Boolean;
+var
+  i: Integer;
+  State: Boolean;
 begin
   // Выполняем события друг за другом. Если какое-то не выполнено, то отменяются и остальные
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
-         State := TActionItem(ActionList.Items[i]).Action.Execute;
-         if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) and (not State) then
-            exit;
-      end;
+    if Assigned(TActionItem(ActionList.Items[i]).Action) then
+    begin
+      State := TActionItem(ActionList.Items[i]).Action.Execute;
+      if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) and
+        (not State) then
+        exit;
+    end;
 end;
 
-function TMultiAction.LocalExecute: boolean;
+function TMultiAction.LocalExecute: Boolean;
 begin
   if QuestionBeforeExecute <> '' then
-     SaveQuestionBeforeExecute;
+    SaveQuestionBeforeExecute;
   if InfoAfterExecute <> '' then
-     SaveInfoAfterExecute;
+    SaveInfoAfterExecute;
   try
     if Assigned(DataSource) or Assigned(View) then
-       DataSourceExecute
+      DataSourceExecute
     else
-       ListExecute;
+      ListExecute;
   finally
     if QuestionBeforeExecute <> '' then
-       RestoreQuestionBeforeExecute;
+      RestoreQuestionBeforeExecute;
     if InfoAfterExecute <> '' then
-       RestoreInfoAfterExecute;
+      RestoreInfoAfterExecute;
   end;
   result := true
 end;
 
 procedure TMultiAction.Notification(AComponent: TComponent;
   Operation: TOperation);
-var i: integer;
+var
+  i: Integer;
 begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and Assigned(ActionList) then
-       if AComponent is TCustomAction then
-           for i := 0 to ActionList.Count - 1 do
-               if TActionItem(ActionList.Items[i]).Action = AComponent then
-                  TActionItem(ActionList.Items[i]).Action := nil;
+      if AComponent is TCustomAction then
+        for i := 0 to ActionList.Count - 1 do
+          if TActionItem(ActionList.Items[i]).Action = AComponent then
+            TActionItem(ActionList.Items[i]).Action := nil;
 end;
 
 procedure TMultiAction.RestoreInfoAfterExecute;
-var i: integer;
+var
+  i: Integer;
 begin
   try
     for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
-         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := FInfoAfterExecuteList.Strings[i];
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and
+        (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
+        TdsdCustomAction(TActionItem(ActionList.Items[i]).Action)
+          .InfoAfterExecute := FInfoAfterExecuteList.Strings[i];
   finally
     FInfoAfterExecuteList.Free;
   end;
 end;
 
 procedure TMultiAction.RestoreQuestionBeforeExecute;
-var i: integer;
+var
+  i: Integer;
 begin
   try
     for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
-         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := FQuestionBeforeExecuteList.Strings[i];
+      if Assigned(TActionItem(ActionList.Items[i]).Action) and
+        (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
+        TdsdCustomAction(TActionItem(ActionList.Items[i]).Action)
+          .QuestionBeforeExecute := FQuestionBeforeExecuteList.Strings[i];
   finally
     FQuestionBeforeExecuteList.Free;
   end;
 end;
 
 procedure TMultiAction.SaveInfoAfterExecute;
-var i: integer;
+var
+  i: Integer;
 begin
   FInfoAfterExecuteList := TStringList.Create;
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then begin
-         FInfoAfterExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute);
-         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := '';
-      end
-      else
-         FInfoAfterExecuteList.Add('');
+    if Assigned(TActionItem(ActionList.Items[i]).Action) and
+      (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
+    begin
+      FInfoAfterExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]
+        ).Action).InfoAfterExecute);
+      TdsdCustomAction(TActionItem(ActionList.Items[i]).Action)
+        .InfoAfterExecute := '';
+    end
+    else
+      FInfoAfterExecuteList.Add('');
 end;
 
 procedure TMultiAction.SaveQuestionBeforeExecute;
-var i: integer;
+var
+  i: Integer;
 begin
   FQuestionBeforeExecuteList := TStringList.Create;
   for i := 0 to ActionList.Count - 1 do
-      if Assigned(TActionItem(ActionList.Items[i]).Action) and (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then begin
-         FQuestionBeforeExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute);
-         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := '';
-      end
-      else
-         FQuestionBeforeExecuteList.Add('');
+    if Assigned(TActionItem(ActionList.Items[i]).Action) and
+      (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) then
+    begin
+      FQuestionBeforeExecuteList.Add
+        (TdsdCustomAction(TActionItem(ActionList.Items[i]).Action)
+        .QuestionBeforeExecute);
+      TdsdCustomAction(TActionItem(ActionList.Items[i]).Action)
+        .QuestionBeforeExecute := '';
+    end
+    else
+      FQuestionBeforeExecuteList.Add('');
 end;
 
 procedure TMultiAction.SetDataSource(const Value: TDataSource);
 begin
-  if Assigned(View) and Assigned(Value) then begin
-     ShowMessage('Установлен View. Нельзя установить DataSource');
-     exit;
+  if Assigned(View) and Assigned(Value) then
+  begin
+    ShowMessage('Установлен View. Нельзя установить DataSource');
+    exit;
   end;
   FDataSource := Value;
 end;
 
 procedure TMultiAction.SetView(const Value: TcxGridTableView);
 begin
-  if Assigned(DataSource) and Assigned(Value) then begin
-     ShowMessage('Установлен DataSource. Нельзя установить View');
-     exit;
+  if Assigned(DataSource) and Assigned(Value) then
+  begin
+    ShowMessage('Установлен DataSource. Нельзя установить View');
+    exit;
   end;
   FView := Value;
 end;
@@ -1940,38 +2096,37 @@ end;
 
 function TExecServerStoredProc.GetXML(StoredProc: TdsdStoredProc): string;
 var
-  i: integer;
+  i: Integer;
 begin
-  Result := '';
-  with StoredProc do begin
-    for I := 0 to Params.Count - 1 do
-        with Params[i] do
-          if ParamType in [ptInput, ptInputOutput] then
-             Result := Result + '<' + Name +
-                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                   '  Value="' + ComponentItem + '" />';
-    Result :=
-             '<xml Session = "" >' +
-                  '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +
-                     Result +
-                  '</' + StoredProcName + '>' +
-             '</xml>';
+  result := '';
+  with StoredProc do
+  begin
+    for i := 0 to Params.Count - 1 do
+      with Params[i] do
+        if ParamType in [ptInput, ptInputOutput] then
+          result := result + '<' + Name + '  DataType="' +
+            GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" ' +
+            '  Value="' + ComponentItem + '" />';
+    result := '<xml Session = "" >' + '<' + StoredProcName + ' OutputType = "' +
+      GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' + result + '</'
+      + StoredProcName + '>' + '</xml>';
   end;
 
 end;
 
-function TExecServerStoredProc.LocalExecute: boolean;
-var XML: String;
-    i: integer;
+function TExecServerStoredProc.LocalExecute: Boolean;
+var
+  XML: String;
+  i: Integer;
 begin
   // Формируем XML для запуска на сервере
   XML := '<xml>';
-    XML := XML + '<master>' + MasterProcedure.GetXML + '</master>';
-    XML := XML + '<list>';
-      for i := 0 to StoredProcList.Count - 1 do
-        if Assigned(StoredProcList[i].StoredProc) then
-           XML := XML + GetXML(StoredProcList[i].StoredProc);
-    XML := XML + '</list>';
+  XML := XML + '<master>' + MasterProcedure.GetXML + '</master>';
+  XML := XML + '<list>';
+  for i := 0 to StoredProcList.Count - 1 do
+    if Assigned(StoredProcList[i].StoredProc) then
+      XML := XML + GetXML(StoredProcList[i].StoredProc);
+  XML := XML + '</list>';
   XML := XML + '</xml>';
   TStorageFactory.GetStorage.ExecuteProc(XML, true);
 end;
@@ -1982,7 +2137,7 @@ begin
   inherited;
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (MasterProcedure = AComponent) then
-       MasterProcedure := nil
+      MasterProcedure := nil
 end;
 
 { TParamMoveItem }
@@ -2018,18 +2173,22 @@ end;
 
 procedure TAddOnDataSet.SetDataSet(const Value: TDataSet);
 begin
-  if Assigned(GridView) and Assigned (Value) then begin
-     ShowMessage('Нельзя установить свойство DataSet так как установлено GridView.');
-     exit
+  if Assigned(GridView) and Assigned(Value) then
+  begin
+    ShowMessage
+      ('Нельзя установить свойство DataSet так как установлено GridView.');
+    exit
   end;
   inherited;
 end;
 
 procedure TAddOnDataSet.SetGridView(const Value: TcxGridTableView);
 begin
-  if Assigned(DataSet) and Assigned (Value) then begin
-     ShowMessage('Нельзя установить свойство GridView так как установлено DataSet.');
-     exit
+  if Assigned(DataSet) and Assigned(Value) then
+  begin
+    ShowMessage
+      ('Нельзя установить свойство GridView так как установлено DataSet.');
+    exit
   end;
   FGridView := Value;
 end;
@@ -2050,12 +2209,13 @@ begin
   inherited;
 end;
 
-function TFileDialogAction.LocalExecute: boolean;
+function TFileDialogAction.LocalExecute: Boolean;
 begin
   result := false;
-  if FFileOpenDialog.Execute then begin
-     Param.Value := FFileOpenDialog.FileName;
-     result := true
+  if FFileOpenDialog.Execute then
+  begin
+    Param.Value := FFileOpenDialog.FileName;
+    result := true
   end;
 end;
 
@@ -2063,17 +2223,16 @@ procedure TFileDialogAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if not (csDestroying in ComponentState) and (Operation = opRemove) and
-     (AComponent = FFileOpenDialog) then
+  if not(csDestroying in ComponentState) and (Operation = opRemove) and
+    (AComponent = FFileOpenDialog) then
     SetupDialog;
 end;
 
 procedure TFileDialogAction.SetupDialog;
 begin
   FFileOpenDialog := TFileOpenDialog.Create(Self);
-  FFileOpenDialog.SetSubComponent(True);
+  FFileOpenDialog.SetSubComponent(true);
   FFileOpenDialog.FreeNotification(Self);
 end;
 
 end.
-

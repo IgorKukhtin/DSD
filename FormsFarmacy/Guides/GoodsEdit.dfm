@@ -8,19 +8,19 @@
   TextHeight = 13
   inherited bbOk: TcxButton
     Top = 228
-    TabOrder = 5
+    TabOrder = 6
     ExplicitTop = 228
   end
   inherited bbCancel: TcxButton
     Top = 228
-    TabOrder = 6
+    TabOrder = 7
     ExplicitTop = 228
   end
   object edName: TcxTextEdit [2]
-    Left = 10
+    Left = 9
     Top = 78
     TabOrder = 1
-    Width = 331
+    Width = 332
   end
   object cxLabel1: TcxLabel [3]
     Left = 8
@@ -46,7 +46,7 @@
     Caption = #1050#1086#1076
   end
   object ceParentGroup: TcxButtonEdit [7]
-    Left = 10
+    Left = 9
     Top = 123
     Properties.Buttons = <
       item
@@ -55,32 +55,15 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 331
+    Width = 332
   end
   object cxLabel4: TcxLabel [8]
-    Left = 8
+    Left = 128
     Top = 160
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103':'
   end
   object ceMeasure: TcxButtonEdit [9]
-    Left = 8
-    Top = 183
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 3
-    Width = 132
-  end
-  object cxLabel6: TcxLabel [10]
-    Left = 154
-    Top = 160
-    Caption = #1042#1080#1076' '#1053#1044#1057':'
-  end
-  object ceNDSKind: TcxButtonEdit [11]
-    Left = 154
+    Left = 128
     Top = 183
     Properties.Buttons = <
       item
@@ -89,7 +72,37 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 187
+    Width = 81
+  end
+  object cxLabel6: TcxLabel [10]
+    Left = 227
+    Top = 160
+    Caption = #1042#1080#1076' '#1053#1044#1057':'
+  end
+  object ceNDSKind: TcxButtonEdit [11]
+    Left = 227
+    Top = 183
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 5
+    Width = 114
+  end
+  object edMinimumLot: TcxCurrencyEdit [12]
+    Left = 9
+    Top = 183
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 3
+    Width = 109
+  end
+  object cxLabel3: TcxLabel [13]
+    Left = 8
+    Top = 160
+    Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -150,6 +163,13 @@
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMinimumLot'
+        Value = Null
+        Component = edMinimumLot
+        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 280
@@ -214,6 +234,12 @@
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MinimumLot'
+        Value = Null
+        Component = edMinimumLot
+        DataType = ftFloat
       end>
     Left = 304
     Top = 216

@@ -1,6 +1,5 @@
 -- Function: gpGet_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Juridical (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Juridical (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
@@ -159,7 +158,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20,11,14         * add  Retail      )))       
+ 20,11,14         * add  Retail
  07.11.14         * изменено RetailReport
  23.05.14         * add Retail
  23.01.14                        * 

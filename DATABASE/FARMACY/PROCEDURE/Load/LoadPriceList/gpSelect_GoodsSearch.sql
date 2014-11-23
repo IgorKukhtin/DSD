@@ -9,7 +9,10 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, 
-               Price TFloat, ProducerName TVarChar, JuridicalName TVarChar)
+               Price TFloat, ProducerName TVarChar, JuridicalName TVarChar,
+               ContractName TVarChar, ExpirationDate TDateTime, 
+               MinimumLot TFloat, NDS TFloat
+)
 
 AS
 $BODY$
@@ -29,18 +32,24 @@ BEGIN
          LoadPriceListItem.GoodsName, 
          LoadPriceListItem.GoodsNDS, 
          LoadPriceListItem.GoodsId,
-         Object_Goods.ObjectCode AS Code,
-         Object_Goods.ValueData  AS Name, 
+         Object_Goods.GoodsCode AS Code,
+         Object_Goods.GoodsName  AS Name, 
          LoadPriceListItem.Price, 
          LoadPriceListItem.ProducerName, 
-         Object_Juridical.ValueData AS JuridicalName
+         Object_Juridical.ValueData AS JuridicalName,
+         Object_Contract.ValueData  AS ContractName,
+         LoadPriceListItem.ExpirationDate,
+         PartnerGoods.MinimumLot,
+         Object_Goods.NDS
 
        FROM LoadPriceListItem 
 
             JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+            LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
-
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
+            LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 
+                                       AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
       WHERE upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') AND inGoodsSearch <> ''; 
 
 END;

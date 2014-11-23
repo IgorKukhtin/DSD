@@ -30,7 +30,7 @@ BEGIN
             JOIN MovementLinkObject AS MovementLinkObject_Unit
                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-       WHERE Movement.DescId = zc_Movement_OrderInternal() AND Movement.OperDate = inOperDate 
+       WHERE Movement.StatusId = zc_Enum_Status_UnComplete() AND Movement.DescId = zc_Movement_OrderInternal() AND Movement.OperDate = inOperDate 
          AND MovementLinkObject_Unit.ObjectId = inUnitId;
 
      IF COALESCE(vbMovementId, 0) = 0 THEN 
@@ -62,6 +62,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.11.14                        * проверка на StatusId 
  12.09.14                        *
 */
 

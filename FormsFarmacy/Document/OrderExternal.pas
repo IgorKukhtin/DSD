@@ -3,7 +3,8 @@ unit OrderExternal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -12,7 +13,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
+  dsdInternetAction;
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
@@ -45,6 +47,11 @@ type
     ContractGuides: TdsdGuides;
     colPrice: TcxGridDBColumn;
     colPartionGoodsDate: TcxGridDBColumn;
+    SMTPGridAction: TdsdSMTPGridAction;
+    actGetDocumentDataForEmail: TdsdExecStoredProc;
+    spGetDocumentDataForEmail: TdsdStoredProc;
+    mactSMTPSend: TMultiAction;
+    bbSendEMail: TdxBarButton;
   private
     { Private declarations }
   public

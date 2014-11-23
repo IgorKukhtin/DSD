@@ -5,7 +5,7 @@ from ContainerLinkObject AS ContainerLO_Juridical
                                                       AND ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
   
      JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = ContainerLO_Juridical.ContainerId
-                                              AND MIContainer.OperDate BETWEEN '01.06.2014' AND '30.06.2014'
+                                              AND MIContainer.OperDate BETWEEN '01.07.2014' AND '31.07.2014'
      JOIN Movement ON Movement.Id = MIContainer.MovementId
                 AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_ReturnIn())
      JOIN MovementLinkObject ON MovementLinkObject.MovementId = MIContainer.MovementId

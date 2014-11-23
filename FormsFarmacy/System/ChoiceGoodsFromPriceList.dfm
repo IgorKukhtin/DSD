@@ -1,4 +1,5 @@
 inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
+  ActiveControl = edGoodsSearch
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
   ClientWidth = 798
   ExplicitWidth = 806
@@ -13,9 +14,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       ExplicitWidth = 798
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
+        Top = 27
         Width = 798
+        Height = 255
+        ExplicitTop = 27
         ExplicitWidth = 798
+        ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -53,7 +59,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ChoiceGoodsForm
+                Action = mactChoiceGoodsForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -77,13 +83,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Options.Editing = False
             Width = 47
           end
-          object colProducerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'ProducerName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 105
-          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
@@ -91,18 +90,72 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Options.Editing = False
             Width = 113
           end
+          object colContractName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colProducerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'ProducerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
+          object colExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object colMinimumLot: TcxGridDBColumn
+            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1087#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'MinimumLot'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object colNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0 %; ; ;'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colGoodsNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'GoodsNDS'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
-      object edGoodsSearch: TcxTextEdit
-        Left = 144
-        Top = 56
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 798
+        Height = 27
+        Align = alTop
+        BevelOuter = bvNone
         TabOrder = 1
-        Width = 121
-      end
-      object cxLabel1: TcxLabel
-        Left = 64
-        Top = 56
-        Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072
+        object edGoodsSearch: TcxTextEdit
+          Left = 83
+          Top = 3
+          TabOrder = 1
+          Width = 158
+        end
+        object cxLabel1: TcxLabel
+          Left = 3
+          Top = 4
+          Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1072
+        end
       end
     end
   end
@@ -171,7 +224,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           ComponentItem = 'Name'
           DataType = ftString
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -195,6 +248,30 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Caption = 'actSetGoodsLink'
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
+    end
+    object mactChoiceGoodsForm: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ChoiceGoodsForm
+        end
+        item
+          Action = DataSetPost
+        end>
+      Caption = 'mactChoiceGoodsForm'
+    end
+    object actRefreshSearch: TdsdExecStoredProc
+      Category = 'DSDLib'
+      ActiveControl = edGoodsSearch
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actRefreshSearch'
+      ShortCut = 13
     end
   end
   inherited MasterDS: TDataSource
@@ -255,33 +332,11 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchGood'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
       Action = mactGoodsLinkDelete
       Category = 0
-    end
-    object bbLabel: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cxLabel1
-    end
-    object bbSearchGood: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = edGoodsSearch
     end
     object bbGoodsPriceListLink: TdxBarButton
       Action = actSetGoodsLink

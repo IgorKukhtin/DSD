@@ -54,7 +54,11 @@ uses
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas';
 
 {$R *.res}
 
