@@ -3,21 +3,26 @@
 -- DROP VIEW IF EXISTS Object_Partner_Address_View;
 
 CREATE OR REPLACE VIEW Object_Partner_Address_View AS
-  SELECT Object_Partner.Id                          AS PartnerId
-       , Object_Partner.ObjectCode                  AS PartnerCode
-       , Object_Partner.ValueData                   AS PartnerName
+  SELECT Object_Partner.Id                           AS PartnerId
+       , Object_Partner.ObjectCode                   AS PartnerCode
+       , Object_Partner.ValueData                    AS PartnerName
 
-       , Object_Area.ValueData                AS AreaName
-       , Object_PartnerTag.ValueData          AS PartnerTagName
-       , Object_Region.ValueData              AS RegionName
-       , Object_Province.ValueData            AS ProvinceName
-       , Object_CityKind.ValueData            AS CityKindName
-       , Object_Street_View.CityName          AS CityName
-       , Object_Street_View.ProvinceCityName  AS ProvinceCityName
-       , Object_Street_View.StreetKindName    AS StreetKindName
-       , Object_Street_View.Name              AS StreetName
+       , ObjectLink_Partner_Area.ChildObjectId       AS AreaId
+       , Object_Area.ValueData                       AS AreaName
+       , ObjectLink_Partner_PartnerTag.ChildObjectId AS PartnerTagId
+       , Object_PartnerTag.ValueData                 AS PartnerTagName
+       , ObjectLink_City_Region.ChildObjectId        AS RegionId
+       , Object_Region.ValueData                     AS RegionName
+       , ObjectLink_City_Province.ChildObjectId      AS ProvinceId
+       , Object_Province.ValueData                   AS ProvinceName
+       , ObjectLink_City_CityKind.ChildObjectId      AS CityKindId
+       , Object_CityKind.ValueData                   AS CityKindName
+       , Object_Street_View.CityName                 AS CityName
+       , Object_Street_View.ProvinceCityName         AS ProvinceCityName
+       , Object_Street_View.StreetKindName           AS StreetKindName
+       , Object_Street_View.Name                     AS StreetName
 
-       , Object_Partner.isErased              AS isErased
+       , Object_Partner.isErased                     AS isErased
   FROM Object AS Object_Partner
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
@@ -58,6 +63,7 @@ ALTER TABLE Object_Partner_Address_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.11.14                         *
  19.11.14                                        *
 */
 
