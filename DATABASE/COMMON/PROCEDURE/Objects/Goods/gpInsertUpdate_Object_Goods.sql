@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -17,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inBusinessId          Integer   , -- Бизнесы
     IN inFuelId              Integer   , -- Вид топлива
     IN inGoodsTagId          Integer   , -- ссылка на признак товара 
+    IN inGoodsGroupAnalystId Integer   , -- ссылка на группу Товаров (аналитика) 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -68,7 +71,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Fuel(), ioId, inFuelId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ioId, inGoodsTagId);   
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId);  
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -76,11 +80,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
  
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.14         * add inGoodsGroupAnalystId
  15.09.14         * add inGoodsTagId
  04.09.14         * add inGroupStatId
  13.01.14                                        * add vbGroupNameFull

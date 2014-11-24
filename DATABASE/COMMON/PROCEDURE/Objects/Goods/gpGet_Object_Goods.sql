@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , FuelId Integer, FuelName TVarChar
+             , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
               )
 AS
 $BODY$
@@ -56,6 +57,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS FuelId
            , CAST ('' as TVarChar) AS FuelName
+           
+           , CAST (0 as Integer)   AS GoodsGroupAnalystId
+           , CAST ('' as TVarChar) AS GoodsGroupAnalystName           
        ;
    ELSE
        RETURN QUERY 
@@ -88,6 +92,9 @@ BEGIN
 
            , Object_Fuel.Id           AS FuelId
            , Object_Fuel.ValueData    AS FuelName
+           
+           , Object_GoodsGroupAnalyst.Id           AS GoodsGroupAnalystId
+           , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupAnalystName           
 
        FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -134,6 +141,11 @@ BEGIN
                               AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
           LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId  
+          
        WHERE Object_Goods.Id = inId;
 
    END IF;
@@ -149,6 +161,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.14         * add inGoodsGroupAnalystId               
  15.09.14         * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * 
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
