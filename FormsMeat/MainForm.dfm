@@ -3,21 +3,21 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1094
-  ExplicitHeight = 254
+  ExplicitWidth = 1102
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
-    Top = 45
-    ExplicitTop = 45
+    Top = 47
+    ExplicitTop = 47
     ExplicitWidth = 1086
-    ExplicitHeight = 182
+    ExplicitHeight = 180
   end
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      45
+      47
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -2842,7 +2842,7 @@
     object actPartnerAddress: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1072#1076#1088#1077#1089#1072')'
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1072#1076#1088#1077#1089#1072')'
       FormName = 'TPartnerAddressForm'
       FormNameParam.Value = 'TPartnerAddressForm'

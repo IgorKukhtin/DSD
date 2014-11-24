@@ -24,8 +24,7 @@ $BODY$
    DECLARE vbObjectId Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContactPerson());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContactPerson());
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -41,12 +40,12 @@ BEGIN
    -- проверка прав уникальности для свойства <Код > + <Object> 
 --   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContactPerson(), vbCode_calc);
 
-   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0)=0 AND COALESCE (inObjectId_Contract, 0)=0) 
+   IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Partner, 0);
    END IF;
 
-   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0)=0 AND COALESCE (inObjectId_Contract, 0)=0) 
+   IF COALESCE (inObjectId_Juridical, 0) <> 0 AND (COALESCE (inObjectId_Partner, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Juridical, 0);
    END IF;
@@ -56,7 +55,7 @@ BEGIN
 	vbObjectId = COALESCE (inObjectId_Contract, 0);
    END IF;
 
-   IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не выбран или не верно выбран Объект контакта.'; END IF;
+   IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Должен быть выбран один <Объект контакта>: <Юридическое лицо> или <Договор> или <Контрагент>.'; END IF;
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContactPerson(), vbCode_calc, inName);
@@ -80,17 +79,13 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  21.10.14         *
  19.06.14                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ContactPerson()
-
-
---select * from gpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');
+-- select * from gpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');

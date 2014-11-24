@@ -4,7 +4,6 @@ DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, I
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , --
@@ -27,7 +26,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AreaName TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
@@ -115,6 +114,7 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName,
+        Object_InfoMoney_View.InfoMoneyName_all,
         Object_Area.ValueData AS AreaName,
 
         Object_ContractConditionKind.ValueData AS ContractConditionKindName,
@@ -323,4 +323,4 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inSession:= zfCalc_UserAdmin()); 

@@ -1,7 +1,7 @@
 ﻿object StreetEditForm: TStreetEditForm
   Left = 0
   Top = 0
-  Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090'>'
   ClientHeight = 300
   ClientWidth = 377
   Color = clBtnFace
@@ -24,8 +24,8 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Top = 51
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 79
@@ -63,7 +63,7 @@
   end
   object cxLabel2: TcxLabel
     Left = 242
-    Top = 98
+    Top = 96
     Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
   end
   object edPostalCode: TcxTextEdit
@@ -103,7 +103,7 @@
   end
   object cxLabel5: TcxLabel
     Left = 42
-    Top = 98
+    Top = 96
     Caption = #1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
   end
   object ceStreetKind: TcxButtonEdit
@@ -121,7 +121,7 @@
   object cxLabel6: TcxLabel
     Left = 42
     Top = 183
-    Caption = #1056#1072#1081#1086#1085
+    Caption = #1052#1080#1082#1088#1086#1088#1072#1081#1086#1085
   end
   object ActionList: TActionList
     Left = 272
@@ -207,6 +207,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -288,6 +289,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end

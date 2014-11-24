@@ -25,7 +25,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
+             , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat 
               )   
@@ -216,10 +218,19 @@ BEGIN
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber              AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
+
+          , View_Personal.PersonalName       AS PersonalName
+          , View_Personal.UnitName           AS UnitName_Personal
+          , Object_BranchPersonal.ValueData  AS BranchName_Personal
+
+          , View_PersonalTrade.PersonalName  AS PersonalTradeName
+          , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+          , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
          , tmpOperationGroup.Sale_Amount_Weight :: TFloat  AS Sale_Amount_Weight
@@ -434,6 +445,20 @@ BEGIN
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                              ON ObjectLink_Partner_Personal.ObjectId = tmpOperationGroup.PartnerId 
+                             AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+         LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = tmpOperationGroup.PartnerId
+                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+         LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
     ;
          
 END;

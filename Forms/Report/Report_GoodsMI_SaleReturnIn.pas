@@ -75,6 +75,7 @@ type
     StreetName: TcxGridDBColumn;
     StreetKindName: TcxGridDBColumn;
     PartnerId: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,7 @@
 object PartnerAddressForm: TPartnerAddressForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1076#1088#1077#1089' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 464
   ClientWidth = 1058
   Color = clBtnFace
@@ -41,6 +41,21 @@ object PartnerAddressForm: TPartnerAddressForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Id: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095'-2'
+        DataBinding.FieldName = 'Id'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -65,6 +80,22 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 120
       end
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object JuridicalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+        DataBinding.FieldName = 'JuridicalGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
@@ -83,14 +114,31 @@ object PartnerAddressForm: TPartnerAddressForm
         Width = 55
       end
       object colShortName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 90
+      end
+      object BranchName_Personal: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'BranchName_Personal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object UnitName_Personal: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'UnitName_Personal'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object colPersonalName: TcxGridDBColumn
-        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
         DataBinding.FieldName = 'PersonalName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -104,8 +152,25 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object PositionName_Personal: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PositionName_Personal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object UnitName_PersonalTrade: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1058#1055')'
+        DataBinding.FieldName = 'UnitName_PersonalTrade'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object colPersonalTradeName: TcxGridDBColumn
-        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1058#1055')'
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
         DataBinding.FieldName = 'PersonalTradeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -118,6 +183,15 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
+      end
+      object PositionName_PersonalTrade: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1058#1055')'
+        DataBinding.FieldName = 'PositionName_PersonalTrade'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object colMemberTakeName: TcxGridDBColumn
         Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
@@ -233,7 +307,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Width = 70
       end
       object clStreetName: TcxGridDBColumn
-        Caption = #1059#1083#1080#1094#1072
+        Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
         DataBinding.FieldName = 'StreetName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -386,6 +460,49 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 107
+      end
+      object clInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 124
+      end
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 115
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -402,8 +519,8 @@ object PartnerAddressForm: TPartnerAddressForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 172
-    Top = 78
+    Left = 180
+    Top = 102
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
@@ -445,8 +562,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -495,11 +612,11 @@ object PartnerAddressForm: TPartnerAddressForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -1191,26 +1308,25 @@ object PartnerAddressForm: TPartnerAddressForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inCode'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
-        Name = 'inName'
+        Name = 'outPartnerName'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
-        ParamType = ptInput
+      end
+      item
+        Name = 'outAddress'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Address'
+        DataType = ftString
       end
       item
         Name = 'inRegionName'

@@ -1,9 +1,9 @@
 object CityEditForm: TCityEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1086#1088#1086#1076'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090'>'
   ClientHeight = 291
-  ClientWidth = 341
+  ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,18 +17,18 @@ object CityEditForm: TCityEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 25
+    Left = 20
     Top = 74
     TabOrder = 0
-    Width = 296
+    Width = 340
   end
   object cxLabel1: TcxLabel
-    Left = 25
+    Left = 20
     Top = 54
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
+    Left = 93
     Top = 249
     Width = 75
     Height = 25
@@ -37,7 +37,7 @@ object CityEditForm: TCityEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
+    Left = 237
     Top = 249
     Width = 75
     Height = 25
@@ -47,20 +47,20 @@ object CityEditForm: TCityEditForm
     TabOrder = 3
   end
   object cxLabel2: TcxLabel
-    Left = 25
+    Left = 20
     Top = 10
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
-    Left = 25
+    Left = 20
     Top = 30
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 340
   end
   object ceCityKind: TcxButtonEdit
-    Left = 25
+    Left = 20
     Top = 119
     Properties.Buttons = <
       item
@@ -69,25 +69,25 @@ object CityEditForm: TCityEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 296
+    Width = 340
   end
   object cxLabel3: TcxLabel
-    Left = 25
+    Left = 20
     Top = 101
     Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
   end
   object cxLabel4: TcxLabel
-    Left = 25
+    Left = 20
     Top = 148
     Caption = #1054#1073#1083#1072#1089#1090#1100
   end
   object cxLabel5: TcxLabel
-    Left = 25
+    Left = 20
     Top = 190
     Caption = #1056#1072#1081#1086#1085
   end
   object ceRegion: TcxButtonEdit
-    Left = 25
+    Left = 20
     Top = 165
     Properties.Buttons = <
       item
@@ -96,10 +96,10 @@ object CityEditForm: TCityEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 296
+    Width = 340
   end
   object ceProvince: TcxButtonEdit
-    Left = 25
+    Left = 20
     Top = 207
     Properties.Buttons = <
       item
@@ -108,7 +108,7 @@ object CityEditForm: TCityEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 296
+    Width = 340
   end
   object ActionList: TActionList
     Left = 167
@@ -187,6 +187,7 @@ object CityEditForm: TCityEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 136
     Top = 245
   end
@@ -262,6 +263,7 @@ object CityEditForm: TCityEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 8
     Top = 245
   end

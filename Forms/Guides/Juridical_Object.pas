@@ -58,6 +58,7 @@ type
     clOKPO: TcxGridDBColumn;
     clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

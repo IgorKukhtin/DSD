@@ -20,7 +20,7 @@ BEGIN
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
          , Object_Partner.ValueData        AS Name
-         , COALESCE (ObjectString_Address.ValueData, Object_Partner.ValueData) :: TVarChar AS Address
+         , COALESCE (ObjectString_Address.ValueData, '' /*Object_Partner.ValueData*/) :: TVarChar AS Address
          , Object_Partner.isErased         AS isErased
          
      FROM Object AS Object_Partner

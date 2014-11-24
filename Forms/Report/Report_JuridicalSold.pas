@@ -102,6 +102,7 @@ type
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    InfoMoneyName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

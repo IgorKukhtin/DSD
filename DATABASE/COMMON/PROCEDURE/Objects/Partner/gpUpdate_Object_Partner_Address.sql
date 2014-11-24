@@ -1,13 +1,6 @@
 -- Function: gpUpdate_Object_Partner_Address()
 
-
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar
-                                                       , Integer, TVarChar, TVarChar, TVarChar
-                                                       , Integer, TVarChar, TVarChar,  TVarChar, TVarChar
-                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
-
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, TVarChar, TVarChar, TVarChar
                                                        , Integer, TVarChar, TVarChar, TVarChar
                                                        , Integer, TVarChar, TVarChar,  TVarChar, TVarChar
                                                        , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
@@ -15,14 +8,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarC
                                                        , Integer, Integer, Integer, Integer, Integer
                                                        , TVarChar);
 
-
-
-
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
- INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
-   --OUT outPartnerName        TVarChar  ,    -- ключ объекта <Контрагент> 
-    IN inCode                Integer   ,    -- код объекта <Контрагент> 
-    IN inName                TVarChar  ,    -- <Контрагент> 
+    IN inId                  Integer   ,    -- ключ объекта <Контрагент> 
+   OUT outPartnerName        TVarChar  ,    -- 
+   OUT outAddress            TVarChar  ,    -- 
     IN inRegionName          TVarChar  ,    -- наименование области
     IN inProvinceName        TVarChar  ,    -- наименование район
     IN inCityName            TVarChar  ,    -- наименование населенный пункт
@@ -34,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
     IN inRoomNumber          TVarChar  ,    -- Номер квартиры
-    IN inShortName           TVarChar  ,    -- Примечание
+    IN inShortName           TVarChar  ,    -- Условное обозначение
 
     IN inOrderName           TVarChar  ,    -- заказы
     IN inOrderPhone          TVarChar  ,    --
@@ -48,16 +37,16 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inActPhone            TVarChar  ,    --
     IN inActMail             TVarChar  ,    --
     
-    IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inPersonalId          Integer   ,    -- сотрудник(ответственное лицо)
-    IN inPersonalTradeId     Integer   ,    -- сотрудник(торговый)
+    IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
+    IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
+    IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
 
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
@@ -74,30 +63,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
-   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
-
  
-   -- сохранили
-   ioId := lpUpdate_Object_Partner_Address( ioId                := ioId
-                                          , inCode              := vbCode 
-                                          , inName              := inName   
-                                          , inRegionName        := inRegionName
-                                          , inProvinceName      := inProvinceName
-                                          , inCityName          := inCityName
-                                          , inCityKindId        := inCityKindId
-                                          , inProvinceCityName  := inProvinceCityName  
-                                          , inPostalCode        := inPostalCode
-                                          , inStreetName        := inStreetName
-                                          , inStreetKindId      := inStreetKindId
-                                          , inHouseNumber       := inHouseNumber
-                                          , inCaseNumber        := inCaseNumber  
-                                          , inRoomNumber        := inRoomNumber
-                                          , inShortName         := inShortName
-                                          , inSession           := inSession);
-
-
   -- Контактные лица 
   -- Заявки
    IF inOrderName <> '' THEN
@@ -121,7 +87,7 @@ BEGIN
                                 JOIN Object AS ContactPerson_Object 
                                             ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
                                            AND ContactPerson_Object.DescId = zc_Object_Partner()
-                                           AND ContactPerson_Object.Id = ioId
+                                           AND ContactPerson_Object.Id = inId
             
                                 JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                 ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
@@ -132,7 +98,7 @@ BEGIN
                            );
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '+', ioId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inOrderName, inOrderPhone, inOrderMail, '', inId, 0, 0, vbContactPersonKindId, inSession);
           
       END IF;
 
@@ -161,7 +127,7 @@ BEGIN
                                 JOIN Object AS ContactPerson_Object 
                                             ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
                                            AND ContactPerson_Object.DescId = zc_Object_Partner()
-                                           AND ContactPerson_Object.Id = ioId
+                                           AND ContactPerson_Object.Id = inId
             
                                 JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                 ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
@@ -173,7 +139,7 @@ BEGIN
 
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inDocName, inDocPhone, inDocMail, '+', ioId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inDocName, inDocPhone, inDocMail, '', inId, 0, 0, vbContactPersonKindId, inSession);
       END IF;
 
    END IF;
@@ -201,7 +167,7 @@ BEGIN
                                 JOIN Object AS ContactPerson_Object 
                                             ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
                                            AND ContactPerson_Object.DescId = zc_Object_Partner()
-                                           AND ContactPerson_Object.Id = ioId
+                                           AND ContactPerson_Object.Id = inId
             
                                 JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                 ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
@@ -213,36 +179,53 @@ BEGIN
 
       IF COALESCE (vbContactPersonId, 0) = 0
       THEN
-          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inActName, inActPhone, inActMail, '+', ioId, 0, 0, vbContactPersonKindId, inSession);
+          vbContactPersonId := gpInsertUpdate_Object_ContactPerson (vbContactPersonId, 0, inActName, inActPhone, inActMail, '', inId, 0, 0, vbContactPersonKindId, inSession);
       END IF;
 
    END IF;
 
 
-   -- сохранили связь с <Сотрудник (экспедитор)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberTakeId);
-   -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
-   -- сохранили связь с <Сотрудник ()>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
+   -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), inId, inMemberTakeId);
+   -- сохранили связь с <Сотрудник (супервайзер)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, inPersonalId);
+   -- сохранили связь с <Сотрудник (торговый)>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, inPersonalTradeId);
    -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), ioId, inAreaId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, inAreaId);
    -- сохранили связь с <Признак торговой точки>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), ioId, inPartnerTagId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, inPartnerTagId);
 
 
-    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
+   -- сохранили
+   SELECT tmp.outPartnerName, tmp.outAddress
+         INTO outPartnerName, outAddress
+      FROM lpUpdate_Object_Partner_Address( inId                := inId
+                                          , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                          , inShortName         := inShortName
+                                          , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
+                                          , inRegionName        := inRegionName
+                                          , inProvinceName      := inProvinceName
+                                          , inCityName          := inCityName
+                                          , inCityKindId        := inCityKindId
+                                          , inProvinceCityName  := inProvinceCityName  
+                                          , inPostalCode        := inPostalCode
+                                          , inStreetName        := inStreetName
+                                          , inStreetKindId      := inStreetKindId
+                                          , inHouseNumber       := inHouseNumber
+                                          , inCaseNumber        := inCaseNumber  
+                                          , inRoomNumber        := inRoomNumber
+                                          , inSession           := inSession
+                                          , inUserId            := vbUserId
+                                           ) AS tmp;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpUpdate_Object_Partner_Address (Integer, Integer,  TVarChar, TVarChar,  TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  12.11.14         *
  19.06.14         *
 */

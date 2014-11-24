@@ -80,11 +80,13 @@ type
     clGLNCode_Juridical: TcxGridDBColumn;
     actChoiceRoute: TOpenChoiceForm;
     actChoiceRouteSorting: TOpenChoiceForm;
-    actChoicePersonalTake: TOpenChoiceForm;
+    actChoiceMemberTake: TOpenChoiceForm;
     colAreaName: TcxGridDBColumn;
     colPartnerTagName: TcxGridDBColumn;
     clPersonalName: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

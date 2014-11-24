@@ -128,6 +128,15 @@ object Juridical_ObjectForm: TJuridical_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object InfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object clIsCorporate: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'isCorporate'

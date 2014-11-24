@@ -14,16 +14,18 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
                RegionName TVarChar, ProvinceName TVarChar,
                StreetKindName TVarChar, StreetKindId Integer,
-               JuridicalId Integer, JuridicalName TVarChar, 
+               JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar,
                Order_ContactPersonKindId Integer, Order_ContactPersonKindName TVarChar, Order_Name TVarChar, Order_Mail TVarChar, Order_Phone TVarChar,
                Doc_ContactPersonKindId Integer, Doc_ContactPersonKindName TVarChar, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
                Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
-              --OKPO TVarChar,
+               OKPO TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
-               PersonalId Integer, PersonalName TVarChar,
-               PersonalTradeId Integer, PersonalTradeName TVarChar,
+               PersonalId Integer, PersonalName TVarChar, UnitName_Personal TVarChar, PositionName_Personal TVarChar, BranchName_Personal TVarChar,
+               PersonalTradeId Integer, PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar, PositionName_PersonalTrade TVarChar,
+
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
+               InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                isErased Boolean
               )
 AS
@@ -89,8 +91,10 @@ BEGIN
          , Object_Street_View.StreetKindName  AS StreetKindName
          , Object_Street_View.StreetKindId    AS StreetKindId
           
-         , Object_Juridical.Id           AS JuridicalId
-         , Object_Juridical.ValueData    AS JuridicalName
+         , Object_Juridical.Id              AS JuridicalId
+         , Object_Juridical.ValueData       AS JuridicalName
+         , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+         , Object_Retail.ValueData          AS RetailName
 
          , zc_Enum_ContactPersonKind_CreateOrder()  AS Order_ContactPersonKindId
          , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CreateOrder()) AS Order_ContactPersonKindName 
@@ -111,16 +115,21 @@ BEGIN
          , tmpContactPerson_Act.Phone   AS Act_Phone
 
 
-       --  , ObjectHistory_JuridicalDetails_View.OKPO
+           , ObjectHistory_JuridicalDetails_View.OKPO
 
            , Object_MemberTake.Id             AS MemberTakeId
            , Object_MemberTake.ValueData      AS MemberTakeName
          
-           , Object_Personal.PersonalId        AS PersonalId
-           , Object_Personal.PersonalName      AS PersonalName
-         
-           , Object_PersonalTrade.PersonalId   AS PersonalTradeId
-           , Object_PersonalTrade.PersonalName AS PersonalTradeName
+           , View_Personal.PersonalId         AS PersonalId
+           , View_Personal.PersonalName       AS PersonalName
+           , View_Personal.UnitName           AS UnitName_Personal
+           , View_Personal.PositionName       AS PositionName_Personal
+           , Object_Branch.ValueData          AS BranchName_Personal
+
+           , View_PersonalTrade.PersonalId    AS PersonalTradeId
+           , View_PersonalTrade.PersonalName  AS PersonalTradeName
+           , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
+           , View_PersonalTrade.PositionName  AS PositionName_PersonalTrade
          
            , Object_Area.Id                  AS AreaId
            , Object_Area.ValueData           AS AreaName
@@ -128,6 +137,11 @@ BEGIN
            , Object_PartnerTag.Id            AS PartnerTagId
            , Object_PartnerTag.ValueData     AS PartnerTagName           
 
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyName_all
 
          , Object_Partner.isErased   AS isErased
          
@@ -163,7 +177,22 @@ BEGIN
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- по улице
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+        LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                             ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
                               ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
                              AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
          LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
@@ -186,12 +215,16 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-         LEFT JOIN Object_Personal_View AS Object_Personal ON Object_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+         LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId 
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-         LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+         LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
@@ -207,6 +240,8 @@ BEGIN
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ" 
         
+         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
   
 END;

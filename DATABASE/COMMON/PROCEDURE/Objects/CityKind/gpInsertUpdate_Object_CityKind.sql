@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Object_CityKind(Integer,Integer,TVarChar,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CityKind(Integer,Integer,TVarChar,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CityKind(Integer,Integer,TVarChar,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CityKind(
@@ -17,7 +16,6 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_CityKind());
-   --vbUserId := inSession;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -43,7 +41,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_CityKind (Integer,Integer,TVarChar,TVarChar,TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

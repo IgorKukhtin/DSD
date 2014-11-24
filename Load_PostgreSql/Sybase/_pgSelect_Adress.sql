@@ -217,11 +217,7 @@ union select 'филиал Киев БН', '15020', '79125', 'Експансія ТОВ', 'ЭКСПАНСИЯ ООО
 union select 'филиал Киев БН', '15020', '79124', 'Експансія ТОВ', 'ЕКСПАНСИЯ ООО КИЕВ ЗАБОЛОТНОГО', '32294905', 'Експансія ТОВ', '32294905', '18689', 'Експанс_я СЦ  Заболотного,37', 'БН', '', '03143', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Заболотного', '37', '37', 'Власенко Тетяна Миколаївна ', 'Севостьянова Інна Вікторівна', 'Київ', 'Експансія', 'супермаркет ', 'Викторія', '0673208857', 'EDI', 'Галина Іванівна', '443211678', 'g.udala@fozzy.ua', 'Галина Іванівна', '443211678', 'g.udala@fozzu.ua'
 union select 'филиал Киев БН', '15020', '79126', 'Експансія ТОВ', 'ЭКСПАНСИЯ ООО ПРОЛИСКИ УЛ.БРОВАРСКАЯ,2А', '32294905', 'Експансія ТОВ', '32294905', '18688', 'Експанс_я СЦ  Прол_ски Бров,2а', 'БН', '', '08322', 'село', 'Проліски', 'Київська', 'Бориспільський', 'вулиця', 'Броварська', '2а', '2а', 'Власенко Тетяна Миколаївна ', 'Севостьянова Інна Вікторівна', 'Київ', 'Експансія', 'супермаркет ', 'Інна Володимерівна', '0672236943', 'EDI', 'Галина Іванівна', '443211678', 'g.udala@fozzy.ua', 'Галина Іванівна', '443211678', 'g.udala@fozzu.ua'
 union select 'филиал Киев БН', '15116', '17636', 'Ліа ЛТД ТОВ ВКФ філія Абсолют-Київ', 'ЛИА ЛТД ООО', '37298071', 'Ліа ЛТД ТОВ ВКФ філія Абсолют-Київ', '37298071', '17697', 'Л_аЛтд  Радужная,25-а', 'БН', '', '02097', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Радужна', '25-а', '25а', 'Власенко Тетяна Миколаївна ', 'Мелещенко Діана Карлосовна', 'Київ', 'Континент', 'супермаркет ', 'Попова Олена', '0949262874', 'EDI', 'Бухгалтерія', '4263077', '', 'Бухгалтерія', '4263077', ''
-union select 'филиал Киев БН', '15158', '17661', 'Метро Кеш енд Кері Україна ТОВ', 'МЕТРО Кеш енд Кер_ Укр.Григоре', '32049199', 'Метро Кеш енд Кері Україна ТОВ', '32049199', '17144', 'МЕТРО Григоренко 10 (Позняки)', 'БН', '', '02140', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Григоренка', '40', '10', 'Власенко Тетяна Миколаївна ', 'Головко Дмитро Олегович', 'Київ', 'Метро', 'супермаркет ', 'Степанець Тетяна', '0673472872', 'EDI', '"МЕТРО Кеш енд Кері Україна ТОВ,
-Проспект Григоренка, 43, 02140
-Київ"', '044-492-10-00', 'www.metro-link.ua', '"МЕТРО Кеш енд Кері Україна ТОВ,
-Проспект Григоренка, 43, 02140
-Київ"', '(044)4921000', 'www.metro-link.ua'
+union select 'филиал Киев БН', '15158', '17661', 'Метро Кеш енд Кері Україна ТОВ', 'МЕТРО Кеш енд Кер_ Укр.Григоре', '32049199', 'Метро Кеш енд Кері Україна ТОВ', '32049199', '17144', 'МЕТРО Григоренко 10 (Позняки)', 'БН', '', '02140', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Григоренка', '40', '10', 'Власенко Тетяна Миколаївна ', 'Головко Дмитро Олегович', 'Київ', 'Метро', 'супермаркет ', 'Степанець Тетяна', '0673472872', 'EDI', '"МЕТРО Кеш енд Кері Україна ТОВ, Проспект Григоренка, 43, 02140 Київ"', '044-492-10-00', 'www.metro-link.ua', '"МЕТРО Кеш енд Кері Україна ТОВ, Проспект Григоренка, 43, 02140 Київ"', '(044)4921000', 'www.metro-link.ua'
 union select 'филиал Киев БН', '15196', '17715', 'Новус Україна ТОВ', 'НОВУС-УКРАИНА Бажана пр-т,8', '36003603', 'Новус Україна ТОВ', '36003603', '17490', 'Новус Україна  Бажана,8', 'БН', '', '02121', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Бажана', '8', '8', 'Власенко Тетяна Миколаївна ', 'Ісаєнко Світлана Вікторівна', 'Київ', 'Новус', 'супермаркет ', 'Алена Вікторовна', '0636403504', 'EDI', 'Бухгалтерія', '5934389', '', 'Бухгалтерія', '5934389', ''
 union select 'филиал Киев БН', '15196', '17718', 'Новус Україна ТОВ', 'НОВУС-УКРАИНА пр-т Броварськи', '36003603', 'Новус Україна ТОВ', '36003603', '16896', 'Новус Україна  Броварск.пр-т,17', 'БН', '', '02089', 'місто', 'Київ', 'Київська', '', 'проспект', 'Броварський', '17', '17', 'Власенко Тетяна Миколаївна ', 'Мелещенко Діана Карлосовна', 'Київ', 'Новус', 'супермаркет ', 'Ольга Константинівна', '0997223364', 'EDI', 'Бухгалтерія', '5934389', '', 'Бухгалтерія', '5934389', ''
 union select 'филиал Киев БН', '15196', '17697', 'Новус Україна ТОВ', 'НОВУС УКРАИНА Киев Воскресенская,14а', '36003603', 'Новус Україна ТОВ', '36003603', '17728', 'Новус Україна  Воскресенская,14а', 'БН', '', '02125', 'місто', 'Київ', 'Київська', '', 'вулиця', 'Воскресінска', '14а', '14а', 'Власенко Тетяна Миколаївна ', 'Мелещенко Діана Карлосовна', 'Київ', 'Новус', 'супермаркет ', 'Нарожна Людмила', '0997223364', 'EDI', 'Бухгалтерія', '5934389', '', 'Бухгалтерія', '5934389', ''
@@ -4796,7 +4792,10 @@ union select 'Шевченко Майя Іванівна' , 'Шевченко Майя Іванівна'
                       , trim (PersonalName) as PersonalName, trim (PersonalTradeName)as PersonalTradeName
                       , trim (AreaName) as AreaName, trim (RetailName) as RetailName, trim (RetailKindName) as RetailKindName
                       , trim (a1) as a1, trim (a2) as a2, trim (a3) as a3, trim (b1) as b1, trim (b2) as b2, trim (b3) as b3, trim (c1) as c1, trim (c2) as c2, trim (c3) as c3
-                      , trim (CityName) || trim (StreetName) || trim (HouseNumber) as Adr
+                      , trim (CityKindName) || ' ' || trim (CityName) || ' ' || trim (StreetKindName) || ' ' || trim (StreetName)
+                     || CASE WHEN trim (HouseNumber) <> '' THEN ' ' || trim (HouseNumber) ELSE '' END
+                     || CASE WHEN trim (RoomNumber) <> '' THEN CASE WHEN trim (HouseNumber) <> '' THEN '/' ELSE ' ' END || trim (RoomNumber) ELSE '' END
+                        as Adr
                       , Object_CityKind.Id as CityKindId
                       , Object_StreetKind.Id as StreetKindId
                       , Object_Area.Id as AreaId
@@ -4820,6 +4819,12 @@ union select 'Шевченко Майя Іванівна' , 'Шевченко Майя Іванівна'
                  where PartnerId not in (select PartnerId from (select PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1)
               )
 
+/*
+-- check many adr
+-- select PartnerId, Object.ObjectCode, Object.ValueData, JurName, PartnerName_old, Name1C, adr, BranchName from tmpPartner_1 left join Object on Object.Id = PartnerId where PartnerId in (select PartnerId  from (select PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1) 
+select PartnerId, Object.ObjectCode, Object.ValueData, JurName, PartnerName_old, Name1C, adr, BranchName from tmpPartner_1 left join Object on Object.Id = PartnerId where JuridicalId_curr in (select max (JuridicalId_curr) as JuridicalId_curr from (select max (JuridicalId_curr) as JuridicalId_curr, PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1) 
+order by JurName, PartnerId
+*/
 /*
 -- !!!insert Object ...Kind and Area and PartnerTag!!!
 --  select CityKindName from tmpPartner group by CityKindName
@@ -4857,27 +4862,48 @@ where JurName in (select JurName from (select JuridicalId_curr, JurName from tmp
 order by JurName
 */
 /*
--- check PersonalName
-select tmpPartner .PersonalName
-from tmpPartner
-left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalName
+-- check many Personal
+select tmpPartner.* from tmpPartner 
+where PartnerId in (select PartnerId from (select PartnerId, PersonalName from tmpPartner where PersonalName <> '' group by PartnerId, PersonalName) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, PersonalTradeName from tmpPartner where PersonalTradeName <> '' group by PartnerId, PersonalTradeName) as a group by PartnerId having Count(*) > 1) 
+order by PartnerId
+
+-- check Personal... and insert Personal...
+select tmpPartner .PersonalName, tmpPartner.PartnerId, Object_Personal_View.PersonalId
+--  select lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), tmpPartner.PartnerId, Object_Personal_View.PersonalId) -- сохранили связь с <Сотрудник (супервайзер)>
+from (select PartnerId, max (PersonalName) as PersonalName from tmpPartner where tmpPartner .PersonalName <> '' group by PartnerId) as tmpPartner
+left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalName 
 left join Object_Member_View on trim (Object_Member_View.MemberName) = coalesce (trim (tmpMember.NewName), tmpPartner .PersonalName)
 left join (select MemberId, max (PersonalId) as PersonalId from Object_Personal_View where isMain = TRUE group by MemberId) As Object_Personal_View on Object_Personal_View.MemberId = Object_Member_View.MemberId
-where tmpPartner .PersonalName <> ''
-and Object_Personal_View.MemberId is null
+where Object_Personal_View.PersonalId is null
 union  
-select tmpPartner .PersonalTradeName
-from tmpPartner 
+select tmpPartner .PersonalTradeName, tmpPartner.PartnerId, Object_Personal_View.PersonalId
+--  select lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), tmpPartner.PartnerId, Object_Personal_View.PersonalId) -- сохранили связь с <Сотрудник (торговый)>
+from (select PartnerId, max (PersonalTradeName) as PersonalTradeName from tmpPartner where tmpPartner .PersonalTradeName <> '' group by PartnerId) as tmpPartner 
 left join tmpMember on trim (tmpMember.OldName) = tmpPartner .PersonalTradeName
 left join Object_Member_View on trim (Object_Member_View.MemberName) = coalesce (trim (tmpMember.NewName), tmpPartner .PersonalTradeName)
 left join (select MemberId, max (PersonalId) as PersonalId from Object_Personal_View where isMain = TRUE group by MemberId) As Object_Personal_View on Object_Personal_View.MemberId = Object_Member_View.MemberId
-where tmpPartner .PersonalTradeName <> ''
-and Object_Personal_View.MemberId is null
+where Object_Personal_View.PersonalId is null
 order by 1
 */
 /*
--- check many adr
-select PartnerId, JurName, PartnerName_old, Name1C, adr from tmpPartner_1 where PartnerId in (select PartnerId  from (select PartnerId, Adr from tmpPartner_1 group by PartnerId, Adr) as a group by PartnerId having Count(*) > 1) order by PartnerId
+-- check many ContactPerson
+select tmpPartner.* from tmpPartner 
+where PartnerId in (select PartnerId from (select PartnerId, a1, a2, a3 from tmpPartner where a1 <> '' or a2 <> ''  or a3 <> '' group by PartnerId, a1, a2, a3) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, b1, b2, b3 from tmpPartner where b1 <> '' or b2 <> ''  or b3 <> '' group by PartnerId, b1, b2, b3) as a group by PartnerId having Count(*) > 1
+              union select PartnerId from (select PartnerId, c1, c2, c3 from tmpPartner where c1 <> '' or c2 <> ''  or c3 <> '' group by PartnerId, c1, c2, c3) as a group by PartnerId having Count(*) > 1
+                   )
+order by PartnerId
+
+-- insert ContactPerson...
+select *
+--  select gpInsertUpdate_Object_ContactPerson (0, 0, xx1, xx2, xx3, '', tmpPartner.PartnerId, 0, 0, KindId, zfCalc_UserAdmin())
+from (select PartnerId, max (a1) as xx1, max (a2) as xx2, max (a3) as xx3, zc_Enum_ContactPersonKind_CreateOrder() as KindId from tmpPartner where a1 <> '' or a2 <> ''  or a3 <> '' group by PartnerId
+     union all
+      select PartnerId, max (b1) as xx1, max (b2) as xx2, max (b3) as xx3, zc_Enum_ContactPersonKind_CheckDocument() as KindId  from tmpPartner where b1 <> '' or b2 <> ''  or b3 <> '' group by PartnerId
+     union all
+      select PartnerId, max (c1) as xx1, max (c2) as xx2, max (c3) as xx3, zc_Enum_ContactPersonKind_AktSverki() as KindId  from tmpPartner where c1 <> '' or c2 <> '' or c3 <> '' group by PartnerId
+     ) as tmpPartner;
 */
 
 /*
@@ -4938,3 +4964,67 @@ where CityName <> ''
   and PaidKindName = 'БН'
   and OKPO = '25288083'
 */
+
+
+
+select JurName_old, JurName,  case when JurName_old <> JurName then 'yes' else 'no' end 
+     , PartnerName_old, PartnerName,  case when PartnerName_old <> PartnerName then 'yes' else 'no' end 
+     , Address_old, adr,  case when Address_old <> adr then 'yes' else 'no' end 
+     , adr_new, ShortName
+   , BranchName, PaidKindName, PartnerId
+from (
+select JurName_old, JurName
+     , PartnerName_old
+     , case when adr <> ''
+           then JurName || CASE WHEN ShortName <> ''
+                                THEN ' ' || ShortName
+                           ELSE ''
+                      END
+                   || CASE WHEN TRIM (adr) <> ''
+                                THEN ' ' || TRIM (adr)
+                           ELSE ''
+                      END 
+    else PartnerName_old end as PartnerName
+
+, Address_old,  case when adr <> '' then adr else Address_old end as adr
+, tmp.adr as adr_new
+, ShortName
+   , BranchName, PaidKindName, PartnerId
+from
+(
+select Object_Juridical.ValueData as JurName_old, tmpPartner.JurName
+     , Object.ValuedATa as PartnerName_old
+     , ObjectString_Address.ValueData as Address_old
+     , Comment as ShortName
+     , TRIM (COALESCE (ObjectString1.ValueData, '')
+              || '' || COALESCE (CityName, '')
+              || ' ' || COALESCE (ObjectString2.ValueData, '')
+              || '' || COALESCE (StreetName, '')
+                     || CASE WHEN COALESCE (HouseNumber, '') <> ''
+                                  THEN ' ' || COALESCE (HouseNumber, '')
+                             ELSE ''
+                        END
+                       ) as adr
+   , BranchName, PaidKindName, PartnerId
+from tmpPartner
+ left join ObjectString as ObjectString1  on ObjectString1.ObjectId = CityKindId AND ObjectString1.DescId = zc_ObjectString_CityKind_ShortName()
+ left join ObjectString as ObjectString2  on ObjectString2.ObjectId = StreetKindId AND ObjectString2.DescId = zc_ObjectString_StreetKind_ShortName()
+               and StreetName <> ''
+ 
+ left join Object on Object.Id = tmpPartner.PartnerId
+ left join Object as Object_Juridical on Object_Juridical.Id = tmpPartner.JuridicalId_curr
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Object.Id
+                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+-- where PartnerId = 261312
+) as tmp
+) as tmp
+group by JurName_old, JurName
+     , PartnerName_old, PartnerName
+     , Address_old, adr
+     , adr_new, ShortName
+   , BranchName, PaidKindName, PartnerId
+
+order by JurName_old, JurName
+     , PartnerName,  PartnerName_old
+     , adr_new

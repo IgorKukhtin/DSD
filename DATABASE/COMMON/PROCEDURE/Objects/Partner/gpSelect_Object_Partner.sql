@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, GLNCode_Juridical TVarChar,
+               RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
@@ -71,6 +72,8 @@ BEGIN
          , Object_JuridicalGroup.ValueData AS JuridicalGroupName
          , ObjectString_GLNCode_Juridical.ValueData     AS GLNCode_Juridical
          
+         , Object_Retail.ValueData         AS RetailName
+
          , Object_Route.Id           AS RouteId
          , Object_Route.ObjectCode   AS RouteCode
          , Object_Route.ValueData    AS RouteName
@@ -160,9 +163,14 @@ BEGIN
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
          
-        LEFT JOIN ObjectString AS ObjectString_GLNCode_Juridical
-                               ON ObjectString_GLNCode_Juridical.ObjectId = Object_Juridical.Id 
-                              AND ObjectString_GLNCode_Juridical.DescId = zc_ObjectString_Juridical_GLNCode()
+         LEFT JOIN ObjectString AS ObjectString_GLNCode_Juridical
+                                ON ObjectString_GLNCode_Juridical.ObjectId = Object_Juridical.Id 
+                               AND ObjectString_GLNCode_Juridical.DescId = zc_ObjectString_Juridical_GLNCode()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
@@ -251,4 +259,4 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner (0, zfCalc_UserAdmin())

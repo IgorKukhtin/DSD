@@ -38,21 +38,21 @@ object PartnerForm: TPartnerForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 31
+        Width = 50
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 133
@@ -60,21 +60,32 @@ object PartnerForm: TPartnerForm
       object clAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 134
       end
-      object clJuridicalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
-        DataBinding.FieldName = 'JuridicalGroupName'
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 100
+      end
+      object clJuridicalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
+        DataBinding.FieldName = 'JuridicalGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 103
@@ -82,9 +93,26 @@ object PartnerForm: TPartnerForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 46
+      end
+      object clPersonalName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
+        DataBinding.FieldName = 'PersonalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object clPersonalTradeName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')'
+        DataBinding.FieldName = 'PersonalTradeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object clPriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
@@ -98,6 +126,7 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
@@ -113,6 +142,7 @@ object PartnerForm: TPartnerForm
           end>
         Properties.ReadOnly = True
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
@@ -120,23 +150,17 @@ object PartnerForm: TPartnerForm
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
         Visible = False
-        Width = 88
-      end
-      object clIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 50
+        Width = 88
       end
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -149,6 +173,7 @@ object PartnerForm: TPartnerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 71
@@ -164,38 +189,26 @@ object PartnerForm: TPartnerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object clMemberTakeName: TcxGridDBColumn
-        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+        Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
         DataBinding.FieldName = 'MemberTakeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoicePersonalTake
+            Action = actChoiceMemberTake
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clPersonalTradeName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
-        DataBinding.FieldName = 'PersonalTradeName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object clPersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'PersonalName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
+        Width = 100
       end
       object clGLNCode_Juridical: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN ('#1102#1088'.'#1083'.)'
@@ -203,7 +216,7 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 53
+        Width = 80
       end
       object clGLNCode: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN'
@@ -211,21 +224,48 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 54
+        Width = 80
       end
       object colAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 79
+        Width = 100
       end
       object colPartnerTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
         DataBinding.FieldName = 'PartnerTagName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 100
+      end
+      object Id: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095'-2'
+        DataBinding.FieldName = 'Id'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -238,8 +278,8 @@ object PartnerForm: TPartnerForm
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 279
-    Top = 76
+    Left = 303
+    Top = 372
     Properties.Buttons = <
       item
         Default = True
@@ -276,8 +316,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -326,11 +366,11 @@ object PartnerForm: TPartnerForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -665,7 +705,7 @@ object PartnerForm: TPartnerForm
         end>
       isShowModal = True
     end
-    object actChoicePersonalTake: TOpenChoiceForm
+    object actChoiceMemberTake: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'Member_ObjectForm'
@@ -677,13 +717,13 @@ object PartnerForm: TPartnerForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeId'
+          ComponentItem = 'MemberTakeId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalTakeName'
+          ComponentItem = 'MemberTakeName'
           DataType = ftString
         end>
       isShowModal = True
@@ -799,10 +839,10 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalTakeId'
+        ComponentItem = 'MemberTakeId'
         ParamType = ptInput
       end
       item

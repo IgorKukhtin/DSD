@@ -1,7 +1,7 @@
 object ProvinceCityForm: TProvinceCityForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1080#1082#1088#1086#1088#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077'>'
   ClientHeight = 344
   ClientWidth = 639
   Color = clBtnFace
@@ -26,7 +26,6 @@ object ProvinceCityForm: TProvinceCityForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 535
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -74,7 +73,7 @@ object ProvinceCityForm: TProvinceCityForm
         Width = 93
       end
       object clCityKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1085#1072#1089'. '#1087#1091#1085#1082#1090#1072
+        Caption = #1042#1080#1076' '#1085'.'#1087'.'
         DataBinding.FieldName = 'CityKindName'
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -129,8 +128,8 @@ object ProvinceCityForm: TProvinceCityForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -179,13 +178,26 @@ object ProvinceCityForm: TProvinceCityForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -194,11 +206,6 @@ object ProvinceCityForm: TProvinceCityForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -231,9 +238,9 @@ object ProvinceCityForm: TProvinceCityForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
+      Caption = '     '
       Category = 0
-      Hint = '       '
+      Hint = '     '
       Visible = ivAlways
     end
     object bbChoice: TdxBarButton

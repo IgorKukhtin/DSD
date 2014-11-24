@@ -1,22 +1,11 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                             Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                             TDateTime, TDateTime, TVarChar);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                             Integer, TFloat, TFloat, 
-                             Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                             TDateTime, TDateTime,
-                             TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer,
-                             TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (integer, integer, tvarchar, tvarchar, tvarchar, tvarchar, tvarchar, integer, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, integer, integer, integer, tdatetime, tdatetime, tvarchar, tvarchar, tvarchar, integer, tvarchar, tvarchar, tvarchar, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    OUT outPartnerName        TVarChar  ,    -- 
-    IN inAddress             TVarChar  ,    -- 
+   OUT outAddress            TVarChar  ,    -- 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
@@ -31,8 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
-    IN inPersonalId            Integer   ,    -- Физ лицо (ответственное лицо)
-    IN inPersonalTradeId       Integer   ,    -- Физ лицо(торговый)
+    IN inPersonalId          Integer   ,    -- Физ лицо (ответственное лицо)
+    IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
     
@@ -49,46 +38,30 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPostalCode          TVarChar  ,    -- индекс
     IN inStreetName          TVarChar  ,    -- наименование улица
     IN inStreetKindId        Integer   ,    -- Вид улицы
-
     
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   -- DECLARE vbAddress TVarChar;
+   DECLARE vbCode Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
-   vbUserId := lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
 
 
-   -- !!!такой адрес!!!
-   /*vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
-                        COALESCE(name, '')||', '
-                   FROM Object_Street_View  WHERE Id = inStreetId);
-   vbAddress := vbAddress||inHouseNumber;*/
+   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
+   -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
+   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
 
-   -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
-   SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
-
-   -- !!!в название добавляем <Адрес точки доставки>!!!
-   outPartnerName:= COALESCE (outPartnerName || ' ' || inAddress, '');
-   -- outPartnerName:= COALESCE(outPartnerName || ', ' || vbAddress, '');
+   -- проверка уникальности <Код>
+   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
 
    -- сохранили
    ioId := lpInsertUpdate_Object_Partner (ioId              := ioId
-                                        , inPartnerName     := outPartnerName
-                                        , inAddress         := inAddress -- vbAddress
-                                        , inCode            := inCode
-                                        , inShortName       := inShortName
+                                        , inCode            := vbCode
                                         , inGLNCode         := inGLNCode
-                                        , inHouseNumber     := inHouseNumber
-                                        , inCaseNumber      := inCaseNumber
-                                        , inRoomNumber      := inRoomNumber
-                                        , inStreetId        := inStreetId
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
                                         , inJuridicalId     := inJuridicalId
@@ -109,9 +82,12 @@ BEGIN
                                          );
 
    -- сохранили
-   ioId := lpUpdate_Object_Partner_Address( ioId                := ioId
-                                          , inCode              := inCode
-                                          , inName              := outPartnerName   
+   SELECT tmp.outPartnerName, tmp.outAddress
+         INTO outPartnerName, outAddress
+      FROM lpUpdate_Object_Partner_Address( inId                := ioId
+                                          , inJuridicalId       := inJuridicalId
+                                          , inShortName         := inShortName
+                                          , inCode              := vbCode
                                           , inRegionName        := inRegionName
                                           , inProvinceName      := inProvinceName
                                           , inCityName          := inCityName
@@ -123,20 +99,18 @@ BEGIN
                                           , inHouseNumber       := inHouseNumber
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
-                                          , inShortName         := inShortName
-                                          , inSession           := inSession);                                         
-   
-   
-   
+                                          , inSession           := inSession
+                                          , inUserId            := vbUserId
+                                           ) AS tmp;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.11.14                                        * all
  20.11.14         * add redmine              
  10.11.14         * add redmine
  25.08.14                                        * add lp

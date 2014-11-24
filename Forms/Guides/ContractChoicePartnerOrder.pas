@@ -51,7 +51,7 @@ type
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actChoiceRouteSorting: TOpenChoiceForm;
-    actChoicePersonalTake: TOpenChoiceForm;
+    actChoiceMemberTake: TOpenChoiceForm;
     clItemName: TcxGridDBColumn;
   private
     { Private declarations }

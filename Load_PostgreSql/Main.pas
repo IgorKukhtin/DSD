@@ -2899,6 +2899,7 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailReportId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
@@ -2943,6 +2944,7 @@ begin
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
              toStoredProc.Params.ParamByName('inRetailId').Value:=0;
+             toStoredProc.Params.ParamByName('inRetailReportId').Value:=0;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
@@ -3228,6 +3230,7 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailReportId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
@@ -9587,6 +9590,7 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailReportId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
@@ -9851,6 +9855,7 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailReportId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);

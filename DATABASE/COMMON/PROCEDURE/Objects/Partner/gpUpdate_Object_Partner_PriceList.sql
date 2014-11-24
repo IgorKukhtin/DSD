@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_PriceList(
     IN inEndPromo            TDateTime ,    -- Дата окончания акции
     IN inRouteId             Integer   ,    -- 
     IN inRouteSortingId      Integer   ,    -- 
-    IN inPersonalId          Integer   ,    -- 
+    IN inMemberId            Integer   ,    -- 
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inSession             TVarChar       -- сессия пользователя
@@ -31,7 +31,7 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTake(), ioId, inPersonalId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberId);
  
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);

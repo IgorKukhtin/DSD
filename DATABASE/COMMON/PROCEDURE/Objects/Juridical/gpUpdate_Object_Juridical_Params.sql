@@ -1,7 +1,5 @@
 -- Function: gpUpdate_Object_Juridical_Params()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_Params (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_Params(
