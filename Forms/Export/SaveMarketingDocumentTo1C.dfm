@@ -163,7 +163,7 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
         item
           Name = 'OPERDATEC'
           DataType = ftString
-          Size = 20
+          Size = 10
         end
         item
           Name = 'INVNUMBERC'
