@@ -141,6 +141,7 @@ BEGIN
       SELECT tmpMovementItem.MovementId	                                            AS MovementId
            , tmpMovementItem.Num                                                    AS Num
            , Movement.InvNumber				                                        AS InvNumber
+           , MovementFloat_WeighingNumber.ValueData                                 AS WeighingNumber
            , Movement.OperDate				                                        AS OperDate
            , MovementString_InvNumberPartner.ValueData                              AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData                                AS InvNumberOrder
@@ -189,12 +190,19 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (tmpMovementItem.GoodsKindId, 0)
                                                   -- AND tmpObject_GoodsPropertyValue.Name <> ''
+--
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  tmpMovement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
+                                    ON MovementFloat_WeighingNumber.MovementId =  tmpMovement.Id
+                                   AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
+
+
 -- MOVEMENT
             LEFT JOIN Movement ON Movement.Id = inMovementId--MovementItem.MovementId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -262,6 +270,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print21 (Integer, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.11.14                                                       *
  03.11.14                                                       *
  31.10.14                                                       *
 */

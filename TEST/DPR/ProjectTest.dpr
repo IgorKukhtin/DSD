@@ -575,7 +575,9 @@ uses
   dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
   OLAPTest in '..\SOURCE\Component\OLAPTest.pas',
   dsdOlap in '..\..\SOURCE\COMPONENT\dsdOlap.pas',
-  dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas';
+  dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
+  GoodsGroupAnalyst in '..\..\Forms\Guides\GoodsGroupAnalyst.pas' {GoodsGroupAnalystForm: TParentForm},
+  GoodsGroupAnalystEdit in '..\..\Forms\Guides\GoodsGroupAnalystEdit.pas' {GoodsGroupAnalystEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

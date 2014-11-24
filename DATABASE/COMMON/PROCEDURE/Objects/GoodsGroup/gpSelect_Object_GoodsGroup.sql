@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
+             , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              ) AS
 $BODY$BEGIN
 
@@ -32,7 +33,10 @@ $BODY$BEGIN
          , Object_TradeMark.ValueData     AS TradeMarkName
 
          , Object_GoodsTag.Id            AS GoodsTagId
-         , Object_GoodsTag.ValueData     AS GoodsTagName         
+         , Object_GoodsTag.ValueData     AS GoodsTagName      
+         
+         , Object_GoodsGroupAnalyst.Id             AS GoodsGroupAnalystId
+         , Object_GoodsGroupAnalystg.ValueData     AS GoodsGroupAnalystName               
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -54,6 +58,11 @@ $BODY$BEGIN
                                 ON ObjectLink_GoodsTag.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_GoodsTag.DescId = zc_ObjectLink_GoodsGroup_GoodsTag()
            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_GoodsTag.ChildObjectId
+           
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupAnalyst
+                                ON ObjectLink_GoodsGroupAnalyst.ObjectId = Object_GoodsGroup.Id
+                               AND ObjectLink_GoodsGroupAnalyst.DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst()
+           LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_GoodsGroupAnalyst.ChildObjectId             
                   
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
   
@@ -67,6 +76,7 @@ ALTER FUNCTION gpSelect_Object_GoodsGroup(TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.14         * add GoodsGroupAnalyst             
  15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
  04.09.14         *              

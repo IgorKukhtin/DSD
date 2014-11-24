@@ -1716,6 +1716,14 @@
 			<DCCReference Include="..\SOURCE\Component\OLAPTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdOlap.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupAnalyst.pas">
+				<Form>GoodsGroupAnalystForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupAnalystEdit.pas">
+				<Form>GoodsGroupAnalystEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
