@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_AccountExternal (
 RETURNS TABLE  (InvNumber Integer, OperDate TDateTime
               , CLIENTCODE Integer, CLIENTINN TVarChar, CLIENTOKPO TVarChar, CLIENTNAME TVarChar
               , SUMA TFloat, PDV TFloat, SUMAPDV TFloat
-              , OperDatePartner TDateTime, InvNumberPartner TVarChar, Comment TVarChar
+              , OPERDATEC TDateTime, INVNUMBERC TVarChar, COMMENT TVarChar
               )  
 AS
 $BODY$

@@ -86,6 +86,8 @@ type
     StreetKindName: TcxGridDBColumn;
     PartnerId: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
+    Sale_SummCost: TcxGridDBColumn;
+    Return_SummCost: TcxGridDBColumn;
     actPrint_byPartner: TdsdPrintAction;
     bbPrint_byPartner: TdxBarButton;
   private
