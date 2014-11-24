@@ -27,8 +27,8 @@ object OLAPSalesForm: TOLAPSalesForm
       Width = 519
       Height = 156
       Groups = <>
-      LookAndFeel.Kind = lfOffice11
-      LookAndFeel.NativeStyle = False
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = True
       OptionsPrefilter.Visible = pfvAlways
       TabOrder = 0
       Visible = False
@@ -86,8 +86,8 @@ object OLAPSalesForm: TOLAPSalesForm
       BevelOuter = bvSpace
       TabOrder = 2
       Visible = False
-      LookAndFeel.Kind = lfOffice11
-      LookAndFeel.NativeStyle = False
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = True
       RootLevelOptions.DetailFrameColor = clBtnShadow
       RootLevelOptions.DetailFrameWidth = 1
       object tvReport: TcxGridDBBandedTableView
@@ -99,6 +99,7 @@ object OLAPSalesForm: TOLAPSalesForm
         OptionsCustomize.GroupBySorting = True
         OptionsView.Footer = True
         OptionsView.GroupFooters = gfAlwaysVisible
+        Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
         Bands = <>
       end
       object cxGridLevel: TcxGridLevel

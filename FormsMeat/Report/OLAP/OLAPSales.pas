@@ -11,32 +11,6 @@ uses DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, c
   cxDBPivotGrid, Vcl.Forms, dsdOLAP, dsdAddOn, cxPropertiesStore, dxBarExtItems,
   dxBar, dsdDB, Datasnap.DBClient;
 
-{uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ELCustomDataEditor, cxStyles, cxCustomData, cxGraphics,
-  cxFilter, cxData, cxDataStorage, cxEdit, DB, cxDBData, cxLabel, Oracle,
-  ELOracleSession, ActnList, ELActionList, cxGridLevel,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxControls, cxGridCustomView, cxGrid, ELGrid, NxCollection, ELFlipPanel,
-  cxTextEdit, cxMemo, cxRichEdit, cxContainer, ELLabel, ExtCtrls,
-  ELGroupPanel, HProcess, xlcClasses, xlEngine, xlReport, ProgressImage,
-  OracleData, ELOracleDataSet, cxGridDBBandedTableView, cxGridBandedTableView,
-  StdCtrls, ELMemo, cxCurrencyEdit, cxCheckBox, cxLookAndFeels,
-  cxLookAndFeelPainters, dxSkinsCore, dxSkinBlack, dxSkinBlue,
-  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
-  dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary,
-  dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
-  dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
-  dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinTheAsphaltWorld, upsmilestile,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomPivotGrid, cxPivotGrid,
-  cxDBPivotGrid, ELOlapSalesUnit, ThreadProgress, cxLocalization}
-
 type
 
   // Перекрыли класс, что бы добраться до private метода GetViewInfoClass
