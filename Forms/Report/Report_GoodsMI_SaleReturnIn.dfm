@@ -3,28 +3,31 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 387
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 422
+  ExplicitWidth = 1028
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 82
     Width = 1020
-    Height = 307
+    Height = 305
     TabOrder = 3
-    ExplicitTop = 80
-    ExplicitWidth = 1055
-    ExplicitHeight = 307
-    ClientRectBottom = 307
-    ClientRectRight = 1020
+    ExplicitTop = 82
+    ExplicitWidth = 1020
+    ExplicitHeight = 305
+    ClientRectBottom = 301
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1055
-      ExplicitHeight = 307
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 307
-        ExplicitWidth = 1055
-        ExplicitHeight = 307
+        Width = 1014
+        Height = 299
+        ExplicitLeft = 40
+        ExplicitWidth = 1014
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -572,7 +575,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1055
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -732,6 +735,41 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   end
   inherited ActionList: TActionList
     Left = 87
+    object actPrint_byPartner: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'partnername'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ReportNameParam.DataType = ftString
+    end
     object actPrint_byJuridical: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -922,7 +960,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -976,6 +1014,10 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byPartner'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1008,6 +1050,10 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
       Hint = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
       Visible = ivAlways
       Control = cbGoods
+    end
+    object bbPrint_byPartner: TdxBarButton
+      Action = actPrint_byPartner
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
