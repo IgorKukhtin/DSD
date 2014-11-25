@@ -52,6 +52,9 @@ type
     cxLabel6: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    cePaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

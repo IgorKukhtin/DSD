@@ -14,6 +14,7 @@ uses
 
 type
   TCash_ObjectForm = class(TAncestorGuidesForm)
+    clPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
