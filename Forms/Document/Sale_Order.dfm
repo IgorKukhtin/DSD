@@ -1116,6 +1116,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
         end>
       Params = <
         item
@@ -1145,7 +1146,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'goodsname_two'
+          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
         end>
       Params = <
         item

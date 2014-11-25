@@ -17,6 +17,8 @@ inherited SaleForm: TSaleForm
     ClientRectBottom = 536
     ClientRectRight = 1385
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 2
+      ExplicitTop = 22
       ExplicitWidth = 1383
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
@@ -1208,7 +1210,7 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'goodsname_two'
+          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
         end>
       Params = <
         item
@@ -1238,6 +1240,7 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;InvNumber;WeighingNumber;goodsname_two'
         end>
       Params = <
         item
