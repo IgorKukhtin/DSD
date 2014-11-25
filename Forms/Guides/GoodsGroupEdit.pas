@@ -43,6 +43,9 @@ type
     cxLabel5: TcxLabel;
     ceGoodsTag: TcxButtonEdit;
     GoodsTagGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    ceGoodsGroupAnalyst: TcxButtonEdit;
+    GoodsGroupAnalystGuides: TdsdGuides;
   private
     { Private declarations }
   public

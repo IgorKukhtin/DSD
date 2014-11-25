@@ -66,6 +66,9 @@ type
     cxLabel10: TcxLabel;
     ceGoodsTag: TcxButtonEdit;
     GoodsTagGuides: TdsdGuides;
+    ceGoodsGroupAnalyst: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    GoodsGroupAnalystGuides: TdsdGuides;
   private
     { Private declarations }
   public

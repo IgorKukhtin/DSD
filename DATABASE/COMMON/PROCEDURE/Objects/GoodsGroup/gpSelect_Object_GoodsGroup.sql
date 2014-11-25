@@ -36,7 +36,7 @@ $BODY$BEGIN
          , Object_GoodsTag.ValueData     AS GoodsTagName      
          
          , Object_GoodsGroupAnalyst.Id             AS GoodsGroupAnalystId
-         , Object_GoodsGroupAnalystg.ValueData     AS GoodsGroupAnalystName               
+         , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName               
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup

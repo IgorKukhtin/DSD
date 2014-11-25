@@ -70,6 +70,7 @@ type
     clIsPartionSumm: TcxGridDBColumn;
     clGroupStatName: TcxGridDBColumn;
     clGoodsTagName: TcxGridDBColumn;
+    clGoodsGroupAnalystName: TcxGridDBColumn;
   private
     { Private declarations }
   public
