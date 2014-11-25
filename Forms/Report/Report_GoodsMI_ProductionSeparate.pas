@@ -27,7 +27,6 @@ type
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
     clAmount: TcxGridDBColumn;
-    edInDescName: TcxTextEdit;
     clInvNumber: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
     clPartionGoods: TcxGridDBColumn;
