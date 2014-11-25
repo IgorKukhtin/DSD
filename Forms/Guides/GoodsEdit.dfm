@@ -190,7 +190,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 273
+    Width = 129
   end
   object cxLabel10: TcxLabel
     Left = 40
@@ -208,6 +208,23 @@
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 273
+  end
+  object ceGoodsGroupAnalyst: TcxButtonEdit
+    Left = 184
+    Top = 155
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 129
+  end
+  object cxLabel11: TcxLabel
+    Left = 184
+    Top = 136
+    Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
   end
   object ActionList: TActionList
     Left = 304
@@ -328,7 +345,15 @@
         Component = GoodsTagGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupAnalystId'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 232
     Top = 48
   end
@@ -473,7 +498,21 @@
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'GoodsGroupAnalystId'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsGroupAnalystName'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 8
     Top = 64
   end
@@ -546,8 +585,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 224
-    Top = 171
+    Left = 232
+    Top = 195
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -636,8 +675,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 208
-    Top = 112
+    Left = 152
+    Top = 96
   end
   object GoodsGroupStatGuides: TdsdGuides
     KeyField = 'Id'
@@ -686,5 +725,29 @@
       end>
     Left = 152
     Top = 330
+  end
+  object GoodsGroupAnalystGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsGroupAnalyst
+    FormNameParam.Value = 'TGoodsGroupAnalystForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupAnalystForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 224
+    Top = 144
   end
 end

@@ -76,6 +76,13 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object clGoodsGroupAnalystName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+        DataBinding.FieldName = 'GoodsGroupAnalystName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -407,22 +414,26 @@ object GoodsForm: TGoodsForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'FuelName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
@@ -448,6 +459,7 @@ object GoodsForm: TGoodsForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 112
     Top = 152
   end
@@ -462,10 +474,12 @@ object GoodsForm: TGoodsForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 152
   end

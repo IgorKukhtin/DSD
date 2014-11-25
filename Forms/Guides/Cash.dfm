@@ -3,8 +3,8 @@ inherited CashForm: TCashForm
   ClientHeight = 374
   ClientWidth = 773
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 789
-  ExplicitHeight = 409
+  ExplicitWidth = 781
+  ExplicitHeight = 408
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,6 +32,7 @@ inherited CashForm: TCashForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -74,6 +75,12 @@ inherited CashForm: TCashForm
             HeaderAlignmentVert = vaCenter
             Width = 106
           end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -86,7 +93,7 @@ inherited CashForm: TCashForm
     end
   end
   inherited ActionList: TActionList
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TCashEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
