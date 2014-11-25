@@ -22,7 +22,7 @@ BEGIN
      END IF;
 
      -- сохранили свойство <≈сть ли подписанный документ>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), ioIsDocument)
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), COALESCE (Movement_find.Id, Movement.Id), ioIsDocument)
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -30,11 +30,13 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                          ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_find ON Movement_find.Id = MovementLinkMovement_Master_find.MovementId
+                                             AND Movement_find.StatusId <> zc_Enum_Status_Erased()
       WHERE Movement.Id = inId
         AND Movement.DescId = zc_Movement_TaxCorrective();
 
      -- сохранили протокол дл€ всех
-     PERFORM lpInsert_MovementProtocol (COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), vbUserId, FALSE)
+     PERFORM lpInsert_MovementProtocol (COALESCE (Movement_find.Id, Movement.Id), vbUserId, FALSE)
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                          ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -42,6 +44,8 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                          ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN Movement AS Movement_find ON Movement_find.Id = MovementLinkMovement_Master_find.MovementId
+                                             AND Movement_find.StatusId <> zc_Enum_Status_Erased()
       WHERE Movement.Id = inId
         AND Movement.DescId = zc_Movement_TaxCorrective();
 

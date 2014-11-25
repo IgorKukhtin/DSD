@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_GoodsGroup(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
+             , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , DescName TVarChar
              , isErased boolean
              ) AS
@@ -29,6 +30,9 @@ BEGIN
            
            , Object_GoodsGroupStat.Id        AS GroupStatId
            , Object_GoodsGroupStat.ValueData AS GroupStatName            
+           
+           , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
+           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName                       
 
            , ObjectDesc.ItemName as DescName
 
@@ -45,6 +49,11 @@ BEGIN
                               ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                              AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
           LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId          
           
           LEFT JOIN ObjectDesc on ObjectDesc.Id = Object_Goods.DescId 
                           
@@ -64,6 +73,9 @@ BEGIN
          
          , Object_GoodsGroupStat.Id        AS GroupStatId
          , Object_GoodsGroupStat.ValueData AS GroupStatName
+
+         , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
+         , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName              
          
          , ObjectDesc.ItemName as DescName
          
@@ -78,6 +90,11 @@ BEGIN
                                  ON ObjectLink_GoodsGroupStat.ObjectId = Object_GoodsGroup.Id
                                 AND ObjectLink_GoodsGroupStat.DescId = zc_ObjectLink_GoodsGroup_GoodsGroupStat()
             LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_GoodsGroupStat.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_GoodsGroupAnalyst
+                                 ON ObjectLink_GoodsGroup_GoodsGroupAnalyst.ObjectId = Object_GoodsGroup.Id
+                                AND ObjectLink_GoodsGroup_GoodsGroupAnalyst.DescId = zc_ObjectLink_GoodsGroup_GoodsGroupAnalyst()
+            LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_GoodsGroup_GoodsGroupAnalyst.ChildObjectId              
             
             LEFT JOIN ObjectDesc on ObjectDesc.Id = Object_GoodsGroup.DescId    
                                           
@@ -96,6 +113,7 @@ ALTER FUNCTION gpSelect_Object_Goods_GoodsGroup(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.14         * add GoodsGroupAnalyst               
  04.09.14         * add zc_ObjectLink_GoodsGroup_GoodsGroupStat()
  02.12.13         *
 */

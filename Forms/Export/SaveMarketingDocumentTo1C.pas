@@ -10,7 +10,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, ExternalSave, Data.DB,
   Datasnap.DBClient, cxLabel, ChoicePeriod, dsdGuides, cxButtonEdit, kbmMemTable,
-  Vcl.Grids, Vcl.DBGrids;
+  Vcl.Grids, Vcl.DBGrids, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TSaveMarketingDocumentTo1CForm = class(TAncestorDialogForm)

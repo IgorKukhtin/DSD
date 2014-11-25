@@ -440,6 +440,8 @@ type
     bbPartnerTag: TdxBarButton;
     actReport_OLAPSold: TAction;
     bbReport_OlapSold: TdxBarButton;
+    actGoodsGroupAnalyst: TdsdOpenForm;
+    bbGoodsGroupAnalyst: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }

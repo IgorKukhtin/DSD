@@ -121,6 +121,7 @@ BEGIN
 --           , CAST(row_number() over(partition BY MovementItem.MovementId ORDER BY MovementItem.MovementId, MovementItem.Id) AS TVarChar) AS Num
 --           , MovementItem.Num                                                    AS Num
            , Movement.InvNumber				                                        AS InvNumber
+           , MovementFloat_WeighingNumber.ValueData                                 AS WeighingNumber
            , Movement.OperDate				                                        AS OperDate
 
            , COALESCE(MovementString_InvNumberPartner.ValueData,Movement.InvNumber) AS InvNumberPartner
@@ -218,13 +219,17 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                                   -- AND tmpObject_GoodsPropertyValue.Name <> ''
+--
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  tmpMovement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
+                                    ON MovementFloat_WeighingNumber.MovementId =  tmpMovement.Id
+                                   AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
 
 -- MOVEMENT
             LEFT JOIN Movement ON Movement.Id = inMovementId--MovementItem.MovementId
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -317,6 +322,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Pack_Print22 (Integer, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.11.14                                                       *
  03.11.14                                                       *
 */
 -- тест

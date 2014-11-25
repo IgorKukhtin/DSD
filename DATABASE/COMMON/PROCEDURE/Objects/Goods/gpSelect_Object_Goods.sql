@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
+             , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
@@ -39,6 +40,9 @@ BEGIN
 
             , Object_GoodsGroupStat.Id        AS GroupStatId
             , Object_GoodsGroupStat.ValueData AS GroupStatName 
+
+            , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
+            , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName             
             
             , Object_Measure.ValueData     AS MeasureName
 
@@ -76,6 +80,11 @@ BEGIN
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
              LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+             
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                                  ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+             LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId             
                  
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
                                   ON ObjectLink_Goods_GoodsTag.ObjectId = Object_Goods.Id
@@ -135,6 +144,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 24.11.14         * add GoodsGroupAnalyst
  13.09.14                                        * add zc_ObjectLink_Goods_GoodsTag()
  04.09.14         * add zc_ObjectLink_Goods_GoodsGroupStat()
  13.01.14                                        * add GoodsGroupNameFull

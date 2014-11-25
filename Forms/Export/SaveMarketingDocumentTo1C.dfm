@@ -159,6 +159,21 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
           Name = 'SUMAPDV'
           DataType = ftString
           Size = 10
+        end
+        item
+          Name = 'OPERDATEC'
+          DataType = ftString
+          Size = 10
+        end
+        item
+          Name = 'INVNUMBERC'
+          DataType = ftString
+          Size = 20
+        end
+        item
+          Name = 'COMMENT'
+          DataType = ftString
+          Size = 100
         end>
       DataSet = AccountExternal
       OpenFileDialog = False
@@ -219,8 +234,10 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
       end
       item
         Name = 'inAccountId'
+        Value = Null
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 16
     Top = 16
   end

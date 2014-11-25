@@ -123,9 +123,9 @@ BEGIN
                                   , ReportContainerLink.AccountKindId
                                   , tmpProfitLoss.MLO_DescId
                                   , tmpProfitLoss.MLO_Partner_DescId
-                             FROM (SELECT ProfitLossId AS Id, zc_MovementLinkObject_From() AS MLO_DescId, zc_MovementLinkObject_To() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = TRUE AND inDescId = zc_Movement_Sale()
+                             FROM (SELECT ProfitLossId AS Id, zc_MovementLinkObject_From() AS MLO_DescId, zc_MovementLinkObject_To() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = TRUE AND isCost = FALSE AND inDescId = zc_Movement_Sale()
                                   UNION ALL
-                                   SELECT ProfitLossId AS Id, zc_MovementLinkObject_To() AS MLO_DescId, zc_MovementLinkObject_From() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = FALSE AND inDescId = zc_Movement_ReturnIn()
+                                   SELECT ProfitLossId AS Id, zc_MovementLinkObject_To() AS MLO_DescId, zc_MovementLinkObject_From() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn()
                                   ) AS tmpProfitLoss
                                   INNER JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
                                                                  ON ContainerLO_ProfitLoss.ObjectId = tmpProfitLoss.Id
@@ -139,7 +139,7 @@ BEGIN
                                   INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                  ON ContainerLO_Juridical.ContainerId = ReportContainerLink_child.ContainerId
                                                                 AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                                AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0))
+                                                                AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_child.ContainerId
                                                                 AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -293,4 +293,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
