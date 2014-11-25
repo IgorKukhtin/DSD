@@ -94,7 +94,40 @@ BEGIN
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)
                                 , tmpListContainer.MovementDescId
                                  )
- SELECT tmpOperation.JuridicalId
+ SELECT tmpResult.JuridicalId
+      , tmpResult.PartnerId
+      , tmpResult.ContractId 
+      , tmpResult.InfoMoneyId
+      , tmpResult.BranchId
+
+      , tmpResult.GoodsId
+      , tmpResult.GoodsKindId
+      , tmpResult.OperDate
+      , tmpResult.InvNumber
+
+      , View_Partner_Address.AreaId                
+      , View_Partner_Address.PartnerTagId          
+      , View_Partner_Address.RegionId              
+      , View_Partner_Address.ProvinceId            
+      , View_Partner_Address.CityKindId            
+      , View_Partner_Address.CityId                
+      , View_Partner_Address.ProvinceCityId        
+      , View_Partner_Address.StreetKindId          
+      , View_Partner_Address.StreetId              
+      , tmpResult.Sale_Summ
+      , tmpResult.Sale_Amount_Weight
+      , tmpResult.Sale_Amount_Sh
+
+      , tmpResult.Return_Summ
+      , tmpResult.Return_Amount_Weight
+      , tmpResult.Return_Amount_Sh
+
+      , tmpResult.Sale_AmountPartner_Weight
+      , tmpResult.Sale_AmountPartner_Sh
+      , tmpResult.Return_AmountPartner_Weight
+      , tmpResult.Return_AmountPartner_Sh
+      FROM 
+      ( SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId
                 , tmpOperation.ContractId 
                 , tmpOperation.InfoMoneyId
@@ -209,7 +242,9 @@ BEGIN
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
                   , tmpOperation.OperDate
-                  , tmpOperation.InvNumber;
+                  , tmpOperation.InvNumber) AS tmpResult
+
+       LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId;
                   
           --LIMIT 1    ;
 

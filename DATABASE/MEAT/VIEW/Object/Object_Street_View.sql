@@ -4,21 +4,20 @@ DROP VIEW IF EXISTS Object_Street_View;
 
 CREATE OR REPLACE VIEW Object_Street_View AS 
        SELECT 
-             Object_Street.Id          AS Id
-           , Object_Street.ValueData   AS Name
+             Object_Street.Id                              AS Id
+           , Object_Street.ValueData                       AS Name
+           , PostalCode.ValueData                          AS PostalCode
            
-           , PostalCode.ValueData      AS PostalCode
-           
-           , Object_StreetKind.Id           AS StreetKindId
-           , Object_StreetKind.ValueData    AS StreetKindName
+           , Object_StreetKind.Id                          AS StreetKindId
+           , Object_StreetKind.ValueData                   AS StreetKindName
          
-           , Object_City.Id                 AS CityId
-           , Object_City.ValueData          AS CityName
+           , ObjectLink_Street_City.ChildObjectId          AS CityId
+           , Object_City.ValueData                         AS CityName
 
-           , Object_ProvinceCity.Id         AS ProvinceCityId
-           , Object_ProvinceCity.ValueData  AS ProvinceCityName
+           , ObjectLink_Street_ProvinceCity.ChildObjectId  AS ProvinceCityId
+           , Object_ProvinceCity.ValueData                 AS ProvinceCityName
            
-           , Object_Street.isErased    AS isErased
+           , Object_Street.isErased                        AS isErased
            
        FROM Object AS Object_Street
            -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Street.AccessKeyId

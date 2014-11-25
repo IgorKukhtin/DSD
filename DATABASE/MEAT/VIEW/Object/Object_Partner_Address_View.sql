@@ -17,9 +17,13 @@ CREATE OR REPLACE VIEW Object_Partner_Address_View AS
        , Object_Province.ValueData                   AS ProvinceName
        , ObjectLink_City_CityKind.ChildObjectId      AS CityKindId
        , Object_CityKind.ValueData                   AS CityKindName
+       , Object_Street_View.CityId                   AS CityId
        , Object_Street_View.CityName                 AS CityName
+       , Object_Street_View.ProvinceCityId           AS ProvinceCityId
        , Object_Street_View.ProvinceCityName         AS ProvinceCityName
+       , Object_Street_View.StreetKindId             AS StreetKindId
        , Object_Street_View.StreetKindName           AS StreetKindName
+       , ObjectLink_Partner_Street.ChildObjectId     AS StreetId
        , Object_Street_View.Name                     AS StreetName
 
        , Object_Partner.isErased                     AS isErased

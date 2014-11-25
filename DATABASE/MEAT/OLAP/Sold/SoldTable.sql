@@ -22,6 +22,16 @@ CREATE TABLE SoldTable
  , GoodsKindId Integer
  , OperDate TDateTime
  , InvNumber TVarChar
+
+ , AreaId                Integer
+ , PartnerTagId          Integer
+ , RegionId              Integer
+ , ProvinceId            Integer
+ , CityKindId            Integer
+ , CityId                Integer
+ , ProvinceCityId        Integer
+ , StreetKindId          Integer
+ , StreetId              Integer
                            
  , Sale_Summ             TFloat  
  , Sale_Amount_Weight    TFloat  
