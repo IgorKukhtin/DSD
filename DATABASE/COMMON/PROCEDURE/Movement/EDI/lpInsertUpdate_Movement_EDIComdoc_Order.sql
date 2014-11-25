@@ -23,7 +23,7 @@ $BODY$
 
    DECLARE vbRouteId          Integer;
    DECLARE vbRouteSortingId   Integer;
-   DECLARE MemberTakeId       Integer;
+   DECLARE vbMemberTakeId     Integer;
 
    DECLARE vbPriceListId      Integer;
    DECLARE vbPriceWithVAT     Boolean;
@@ -49,7 +49,7 @@ BEGIN
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
             INTO vbMovementId_Order, vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
-               , vbRouteId, vbRouteSortingId, MemberTakeId
+               , vbRouteId, vbRouteSortingId, vbMemberTakeId
                , vbGoodsPropertyId, vbOKPO
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
