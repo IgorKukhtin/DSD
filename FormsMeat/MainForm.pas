@@ -369,8 +369,6 @@ type
     bbIncomeCashOld: TdxBarButton;
     actLoad1CMoney: TdsdOpenForm;
     bbLoad1CMoney: TdxBarButton;
-    actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm;
-    bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton;
     actFounder: TdsdOpenForm;
     bbFounder: TdxBarButton;
     actArticleLoss: TdsdOpenForm;

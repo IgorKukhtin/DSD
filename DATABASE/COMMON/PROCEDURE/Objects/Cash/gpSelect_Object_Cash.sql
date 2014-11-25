@@ -1,13 +1,15 @@
 -- Function: gpSelect_Object_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Cash();
+DROP FUNCTION IF EXISTS gpSelect_Object_Cash(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               CurrencyName TVarChar, BranchName TVarChar, JuridicalName TVarChar, 
-               BusinessName TVarChar)
+               CurrencyName TVarChar, BranchName TVarChar,
+               JuridicalName TVarChar, 
+               BusinessName TVarChar, 
+               PaidKindName TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -29,6 +31,7 @@ BEGIN
    , Branch.ValueData   AS BranchName
    , JuridicalBasis.ValueData  AS JuridicalName
    , Business.ValueData AS BusinessName
+   , PaidKind.ValueData AS PaidKindName   
 
    FROM Object
         LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object.AccessKeyId
@@ -40,15 +43,23 @@ BEGIN
         LEFT JOIN ObjectLink AS Cash_Branch
                              ON Cash_Branch.ObjectId = Object.Id
                             AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-           LEFT JOIN Object AS Branch ON Branch.Id = Cash_Branch.ChildObjectId
-           LEFT JOIN ObjectLink AS Cash_JuridicalBasis
-                                ON Cash_JuridicalBasis.ObjectId = Object.Id
-                               AND Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
-           LEFT JOIN Object AS JuridicalBasis ON JuridicalBasis.Id = Cash_JuridicalBasis.ChildObjectId
-           LEFT JOIN ObjectLink AS Cash_Business
-                                ON Cash_Business.ObjectId = Object.Id
-                               AND Cash_Business.DescId = zc_ObjectLink_Cash_Business()
-           LEFT JOIN Object AS Business ON Business.Id = Cash_Business.ChildObjectId
+        LEFT JOIN Object AS Branch ON Branch.Id = Cash_Branch.ChildObjectId
+          
+        LEFT JOIN ObjectLink AS Cash_JuridicalBasis
+                             ON Cash_JuridicalBasis.ObjectId = Object.Id
+                            AND Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
+        LEFT JOIN Object AS JuridicalBasis ON JuridicalBasis.Id = Cash_JuridicalBasis.ChildObjectId
+           
+        LEFT JOIN ObjectLink AS Cash_Business
+                             ON Cash_Business.ObjectId = Object.Id
+                            AND Cash_Business.DescId = zc_ObjectLink_Cash_Business()
+        LEFT JOIN Object AS Business ON Business.Id = Cash_Business.ChildObjectId
+           
+        LEFT JOIN ObjectLink AS Cash_PaidKind
+                             ON Cash_PaidKind.ObjectId = Object.Id
+                            AND Cash_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
+        LEFT JOIN Object AS PaidKind ON PaidKind.Id = Cash_PaidKind.ChildObjectId
+                      
    WHERE Object.DescId = zc_Object_Cash()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
   ;
@@ -62,6 +73,7 @@ ALTER FUNCTION gpSelect_Object_Cash (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.11.14         * add PaidKind               
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
  24.12.13                                        * Cyr1251
  10.05.13          *

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 330
-  ClientWidth = 301
+  ClientHeight = 379
+  ClientWidth = 300
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 34
-    Top = 296
+    Top = 344
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 178
-    Top = 296
+    Top = 344
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -95,12 +95,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 192
+    Top = 232
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
   end
   object ceTradeMark: TcxButtonEdit
     Left = 8
-    Top = 210
+    Top = 250
     Properties.Buttons = <
       item
         Default = True
@@ -112,12 +112,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 8
-    Top = 238
+    Top = 278
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsTag: TcxButtonEdit
     Left = 8
-    Top = 257
+    Top = 297
     Properties.Buttons = <
       item
         Default = True
@@ -125,6 +125,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 8
+    Top = 189
+    Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+  end
+  object ceGoodsGroupAnalyst: TcxButtonEdit
+    Left = 8
+    Top = 209
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
     Width = 273
   end
   object ActionList: TActionList
@@ -199,6 +216,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsGroupAnalystId'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inTradeMarkId'
         Value = ''
         Component = TradeMarkGuides
@@ -212,6 +236,7 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 208
     Top = 8
   end
@@ -231,7 +256,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -299,7 +324,21 @@
         Component = GoodsTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'GoodsGroupAnalystId'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsGroupAnalystName'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 160
     Top = 48
   end
@@ -367,7 +406,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 136
+    Left = 112
     Top = 160
   end
   object TradeMarkGuides: TdsdGuides
@@ -391,8 +430,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 128
-    Top = 200
+    Left = 176
+    Top = 241
   end
   object GoodsTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -416,6 +455,30 @@
         DataType = ftString
       end>
     Left = 128
-    Top = 248
+    Top = 281
+  end
+  object GoodsGroupAnalystGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsGroupAnalyst
+    FormNameParam.Value = 'TGoodsGroupAnalystForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupAnalystForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 200
+    Top = 192
   end
 end

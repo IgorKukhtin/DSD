@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Cash()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Cash (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Cash (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
  INOUT ioId	          Integer   ,    -- ключ объекта <Касса> 
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
     IN inBranchId         Integer   ,    -- Какому филиалу принадлежит касса 
     IN inJuridicalBasisId Integer   ,    -- Главное юр Лицо
     IN inBusinessId       Integer   ,    -- Бизнес
+    IN inPaidKindId       Integer   ,    -- Форма оплаты 
     IN inSession          TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -36,18 +38,20 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Branch(), ioId, inBranchId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_JuridicalBasis(), ioId, inJuridicalBasisId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Business(), ioId, inBusinessId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_PaidKind(), ioId, inPaidKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Cash (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Cash (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
   
  /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.11.14         * add PaidKind                 
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
  26.12.13                                        * add inAccessKeyId
  24.11.13                                        * err lfGet_ObjectCode (zc_Object_Cash(), inCode)

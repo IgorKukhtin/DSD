@@ -91,7 +91,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 273
+    Width = 124
   end
   object cxLabel5: TcxLabel
     Left = 40
@@ -125,11 +125,28 @@
     TabOrder = 13
     Width = 273
   end
+  object cxLabel2: TcxLabel
+    Left = 192
+    Top = 149
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+  end
+  object cePaidKind: TcxButtonEdit
+    Left = 192
+    Top = 170
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 15
+    Width = 121
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -143,9 +160,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -173,7 +192,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inName'
+        Name = 'inCashName'
         Value = ''
         Component = edName
         DataType = ftString
@@ -204,7 +223,15 @@
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -291,13 +318,29 @@
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 192
-    Top = 88
+    PackSize = 1
+    Left = 16
+    Top = 288
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -320,6 +363,8 @@
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -336,7 +381,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 256
+    Left = 88
     Top = 165
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -361,6 +406,8 @@
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
+    FormNameParam.Value = 'TBusiness_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -383,6 +430,8 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -401,5 +450,29 @@
       end>
     Left = 264
     Top = 208
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 232
+    Top = 165
   end
 end
