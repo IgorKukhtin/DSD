@@ -133,7 +133,7 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN -1 * _tmpItem.OperSumm
-                    ELSE CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END * CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
+                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ * CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
                END AS OperSumm
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN _tmpItem.OperSumm_Currency
