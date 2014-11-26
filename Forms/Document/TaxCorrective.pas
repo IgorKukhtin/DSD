@@ -69,8 +69,6 @@ type
     edReturnIn: TcxTextEdit;
     cxLabel8: TcxLabel;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
-    actPrint_TaxCorrective_Us: TdsdPrintAction;
-    actPrint_TaxCorrective_Client: TdsdPrintAction;
     bbPrint_TaxCorrective_Client: TdxBarButton;
     edDocumentTax: TcxButtonEdit;
     DocumentTaxGuides: TdsdGuides;
@@ -84,6 +82,12 @@ type
     spInsertUpdateMovement_IsDocument: TdsdStoredProc;
     cxLabel13: TcxLabel;
     edInvNumberBranch: TcxTextEdit;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
+    mactPrint_TaxCorrective_Us: TMultiAction;
   private
     { Private declarations }
   public

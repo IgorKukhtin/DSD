@@ -21,21 +21,34 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TaxCorrective());
 
-     SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
-          , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective
-     FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
-                            THEN inMovementId
-                       ELSE MovementLinkMovement_Master.MovementChildId
-                  END AS MovementId_TaxCorrective
+     SELECT MAX(tmpMovement.OperDate)
+            INTO vbOperDate
+     FROM (SELECT Movement_find.OperDate
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                               ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                               ON MovementLinkMovement_Master.MovementId = Movement.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                -- печатаем всегда все корректировки
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
+                                               ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
+                                              AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
+                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
            WHERE Movement.Id = inMovementId
-          ) AS tmpMovement
-          INNER JOIN Movement AS Movement_TaxCorrective ON Movement_TaxCorrective.Id = tmpMovement.MovementId_TaxCorrective
-                                                       AND (Movement_TaxCorrective.StatusId = zc_Enum_Status_Complete() OR tmpMovement.MovementId_TaxCorrective = inMovementId);
+             AND Movement.DescId = zc_Movement_TaxCorrective()
+          UNION
+           SELECT Movement_Master.OperDate
+           FROM Movement
+                INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
+                                                      AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+          ) AS tmpMovement;
+
+
 
 
 
@@ -45,14 +58,10 @@ BEGIN
        SELECT
             COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_TaxCorrective')
        INTO vbPrintFormName
-       FROM Movement
+       FROM PrintForms_View
+       WHERE vbOperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+         AND PrintForms_View.ReportType = 'TaxCorrective';
 
-       LEFT JOIN PrintForms_View
-              ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.ReportType = 'TaxCorrective'
-
-       WHERE Movement.Id =  vbMovementId_TaxCorrective
-         AND Movement.DescId = zc_Movement_TaxCorrective();
 
 
      RETURN (vbPrintFormName);

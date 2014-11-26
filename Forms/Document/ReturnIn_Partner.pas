@@ -83,8 +83,6 @@ type
     colMeasureName: TcxGridDBColumn;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
-    actPrint_TaxCorrective_Client: TdsdPrintAction;
-    actPrint_TaxCorrective_Us: TdsdPrintAction;
     bbPrintTaxCorrective_Us: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
     actCorrective: TdsdExecStoredProc;
@@ -127,6 +125,12 @@ type
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
     actGoodsKindChoice: TOpenChoiceForm;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
+    mactPrint_TaxCorrective_Us: TMultiAction;
   private
     { Private declarations }
   public
