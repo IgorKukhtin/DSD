@@ -2,27 +2,29 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitWidth = 1028
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1020
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1020
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1020
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1014
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 518
-        ExplicitWidth = 1020
-        ExplicitHeight = 518
+        Width = 1014
+        Height = 514
+        ExplicitWidth = 1014
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -77,6 +79,7 @@ inherited ReturnInForm: TReturnInForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -199,8 +202,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 518
+        Width = 1014
+        Height = 514
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -564,7 +567,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 223
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 223
     end
     object cxLabel3: TcxLabel
@@ -981,7 +984,10 @@ inherited ReturnInForm: TReturnInForm
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction [14]
       Category = 'DSDLib'
@@ -1235,6 +1241,63 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    object actSPPrintSaleTaxCorrectiveProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetReportNameTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTaxCorrective
+        end>
+    end
+    object mactPrint_TaxCorrective_Us: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintSaleTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Us
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 18
+    end
+    object actPrintTax_Us: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1291,7 +1354,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1443,9 +1506,8 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 16
     end
     object bbPrintTaxCorrective_Us: TdxBarButton
-      Action = actPrint_TaxCorrective_Us
+      Action = mactPrint_TaxCorrective_Us
       Category = 0
-      ImageIndex = 18
     end
     object bbPrint_Return_By_TaxCorrective: TdxBarButton
       Action = actPrint_ReturnIn_by_TaxCorrective
@@ -1524,6 +1586,12 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ReportName'
         Value = 'PrintMovement_TaxCorrective'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportNameTaxCorrective'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
       end>
@@ -2806,5 +2874,28 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 931
     Top = 65532
+  end
+  object spGetReportNameTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_TaxCorrective_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTaxCorrective'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 520
   end
 end
