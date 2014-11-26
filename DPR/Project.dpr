@@ -57,7 +57,6 @@ uses
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
   VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
-  MainForm in '..\FormsMeat\MainForm.pas' {MainForm},
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
@@ -66,7 +65,8 @@ uses
   dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   dsdOLAPSetup in '..\SOURCE\COMPONENT\dsdOLAPSetup.pas' {OLAPSetupForm},
   OLAPSales in '..\FormsMeat\Report\OLAP\OLAPSales.pas' {OLAPSalesForm},
-  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas';
+  GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas',
+  MainForm in '..\FormsMeat\MainForm.pas' {MainForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -190,7 +190,8 @@ uses
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
-  MemberTest in '..\SOURCE\Objects\All\MemberTest.pas';
+  MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
+  Process in '..\..\Forms\Kind\Process.pas' {ProcessForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

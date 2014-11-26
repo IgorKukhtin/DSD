@@ -2,7 +2,7 @@ object OLAPSetupForm: TOLAPSetupForm
   Left = 427
   Top = 103
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1054#1083#1072#1087#1072
-  ClientHeight = 507
+  ClientHeight = 623
   ClientWidth = 965
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,27 +25,30 @@ object OLAPSetupForm: TOLAPSetupForm
     Left = 0
     Top = 0
     Width = 965
-    Height = 507
+    Height = 623
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 507
     object fpSettings: TPanel
       Left = 0
       Top = 0
       Width = 961
-      Height = 503
+      Height = 619
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 503
       object ScrollBox1: TScrollBox
         Left = 1
         Top = 1
         Width = 959
-        Height = 501
+        Height = 617
         Align = alClient
         BorderStyle = bsNone
         TabOrder = 0
+        ExplicitHeight = 542
         object Label1: TLabel
-          Left = 262
-          Top = 478
+          Left = 162
+          Top = 569
           Width = 150
           Height = 13
           Caption = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
@@ -65,17 +68,17 @@ object OLAPSetupForm: TOLAPSetupForm
           Caption = #1060#1080#1083#1100#1090#1088#1099': '
         end
         object Label5: TLabel
-          Left = 427
-          Top = 296
+          Left = 704
+          Top = 49
           Width = 35
           Height = 13
           Caption = #1044#1072#1090#1099': '
         end
         object laFilterCaption: TLabel
           Left = 705
-          Top = 49
+          Top = 220
           Width = 54
-          Height = 13
+          Height = 95
           Caption = #1044#1072#1085#1085#1099#1077': '
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -85,8 +88,8 @@ object OLAPSetupForm: TOLAPSetupForm
           ParentFont = False
         end
         object Label6: TLabel
-          Left = 574
-          Top = 477
+          Left = 602
+          Top = 568
           Width = 182
           Height = 13
           Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1087#1080#1089#1077#1081':'
@@ -95,7 +98,7 @@ object OLAPSetupForm: TOLAPSetupForm
           Left = 18
           Top = 68
           Width = 381
-          Height = 392
+          Height = 487
           BevelEdges = []
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -155,7 +158,7 @@ object OLAPSetupForm: TOLAPSetupForm
           Left = 427
           Top = 68
           Width = 259
-          Height = 223
+          Height = 487
           BevelEdges = []
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -206,9 +209,9 @@ object OLAPSetupForm: TOLAPSetupForm
           end
         end
         object cxDate: TcxGrid
-          Left = 428
-          Top = 315
-          Width = 262
+          Left = 705
+          Top = 68
+          Width = 238
           Height = 145
           BevelEdges = []
           BevelInner = bvNone
@@ -257,8 +260,8 @@ object OLAPSetupForm: TOLAPSetupForm
           end
         end
         object cbPreparedSettings: TComboBox
-          Left = 421
-          Top = 474
+          Left = 321
+          Top = 565
           Width = 145
           Height = 21
           Style = csDropDownList
@@ -267,9 +270,9 @@ object OLAPSetupForm: TOLAPSetupForm
         end
         object cxFilter: TcxGrid
           Left = 705
-          Top = 67
+          Top = 239
           Width = 238
-          Height = 393
+          Height = 316
           BevelEdges = []
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -313,8 +316,8 @@ object OLAPSetupForm: TOLAPSetupForm
           end
         end
         object cxMaxRecordCount: TcxCurrencyEdit
-          Left = 760
-          Top = 473
+          Left = 788
+          Top = 564
           EditValue = 1000000
           ParentFont = False
           Properties.Alignment.Horz = taRightJustify
@@ -334,6 +337,7 @@ object OLAPSetupForm: TOLAPSetupForm
           Properties.Alignment.Horz = taLeftJustify
           Properties.Alignment.Vert = taVCenter
           Properties.Orientation = cxoLeft
+          Visible = False
           Height = 17
           Width = 132
           AnchorY = 14
@@ -353,6 +357,7 @@ object OLAPSetupForm: TOLAPSetupForm
               Value = 1
             end>
           TabOrder = 8
+          Visible = False
           Width = 239
         end
         object ELLabel1: TcxLabel
@@ -371,6 +376,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object fldReportType: TcxImageComboBox
           Left = 161
           Top = 26
+          Enabled = False
           ParentFont = False
           Properties.Items = <
             item
@@ -387,8 +393,8 @@ object OLAPSetupForm: TOLAPSetupForm
           Width = 239
         end
         object DatePanel: TPanel
-          Left = 623
-          Top = 316
+          Left = 883
+          Top = 69
           Width = 40
           Height = 143
           BevelOuter = bvNone
@@ -405,6 +411,7 @@ object OLAPSetupForm: TOLAPSetupForm
           Properties.Alignment.Horz = taLeftJustify
           Properties.Alignment.Vert = taVCenter
           Properties.Orientation = cxoLeft
+          Visible = False
           Height = 17
           Width = 124
           AnchorY = 37
@@ -447,6 +454,7 @@ object OLAPSetupForm: TOLAPSetupForm
             end>
           Properties.OnChange = fldReportTypePropertiesChange
           TabOrder = 12
+          Visible = False
           Width = 239
         end
         object cxButton1: TcxButton
@@ -495,15 +503,36 @@ object OLAPSetupForm: TOLAPSetupForm
           Top = 4
           Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
         end
+        object cxButton3: TcxButton
+          Left = 470
+          Top = 565
+          Width = 125
+          Height = 20
+          Caption = #1059#1076#1072#1083#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1091
+          OptionsImage.ImageIndex = 72
+          OptionsImage.Images = dmMain.ImageList
+          TabOrder = 19
+          OnClick = ELDeletePreparedSettingsClick
+        end
+        object cxButton4: TcxButton
+          Left = 470
+          Top = 591
+          Width = 125
+          Height = 20
+          Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1091
+          OptionsImage.ImageIndex = 0
+          OptionsImage.Images = dmMain.ImageList
+          TabOrder = 20
+          OnClick = ELSavePreparedSettingsClick
+        end
       end
     end
     object txPreparedSettings: TcxTextEdit
-      Left = 90
-      Top = 474
+      Left = 322
+      Top = 593
       ParentFont = False
       TabOrder = 1
-      Visible = False
-      Width = 147
+      Width = 145
     end
   end
   object DimensionDS: TDataSource
@@ -518,13 +547,13 @@ object OLAPSetupForm: TOLAPSetupForm
   end
   object DateDS: TDataSource
     DataSet = DateFields
-    Left = 502
-    Top = 302
+    Left = 806
+    Top = 78
   end
   object FilterDS: TDataSource
     DataSet = FilterTable
     Left = 784
-    Top = 176
+    Top = 272
   end
   object DimensionFields: TClientDataSet
     Aggregates = <>
@@ -582,8 +611,8 @@ object OLAPSetupForm: TOLAPSetupForm
   object DateFields: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 552
-    Top = 344
+    Left = 856
+    Top = 120
     object DateFieldsName: TStringField
       FieldName = 'Name'
       Size = 100
@@ -600,7 +629,7 @@ object OLAPSetupForm: TOLAPSetupForm
     Aggregates = <>
     Params = <>
     Left = 832
-    Top = 224
+    Top = 272
     object FilterTableName: TStringField
       FieldName = 'Name'
       Size = 100

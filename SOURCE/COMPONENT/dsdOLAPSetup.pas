@@ -82,6 +82,8 @@ type
     DataFieldsField_Name: TStringField;
     DataFieldsCalculateType: TSmallintField;
     DataFieldsisOLAPFilter: TBooleanField;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
     procedure btnRunOlapClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DimensionFieldsAfterScroll(DataSet: TDataSet);
@@ -264,7 +266,7 @@ procedure TOLAPSetupForm.ELSavePreparedSettingsClick(
 begin
   inherited;
   FillOlapSaleReportOptionFromGrid;
-//  FPreparedSettingsList.Values[txPreparedSettings.Text] := FELOlapSaleReportOption.XMLScheme;
+  FPreparedSettingsList.Values[txPreparedSettings.Text] := FOlapReportOption.XMLScheme;
 //  TELListCube.SaveShema(FPreparedSettingsList.Text, SchemeName);
   cbPreparedSettings.Items.Add(txPreparedSettings.Text)
 end;
@@ -273,21 +275,21 @@ procedure TOLAPSetupForm.ELDeletePreparedSettingsClick(
   Sender: TObject);
 begin
   inherited;
-{  if ELMessageDlg('Вы хотите удалить предварительную настройку?', emtConfirmation, embYesNo, []) = mrYes then begin
+  if MessageDlg('Вы хотите удалить предварительную настройку?', mtConfirmation, mbYesNo, 0) = mrYes then begin
     FPreparedSettingsList.Delete(FPreparedSettingsList.IndexOfName(cbPreparedSettings.Text));
     cbPreparedSettings.Items.Delete(cbPreparedSettings.Items.IndexOfName(cbPreparedSettings.Text));
     cbPreparedSettings.Text := '';
-    TELListCube.SaveShema(FPreparedSettingsList.Text, SchemeName);
-  end;}
+//    TELListCube.SaveShema(FPreparedSettingsList.Text, SchemeName);
+  end;
 end;
 
 procedure TOLAPSetupForm.cbPreparedSettingsCloseUp(Sender: TObject);
 begin
   inherited;
-{  if cbPreparedSettings.Text <> '' then begin
-    FELOlapSaleReportOption.XMLScheme := FPreparedSettingsList.Values[cbPreparedSettings.Text];
+  if cbPreparedSettings.Text <> '' then begin
+    FOlapReportOption.XMLScheme := FPreparedSettingsList.Values[cbPreparedSettings.Text];
     FillGridFromOlapSaleReportOption
-  end;}
+  end;
 end;
 
 procedure TOLAPSetupForm.FillGridFromOlapSaleReportOption;
