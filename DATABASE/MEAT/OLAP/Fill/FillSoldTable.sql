@@ -372,8 +372,11 @@ BEGIN
           , LinkObject_Juridical.ObjectId
           , LinkObject_Contract.ObjectId;
 
-  UPDATE SoldTable SET SaleBonus = Sale_Summ - COALESCE(Bonus, 0);
-
+  UPDATE SoldTable SET SaleBonus = COALESCE(Sale_Summ, 0) - COALESCE(Bonus, 0),
+                     Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0),
+               SaleReturn_Profit = COALESCE(SaleReturn_Summ, 0) - COALESCE(SaleReturn_SummCost, 0),
+                 SaleBonusProfit = COALESCE(Sale_Summ, 0) - COALESCE(Bonus, 0) - COALESCE(Sale_SummCost, 0);
+  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -36,6 +36,7 @@ CREATE TABLE SoldTable
                            
  , Sale_Summ             TFloat  
  , Sale_SummCost         TFloat
+ , Sale_Profit           TFloat
  , Sale_Amount_Weight    TFloat  
  , Sale_Amount_Sh        TFloat  
 
@@ -46,11 +47,13 @@ CREATE TABLE SoldTable
 
  , SaleReturn_Summ       TFloat
  , SaleReturn_SummCost   TFloat
+ , SaleReturn_Profit     TFloat
  , SaleReturn_Amount_Weight TFloat
  , SaleReturn_Amount_Sh  TFloat
 
  , Bonus                 TFloat
  , SaleBonus             TFloat
+ , SaleBonusProfit       TFloat
  , Plan_Weight           TFloat
  , Plan_Summ             TFloat
  
@@ -68,6 +71,7 @@ WITH (
 
 ALTER TABLE SoldTable
   OWNER TO postgres;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO project;
 
 /*                                  Индексы                                      */
 

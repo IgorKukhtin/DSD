@@ -169,7 +169,7 @@ type
 
 implementation
 
-uses SysUtils, DateUtils, Variants, dsdOLAPXMLBind;
+uses SysUtils, DateUtils, Variants, dsdOLAPXMLBind, TypInfo;
 
 { TELOlapSalers }
 
@@ -313,10 +313,13 @@ var
   OLAPField: TDataOLAPField;
   DimensionOLAPField: TDimensionOLAPField;
   DateOLAPField: TDateOLAPField;
+  FieldNameList: TStringList;
+  i: integer;
 begin
   isOLAPonServer := false;
   isCreateDate := false;
   SummaryType := stNone;
+  FieldNameList := TStringList.Create;
 
   FFields := TStringList.Create;
 
@@ -329,8 +332,13 @@ begin
          OLAPField.Caption := FieldByName('Caption').asString;
          OLAPField.FieldName := FieldByName('FieldName').asString;
          // Устанавливаем данные для расчета
-         if FieldByName('FieldName').asString then
-
+         if FieldByName('SummaryType').asString <> '' then begin
+            OLAPField.SummaryType := TSummaryType(GetEnumValue(TypeInfo(TSummaryType), FieldByName('SummaryType').asString));
+            OLAPField.Condition := FieldByName('VisibleFieldName').asString;
+            FieldNameList.DelimitedText := FieldByName('ConnectFieldName').asString;
+            for I := 0 to FieldNameList.Count - 1 do
+                OLAPField.ObligatoryObjects[i] := Objects[FieldNameList[i]];
+         end;
          FFields.AddObject(OLAPField.FieldName, OLAPField);
        end;
        if FieldByName('FieldType').AsString = 'dimension' then

@@ -26,8 +26,14 @@ BEGIN
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 104, 'data'::TVarChar, 'Штуки реализации'::TVarChar, 'Sale_Amount_Sh'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 105, 'data'::TVarChar, '% рентабельности реализация'::TVarChar, 'SalePercent'::TVarChar, ',0.###'::TVarChar, 
-                 ''::TVarChar, ''::TVarChar,'Sale_SummCost,sale_summ'::TVarChar,''::TVarChar,'stPercent'::TVarChar
+   UNION SELECT 105, 'data'::TVarChar, 'Доход от реализации'::TVarChar, 'Sale_Profit'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 106, 'data'::TVarChar, '% рентабельности реализация'::TVarChar, 'Sale_Percent'::TVarChar, ',0.###'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,
+                'Sale_SummCost,Sale_Profit'::TVarChar,
+                'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(Sale_Profit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
+                'stPercent'::TVarChar
+
    UNION SELECT 111, 'data'::TVarChar, 'Сумма возврата'::TVarChar, 'Return_summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 112, 'data'::TVarChar, 'С\с возврата'::TVarChar, 'Return_SummCost'::TVarChar, ',0.00'::TVarChar, 
@@ -36,6 +42,7 @@ BEGIN
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 114, 'data'::TVarChar, 'Штуки возврата'::TVarChar, 'Return_Amount_Sh'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+
    UNION SELECT 121, 'data'::TVarChar, 'Сумма реализация-возврат'::TVarChar, 'SaleReturn_summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 122, 'data'::TVarChar, 'С\с реализация-возврат'::TVarChar, 'SaleReturn_SummCost'::TVarChar, ',0.00'::TVarChar, 
@@ -44,22 +51,32 @@ BEGIN
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 124, 'data'::TVarChar, 'Штуки реализация-возврат'::TVarChar, 'SaleReturn_Amount_Sh'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 125, 'data'::TVarChar, '% рентабельности реализация-возврат'::TVarChar, 'SaleReturnPercent'::TVarChar, ',0.###'::TVarChar, 
-                 ''::TVarChar, ''::TVarChar,'SaleReturn_SummCost,saleReturn_summ'::TVarChar,''::TVarChar,'stPercent'::TVarChar
+   UNION SELECT 125, 'data'::TVarChar, 'Доход от реализации-возврат'::TVarChar, 'SaleReturn_Profit'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 126, 'data'::TVarChar, '% рентабельности реализация-возврат'::TVarChar, 'SaleReturnPercent'::TVarChar, ',0.###'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,
+                 'SaleReturn_SummCost,SaleReturn_Profit'::TVarChar,
+                 'CASE WHEN SUM(SaleReturn_SummCost) = 0 THEN 0 ELSE SUM(SaleReturn_Profit) / SUM(SaleReturn_SummCost) * 100 END'::TVarChar,
+                 'stPercent'::TVarChar
 
    UNION SELECT 131, 'data'::TVarChar, 'Бонус'::TVarChar, 'Bonus'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 132, 'data'::TVarChar, 'Реализация - бонус'::TVarChar, 'SaleBonus'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 133, 'data'::TVarChar, '% рентабельности реализация - бонус'::TVarChar, 'SaleBonusPercent'::TVarChar, ',0.00'::TVarChar, 
-                 ''::TVarChar, ''::TVarChar,'Sale_SummCost,SaleBonus'::TVarChar,''::TVarChar,'stPercent'::TVarChar
+   UNION SELECT 133, 'data'::TVarChar, 'Доход реализация - бонус'::TVarChar, 'SaleBonusProfit'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
+   UNION SELECT 134, 'data'::TVarChar, '% рентабельности реализация - бонус'::TVarChar, 'SaleBonusPercent'::TVarChar, ',0.00'::TVarChar, 
+                 ''::TVarChar, ''::TVarChar,
+                 'Sale_SummCost,SaleBonusProfit'::TVarChar,
+                 'CASE WHEN SUM(Sale_SummCost) = 0 THEN 0 ELSE SUM(SaleBonusProfit) / SUM(Sale_SummCost) * 100 END'::TVarChar,
+                 'stPercent'::TVarChar
 
    UNION SELECT 141, 'data'::TVarChar, 'План кг'::TVarChar, 'Plan_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
    UNION SELECT 142, 'data'::TVarChar, 'План сумма'::TVarChar, 'Plan_Summ'::TVarChar, ',0.00'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar
-   UNION SELECT 143, 'data'::TVarChar, '% выполнения плана кг'::TVarChar, 'Plan_WeightPercent'::TVarChar, ',0.###'::TVarChar, 
-                 ''::TVarChar, ''::TVarChar,'Plan_Weight,SaleReturn_Amount_Weight'::TVarChar,''::TVarChar,'stPercent'::TVarChar
+--   UNION SELECT 143, 'data'::TVarChar, '% выполнения плана кг'::TVarChar, 'Plan_WeightPercent'::TVarChar, ',0.###'::TVarChar, 
+  --               ''::TVarChar, ''::TVarChar,'Plan_Weight,SaleReturn_Amount_Weight'::TVarChar,''::TVarChar,'stPercent'::TVarChar
  
    UNION SELECT 151, 'data'::TVarChar, 'Акции кг'::TVarChar, 'Actions_Weight'::TVarChar, ',0.###'::TVarChar, 
                  ''::TVarChar, ''::TVarChar,''::TVarChar,''::TVarChar,''::TVarChar

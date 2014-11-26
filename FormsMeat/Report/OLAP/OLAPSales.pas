@@ -69,7 +69,7 @@ type
 
 implementation
 
-uses Dialogs, SysUtils, Variants, cxCurrencyEdit, StrUtils, GridGroupCalculate,
+uses Dialogs, SysUtils, Variants, GridGroupCalculate, cxCurrencyEdit, StrUtils,
 UtilConvert;
 {ComObj, cxGridExportLink, cxExportPivotGridLink, cxFilterControlDialog;}
 
