@@ -9,33 +9,7 @@ uses DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, c
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxTextEdit, cxMemo,
   cxRichEdit, cxLabel, Vcl.ExtCtrls, Vcl.Controls, cxCustomPivotGrid,
   cxDBPivotGrid, Vcl.Forms, dsdOLAP, dsdAddOn, cxPropertiesStore, dxBarExtItems,
-  dxBar, dsdDB, Datasnap.DBClient;
-
-{uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ELCustomDataEditor, cxStyles, cxCustomData, cxGraphics,
-  cxFilter, cxData, cxDataStorage, cxEdit, DB, cxDBData, cxLabel, Oracle,
-  ELOracleSession, ActnList, ELActionList, cxGridLevel,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxControls, cxGridCustomView, cxGrid, ELGrid, NxCollection, ELFlipPanel,
-  cxTextEdit, cxMemo, cxRichEdit, cxContainer, ELLabel, ExtCtrls,
-  ELGroupPanel, HProcess, xlcClasses, xlEngine, xlReport, ProgressImage,
-  OracleData, ELOracleDataSet, cxGridDBBandedTableView, cxGridBandedTableView,
-  StdCtrls, ELMemo, cxCurrencyEdit, cxCheckBox, cxLookAndFeels,
-  cxLookAndFeelPainters, dxSkinsCore, dxSkinBlack, dxSkinBlue,
-  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle,
-  dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary,
-  dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin,
-  dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp,
-  dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
-  dxSkinSummer2008, dxSkinTheAsphaltWorld, upsmilestile,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomPivotGrid, cxPivotGrid,
-  cxDBPivotGrid, ELOlapSalesUnit, ThreadProgress, cxLocalization}
+  dxBar, dsdDB, Datasnap.DBClient, dsdAction;
 
 type
 
@@ -50,8 +24,6 @@ type
   end;
 
   TOLAPSalesForm = class(TForm)
-    acExcel: TAction;
-    acShowDetail: TAction;
     cxDBPivotGrid: TcxDBPivotGrid;
     gpRepHeader: TPanel;
     lblRepName: TcxLabel;
@@ -70,12 +42,13 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     sbDataEditor: TScrollBox;
+    bbExcel: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
 
     procedure FormCreate(Sender: TObject);
 
     procedure tvReportDataControllerSummaryAfterSummary(
       ASender: TcxDataSummary);
-    procedure acExcelExecute(Sender: TObject);
     procedure odsRepDataCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
@@ -96,7 +69,7 @@ type
 
 implementation
 
-uses Dialogs, SysUtils, Variants, cxCurrencyEdit, StrUtils, GridGroupCalculate,
+uses Dialogs, SysUtils, Variants, GridGroupCalculate, cxCurrencyEdit, StrUtils,
 UtilConvert;
 {ComObj, cxGridExportLink, cxExportPivotGridLink, cxFilterControlDialog;}
 
@@ -422,21 +395,6 @@ end;
 function TcxDBPivotGrid.CreateController: TcxPivotGridController;
 begin
   Result := TmycxPivotGridController.Create(Self);
-end;
-
-
-procedure TOLAPSalesForm.acExcelExecute(Sender: TObject);
-var Excel: OleVariant;
-begin
-  inherited;
-  {if cxGrid.Visible then
-     TdmExportToXl.RunReport(cxGrid)
-  else begin
-     cxExportPivotGridToExcel('temp', cxDBPivotGrid);
-     Excel := CreateOleObject('Excel.Application');
-     Excel.Workbooks.Open(GetCurrentDir + '\temp.xls');
-     Excel.Visible := True;
-  end;}
 end;
 
 procedure TOLAPSalesForm.odsRepDataCalcFields(DataSet: TDataSet);

@@ -1,28 +1,28 @@
 inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSeparateForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')>'
   ClientHeight = 427
-  ClientWidth = 1081
+  ClientWidth = 1048
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1089
+  ExplicitWidth = 1056
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1081
+    Width = 1048
     Height = 328
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1081
     ExplicitHeight = 328
     ClientRectBottom = 328
-    ClientRectRight = 1081
+    ClientRectRight = 1048
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1081
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 1081
+        Width = 1048
         Height = 328
         ExplicitWidth = 1081
         ExplicitHeight = 328
@@ -262,7 +262,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
   end
   inherited Panel: TPanel
-    Width = 1081
+    Width = 1048
     Height = 73
     ExplicitWidth = 1081
     ExplicitHeight = 73
@@ -306,24 +306,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       TabOrder = 5
       Width = 207
     end
-    object edInDescName: TcxTextEdit
-      AlignWithMargins = True
-      Left = 866
-      Top = 5
-      ParentCustomHint = False
-      BeepOnEnter = False
-      Enabled = False
-      ParentFont = False
-      Properties.HideSelection = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-      TabOrder = 6
-      Width = 209
-    end
     object cxLabel3: TcxLabel
       Left = 206
       Top = 6
@@ -338,7 +320,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 8
+      TabOrder = 7
       Width = 203
     end
     object cxLabel5: TcxLabel
@@ -355,7 +337,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 10
+      TabOrder = 9
       Width = 207
     end
     object edToGroup: TcxButtonEdit
@@ -367,22 +349,22 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 11
+      TabOrder = 10
       Width = 203
     end
     object cbGroupMovement: TcxCheckBox
-      Left = 866
-      Top = 32
-      Caption = #1087#1086' '#1076#1086#1082'.'
-      TabOrder = 12
-      Width = 63
+      Left = 869
+      Top = 5
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      TabOrder = 11
+      Width = 172
     end
     object cbGroupPartion: TcxCheckBox
-      Left = 962
-      Top = 32
-      Caption = #1087#1086' '#1087#1072#1088#1090#1080#1103#1084
-      TabOrder = 13
-      Width = 87
+      Left = 869
+      Top = 29
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
+      TabOrder = 12
+      Width = 156
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -629,7 +611,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       item
         Name = 'InDescName'
         Value = ''
-        Component = edInDescName
         DataType = ftString
         ParamType = ptInput
       end

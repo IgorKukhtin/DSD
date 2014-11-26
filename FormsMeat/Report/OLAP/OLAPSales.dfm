@@ -27,8 +27,8 @@ object OLAPSalesForm: TOLAPSalesForm
       Width = 519
       Height = 156
       Groups = <>
-      LookAndFeel.Kind = lfOffice11
-      LookAndFeel.NativeStyle = False
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = True
       OptionsPrefilter.Visible = pfvAlways
       TabOrder = 0
       Visible = False
@@ -86,8 +86,8 @@ object OLAPSalesForm: TOLAPSalesForm
       BevelOuter = bvSpace
       TabOrder = 2
       Visible = False
-      LookAndFeel.Kind = lfOffice11
-      LookAndFeel.NativeStyle = False
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = True
       RootLevelOptions.DetailFrameColor = clBtnShadow
       RootLevelOptions.DetailFrameWidth = 1
       object tvReport: TcxGridDBBandedTableView
@@ -99,6 +99,7 @@ object OLAPSalesForm: TOLAPSalesForm
         OptionsCustomize.GroupBySorting = True
         OptionsView.Footer = True
         OptionsView.GroupFooters = gfAlwaysVisible
+        Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
         Bands = <>
       end
       object cxGridLevel: TcxGridLevel
@@ -107,17 +108,17 @@ object OLAPSalesForm: TOLAPSalesForm
     end
   end
   object aclFormAction: TActionList
+    Images = dmMain.ImageList
     Left = 80
     Top = 48
-    object acExcel: TAction
-      Category = ' '#1054#1073#1097#1080#1077' '#1076#1077#1081#1089#1090#1074#1080#1103
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074' '#1045#1082#1089#1077#1083#1100
-      OnExecute = acExcelExecute
-    end
-    object acShowDetail: TAction
-      Category = ' '#1054#1073#1097#1080#1077' '#1076#1077#1081#1089#1090#1074#1080#1103
-      AutoCheck = True
-      Caption = #1055#1086#1076#1088#1086#1073#1085#1086
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxDBPivotGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object MasterCDS: TClientDataSet
@@ -188,6 +189,10 @@ object OLAPSalesForm: TOLAPSalesForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbExcel'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -209,6 +214,10 @@ object OLAPSalesForm: TOLAPSalesForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+    end
+    object bbExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore

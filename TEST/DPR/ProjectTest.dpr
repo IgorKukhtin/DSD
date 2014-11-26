@@ -454,7 +454,6 @@ uses
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
   PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm},
   dbObjectMeatTest in '..\SOURCE\dbObjectMeatTest.pas',
-  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   CurrencyValue_Object in '..\..\Forms\Guides\CurrencyValue_Object.pas' {CurrencyValue_ObjectForm: TParentForm},
@@ -577,7 +576,8 @@ uses
   dsdOlap in '..\..\SOURCE\COMPONENT\dsdOlap.pas',
   dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   GoodsGroupAnalyst in '..\..\Forms\Guides\GoodsGroupAnalyst.pas' {GoodsGroupAnalystForm: TParentForm},
-  GoodsGroupAnalystEdit in '..\..\Forms\Guides\GoodsGroupAnalystEdit.pas' {GoodsGroupAnalystEditForm: TParentForm};
+  GoodsGroupAnalystEdit in '..\..\Forms\Guides\GoodsGroupAnalystEdit.pas' {GoodsGroupAnalystEditForm: TParentForm},
+  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

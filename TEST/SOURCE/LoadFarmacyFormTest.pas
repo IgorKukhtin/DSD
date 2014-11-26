@@ -315,9 +315,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
-
-{ TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));

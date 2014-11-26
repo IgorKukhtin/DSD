@@ -4,18 +4,19 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
+    Top = 45
     ExplicitWidth = 1086
-    ExplicitHeight = 201
+    ExplicitHeight = 182
   end
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      26
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -1303,10 +1304,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbReport_GoodsMI_ProductionSeparatePart'
-        end
-        item
-          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1918,10 +1915,6 @@
       Action = actReport_GoodsMI_ProductionSeparate
       Category = 0
     end
-    object bbReport_GoodsMI_ProductionSeparatePart: TdxBarButton
-      Action = actReport_GoodsMI_ProductionSeparatePart
-      Category = 0
-    end
     object bbFounder: TdxBarButton
       Action = actFounder
       Category = 0
@@ -2316,28 +2309,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_ProductionSeparatePart: TdsdOpenForm [17]
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
-      FormName = 'TReport_GoodsMI_ProductionSeparateForm'
-      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptResult
-      GuiParams = <
-        item
-          Name = 'inGroupMovement'
-          Value = 'False'
-          DataType = ftBoolean
-        end
-        item
-          Name = 'InDescName'
-          Value = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object actArticleLoss: TdsdOpenForm [18]
+    object actArticleLoss: TdsdOpenForm [17]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1057#1090#1072#1090#1100#1080' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -2348,7 +2320,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Founders: TdsdOpenForm [19]
+    object actReport_Founders: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
@@ -2358,7 +2330,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actFounder: TdsdOpenForm [20]
+    object actFounder: TdsdOpenForm [19]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
@@ -2369,7 +2341,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actCorrAccount: TdsdOpenForm [21]
+    object actCorrAccount: TdsdOpenForm [20]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1088#1088#1077#1089#1087#1086#1085#1076#1077#1085#1090#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
@@ -2380,7 +2352,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actRetailReport: TdsdOpenForm [22]
+    object actRetailReport: TdsdOpenForm [21]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1086#1090#1095#1077#1090')'
@@ -2391,7 +2363,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_BankAccount: TdsdOpenForm [23]
+    object actReport_BankAccount: TdsdOpenForm [22]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091
@@ -2401,7 +2373,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Cash: TdsdOpenForm [24]
+    object actReport_Cash: TdsdOpenForm [23]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1082#1072#1089#1089#1077
@@ -2411,7 +2383,7 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Member: TdsdOpenForm [25]
+    object actReport_Member: TdsdOpenForm [24]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
@@ -2608,21 +2580,17 @@
     object actReport_GoodsMI_ProductionSeparate: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077') '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')'
       FormName = 'TReport_GoodsMI_ProductionSeparateForm'
       FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
         item
-          Name = 'inGroupMovement'
-          Value = 'True'
-          DataType = ftBoolean
-        end
-        item
           Name = 'InDescName'
           Value = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
           DataType = ftString
+          ParamType = ptUnknown
         end>
       isShowModal = False
     end

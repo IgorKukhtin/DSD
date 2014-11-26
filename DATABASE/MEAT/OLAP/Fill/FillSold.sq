@@ -1,3 +1,19 @@
+SELECT MovementItemContainer.Amount
+     , Container.ObjectId AS JuridicalId
+     , LinkObject_PaidKind.ObjectId AS PaidKindId 
+     , LinkObject_Contract.ObjectId AS ContractId
+     
+FROM movement 
+   JOIN MovementItemContainer ON MovementItemContainer.movementid = movement.id AND MovementItemContainer.DescId = 2
+   JOIN Container ON Container.Id = MovementItemContainer.containerid 
+                 --AND Container.ObjectId IN (SELECT AccountId  FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_70300())
+   JOIN ContainerLinkObject AS LinkObject_PaidKind ON LinkObject_PaidKind.ContainerId = Container.Id 
+   JOIN ContainerLinkObject AS LinkObject_Contract ON LinkObject_Contract.ContainerId = Container.Id 
+   
+WHERE movement.descid = zc_Movement_ProfitLossService()
+
+
+
     WITH tmpMovement AS (SELECT tmpListContainer.JuridicalId 
                               , MovementLinkObject_Partner.ObjectId AS PartnerId
                               , tmpListContainer.ContractId 

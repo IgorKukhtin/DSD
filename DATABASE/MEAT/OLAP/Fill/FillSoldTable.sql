@@ -13,9 +13,16 @@ BEGIN
   DELETE FROM SoldTable;
 
 
-  INSERT INTO SoldTable
+  INSERT INTO SoldTable (JuridicalId, PartnerId, ContractId, InfoMoneyId, PaidKindId, BranchId
+                       , GoodsId, GoodsKindId, OperDate, InvNumber
+                       , AreaId, PartnerTagId, RegionId, ProvinceId, CityKindId, CityId, ProvinceCityId, StreetKindId, StreetId
+                       , Sale_Summ, Sale_SummCost, Sale_Amount_Weight, Sale_Amount_Sh
+                       , Return_Summ, Return_SummCost, Return_Amount_Weight, Return_Amount_Sh
+                       , SaleReturn_Summ, SaleReturn_SummCost, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
+                       , Bonus, Plan_Weight, Plan_Summ, Actions_Weight, Actions_Summ
+                       , Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Return_AmountPartner_Weight, Return_AmountPartner_Sh)
 
---    OPEN Cursor1 FOR
+
     WITH tmpReportContainerLink AS (SELECT isSale
                                          , ReportContainerLink.ReportContainerId
                                          , ReportContainerLink.AccountKindId
@@ -48,6 +55,7 @@ BEGIN
                               , MovementLinkObject_Partner.ObjectId AS PartnerId
                               , tmpListContainer.ContractId 
                               , tmpListContainer.InfoMoneyId
+                              , tmpListContainer.PaidKindId
                               , Movement.OperDate
                               , Movement.InvNumber
                               
@@ -108,6 +116,7 @@ BEGIN
                                 , MovementLinkObject_Partner.ObjectId
                                 , tmpListContainer.ContractId 
                                 , tmpListContainer.InfoMoneyId
+                                , tmpListContainer.PaidKindId
                                 , Movement.OperDate
                                 , Movement.InvNumber
                                 , MovementItem.Id 
@@ -115,11 +124,57 @@ BEGIN
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)
                                 , tmpListContainer.MovementDescId
-                                 )
- SELECT tmpOperation.JuridicalId
+       )
+       
+        SELECT tmpResult.JuridicalId
+      , tmpResult.PartnerId
+      , tmpResult.ContractId 
+      , tmpResult.InfoMoneyId
+      , tmpResult.PaidKindId
+      , tmpResult.BranchId
+
+      , tmpResult.GoodsId
+      , tmpResult.GoodsKindId
+      , tmpResult.OperDate
+      , tmpResult.InvNumber
+
+      , View_Partner_Address.AreaId                
+      , View_Partner_Address.PartnerTagId          
+      , View_Partner_Address.RegionId              
+      , View_Partner_Address.ProvinceId            
+      , View_Partner_Address.CityKindId            
+      , View_Partner_Address.CityId                
+      , View_Partner_Address.ProvinceCityId        
+      , View_Partner_Address.StreetKindId          
+      , View_Partner_Address.StreetId              
+
+      , tmpResult.Sale_Summ
+      , tmpResult.Sale_SummCost
+      , tmpResult.Sale_Amount_Weight
+      , tmpResult.Sale_Amount_Sh
+
+      , tmpResult.Return_Summ
+      , tmpResult.Return_SummCost
+      , tmpResult.Return_Amount_Weight
+      , tmpResult.Return_Amount_Sh
+
+      , (tmpResult.Sale_Summ - tmpResult.Return_Summ)                   AS SaleReturn_Summ
+      , (tmpResult.Sale_SummCost - tmpResult.Return_SummCost)           AS SaleReturn_SummCost
+      , (tmpResult.Sale_Amount_Weight - tmpResult.Return_Amount_Weight) AS SaleReturn_Amount_Weight 
+      , (tmpResult.Sale_Amount_Sh - tmpResult.Return_Amount_Sh)         AS SaleReturn_Amount_Sh
+      
+      , 0, 0, 0, 0, 0
+
+      , tmpResult.Sale_AmountPartner_Weight
+      , tmpResult.Sale_AmountPartner_Sh
+      , tmpResult.Return_AmountPartner_Weight
+      , tmpResult.Return_AmountPartner_Sh
+      FROM 
+      ( SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId
                 , tmpOperation.ContractId 
                 , tmpOperation.InfoMoneyId
+                , tmpOperation.PaidKindId
                 , tmpOperation.BranchId
 
                 , tmpOperation.GoodsId
@@ -128,12 +183,12 @@ BEGIN
                 , tmpOperation.InvNumber
 
                 , SUM (tmpOperation.Sale_Summ)          AS Sale_Summ
-                -- , SUM (tmpOperation.Sale_SummCost)      AS Sale_SummCost
+                , SUM (tmpOperation.Sale_SummCost)      AS Sale_SummCost
                 , SUM (tmpOperation.Sale_Amount_Weight) AS Sale_Amount_Weight
                 , SUM (tmpOperation.Sale_Amount_Sh)     AS Sale_Amount_Sh
 
                 , SUM (tmpOperation.Return_Summ)          AS Return_Summ
-                -- , SUM (tmpOperation.Return_SummCost)      AS Return_SummCost
+                , SUM (tmpOperation.Return_SummCost)      AS Return_SummCost
                 , SUM (tmpOperation.Return_Amount_Weight) AS Return_Amount_Weight
                 , SUM (tmpOperation.Return_Amount_Sh)     AS Return_Amount_Sh
 
@@ -146,6 +201,7 @@ BEGIN
                       , tmpMovement.PartnerId 
                       , tmpMovement.ContractId  
                       , tmpMovement.InfoMoneyId
+                      , tmpMovement.PaidKindId
                       , tmpMovement.BranchId
                       , tmpMovement.GoodsId 
                       , tmpMovement.GoodsKindId 
@@ -173,6 +229,7 @@ BEGIN
                         , tmpMovement.PartnerId 
                         , tmpMovement.ContractId
                         , tmpMovement.InfoMoneyId
+                        , tmpMovement.PaidKindId
                         , tmpMovement.BranchId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId 
@@ -184,6 +241,7 @@ BEGIN
                       , tmpMovement.PartnerId 
                       , tmpMovement.ContractId
                       , tmpMovement.InfoMoneyId
+                      , tmpMovement.PaidKindId
                       , tmpMovement.BranchId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
@@ -224,6 +282,7 @@ BEGIN
                         , tmpMovement.PartnerId 
                         , tmpMovement.ContractId
                         , tmpMovement.InfoMoneyId
+                        , tmpMovement.PaidKindId
                         , tmpMovement.BranchId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId
@@ -234,6 +293,7 @@ BEGIN
                       , tmpMovement.PartnerId 
                       , tmpMovement.ContractId
                       , tmpMovement.InfoMoneyId
+                      , tmpMovement.PaidKindId
                       , tmpMovement.BranchId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
@@ -268,6 +328,7 @@ BEGIN
                         , tmpMovement.PartnerId 
                         , tmpMovement.ContractId
                         , tmpMovement.InfoMoneyId
+                        , tmpMovement.PaidKindId
                         , tmpMovement.BranchId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId
@@ -279,16 +340,43 @@ BEGIN
                   , tmpOperation.PartnerId
                   , tmpOperation.ContractId 
                   , tmpOperation.InfoMoneyId
+                  , tmpOperation.PaidKindId
                   , tmpOperation.BranchId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
                   , tmpOperation.OperDate
-                  , tmpOperation.InvNumber
-          --LIMIT 1
-         ;
+                  , tmpOperation.InvNumber) AS tmpResult
 
-    -- RETURN NEXT Cursor1;
+       LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpResult.PartnerId
+ UNION SELECT 
+     LinkObject_Juridical.ObjectId AS JuridicalId, 0 AS PartnerId, LinkObject_Contract.ObjectId AS ContractId, 0 AS InfoMoneyId, LinkObject_PaidKind.ObjectId, 0 AS  BranchId
+                       , 0 AS GoodsId, 0 AS GoodsKindId, MovementItemContainer.OperDate, ''::TVarChar AS InvNumber
+                       , 0 AS AreaId, 0 AS PartnerTagId, 0 AS RegionId, 0 AS ProvinceId, 0 AS CityKindId, 0 AS CityId, 0 AS ProvinceCityId, 0 AS StreetKindId, 0 AS StreetId
+                       , 0 AS Sale_Summ, 0 AS Sale_SummCost, 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh
+                       , 0 AS Return_Summ, 0 AS Return_SummCost, 0 AS Return_Amount_Weight, 0 AS Return_Amount_Sh
+                       , 0 AS SaleReturn_Summ, 0 AS SaleReturn_SummCost, 0 AS SaleReturn_Amount_Weight, 0 AS SaleReturn_Amount_Sh
+                       , - SUM(MovementItemContainer.Amount) AS Bonus, 0 AS Plan_Weight, 0 AS Plan_Summ, 0 AS Actions_Weight, 0 AS Actions_Summ
+                       , 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Return_AmountPartner_Weight, 0 AS Return_AmountPartner_Sh
+     
+   FROM movement 
+        JOIN MovementItemContainer ON MovementItemContainer.movementid = movement.id AND MovementItemContainer.DescId = 2
+        JOIN Container ON Container.Id = MovementItemContainer.containerid 
+                      AND Container.ObjectId = 82414 --AND Container.ObjectId IN (SELECT AccountId  FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_70300())
+        JOIN ContainerLinkObject AS LinkObject_Juridical ON LinkObject_Juridical.ContainerId = Container.Id AND LinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+        JOIN ContainerLinkObject AS LinkObject_PaidKind ON LinkObject_PaidKind.ContainerId = Container.Id AND LinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+        JOIN ContainerLinkObject AS LinkObject_Contract ON LinkObject_Contract.ContainerId = Container.Id AND LinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
+   
+  WHERE movement.descid = zc_Movement_ProfitLossService()
+   GROUP BY MovementItemContainer.OperDate
+          , LinkObject_PaidKind.ObjectId 
+          , LinkObject_Juridical.ObjectId
+          , LinkObject_Contract.ObjectId;
 
+  UPDATE SoldTable SET SaleBonus = COALESCE(Sale_Summ, 0) - COALESCE(Bonus, 0),
+                     Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0),
+               SaleReturn_Profit = COALESCE(SaleReturn_Summ, 0) - COALESCE(SaleReturn_SummCost, 0),
+                 SaleBonusProfit = COALESCE(Sale_Summ, 0) - COALESCE(Bonus, 0) - COALESCE(Sale_SummCost, 0);
+  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -297,6 +385,7 @@ ALTER FUNCTION FillSoldTable (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.11.14                         *  
  25.11.14                                        * add Sale_SummCost Return_SummCost 
  19.11.14                         * add 
 */

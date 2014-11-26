@@ -12,6 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
     IN inMinimumLot          TFloat    ,    -- Групповая упаковка
+
+    IN inMinimumLot          TFloat    ,    -- Групповая упаковка
+    IN inMinimumLot          TFloat    ,    -- Групповая упаковка
+
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
