@@ -154,7 +154,8 @@ begin
   ClientDataSet.IndexFieldNames := 'ActionName';
   for I := 0 to ActionList.ActionCount - 1 do
       // Проверяем только открытие формы
-      if ActionList.Actions[i].ClassName = 'TdsdOpenForm' then
+      if (ActionList.Actions[i].ClassName = 'TdsdOpenForm') or
+         (ActionList.Actions[i].Name = 'actReport_OLAPSold')  then
          if not ClientDataSet.Locate('ActionName', ActionList.Actions[i].Name, []) then begin
             TCustomAction(ActionList.Actions[i]).Enabled := false;
             TCustomAction(ActionList.Actions[i]).Visible := false;

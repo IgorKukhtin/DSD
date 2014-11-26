@@ -328,6 +328,9 @@ begin
          OLAPField := TDataOLAPField.Create;
          OLAPField.Caption := FieldByName('Caption').asString;
          OLAPField.FieldName := FieldByName('FieldName').asString;
+         // Устанавливаем данные для расчета
+         if FieldByName('FieldName').asString then
+
          FFields.AddObject(OLAPField.FieldName, OLAPField);
        end;
        if FieldByName('FieldType').AsString = 'dimension' then
@@ -345,31 +348,10 @@ begin
     end;
   end;
 
-(*  OLAPField := TDataOLAPField.Create;
-  OLAPField.Caption := 'Сумма реализации-возврат';
-  OLAPField.FieldName := 'SOLD_SUMM';
-  FFields.AddObject(OLAPField.FieldName, OLAPField);
-
+(*
   OLAPField := TDataOLAPField.Create;
   OLAPField.Caption := 'Вес реализации-возврат';
   OLAPField.FieldName := 'WEIGHT';
-  OLAPField.DisplayFormat := ',0.0';
-  FFields.AddObject(OLAPField.FieldName, OLAPField);
-
-  OLAPField := TDataOLAPField.Create;
-  OLAPField.Caption := 'Вес с тарой реализации-возврат';
-  OLAPField.FieldName := 'WEIGHT_WITH_TARE';
-  OLAPField.DisplayFormat := ',0.0';
-  FFields.AddObject(OLAPField.FieldName, OLAPField);
-
-  OLAPField := TDataOLAPField.Create;
-  OLAPField.Caption := 'Сумма замен+возврат';
-  OLAPField.FieldName := 'EXCHANGE_SUMM';
-  FFields.AddObject(OLAPField.FieldName, OLAPField);
-
-  OLAPField := TDataOLAPField.Create;
-  OLAPField.Caption := 'Вес замен+возврат';
-  OLAPField.FieldName := 'EXCHANGE_WEIGHT';
   OLAPField.DisplayFormat := ',0.0';
   FFields.AddObject(OLAPField.FieldName, OLAPField);
 

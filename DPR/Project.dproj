@@ -182,9 +182,6 @@
 			<DCCReference Include="..\Forms\Ancestor\AncestorMain.pas">
 				<Form>AncestorMainForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\FormsMeat\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\LookAndFillSettings.pas">
 				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
@@ -200,6 +197,9 @@
 				<Form>OLAPSalesForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\GridGroupCalculate.pas"/>
+			<DCCReference Include="..\FormsMeat\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

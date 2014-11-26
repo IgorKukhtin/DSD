@@ -790,7 +790,7 @@ begin
   result := true;
   ModalResult := ShowForm.ModalResult;
   if isShowModal then
-    result := ModalResult = mrOk;
+     result := ModalResult = mrOk;
 end;
 
 procedure TdsdOpenForm.Notification(AComponent: TComponent;
@@ -803,7 +803,7 @@ begin
     if (Operation = opRemove) and Assigned(FParams) then
       for i := 0 to GuiParams.Count - 1 do
         if GuiParams[i].Component = AComponent then
-          GuiParams[i].Component := nil;
+           GuiParams[i].Component := nil;
 end;
 
 procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
@@ -826,11 +826,11 @@ begin
   if TParentForm(result).Execute(Self, FParams) then
   begin
     if result.WindowState = wsMinimized then
-      result.WindowState := wsNormal;
+       result.WindowState := wsNormal;
     if isShowModal then
-      result.ShowModal
+       result.ShowModal
     else
-      result.Show
+       result.Show
   end
   else
     result.Free

@@ -1359,9 +1359,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbObjectMeatTest.pas"/>
-			<DCCReference Include="..\..\FormsMeat\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
 				<Form>AncestorMainForm</Form>
 			</DCCReference>
@@ -1723,6 +1720,9 @@
 			<DCCReference Include="..\..\Forms\Guides\GoodsGroupAnalystEdit.pas">
 				<Form>GoodsGroupAnalystEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMeat\MainForm.pas">
+				<Form>MainForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

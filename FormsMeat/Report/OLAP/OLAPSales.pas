@@ -9,7 +9,7 @@ uses DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, c
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxTextEdit, cxMemo,
   cxRichEdit, cxLabel, Vcl.ExtCtrls, Vcl.Controls, cxCustomPivotGrid,
   cxDBPivotGrid, Vcl.Forms, dsdOLAP, dsdAddOn, cxPropertiesStore, dxBarExtItems,
-  dxBar, dsdDB, Datasnap.DBClient;
+  dxBar, dsdDB, Datasnap.DBClient, dsdAction;
 
 type
 
@@ -24,8 +24,6 @@ type
   end;
 
   TOLAPSalesForm = class(TForm)
-    acExcel: TAction;
-    acShowDetail: TAction;
     cxDBPivotGrid: TcxDBPivotGrid;
     gpRepHeader: TPanel;
     lblRepName: TcxLabel;
@@ -44,12 +42,13 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     sbDataEditor: TScrollBox;
+    bbExcel: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
 
     procedure FormCreate(Sender: TObject);
 
     procedure tvReportDataControllerSummaryAfterSummary(
       ASender: TcxDataSummary);
-    procedure acExcelExecute(Sender: TObject);
     procedure odsRepDataCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
@@ -396,21 +395,6 @@ end;
 function TcxDBPivotGrid.CreateController: TcxPivotGridController;
 begin
   Result := TmycxPivotGridController.Create(Self);
-end;
-
-
-procedure TOLAPSalesForm.acExcelExecute(Sender: TObject);
-var Excel: OleVariant;
-begin
-  inherited;
-  {if cxGrid.Visible then
-     TdmExportToXl.RunReport(cxGrid)
-  else begin
-     cxExportPivotGridToExcel('temp', cxDBPivotGrid);
-     Excel := CreateOleObject('Excel.Application');
-     Excel.Workbooks.Open(GetCurrentDir + '\temp.xls');
-     Excel.Visible := True;
-  end;}
 end;
 
 procedure TOLAPSalesForm.odsRepDataCalcFields(DataSet: TDataSet);
