@@ -2,27 +2,29 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitWidth = 1129
-  ExplicitHeight = 703
+  ExplicitWidth = 1121
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1113
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1113
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1113
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1109
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1113
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1107
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1113
-        Height = 518
-        ExplicitWidth = 1113
-        ExplicitHeight = 518
+        Width = 1107
+        Height = 514
+        ExplicitWidth = 1107
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -57,6 +59,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -169,7 +172,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -463,6 +466,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       Caption = 'actSPPrintProcName'
     end
+    object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetReportNameTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTaxCorrective
+        end>
+      Caption = 'actSPPrintTaxCorrectiveProcName'
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -474,7 +487,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -492,9 +504,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           ComponentItem = 'Id'
         end>
       ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -507,7 +522,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -525,9 +539,40 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           ComponentItem = 'Id'
         end>
       ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_TaxCorrective_Client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Client
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+    end
+    object mactPrint_TaxCorrective_Us: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Us
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 19
     end
   end
   inherited MasterDS: TDataSource
@@ -575,7 +620,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -638,12 +683,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
     end
     inherited bbPrint: TdxBarButton
-      Action = actPrint_TaxCorrective_Us
-      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 16
+      Action = mactPrint_TaxCorrective_Us
     end
     object bbPrint_TaxCorrective_Client: TdxBarButton [5]
-      Action = actPrint_TaxCorrective_Client
+      Action = mactPrint_TaxCorrective_Client
       Category = 0
     end
   end
@@ -704,6 +747,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       item
         Name = 'inPaidKindId'
         Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportNameTaxCorrective'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
       end>
     Left = 280
@@ -1632,5 +1681,28 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 497
     Top = 512
+  end
+  object spGetReportNameTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_TaxCorrective_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTaxCorrective'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 520
   end
 end

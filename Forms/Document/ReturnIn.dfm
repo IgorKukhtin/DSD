@@ -1019,7 +1019,10 @@ inherited ReturnInForm: TReturnInForm
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -1241,7 +1244,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object actSPPrintSaleTaxCorrectiveProcName: TdsdExecStoredProc
+    object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGetReportNameTaxCorrective
@@ -1250,53 +1253,33 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spGetReportNameTaxCorrective
         end>
     end
+    object mactPrint_TaxCorrective_Client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Client
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+    end
     object mactPrint_TaxCorrective_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSPPrintSaleTaxCorrectiveProcName
+          Action = actSPPrintTaxCorrectiveProcName
         end
         item
           Action = actPrint_TaxCorrective_Us
         end>
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 18
-    end
-    object actPrintTax_Us: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
+      ImageIndex = 19
     end
   end
   inherited MasterDS: TDataSource
@@ -1501,9 +1484,8 @@ inherited ReturnInForm: TReturnInForm
       Category = 0
     end
     object bbPrintTaxCorrective_Client: TdxBarButton
-      Action = actPrint_TaxCorrective_Client
+      Action = mactPrint_TaxCorrective_Client
       Category = 0
-      ImageIndex = 16
     end
     object bbPrintTaxCorrective_Us: TdxBarButton
       Action = mactPrint_TaxCorrective_Us
