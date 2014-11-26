@@ -48,6 +48,7 @@ type
     CurrencyPartnerValue: TcxGridDBColumn;
     ParPartnerValue: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    colAmountSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

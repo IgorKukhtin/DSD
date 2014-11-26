@@ -66,7 +66,7 @@ BEGIN
              , 0 AS ServiceDateId
 
              , 0 AS ContractId -- не используется
-             , 0 AS PaidKindId -- не используется
+             , COALESCE (ObjectLink_Cash_PaidKind.ChildObjectId, zc_Enum_PaidKind_SecondForm()) AS PaidKindId -- !!!НЕ Всегда НАЛ!!!, но здесь пока не используется
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -83,6 +83,9 @@ BEGIN
                                                                    AND ObjectLink_Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
              LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = MovementItem.ObjectId
                                                              AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_PaidKind
+                                  ON ObjectLink_Cash_PaidKind.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Cash_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_Cash()
@@ -168,7 +171,7 @@ BEGIN
                END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , zc_Enum_PaidKind_SecondForm() AS PaidKindId -- Всегда НАЛ
+             , _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
