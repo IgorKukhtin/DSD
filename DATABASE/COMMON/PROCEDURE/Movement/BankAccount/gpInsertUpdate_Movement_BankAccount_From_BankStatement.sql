@@ -30,10 +30,11 @@ BEGIN
 
 
      -- ¬ыбираем все данные и сразу вызываем процедуры
-     PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE(Movement_BankAccount.Id, 0)
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE (Movement_BankAccount.Id, 0)
                                                , inInvNumber            := Movement.InvNumber
                                                , inOperDate             := Movement.OperDate
                                                , inAmount               := MovementFloat_Amount.ValueData
+                                               , inAmountSumm           := MovementFloat_Amount_BankAccount.ValueData -- !!!значение при перезаливки не мен€етс€!!!
                                                , inAmountCurrency       := MovementFloat_AmountCurrency.ValueData
                                                , inBankAccountId        := MovementLinkObject_BankAccount.ObjectId
                                                , inComment              := MovementString_Comment.ValueData
@@ -118,6 +119,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            -- !!!значение при перезаливки не мен€етс€!!!
+            LEFT JOIN MovementFloat AS MovementFloat_Amount_BankAccount
+                                    ON MovementFloat_Amount_BankAccount.MovementId = Movement_BankAccount.Id
+                                   AND MovementFloat_Amount_BankAccount.DescId = zc_MovementFloat_Amount()
 
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;

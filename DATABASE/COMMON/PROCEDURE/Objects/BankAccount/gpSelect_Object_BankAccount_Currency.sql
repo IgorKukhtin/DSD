@@ -31,6 +31,7 @@ BEGIN
                                  , MovementItem.ObjectId          AS CurrencyFromId
                                  , MovementItem.Amount            AS Amount
                                  , MILinkObject_Currency.ObjectId AS CurrencyToId
+                                 , CASE WHEN MovementItem.ObjectId = zc_Enum_Currency_Basis() THEN MILinkObject_Currency.ObjectId ELSE MovementItem.ObjectId END AS CurrencyToId_calc
                                  , MILinkObject_PaidKind.ObjectId AS PaidKindId
                             FROM Movement
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -49,7 +50,7 @@ BEGIN
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
          , tmpCurrency AS (SELECT zc_Enum_Currency_Basis() AS CurrencyFromId
-                                , CASE WHEN tmpMovement.CurrencyFromId = zc_Enum_Currency_Basis() THEN tmpMovement.CurrencyToId ELSE tmpMovement.CurrencyFromId END AS CurrencyToId
+                                , tmpMovement.CurrencyToId_calc AS CurrencyToId
                                 , CASE WHEN tmpMovement.CurrencyFromId = zc_Enum_Currency_Basis()
                                             THEN tmpMovement.Amount
                                        WHEN tmpMovement.CurrencyToId = zc_Enum_Currency_Basis()
@@ -62,8 +63,13 @@ BEGIN
                                        ELSE 1
                                   END AS ParValue
 
-                           FROM (SELECT MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement) AS tmpMovement_find
+                           FROM (SELECT tmpMovement.CurrencyToId_calc AS CurrencyToId_calc
+                                      , MAX (tmpMovement.OperDate)    AS OperDate
+                                 FROM tmpMovement
+                                 GROUP BY tmpMovement.CurrencyToId_calc
+                                ) AS tmpMovement_find
                                 INNER JOIN tmpMovement ON tmpMovement.OperDate = tmpMovement_find.OperDate
+                                                      AND tmpMovement.CurrencyToId_calc = tmpMovement_find.CurrencyToId_calc
                                 LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                             ON MIFloat_ParValue.MovementItemId = tmpMovement.MovementItemId
                                                            AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()

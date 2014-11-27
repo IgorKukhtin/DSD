@@ -38,6 +38,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colAmountCurrency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colAmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -54,6 +59,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colAmountCurrency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colAmountSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -132,6 +142,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colAmountSumm: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
+            DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
