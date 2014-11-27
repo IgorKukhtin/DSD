@@ -51,6 +51,12 @@ type
     ToGroupGuides: TdsdGuides;
     cbGroupMovement: TcxCheckBox;
     cbGroupPartion: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    cxLabel8: TcxLabel;
+    edChildGoods: TcxButtonEdit;
+    edChildGoodsGroup: TcxButtonEdit;
+    ChildGoodsGroupGuides: TdsdGuides;
+    ChildGoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public
