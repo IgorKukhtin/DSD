@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_LossDebt (Integer, Integer)
+ -- Function: lpComplete_Movement_LossDebt (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_LossDebt (Integer, Integer);
 
@@ -11,6 +11,11 @@ AS
 $BODY$
    DECLARE vbPartionMovementId Integer;
 BEGIN
+     IF inMovementId = 123096 -- № 15 от 31.12.2013
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не может быть проведен.';
+     END IF;
+
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -253,6 +258,7 @@ BEGIN
                                                                                                                  , zc_Enum_AccountGroup_90000() -- Расчеты с бюджетом
                                                                                                                   )
                                      WHERE tmpMovement.AccountId = 0
+                                       AND tmpMovement.MovementId <> 123096 -- № 15 от 31.12.2013
                                     ) AS tmpMovement
                                     JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                              ON ContainerLO_PaidKind.ObjectId = tmpMovement.PaidKindId

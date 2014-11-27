@@ -59,7 +59,6 @@ procedure TLoadReportTest.LoadReportFormTest;
 var
  i : integer;
 begin
-
   // Транспорт
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   // Отчеты(Финансы)
@@ -132,7 +131,7 @@ begin
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 
-end;
+  end;
 
 procedure TLoadReportTest.SetUp;
 begin
