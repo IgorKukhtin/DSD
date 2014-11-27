@@ -1,30 +1,32 @@
 inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSeparateForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')>'
   ClientHeight = 427
-  ClientWidth = 1048
+  ClientWidth = 1098
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1056
+  ExplicitWidth = 1106
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1048
+    Width = 1098
     Height = 328
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1081
+    ExplicitWidth = 1048
     ExplicitHeight = 328
     ClientRectBottom = 328
-    ClientRectRight = 1048
+    ClientRectRight = 1098
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1081
+      ExplicitWidth = 1048
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
-        Width = 1048
+        Width = 1098
         Height = 328
-        ExplicitWidth = 1081
+        ExplicitLeft = 32
+        ExplicitTop = -3
+        ExplicitWidth = 1056
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -262,22 +264,22 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
   end
   inherited Panel: TPanel
-    Width = 1048
+    Width = 1098
     Height = 73
-    ExplicitWidth = 1081
+    ExplicitWidth = 1048
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
-      Left = 116
+      Left = 108
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 116
+      ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
-      Left = 116
+      Left = 108
       Top = 29
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 116
+      ExplicitLeft = 108
       ExplicitTop = 29
     end
     inherited cxLabel1: TcxLabel
@@ -291,12 +293,12 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       ExplicitTop = 30
     end
     object cxLabel4: TcxLabel
-      Left = 559
+      Left = 501
       Top = 6
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1088#1072#1089#1093'.:'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 650
+      Left = 596
       Top = 5
       Properties.Buttons = <
         item
@@ -304,15 +306,15 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 207
+      Width = 147
     end
     object cxLabel3: TcxLabel
-      Left = 206
+      Left = 194
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
     end
     object edFromGroup: TcxButtonEdit
-      Left = 344
+      Left = 328
       Top = 5
       Properties.Buttons = <
         item
@@ -321,16 +323,16 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 203
+      Width = 169
     end
     object cxLabel5: TcxLabel
-      Left = 220
+      Left = 208
       Top = 30
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
     end
     object edGoods: TcxButtonEdit
-      Left = 650
-      Top = 29
+      Left = 812
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -338,10 +340,10 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 207
+      Width = 148
     end
     object edToGroup: TcxButtonEdit
-      Left = 344
+      Left = 328
       Top = 29
       Properties.Buttons = <
         item
@@ -350,27 +352,60 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 203
+      Width = 169
     end
     object cbGroupMovement: TcxCheckBox
-      Left = 869
+      Left = 959
       Top = 5
       Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 11
       Width = 172
     end
     object cbGroupPartion: TcxCheckBox
-      Left = 869
+      Left = 959
       Top = 29
       Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084
       TabOrder = 12
       Width = 156
     end
+    object cxLabel6: TcxLabel
+      Left = 501
+      Top = 32
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'#1087#1088#1080#1093':'
+    end
+    object cxLabel8: TcxLabel
+      Left = 747
+      Top = 6
+      Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093':'
+    end
+    object edChildGoods: TcxButtonEdit
+      Left = 812
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 148
+    end
+    object edChildGoodsGroup: TcxButtonEdit
+      Left = 596
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 16
+      Width = 147
+    end
   end
   object cxLabel7: TcxLabel [2]
-    Left = 610
+    Left = 747
     Top = 30
-    Caption = #1058#1086#1074#1072#1088':'
+    Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093':'
   end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction
@@ -473,13 +508,6 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
-        Value = ''
-        Component = GoodsGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inGroupMovement'
         Value = Null
         Component = cbGroupMovement
@@ -494,9 +522,30 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChildGoodsGroupId'
+        Value = Null
+        Component = ChildGoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChildGoodsId'
+        Value = Null
+        Component = ChildGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -604,7 +653,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 688
+    Left = 616
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -674,8 +723,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 19
+    Left = 848
+    Top = 65531
   end
   object ToGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -704,5 +753,57 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       end>
     Left = 464
     Top = 24
+  end
+  object ChildGoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edChildGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ChildGoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ChildGoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 680
+    Top = 24
+  end
+  object ChildGoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edChildGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ChildGoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ChildGoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 904
+    Top = 19
   end
 end

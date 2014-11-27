@@ -4,18 +4,21 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTim
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
-    IN inStartDate     TDateTime ,  
-    IN inEndDate       TDateTime ,
-    IN inGoodsGroupId  Integer   ,
-    IN inGroupMovement Boolean   ,
-    IN inGroupPartion  Boolean   ,
-    IN inGoodsId       Integer   ,
-    IN inFromId        Integer   ,    -- от кого 
-    IN inToId          Integer   ,    -- кому
-    IN inSession       TVarChar       -- сессия пользователя
+    IN inStartDate          TDateTime ,  
+    IN inEndDate            TDateTime ,
+    IN inGroupMovement      Boolean   ,
+    IN inGroupPartion       Boolean   ,
+    IN inGoodsGroupId       Integer   ,
+    IN inGoodsId            Integer   ,
+    IN inChildGoodsGroupId  Integer   ,
+    IN inChildGoodsId       Integer   ,
+    IN inFromId             Integer   ,    -- от кого 
+    IN inToId               Integer   ,    -- кому
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar 
              , GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
@@ -31,6 +34,7 @@ BEGIN
 
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpChildGoods (ChildGoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpToGroup (ToId  Integer) ON COMMIT DROP;
   
@@ -47,6 +51,21 @@ BEGIN
                SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
          END IF;
     END IF;
+
+    IF inChildGoodsGroupId <> 0
+    THEN
+        INSERT INTO _tmpChildGoods (ChildGoodsId)
+          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+    ELSE IF inChildGoodsId <> 0
+         THEN
+             INSERT INTO _tmpChildGoods (ChildGoodsId)
+              SELECT inChildGoodsId;
+         ELSE
+             INSERT INTO _tmpChildGoods (ChildGoodsId)
+               SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+         END IF;
+    END IF;
+
 
     -- ограничения по ОТ КОГО
     IF inFromId <> 0
@@ -122,11 +141,10 @@ BEGIN
                                          
                             JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId   --MIMaster
 				             
-		            JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-
-                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+	                    LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+        
                         GROUP BY MovementItem.ObjectId    
                                , COALESCE (Container.ObjectId, 0) 
                                , MIFloat_HeadCount.ValueData 
@@ -170,8 +188,8 @@ BEGIN
                              , tmpMI_Container.HeadCount
                              , tmpMI_Container.MovementItemDescId as DescId 
                         FROM tmpMI_Container
-                           JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
-                                 ) AS tmpAccount on tmpAccount.AccountID = tmpMI_Container.ContainerObjectId
+                          -- JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
+                          --       ) AS tmpAccount on tmpAccount.AccountID = tmpMI_Container.ContainerObjectId
                         Where tmpMI_Container.MIContainerDescId = zc_MIContainer_Summ()
                         GROUP BY tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
@@ -234,6 +252,9 @@ BEGIN
                   FROM tmpMI_sum AS tmpMIMaster_Sum
                        JOIN tmpMI_sum AS tmpMIChild_Sum on tmpMIMaster_Sum.MovementId = tmpMIChild_Sum.MovementId
                                                        AND tmpMIChild_Sum.DescId = zc_MI_Child()
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMIMaster_Sum.GoodsId
+                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMIChild_Sum.GoodsId
+		                      --         
                   Where tmpMIMaster_Sum.DescId = zc_MI_Master()
             
               UNION
@@ -249,10 +270,13 @@ BEGIN
                         , tmpMIChild.Summ as ChildSumm
                         , tmpMIChild.Amount as ChildAmount
                   FROM tmpMI_Amount AS tmpMIMaster
-                         JOIN tmpMI_Amount AS tmpMIChild on tmpMIMaster.MovementId = tmpMIChild.MovementId
+                         LEFT JOIN tmpMI_Amount AS tmpMIChild on tmpMIMaster.MovementId = tmpMIChild.MovementId
                                                         AND tmpMIChild.DescId = zc_MI_Child()
-                                                        AND tmpMIChild.Amount<>0
+                         JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMIMaster.GoodsId
+                         JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMIChild.GoodsId
+                               
                   Where tmpMIMaster.DescId = zc_MI_Master()
+                   AND COALESCE (tmpMIChild.Amount, -1 ) <> 0
                          
             ) AS tmpMI 
 	    GROUP BY CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END
@@ -295,10 +319,11 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 19.11.14
+ 27.11.14         *
+ 19.11.14         *
  21.08.14         * 
     
 */
 
 -- тест
---select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGoodsGroupId := 0 , inGroupMovement := 'True' , inGroupPartion := 'False' , inGoodsId := 0 , inFromId := 8442 , inToId := 8444 ,  inSession := '5');
+--select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'False' , inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId := 2360 , inFromId := 0 , inToId := 0 ,  inSession := '5');
