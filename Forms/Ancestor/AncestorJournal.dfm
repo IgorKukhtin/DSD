@@ -1,29 +1,30 @@
 inherited AncestorJournalForm: TAncestorJournalForm
-  ClientHeight = 329
+  ClientHeight = 509
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 733
-  ExplicitHeight = 364
+  ExplicitWidth = 725
+  ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 59
     Width = 717
-    Height = 272
-    ExplicitTop = 57
+    Height = 450
+    ExplicitTop = 59
     ExplicitWidth = 717
-    ExplicitHeight = 272
-    ClientRectBottom = 272
-    ClientRectRight = 717
+    ExplicitHeight = 270
+    ClientRectBottom = 446
+    ClientRectRight = 713
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 717
-      ExplicitHeight = 272
+      ExplicitWidth = 711
+      ExplicitHeight = 264
       inherited cxGrid: TcxGrid
-        Width = 717
-        Height = 272
-        ExplicitWidth = 717
-        ExplicitHeight = 272
+        Width = 711
+        Height = 444
+        ExplicitWidth = 711
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -247,6 +248,22 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtDelete
       DataSource = MasterDS
     end
+    object actReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 12
+    end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -333,6 +350,16 @@ inherited AncestorJournalForm: TAncestorJournalForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
     object spCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -385,6 +412,17 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
+    object actSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
     object actSimpleErased: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -433,7 +471,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -570,13 +608,16 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Action = actCompleteList
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object N11: TMenuItem [8]
+    object miReComplete: TMenuItem [8]
+      Action = actReCompleteList
+    end
+    object N11: TMenuItem [9]
       Action = actUnCompleteList
     end
-    object N12: TMenuItem [9]
+    object N12: TMenuItem [10]
       Action = actSetErasedList
     end
-    object N6: TMenuItem [10]
+    object N6: TMenuItem [11]
       Caption = '-'
     end
   end
@@ -607,8 +648,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 40
-    Top = 144
+    Left = 384
+    Top = 168
   end
   object spMovementUnComplete: TdsdStoredProc
     DataSets = <>
@@ -661,5 +702,20 @@ inherited AncestorJournalForm: TAncestorJournalForm
       end>
     Left = 320
     Top = 232
+  end
+  object spMovementReComplete: TdsdStoredProc
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 104
   end
 end

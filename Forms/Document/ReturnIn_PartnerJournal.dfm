@@ -10,14 +10,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Width = 1106
     Height = 476
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1106
     ExplicitHeight = 476
     ClientRectBottom = 472
     ClientRectRight = 1102
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
       ExplicitWidth = 1100
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
@@ -588,6 +585,8 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     inherited actDisabled: TOpenChoiceForm [17]
     end
+    inherited actReCompleteList: TMultiAction [18]
+    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1086,6 +1085,23 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       end>
     Left = 384
     Top = 176
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ReturnIn'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'

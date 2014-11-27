@@ -63,6 +63,11 @@ type
     actSimpleUncompleteList: TMultiAction;
     actSimpleErased: TMultiAction;
     bbInsertMask: TdxBarButton;
+    actSimpleReCompleteList: TMultiAction;
+    spReCompete: TdsdExecStoredProc;
+    spMovementReComplete: TdsdStoredProc;
+    miReComplete: TMenuItem;
+    actReCompleteList: TMultiAction;
   private
     { Private declarations }
   public
