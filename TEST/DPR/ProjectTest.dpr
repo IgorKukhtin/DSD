@@ -577,7 +577,8 @@ uses
   dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   GoodsGroupAnalyst in '..\..\Forms\Guides\GoodsGroupAnalyst.pas' {GoodsGroupAnalystForm: TParentForm},
   GoodsGroupAnalystEdit in '..\..\Forms\Guides\GoodsGroupAnalystEdit.pas' {GoodsGroupAnalystEditForm: TParentForm},
-  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm};
+  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

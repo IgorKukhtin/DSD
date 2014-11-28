@@ -440,6 +440,8 @@ type
     bbReport_OlapSold: TdxBarButton;
     actGoodsGroupAnalyst: TdsdOpenForm;
     bbGoodsGroupAnalyst: TdxBarButton;
+    actReport_GoodsMI_ProductionUnion: TdsdOpenForm;
+    bbReport_GoodsMI_ProductionUnion: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }
