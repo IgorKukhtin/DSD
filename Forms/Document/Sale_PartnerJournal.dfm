@@ -10,14 +10,11 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Width = 1020
     Height = 476
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1020
     ExplicitHeight = 476
     ClientRectBottom = 472
     ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
       ExplicitWidth = 1014
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
@@ -1451,6 +1448,23 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Sale'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'

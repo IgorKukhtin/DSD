@@ -14,6 +14,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_LossDebt());
 
+     IF inMovementId = 123096 -- № 15 от 31.12.2013
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не может быть распроведен.';
+     END IF;
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

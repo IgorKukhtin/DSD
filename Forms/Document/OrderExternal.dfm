@@ -662,7 +662,7 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Name = 'inOperDate'
         Value = 0d
-        Component = edOperDate
+        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
       end

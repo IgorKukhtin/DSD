@@ -3,29 +3,27 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1389
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1397
-  ExplicitHeight = 702
+  ExplicitWidth = 1405
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1389
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1389
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1385
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1389
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1383
-      ExplicitHeight = 514
+      ExplicitWidth = 1389
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1383
-        Height = 514
-        ExplicitWidth = 1383
-        ExplicitHeight = 514
+        Width = 1389
+        Height = 518
+        ExplicitWidth = 1389
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -333,7 +331,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -1283,7 +1281,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'inOperDate'
         Value = 0d
-        Component = edOperDate
+        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -1310,7 +1308,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

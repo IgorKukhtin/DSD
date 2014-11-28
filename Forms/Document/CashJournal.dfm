@@ -2,19 +2,22 @@ inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 998
+  ExplicitWidth = 990
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
     ExplicitWidth = 982
-    ClientRectRight = 982
+    ExplicitHeight = 450
+    ClientRectRight = 978
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 976
+      ExplicitHeight = 444
       inherited cxGrid: TcxGrid
-        Width = 982
-        ExplicitWidth = 982
+        Width = 976
+        ExplicitWidth = 976
+        ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -43,6 +46,7 @@ inherited CashJournalForm: TCashJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -360,7 +364,7 @@ inherited CashJournalForm: TCashJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -419,6 +423,9 @@ inherited CashJournalForm: TCashJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Cash'
   end
   object CashGuides: TdsdGuides
     KeyField = 'Id'
