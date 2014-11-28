@@ -45,7 +45,7 @@ BEGIN
      inIsParentDetail:= inIsParentDetail OR inIsInfoMoneyDetail;
 
      -- !!!проводки только у Админа!!!
-     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898)) -- Отчеты (управленческие)
+     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933)) -- Отчеты (управленческие) + Клиент банк-ввод документов
      THEN
 
      RETURN QUERY 
