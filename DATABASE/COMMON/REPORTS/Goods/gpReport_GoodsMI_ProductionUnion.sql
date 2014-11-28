@@ -1,13 +1,9 @@
--- Function: gpReport_GoodsMI_ProductionSeparate ()
+-- Function: gpReport_GoodsMI_ProductionUnion ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
+
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
     IN inGroupMovement      Boolean   ,
@@ -20,12 +16,12 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inToId               Integer   ,    -- кому
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar 
-             , GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
+             , PartionGoods  TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
-             , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
-             , ChildAmount TFloat, ChildSumm TFloat, Price TFloat
-             , ChildPrice TFloat, Percent TFloat
+             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
+             , ChildAmount TFloat, ChildSumm TFloat
+             , ChildPrice TFloat
              )   
 AS
 $BODY$
@@ -88,7 +84,7 @@ BEGIN
     END IF;
 
   
-   -- Результат
+    -- Результат
     RETURN QUERY
     
     -- ограничиваем по виду документа  , по от кого / кому
@@ -96,13 +92,8 @@ BEGIN
                         (SELECT Movement.Id        AS MovementId
                               , Movement.InvNumber AS InvNumber
                               , Movement.OperDate  AS OperDate
-                              , MovementString_PartionGoods.ValueData AS PartionGoods 
                          FROM Movement 
-                              LEFT JOIN MovementString AS MovementString_PartionGoods
-                                                       ON MovementString_PartionGoods.MovementId =  Movement.Id
-                                                      AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
-
-			      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
 				                           ON MovementLinkObject_From.MovementId = Movement.Id
 						          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 			      JOIN _tmpFromGroup on _tmpFromGroup.FromId = MovementLinkObject_From.ObjectId
@@ -114,38 +105,44 @@ BEGIN
 				  
 						      
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                           AND Movement.DescId  = zc_Movement_ProductionSeparate() -- 9 --and   Movement.Id  = 386839 
-                            
+                           AND Movement.DescId  = zc_Movement_ProductionUnion() -- 9 --and   Movement.Id  = 386839 
+                            --and Movement.Id =  385759
                          GROUP BY Movement.Id 
                                 , Movement.InvNumber 
                                 , Movement.OperDate  
-                                , MovementString_PartionGoods.ValueData 
                          )
 
-, tmpMI_Container AS (SELECT tmpMovement.MovementId AS MovementId
+  , tmpMI_Container AS (SELECT tmpMovement.MovementId AS MovementId
                              , tmpMovement.InvNumber
                              , tmpMovement.OperDate
-                             , tmpMovement.PartionGoods
+                             --, tmpMovement.PartionGoods
                              , MovementItem.ObjectId AS GoodsId       
-                            -- , 0 AS Summ
-                             , SUM (MIContainer.Amount) AS Amount
+                             , (MIContainer.Amount)    AS Amount
                              , MIFloat_HeadCount.ValueData AS HeadCount
-                             , MovementItem.DescId  as MovementItemDescId
-                             , MIContainer.DescId  as MIContainerDescId
+                             , MovementItem.DescId         as MovementItemDescId
+                             , MIContainer.DescId          as MIContainerDescId
                              , Container.ObjectId as  ContainerObjectId
-                             
+                             , MovementItem.Id      as MovementItemId 
+                             , MovementItem.ParentId as MovementItemParentId
+                             , COALESCE (ContainerLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                         FROM tmpMovement
                             JOIN MovementItemContainer AS MIContainer 
                                                        ON MIContainer.MovementId = tmpMovement.MovementId
-                            JOIN Container ON Container.Id = MIContainer.ContainerId                              --left
+                            JOIN Container ON Container.Id = MIContainer.ContainerId            
                                          
-                            JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId   --MIMaster
+                            JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId   
 				             
 	                    LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-        
-                        GROUP BY MovementItem.ObjectId    
+                                                       AND MIContainer.DescId =  zc_MIContainer_Count()
+                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_Count()
+
+
+                            LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
+                                                          ON ContainerLO_PartionGoods.ContainerId = Container.Id
+                                                         AND ContainerLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                        /*GROUP BY MovementItem.ObjectId    
                                , COALESCE (Container.ObjectId, 0) 
                                , MIFloat_HeadCount.ValueData 
                                , tmpMovement.MovementId
@@ -154,39 +151,48 @@ BEGIN
                                , tmpMovement.PartionGoods
                                , MovementItem.DescId ,MIContainer.DescId
                                , Container.ObjectId
+                         */
                            )
 
                          
-     , tmpMI_Amount AS (SELECT tmpMI_Container.MovementId 
+     , tmpMI_Count AS (SELECT tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
-                             , tmpMI_Container.PartionGoods
+                             , tmpMI_Container.PartionGoodsId
                              , tmpMI_Container.GoodsId 
                              , 0 AS Summ
                              , SUM (tmpMI_Container.Amount) AS Amount
                              , tmpMI_Container.HeadCount
                              , tmpMI_Container.MovementItemDescId  as DescId 
+                             , tmpMI_Container.MovementItemId 
+                             , tmpMI_Container.MovementItemParentId
+                             
                         FROM tmpMI_Container
                            
                         Where tmpMI_Container.MIContainerDescId = zc_MIContainer_Count()
                         GROUP BY tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
-                             , tmpMI_Container.PartionGoods
+                             , tmpMI_Container.PartionGoodsId
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.HeadCount
                              , tmpMI_Container.MovementItemDescId 
-                           )
+                             , tmpMI_Container.MovementItemId 
+                             , tmpMI_Container.MovementItemParentId
+                        )
 
-  , tmpMI_sum AS (SELECT tmpMI_Container.MovementId 
+        , tmpMI_sum AS (SELECT tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
-                             , tmpMI_Container.PartionGoods
+                             , tmpMI_Container.PartionGoodsId
                              , tmpMI_Container.GoodsId 
                              , SUM (tmpMI_Container.Amount)  AS Summ
                              , 0 AS Amount
                              , tmpMI_Container.HeadCount
                              , tmpMI_Container.MovementItemDescId as DescId 
+                             , tmpMI_Container.MovementItemId 
+                             , tmpMI_Container.MovementItemParentId  
+                         
                         FROM tmpMI_Container
                           -- JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
                           --       ) AS tmpAccount on tmpAccount.AccountID = tmpMI_Container.ContainerObjectId
@@ -194,17 +200,19 @@ BEGIN
                         GROUP BY tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
-                             , tmpMI_Container.PartionGoods
                              , tmpMI_Container.GoodsId 
                              , tmpMI_Container.HeadCount
                              , tmpMI_Container.MovementItemDescId 
+                             , tmpMI_Container.MovementItemId 
+                             , tmpMI_Container.MovementItemParentId    
+                             , tmpMI_Container.PartionGoodsId                         
                            )
 
  
       SELECT CAST (tmpOperationGroup.InvNumber AS TVarChar) AS InvNumber
            , CAST (tmpOperationGroup.OperDate AS TDateTime)  AS OperDate
-           , CAST (tmpOperationGroup.PartionGoods AS TVarChar) AS PartionGoods
-
+           
+           , CAST (Object_PartionGoods.ValueData AS TVarChar) AS PartionGoods
            , Object_GoodsGroup.ValueData AS GoodsGroupName 
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName  
@@ -214,7 +222,7 @@ BEGIN
 
            , tmpOperationGroup.Summ :: TFloat AS Summ
 
-
+           , CAST (Object_PartionGoodsChild.ValueData AS TVarChar) AS ChildPartionGoods
            , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName 
            , Object_GoodsChild.ObjectCode     AS ChildGoodsCode
            , Object_GoodsChild.ValueData      AS ChildGoodsName
@@ -222,15 +230,14 @@ BEGIN
            , tmpOperationGroup.ChildAmount  :: TFloat AS ChildAmount
 
            , tmpOperationGroup.ChildSumm :: TFloat AS ChildSumm
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            
-           , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat         AS ChildPrice
-           , CASE WHEN tmpOperationGroup.Amount <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / tmpOperationGroup.Amount) ,0) ELSE 0 END   ::TFloat   AS Percent  
-
+           , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat  AS ChildPrice
+           
       FROM (
             SELECT CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
                  , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END AS OperDate
-                 , CASE when inGroupPartion = True THEN tmpMI.PartionGoods ELSE '' END AS PartionGoods
+                 , CASE when inGroupPartion = True THEN tmpMI.PartionGoodsId ELSE 0 END AS PartionGoodsId
+                 , CASE when inGroupPartion = True THEN tmpMI.ChildPartionGoodsId ELSE 0 END AS ChildPartionGoodsId
                  , tmpMI.GoodsId       
                  , ABS (SUM(tmpMI.Summ)) as Summ
                  , ABS (SUM(tmpMI.Amount)) as Amount
@@ -241,16 +248,17 @@ BEGIN
 
             FROM (SELECT  tmpMIMaster_Sum.InvNumber
                         , tmpMIMaster_Sum.OperDate
-                        , tmpMIMaster_Sum.PartionGoods 
+                        , tmpMIMaster_Sum.PartionGoodsId 
                         , tmpMIMaster_Sum.GoodsId       
                         , tmpMIMaster_Sum.Summ
                         , tmpMIMaster_Sum.Amount
                         , tmpMIMaster_Sum.HeadCount
+                        , tmpMIChild_Sum.PartionGoodsId AS ChildPartionGoodsId
                         , tmpMIChild_Sum.GoodsId  AS ChildGoodsId     
                         , tmpMIChild_Sum.Summ AS ChildSumm
                         , tmpMIChild_Sum.Amount AS ChildAmount
                   FROM tmpMI_sum AS tmpMIMaster_Sum
-                       JOIN tmpMI_sum AS tmpMIChild_Sum on tmpMIMaster_Sum.MovementId = tmpMIChild_Sum.MovementId
+                       JOIN tmpMI_sum AS tmpMIChild_Sum on tmpMIChild_Sum.MovementItemParentId = tmpMIMaster_Sum.MovementItemId
                                                        AND tmpMIChild_Sum.DescId = zc_MI_Child()
                        JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMIMaster_Sum.GoodsId
                        JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMIChild_Sum.GoodsId
@@ -261,16 +269,17 @@ BEGIN
            
                   SELECT  tmpMIMaster.InvNumber
                         , tmpMIMaster.OperDate
-                        , tmpMIMaster.PartionGoods 
+                        , tmpMIMaster.PartionGoodsId 
                         , tmpMIMaster.GoodsId as GoodsId       
                         , tmpMIMaster.Summ
                         , tmpMIMaster.Amount
                         , tmpMIMaster.HeadCount
+                        , tmpMIChild.PartionGoodsId AS ChildPartionGoodsId
                         , tmpMIChild.GoodsId  as ChildGoodsId     
                         , tmpMIChild.Summ as ChildSumm
                         , tmpMIChild.Amount as ChildAmount
-                  FROM tmpMI_Amount AS tmpMIMaster
-                         LEFT JOIN tmpMI_Amount AS tmpMIChild on tmpMIMaster.MovementId = tmpMIChild.MovementId
+                  FROM tmpMI_Count AS tmpMIMaster
+                         LEFT JOIN tmpMI_Count AS tmpMIChild on tmpMIChild.MovementItemParentId = tmpMIMaster.MovementItemId
                                                         AND tmpMIChild.DescId = zc_MI_Child()
                          JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMIMaster.GoodsId
                          JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMIChild.GoodsId
@@ -281,7 +290,8 @@ BEGIN
             ) AS tmpMI 
 	    GROUP BY CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END
                    , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
-                   , CASE when inGroupPartion = True THEN tmpMI.PartionGoods ELSE '' END 
+                   , CASE when inGroupPartion = True THEN tmpMI.PartionGoodsId ELSE 0 END 
+                   , CASE when inGroupPartion = True THEN tmpMI.ChildPartionGoodsId ELSE 0 END
                    , tmpMI.GoodsId       
                    , tmpMI.ChildGoodsId   
             ) AS tmpOperationGroup
@@ -299,12 +309,18 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupChild.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroupChild ON Object_GoodsGroupChild.Id = ObjectLink_Goods_GoodsGroupChild.ChildObjectId
 
-             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= inEndDate)
-                                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
+             LEFT JOIN Object AS Object_PartionGoods 
+                              ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
+                             AND inGroupPartion = True
+                                                     
+             LEFT JOIN Object AS Object_PartionGoodsChild
+                              ON Object_PartionGoodsChild.Id = tmpOperationGroup.ChildPartionGoodsId
+                             AND inGroupPartion = True
 
-      ORDER BY tmpOperationGroup.InvNumber
+       ORDER BY tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
-             , tmpOperationGroup.PartionGoods 
+             , Object_PartionGoods.ValueData
+             , Object_PartionGoodsChild.ValueData
              , Object_GoodsGroup.ValueData 
              , Object_Goods.ObjectCode     
              , Object_Goods.ValueData      
@@ -313,17 +329,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 27.11.14         *
- 19.11.14         *
- 21.08.14         * 
+ 28.11.14         *
+
     
 */
 
 -- тест
---select * from gpReport_GoodsMI_ProductionSeparate(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'False' , inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId := 2360 , inFromId := 0 , inToId := 0 ,  inSession := '5');
+--select * from gpReport_GoodsMI_ProductionUnion(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'True' , inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId :=0 , inFromId := 0 , inToId := 0 ,  inSession := '5');
