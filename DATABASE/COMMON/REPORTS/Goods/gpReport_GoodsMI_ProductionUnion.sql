@@ -111,7 +111,7 @@ BEGIN
 						      
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
                            AND Movement.DescId  = zc_Movement_ProductionUnion() -- 9 --and   Movement.Id  = 386839 
-                            and Movement.Id =  385769
+                            --and Movement.Id =  385769
                          GROUP BY Movement.Id 
                                 , Movement.InvNumber 
                                 , Movement.OperDate  
