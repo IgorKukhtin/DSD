@@ -66,8 +66,6 @@ type
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    actPrint_TaxCorrective_Us: TdsdPrintAction;
-    actPrint_TaxCorrective_Client: TdsdPrintAction;
     actPrint: TdsdPrintAction;
     bbPrintReturnIn: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
@@ -88,6 +86,12 @@ type
     colCurrencyDocumentName: TcxGridDBColumn;
     colCurrencyPartnerName: TcxGridDBColumn;
     colIsEDI: TcxGridDBColumn;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
+    mactPrint_TaxCorrective_Us: TMultiAction;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ>
     IN inInvNumber             TVarChar  , -- Номер документа
     IN inOperDate              TDateTime , -- Дата документа
     IN inAmount                TFloat    , -- Сумма операции 
+    IN inAmountSumm            TFloat    , -- Cумма грн, обмен
     IN inAmountCurrency        TFloat    , -- Сумма в валюте
     IN inBankAccountId         Integer   , -- Расчетный счет 	
     IN inComment               TVarChar  , -- Комментарий 
@@ -35,11 +36,30 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не выбрано значение <№ договора>.';
      END IF;
 
-     -- проверка (для юр.лица только)
+     -- проверка
      IF COALESCE (inCurrencyId, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не выбрано значение <Валюта>.';
      END IF;
+
+     -- проверка
+     IF inAmountSumm < 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Неверное значение <Cумма грн, обмен>.';
+     END IF;
+     -- проверка
+     IF inCurrencyId = zc_Enum_Currency_Basis() AND inAmount > 0 AND inInfoMoneyId IN (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000())  -- Покупка/продажа валюты
+        AND COALESCE (inAmountSumm, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для <%> не введено значение <Cумма грн, обмен>.', lfGet_Object_ValueData (inInfoMoneyId);
+     END IF;
+     -- проверка
+     IF NOT (inCurrencyId = zc_Enum_Currency_Basis() AND inAmount > 0 AND inInfoMoneyId IN (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000()))  -- Покупка/продажа валюты
+        AND inAmountSumm > 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для <%> в валюту <%> значение <Cумма грн, обмен> должно быть равно нулю.', lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inCurrencyId);
+     END IF;
+
 
      -- Проверка установки значений
      IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND (InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
@@ -60,6 +80,8 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50200() -- Налоговые платежи
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                                                                                                                                   )
                                                                                                          OR InfoMoneyId = zc_Enum_InfoMoney_21419() -- Штрафы за недовоз
                                                                                                         )
@@ -93,6 +115,8 @@ BEGIN
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
     
+     -- Cумма грн, обмен
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmountSumm);
      -- Сумма в валюте
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, inAmountCurrency);
      -- Курс для перевода в валюту баланса

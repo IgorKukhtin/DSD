@@ -132,16 +132,24 @@ BEGIN
              , COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                     AND _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
+                    WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN -1 * _tmpItem.OperSumm
-                    ELSE CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END * CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
+                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
                END AS OperSumm
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN _tmpItem.OperSumm_Currency
                     ELSE 0
                END AS OperSumm_Currency
              , CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                     AND _tmpItem.isActive = TRUE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
+                    WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0
-                    ELSE -1 * _tmpItem.OperSumm - CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END * CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
+                    ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
                END AS OperSumm_Diff
  
              , _tmpItem.MovementItemId
@@ -151,6 +159,7 @@ BEGIN
              , 0 AS ContainerId_Diff                                          -- сформируем позже
 
              , CASE WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN zc_Enum_ProfitLoss_80105() -- Разница при покупке/продаже валюты
                     ELSE zc_Enum_ProfitLoss_80103() -- Курсовая разница
                END AS ProfitLossId_Diff
@@ -197,6 +206,11 @@ BEGIN
              , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
 
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                     AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.isActive = FALSE
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
+                         THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN _tmpItem.CurrencyId
                     ELSE 0
                END AS CurrencyId
@@ -204,6 +218,9 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
+             LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                     ON MovementFloat_Amount.MovementId = inMovementId
+                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
              LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
                                      ON MovementFloat_CurrencyPartnerValue.MovementId = inMovementId
                                     AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()

@@ -3378,6 +3378,7 @@ begin
                             +'                                           , '+FormatToVarCharServer_notNULL('')
                             +'                                           , '+FormatToVarCharServer_notNULL('')
                             +'                                           , '+FormatToVarCharServer_notNULL('')
+                            +'                                           , '+FormatToVarCharServer_notNULL('')
                             +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
                             +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
                             +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
@@ -9736,6 +9737,7 @@ begin
                                      +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
                                      +'                                           , '+FormatToVarCharServer_notNULL('01.01.2000')
                                      +'                                           , '+FormatToVarCharServer_notNULL('31.12.2020')
@@ -9998,6 +10000,7 @@ begin
                       fExecSqToQuery ('select * from gpInsertUpdate_Object_Contract(0'
                                      +'                                           , 0'
                                      +'                                           , '+FormatToVarCharServer_notNULL('без договора')
+                                     +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('')
                                      +'                                           , '+FormatToVarCharServer_notNULL('')

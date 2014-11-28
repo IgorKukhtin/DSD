@@ -1,8 +1,8 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 315
-  ClientWidth = 545
-  ExplicitWidth = 551
+  ClientWidth = 581
+  ExplicitWidth = 587
   ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
@@ -111,7 +111,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 532
+    Width = 563
   end
   object ceContract: TcxButtonEdit [15]
     Left = 280
@@ -123,7 +123,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 260
+    Width = 291
   end
   object cxLabel8: TcxLabel [16]
     Left = 280
@@ -139,7 +139,7 @@
     Left = 8
     Top = 245
     TabOrder = 11
-    Width = 532
+    Width = 563
   end
   object cxLabel9: TcxLabel [19]
     Left = 415
@@ -157,7 +157,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 125
+    Width = 54
   end
   object edInvNumber: TcxTextEdit [21]
     Left = 8
@@ -207,12 +207,25 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 26
-    Width = 125
+    Width = 156
   end
   object cxLabel13: TcxLabel [27]
     Left = 415
     Top = 5
     Caption = #1041#1072#1085#1082
+  end
+  object cxLabel4: TcxLabel [28]
+    Left = 479
+    Top = 60
+    Caption = 'C'#1091#1084#1084#1072' '#1075#1088#1085', '#1086#1073#1084#1077#1085
+  end
+  object ceAmountSumm: TcxCurrencyEdit [29]
+    Left = 479
+    Top = 80
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 29
+    Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
@@ -272,6 +285,13 @@
         Name = 'inamountout'
         Value = 0.000000000000000000
         Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountSumm'
+        Value = Null
+        Component = ceAmountSumm
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -381,6 +401,12 @@
         Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountSumm'
+        Value = Null
+        Component = ceAmountSumm
         DataType = ftFloat
       end
       item
@@ -721,8 +747,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 472
-    Top = 50
+    Left = 408
+    Top = 106
   end
   object BankGuides: TdsdGuides
     KeyField = 'Id'

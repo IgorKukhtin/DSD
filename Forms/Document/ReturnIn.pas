@@ -129,6 +129,10 @@ type
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
+    mactPrint_TaxCorrective_Us: TMultiAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
   private
     { Private declarations }
   public

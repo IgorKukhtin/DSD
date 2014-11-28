@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat 
              , AmountOut TFloat 
+             , AmountSumm TFloat 
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
@@ -44,6 +45,7 @@ BEGIN
            
            , 0::TFloat                                         AS AmountIn
            , 0::TFloat                                         AS AmountOut
+           , 0::TFloat                                         AS AmountSumm
 
            , ''::TVarChar                                      AS Comment
            , 0                                                 AS BankAccountId
@@ -96,6 +98,8 @@ BEGIN
                       0
                   END::TFloat AS AmountOut
 
+           , MovementFloat_Amount.ValueData    AS AmountSumm
+
            , MIString_Comment.ValueData        AS Comment
 
            , View_BankAccount.Id               AS BankAccountId
@@ -121,6 +125,9 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId = Movement.Id
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
             LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = Movement.Id
                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()

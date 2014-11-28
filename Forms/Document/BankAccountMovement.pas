@@ -45,6 +45,8 @@ type
     ceBank: TcxButtonEdit;
     cxLabel13: TcxLabel;
     BankGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ceAmountSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

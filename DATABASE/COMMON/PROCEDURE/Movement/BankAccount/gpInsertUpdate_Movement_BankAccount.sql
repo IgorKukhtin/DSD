@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inOperDate             TDateTime , -- Дата документа
     IN inAmountIn             TFloat    , -- Сумма прихода
     IN inAmountOut            TFloat    , -- Сумма расхода
+    IN inAmountSumm           TFloat    , -- Cумма грн, обмен
 
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inComment              TVarChar  , -- Комментарий 
@@ -82,6 +83,7 @@ BEGIN
                                                , inInvNumber            := inInvNumber
                                                , inOperDate             := inOperDate
                                                , inAmount               := vbAmount
+                                               , inAmountSumm           := inAmountSumm
                                                , inAmountCurrency       := vbAmountCurrency
                                                , inBankAccountId        := inBankAccountId
                                                , inComment              := inComment
