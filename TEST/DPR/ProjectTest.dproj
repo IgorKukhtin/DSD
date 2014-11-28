@@ -1359,9 +1359,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbObjectMeatTest.pas"/>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
-				<Form>AncestorMainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
 				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1723,6 +1720,26 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMeat\MainForm.pas">
 				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupItemsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportSettingsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
+			<DCCReference Include="..\..\Forms\Import\ImportGroup.pas">
+				<Form>ImportGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Import\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Import\ImportType.pas">
+				<Form>ImportTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

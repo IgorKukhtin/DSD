@@ -454,7 +454,6 @@ uses
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
   PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm},
   dbObjectMeatTest in '..\SOURCE\dbObjectMeatTest.pas',
-  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   CurrencyValue_Object in '..\..\Forms\Guides\CurrencyValue_Object.pas' {CurrencyValue_ObjectForm: TParentForm},
   MeasureTest in '..\SOURCE\Objects\All\MeasureTest.pas',
@@ -577,7 +576,16 @@ uses
   dsdOLAPXMLBind in '..\..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   GoodsGroupAnalyst in '..\..\Forms\Guides\GoodsGroupAnalyst.pas' {GoodsGroupAnalystForm: TParentForm},
   GoodsGroupAnalystEdit in '..\..\Forms\Guides\GoodsGroupAnalystEdit.pas' {GoodsGroupAnalystEditForm: TParentForm},
-  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm};
+  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
+  ImportGroupItemsTest in '..\SOURCE\Objects\All\ImportGroupItemsTest.pas',
+  ImportGroupTest in '..\SOURCE\Objects\All\ImportGroupTest.pas',
+  ImportSettingsTest in '..\SOURCE\Objects\All\ImportSettingsTest.pas',
+  ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
+  ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
+  ImportGroup in '..\..\Forms\Import\ImportGroup.pas' {ImportGroupForm: TParentForm},
+  ImportSettings in '..\..\Forms\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  ImportType in '..\..\Forms\Import\ImportType.pas' {ImportTypeForm: TParentForm},
+  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

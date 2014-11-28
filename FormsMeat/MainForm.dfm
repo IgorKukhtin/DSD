@@ -3,12 +3,14 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -288
   ExplicitWidth = 1094
   ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
     Top = 45
+    ExplicitTop = 45
     ExplicitWidth = 1086
     ExplicitHeight = 182
   end
@@ -154,6 +156,19 @@
         item
           Visible = True
           ItemName = 'bbToolsWeighingTree'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbLoadLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbImportType'
+        end
+        item
+          Visible = True
+          ItemName = 'bbImportSettings'
         end
         item
           Visible = True

@@ -224,9 +224,6 @@
 				<Form>AncestorJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
-				<Form>AncestorMainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
 				<Form>AncestorReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -325,7 +322,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Load\ImportType.pas">
+			<DCCReference Include="..\..\Forms\Import\ImportType.pas">
 				<Form>ImportTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -335,7 +332,7 @@
 				<Form>MovementItemsLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Load\ImportGroup.pas">
+			<DCCReference Include="..\..\Forms\Import\ImportGroup.pas">
 				<Form>ImportGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -479,7 +476,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportGroupItemsTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
+			<DCCReference Include="..\..\Forms\Import\ImportSettings.pas">
 				<Form>ImportSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -550,6 +547,7 @@
 				<Form>ProcessForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

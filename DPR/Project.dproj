@@ -179,9 +179,6 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
-			<DCCReference Include="..\Forms\Ancestor\AncestorMain.pas">
-				<Form>AncestorMainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\LookAndFillSettings.pas">
 				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
@@ -199,6 +196,9 @@
 			<DCCReference Include="..\SOURCE\GridGroupCalculate.pas"/>
 			<DCCReference Include="..\FormsMeat\MainForm.pas">
 				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

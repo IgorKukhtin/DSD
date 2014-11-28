@@ -60,13 +60,13 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-      procedure TGoodsTest.ProcedureLoad;
+procedure TGoodsTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\Goods\';
   inherited;
 end;
 
-     procedure TGoodsTest.Test;
+procedure TGoodsTest.Test;
 var Id: integer;
     RecordCount: Integer;
     ObjectTest: TGoods;

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -12,9 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inNDSKindId           Integer   ,    -- НДС
     IN inMinimumLot          TFloat    ,    -- Групповая упаковка
-
-    IN inMinimumLot          TFloat    ,    -- Групповая упаковка
-    IN inMinimumLot          TFloat    ,    -- Групповая упаковка
+    IN inReferCode           Integer   ,    -- Код для стыковки спецпроекта
+    IN inReferPrice          TFloat    ,    -- Референтная цена упаковки
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -55,6 +55,8 @@ BEGIN
    END IF;   	
 
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(), ioId, inMinimumLot);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(), ioId, inReferCode);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), ioId, inReferPrice);
 
    -- Кусок ниже реализован временно пока работает одна сеть
 
@@ -75,12 +77,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.11.14                        *
  13.11.14                        *
  26.06.14                        *
  24.06.14         *

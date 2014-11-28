@@ -11,3 +11,4 @@ DROP VIEW IF EXISTS Object_Contract_InvNumber_Key_View CASCADE;
 DROP VIEW IF EXISTS Object_ContractCondition_DefermentPaymentView CASCADE;
 DROP VIEW IF EXISTS Object_Member_View CASCADE;
 DROP VIEW IF EXISTS Object_RoleAccessKey_View CASCADE;
+DROP VIEW IF EXISTS Object_Street_View CASCADE;

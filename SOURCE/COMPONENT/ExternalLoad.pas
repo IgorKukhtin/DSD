@@ -337,15 +337,22 @@ end;
 function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: String;
   AImportSettings: TImportSettings): string;
 var
-  c: char;
+  c, c1: char;
 begin
   result := AFieldName;
-  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then
+  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then begin
      if (length(AFieldName) = 1) then begin
         c := lowercase(AFieldName)[1];
         if c in ['a'..'z'] then
            result := 'F' + IntToStr(byte(c) - byte('a') + 1);
      end;
+     if (length(AFieldName) = 2) then begin
+        c  := lowercase(AFieldName)[1];
+        c1 := lowercase(AFieldName)[2];
+        if (c in ['a'..'z']) and (c1 in ['a'..'z']) then
+           result := 'F' + IntToStr(byte(c)*26 + byte(c1) - byte('a') + 1);
+     end;
+  end;
 end;
 
 procedure TExecuteProcedureFromExternalDataSet.Load;
