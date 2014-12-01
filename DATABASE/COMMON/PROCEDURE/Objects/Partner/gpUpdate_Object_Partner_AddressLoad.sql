@@ -57,7 +57,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
-   IF COALESCE(inId, 0 = 0) THEN
+   IF COALESCE(inId, 0) = 0 THEN
       RAISE EXCEPTION 'Ошибка. Контрагент "%" не найден в справочнике контрагентов.', inPartnerName;
    END IF;
 
@@ -118,13 +118,13 @@ BEGIN
                                            );
 
    -- сохранили связь с <Сотрудник (супервайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, inPersonalId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, vbPersonalId);
    -- сохранили связь с <Сотрудник (торговый)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, inPersonalTradeId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, vbPersonalTradeId);
    -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, inAreaId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, vbAreaId);
    -- сохранили связь с <Признак торговой точки>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, inPartnerTagId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, vbPartnerTagId);
 
 END;
 $BODY$

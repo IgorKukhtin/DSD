@@ -505,8 +505,6 @@ constructor TImportSettings.Create(ItemClass: TCollectionItemClass);
 begin
   inherited;
   StoredProc := TdsdStoredProc.Create(nil);
-  StoredProc.OutputType := otMultiExecute;
-  StoredProc.PackSize := 100;
 end;
 
 destructor TImportSettings.Destroy;
@@ -549,9 +547,16 @@ begin
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
-//  Result.StoredProc := TdsdStoredProc.Create(nil);
+  if Result.Directory = '' then begin
+     Result.StoredProc.OutputType := otResult;
+     Result.StoredProc.PackSize := 1;
+  end
+  else begin
+     Result.StoredProc.OutputType := otMultiExecute;
+     Result.StoredProc.PackSize := 100;
+  end;
+
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
-//  Result.StoredProc.OutputType := otResult;
 
   GetStoredProc.Params.Clear;
   {Заполняем параметрами параметры процедуры}

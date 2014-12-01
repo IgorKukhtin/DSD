@@ -1,6 +1,6 @@
 -- Function: lfSelect_Object_Unit_byProfitLossDirection ()
 
-DROP FUNCTION IF EXISTS lfSelect_Object_Unit_byProfitLossDirection ();
+--DROP FUNCTION IF EXISTS lfSelect_Object_Unit_byProfitLossDirection ();
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Unit_byProfitLossDirection()
 
