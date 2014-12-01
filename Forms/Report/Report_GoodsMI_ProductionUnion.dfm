@@ -617,7 +617,28 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         Component = PeriodChoice
       end
       item
+        Component = FromGroupGuides
+      end
+      item
+        Component = ToGroupGuides
+      end
+      item
         Component = GoodsGroupGuides
+      end
+      item
+        Component = GoodsGuides
+      end
+      item
+        Component = ChildGoodsGuides
+      end
+      item
+        Component = ChildGoodsGroupGuides
+      end
+      item
+        Component = cbGroupPartion
+      end
+      item
+        Component = cbGroupMovement
       end>
     Left = 184
     Top = 136

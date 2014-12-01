@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransferDebtIn(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , InvNumberPartner TVarChar
+             , InvNumberPartner TVarChar, InvNumberMark TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
@@ -51,6 +51,7 @@ BEGIN
            , Object_Status.ObjectCode    		AS StatusCode
            , Object_Status.ValueData     		AS StatusName
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData AS InvNumberMark
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -101,10 +102,15 @@ BEGIN
             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtIn() AND Movement.StatusId = tmpStatus.StatusId
             INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
+            
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+           
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
@@ -197,6 +203,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.12.14         * add InvNumberMark               
  03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner
  20.05.14                                        * add DocumentTaxKind...

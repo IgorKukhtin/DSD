@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtIn(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberMark TVarChar
+             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
@@ -38,6 +39,7 @@ BEGIN
                0 	     	                    AS Id
              , tmpInvNum.InvNumber              AS InvNumber
              , CAST ('' as TVarChar)            AS InvNumberPartner
+             , CAST ('' as TVarChar)            AS InvNumberMark
              , inOperDate			            AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name              	AS StatusName
@@ -94,12 +96,13 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
        SELECT
-             Movement.Id				AS Id
-           , Movement.InvNumber				AS InvNumber
+             Movement.Id				                AS Id
+           , Movement.InvNumber				            AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Movement.OperDate				AS OperDate
-           , Object_Status.ObjectCode    		AS StatusCode
-           , Object_Status.ValueData     		AS StatusName
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
+           , Movement.OperDate			    	        AS OperDate
+           , Object_Status.ObjectCode    		        AS StatusCode
+           , Object_Status.ValueData     		        AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -141,7 +144,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+            
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
@@ -239,6 +245,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.12.14         * add InvNumberMark
  03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner
  20.05.14                                        * add DocumentTaxKind...
