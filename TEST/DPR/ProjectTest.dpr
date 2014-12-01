@@ -588,7 +588,8 @@ uses
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
-  FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas';
+  FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

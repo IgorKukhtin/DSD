@@ -31,6 +31,7 @@ type
     actGoodsKindChoiceMaster: TOpenChoiceForm;
     colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
+    clChildPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

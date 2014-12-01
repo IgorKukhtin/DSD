@@ -1,7 +1,8 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1020
-  ExplicitWidth = 1036
+  ExplicitWidth = 1028
+  ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -45,6 +46,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               Kind = skSum
               Column = colCount
             end>
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -151,6 +153,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         ExplicitTop = 228
         ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
+          Styles.Content = nil
+          inherited colChildGoodsCode: TcxGridDBColumn
+            Width = 86
+          end
           object colChildGoodsName: TcxGridDBColumn [1]
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
@@ -163,18 +169,31 @@ inherited ProductionUnionForm: TProductionUnionForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 236
+            Width = 342
+          end
+          inherited colChildAmount: TcxGridDBColumn
+            Width = 88
           end
           inherited colChildAmountReceipt: TcxGridDBColumn
             Visible = True
+            Width = 101
+          end
+          object clChildPartionGoodsDate: TcxGridDBColumn [4]
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
           end
           inherited colChildPartionGoods: TcxGridDBColumn
             Visible = True
+            Width = 129
           end
           inherited colChildComment: TcxGridDBColumn
             Visible = True
+            Width = 81
           end
-          object colChildGoodsKindName: TcxGridDBColumn [6]
+          object colChildGoodsKindName: TcxGridDBColumn [7]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -186,7 +205,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 86
+            Width = 103
           end
         end
       end
@@ -197,6 +216,9 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 96
     ExplicitWidth = 1020
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
