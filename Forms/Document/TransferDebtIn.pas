@@ -95,6 +95,8 @@ type
     bbSetErasedTaxCorrective: TdxBarButton;
     bbUnCompleteTaxCorrective: TdxBarButton;
     actTaxJournalChoice: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    edInvNumberMark: TcxTextEdit;
   private
     { Private declarations }
   public
