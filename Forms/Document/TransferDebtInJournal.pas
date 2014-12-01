@@ -43,6 +43,7 @@ type
     clChecked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
+    colInvNumberMark: TcxGridDBColumn;
   private
     { Private declarations }
   public

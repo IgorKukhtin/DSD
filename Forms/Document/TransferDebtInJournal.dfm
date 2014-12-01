@@ -2,9 +2,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitLeft = -38
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1028
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,8 +16,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -102,6 +99,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -125,6 +123,14 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object colInvNumberMark: TcxGridDBColumn
+            Caption = #8470' '#1079'.'#1084'.'
+            DataBinding.FieldName = 'InvNumberMark'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -488,6 +494,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -530,6 +537,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -582,6 +590,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -624,6 +633,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -929,6 +939,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 496
     Top = 288
   end
@@ -951,6 +962,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 250
   end
@@ -987,12 +999,14 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1012,15 +1026,18 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 280
   end
@@ -1031,12 +1048,14 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1056,17 +1075,20 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
-    Top = 312
+    Top = 336
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
@@ -1093,6 +1115,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 306
   end
@@ -1121,6 +1144,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 586
     Top = 354
   end
@@ -1131,17 +1155,20 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inChecked'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 320
     Top = 435
   end

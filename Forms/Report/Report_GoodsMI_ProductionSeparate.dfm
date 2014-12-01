@@ -14,19 +14,17 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     Height = 328
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1048
+    ExplicitWidth = 1098
     ExplicitHeight = 328
     ClientRectBottom = 328
     ClientRectRight = 1098
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1048
+      ExplicitWidth = 1098
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
         Width = 1098
         Height = 328
-        ExplicitLeft = 32
-        ExplicitTop = -3
-        ExplicitWidth = 1056
+        ExplicitWidth = 1098
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -266,7 +264,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   inherited Panel: TPanel
     Width = 1098
     Height = 73
-    ExplicitWidth = 1048
+    ExplicitWidth = 1098
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 108
@@ -624,7 +622,30 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         Component = PeriodChoice
       end
       item
+        Component = cbGroupMovement
+      end
+      item
+        Component = cbGroupPartion
+      end
+      item
+        Component = ChildGoodsGroupGuides
+      end
+      item
+        Component = ChildGoodsGuides
+      end
+      item
+        Component = FromGroupGuides
+      end
+      item
+        Component = ToGroupGuides
+      end
+      item
+        Component = GoodsGuides
+      end
+      item
         Component = GoodsGroupGuides
+      end
+      item
       end>
     Left = 184
     Top = 136
