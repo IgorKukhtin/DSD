@@ -14,7 +14,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportType());
    vbUserId := lpGetUserBySession (inSession); 
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+   vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId)::Integer, 0);
 
    RETURN QUERY 
        SELECT 
@@ -28,7 +28,7 @@ BEGIN
 
                  JOIN ObjectLink AS ObjectLink_ImportGroup_Object
                                  ON ObjectLink_ImportGroup_Object.DescId = zc_ObjectLink_ImportGroup_Object()
-                                AND ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId
+                                AND (ObjectLink_ImportGroup_Object.ChildObjectId = vbObjectId OR vbObjectId = 0)
 
                  JOIN ObjectLink AS ObjectLink_ImportGroupItems_ImportGroup
                                  ON ObjectLink_ImportGroupItems_ImportGroup.DescId = zc_ObjectLink_ImportGroupItems_ImportGroup()

@@ -72,7 +72,7 @@ BEGIN
    PERFORM gpInsertUpdate_Object_LinkGoods_Load(inCode, inCode, vbObjectId, inSession);
 
    -- сохранили протокол
-   -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
 

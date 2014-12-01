@@ -1741,6 +1741,12 @@
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
 				<Form>AncestorMainForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\FileTypeKind.pas">
+				<Form>FileTypeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\FileTypeKindTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

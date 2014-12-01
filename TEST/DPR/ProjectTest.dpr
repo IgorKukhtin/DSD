@@ -585,7 +585,10 @@ uses
   ImportGroup in '..\..\Forms\Import\ImportGroup.pas' {ImportGroupForm: TParentForm},
   ImportSettings in '..\..\Forms\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   ImportType in '..\..\Forms\Import\ImportType.pas' {ImportTypeForm: TParentForm},
-  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm};
+  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
+  NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
+  FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
