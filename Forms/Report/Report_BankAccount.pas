@@ -58,6 +58,8 @@ type
     CurrencyName: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
+    Summ_Currency: TcxGridDBColumn;
+    CurrencyName_BankAccount: TcxGridDBColumn;
   private
     { Private declarations }
   public

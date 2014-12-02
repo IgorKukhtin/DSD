@@ -10,17 +10,18 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   inherited PageControl: TcxPageControl
     Width = 982
     Height = 342
-    ExplicitWidth = 917
+    ExplicitTop = 26
+    ExplicitWidth = 982
     ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 917
+      ExplicitWidth = 982
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 342
-        ExplicitWidth = 917
+        ExplicitWidth = 982
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -263,7 +264,8 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -273,8 +275,8 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.Nullable = False
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -283,6 +285,9 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
           object Amount_Currency: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1074#1072#1083#1102#1090#1077
             DataBinding.FieldName = 'Amount_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
