@@ -1,20 +1,16 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 277
-  ClientWidth = 350
-  ExplicitWidth = 356
-  ExplicitHeight = 302
+  ClientHeight = 307
+  ClientWidth = 349
+  ExplicitWidth = 355
+  ExplicitHeight = 332
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 228
-    TabOrder = 6
-    ExplicitTop = 228
+    TabOrder = 8
   end
   inherited bbCancel: TcxButton
-    Top = 228
-    TabOrder = 7
-    ExplicitTop = 228
+    TabOrder = 9
   end
   object edName: TcxTextEdit [2]
     Left = 9
@@ -104,6 +100,32 @@
     Top = 160
     Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100':'
   end
+  object cxLabel5: TcxLabel [14]
+    Left = 169
+    Top = 210
+    Caption = #1062#1077#1085#1072' '#1057#1055':'
+  end
+  object ceReferPrice: TcxCurrencyEdit [15]
+    Left = 170
+    Top = 233
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 7
+    Width = 109
+  end
+  object cxLabel7: TcxLabel [16]
+    Left = 53
+    Top = 210
+    Caption = #1050#1086#1076' '#1057#1055':'
+  end
+  object ceReferCode: TcxCurrencyEdit [17]
+    Left = 54
+    Top = 233
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 6
+    Width = 109
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
     Top = 48
@@ -169,6 +191,19 @@
         Name = 'inMinimumLot'
         Value = Null
         Component = edMinimumLot
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReferCode'
+        Value = Null
+        Component = ceReferCode
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReferPrice'
+        Value = Null
+        Component = ceReferPrice
         DataType = ftFloat
         ParamType = ptInput
       end>
@@ -240,6 +275,16 @@
         Value = Null
         Component = edMinimumLot
         DataType = ftFloat
+      end
+      item
+        Name = 'ReferCode'
+        Value = Null
+        Component = ceReferCode
+      end
+      item
+        Name = 'ReferPrice'
+        Value = Null
+        Component = ceReferPrice
       end>
     Left = 304
     Top = 216

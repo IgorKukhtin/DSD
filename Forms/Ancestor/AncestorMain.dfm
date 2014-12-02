@@ -110,6 +110,18 @@ object AncestorMainForm: TAncestorMainForm
           ItemName = 'bbUpdateProgramm'
         end>
     end
+    object bbLoadLoad: TdxBarButton
+      Action = actImportGroup
+      Category = 0
+    end
+    object bbImportType: TdxBarButton
+      Action = actImportType
+      Category = 0
+    end
+    object bbImportSettings: TdxBarButton
+      Action = actImportSettings
+      Category = 0
+    end
     object bbGuides: TdxBarSubItem
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Category = 0
@@ -150,6 +162,39 @@ object AncestorMainForm: TAncestorMainForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1080#1085#1090#1077#1088#1092#1077#1081#1089#1072
       OnExecute = actLookAndFeelExecute
+    end
+    object actImportSettings: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
+      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      FormName = 'TImportSettingsForm'
+      FormNameParam.Value = 'TImportSettingsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actImportGroup: TdsdOpenForm
+      Category = #1047#1072#1075#1088#1091#1079#1082#1080
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1080
+      FormName = 'TImportGroupForm'
+      FormNameParam.Value = 'TImportGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actImportType: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      FormName = 'TImportTypeForm'
+      FormNameParam.Value = 'TImportTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object cxLocalizer: TcxLocalizer

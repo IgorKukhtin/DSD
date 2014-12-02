@@ -70,10 +70,6 @@ type
     actRole: TdsdOpenForm;
     bbUser: TdxBarButton;
     bbRole: TdxBarButton;
-    actImportType: TdsdOpenForm;
-    bbImportType: TdxBarButton;
-    actImportSettings: TdsdOpenForm;
-    bbImportSettings: TdxBarButton;
     actMovementLoad: TdsdOpenForm;
     bbMovementLoad: TdxBarButton;
     actAdditionalGoods: TdsdOpenForm;
@@ -95,8 +91,6 @@ type
     bbJuridicalSettings: TdxBarButton;
     actProtocolUser: TdsdOpenForm;
     bbUserProtocol: TdxBarButton;
-    actImportGroup: TdsdOpenForm;
-    bbLoadLoad: TdxBarButton;
     actSaveData: TAction;
     bbSaveData: TdxBarButton;
     actContactPerson: TdsdOpenForm;

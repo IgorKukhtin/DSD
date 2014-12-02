@@ -28,7 +28,6 @@ object OLAPSetupForm: TOLAPSetupForm
     Height = 623
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 507
     object fpSettings: TPanel
       Left = 0
       Top = 0
@@ -36,7 +35,6 @@ object OLAPSetupForm: TOLAPSetupForm
       Height = 619
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 503
       object ScrollBox1: TScrollBox
         Left = 1
         Top = 1
@@ -45,7 +43,6 @@ object OLAPSetupForm: TOLAPSetupForm
         Align = alClient
         BorderStyle = bsNone
         TabOrder = 0
-        ExplicitHeight = 542
         object Label1: TLabel
           Left = 162
           Top = 569
@@ -78,7 +75,7 @@ object OLAPSetupForm: TOLAPSetupForm
           Left = 705
           Top = 220
           Width = 54
-          Height = 95
+          Height = 13
           Caption = #1044#1072#1085#1085#1099#1077': '
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -376,7 +373,6 @@ object OLAPSetupForm: TOLAPSetupForm
         object fldReportType: TcxImageComboBox
           Left = 161
           Top = 26
-          Enabled = False
           ParentFont = False
           Properties.Items = <
             item

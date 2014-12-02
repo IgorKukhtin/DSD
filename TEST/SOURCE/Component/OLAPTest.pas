@@ -182,6 +182,9 @@ begin
  OlapSaleReportOption.Objects['JuridicalName'].Visible := true;
  OlapSaleReportOption.Objects['GoodsName'].Visible := true;
 
+  with OlapSaleReportOption.Objects['YEAR_DATE_DOC'] do begin
+      Visible := true;
+  end;
 {  with OlapSaleReportOption.Objects['MONTH_YEAR_DATE_DOC'] do begin
       Visible := true;
   end;
@@ -194,13 +197,10 @@ begin
       Visible := true;
   end;
 
-  with OlapSaleReportOption.Objects['YEAR_DATE_DOC'] do begin
-      Visible := true;
-  end;
  }
-  with OlapSaleReportOption.Objects['DATE_DOC'] do begin
+ { with OlapSaleReportOption.Objects['DATE_DOC'] do begin
       Visible := true;
-  end;
+  end;}
 
   (*  with OlapSaleReportOption.Objects['POSITION_NAME'] do begin
   //     Visible := true;
@@ -275,8 +275,8 @@ begin
   OlapSaleReportOption.FromDate := StrToDate('01.01.2014');
   OlapSaleReportOption.ToDate := StrToDate('01.01.2015');
 
-//  OlapSaleReportOption.isOLAPonServer := true;
-  OlapSaleReportOption.isOLAPonServer := false;
+ // OlapSaleReportOption.isOLAPonServer := true;
+ OlapSaleReportOption.isOLAPonServer := false;
 
  Check (false, TOlap.CreateSQLExpression(OlapSaleReportOption, DataSet.FieldDefs, DataList));
  exit;

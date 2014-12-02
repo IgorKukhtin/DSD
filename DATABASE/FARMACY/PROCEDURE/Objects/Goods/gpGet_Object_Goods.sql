@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
-               MinimumLot TFloat, 
+               MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, 
                isErased boolean
                ) AS
 $BODY$
@@ -40,6 +40,8 @@ BEGIN
            , COALESCE(ObjectNDSKind.ValueData, ''::TVarChar)  AS NDSKindName
 
            , 0::TFloat     AS MinimumLot
+           , 0::TFloat     AS ReferCode
+           , 0::TFloat     AS ReferPrice
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -67,10 +69,18 @@ BEGIN
           , Object_Goods_View.NDSKindName    AS NDSKindName
 
           , Object_Goods_View.MinimumLot     AS MinimumLot
+          , ObjectFloat_Goods_ReferCode.ValueData  AS ReferCode
+          , ObjectFloat_Goods_ReferPrice.ValueData AS ReferPrice
 
           , Object_Goods_View.isErased       AS isErased
           
      FROM Object_Goods_View
+        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferCode
+                               ON ObjectFloat_Goods_ReferCode.ObjectId = Object_Goods_View.Id 
+                              AND ObjectFloat_Goods_ReferCode.DescId = zc_ObjectFloat_Goods_ReferCode()   
+        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferPrice
+                               ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods_View.Id 
+                              AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()   
     WHERE Object_Goods_View.Id = inId;
   END IF;
   

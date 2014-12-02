@@ -146,45 +146,6 @@ inherited MainForm: TMainForm
           ItemName = 'bbTest'
         end>
     end
-    inherited bbGuides: TdxBarSubItem
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbCommon'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAlternativeGoodsCodeForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSubItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnit'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridical'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContract'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContactPerson'
-        end>
-    end
     object bbDocuments: TdxBarSubItem [6]
       Caption = #1053#1072#1082#1083#1072#1076#1085#1099#1077
       Category = 0
@@ -344,13 +305,44 @@ inherited MainForm: TMainForm
       Action = actRole
       Category = 0
     end
-    object bbImportType: TdxBarButton [36]
-      Action = actImportType
-      Category = 0
-    end
-    object bbImportSettings: TdxBarButton [37]
-      Action = actImportSettings
-      Category = 0
+    inherited bbGuides: TdxBarSubItem
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbCommon'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAlternativeGoodsCodeForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPerson'
+        end>
     end
     object bbMovementLoad: TdxBarButton [38]
       Action = actMovementLoad
@@ -404,10 +396,6 @@ inherited MainForm: TMainForm
     end
     object bbUserProtocol: TdxBarButton [48]
       Action = actProtocolUser
-      Category = 0
-    end
-    object bbLoadLoad: TdxBarButton [49]
-      Action = actImportGroup
       Category = 0
     end
     object bbSaveData: TdxBarButton [50]
@@ -472,28 +460,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actImportSettings: TdsdOpenForm [6]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
-      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
-      FormName = 'TImportSettingsForm'
-      FormNameParam.Value = 'TImportSettingsForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actImportGroup: TdsdOpenForm [7]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1080
-      MoveParams = <>
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1080
-      FormName = 'TImportGroupForm'
-      FormNameParam.Value = 'TImportGroupForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actGoods: TdsdOpenForm [8]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -511,17 +477,6 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       FormName = 'TUserForm'
       FormNameParam.Value = 'TUserForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actImportType: TdsdOpenForm [11]
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
-      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
-      FormName = 'TImportTypeForm'
-      FormNameParam.Value = 'TImportTypeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

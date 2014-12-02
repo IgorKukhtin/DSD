@@ -42,9 +42,11 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadDocumentTaxKindFormTest;
     procedure LoadEDIForm;
     procedure LoadExternalForm;
-    procedure LoadDocumentTaxKindFormTest;
+    procedure LoadImportSettingsFormTest;
+    procedure LoadImportTypeFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFounderFormTest;
     procedure LoadFounderServiceFormTest;
@@ -449,6 +451,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadImportSettingsFormTest;
+begin
+  //Настройки импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
+end;
+
+procedure TLoadFormTest.LoadImportTypeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFileTypeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFileTypeKindForm');
+  //Типы импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;

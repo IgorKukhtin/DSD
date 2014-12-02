@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -31,6 +32,7 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_TransferDebtIn (ioId    := ioId
                                                   , inInvNumber        := inInvNumber
                                                   , inInvNumberPartner := inInvNumberPartner
+                                                  , inInvNumberMark    := inInvNumberMark
                                                   , inOperDate         := inOperDate
                                                   , inChecked          := inChecked
                                                   , inPriceWithVAT     := inPriceWithVAT
@@ -53,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.12.14         * add inInvNumberMark               
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
  07.05.14                                        * add inPartnerId

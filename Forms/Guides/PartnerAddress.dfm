@@ -20,9 +20,9 @@ object PartnerAddressForm: TPartnerAddressForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 1058
-    Height = 438
+    Height = 436
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -513,6 +513,27 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 50
       end
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object DocBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'DocBranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object LastDocName: TcxGridDBColumn
+        Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+        DataBinding.FieldName = 'LastDocName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -531,8 +552,44 @@ object PartnerAddressForm: TPartnerAddressForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 2
     Width = 245
+  end
+  object cbPeriod: TcxCheckBox
+    Left = 390
+    Top = 36
+    Action = actRefresh
+    Caption = #1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082' '#1079#1072' '
+    TabOrder = 4
+    Width = 136
+  end
+  object deStart: TcxDateEdit
+    Left = 530
+    Top = 36
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 6
+    Width = 85
+  end
+  object cxlEnd: TcxLabel
+    Left = 615
+    Top = 36
+    AutoSize = False
+    Caption = #1087#1086
+    Properties.Alignment.Vert = taVCenter
+    Height = 21
+    Width = 21
+    AnchorY = 47
+  end
+  object deEnd: TcxDateEdit
+    Left = 640
+    Top = 36
+    EditValue = 41852d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 10
+    Width = 85
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -562,8 +619,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -581,7 +638,7 @@ object PartnerAddressForm: TPartnerAddressForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -614,6 +671,10 @@ object PartnerAddressForm: TPartnerAddressForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbPrint_byPartner'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -631,6 +692,26 @@ object PartnerAddressForm: TPartnerAddressForm
         item
           Visible = True
           ItemName = 'bbJuridicalGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic2'
+        end
+        item
+          Visible = True
+          ItemName = 'chkByDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'deStartDate'
+        end
+        item
+          Visible = True
+          ItemName = 'textTo'
+        end
+        item
+          Visible = True
+          ItemName = 'deEndDate'
         end
         item
           Visible = True
@@ -709,6 +790,42 @@ object PartnerAddressForm: TPartnerAddressForm
       Hint = 'JuridicalGuides'
       Visible = ivAlways
       Control = edJuridical
+    end
+    object dxBarStatic2: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
+    end
+    object chkByDoc: TdxBarControlContainerItem
+      Caption = 'ChkByDoc'
+      Category = 0
+      Hint = 'ChkByDoc'
+      Visible = ivAlways
+      Control = cbPeriod
+    end
+    object deStartDate: TdxBarControlContainerItem
+      Caption = 'deStartDate'
+      Category = 0
+      Hint = 'deStartDate'
+      Visible = ivAlways
+      Control = deStart
+    end
+    object textTo: TdxBarControlContainerItem
+      Caption = 'textTo'
+      Category = 0
+      Hint = 'textTo'
+      Visible = ivAlways
+      Control = cxlEnd
+    end
+    object deEndDate: TdxBarControlContainerItem
+      Caption = 'deEndDate'
+      Category = 0
+      Hint = 'deEndDate'
+      Visible = ivAlways
+      Control = deEnd
+    end
+    object bbPrint_byPartner: TdxBarButton
+      Action = actPrint_byPartner
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1234,6 +1351,37 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       isShowModal = True
     end
+    object actPrint_byPartner: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'partnername'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41852d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41852d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ReportNameParam.DataType = ftString
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -1243,6 +1391,27 @@ object PartnerAddressForm: TPartnerAddressForm
         DataSet = MasterCDS
       end>
     Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPeriod'
+        Value = Null
+        Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
       item
         Name = 'inJuridicalId'
         Value = ''
@@ -1585,5 +1754,11 @@ object PartnerAddressForm: TPartnerAddressForm
       end>
     Left = 384
     Top = 112
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 480
+    Top = 120
   end
 end

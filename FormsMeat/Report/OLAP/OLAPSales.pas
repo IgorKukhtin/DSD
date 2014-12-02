@@ -129,42 +129,31 @@ end;
 procedure TOLAPSalesForm.CalcRepData;
 var
   i: integer;
-  //OracleSession: TELOracleSession;
+  FieldDefs: TFieldDefs;
 begin
-  //OracleSession := GetSession;
-  //try
-  //  OracleSession.DataDateTime := Trunc(ELEnvironment.SysDate);
-  //except end;
-  //odsRepData.Session := OracleSession;
-  {FieldDefs := TFieldDefs.Create(odsRepData);
-  odsRepData.DeleteVariables;
-  odsRepData.DeclareAndSet('LSQL', otSubst, TELOlapSalers.CreateSQLExpression(FELOlapSaleReportOption, FieldDefs, DataFields));
+(*  FieldDefs := TFieldDefs.Create(MasterCDS);
 
-  if odsRepData.Active then
-     odsRepData.Close;
+  if OlapReportOption.isOLAPonServer then begin
+     spSelect.ParamByName('SQL').Value := gfStrToXmlStr(TOlap.CreateSQLExpression(OlapReportOption, MasterCDS.FieldDefs, DataFields));
+     spSelect.Execute;
+     MasterCDS.FieldDefs.Clear;
+     MasterCDS.FieldDefs.Assign(FieldDefs);
+     for i := 0 to MasterCDS.FieldDefs.Count - 1 do
+         MasterCDS.FieldDefs[i].CreateField(MasterCDS);
 
-  if FELOlapSaleReportOption.isOLAPonServer then begin
-    odsRepData.FieldDefs.Clear;
-    odsRepData.FieldDefs.Assign(FieldDefs);
-    for i := 0 to odsRepData.FieldDefs.Count - 1 do
-        odsRepData.FieldDefs[i].CreateField(odsRepData);
-
-    if FELOlapSaleReportOption.isOLAPonServer and (FELOlapSaleReportOption.SummaryType <> stNone) then
-      for i := 0 to FELOlapSaleReportOption.FieldCount - 1 do
-          if FELOlapSaleReportOption.Objects[i] is TDataOLAPField then
-             with FELOlapSaleReportOption.Objects[i] do
+    if OlapReportOption.isOLAPonServer and (OlapReportOption.SummaryType <> stNone) then
+      for i := 0 to OlapReportOption.FieldCount - 1 do
+          if OlapReportOption.Objects[i] is TDataOLAPField then
+             with OlapReportOption.Objects[i] do
                if Visible then
                   with FieldDefs.AddFieldDef do begin
                     Name := 'ITOG_' + FieldName;
                     DataType := ftFloat;
-                    CreateField(odsRepData).FieldKind := fkCalculated;
+                    CreateField(MasterCDS).FieldKind := fkCalculated;
                   end;
   end;
-
-  odsRepData.Open;}
+  *)
   FReportTime := Now;
-
-  OlapReportOption.isOLAPonServer := false;
 
   spSelect.ParamByName('SQL').Value := gfStrToXmlStr(TOlap.CreateSQLExpression(OlapReportOption, MasterCDS.FieldDefs, DataFields));
   spSelect.Execute;

@@ -23,7 +23,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel;
+  cxTextEdit, dsdGuides, cxLabel, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar, ChoicePeriod;
 
 type
   TPartnerAddressForm = class(TParentForm)
@@ -116,6 +117,21 @@ type
     PositionName_PersonalTrade: TcxGridDBColumn;
     BranchName_Personal: TcxGridDBColumn;
     Id: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    PaidKindName: TcxGridDBColumn;
+    DocBranchName: TcxGridDBColumn;
+    LastDocName: TcxGridDBColumn;
+    cbPeriod: TcxCheckBox;
+    deStart: TcxDateEdit;
+    cxlEnd: TcxLabel;
+    deEnd: TcxDateEdit;
+    dxBarStatic2: TdxBarStatic;
+    chkByDoc: TdxBarControlContainerItem;
+    deStartDate: TdxBarControlContainerItem;
+    textTo: TdxBarControlContainerItem;
+    deEndDate: TdxBarControlContainerItem;
+    actPrint_byPartner: TdsdPrintAction;
+    bbPrint_byPartner: TdxBarButton;
   private
     { Private declarations }
   public

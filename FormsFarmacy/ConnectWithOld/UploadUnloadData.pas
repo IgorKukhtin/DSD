@@ -62,20 +62,22 @@ end;
 {------------------------------------------------------------------------------}
 procedure TdmUnloadUploadData.SaveGoods;
 begin
-  spUnload.StoredProcName := 'gpSelect_Object_Goods_Retail';
+  spUnload.StoredProcName := 'gpSelect_Object_Goods_Retail_Save';
   spUnload.Execute;
   with TGaugeFactory.GetGauge('Загрузка данных', 1, UnloadDataCDS.RecordCount) do begin
     Start;
     try
       while not UnloadDataCDS.EOF do begin
-        InsertSendTable('call InsertUpdateGoodsExternal(' + chr(39) +
+        InsertSendTable('call InsertUpdateGoodsExternalNew(' + chr(39) +
             UnloadDataCDS.FieldByName('Name').asString + chr(39) + ',' +
             chr(39) + chr(39) + ',' +
             UnloadDataCDS.FieldByName('Code').asString + ',' +
             ReplaceStr(UnloadDataCDS.FieldByName('NDS').asString, FormatSettings.DecimalSeparator, '.') + ',' +
             chr(39) + copy(UnloadDataCDS.FieldByName('Name').asString, 1, 20) +
             chr(39) + ',' +chr(39) + UnloadDataCDS.FieldByName('MeasureName').asString +
-            chr(39) + ', 0, 1);');
+            chr(39) + ', 0, 1, ' +
+            ReplaceStr(IntToStr(UnloadDataCDS.FieldByName('ReferCode').asInteger), FormatSettings.DecimalSeparator, '.') + ',' +
+            ReplaceStr(FloatToStr(UnloadDataCDS.FieldByName('ReferPrice').asFloat), FormatSettings.DecimalSeparator, '.') + ');');
         IncProgress;
         UnloadDataCDS.Next;
       end;

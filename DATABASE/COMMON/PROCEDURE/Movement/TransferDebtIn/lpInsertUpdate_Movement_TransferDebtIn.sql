@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (приход)>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -59,6 +60,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <Номер накладной у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+     -- сохранили свойство <Номер "перекресленої зеленої марки зi складу">
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberMark(), ioId, inInvNumberMark);
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
@@ -97,6 +100,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.12.14         * add InvNumberMark
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
  07.05.14                                        * add vbAccessKeyId
