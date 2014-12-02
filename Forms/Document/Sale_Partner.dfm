@@ -11,17 +11,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1389
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1389
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -267,7 +267,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1389
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1691,7 +1691,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale'
+    StoredProcName = 'gpInsertUpdate_Movement_Sale_Partner'
     Params = <
       item
         Name = 'ioId'

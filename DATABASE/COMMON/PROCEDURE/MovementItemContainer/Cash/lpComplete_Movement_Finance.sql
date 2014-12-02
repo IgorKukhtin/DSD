@@ -245,8 +245,10 @@ BEGIN
      -- return;
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+     UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
+                                              THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
 
+                                         WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
                                               THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                              THEN zc_Enum_ProfitLoss_60201() -- Амортизация + Производственные ОС + Основные средства
 
