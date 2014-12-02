@@ -151,7 +151,7 @@ BEGIN
                 , tmpContainer.BankAccountId
                 , tmpContainer.CurrencyId
                 , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
-                , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.DescId = zc_Movement_Currency() THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
+                , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() AND inIsDetail = TRUE THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
                 , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
                 , 0                         AS StartAmount
                 , 0                         AS EndAmount
@@ -161,7 +161,7 @@ BEGIN
                 , 0                         AS EndAmount_Currency
                 , 0                         AS DebetSumm_Currency
                 , 0                         AS KreditSumm_Currency
-                , SUM (CASE WHEN MIContainer.DescId = zc_Movement_Currency() THEN -1 * MIContainer.Amount ELSE 0 END) AS Summ_Currency
+                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
            FROM tmpContainer
                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -179,7 +179,7 @@ BEGIN
                                                 AND inIsDetail = TRUE
            GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
                   , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId
-                  , MIContainer.DescId
+                  , MIContainer.MovementDescId
           UNION ALL
            -- 2.2. движение в валюте операции
            SELECT tmpContainer.ContainerId

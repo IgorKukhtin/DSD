@@ -39,6 +39,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлена <Валюта (результат)>.';
      END IF;
 
+     -- проверка
+     IF inCurrencyFromId <> zc_Enum_Currency_Basis()
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Валюта (значение)> должно соответствовать <%>.', lfGet_Object_ValueData (zc_Enum_Currency_Basis());
+     END IF;
+
+
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Currency())
      THEN
@@ -74,6 +81,10 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+
+
+     -- 5.2. создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Currency())

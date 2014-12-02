@@ -11447,7 +11447,7 @@ begin
                                   +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
                                   +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
                                   +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
-                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString);
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
                        CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
                        CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
                        zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
@@ -11570,7 +11570,7 @@ begin
                                   +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
                                   +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
                                   +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
-                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString);
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
                        CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
                        CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
                        zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
@@ -12571,7 +12571,7 @@ begin
                                   +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
                                   +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
                                   +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
-                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString);
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
                        CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
                        CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
                        zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
