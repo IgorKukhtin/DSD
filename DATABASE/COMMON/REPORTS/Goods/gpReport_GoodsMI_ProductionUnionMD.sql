@@ -280,10 +280,10 @@ BEGIN
                              AND inGroupPartion = True
 
        ORDER BY
-               tmpOperationGroup.MasterId
-             , tmpOperationGroup.InvNumber
+               tmpOperationGroup.InvNumber
              , tmpOperationGroup.OperDate
              , Object_PartionGoods.ValueData
+             , tmpOperationGroup.MasterId
              , Object_GoodsGroup.ValueData
              , Object_Goods.ObjectCode
              , Object_Goods.ValueData

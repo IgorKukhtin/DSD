@@ -151,7 +151,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 130
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
@@ -165,7 +165,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 132
+            Width = 350
           end
           object clHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
@@ -185,7 +185,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 100
           end
           object clSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072'  ('#1087#1088#1080#1093#1086#1076')'
@@ -195,7 +195,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 120
           end
         end
       end
@@ -241,12 +241,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBColumn15
+              Column = ChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBColumn14
+              Column = ChildAmount
             end
             item
               Format = ',0.####'
@@ -280,12 +280,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBColumn15
+              Column = ChildSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBColumn14
+              Column = ChildAmount
             end
             item
               Format = ',0.####'
@@ -307,36 +307,36 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object cxGridDBColumn10: TcxGridDBColumn
+          object ChildPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildPartionGoods'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 64
+            Width = 70
           end
-          object cxGridDBColumn11: TcxGridDBColumn
+          object ChildGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            Width = 130
           end
-          object cxGridDBColumn12: TcxGridDBColumn
+          object ChildGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
-          object cxGridDBColumn13: TcxGridDBColumn
+          object ChildGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildGoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 109
+            Width = 350
           end
-          object cxGridDBColumn14: TcxGridDBColumn
+          object ChildAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -344,9 +344,9 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 100
           end
-          object cxGridDBColumn15: TcxGridDBColumn
+          object ChildSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072'  ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -354,14 +354,14 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 150
           end
-          object cxGridDBColumn16: TcxGridDBColumn
+          object ChildPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildPrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 57
+            Width = 80
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -724,6 +724,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
