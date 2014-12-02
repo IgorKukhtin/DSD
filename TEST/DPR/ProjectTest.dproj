@@ -1747,6 +1747,10 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\FileTypeKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas">
+				<Form>Report_GoodsMI_ProductionUnionMDForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
 				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
