@@ -2,9 +2,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
   ClientWidth = 1110
-  ExplicitLeft = -128
-  ExplicitWidth = 1126
-  ExplicitHeight = 359
+  ExplicitWidth = 1118
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -59,6 +58,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -378,7 +378,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Top = 65528
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_From_Report'
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -398,50 +398,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-      end
-      item
-        Name = 'inAmount'
-        Component = MasterCDS
-        ComponentItem = 'Sum_Bonus'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inContractId'
-        Component = MasterCDS
-        ComponentItem = 'ContractId_master'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId '
-        Component = MasterCDS
-        ComponentItem = 'InfoMoneyId_master'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
-        Component = MasterCDS
-        ComponentItem = 'JuridicalId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaidKindId'
-        Component = MasterCDS
-        ComponentItem = 'PaidKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inContractConditionKindId'
-        Component = MasterCDS
-        ComponentItem = 'ConditionKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBonusKindId'
-        Component = MasterCDS
-        ComponentItem = 'BonusKindId'
-        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 368
     Top = 176
   end

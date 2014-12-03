@@ -1,7 +1,8 @@
+
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReport 
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, tvarchar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, TVarChar );
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, Integer);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
@@ -9,9 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
 
-    IN inSession                  TVarChar    -- сессия пользователя
+    IN inSession                  TVarChar        -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId Integer;
@@ -19,10 +20,11 @@ $BODY$
 BEGIN
   
        -- проверка прав пользователя на вызов процедуры
-       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());  
-  
-       -- удаляем все документы сформированные автоматически
-       -- 
+       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
+      vbUserId:= lpGetUserBySession (inSession);
+       
+       
+     /*   -- удаляем все документы сформированные автоматически
        PERFORM lpSetErased_Movement (inMovementId:= Movement.Id
                                    , inUserId    := vbUserId)
        FROM Movement
@@ -34,44 +36,26 @@ BEGIN
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
        ;
+      */
+      
+            -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-       /*ioId :=  gpInsertUpdate_Movement_ProfitLossService (ioId              := 0             --COALESCE (vbId,0)
-                                                         , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                         , inOperDate        := inEndDate
-                                                         , inAmountIn        := 0
-                                                         , inAmountOut       := inAmount
-                                                         , inComment         := ''
-                                                         , inContractId      := inContractId
-                                                         , inInfoMoneyId     := inInfoMoneyId
-                                                         , inJuridicalId     := inJuridicalId
-                                                         , inPaidKindId      := inPaidKindId
-                                                         , inUnitId          := 0
-                                                         , inContractConditionKindId   := inContractConditionKindId
-                                                         , inBonusKindId     := inBonusKindId
-                                                         , inisLoad          := TRUE
-                                                         , inSession         := inSession
-                                                         );
-*/
-
-
-  -- создаются временные таблицы - для формирование данных для проводок
-  --   PERFORM lpComplete_Movement_Finance_CreateTemp();
-
-     select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
+     PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
                                                      , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
                                                      , inOperDate        :=inEndDate
-                                                     , inAmountIn        := 0
+                                                     , inAmountIn        := 0  :: tfloat
                                                      , inAmountOut       := Sum_Bonus
-                                                     , inComment         := ''
+                                                     , inComment         := '' :: TVarChar
                                                      , inContractId      := ContractId_find
                                                      , inInfoMoneyId     := InfoMoneyId_find
                                                      , inJuridicalId     := JuridicalId
                                                      , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
-                                                     , inUnitId          := 0
+                                                     , inUnitId          := 0  :: Integer
                                                      , inContractConditionKindId   := ConditionKindId
                                                      , inBonusKindId     := BonusKindId
                                                      , inisLoad          := TRUE
-                                                     , inUserId          := inSession     --zfCalc_UserAdmin() :: Integer
+                                                     , inUserId          := vbUserId     --zfCalc_UserAdmin() :: Integer
                                                       )
     from gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) as a
     where Sum_Bonus <> 0    -- and Sum_Bonus =30
@@ -90,4 +74,8 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport (inStartDate := '01.01.2013', inEndDate := '01.01.2013' , inSession:= '2')
+--SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport (inStartDate := '01.01.2013', inEndDate := '01.01.2013' , inSession:= '2')
+--select * from gpInsertUpdate_Movement_ProfitLossService_ByReport(inStartDate := ('01.11.2014')::TDateTime , inEndDate := ('30.11.2014')::TDateTime ,  inSession := zfCalc_UserAdmin());
+
+-- Function: lpComplete_Movement_All_CreateTemp ()
+
