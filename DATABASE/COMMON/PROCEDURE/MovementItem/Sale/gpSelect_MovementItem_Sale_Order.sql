@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_Sale_Order()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale_Order (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale_Order (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale_Order(
     IN inMovementId  Integer      , -- ключ Документа

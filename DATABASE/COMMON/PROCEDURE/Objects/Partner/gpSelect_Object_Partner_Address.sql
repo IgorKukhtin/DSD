@@ -1,16 +1,20 @@
 -- Function: gpSelect_Object_Partner_Address()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
-    IN inJuridicalId       Integer  , 
+    IN inStartDate   TDateTime , --
+    IN inEndDate     TDateTime , --
+    IN inIsPeriod    Boolean   , --
+    IN inJuridicalId       Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ShortName TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
-               PostalCode TVarChar, ProvinceCityName TVarChar, 
+               PostalCode TVarChar, ProvinceCityName TVarChar,
                CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
                RegionName TVarChar, ProvinceName TVarChar,
                StreetKindName TVarChar, StreetKindId Integer,
@@ -22,10 +26,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MemberTakeId Integer, MemberTakeName TVarChar,
                PersonalId Integer, PersonalName TVarChar, UnitName_Personal TVarChar, PositionName_Personal TVarChar, BranchName_Personal TVarChar,
                PersonalTradeId Integer, PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar, PositionName_PersonalTrade TVarChar,
-
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
                InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
+               PaidKindName TVarChar, DocBranchName TVarChar, LastDocName TVarChar,
                isErased Boolean
               )
 AS
@@ -35,69 +39,69 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
 
-   RETURN QUERY 
+   RETURN QUERY
 
-   WITH tmpContactPerson as ( SELECT 
+   WITH tmpContactPerson as ( SELECT
                                      Object_ContactPerson.ValueData   AS Name
                                    , ObjectString_Phone.ValueData     AS Phone
                                    , ObjectString_Mail.ValueData      AS Mail
-           
+
                                    , ContactPerson_Object.Id          AS PartnerId
                                    , ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId AS ContactPersonKindId
- 
+
                               FROM Object AS Object_ContactPerson
-       
+
                                     LEFT JOIN ObjectString AS ObjectString_Phone
-                                                           ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
+                                                           ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id
                                                           AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
                                     LEFT JOIN ObjectString AS ObjectString_Mail
-                                                           ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                                           ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id
                                                           AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
-            
+
                                     LEFT JOIN ObjectLink AS ContactPerson_ContactPerson_Object
                                                          ON ContactPerson_ContactPerson_Object.ObjectId = Object_ContactPerson.Id
                                                         AND ContactPerson_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
                                      JOIN Object AS ContactPerson_Object ON ContactPerson_Object.Id = ContactPerson_ContactPerson_Object.ChildObjectId
                                                                         AND ContactPerson_Object.DescId = zc_Object_Partner()
-                                    
+
                                      JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                      ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
                                                     AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
-           
+
                               WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
                             )
 
-     SELECT 
+     SELECT
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
          , Object_Partner.ValueData        AS Name
 
          , ObjectString_ShortName.ValueData   AS ShortName
-        
+
          , ObjectString_Address.ValueData     AS Address
          , ObjectString_HouseNumber.ValueData AS HouseNumber
          , ObjectString_CaseNumber.ValueData  AS CaseNumber
          , ObjectString_RoomNumber.ValueData  AS RoomNumber
 
-         , Object_Street_View.Id              AS StreetId 
-         , Object_Street_View.Name            AS StreetName 
-         , Object_Street_View.PostalCode      AS PostalCode 
+         , Object_Street_View.Id              AS StreetId
+         , Object_Street_View.Name            AS StreetName
+         , Object_Street_View.PostalCode      AS PostalCode
          , Object_Street_View.ProvinceCityName  AS ProvinceCityName
-         , Object_Street_View.CityName        AS CityName 
+         , Object_Street_View.CityName        AS CityName
          , Object_CityKind.ValueData          AS CityKindName
          , Object_CityKind.Id                 AS CityKindId
          , Object_Region.ValueData            AS RegionName
          , Object_Province.ValueData          AS ProvinceName
          , Object_Street_View.StreetKindName  AS StreetKindName
          , Object_Street_View.StreetKindId    AS StreetKindId
-          
+
          , Object_Juridical.Id              AS JuridicalId
          , Object_Juridical.ValueData       AS JuridicalName
          , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
          , Object_Retail.ValueData          AS RetailName
 
          , zc_Enum_ContactPersonKind_CreateOrder()  AS Order_ContactPersonKindId
-         , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CreateOrder()) AS Order_ContactPersonKindName 
+         , lfGet_Object_ValueData (zc_Enum_ContactPersonKind_CreateOrder()) AS Order_ContactPersonKindName
          , tmpContactPerson_Order.Name   AS Order_Name
          , tmpContactPerson_Order.Mail   AS Order_Mail
          , tmpContactPerson_Order.Phone  AS Order_Phone
@@ -119,7 +123,7 @@ BEGIN
 
            , Object_MemberTake.Id             AS MemberTakeId
            , Object_MemberTake.ValueData      AS MemberTakeName
-         
+
            , View_Personal.PersonalId         AS PersonalId
            , View_Personal.PersonalName       AS PersonalName
            , View_Personal.UnitName           AS UnitName_Personal
@@ -130,23 +134,45 @@ BEGIN
            , View_PersonalTrade.PersonalName  AS PersonalTradeName
            , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
            , View_PersonalTrade.PositionName  AS PositionName_PersonalTrade
-         
-           , Object_Area.Id                  AS AreaId
-           , Object_Area.ValueData           AS AreaName
-        
-           , Object_PartnerTag.Id            AS PartnerTagId
-           , Object_PartnerTag.ValueData     AS PartnerTagName           
 
-       , Object_InfoMoney_View.InfoMoneyGroupName
-       , Object_InfoMoney_View.InfoMoneyDestinationName
-       , Object_InfoMoney_View.InfoMoneyCode
-       , Object_InfoMoney_View.InfoMoneyName
-       , Object_InfoMoney_View.InfoMoneyName_all
+           , Object_Area.Id                   AS AreaId
+           , Object_Area.ValueData            AS AreaName
 
-         , Object_Partner.isErased   AS isErased
-         
+           , Object_PartnerTag.Id             AS PartnerTagId
+           , Object_PartnerTag.ValueData      AS PartnerTagName
+
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
+           , Object_PaidKind.ValueData        AS PaidKindName
+           , Object_BranchDoc.ValueData       AS DocBranchName
+           , MovementDesc_Doc.ItemName        AS LastDocName
+
+           , Object_Partner.isErased          AS isErased
+
      FROM Object AS Object_Partner
-   
+         LEFT JOIN (SELECT Object.Id, MAX(Movement.DescId) AS DescId, MAX(MLO_PaidKind.ObjectId) AS PaidKindId, MAX(MILO_Branch.ObjectId) AS BranchId
+          FROM Object
+          INNER JOIN MovementLinkObject ON MovementLinkObject.ObjectId = Object.Id
+          INNER JOIN Movement ON MovementLinkObject.MovementId = Movement.Id
+                 AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
+                 AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                 AND ((inIsPeriod = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate) OR inIsPeriod = FALSE)
+                 AND Movement.StatusId = zc_Enum_Status_Complete()
+          LEFT JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                AND MovementItem.IsErased = FALSE
+          LEFT JOIN MovementItemLinkObject AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
+          WHERE Object.DescId = zc_Object_Partner()
+          GROUP BY Object.Id) AS tmpMovement_Partner ON tmpMovement_Partner.Id = Object_Partner.id
+
+         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement_Partner.PaidKindId
+         LEFT JOIN Object AS Object_BranchDoc   ON Object_BranchDoc.Id   = tmpMovement_Partner.BranchId
+         LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id   = tmpMovement_Partner.DescId
+
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
@@ -168,22 +194,22 @@ BEGIN
                                AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
-                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
          LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
@@ -197,7 +223,7 @@ BEGIN
                              AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
          LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+         LEFT JOIN ObjectLink AS ObjectLink_City_Region
                              ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
                             AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
          LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
@@ -208,53 +234,54 @@ BEGIN
          LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake
-                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
-         
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                              ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
          LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                              ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId 
+                              ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
- 
+
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Order on tmpContactPerson_Order.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Order.ContactPersonKindId = 153272    --"Формирование заказов"
          LEFT JOIN tmpContactPerson AS tmpContactPerson_Doc on tmpContactPerson_Doc.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Doc.ContactPersonKindId = 153273    --"Проверка документов"
-         LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ" 
-        
-         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+         LEFT JOIN tmpContactPerson AS tmpContactPerson_Act on tmpContactPerson_Act.PartnerId = Object_Partner.Id  AND  tmpContactPerson_Act.ContactPersonKindId = 153274    --"Акты сверки и выполенных работ"
+
+         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
     WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner_Address (integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.12.14                                                       *
  17.10.14         *
- 19.06.14         * 
+ 19.06.14         *
 */
 
 -- тест

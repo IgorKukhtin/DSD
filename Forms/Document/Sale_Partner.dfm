@@ -1,27 +1,27 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1389
-  ExplicitWidth = 1405
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1389
+    Width = 1020
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1389
+    ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1389
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1389
+      ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1389
+        Width = 1020
         Height = 518
-        ExplicitWidth = 1389
+        ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -264,10 +264,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1389
+    Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1389
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1121,6 +1121,29 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
+    object actUpdatePriceCurrency: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdatePriceCurrency
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+      ImageIndex = 45
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' '#1074#1072#1083#1102#1090#1077'.'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1200,14 +1223,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -1224,7 +1239,23 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePriceCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1337,6 +1368,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbPrint_Spec: TdxBarButton
       Action = actPrint_Spec
+      Category = 0
+    end
+    object bbUpdatePriceCurrency: TdxBarButton
+      Action = actUpdatePriceCurrency
       Category = 0
     end
   end
@@ -2998,5 +3033,21 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     PackSize = 1
     Left = 535
     Top = 520
+  end
+  object spUpdatePriceCurrency: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Price_Currency'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 328
   end
 end

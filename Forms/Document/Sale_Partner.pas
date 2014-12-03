@@ -138,6 +138,9 @@ type
     edParPartnerValue: TcxCurrencyEdit;
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
+    actUpdatePriceCurrency: TdsdExecStoredProc;
+    spUpdatePriceCurrency: TdsdStoredProc;
+    bbUpdatePriceCurrency: TdxBarButton;
   private
     { Private declarations }
   public

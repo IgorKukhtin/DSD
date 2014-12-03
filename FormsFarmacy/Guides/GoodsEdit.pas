@@ -26,6 +26,10 @@ type
     NDSKindGuides: TdsdGuides;
     edMinimumLot: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
+    cxLabel5: TcxLabel;
+    ceReferPrice: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceReferCode: TcxCurrencyEdit;
   private
     { Private declarations }
   public

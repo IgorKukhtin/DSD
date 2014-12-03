@@ -105,6 +105,7 @@ type
   public
     constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings); overload;
     constructor Create(ConnectionString, SQL: string; ImportSettings: TImportSettings); overload;
+    destructor Destroy; override;
     procedure Load;
   end;
 
@@ -300,7 +301,7 @@ begin
         ListName := '';//List[0];
         if Copy(ListName, 1, 1) = chr(39) then
            ListName := Copy(List[0], 2, length(List[0])-2);
-        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':Z60000]';
+        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(FStartRecord)+ ':AZ60000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);
@@ -334,18 +335,32 @@ begin
   TODBCExternalLoad(FExternalLoad).Activate;
 end;
 
+destructor TExecuteProcedureFromExternalDataSet.Destroy;
+begin
+  FreeAndNil(FExternalLoad);
+  FreeAndNil(FImportSettings);
+  inherited;
+end;
+
 function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: String;
   AImportSettings: TImportSettings): string;
 var
-  c: char;
+  c, c1: char;
 begin
   result := AFieldName;
-  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then
+  if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then begin
      if (length(AFieldName) = 1) then begin
         c := lowercase(AFieldName)[1];
         if c in ['a'..'z'] then
            result := 'F' + IntToStr(byte(c) - byte('a') + 1);
      end;
+     if (length(AFieldName) = 2) then begin
+        c  := lowercase(AFieldName)[1];
+        c1 := lowercase(AFieldName)[2];
+        if (c in ['a'..'z']) and (c1 in ['a'..'z']) then
+           result := 'F' + IntToStr((byte(c) - byte('a') + 1) *26 + byte(c1) - byte('a') + 1);
+     end;
+  end;
 end;
 
 procedure TExecuteProcedureFromExternalDataSet.Load;
@@ -410,7 +425,10 @@ begin
                      end;
                   end
                   else
-                    StoredProc.Params.Items[i].Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
+                    if VarIsNULL(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value) then
+                       StoredProc.Params.Items[i].Value := ''
+                    else
+                       StoredProc.Params.Items[i].Value := trim(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value);
                 end;
              end;
           end;
@@ -430,8 +448,27 @@ begin
     dtXLS, dtDBF, dtMMO: begin
         saFound := TStringList.Create;
         try
-          if ImportSettings.FileType = dtXLS then
-             FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+          // Если директории нет, то пусть пользователь выбирает.
+          if ImportSettings.Directory = '' then begin
+             with {File}TOpenDialog.Create(nil) do
+             try
+               //InitialDir := InitializeDirectory;
+               //DefaultExt := FFileExtension;
+               if ImportSettings.FileType = dtXLS then
+                  Filter := '*.xls';
+               if Execute then begin
+                  saFound.Add(FileName);
+                  //InitializeDirectory := ExtractFilePath(FileName);
+                  //Self.Open(FileName);
+               end;
+             finally
+               Free;
+             end;
+          end
+          else begin
+            if ImportSettings.FileType = dtXLS then
+               FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+          end;
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
               with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
@@ -468,8 +505,6 @@ constructor TImportSettings.Create(ItemClass: TCollectionItemClass);
 begin
   inherited;
   StoredProc := TdsdStoredProc.Create(nil);
-  StoredProc.OutputType := otMultiExecute;
-  StoredProc.PackSize := 100;
 end;
 
 destructor TImportSettings.Destroy;
@@ -507,14 +542,21 @@ begin
   Result.StartRow := GetStoredProc.Params.ParamByName('StartRow').Value;
   Result.Directory := GetStoredProc.Params.ParamByName('Directory').Value;
   Result.FileType := GetFileType(GetStoredProc.Params.ParamByName('FileTypeName').Value);
-  Result.JuridicalId := GetStoredProc.Params.ParamByName('JuridicalId').Value;
-  Result.ContractId := GetStoredProc.Params.ParamByName('ContractId').Value;
+  Result.JuridicalId := StrToIntDef(GetStoredProc.Params.ParamByName('JuridicalId').AsString, 0);
+  Result.ContractId := StrToIntDef(GetStoredProc.Params.ParamByName('ContractId').AsString, 0);
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
-//  Result.StoredProc := TdsdStoredProc.Create(nil);
+  if Result.Directory = '' then begin
+     Result.StoredProc.OutputType := otResult;
+     Result.StoredProc.PackSize := 1;
+  end
+  else begin
+     Result.StoredProc.OutputType := otMultiExecute;
+     Result.StoredProc.PackSize := 100;
+  end;
+
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
-//  Result.StoredProc.OutputType := otResult;
 
   GetStoredProc.Params.Clear;
   {Заполняем параметрами параметры процедуры}

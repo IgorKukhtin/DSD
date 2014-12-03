@@ -591,12 +591,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
       end>
     Left = 80
     Top = 320

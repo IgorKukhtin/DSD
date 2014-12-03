@@ -48,7 +48,6 @@ uses
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
-  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
@@ -75,7 +74,7 @@ begin
   if ShowModal = mrOk then
   begin
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;

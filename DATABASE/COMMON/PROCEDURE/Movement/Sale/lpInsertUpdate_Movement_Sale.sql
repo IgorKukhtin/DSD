@@ -125,9 +125,9 @@ BEGIN
                outParValue:=0;
           END IF;
      END IF;
-     -- сохранили свойство <>
+     -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
-     -- сохранили свойство <>
+     -- сохранили свойство <Номинал для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, outParValue);
 
      -- рассчет курса для перевода из вал. док. в валюту контрагента
@@ -135,9 +135,9 @@ BEGIN
      THEN SELECT Amount, ParValue INTO ioCurrencyPartnerValue, ioParPartnerValue
           FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= inCurrencyDocumentId, inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
      END IF;*/
-     -- сохранили свойство <>
+     -- сохранили свойство <Курс для перевода из вал. док. в валюту контрагента>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, ioCurrencyPartnerValue);
-     -- сохранили свойство <>
+     -- сохранили свойство <Номинал для перевода из вал. док. в валюту контрагента>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, ioParPartnerValue);
 
 

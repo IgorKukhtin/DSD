@@ -23,8 +23,8 @@ type
     colDebet: TcxGridDBColumn;
     colKredit: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    dsdPrintAction: TdsdPrintAction;
-    bbPrint: TdxBarButton;
+    actPrintOfficial: TdsdPrintAction;
+    bbPrintOfficial: TdxBarButton;
     cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
@@ -46,10 +46,8 @@ type
     cxLabel3: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    gpGetDefault: TdsdStoredProc;
-    gpGetJuridical: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bbPrintReport: TdxBarButton;
+    bbPrint: TdxBarButton;
     cxLabel4: TcxLabel;
     edAccount: TcxButtonEdit;
     AccountGuides: TdsdGuides;
@@ -76,6 +74,15 @@ type
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+
+    colDebet_Currency: TcxGridDBColumn;
+    colKredit_Currency: TcxGridDBColumn;
+    colStartRemains_Currency: TcxGridDBColumn;
+    colEndRemains_Currency: TcxGridDBColumn;
+    colSumm_Currency: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
+    actPrintCurrency: TdsdPrintAction;
+    bbPrintCurrency: TdxBarButton;
   private
     { Private declarations }
   public

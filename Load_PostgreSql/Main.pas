@@ -283,6 +283,7 @@ type
     procedure pLoadDocumentItem_Sale_IntBN(SaveCount:Integer);
     function pLoadDocument_Sale_IntNal:Integer;
     procedure pLoadDocumentItem_Sale_IntNal(SaveCount:Integer);
+
     function pLoadDocument_Sale_Fl:Integer;
     procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
 
@@ -11365,6 +11366,10 @@ end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
 procedure TMainForm.pCompleteDocument_Sale_IntBN(isLastComplete:Boolean);
+var
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      if (not cbCompleteSaleInt.Checked)or(not cbCompleteSaleInt.Enabled) then exit;
      //
@@ -11429,6 +11434,29 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+
+             //!!!ВАЛЮТА!!!
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
              //
              if cbUnComplete.Checked then
              begin
@@ -11442,6 +11470,9 @@ begin
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
              Next;
              Application.ProcessMessages;
              Application.ProcessMessages;
@@ -11457,6 +11488,10 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Sale_IntNAL(isLastComplete:Boolean);
+var
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      if (not cbCompleteSaleIntNal.Checked)or(not cbCompleteSaleIntNal.Enabled) then exit;
      //
@@ -11522,6 +11557,29 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+
+             //!!!ВАЛЮТА!!!
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
              //
              if cbUnComplete.Checked then
              begin
@@ -11548,6 +11606,9 @@ begin
                    end;
              end;
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
              Next;
              Application.ProcessMessages;
              Application.ProcessMessages;
@@ -11961,6 +12022,9 @@ end;
 //!!!!INTEGER
 function TMainForm.pLoadDocument_Sale_IntNal:Integer;
 var ContractId_pg,PriceListId:Integer;
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      Result:=0;
      if (not cbSaleIntNal.Checked)or(not cbSaleIntNal.Enabled) then exit;
@@ -12042,8 +12106,38 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
              //
+
+             //!!!ВАЛЮТА!!!
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+FieldByName('Id_Postgres').AsString);
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end
+             else begin
+                       fOpenSqToQuery ('select zc_Enum_Currency_Basis() AS RetV');
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('RetV').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('RetV').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
+
              //!!!УДАЛЯЕМ ВСЕ ЭЛЕМЕНТЫ!!!
              if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
              then
@@ -12144,6 +12238,9 @@ begin
                         //fExecSqFromQuery('update dba.Bill join dba._pgBillLoad_union on _pgBillLoad_union.BillId_union = '+FieldByName('ObjectId').AsString +' and _pgBillLoad_union.BillId = Bill.Id set Bill.Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value) + ' and isnull(Bill.Id_Postgres,0)<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
                   end;
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -12157,6 +12254,9 @@ end;
 procedure TMainForm.pLoadDocumentItem_Sale_IntNal(SaveCount:Integer);
 var str:String;
     i:Integer;
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      if (cbOKPO.Checked)then exit;
      if (not cbSaleIntNal.Checked)or(not cbSaleIntNal.Enabled) then exit;
@@ -12288,6 +12388,30 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
+
+             //!!!ВАЛЮТА!!!
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+FieldByName('MovementId_Postgres').AsString);
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
+
              //!!!ВОССТАНАВЛИВАЕМ 1 ЭЛЕМЕНТ!!
              if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
              then
@@ -12332,6 +12456,10 @@ begin
                   if not myExecToStoredProc_two then;
              end;
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -12344,6 +12472,9 @@ end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Sale_IntBN:Integer;
 var ContractId_pg,PriceListId:Integer;
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      Result:=0;
      if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
@@ -12427,6 +12558,36 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //!!!ВАЛЮТА!!!
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+IntToStr(FieldByName('Id_Postgres').AsInteger));
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end
+             else begin
+                       fOpenSqToQuery ('select zc_Enum_Currency_Basis() AS RetV');
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('RetV').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('RetV').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('RetV').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
+
              //!!!УДАЛЯЕМ ВСЕ ЭЛЕМЕНТЫ!!!
              if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
              then
@@ -12537,6 +12698,9 @@ begin
              if (FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);}
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -12549,6 +12713,10 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!INTEGER
 procedure TMainForm.pLoadDocumentItem_Sale_IntBN (SaveCount:Integer);
+var
+   CurrencyDocumentId:Integer;
+   CurrencyPartnerId:Integer;
+   zc_Enum_Currency_Basis:Integer;
 begin
      if (cbOKPO.Checked)then exit;
      if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
@@ -12669,6 +12837,29 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
+             //!!!ВАЛЮТА!!!
+             begin
+                   fOpenSqToQuery (' SELECT coalesce (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis())   AS CurrencyDocumentId'
+                                  +'      , coalesce (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())    AS CurrencyPartnerId'
+                                  +'      , zc_Enum_Currency_Basis()                       as zc_Enum_Currency_Basis'
+                                  +' FROM Movement'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument'
+                                  +'             ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()'
+                                  +'      LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner'
+                                  +'             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id'
+                                  +'            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()'
+                                  +' WHERE Movement.Id = '+FieldByName('MovementId_Postgres').AsString);
+                       CurrencyDocumentId:=toSqlQuery.FieldByName('CurrencyDocumentId').AsInteger;
+                       CurrencyPartnerId:=toSqlQuery.FieldByName('CurrencyPartnerId').AsInteger;
+                       zc_Enum_Currency_Basis:=toSqlQuery.FieldByName('zc_Enum_Currency_Basis').AsInteger;
+             end;
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+             if (CurrencyDocumentId=zc_Enum_Currency_Basis) and (CurrencyPartnerId =zc_Enum_Currency_Basis)
+             then begin
+             //!!!если ВАЛЮТА, ничего не делаем!!!
+
+
              //!!!ВОССТАНАВЛИВАЕМ 1 ЭЛЕМЕНТ!!
              if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
              then
@@ -12715,6 +12906,9 @@ begin
                   if not myExecToStoredProc_two then;
              end;
              //
+
+             end; //if !!!если ВАЛЮТА, ничего не делаем!!!
+
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;

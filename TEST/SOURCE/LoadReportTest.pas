@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadReportFormTest;
 var
  i : integer;
 begin
+
   // Транспорт
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   // Отчеты(Финансы)
@@ -71,7 +72,8 @@ begin
   LoadReportFromFile('Обороты по контрагентам (факт)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам (факт).fr3');
 
 
-  LoadReportFromFile('Акт сверки (бухгалтерский) АЛАН', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский) АЛАН.fr3');
+  LoadReportFromFile('Акт сверки (бухгалтерский)', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский).fr3');
+  LoadReportFromFile('Акт сверки (в валюте)', ReportPath + '\Отчеты (финансы)\Акт сверки (в валюте).fr3');
   LoadReportFromFile('Отчет Итог по покупателю (Акт сверки)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Обороты из акта сверки', ReportPath + '\Отчеты (финансы)\Обороты из акта сверки.fr3');
   LoadReportFromFile('Обороты по расчетному счету', ReportPath + '\Отчеты (финансы)\Обороты по расчетному счету.fr3');
@@ -131,7 +133,7 @@ begin
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 
-  end;
+end;
 
 procedure TLoadReportTest.SetUp;
 begin
