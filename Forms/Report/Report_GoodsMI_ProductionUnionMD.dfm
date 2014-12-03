@@ -197,6 +197,10 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object MasterId: TcxGridDBColumn
+            DataBinding.FieldName = 'MasterId'
+            Width = 70
+          end
         end
       end
       object cxGridDetail: TcxGrid
@@ -362,6 +366,10 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object clMasterId: TcxGridDBColumn
+            DataBinding.FieldName = 'MasterId'
+            Width = 70
           end
         end
         object cxGridLevel1: TcxGridLevel

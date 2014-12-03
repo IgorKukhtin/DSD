@@ -201,7 +201,7 @@ BEGIN
                         FROM tmpMI_Container
                           -- JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
                           --       ) AS tmpAccount on tmpAccount.AccountID = tmpMI_Container.ContainerObjectId
-                        Where tmpMI_Container.MIContainerDescId = zc_MIContainer_Summ()
+                        WHERE tmpMI_Container.MIContainerDescId = zc_MIContainer_Summ()
                         GROUP BY tmpMI_Container.MovementId
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
@@ -229,7 +229,11 @@ BEGIN
             SELECT CASE WHEN inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END                        AS InvNumber
                  , CASE WHEN inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END   AS OperDate
                  , CASE WHEN inGroupPartion = True THEN tmpMI.PartionGoodsId ELSE 0 END                     AS PartionGoodsId
-                 , tmpMI.MasterId                                                                           AS MasterId
+--                 , tmpMI.MasterId                                                                           AS MasterId
+
+                 , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MasterId
+                        WHEN inGroupPartion  = TRUE THEN tmpMI.PartionGoodsId
+                   ELSE tmpMI.GoodsId END                                                                   AS MasterId
                  , tmpMI.GoodsId                                                                            AS GoodsId
                  , ABS (SUM(tmpMI.Summ))                                                                    AS Summ
                  , ABS (SUM(tmpMI.Amount))                                                                  AS Amount
@@ -264,7 +268,10 @@ BEGIN
 	    GROUP BY CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END
                    , CASE when inGroupMovement = True THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
                    , CASE when inGroupPartion = True THEN tmpMI.PartionGoodsId ELSE 0 END
-                   , tmpMI.MasterId
+                --   , tmpMI.MasterId
+                   , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MasterId
+                          WHEN inGroupPartion  = TRUE THEN tmpMI.PartionGoodsId
+                     ELSE tmpMI.GoodsId END
                    , tmpMI.GoodsId
             ) AS tmpOperationGroup
 
@@ -427,13 +434,18 @@ BEGIN
            , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat  AS ChildPrice
 
       FROM (
-            SELECT tmpMI.MasterId               AS MasterId
+            SELECT --tmpMI.MasterId               AS MasterId
+                   CASE WHEN inGroupMovement = TRUE THEN tmpMI.MasterId
+                        WHEN inGroupPartion  = TRUE THEN tmpMI.PartionGoodsId
+                   ELSE tmpMI.GoodsId END       AS MasterId
                  , tmpMI.ChildGoodsId           AS ChildGoodsId
                  , CASE when inGroupPartion = True THEN tmpMI.ChildPartionGoodsId ELSE 0 END AS ChildPartionGoodsId
                  , ABS (SUM(tmpMI.ChildSumm))   AS ChildSumm
                  , ABS (SUM(tmpMI.ChildAmount)) AS ChildAmount
 
             FROM (SELECT  tmpMIChild_Sum.MovementItemParentId       AS MasterId
+                        , tmpMIMaster_Sum.GoodsId                   AS GoodsId
+                        , tmpMIMaster_Sum.PartionGoodsId            AS PartionGoodsId
                         , tmpMIChild_Sum.PartionGoodsId             AS ChildPartionGoodsId
                         , tmpMIChild_Sum.GoodsId                    AS ChildGoodsId
                         , tmpMIChild_Sum.Summ                       AS ChildSumm
@@ -449,6 +461,8 @@ BEGIN
                   UNION
 
                   SELECT  tmpMIChild.MovementItemParentId           AS MasterId
+                        , tmpMIMaster.GoodsId                       AS GoodsId
+                        , tmpMIMaster.PartionGoodsId                AS PartionGoodsId
                         , tmpMIChild.PartionGoodsId                 AS ChildPartionGoodsId
                         , tmpMIChild.GoodsId                        AS ChildGoodsId
                         , tmpMIChild.Summ                           AS ChildSumm
@@ -465,7 +479,9 @@ BEGIN
 
                  ) AS tmpMI
 
-	           GROUP BY   tmpMI.MasterId
+	           GROUP BY  CASE WHEN inGroupMovement = TRUE THEN tmpMI.MasterId
+                              WHEN inGroupPartion  = TRUE THEN tmpMI.PartionGoodsId
+                          ELSE tmpMI.GoodsId END
                         , CASE WHEN inGroupPartion = True THEN tmpMI.ChildPartionGoodsId ELSE 0 END
                         , tmpMI.ChildGoodsId
             ) AS tmpOperationGroup

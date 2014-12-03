@@ -61,6 +61,8 @@ type
     cxGridLevel1: TcxGridLevel;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
+    MasterId: TcxGridDBColumn;
+    clMasterId: TcxGridDBColumn;
   private
     { Private declarations }
   public
