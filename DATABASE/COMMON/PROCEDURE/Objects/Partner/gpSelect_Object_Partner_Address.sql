@@ -154,24 +154,39 @@ BEGIN
            , Object_Partner.isErased          AS isErased
 
      FROM Object AS Object_Partner
-         LEFT JOIN (SELECT Object.Id, MAX(Movement.DescId) AS DescId, MAX(MLO_PaidKind.ObjectId) AS PaidKindId, MAX(MILO_Branch.ObjectId) AS BranchId
-          FROM Object
-          INNER JOIN MovementLinkObject ON MovementLinkObject.ObjectId = Object.Id
-          INNER JOIN Movement ON MovementLinkObject.MovementId = Movement.Id
-                 AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
-                 AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                 AND ((inIsPeriod = TRUE AND Movement.OperDate BETWEEN inStartDate AND inEndDate) OR inIsPeriod = FALSE)
-                 AND Movement.StatusId = zc_Enum_Status_Complete()
-          LEFT JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                AND MovementItem.IsErased = FALSE
-          LEFT JOIN MovementItemLinkObject AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
-          WHERE Object.DescId = zc_Object_Partner()
-          GROUP BY Object.Id) AS tmpMovement_Partner ON tmpMovement_Partner.Id = Object_Partner.id
+          LEFT JOIN (SELECT Object.Id AS PartnerId
+                          , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN 3000
+                                      ELSE 0
+                                 END
+                               + CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN zc_Movement_Sale()
+                                      ELSE zc_Movement_Income()
+                                 END
+                                 ) AS DescId
+                          , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 3000
+                                      WHEN MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 2000
+                                      ELSE 0
+                                 END
+                               + COALESCE (MLO_PaidKind.ObjectId, 0)
+                                 ) AS PaidKindId
+                          , MAX (COALESCE (MILO_Branch.ObjectId, 0)) AS BranchId
+                     FROM Object
+                          INNER JOIN MovementLinkObject ON MovementLinkObject.ObjectId = Object.Id
+                          INNER JOIN Movement ON MovementLinkObject.MovementId = Movement.Id
+                                             AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
+                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                                             AND inIsPeriod = TRUE
+                          LEFT JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.IsErased = FALSE
+                          LEFT JOIN MovementItemLinkObject AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
+                     WHERE Object.DescId = zc_Object_Partner()
+                     GROUP BY Object.Id
+                    ) AS tmpMovement ON tmpMovement.PartnerId = Object_Partner.id
 
-         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement_Partner.PaidKindId
-         LEFT JOIN Object AS Object_BranchDoc   ON Object_BranchDoc.Id   = tmpMovement_Partner.BranchId
-         LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id   = tmpMovement_Partner.DescId
+         LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = CASE WHEN tmpMovement.DescId > 3000 THEN tmpMovement.DescId - 3000 WHEN tmpMovement.DescId > 2000 THEN tmpMovement.DescId - 2000 ELSE tmpMovement.DescId END
+         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN tmpMovement.PaidKindId > 3000 THEN tmpMovement.PaidKindId - 3000 WHEN tmpMovement.PaidKindId > 2000 THEN tmpMovement.PaidKindId - 2000 ELSE tmpMovement.PaidKindId END
+         LEFT JOIN Object AS Object_BranchDoc   ON Object_BranchDoc.Id   = tmpMovement.BranchId
 
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
@@ -268,7 +283,10 @@ BEGIN
 
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-    WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
+    WHERE Object_Partner.DescId = zc_Object_Partner()
+      AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+      AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
+   ;
 
 END;
 $BODY$
@@ -279,10 +297,11 @@ ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.12.14                                        * all
  01.12.14                                                       *
  17.10.14         *
  19.06.14         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_Address (0,'2')
+-- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, 0, '2')

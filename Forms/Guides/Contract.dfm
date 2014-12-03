@@ -755,11 +755,6 @@ object ContractForm: TContractForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clComment
-        Properties.Strings = (
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -785,8 +780,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1006,11 +1001,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
           DataType = ftString
@@ -1057,17 +1054,20 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
         end
         item
           Name = 'JuridicalId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -1088,11 +1088,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindName'
           DataType = ftString
@@ -1124,27 +1126,32 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyGroupId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupId'
         end
         item
           Name = 'InfoMoneyGroupName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
@@ -1161,11 +1168,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -1182,34 +1191,40 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end
         item
           Name = 'OKPO'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OKPO'
           DataType = ftString
         end
         item
           Name = 'JuridicalCode'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalCode'
         end>
@@ -1241,11 +1256,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractTagId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractTagName'
           DataType = ftString
@@ -1262,11 +1279,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'BankAccountId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'BankAccountName'
           DataType = ftString
@@ -1279,17 +1298,20 @@ object ContractForm: TContractForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -1317,11 +1339,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
@@ -1338,11 +1362,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindName'
           DataType = ftString
@@ -1391,11 +1417,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalName'
           DataType = ftString
@@ -1412,11 +1440,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
@@ -1433,11 +1463,13 @@ object ContractForm: TContractForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalCollationId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalCollationName'
           DataType = ftString
@@ -1496,6 +1528,7 @@ object ContractForm: TContractForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1554,12 +1587,14 @@ object ContractForm: TContractForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1567,6 +1602,7 @@ object ContractForm: TContractForm
       end
       item
         Name = 'inValue'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -1574,24 +1610,28 @@ object ContractForm: TContractForm
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inContractConditionKindId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBonusKindId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = Null
         Component = ContractConditionCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
@@ -1619,36 +1659,42 @@ object ContractForm: TContractForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inPersonalId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTradeId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalCollationId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalCollationId'
         ParamType = ptInput
       end
       item
         Name = 'inBankAccountId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'BankAccountId'
         ParamType = ptInput
       end
       item
         Name = 'inContractTagId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractTagId'
         ParamType = ptInput
