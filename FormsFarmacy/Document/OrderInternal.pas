@@ -81,6 +81,9 @@ type
     mactDeleteLinkGroup: TMultiAction;
     mactDeleteLinkDS: TMultiAction;
     N2: TMenuItem;
+    cxLabel3: TcxLabel;
+    edOrderKind: TcxButtonEdit;
+    GuidesOrderKind: TdsdGuides;
   private
     { Private declarations }
   public

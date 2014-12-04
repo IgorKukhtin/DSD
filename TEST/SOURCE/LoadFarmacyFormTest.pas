@@ -18,6 +18,7 @@ type
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadEnumFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadImportSettingsFormTest;
@@ -30,10 +31,10 @@ type
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadReportFormTest;
     procedure LoadRetailFormTest;
     procedure LoadServiceFormTest;
     procedure LoadUnitFormTest;
-    procedure LoadUnumFormTest;
     procedure LoadAdditionalGoodsFormTest;
     procedure FormTest;
   end;
@@ -151,6 +152,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromPriceListForm');
 end;
 
+procedure TLoadFormTest.LoadReportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
+end;
+
 procedure TLoadFormTest.LoadRetailFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailForm'));
@@ -196,13 +203,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
 
-procedure TLoadFormTest.LoadUnumFormTest;
+procedure TLoadFormTest.LoadEnumFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TNDSKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TNDSKindForm');
   // Типы файлов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFileTypeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFileTypeKindForm');
+  // Типы заказов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderKindEditForm');
 end;
 
 

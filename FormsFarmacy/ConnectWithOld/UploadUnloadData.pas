@@ -13,7 +13,7 @@ type
   private
     SendTable: TVKSmartDBF;
     procedure SaveGoods;
-    procedure OpenSendTable(pathFullTableName:string);
+    procedure OpenSendTable(pathFullTableName: AnsiString);
     procedure InsertSendTable(EXEC_STR:String);
   public
     procedure UnloadData;
@@ -25,7 +25,7 @@ uses Forms, SimpleGauge, StrUtils, SysUtils;
 
 {$R *.DFM}
 
-procedure TdmUnloadUploadData.OpenSendTable(pathFullTableName:string);
+procedure TdmUnloadUploadData.OpenSendTable(pathFullTableName: AnsiString);
 begin
  Application.ProcessMessages;
  with SendTable do begin
@@ -55,7 +55,7 @@ procedure TdmUnloadUploadData.InsertSendTable(EXEC_STR:String);
 begin
    with SendTable do begin
       Insert;
-      FieldByName('EXEC_STR').AsString:=EXEC_STR;
+      FieldByName('EXEC_STR').AsString := EXEC_STR;
       Post;
    end;
 end;

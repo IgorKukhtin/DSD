@@ -96,7 +96,7 @@ uses
   PriceListJournal in '..\..\FormsFarmacy\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
   OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
-  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalLite in '..\..\FormsFarmacy\Document\OrderInternalLite.pas' {OrderInternalLiteForm: TParentForm},
   OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   User in '..\..\Forms\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm: TParentForm},
@@ -169,13 +169,13 @@ uses
   UploadUnloadData in '..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
   Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
-  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonTest in '..\SOURCE\Objects\All\ContactPersonTest.pas',
   JuridicalSettings in '..\..\FormsFarmacy\Guides\JuridicalSettings.pas' {JuridicalSettingsForm: TParentForm},
   PartnerCode in '..\..\FormsFarmacy\Guides\PartnerCode.pas' {PartnerCodeForm: TParentForm},
   GoodsLite in '..\..\FormsFarmacy\Guides\GoodsLite.pas' {GoodsLiteForm: TParentForm},
-  ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
+  ReportOrderGoods in '..\..\FormsFarmacy\Report\ReportOrderGoods.pas' {ReportOrderGoodsForm: TParentForm},
   LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
@@ -191,17 +191,26 @@ uses
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   Process in '..\..\Forms\Kind\Process.pas' {ProcessForm: TParentForm},
-  NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas';
+  NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
+  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
+  IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
+  ChoiceGoodsFromPriceList in '..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas' {ChoiceGoodsFromPriceListForm: TParentForm},
+  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderKindTest in '..\SOURCE\Objects\All\OrderKindTest.pas',
+  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  OrderKindEdit in '..\..\Forms\Kind\OrderKindEdit.pas' {OrderKindEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';
+  EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
-  ProcessPath := '..\DATABASE\FARMACY\PROCESS\';
+  LocalProcessPath := '..\DATABASE\FARMACY\PROCESS\';
 
   gc_AdminPassword := 'Админ';
   gc_ProgramName := 'Farmacy.exe';

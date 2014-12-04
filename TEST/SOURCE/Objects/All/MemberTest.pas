@@ -11,9 +11,10 @@ type
   end;
 
   TMember = class(TObjectTest)
-  function InsertDefault: integer; override;
+    function InsertDefault: integer; override;
+    procedure SetDataSetParam; override;
   public
-    function InsertUpdateMember(const Id, Code : integer; Name, INN: string): integer;
+    function InsertUpdateMember(const Id, Code : integer;  IsOfficial: boolean; Name, INN: string): integer;
     constructor Create; override;
   end;
 
@@ -33,20 +34,27 @@ end;
 
 function TMember.InsertDefault: integer;
 begin
-  result := InsertUpdateMember(0, -1, 'Физические лица','123');
+  result := InsertUpdateMember(0, -1, true, 'Физические лица','123');
 end;
 
-function TMember.InsertUpdateMember(const Id, Code: Integer;
+function TMember.InsertUpdateMember(const Id, Code: Integer; IsOfficial: boolean;
   Name, INN : string): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inIsOfficial', ftBoolean, ptInput, IsOfficial);
   FParams.AddParam('inINN', ftString, ptInput, INN);
   FParams.AddParam('inDriverCertificate', ftString, ptInput, '');
   FParams.AddParam('inComment', ftString, ptInput, '');
   result := InsertUpdate(FParams);
+end;
+
+procedure TMember.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inIsShowAll', ftboolean, ptInput, true);
 end;
 
 procedure TMemberTest.ProcedureLoad;
@@ -58,12 +66,13 @@ end;
 
 procedure TMemberTest.Test;
 var Id: integer;
-    RecordCount: Integer;
+    //RecordCount: Integer;
     ObjectTest: TMember;
 begin
   ObjectTest := TMember.Create;
   // Получим список
-  RecordCount := ObjectTest.GetDataSet.RecordCount;
+  //RecordCount :=
+  ObjectTest.GetDataSet.RecordCount;
   // Вставка группы
   Id := ObjectTest.InsertDefault;
   try

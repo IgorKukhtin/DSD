@@ -16,11 +16,6 @@ object AncestorMainForm: TAncestorMainForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object cxLabel1: TcxLabel
-    Left = 0
-    Top = 26
-    Align = alClient
-  end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

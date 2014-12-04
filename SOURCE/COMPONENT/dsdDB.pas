@@ -330,6 +330,7 @@ end;
 procedure TdsdStoredProc.SetStoredProcName(const Value: String);
   function PostgresDataTypeToDelphiDataType(PostgresType: string): TFieldType;
   begin
+    result := ftUnknown;
     if PostgresType = 'tdatetime' then
        result := ftDateTime;
     if PostgresType = 'int4' then
@@ -345,6 +346,7 @@ procedure TdsdStoredProc.SetStoredProcName(const Value: String);
   end;
   function PostgresParamTypeToDelphiParamType(PostgresType: string): TParamType;
   begin
+    result := ptUnknown;
     if PostgresType = 'IN' then
        result := ptInput;
     if PostgresType = 'OUT' then

@@ -17,6 +17,8 @@ type
     procedure TearDown; override;
     // получение поличества записей
     procedure DirectoryLoad(Directory: string);
+    //
+    procedure FileLoad(FileName: string);
   public
     // загрузка процедура из определенной директории
     procedure ProcedureLoad; virtual;
@@ -84,6 +86,11 @@ begin
   finally
     saFound.Free
   end;
+end;
+
+procedure TdbTest.FileLoad(FileName: string);
+begin
+  ExecFile(FileName, ZQuery);
 end;
 
 procedure TdbTest.ProcedureLoad;

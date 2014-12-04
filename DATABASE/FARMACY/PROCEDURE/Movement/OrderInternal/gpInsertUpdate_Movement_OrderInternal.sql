@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Movement_OrderInternal()
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternal (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- Подразделения
+    IN inOrderKindId         Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,6 +25,9 @@ BEGIN
      -- сохранили связь с <Подразделения>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
 
+     -- сохранили связь с Тип заказа>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderKind(), ioId, inOrderKindId);
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -34,6 +39,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.12.14                         *
  11.09.14                         *
  03.07.14                                                        *
 

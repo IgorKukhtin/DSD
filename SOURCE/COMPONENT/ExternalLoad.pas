@@ -100,7 +100,7 @@ type
   private
     FExternalLoad: TExternalLoad;
     FImportSettings: TImportSettings;
-    function GetFieldName(AFieldName: String; AImportSettings: TImportSettings): string;
+    function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
   public
     constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings); overload;
@@ -338,11 +338,10 @@ end;
 destructor TExecuteProcedureFromExternalDataSet.Destroy;
 begin
   FreeAndNil(FExternalLoad);
-  FreeAndNil(FImportSettings);
   inherited;
 end;
 
-function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: String;
+function TExecuteProcedureFromExternalDataSet.GetFieldName(AFieldName: AnsiString;
   AImportSettings: TImportSettings): string;
 var
   c, c1: char;

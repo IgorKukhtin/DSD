@@ -57,7 +57,8 @@ uses
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   OrdrspXML in '..\SOURCE\EDI\OrdrspXML.pas',
   InvoiceXML in '..\SOURCE\EDI\InvoiceXML.pas',
-  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas';
+  dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -74,8 +75,8 @@ begin
   if ShowModal = mrOk then
   begin
      TUpdater.AutomaticUpdateProgram;
-     Application.CreateForm(TMainFormInstance, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
+     Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;
 end.

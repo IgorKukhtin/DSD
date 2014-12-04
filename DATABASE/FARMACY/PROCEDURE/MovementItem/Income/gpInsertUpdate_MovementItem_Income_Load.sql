@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadMovement 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
           (Integer, TVarChar, TDateTime,
            Integer, TVarChar, TVarChar, TVarChar, 
            TFloat, TFloat,
@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadMovement
            TVarChar,
            TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadMovement(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
     IN inOperDate            TDateTime , -- Дата документа
@@ -26,10 +26,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadMovement(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbLoadPriceListId Integer;
-   DECLARE vbLoadPriceListItemsId Integer;
+   DECLARE vbMovementId Integer;
+   DECLARE vbMovementItemId Integer;
    DECLARE vbGoodsId Integer;
 BEGIN
+
+
+
 /*	
 
   IF COALESCE(inPrice, 0) = 0 THEN 
@@ -95,5 +98,5 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 07.11.14                        *   
+ 02.12.14                        *   
 */

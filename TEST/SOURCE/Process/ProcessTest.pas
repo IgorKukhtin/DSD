@@ -19,7 +19,7 @@ uses UtilConst;
 
 procedure TdbProcessTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcessPath;
+  ScriptDirectory := LocalProcessPath;
   inherited;
 end;
 

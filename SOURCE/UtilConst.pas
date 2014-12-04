@@ -20,6 +20,7 @@ var
   ViewPath: string = '..\DATABASE\COMMON\View\';
   LocalViewPath: string = '..\DATABASE\MEAT\View\';
   ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
+  LocalProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
   gc_AdminPassword: string = 'Admin';
 
 

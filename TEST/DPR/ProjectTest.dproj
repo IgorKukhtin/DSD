@@ -1342,8 +1342,8 @@
 				<Form>OrderInternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
-				<Form>ContactPersonForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\OrderKind.pas">
+				<Form>OrderKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContactPersonEdit.pas">
@@ -1551,7 +1551,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\IncomeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\IncomeTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ProductionUnionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\ProductionSeparateTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SendOnPriceTest.pas"/>
@@ -1751,6 +1751,7 @@
 				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
