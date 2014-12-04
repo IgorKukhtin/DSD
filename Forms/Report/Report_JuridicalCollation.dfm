@@ -1,29 +1,28 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 1110
-  ExplicitLeft = -92
-  ExplicitWidth = 1126
+  ClientWidth = 1112
+  ExplicitWidth = 1128
   ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1110
+    Width = 1112
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1110
+    ExplicitWidth = 1112
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 1110
+    ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1112
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 1110
+        Width = 1112
         Height = 309
-        ExplicitWidth = 1110
+        ExplicitWidth = 1112
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -46,6 +45,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Format = ',0.00##'
               Kind = skSum
               Column = colEndRemains
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colStartRemains_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colDebet_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colKredit_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colEndRemains_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSumm_Currency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -83,6 +112,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Format = ',0.00##'
               Kind = skSum
               Column = colEndRemains
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colStartRemains_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colDebet_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colKredit_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colEndRemains_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colSumm_Currency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -115,6 +174,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colOperDate: TcxGridDBColumn
@@ -130,22 +190,26 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colStartRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'StartRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -155,7 +219,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -165,9 +230,65 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'EndRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colStartRemains_Currency: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
+            DataBinding.FieldName = 'StartRemains_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colDebet_Currency: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'. '
+            DataBinding.FieldName = 'Debet_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colKredit_Currency: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'. '
+            DataBinding.FieldName = 'Kredit_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colEndRemains_Currency: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
+            DataBinding.FieldName = 'EndRemains_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colFromName: TcxGridDBColumn
@@ -175,6 +296,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colToName: TcxGridDBColumn
@@ -182,6 +304,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object clContractStateKindName: TcxGridDBColumn
@@ -232,6 +355,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clContractTagName: TcxGridDBColumn
@@ -248,6 +372,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colInfoMoneyGroupCode: TcxGridDBColumn
@@ -256,6 +381,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colInfoMoneyGroupName: TcxGridDBColumn
@@ -264,6 +390,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colInfoMoneyDestinationCode: TcxGridDBColumn
@@ -272,6 +399,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colInfoMoneyDestinationName: TcxGridDBColumn
@@ -280,6 +408,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colInfoMoneyCode: TcxGridDBColumn
@@ -288,6 +417,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colInfoMoneyName: TcxGridDBColumn
@@ -295,6 +425,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colAccountName: TcxGridDBColumn
@@ -303,27 +434,47 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object colSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1054#1073#1086#1088#1086#1090
             DataBinding.FieldName = 'MovementSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
-            IsCaptionAssigned = True
+            Width = 55
+          end
+          object colSumm_Currency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1054#1073#1086#1088#1086#1090' '#1074' '#1074#1072#1083'. '
+            DataBinding.FieldName = 'MovementSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
           end
           object colOperationSort: TcxGridDBColumn
+            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
             DataBinding.FieldName = 'OperationSort'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
+            Width = 55
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1110
+    Width = 1112
     Height = 54
-    ExplicitWidth = 1110
+    ExplicitWidth = 1112
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -484,6 +635,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           'TextValue')
       end
       item
+        Component = CurrencyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -510,114 +667,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = PartnerGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     Left = 208
     Top = 272
   end
   inherited ActionList: TActionList
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = gpGetDefault
-      StoredProcList = <
-        item
-          StoredProc = gpGetDefault
-        end
-        item
-          StoredProc = spSelect
-        end>
-    end
-    object dsdPrintAction: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spJuridicalBalance
-      StoredProcList = <
-        item
-          StoredProc = spJuridicalBalance
-        end
-        item
-          StoredProc = gpGetJuridical
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
-      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = MasterCDS
-          UserName = 'frxDBDataset'
-          IndexFieldNames = 'OperDate;ItemName;InvNumber'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-        end
-        item
-          Name = 'StartBalance'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'StartBalance'
-          DataType = ftFloat
-          ParamType = ptInput
-        end
-        item
-          Name = 'PartnerName'
-          Value = ''
-          Component = JuridicalGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'OurFirm'
-          Value = ''
-          Component = PartnerGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'AccounterName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'AccounterName'
-          DataType = ftString
-          ParamType = ptInput
-        end
-        item
-          Name = 'AccountName'
-          Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'PaidKindName'
-          Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
-          Name = 'ContractName'
-          Value = ''
-          Component = ContractGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end>
-      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
-      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
-      ReportNameParam.DataType = ftString
-    end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -676,13 +736,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       StoredProcList = <
         item
           StoredProc = spJuridicalBalance
-        end
-        item
-          StoredProc = gpGetJuridical
         end>
-      Caption = 'actPrint'
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
       Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      ImageIndex = 17
+      ImageIndex = 3
       DataSets = <
         item
           DataSet = MasterCDS
@@ -705,6 +762,22 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
           Name = 'StartBalance'
           Value = Null
           Component = FormParams
@@ -713,18 +786,42 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
-          Name = 'PartnerName'
-          Value = ''
-          Component = JuridicalGuides
-          ComponentItem = 'TextValue'
+          Name = 'StartBalanceCurrency'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalanceCurrency'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
         end
         item
-          Name = 'OurFirm'
+          Name = 'JuridicalShortName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
           Value = ''
-          Component = PartnerGuides
-          ComponentItem = 'TextValue'
+          Component = FormParams
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
         end
@@ -737,11 +834,97 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
+          Name = 'ContracNumber'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ContracNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractSigningDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractSigningDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName_Basis'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'JuridicalName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintOfficial: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spJuridicalBalance
+      StoredProcList = <
+        item
+          StoredProc = spJuridicalBalance
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'OperDate;ItemName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
           Name = 'AccountName'
           Value = ''
           Component = AccountGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
         end
         item
           Name = 'PaidKindName'
@@ -749,9 +932,278 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = PaidKindGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalance'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalanceCurrency'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalanceCurrency'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContracNumber'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ContracNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractSigningDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractSigningDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName_Basis'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'JuridicalName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName_Basis'
+          DataType = ftString
+          ParamType = ptInput
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintCurrency: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spJuridicalBalance
+      StoredProcList = <
+        item
+          StoredProc = spJuridicalBalance
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'OperDate;ItemName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalance'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalanceCurrency'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalanceCurrency'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InternalCurrencyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InternalCurrencyName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContracNumber'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ContracNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractSigningDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractSigningDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName_Basis'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'JuridicalName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrintTurnover: TdsdPrintAction
@@ -782,6 +1234,22 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
           Name = 'StartBalance'
           Value = Null
           Component = FormParams
@@ -790,18 +1258,42 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
-          Name = 'PartnerName'
-          Value = ''
-          Component = JuridicalGuides
-          ComponentItem = 'TextValue'
+          Name = 'StartBalanceCurrency'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'StartBalanceCurrency'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
         end
         item
-          Name = 'OurFirm'
+          Name = 'JuridicalShortName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
           Value = ''
-          Component = PartnerGuides
-          ComponentItem = 'TextValue'
+          Component = FormParams
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
         end
@@ -814,25 +1306,52 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ParamType = ptInput
         end
         item
-          Name = 'AccountName'
+          Name = 'ContracNumber'
           Value = ''
-          Component = AccountGuides
-          ComponentItem = 'TextValue'
+          Component = FormParams
+          ComponentItem = 'ContracNumber'
           DataType = ftString
+          ParamType = ptInput
         end
         item
-          Name = 'PaidKindName'
-          Value = ''
-          Component = PaidKindGuides
-          ComponentItem = 'TextValue'
+          Name = 'ContractTagName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractTagName'
           DataType = ftString
+          ParamType = ptInput
         end
         item
-          Name = 'ContractName'
+          Name = 'ContractSigningDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractSigningDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName_Basis'
           Value = ''
-          Component = ContractGuides
-          ComponentItem = 'TextValue'
+          Component = FormParams
+          ComponentItem = 'JuridicalName_Basis'
           DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalShortName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalShortName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName_Basis'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccounterName_Basis'
+          DataType = ftString
+          ParamType = ptInput
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
@@ -947,11 +1466,27 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintReport'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOfficial'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -970,20 +1505,24 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrint: TdxBarButton
-      Action = dsdPrintAction
-      Category = 0
-    end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
       Category = 0
     end
-    object bbPrintReport: TdxBarButton
+    object bbPrintOfficial: TdxBarButton
+      Action = actPrintOfficial
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
     end
     object bbPrintTurnover: TdxBarButton
       Action = actPrintTurnover
+      Category = 0
+    end
+    object bbPrintCurrency: TdxBarButton
+      Action = actPrintCurrency
       Category = 0
     end
   end
@@ -1024,6 +1563,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = CurrencyGuides
       end>
     Left = 408
     Top = 72
@@ -1112,6 +1654,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'FormName'
         Value = Null
         DataType = ftString
+      end
+      item
+        Name = 'ContractSigningDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInputOutput
       end>
     Left = 192
     Top = 144
@@ -1132,6 +1680,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1164,22 +1719,113 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
       end
       item
-        Name = 'StartBalance'
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outStartBalance'
         Value = Null
         Component = FormParams
         ComponentItem = 'StartBalance'
         DataType = ftFloat
       end
       item
-        Name = 'OurFirm'
+        Name = 'outStartBalanceCurrency'
         Value = Null
         Component = FormParams
-        ComponentItem = 'OurFirm'
+        ComponentItem = 'StartBalanceCurrency'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outJuridicalName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalName'
+        DataType = ftString
+      end
+      item
+        Name = 'outJuridicalShortName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalShortName'
+        DataType = ftString
+      end
+      item
+        Name = 'outPartnerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerName'
+        DataType = ftString
+      end
+      item
+        Name = 'outCurrencyName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CurrencyName'
+        DataType = ftString
+      end
+      item
+        Name = 'outInternalCurrencyName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InternalCurrencyName'
+        DataType = ftString
+      end
+      item
+        Name = 'outAccounterName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccounterName'
+        DataType = ftString
+      end
+      item
+        Name = 'outContracNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContracNumber'
+        DataType = ftString
+      end
+      item
+        Name = 'outContractTagName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractTagName'
+        DataType = ftString
+      end
+      item
+        Name = 'outContractSigningDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractSigningDate'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outJuridicalName_Basis'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalName_Basis'
+        DataType = ftString
+      end
+      item
+        Name = 'outJuridicalShortName_Basis'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalShortName_Basis'
+        DataType = ftString
+      end
+      item
+        Name = 'outAccounterName_Basis'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccounterName_Basis'
         DataType = ftString
       end>
     PackSize = 1
-    Left = 112
-    Top = 200
+    Left = 296
+    Top = 240
   end
   object PartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -1205,6 +1851,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
       end
       item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
@@ -1219,65 +1895,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 440
     Top = 24
-  end
-  object gpGetDefault: TdsdStoredProc
-    StoredProcName = 'gpGetJuridicalCollation'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'OperDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'MainJuridicalId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'MainJuridicalName'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 576
-    Top = 64
-  end
-  object gpGetJuridical: TdsdStoredProc
-    StoredProcName = 'gpGet_ObjectHistory_JuridicalDetails'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'AccounterName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AccounterName'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 296
-    Top = 192
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'

@@ -1,26 +1,26 @@
 inherited Report_BankAccountForm: TReport_BankAccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091'>'
   ClientHeight = 555
-  ClientWidth = 965
-  ExplicitWidth = 981
+  ClientWidth = 982
+  ExplicitWidth = 998
   ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 965
+    Width = 982
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 965
     ExplicitHeight = 472
     ClientRectBottom = 472
-    ClientRectRight = 965
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 965
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 965
+        Width = 982
         Height = 472
         ExplicitWidth = 965
         ExplicitHeight = 472
@@ -105,6 +105,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -186,6 +191,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summ_Currency
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -202,6 +212,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'BankName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object BankAccountName: TcxGridDBColumn
@@ -212,11 +223,20 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Options.Editing = False
             Width = 105
           end
+          object CurrencyName_BankAccount: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' '#1088'.'#1089#1095'.'
+            DataBinding.FieldName = 'CurrencyName_BankAccount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 105
           end
           object clItemName: TcxGridDBColumn
@@ -224,6 +244,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colContractCode: TcxGridDBColumn
@@ -240,6 +261,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'ContractInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colContractTagName: TcxGridDBColumn
@@ -291,6 +313,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object StartAmount: TcxGridDBColumn
@@ -298,7 +321,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -311,11 +334,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object StartAmountK: TcxGridDBColumn
@@ -323,11 +347,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colDebetSumm: TcxGridDBColumn
@@ -335,7 +360,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'DebetSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -348,7 +373,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'KreditSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -361,7 +386,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
@@ -374,11 +399,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'EndAmountD'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object EndAmountK: TcxGridDBColumn
@@ -386,18 +412,23 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'EndAmountK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object CurrencyName: TcxGridDBColumn
-            Caption = #1042#1072#1083#1102#1090#1072
-            DataBinding.FieldName = 'CurrencyName'
+          object Summ_Currency: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'Summ_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object StartAmount_Currency: TcxGridDBColumn
@@ -405,9 +436,10 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmount_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -418,11 +450,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmountD_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object StartAmountK_Currency: TcxGridDBColumn
@@ -430,11 +463,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'StartAmountK_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colDebetSumm_Currency: TcxGridDBColumn
@@ -442,35 +476,36 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'DebetSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 90
           end
           object colKreditSumm_Currency: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'.'
             DataBinding.FieldName = 'KreditSumm_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 90
           end
           object EndAmount_Currency: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'.'
             DataBinding.FieldName = 'EndAmount_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -481,11 +516,12 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'EndAmountD_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object EndAmountK_Currency: TcxGridDBColumn
@@ -493,12 +529,21 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             DataBinding.FieldName = 'EndAmountK_Currency'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
@@ -513,7 +558,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     end
   end
   inherited Panel: TPanel
-    Width = 965
+    Width = 982
     Height = 57
     ExplicitWidth = 965
     ExplicitHeight = 57

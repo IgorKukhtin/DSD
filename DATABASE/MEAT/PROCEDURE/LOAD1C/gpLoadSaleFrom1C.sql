@@ -282,24 +282,16 @@ BEGIN
           IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
           THEN
               -- !!!удаление!!!
+              DROP TABLE _tmpMIContainer_insert;
+              DROP TABLE _tmpMIReport_insert;
               DROP TABLE _tmpItemSumm;
               DROP TABLE _tmpItem;
-              -- !!!продажи!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-              -- !!!продажи!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
-                               , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer
-                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_From Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
-                               , PartionGoodsId Integer
-                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
-               -- Провели существующий документ - Sale
-               PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
-                                               , inUserId         := vbUserId
-                                               , inIsLastComplete := FALSE);
+             -- создаются временные таблицы - для формирование данных для проводок
+              PERFORM lpComplete_Movement_Sale_CreateTemp();
+              -- Провели существующий документ - Sale
+              PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
+                                              , inUserId         := vbUserId
+                                              , inIsLastComplete := FALSE);
           ELSE
           IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
           THEN

@@ -4942,9 +4942,10 @@ and ObjectHistory_JuridicalDetails_View.OKPO is null
 -- !!!check!!!
 -- select gpInsertUpdate_Object_CityKind ((select Id, from Object where descId = zc_Object_CityKind() and ValueData = CityKindName), 0, CityKindName, zfCalc_UserAdmin()) from (select CityKindName from tmpPartner group by CityKindName) as a
 /*
-select lpUpdate_Object_Partner_Address(ioId                := PartnerId
+select lpUpdate_Object_Partner_Address(inId                := PartnerId
+                                     , inJuridicalId       := NULL
+                                     , inShortName         := Comment
                                      , inCode              := NULL
-                                     , inName              := NULL
                                      , inRegionName        := RegionName
                                      , inProvinceName      := ProvinceName
                                      , inCityName          := CityName
@@ -4956,8 +4957,8 @@ select lpUpdate_Object_Partner_Address(ioId                := PartnerId
                                      , inHouseNumber       := HouseNumber
                                      , inCaseNumber        := ''
                                      , inRoomNumber        := RoomNumber
-                                     , inShortName         := Comment
                                      , inSession           := zfCalc_UserAdmin()
+                                     , inUserId            := zfCalc_UserAdmin() :: Integer
                                       )
 from tmpPartner
 where CityName <> ''
@@ -4965,7 +4966,42 @@ where CityName <> ''
   and OKPO = '25288083'
 */
 
+/*
+-- !!!update JurName!!!
+select *
+-- select lpUpdate_Object_ValueData (JuridicalId_curr, JurName, zfCalc_UserAdmin() :: Integer)
+from (select JuridicalId_curr, JurName
+      from tmpPartner
+      group by JuridicalId_curr, JurName
+      ) as tmp
+ inner join Object on Object.Id = JuridicalId_curr and ValueData <> JurName
+*/
 
+/*
+-- !!!update PartnerName!!!
+   select Object.Id, Object.ValueData, tmpPartner.*
+--   select lpUpdate_Object_Partner_Params_excel( inId                := PartnerId
+                                          , inJuridicalId       := JuridicalId_curr
+                                          , inShortName         := Comment
+                                          , inCode              := ObjectCode
+                                          , inRegionName        := RegionName
+                                          , inProvinceName      := ProvinceName
+                                          , inCityName          := CityName
+                                          , inCityKindId        := CityKindId
+                                          , inProvinceCityName  := ''
+                                          , inPostalCode        := PostalCode
+                                          , inStreetName        := StreetName
+                                          , inStreetKindId      := StreetKindId
+                                          , inHouseNumber       := HouseNumber
+                                          , inCaseNumber        := ''
+                                          , inRoomNumber        := RoomNumber
+                                          , inUserId            := zfCalc_UserAdmin() :: Integer
+                                           )
+from tmpPartner
+     inner join Object on Object.Id = PartnerId
+-- where JuridicalId_curr = 98443
+ order by 2
+*/
 
 select JurName_old, JurName,  case when JurName_old <> JurName then 'yes' else 'no' end 
      , PartnerName_old, PartnerName,  case when PartnerName_old <> PartnerName then 'yes' else 'no' end 

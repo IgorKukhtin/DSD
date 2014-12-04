@@ -3,7 +3,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 464
-  ClientWidth = 1058
+  ClientWidth = 1177
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object PartnerAddressForm: TPartnerAddressForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
-    Width = 1058
-    Height = 436
+    Top = 26
+    Width = 1177
+    Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 1058
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,17 +53,43 @@ object PartnerAddressForm: TPartnerAddressForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object ceCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+      object LastDocName: TcxGridDBColumn
+        Caption = #1044#1086#1082#1091#1084#1077#1085#1090' ('#1085#1072#1079#1074#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'LastDocName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 90
+      end
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object DocBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'DocBranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object ceCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -78,19 +105,19 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 200
       end
-      object RetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
+      object colShortName: TcxGridDBColumn
+        Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
+        Width = 90
       end
       object JuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
         DataBinding.FieldName = 'JuridicalGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -113,12 +140,43 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 55
       end
-      object colShortName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'ShortName'
+      object colAreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = AreaChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 100
+      end
+      object RetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object colPartnerTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
+        DataBinding.FieldName = 'PartnerTagName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PartnerTagChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
       end
       object BranchName_Personal: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')'
@@ -208,36 +266,6 @@ object PartnerAddressForm: TPartnerAddressForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
-      end
-      object colAreaName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085
-        DataBinding.FieldName = 'AreaName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = AreaChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object colPartnerTagName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
-        DataBinding.FieldName = 'PartnerTagName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = PartnerTagChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 120
       end
       object colRegionName: TcxGridDBColumn
         Caption = #1054#1073#1083#1072#1089#1090#1100
@@ -513,40 +541,22 @@ object PartnerAddressForm: TPartnerAddressForm
         Options.Editing = False
         Width = 50
       end
-      object PaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object DocBranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'DocBranchName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object LastDocName: TcxGridDBColumn
-        Caption = #1044#1086#1082#1091#1084#1077#1085#1090
-        DataBinding.FieldName = 'LastDocName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
   object cxLabel6: TcxLabel
-    Left = 180
-    Top = 102
+    Left = 24
+    Top = 36
+    AutoSize = False
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+    Height = 17
+    Width = 110
   end
   object edJuridical: TcxButtonEdit
     Left = 143
-    Top = 36
+    Top = 35
     Properties.Buttons = <
       item
         Default = True
@@ -556,24 +566,23 @@ object PartnerAddressForm: TPartnerAddressForm
     Width = 245
   end
   object cbPeriod: TcxCheckBox
-    Left = 390
+    Left = 394
     Top = 36
-    Action = actRefresh
-    Caption = #1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1076#1086#1082' '#1079#1072' '
-    TabOrder = 4
-    Width = 136
+    Caption = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+    TabOrder = 3
+    Width = 148
   end
   object deStart: TcxDateEdit
-    Left = 530
+    Left = 544
     Top = 36
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 85
   end
   object cxlEnd: TcxLabel
-    Left = 615
+    Left = 629
     Top = 36
     AutoSize = False
     Caption = #1087#1086
@@ -583,7 +592,7 @@ object PartnerAddressForm: TPartnerAddressForm
     AnchorY = 47
   end
   object deEnd: TcxDateEdit
-    Left = 640
+    Left = 654
     Top = 36
     EditValue = 41852d
     Properties.SaveTime = False
@@ -605,6 +614,71 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cbPeriod
+        Properties.Strings = (
+          'Action'
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'Caption'
+          'Checked'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBackground'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'State'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'Top'
+          'Touch'
+          'Transparent'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -619,8 +693,8 @@ object PartnerAddressForm: TPartnerAddressForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -638,7 +712,7 @@ object PartnerAddressForm: TPartnerAddressForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -671,10 +745,6 @@ object PartnerAddressForm: TPartnerAddressForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbPrint_byPartner'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -695,7 +765,15 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic2'
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -1355,8 +1433,8 @@ object PartnerAddressForm: TPartnerAddressForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      Caption = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
+      Hint = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ImageIndex = 21
       ShortCut = 16464
       DataSets = <
@@ -1378,8 +1456,8 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = deEnd
           DataType = ftDateTime
         end>
-      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      ReportName = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
+      ReportNameParam.Value = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ReportNameParam.DataType = ftString
     end
   end
@@ -1733,6 +1811,12 @@ object PartnerAddressForm: TPartnerAddressForm
     ComponentList = <
       item
         Component = JuridicalGuides
+      end
+      item
+        Component = cbPeriod
+      end
+      item
+        Component = PeriodChoice
       end>
     Left = 288
     Top = 184

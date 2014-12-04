@@ -59,10 +59,11 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
-           , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
-                       THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END :: TVarChar                                           AS OperPrice
+           , (CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
+              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+             ) :: TVarChar                                             AS OperPrice
            , '0' :: TVarChar                                           AS Tax
 
              -- Сумма без НДС
@@ -70,7 +71,7 @@ BEGIN
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END 
+             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
@@ -83,7 +84,7 @@ BEGIN
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END 
+             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
@@ -94,7 +95,7 @@ BEGIN
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END 
+             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
@@ -107,7 +108,7 @@ BEGIN
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END 
+             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
            * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
@@ -227,6 +228,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MIMaster.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                        ON MIFloat_CountForPrice.MovementItemId = MIMaster.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
         AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
@@ -255,4 +259,5 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inInfoMoneyId:= 0, inPaidKindId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '31.10.2014', inEndDate:= '31.10.2014', inInfoMoneyId:= 0, inPaidKindId:= 0, inSession:= zfCalc_UserAdmin())
+

@@ -589,8 +589,9 @@ uses
   FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
   FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm},
-  IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas';
+  IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
+  Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

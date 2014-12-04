@@ -61,7 +61,7 @@ BEGIN
                                                 , MIContainer.ContainerId
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
-                                                , CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() THEN 1 ELSE -1 END * MIContainer.Amount AS Amount
+                                                , CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() OR MIContainer.DescId = zc_MIContainer_SummCurrency() THEN 1 ELSE -1 END * MIContainer.Amount AS Amount
                                                 , tmpMovement.MovementId
                                                 , tmpMovement.MovementDescId
                                                 , tmpMovement.InvNumber

@@ -46,6 +46,10 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
+
+                                                      WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
+                                                       AND COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                                                           THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                            THEN zc_Enum_AccountDirection_30100() -- покупатели
 
@@ -241,8 +245,10 @@ BEGIN
      -- return;
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+     UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
+                                              THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
 
+                                         WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
                                               THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                              THEN zc_Enum_ProfitLoss_60201() -- Амортизация + Производственные ОС + Основные средства
 
@@ -547,6 +553,7 @@ BEGIN
        FROM _tmpItem
        WHERE _tmpItem.ContainerId_Diff <> 0
       UNION ALL
+       -- это !!!одна!!! проводка для "забалансового" Валютного счета 
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_Currency, 0 AS ParentId
             , _tmpItem.OperSumm_Currency
             , _tmpItem.OperDate
@@ -582,16 +589,28 @@ BEGIN
                                                )
      FROM (SELECT _tmpItem_Active.MovementDescId
                 , _tmpItem_Active.MovementItemId
-                , _tmpItem_Active.OperSumm, _tmpItem_Active.OperDate
+                , _tmpItem_Active.OperSumm + CASE WHEN _tmpItem_Active.ObjectDescId = zc_Object_BankAccount() THEN (_tmpItem_Passive.OperSumm_Diff) ELSE 0 END AS OperSumm
+                , _tmpItem_Active.OperDate
                 , _tmpItem_Active.ContainerId AS ActiveContainerId
                 , _tmpItem_Active.AccountId AS ActiveAccountId
                 , COALESCE (_tmpItem_Passive_SendDebt.ContainerId, _tmpItem_Passive.ContainerId) AS PassiveContainerId
                 , COALESCE (_tmpItem_Passive_SendDebt.AccountId, _tmpItem_Passive.AccountId) AS PassiveAccountId
            FROM _tmpItem AS _tmpItem_Active
                 LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.OperSumm < 0 AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
-                LEFT JOIN Movement ON Movement.Id = inMovementId
-                LEFT JOIN _tmpItem AS _tmpItem_Passive_SendDebt ON _tmpItem_Passive_SendDebt.OperSumm < 0 AND Movement.DescId = zc_Movement_SendDebt()
+                LEFT JOIN _tmpItem AS _tmpItem_Passive_SendDebt ON _tmpItem_Passive_SendDebt.OperSumm < 0 AND _tmpItem_Passive_SendDebt.MovementDescId = zc_Movement_SendDebt()
            WHERE _tmpItem_Active.OperSumm > 0
+          UNION ALL
+           SELECT _tmpItem_BankAccount.MovementDescId
+                , _tmpItem_BankAccount.MovementItemId
+                , ABS (_tmpItem_Diff.OperSumm_Diff) AS OperSumm
+                , _tmpItem_BankAccount.OperDate
+                , CASE WHEN _tmpItem_Diff.OperSumm_Diff < 0 THEN _tmpItem_BankAccount.ContainerId ELSE _tmpItem_Diff.ContainerId_Diff END AS ActiveContainerId
+                , CASE WHEN _tmpItem_Diff.OperSumm_Diff < 0 THEN _tmpItem_BankAccount.AccountId ELSE zc_Enum_Account_100301() END AS ActiveAccountId
+                , CASE WHEN _tmpItem_Diff.OperSumm_Diff < 0 THEN _tmpItem_Diff.ContainerId_Diff ELSE _tmpItem_BankAccount.ContainerId END AS PassiveContainerId
+                , CASE WHEN _tmpItem_Diff.OperSumm_Diff < 0 THEN zc_Enum_Account_100301() ELSE _tmpItem_BankAccount.AccountId END AS PassiveAccountId
+           FROM _tmpItem AS _tmpItem_BankAccount
+                INNER JOIN _tmpItem AS _tmpItem_Diff ON _tmpItem_Diff.ContainerId_Diff <> 0 AND _tmpItem_Diff.MovementItemId = _tmpItem_BankAccount.MovementItemId
+           WHERE _tmpItem_BankAccount.ObjectDescId = zc_Object_BankAccount() AND _tmpItem_BankAccount.ContainerId_Diff = 0
           ) AS _tmpItem
     ;
 

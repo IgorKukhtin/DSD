@@ -127,6 +127,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Transport()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                   )
@@ -155,6 +156,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Transport()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                           )
@@ -215,6 +217,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_Transport()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                    )
@@ -243,6 +246,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderExternal()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
 
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_Transport()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                           )
@@ -289,4 +293,4 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM lpGetAccessKey (zfCalc_UserAdmin() :: Integer, null)
+-- -- -- SELECT * FROM lpGetAccessKey (10895 :: Integer, zc_Enum_Process_AccessKey_TrasportDnepr())

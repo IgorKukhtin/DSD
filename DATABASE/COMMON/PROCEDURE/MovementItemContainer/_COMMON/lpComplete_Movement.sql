@@ -33,7 +33,7 @@ BEGIN
   -- проверка прав для <AccessKey>
   IF inDescId = zc_Movement_Sale()
   THEN 
-      IF lpGetAccessKey (inUserId, COALESCE ((SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
+      IF lpGetAccessKey (inUserId, COALESCE ((SELECT MAX (ProcessId) FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав для изменения в документе № <%> от <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate);
