@@ -1747,6 +1747,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\FileTypeKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas">
 				<Form>Report_GoodsMI_ProductionUnionMDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1755,7 +1756,6 @@
 				<Form>Report_GoodsMI_ProductionUnionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
