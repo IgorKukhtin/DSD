@@ -2129,6 +2129,7 @@ begin
   XML := XML + '</list>';
   XML := XML + '</xml>';
   TStorageFactory.GetStorage.ExecuteProc(XML, true);
+  result := true;
 end;
 
 procedure TExecServerStoredProc.Notification(AComponent: TComponent;

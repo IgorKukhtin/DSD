@@ -35,6 +35,8 @@ begin
 
                 AField.DisplayLabel := TcxGridDBColumn(Columns[i]).DataBinding.Field.DisplayLabel;
                 AField.DisplayWidth := TcxGridDBColumn(Columns[i]).DataBinding.Field.DisplayWidth;
+                if TcxGridDBColumn(Columns[i]).DataBinding.Field.DataType in [ftString] then
+                   AField.Size      := 255;
                 AField.EditMask     := TcxGridDBColumn(Columns[i]).DataBinding.Field.EditMask;
                 AField.FieldName    := TcxGridDBColumn(Columns[i]).DataBinding.Field.FieldName;
                 AField.Visible      := TcxGridDBColumn(Columns[i]).DataBinding.Field.Visible;

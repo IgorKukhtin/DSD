@@ -10,8 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitId Integer, UnitName TVarChar
-              )
+             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar)
 
 AS
 $BODY$
@@ -45,6 +44,8 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData           AS TotalSum
            , Object_Unit.Id                             AS UnitId
            , Object_Unit.ValueData                      AS UnitName
+           , Object_OrderKind.Id                                AS OrderKindId
+           , Object_OrderKind.ValueData                         AS OrderKindName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -69,6 +70,12 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                         ON MovementLinkObject_OrderKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+
+            LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
             ;
 

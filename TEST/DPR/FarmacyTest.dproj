@@ -297,8 +297,8 @@
 				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
-				<Form>OrderInternalForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalLite.pas">
+				<Form>OrderInternalLiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
@@ -492,8 +492,8 @@
 				<Form>ContactPersonKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
-				<Form>ContactPersonForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\OrderKind.pas">
+				<Form>OrderKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContactPersonEdit.pas">
@@ -514,8 +514,8 @@
 				<Form>GoodsLiteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas">
-				<Form>ChoiceGoodsFromPriceListForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportOrderGoods.pas">
+				<Form>ReportOrderGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\LookAndFillSettings.pas">
@@ -548,6 +548,29 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\NDSKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\IncomeTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\System\ChoiceGoodsFromPriceList.pas">
+				<Form>ChoiceGoodsFromPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\OrderKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
+				<Form>ContactPersonForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\OrderKindEdit.pas">
+				<Form>OrderKindEditForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

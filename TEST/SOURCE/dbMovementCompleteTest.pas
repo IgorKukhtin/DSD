@@ -17,7 +17,7 @@ type
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest,
-     dbObjectTest, Authentication, CommonData, IncomeTest;
+     dbObjectTest, Authentication, CommonData, IncomeTest, IncomeMovementItemTest;
 { TdbMovementItemTest }
 
 { TdbMovementCompleteTest }
@@ -37,7 +37,7 @@ var
 begin
   IncomeTest := TIncome.Create;
   try
-    MovementItemId := TMovementItemIncomeTest.Create.GetDefault;
+    MovementItemId := TIncomeMovementItem.Create.GetDefault;
     MovementId := IncomeTest.GetDefault;
     TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [MovementId]));
     try

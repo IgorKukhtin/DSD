@@ -29,7 +29,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     actLookAndFeel: TAction;
     bbLookAndFillSettings: TdxBarButton;
-    cxLabel1: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);

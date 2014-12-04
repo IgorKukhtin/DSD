@@ -3,25 +3,26 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 476
+    Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1073
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1069
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1067
-      ExplicitHeight = 470
+      ExplicitWidth = 1073
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1067
-        Height = 470
-        ExplicitWidth = 1067
-        ExplicitHeight = 470
+        Width = 1073
+        Height = 478
+        ExplicitWidth = 1073
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -111,7 +112,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -122,26 +123,26 @@ inherited IncomeJournalForm: TIncomeJournalForm
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            Width = 74
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 88
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 187
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 200
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -161,7 +162,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 109
           end
         end
       end
@@ -191,6 +192,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -275,7 +277,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -419,6 +421,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -437,6 +440,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -449,6 +453,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -521,6 +526,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 248
   end

@@ -2,7 +2,7 @@ unit ContactPersonTest;
 
 interface
 
-uses dbTest, dbObjectTest, ObjectTest;
+uses dbTest, dbObjectTest, ObjectTest, DB;
 
 type
 
@@ -15,6 +15,9 @@ type
   TContactPerson = class(TObjectTest)
      function InsertDefault: integer; override;
   public
+    FContactPersonKindId: Integer;
+    FPartnerId: Integer;
+    function GetRecord(Id: integer): TDataSet; override;
     function InsertUpdateContactPerson(Id, Code: Integer;
        Name, Phone, Mail, Comment: String; ObjectId, ContactPersonKindId: Integer): integer;
     constructor Create; override;
@@ -23,7 +26,7 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
+uses DBClient, dsdDB, UtilConst, TestFramework, SysUtils, JuridicalTest;
 
 { TdbUnitTest }
 
@@ -33,6 +36,7 @@ begin
   inherited;
   ScriptDirectory := ProcedurePath + 'OBJECTS\ContactPersonKind\';
   inherited;
+  FileLoad(ProcessPath + 'OBJECT\ContactPerson.sql');
 end;
 
 procedure TContactPersonTest.Test;
@@ -63,14 +67,27 @@ begin
   spGet := 'gpGet_Object_ContactPerson';
 end;
 
-function TContactPerson.InsertDefault: integer;
-var
-   vbObjectId, vbContactPersonKindId: Integer;
+function TContactPerson.GetRecord(Id: integer): TDataSet;
 begin
-  vbObjectId := TJuridical.Create.GetDefault;
-  vbContactPersonKindId := 0;
+  with FdsdStoredProc do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := spGet;
+    OutputType := otDataSet;
+    Params.Clear;
+    Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
+    Params.AddParam('inPartnerId', ftInteger, ptInput, FPartnerId);
+    Params.AddParam('inContactPersonKindId', ftInteger, ptInput, FContactPersonKindId);
+    Execute;
+    result := DataSets[0].DataSet;
+  end;
+end;
+
+function TContactPerson.InsertDefault: integer;
+begin
+  FPartnerId := TJuridical.Create.GetDefault;
+  FContactPersonKindId := 0;
   result := InsertUpdateContactPerson(0, -11, 'Иванов', 'Телефон', 'none@none.com',
-            'Comment', vbObjectId, vbContactPersonKindId);
+            'Comment', FPartnerId, FContactPersonKindId);
 end;
 
 function TContactPerson.InsertUpdateContactPerson;
@@ -82,7 +99,9 @@ begin
   FParams.AddParam('inPhone', ftString, ptInput, Phone);
   FParams.AddParam('inMail', ftString, ptInput, Mail);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
-  FParams.AddParam('inObjectId', ftInteger, ptInput, ObjectId);
+  FParams.AddParam('inObjectId_Partner', ftInteger, ptInput, 0);
+  FParams.AddParam('inObjectId_Juridical', ftInteger, ptInput, ObjectId);
+  FParams.AddParam('inObjectId_Contract', ftInteger, ptInput, 0);
   FParams.AddParam('inContactPersonKindId', ftInteger, ptInput, ContactPersonKindId);
   result := InsertUpdate(FParams);
 end;

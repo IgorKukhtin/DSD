@@ -5,7 +5,6 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -94,7 +93,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Income (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 
 
 /*

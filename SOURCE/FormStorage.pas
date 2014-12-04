@@ -42,16 +42,16 @@ type
 
   function StreamToString(Stream: TStream): String;
   // Процедура по символьно переводит строку в набор цифр
-  function ReConvertConvert(S: Ansistring): AnsiString;
+  function ReConvertConvert(S: AnsiString): AnsiString;
   // Процедура по символьно переводит строку в набор цифр
-  function ConvertConvert(S: RawByteString): String;
+  function ConvertConvert(S: String): String;
 
 implementation
 
 uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn;
 
 // Процедура по символьно переводит строку в набор цифр
-function ConvertConvert(S: RawByteString): String;
+function ConvertConvert(S: String): String;
 var i: integer;
     ArcS: Ansistring;
 begin
@@ -204,13 +204,13 @@ begin
         end;
       end;
     // Загрузить пользователские дефолты!!!
-    try
+   // try
       for i := 0 to Result.ComponentCount - 1 do
           if Result.Components[i] is TdsdUserSettingsStorageAddOn then
              TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
-    except
+   // except
 
-    end;
+   // end;
 end;
 
 function TdsdFormStorage.LoadFile(FileName: string): AnsiString;

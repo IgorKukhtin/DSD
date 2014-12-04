@@ -912,7 +912,7 @@ var
   FilterCriteriaItem: TcxFilterCriteriaItem;
   vbValue: string;
 begin
-  if (length(edFilter.Text) = 1) and (not (edFilter.Text[1] in ['0'..'9'])) then
+  if (length(edFilter.Text) = 1) and (not CharInSet(edFilter.Text[1], ['0'..'9'])) then
      vbValue := edFilter.Text + '%'
   else
      vbValue := '%' + edFilter.Text + '%';
@@ -1056,7 +1056,7 @@ end;
 
 procedure TdsdUserSettingsStorageAddOn.LoadUserSettings;
 var
-  Data: WideString;
+  Data: String;
   XMLDocument: IXMLDocument;
   i: integer;
   PropertiesStore: TcxPropertiesStore;

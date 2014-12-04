@@ -30,13 +30,13 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Retail(), inName);
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Retail(), vbCode_calc);
-
-   -- сохранили св-во <Код GLN>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
-   
+  
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Retail(), vbCode_calc, inName);
    
+   -- сохранили св-во <Код GLN>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
