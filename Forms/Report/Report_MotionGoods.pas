@@ -140,6 +140,10 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     ContainerId_Summ: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    SummSale_10500: TcxGridDBColumn;
+    SummSale_40208: TcxGridDBColumn;
+    SummReturnIn_40208: TcxGridDBColumn;
+    SummInventory_RePrice: TcxGridDBColumn;
   private
   public
   end;
