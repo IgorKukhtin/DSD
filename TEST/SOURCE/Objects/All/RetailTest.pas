@@ -16,7 +16,7 @@ type
     function InsertDefault: integer; override;
   public
    function InsertUpdateRetail(const Id: integer; Code: Integer;
-        Name: string): integer;
+        Name, GLNCode: string): integer;
     constructor Create; override;
   end;
 
@@ -37,16 +37,17 @@ end;
 
 function TRetail.InsertDefault: integer;
 begin
-  result := InsertUpdateRetail(0, -1, 'Торговая сеть');
+  result := InsertUpdateRetail(0, -1, 'Торговая сеть', '6543567');
 end;
 
 function TRetail.InsertUpdateRetail(const Id: integer; Code: Integer;
-  Name: string): integer;
+  Name, GlnCode: string): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inGlnCode', ftString, ptInput, GlnCode);
   result := InsertUpdate(FParams);
 end;
 

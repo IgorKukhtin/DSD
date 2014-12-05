@@ -18,7 +18,7 @@ type
      procedure SetDataSetParam; override;
   public
     function InsertUpdateOrderExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             FromId, ToId, InternalOrderId: Integer): integer;
+             FromId, ToId, ContractId, InternalOrderId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -41,7 +41,7 @@ function TOrderExternal.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
-    FromId, ToId, InternalOrderId: Integer;
+    FromId, ToId, InternalOrderId, ContractId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -49,13 +49,14 @@ begin
 
   FromId := TJuridical.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
+  ContractId := 0;
   InternalOrderId := TOrderInternal.Create.GetDefault;
   //
-  result := InsertUpdateOrderExternal(Id, InvNumber, OperDate, FromId, ToId, InternalOrderId);
+  result := InsertUpdateOrderExternal(Id, InvNumber, OperDate, FromId, ToId, ContractId, InternalOrderId);
 end;
 
 function TOrderExternal.InsertUpdateOrderExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             FromId, ToId, InternalOrderId: Integer): integer;
+             FromId, ToId, ContractId, InternalOrderId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -63,6 +64,7 @@ begin
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inInternalOrderId', ftInteger, ptInput, InternalOrderId);
 
   result := InsertUpdate(FParams);

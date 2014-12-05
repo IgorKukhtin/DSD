@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1222
-  ExplicitTop = -88
   ExplicitWidth = 1230
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -495,6 +494,22 @@ inherited OrderInternalForm: TOrderInternalForm
       Top = 3
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object cxLabel3: TcxLabel
+      Left = 624
+      Top = 4
+      Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+    end
+    object edOrderKind: TcxButtonEdit
+      Left = 624
+      Top = 22
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Width = 137
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -534,7 +549,6 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 120
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 55
     Top = 303
     object mactDeleteLinkGroup: TMultiAction [0]
@@ -1023,6 +1037,19 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'OrderKindId'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'OrderKindName'
+        Value = Null
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1059,64 +1086,11 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end
       item
+        Name = 'OrderKindId'
         Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1137,36 +1111,13 @@ inherited OrderInternalForm: TOrderInternalForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
-      end
-      item
-      end
-      item
       end
       item
         Control = edUnit
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edOrderKind
       end>
     Left = 232
     Top = 193
@@ -1542,5 +1493,31 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 592
     Top = 144
+  end
+  object GuidesOrderKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderKind
+    FormNameParam.Value = 'TOrderKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TOrderKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 664
+    Top = 40
   end
 end

@@ -449,7 +449,7 @@ uses
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
   OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
   PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm},
@@ -522,7 +522,7 @@ uses
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
-  IncomeTest in '..\SOURCE\Movement\All\IncomeTest.pas',
+  IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
   ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
   ProductionSeparateTest in '..\SOURCE\Movement\All\ProductionSeparateTest.pas',
   SendOnPriceTest in '..\SOURCE\Movement\All\SendOnPriceTest.pas',
@@ -589,6 +589,7 @@ uses
   FileTypeKind in '..\..\Forms\Kind\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
   FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
+  IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
   Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
   Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
 

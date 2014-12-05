@@ -61,8 +61,12 @@ type
     cxGridLevel1: TcxGridLevel;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
-    MasterId: TcxGridDBColumn;
-    clMasterId: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    GoodsKindChildName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    InfoMoneyDetailName: TcxGridDBColumn;
+    ReceiptName: TcxGridDBColumn;
+    InfoMoneyDetailChildName: TcxGridDBColumn;
   private
     { Private declarations }
   public

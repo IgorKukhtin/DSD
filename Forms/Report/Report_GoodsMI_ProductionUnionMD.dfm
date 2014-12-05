@@ -17,20 +17,19 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     TabOrder = 3
     ExplicitTop = 101
     ExplicitWidth = 1098
-    ExplicitHeight = 326
+    ExplicitHeight = 522
     ClientRectBottom = 518
     ClientRectRight = 1094
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1092
-      ExplicitHeight = 320
+      ExplicitHeight = 516
       inherited cxGrid: TcxGrid
         Width = 1092
         Height = 220
-        ExplicitTop = 302
         ExplicitWidth = 1092
-        ExplicitHeight = 296
+        ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -197,8 +196,32 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object MasterId: TcxGridDBColumn
-            DataBinding.FieldName = 'MasterId'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyDetailName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyDetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ReceiptName: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090
+            DataBinding.FieldName = 'ReceiptName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -211,8 +234,6 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 0
-        ExplicitHeight = 285
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -331,7 +352,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             DataBinding.FieldName = 'ChildGoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 68
+            Width = 70
           end
           object ChildGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
@@ -367,8 +388,18 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clMasterId: TcxGridDBColumn
-            DataBinding.FieldName = 'MasterId'
+          object GoodsKindChildName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindChildName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object InfoMoneyDetailChildName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyDetailChildName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -955,8 +986,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'MasterId'
-    MasterFields = 'MasterId'
+    IndexFieldNames = 
+      'MovementItemId;GoodsId;GoodsKindId;PartionGoodsId;ReceiptId;Unit' +
+      'Id;InfoMoneyDetailId'
+    MasterFields = 
+      'MovementItemId;GoodsId;GoodsKindId;PartionGoodsId;ReceiptId;Unit' +
+      'Id;InfoMoneyDetailId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>

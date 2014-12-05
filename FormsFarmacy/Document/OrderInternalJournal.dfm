@@ -2,6 +2,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
   ClientHeight = 535
   ClientWidth = 828
+  ExplicitLeft = -46
   ExplicitWidth = 836
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -10,6 +11,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Width = 828
     Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 828
     ExplicitHeight = 478
     ClientRectBottom = 478
@@ -112,30 +114,37 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           OptionsData.Editing = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 103
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            Width = 94
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 103
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 169
+          end
+          object colOrderKind: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'OrderKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -145,7 +154,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 130
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -155,7 +164,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 132
           end
         end
       end
@@ -250,6 +259,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -489,6 +499,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -507,6 +518,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -519,6 +531,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inmovementid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -602,6 +615,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Params = <
       item
         Name = 'inInternalOrder'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput

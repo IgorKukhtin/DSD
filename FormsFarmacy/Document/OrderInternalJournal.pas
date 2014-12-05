@@ -32,6 +32,7 @@ type
     colTotalSumm: TcxGridDBColumn;
     actCalculateExternalZakaz: TdsdExecStoredProc;
     spCalculate: TdsdStoredProc;
+    colOrderKind: TcxGridDBColumn;
   private
     { Private declarations }
   public

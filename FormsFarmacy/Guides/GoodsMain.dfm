@@ -10,6 +10,7 @@ inherited GoodsMainForm: TGoodsMainForm
   inherited PageControl: TcxPageControl
     Width = 782
     Height = 397
+    ExplicitTop = 26
     ExplicitWidth = 782
     ExplicitHeight = 397
     ClientRectBottom = 397
@@ -24,6 +25,7 @@ inherited GoodsMainForm: TGoodsMainForm
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -81,8 +83,19 @@ inherited GoodsMainForm: TGoodsMainForm
       end
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+  end
   inherited ActionList: TActionList
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TGoodsMainEditForm'
       FormNameParam.Value = 'TGoodsMainEditForm'
     end
@@ -95,17 +108,20 @@ inherited GoodsMainForm: TGoodsMainForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'Code'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
         end>

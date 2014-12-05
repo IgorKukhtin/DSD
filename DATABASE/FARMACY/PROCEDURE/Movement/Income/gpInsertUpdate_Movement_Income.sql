@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
+    IN inContractId          Integer   , -- Договор
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -21,23 +22,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      vbUserId := inSession;
 
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
+                                          , inFromId, inToId, inNDSKindId, inContractId, vbUserId);
 
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-     -- сохранили связь с <Типы НДС>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_NDSKind(), ioId, inNDSKindId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -47,6 +34,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.12.14                                                        *
  10.07.14                                                        *
 
 

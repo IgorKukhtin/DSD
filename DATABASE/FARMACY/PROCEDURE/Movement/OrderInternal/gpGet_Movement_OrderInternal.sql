@@ -9,8 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar
-              )
+             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -31,6 +30,8 @@ BEGIN
              , Object_Status.Name                               AS StatusName
              , 0                     				            AS UnitId
              , CAST ('' AS TVarChar) 				            AS UnitName
+             , 0                     				            AS OrderKindId
+             , CAST ('' AS TVarChar) 				            AS OrderKindName
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -45,6 +46,8 @@ BEGIN
            , Object_Status.ValueData                            AS StatusName
            , Object_Unit.Id                                     AS UnitId
            , Object_Unit.ValueData                              AS UnitName
+           , Object_OrderKind.Id                                AS OrderKindId
+           , Object_OrderKind.ValueData                         AS OrderKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -55,8 +58,13 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_OrderInternal();
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderKind
+                                         ON MovementLinkObject_OrderKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+
+            LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+
+       WHERE Movement.Id =  inMovementId;
 
        END IF;
 
