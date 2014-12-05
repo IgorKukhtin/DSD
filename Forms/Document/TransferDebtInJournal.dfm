@@ -8,21 +8,23 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 478
+    Height = 476
     TabOrder = 3
-    ExplicitTop = 57
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
-        ExplicitWidth = 1020
-        ExplicitHeight = 478
+        Width = 1014
+        Height = 470
+        ExplicitWidth = 1014
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -652,6 +654,48 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -693,7 +737,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -777,6 +821,10 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Return_By_TaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -822,6 +870,10 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     end
     object bbspChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbPrint_Return_By_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
   end

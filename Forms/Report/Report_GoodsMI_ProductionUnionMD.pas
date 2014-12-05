@@ -67,6 +67,7 @@ type
     InfoMoneyDetailName: TcxGridDBColumn;
     ReceiptName: TcxGridDBColumn;
     InfoMoneyDetailChildName: TcxGridDBColumn;
+    cbGroupInfoMoney: TcxCheckBox;
   private
     { Private declarations }
   public

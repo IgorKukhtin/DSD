@@ -44,6 +44,8 @@ type
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
     colInvNumberMark: TcxGridDBColumn;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    bbPrint_Return_By_TaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public
