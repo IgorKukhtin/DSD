@@ -75,8 +75,12 @@ BEGIN
 
 
 
-    -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
-    PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), ioId, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order()));
+    -- если есть
+    IF EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0)
+    THEN
+        -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
+        PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), ioId, (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Order AND DescId = zc_MovementLinkMovement_Order()));
+    END IF;
 
 
     -- в этом случае надо восстановить/удалить Налоговую

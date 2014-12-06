@@ -64,7 +64,12 @@ BEGIN
 
       IF inisOk THEN 
          PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
+
          PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (vbTaxMovementId, vbUserId, FALSE);
       END IF;
    END IF;
 
@@ -72,11 +77,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.12.14                         * add сохранили протокол
  14.10.14                         * 
  04.08.14                         * 
 
