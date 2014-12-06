@@ -1,12 +1,14 @@
 -- Function: gpReport_GoodsMI_ProductionUnionMD ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnionMD (TDateTime, TDateTime,  Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnionMD (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnionMD (
     IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inGroupMovement      Boolean   ,
     IN inGroupPartion       Boolean   ,
+    IN inGroupInfoMoney     Boolean   ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -261,7 +263,8 @@ BEGIN
                  , CASE WHEN inGroupMovement = True THEN tmpMI.MovementItemId ELSE 0 END                    AS MovementItemId
                  , CASE WHEN inGroupPartion = True  THEN tmpMI.PartionGoodsId ELSE 0 END                    AS PartionGoodsId
                  , tmpMI.GoodsId                                                                            AS GoodsId
-                 , tmpMI.InfoMoneyDetailId                                                                  AS InfoMoneyDetailId
+--                 , tmpMI.InfoMoneyDetailId                                                                  AS InfoMoneyDetailId
+                 , CASE WHEN inGroupInfoMoney = True  THEN tmpMI.InfoMoneyDetailId ELSE 0 END               AS InfoMoneyDetailId
                  , tmpMI.ReceiptId                                                                          AS ReceiptId
                  , tmpMI.GoodsKindId                                                                        AS GoodsKindId
                  , tmpMI.UnitId                                                                             AS UnitId
@@ -307,7 +310,8 @@ BEGIN
                  , CASE WHEN inGroupMovement = True THEN tmpMI.MovementItemId ELSE 0 END
                  , CASE WHEN inGroupPartion = True  THEN tmpMI.PartionGoodsId ELSE 0 END
                  , tmpMI.GoodsId
-                 , tmpMI.InfoMoneyDetailId
+--                 , tmpMI.InfoMoneyDetailId
+                 , CASE WHEN inGroupInfoMoney = True  THEN tmpMI.InfoMoneyDetailId ELSE 0 END
                  , tmpMI.ReceiptId
                  , tmpMI.GoodsKindId
                  , tmpMI.UnitId
@@ -521,7 +525,8 @@ BEGIN
                    CASE WHEN inGroupMovement = True THEN tmpMI.MovementItemId ELSE 0 END                    AS MovementItemId
                  , CASE WHEN inGroupPartion = True  THEN tmpMI.PartionGoodsId ELSE 0 END                    AS PartionGoodsId
                  , tmpMI.GoodsId                                                                            AS GoodsId
-                 , tmpMI.InfoMoneyDetailId                                                                  AS InfoMoneyDetailId
+                 , CASE WHEN inGroupInfoMoney = True  THEN tmpMI.InfoMoneyDetailId ELSE 0 END               AS InfoMoneyDetailId
+--                 , tmpMI.InfoMoneyDetailId                                                                  AS InfoMoneyDetailId
                  , tmpMI.ReceiptId                                                                          AS ReceiptId
                  , tmpMI.GoodsKindId                                                                        AS GoodsKindId
                  , tmpMI.UnitId                                                                             AS UnitId
@@ -549,7 +554,8 @@ BEGIN
                         , tmpMIChild_Sum.InfoMoneyDetailId          AS ChildInfoMoneyDetailId
                         , tmpMIChild_Sum.GoodsKindId                AS ChildGoodsKindId
 
-                        , tmpMIMaster_Sum.InfoMoneyDetailId         AS InfoMoneyDetailId
+--                        , tmpMIMaster_Sum.InfoMoneyDetailId         AS InfoMoneyDetailId
+                        , tmpMIChild_Sum.InfoMoneyDetailId          AS InfoMoneyDetailId
                         , tmpMIMaster_Sum.ReceiptId                 AS ReceiptId
                         , tmpMIMaster_Sum.GoodsKindId               AS GoodsKindId
                         , tmpMIMaster_Sum.UnitId                    AS UnitId
@@ -610,7 +616,8 @@ BEGIN
                    CASE WHEN inGroupMovement = True THEN tmpMI.MovementItemId ELSE 0 END
                  , CASE WHEN inGroupPartion = True  THEN tmpMI.PartionGoodsId ELSE 0 END
                  , tmpMI.GoodsId
-                 , tmpMI.InfoMoneyDetailId
+--                 , tmpMI.InfoMoneyDetailId
+                 , CASE WHEN inGroupInfoMoney = True  THEN tmpMI.InfoMoneyDetailId ELSE 0 END
                  , tmpMI.ReceiptId
                  , tmpMI.GoodsKindId
                  , tmpMI.UnitId
@@ -668,6 +675,6 @@ $BODY$
 -- тест
 /*
 BEGIN;
- select * from gpReport_GoodsMI_ProductionUnionMD(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'True' , inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId :=0 , inFromId := 0 , inToId := 0 ,  inSession := '5');
+ select * from gpReport_GoodsMI_ProductionUnionMD(inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inGroupMovement := 'True' , inGroupPartion := 'True' , inGroupInfoMoney := 'True', inGoodsGroupId := 0 , inGoodsId := 0 , inChildGoodsGroupId := 0 , inChildGoodsId :=0 , inFromId := 0 , inToId := 0 ,  inSession := '5');
 COMMIT;
 */

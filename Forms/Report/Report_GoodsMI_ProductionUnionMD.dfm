@@ -3,30 +3,30 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077') ('#1084#1072#1089#1090#1077#1088'-'#1076#1077#1090#1072#1083#1100#1085#1086')' +
     '>'
   ClientHeight = 623
-  ClientWidth = 1098
+  ClientWidth = 1150
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1106
+  ExplicitWidth = 1158
   ExplicitHeight = 657
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 101
-    Width = 1098
+    Width = 1150
     Height = 522
     TabOrder = 3
     ExplicitTop = 101
     ExplicitWidth = 1098
     ExplicitHeight = 522
     ClientRectBottom = 518
-    ClientRectRight = 1094
+    ClientRectRight = 1146
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 2
       ExplicitWidth = 1092
       ExplicitHeight = 516
       inherited cxGrid: TcxGrid
-        Width = 1092
+        Width = 1144
         Height = 220
         ExplicitWidth = 1092
         ExplicitHeight = 220
@@ -229,11 +229,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 220
-        Width = 1092
+        Width = 1144
         Height = 296
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1092
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -410,7 +411,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     end
   end
   inherited Panel: TPanel
-    Width = 1098
+    Width = 1150
     Height = 73
     ExplicitWidth = 1098
     ExplicitHeight = 73
@@ -547,6 +548,13 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       TabOrder = 16
       Width = 147
     end
+    object cbGroupInfoMoney: TcxCheckBox
+      Left = 959
+      Top = 52
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1089#1090#1072#1090#1100#1103#1084
+      TabOrder = 17
+      Width = 156
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 747
@@ -673,6 +681,13 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
         Name = 'inGroupPartion'
         Value = Null
         Component = cbGroupPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGroupInfoMoney'
+        Value = Null
+        Component = cbGroupInfoMoney
         DataType = ftBoolean
         ParamType = ptInput
       end
