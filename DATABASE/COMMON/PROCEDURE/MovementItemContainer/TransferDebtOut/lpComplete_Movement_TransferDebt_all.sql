@@ -726,19 +726,6 @@ $BODY$
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        *
 */
-/*
-     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
-     -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , AccountId_From Integer, AccountId_To Integer, ContainerId_From Integer, ContainerId_To Integer
-                               , ContainerId_Summ Integer, GoodsId Integer, GoodsKindId Integer
-                               , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                               , AccountId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
-*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 267275 , inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_TransferDebt_all (inMovementId:= 267275, inUserId:= zfCalc_UserAdmin() :: Integer)

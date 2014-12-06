@@ -26,7 +26,6 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -34,4 +33,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpComplete_Movement_Sale_CreateTemp ()

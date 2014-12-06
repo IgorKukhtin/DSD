@@ -3,8 +3,9 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1166
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1174
-  ExplicitHeight = 451
+  ExplicitLeft = -184
+  ExplicitWidth = 1182
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -358,7 +359,7 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 70
           end
           object clmovIsCheck: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
@@ -369,10 +370,12 @@ inherited EDIJournalForm: TEDIJournalForm
             Width = 55
           end
           object clisElectron: TcxGridDBColumn
-            Caption = #1050#1074#1080#1090#1072#1085#1094#1080#1103
+            Caption = #1050#1074#1080#1090#1072#1085#1094#1080#1103', '#1101#1083#1077#1082#1090#1088'.'
             DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 75
           end
         end
       end
@@ -784,7 +787,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 184
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Top = 183
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <

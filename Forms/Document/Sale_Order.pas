@@ -143,6 +143,9 @@ type
     actPrint_Pack22: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
+    spUpdatePriceCurrency: TdsdStoredProc;
+    actUpdatePriceCurrency: TdsdExecStoredProc;
+    bbUpdatePriceCurrency: TdxBarButton;
   private
     { Private declarations }
   public

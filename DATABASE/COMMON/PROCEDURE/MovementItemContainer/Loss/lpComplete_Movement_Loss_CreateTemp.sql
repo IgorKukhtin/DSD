@@ -1,0 +1,35 @@
+-- Function: lpComplete_Movement_Loss_CreateTemp ()
+
+DROP FUNCTION IF EXISTS lpComplete_Movement_Loss_CreateTemp ();
+
+CREATE OR REPLACE FUNCTION lpComplete_Movement_Loss_CreateTemp()
+RETURNS VOID
+AS
+$BODY$
+BEGIN
+     -- таблица - Проводки
+     PERFORM lpComplete_Movement_All_CreateTemp();
+
+     -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsId_Item Integer
+                               , OperCount TFloat
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
+                               , PartionGoodsId Integer) ON COMMIT DROP;
+
+
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.12.14                                        *
+*/
+
+-- тест
+-- SELECT * FROM lpComplete_Movement_Loss_CreateTemp ()

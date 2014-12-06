@@ -21,7 +21,6 @@ BEGIN
      PERFORM lpComplete_Movement_PersonalAccount (inMovementId := inMovementId
                                                 , inUserId     := vbUserId);
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

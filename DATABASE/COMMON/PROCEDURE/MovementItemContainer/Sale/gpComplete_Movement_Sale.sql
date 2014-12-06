@@ -18,7 +18,6 @@ BEGIN
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      PERFORM lpComplete_Movement_Sale_CreateTemp();
-
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                      , inUserId         := vbUserId

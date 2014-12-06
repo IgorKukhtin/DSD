@@ -13,7 +13,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_IncomeFuel());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_IncomeFuel_noFind());
 
 END;
 $BODY$

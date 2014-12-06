@@ -2,26 +2,26 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 476
+    Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1016
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1014
-      ExplicitHeight = 470
+      ExplicitWidth = 1020
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 470
-        ExplicitWidth = 1014
-        ExplicitHeight = 470
+        Width = 1020
+        Height = 478
+        ExplicitWidth = 1020
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -504,6 +504,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 30
+          end
+          object colIsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 30
           end
         end
@@ -1154,7 +1161,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

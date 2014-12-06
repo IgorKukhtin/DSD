@@ -36,5 +36,4 @@ ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable () OWNER TO postgres
 */
 
 -- тест
--- CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 -- SELECT * FROM lpInsertUpdate_MovementItemContainer_byTable ()

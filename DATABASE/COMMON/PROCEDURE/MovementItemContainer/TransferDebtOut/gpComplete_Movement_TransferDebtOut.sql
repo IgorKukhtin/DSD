@@ -6,8 +6,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_TransferDebtOut(
     IN inMovementId        Integer              , -- ключ Документа
     IN inSession           TVarChar               -- сессия пользователя
 )                              
- RETURNS VOID
-
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -15,17 +14,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_TransferDebtOut());
 
-     -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , AccountId_From Integer, AccountId_To Integer, ContainerId_From Integer, ContainerId_To Integer
-                               , ContainerId_Summ Integer, GoodsId Integer, GoodsKindId Integer
-                               , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                               , AccountId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
-
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_TransferDebt_all_CreateTemp();
      -- проводим Документ
      PERFORM lpComplete_Movement_TransferDebt_all (inMovementId := inMovementId
                                                  , inUserId     := vbUserId);
