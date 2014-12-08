@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                Value1 TVarChar, Value2 TVarChar, 
                Value3 TVarChar, Value4 TVarChar,
                Value5 TVarChar, Value6 TVarChar, 
-               Value7 TVarChar, Value8 TVarChar, Value9 TVarChar,
+               Value7 TVarChar, Value8 TVarChar,
+               Value9 TVarChar, Value10 TVarChar,
                GoodsId Integer, GoodsName TVarChar
                ) AS
 $BODY$
@@ -36,7 +37,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS Value7
            , CAST ('' as TVarChar)  AS Value8
            , CAST ('' as TVarChar)  AS Value9
-
+           , CAST ('' as TVarChar)  AS Value10
+           
            , CAST (0 as Integer)    AS GoodsId
            , CAST ('' as TVarChar)  AS GoodsName
            ;
@@ -57,6 +59,7 @@ BEGIN
            , ObjectString_Value7.ValueData AS Value7
            , ObjectString_Value8.ValueData AS Value8
            , ObjectString_Value9.ValueData AS Value9           
+           , ObjectString_Value10.ValueData AS Value10
                                                       
            , Object_Goods.Id        AS GoodsId
            , Object_Goods.ValueData AS GoodsName 
@@ -89,6 +92,9 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Value9
                                ON ObjectString_Value9.ObjectId = Object_GoodsQuality.Id 
                               AND ObjectString_Value9.DescId = zc_ObjectString_GoodsQuality_Value9()  
+           LEFT JOIN ObjectString AS ObjectString_Value10
+                               ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id 
+                              AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
                                                                        
            LEFT JOIN ObjectLink AS GoodsQuality_Goods
                                 ON GoodsQuality_Goods.ObjectId = Object_GoodsQuality.Id
