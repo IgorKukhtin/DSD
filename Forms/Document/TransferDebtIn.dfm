@@ -2,29 +2,30 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 662
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 697
+  ExplicitWidth = 1028
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 1020
-    Height = 531
+    Height = 529
     Properties.ActivePage = cxTabSheetTaxCorrective
-    ExplicitTop = 131
-    ExplicitWidth = 1174
-    ExplicitHeight = 531
-    ClientRectBottom = 531
-    ClientRectRight = 1020
+    ExplicitTop = 133
+    ExplicitWidth = 1020
+    ExplicitHeight = 529
+    ClientRectBottom = 525
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 1174
-      ExplicitHeight = 507
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1014
+      ExplicitHeight = 503
       inherited cxGrid: TcxGrid
-        Width = 1174
-        Height = 507
-        ExplicitWidth = 1174
-        ExplicitHeight = 507
+        Width = 1014
+        Height = 503
+        ExplicitWidth = 1014
+        ExplicitHeight = 503
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -153,15 +154,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1174
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 507
+        Width = 1014
+        Height = 503
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1174
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -489,7 +488,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1020
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1174
+    ExplicitWidth = 1020
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -521,7 +520,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -1082,6 +1081,38 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Status = mtComplete
       DataSource = TaxCorrectiveDS
     end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1138,7 +1169,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1233,6 +1264,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_ReturnIn_by_TaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1285,6 +1320,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     object bbSetErasedTaxCorrective: TdxBarButton
       Action = actSetErasedTaxCorrective
+      Category = 0
+    end
+    object bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
   end
