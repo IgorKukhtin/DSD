@@ -97,6 +97,8 @@ type
     actTaxJournalChoice: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     edInvNumberMark: TcxTextEdit;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public
