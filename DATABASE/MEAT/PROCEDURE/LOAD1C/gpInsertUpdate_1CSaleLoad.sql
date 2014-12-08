@@ -45,10 +45,16 @@ BEGIN
     
         INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
                             GoodsName, OperCount, OperPrice, Tax, 
-                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog)
+                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog
+                          , BranchId, BranchId_Link, PaidKindId
+                           )
              VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
                     inGoodsName, inOperCount, inOperPrice, inTax, 
-                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog);
+                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog
+                  , zfGetBranchFromUnitId (inUnitId)
+                  , zfGetBranchLinkFromBranchPaidKind (zfGetBranchFromUnitId (inUnitId), zfGetPaidKindFrom1CType(inVidDoc))
+                  , zfGetPaidKindFrom1CType (inVidDoc)
+                   );
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
