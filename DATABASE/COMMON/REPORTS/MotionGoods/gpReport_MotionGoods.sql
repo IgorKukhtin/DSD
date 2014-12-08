@@ -364,14 +364,16 @@ BEGIN
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    -- AND MIContainer.isActive = TRUE
-                                                   AND MIContainer.ActiveContainerId = tmpContainer_Summ.ContainerId_Summ
-                                                       THEN MIContainer.Amount
+                                                   AND (MIContainer.ActiveContainerId = tmpContainer_Summ.ContainerId_Summ
+                                                     OR MovementBoolean_HistoryCost.ValueData = TRUE)
+                                                       THEN MIContainer.Amount * CASE WHEN MIContainer.ActiveContainerId = tmpContainer_Summ.ContainerId_Summ THEN 1 ELSE -1 END
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    -- AND MIContainer.isActive = FALSE
                                                    AND MIContainer.PassiveContainerId = tmpContainer_Summ.ContainerId_Summ
+                                                   AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_SendOnPriceOut
@@ -461,6 +463,9 @@ BEGIN
                                                                                     AND MIContainer.OperDate >= inStartDate*/
                                       LEFT JOIN MovementItemReport AS MIContainer ON MIContainer.ReportContainerId = tmpContainer_Summ.ReportContainerId
                                                                                  AND MIContainer.OperDate >= inStartDate
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
+                                                                ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
+                                                               AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
                                         , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END
                                         , tmpContainer_Summ.AccountId

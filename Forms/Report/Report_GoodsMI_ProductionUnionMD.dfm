@@ -3,33 +3,31 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077') ('#1084#1072#1089#1090#1077#1088'-'#1076#1077#1090#1072#1083#1100#1085#1086')' +
     '>'
   ClientHeight = 623
-  ClientWidth = 1150
+  ClientWidth = 1020
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1158
-  ExplicitHeight = 657
+  ExplicitWidth = 1036
+  ExplicitHeight = 658
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 101
-    Width = 1150
-    Height = 522
+    Top = 99
+    Width = 1020
+    Height = 524
     TabOrder = 3
-    ExplicitTop = 101
-    ExplicitWidth = 1098
-    ExplicitHeight = 522
-    ClientRectBottom = 518
-    ClientRectRight = 1146
+    ExplicitTop = 99
+    ExplicitWidth = 1150
+    ExplicitHeight = 524
+    ClientRectBottom = 524
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1092
-      ExplicitHeight = 516
+      ExplicitWidth = 1150
+      ExplicitHeight = 524
       inherited cxGrid: TcxGrid
-        Width = 1144
-        Height = 220
-        ExplicitWidth = 1092
-        ExplicitHeight = 220
+        Width = 1020
+        Height = 228
+        ExplicitWidth = 1150
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -228,13 +226,13 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       end
       object cxGridDetail: TcxGrid
         Left = 0
-        Top = 220
-        Width = 1144
+        Top = 228
+        Width = 1020
         Height = 296
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1092
+        ExplicitWidth = 1150
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -411,9 +409,9 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     end
   end
   inherited Panel: TPanel
-    Width = 1150
+    Width = 1020
     Height = 73
-    ExplicitWidth = 1098
+    ExplicitWidth = 1150
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 108
@@ -742,7 +740,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

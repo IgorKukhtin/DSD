@@ -1,30 +1,30 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EDI>'
   ClientHeight = 424
-  ClientWidth = 1166
+  ClientWidth = 1119
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -184
-  ExplicitWidth = 1182
+  ExplicitLeft = -137
+  ExplicitWidth = 1135
   ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 1166
+    Width = 1119
     Height = 367
     ExplicitTop = 57
-    ExplicitWidth = 1166
+    ExplicitWidth = 1020
     ExplicitHeight = 367
     ClientRectBottom = 367
-    ClientRectRight = 1166
+    ClientRectRight = 1119
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1166
+      ExplicitWidth = 1020
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
-        Width = 1166
+        Width = 1119
         Height = 209
         Align = alTop
-        ExplicitWidth = 1166
+        ExplicitWidth = 1020
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -382,19 +382,21 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1166
+        Width = 1119
         Height = 3
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 1020
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 212
-        Width = 1166
+        Width = 1119
         Height = 155
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 1020
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -633,11 +635,12 @@ inherited EDIJournalForm: TEDIJournalForm
         object cxProtocolGrid: TcxGrid
           Left = 954
           Top = 0
-          Width = 212
+          Width = 165
           Height = 155
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitWidth = 66
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -705,10 +708,11 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1166
+    Width = 1119
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1020
     object deStart: TcxDateEdit
       Left = 107
       Top = 5

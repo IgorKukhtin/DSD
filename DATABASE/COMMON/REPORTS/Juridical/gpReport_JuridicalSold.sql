@@ -32,7 +32,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
+             , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat, MoneySumm TFloat, ServiceSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
               )
 AS
@@ -140,8 +140,10 @@ BEGIN
         Operation.ReturnOutSumm::TFloat,
         Operation.SaleSumm::TFloat,
         Operation.SaleRealSumm::TFloat,
+        Operation.SaleSumm_10300::TFloat,
         Operation.ReturnInSumm::TFloat,
         Operation.ReturnInRealSumm::TFloat,
+        Operation.ReturnInSumm_10300::TFloat,
         Operation.MoneySumm::TFloat,
         Operation.ServiceSumm::TFloat,
         Operation.TransferDebtSumm::TFloat,
@@ -162,44 +164,48 @@ BEGIN
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
                      SUM (Operation_all.KreditSumm)  AS KreditSumm,
 
-                     SUM (Operation_all.IncomeSumm)    AS IncomeSumm,
-                     SUM (Operation_all.ReturnOutSumm) AS ReturnOutSumm,
-                     SUM (Operation_all.SaleSumm)      AS SaleSumm,
-                     SUM (Operation_all.SaleRealSumm)  AS SaleRealSumm,
-                     SUM (Operation_all.ReturnInSumm)  AS ReturnInSumm,
+                     SUM (Operation_all.IncomeSumm)        AS IncomeSumm,
+                     SUM (Operation_all.ReturnOutSumm)     AS ReturnOutSumm,
+                     SUM (Operation_all.SaleSumm)          AS SaleSumm,
+                     SUM (Operation_all.SaleRealSumm)      AS SaleRealSumm,
+                     SUM (Operation_all.SaleSumm_10300)    AS SaleSumm_10300,
+                     SUM (Operation_all.ReturnInSumm)      AS ReturnInSumm,
                      SUM (Operation_all.ReturnInRealSumm)  AS ReturnInRealSumm,
-                     SUM (Operation_all.MoneySumm)     AS MoneySumm,
-                     SUM (Operation_all.ServiceSumm)   AS ServiceSumm,
+                     SUM (Operation_all.ReturnInSumm_10300)AS ReturnInSumm_10300,
+                     SUM (Operation_all.MoneySumm)         AS MoneySumm,
+                     SUM (Operation_all.ServiceSumm)       AS ServiceSumm,
                      SUM (Operation_all.TransferDebtSumm)  AS TransferDebtSumm,
-                     SUM (Operation_all.SendDebtSumm)  AS SendDebtSumm,
-                     SUM (Operation_all.OtherSumm)     AS OtherSumm,
-                     SUM (Operation_all.EndAmount)     AS EndAmount
+                     SUM (Operation_all.SendDebtSumm)      AS SendDebtSumm,
+                     SUM (Operation_all.OtherSumm)         AS OtherSumm,
+                     SUM (Operation_all.EndAmount)         AS EndAmount
           FROM
          (SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.BranchId
                , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm
 
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_Income() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnOutSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnOutSumm
 
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Sale()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleRealSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS TransferDebtSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleRealSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm_10300
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS TransferDebtSumm
 
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInRealSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInRealSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN 1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm_10300
 
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm
-               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId NOT IN (zc_Movement_Income(), zc_Movement_ReturnOut()
-                                                                                                       , zc_Movement_Sale(), zc_Movement_ReturnIn()
-                                                                                                       , zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()
-                                                                                                       , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
-                                                                                                       , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
-                                                                                                       , zc_Movement_SendDebt()
-                                                                                                        )
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_ReturnOut()
+                                                                                                                  , zc_Movement_Sale(), zc_Movement_ReturnIn()
+                                                                                                                  , zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()
+                                                                                                                  , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
+                                                                                                                  , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
+                                                                                                                  , zc_Movement_SendDebt()
+                                                                                                                   )
                                                                                  THEN MIContainer.Amount
                                                                             ELSE 0
                                                                        END
@@ -231,10 +237,9 @@ BEGIN
                   AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR COALESCE (inInfoMoneyGroupId, 0) = 0)
                   AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                 ) AS tmpContainer
-                LEFT JOIN MovementItemContainer AS MIContainer 
+                LEFT JOIN MovementItemContainer AS MIContainer
                                                 ON MIContainer.Containerid = tmpContainer.ContainerId
                                                AND MIContainer.OperDate >= inStartDate
-                LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.BranchId
          ) AS Operation_all
 

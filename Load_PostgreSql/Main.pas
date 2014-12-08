@@ -1253,6 +1253,36 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 var StartDate:TDateTime;
 begin
+     if ParamStr(2)='autoReturnIn'
+     then begin
+               StartDateEdit.Text:=DateToStr(Date-1);
+               EndDateEdit.Text:=DateToStr(Date-1);
+
+               StartDateCompleteEdit.Text:=DateToStr(Date-1);
+               EndDateCompleteEdit.Text:=DateToStr(Date-1);
+
+               cbContractInt.Checked:=true;//загрузка Договора Int
+               //Загружаем справочники
+               OKGuideButtonClick(Self);
+
+               cbCompleteReturnInInt.Checked:=true;//загрузка док-тов: Воз.от пок.Int - БН
+               cbReturnInInt.Checked:=true;//проведение/распроведение док-тов: Воз.от пок.Int - БН
+
+               //Распроводим
+               cbComplete.Checked:=false;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+               //
+               //Загружаем
+               OKDocumentButtonClick(Self);
+               //Проводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=false;
+               cbLastComplete.Checked:=false;
+               OKCompleteDocumentButtonClick(Self);
+     end;
+
      if ParamStr(2)='auto'
      then begin
                fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-1)+') as RetV');
@@ -1264,9 +1294,9 @@ begin
                StartDateCompleteEdit.Text:=DateToStr(StartDate);
                EndDateCompleteEdit.Text:=DateToStr(Date-1);
 
-               cbSendUnitBranch.Checked:=true;//загрузка док-тов
-               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов
-               cbBranchSendOnPrice.Checked:=true;//только 1код подразделения
+               cbSendUnitBranch.Checked:=true;//загрузка док-тов : Перемещение с филиалами
+               cbCompleteSendOnPrice.Checked:=true;//проведение/распроведение док-тов: Перемещение с филиалами
+               cbBranchSendOnPrice.Checked:=true;//ограничение: только 1код подразделения
                //значение 1код подразделения
                if ParamStr(3)<>'' then UnitCodeSendOnPriceEdit.Text:=ParamStr(3)
                else UnitCodeSendOnPriceEdit.Text:='22121';
@@ -1291,6 +1321,8 @@ var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
 begin
+     if System.Pos('auto',ParamStr(2))<=0
+     then
      if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
 
      fStop:=false;
@@ -1405,6 +1437,8 @@ begin
                StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
      end;
 
+     if System.Pos('auto',ParamStr(2))<=0
+     then
      if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').') else ShowMessage('Справочники загружены. Time=('+StrTime+').');
      //
      fStop:=true;
@@ -1416,7 +1450,7 @@ var tmpDate1,tmpDate2:TDateTime;
     StrTime:String;
     myRecordCount1,myRecordCount2:Integer;
 begin
-     if ParamStr(2)<>'auto'
+     if System.Pos('auto',ParamStr(2))<=0
      then
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      {if not cbBeforeSave.Checked
@@ -1555,7 +1589,7 @@ begin
 
      if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').')
      else
-         if ParamStr(2)<>'auto'
+         if System.Pos('auto',ParamStr(2))<=0
          then ShowMessage('Документы загружены. Time=('+StrTime+').');
      //
      fStop:=true;
@@ -1688,7 +1722,7 @@ begin
      end;
      //
      //
-     if ParamStr(2)<>'auto'
+     if System.Pos('auto',ParamStr(2))<=0
      then begin
                if (cbInsertHistoryCost.Checked)
                then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
@@ -1810,7 +1844,7 @@ begin
                StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
      end;
 
-     if ParamStr(2)<>'auto'
+     if System.Pos('auto',ParamStr(2))<=0
      then begin
                if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
                else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
@@ -6911,7 +6945,8 @@ begin
         Add('from dba.PriceListItems_byHistory');
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
-        Add('where PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0');
+        Add('where (PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0)');
+        Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-70) or PriceListItems_byHistory.Id_Postgres is null)');
         Add('order by PriceListId_PG, GoodsId_PG, OperDate');
         Open;
         cbPriceListItems.Caption:='5.2. ('+IntToStr(RecordCount)+') Прайс листы - цены';

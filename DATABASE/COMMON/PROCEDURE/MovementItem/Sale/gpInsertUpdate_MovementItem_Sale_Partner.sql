@@ -29,7 +29,9 @@ BEGIN
      -- ѕроверка, т.к. эти параметры мен€ть нельз€
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND Amount <> 0 AND isErased = FALSE)
      THEN
-         IF NOT EXISTS (SELECT MovementItem.Id
+         IF NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_CurrencyDocument() AND ObjectId <> zc_Enum_Currency_Basis())
+        AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_CurrencyPartner() AND ObjectId <> zc_Enum_Currency_Basis())
+        AND NOT EXISTS (SELECT MovementItem.Id
                         FROM MovementItem
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
