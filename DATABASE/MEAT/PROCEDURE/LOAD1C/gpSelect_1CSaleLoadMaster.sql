@@ -27,6 +27,41 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
+     WITH tmpPartner1CLink AS (SELECT Object_Partner1CLink.Id AS ObjectId
+                                    , Object_Partner1CLink.ObjectCode
+                                    , ObjectLink_Partner1CLink_Branch.ChildObjectId AS BranchId_Link
+                                    , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
+                                    , ObjectLink_Partner1CLink_Partner.ChildObjectId  AS PartnerId
+                               FROM Object AS Object_Partner1CLink
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                                         ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                                        AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                                         ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                                        AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                                    LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                                         ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                                        AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+                                    LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                               WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                                 AND Object_Partner1CLink.ObjectCode <> 0
+                                 AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
+                                 AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
+                              )
+        , tmpGoodsByGoodsKind1CLink AS (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
+                                             , Object_GoodsByGoodsKind1CLink.ObjectCode
+                                             , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId_Link
+                                        FROM Object AS Object_GoodsByGoodsKind1CLink
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
+                                                                  ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                                                 AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
+                                                                  ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                                                 AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
+                                        WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
+                                          AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
+                                          AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0  -- еще проверка что есть объект
+                                       )
    SELECT DISTINCT
       Sale1C.UnitId      ,
       Sale1C.VidDoc      ,
@@ -52,57 +87,24 @@ BEGIN
             , Object_Contract_View.ContractTagName
             , Object_Contract_View.ContractStateKindCode 
             , (Count (tmpGoodsByGoodsKind1CLink.ObjectId) <> Count (*)) AS Synchronize      
-      , (SELECT ValueData FROM Object WHERE Id = zfGetPaidKindFrom1CType(Sale1C.VidDoc)) AS PaidKindName
+      , Object_PaidKind.ValueData AS PaidKindName
       , ObjectDesc.ItemName
       
       FROM Sale1C
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
-           LEFT JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
-                           , Object_Partner1CLink.ObjectCode
-                           , ObjectLink_Partner1CLink_Branch.ChildObjectId   AS BranchId
-                           , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
-                           , ObjectLink_Partner1CLink_Partner.ChildObjectId  AS PartnerId
-                       FROM Object AS Object_Partner1CLink
-                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                                ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                               AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
-                                                ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
-                                               AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
-                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-                                                ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
-                                               AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-                      WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
-                        -- AND ObjectLink_Partner1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
-                        AND Object_Partner1CLink.ObjectCode <> 0
-                        AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
-                     ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
-                                          AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Sale1C.PaidKindId
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Sale1C.BranchId
+           LEFT JOIN tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
+                                     AND tmpPartner1CLink.BranchId_Link = Sale1C.BranchId_Link
 
            LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartner1CLink.PartnerId
            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
 
-           LEFT JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id AS ObjectId
-                           , Object_GoodsByGoodsKind1CLink.ObjectCode
-                           , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
-                      FROM Object AS Object_GoodsByGoodsKind1CLink
-                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
-                                                ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
-                                               AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
-                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
-                                                ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
-                                               AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
-                      WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
-                        -- AND ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId = (SELECT Object_BranchLink_View.Id FROM Object_BranchLink_View WHERE Object_BranchLink_View.BranchId = inBranchId AND COALESCE (Object_BranchLink_View.PaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()) -- оптимизируем
-                        AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
-                        AND ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId <> 0 -- еще проверка что есть объект
-                     ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
-                                                   AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+           LEFT JOIN tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
+                                              AND tmpGoodsByGoodsKind1CLink.BranchId_Link = Sale1C.BranchId_Link
 
 
-   WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-     AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+   WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND Sale1C.BranchId = inBranchId
    GROUP BY       Sale1C.UnitId      ,
       Sale1C.VidDoc      ,
       Sale1C.InvNumber   ,
@@ -125,6 +127,7 @@ BEGIN
             , Object_Contract_View.ContractTagName
             , Object_Contract_View.ContractStateKindCode 
       , ObjectDesc.ItemName
+      , Object_PaidKind.ValueData
 ;
 
 END;
@@ -144,4 +147,4 @@ ALTER FUNCTION gpSelect_1CSaleLoadMaster (TDateTime, TDateTime, Integer, TVarCha
 */
 
 -- тест
--- SELECT * FROM gpSelect_1CSaleLoad (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_1CSaleLoadMaster ('01.11.2014'::TDateTime, '30.11.2014'::TDateTime, 8379, inSession:= zfCalc_UserAdmin())
