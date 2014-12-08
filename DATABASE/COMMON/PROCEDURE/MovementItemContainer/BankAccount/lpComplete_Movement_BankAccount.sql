@@ -137,7 +137,7 @@ BEGIN
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN -1 * _tmpItem.OperSumm
-                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
+                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN -1 * _tmpItem.OperSumm_Currency
@@ -149,7 +149,7 @@ BEGIN
                          THEN COALESCE (MovementFloat_Amount.ValueData, 0) - _tmpItem.OperSumm
                     WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          THEN 0
-                    ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (_tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData AS NUMERIC (16, 2))
+                    ELSE -1 * _tmpItem.OperSumm + 1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm_Diff
  
              , _tmpItem.MovementItemId
