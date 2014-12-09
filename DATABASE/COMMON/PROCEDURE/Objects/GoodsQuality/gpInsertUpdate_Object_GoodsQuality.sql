@@ -1,9 +1,9 @@
 -- Function: gpInsertUpdate_Object_GoodsQuality()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChIr,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsQuality(
- INOUT ioId	          Integer   ,    -- ключ объекта <> 
+ INOUT ioId	              Integer   ,    -- ключ объекта <> 
     IN inCode             Integer   ,    -- код объекта <> 
     IN inGoodsQualityName TVarChar  ,    -- Название объекта <Значение ГОСТ, ДСТУ,ТУ, колонка 17> 
     IN inValue1           TVarChar  ,    -- 
@@ -37,7 +37,7 @@ $BODY$
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsQuality(), inCode, inGoodsQualityName
-                                , inAccessKeyId:= (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId));
+                                , inAccessKeyId:= CASE WHEN COALESCE (inBranchId, 0) = 0 THEN zc_Enum_Process_AccessKey_GoodsQualityDnepr() ELSE (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId) END);
    
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value1(), ioId, inValue1);
@@ -67,7 +67,7 @@ $BODY$
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsQuality (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,TVarChIr,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,Integer, TVarChar) OWNER TO postgres;
   
  /*-------------------------------------------------------------------------------*/
 /*

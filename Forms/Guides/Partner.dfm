@@ -316,8 +316,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -886,7 +886,7 @@ object PartnerForm: TPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 576
+    Left = 352
     Top = 160
   end
   object RefreshDispatcher: TRefreshDispatcher

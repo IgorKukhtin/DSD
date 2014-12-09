@@ -444,10 +444,8 @@ type
     bbReport_GoodsMI_ProductionUnion: TdxBarButton;
     actReport_GoodsMI_ProductionUnionMD: TdsdOpenForm;
     bbReport_GoodsMI_ProductionUnionMD: TdxBarButton;
-    actGoodsQuality: TdsdOpenForm;
-    bbGoodsQuality: TdxBarButton;
     actProductionUnionTech: TdsdOpenForm;
-    bbProductionUnionTech: TdxBarButton;    
+    bbProductionUnionTech: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }
