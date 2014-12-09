@@ -75,7 +75,7 @@ AS
            , CAST ('PrintMovement_Sale32516492' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32516492', '32516482')
+       AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Adventis + Billa + Kray

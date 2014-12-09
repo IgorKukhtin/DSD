@@ -119,8 +119,8 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
            , Object_Branch.ValueData                  AS BranchName
 
-           , COALESCE (MovementLinkMovement_ChildEDI.MovementId, 0) <> 0     AS isEDI
-           , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean AS isElectron
+           , COALESCE (MovementLinkMovement_ChildEDI.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean  AS isElectron
 
        FROM (SELECT Movement.Id
              FROM tmpStatus

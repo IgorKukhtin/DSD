@@ -41,10 +41,8 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfSelect_ObjectHistory_PriceListItem (Integer, TDateTime) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

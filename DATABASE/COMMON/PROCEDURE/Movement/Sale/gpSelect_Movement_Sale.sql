@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
              , isEDI Boolean
+             , isElectron Boolean
              , isError Boolean
               )
 AS
@@ -119,6 +120,7 @@ BEGIN
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE(MovementBoolean_Electron.ValueData, FALSE)          AS isElectron
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
@@ -280,6 +282,10 @@ BEGIN
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId -- Movement_DocumentMaster.Id
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Electron
+                                      ON MovementBoolean_Electron.MovementId = MovementLinkMovement_Master.MovementChildId
+                                     AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Master
                                          ON MovementLinkObject_To_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_To_Master.DescId = zc_MovementLinkObject_To()

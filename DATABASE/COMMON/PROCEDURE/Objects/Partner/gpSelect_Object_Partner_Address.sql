@@ -34,13 +34,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
               )
 AS
 $BODY$
-BEGIN
+   DECLARE vbUserId Integer;
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
+   DECLARE vbIsConstraint Boolean;
+   DECLARE vbObjectId_Constraint Integer;
+BEGIN
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner_Address());
+   vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- определяется уровень доступа
+   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
    RETURN QUERY
-
    WITH tmpContactPerson as ( SELECT
                                      Object_ContactPerson.ValueData   AS Name
                                    , ObjectString_Phone.ValueData     AS Phone
@@ -286,6 +293,8 @@ BEGIN
     WHERE Object_Partner.DescId = zc_Object_Partner()
       AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
       AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
+      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+           OR vbIsConstraint = FALSE)
    ;
 
 END;

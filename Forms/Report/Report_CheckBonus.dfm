@@ -1,25 +1,25 @@
 inherited Report_CheckBonusForm: TReport_CheckBonusForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
   ClientHeight = 324
-  ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 358
+  ClientWidth = 1020
+  ExplicitWidth = 1036
+  ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1110
+    Width = 1020
     Height = 267
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1110
     ExplicitHeight = 267
     ClientRectBottom = 267
-    ClientRectRight = 1110
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
-        Width = 1110
+        Width = 1020
         Height = 267
         ExplicitWidth = 1110
         ExplicitHeight = 267
@@ -226,7 +226,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     end
   end
   inherited Panel: TPanel
-    Width = 1110
+    Width = 1020
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
       EditValue = 41640d
@@ -268,7 +268,18 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           StoredProc = spSelect
         end>
-      Caption = 'actDocBonus'
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')>'
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087 +
+        #1077#1088#1080#1086#1076#1086#1074')>'
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089 +
+        #1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1086#1090#1095#1077#1090#1072'?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076 +
+        #1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1086#1090#1095#1077#1090#1072'.'
     end
   end
   inherited MasterDS: TDataSource
@@ -311,11 +322,11 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -324,6 +335,18 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton

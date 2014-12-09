@@ -579,8 +579,7 @@ BEGIN
                               , COALESCE (MIFloat_Price.ValueData, 0)
                               , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
-       SELECT
-             Object_GoodsByGoodsKind_View.Id AS Id
+      SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
@@ -703,15 +702,16 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
-            LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = tmpMI.GoodsId
-                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI.GoodsKindId
-
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+
+            LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
+                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
@@ -756,12 +756,6 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
  05.02.14                                                       *
 */
 
-/*
-BEGIN;
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 570596, inSession:= '5');
-
-COMMIT;
-*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 135428, inSession:= '2');
 -- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= '2');

@@ -26,27 +26,12 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-     -- !!!
-     IF vbMovementDescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-     THEN
-         -- таблица - Проводки
-         CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-         CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
-     END IF;
 
      -- !!!1 - Loss!!!
      IF vbMovementDescId = zc_Movement_Loss()
      THEN
-              -- !!!Loss!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
-              -- !!!Loss!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsId_Item Integer
-                               , OperCount TFloat
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_Loss_CreateTemp();
              -- !!! проводим - Loss !!!
              PERFORM lpComplete_Movement_Loss (inMovementId     := inMovementId
                                              , inUserId         := zfCalc_UserAdmin() :: Integer);
@@ -55,17 +40,9 @@ BEGIN
      -- !!!2 - SendOnPrice!!!
      IF vbMovementDescId = zc_Movement_SendOnPrice()
      THEN
-              -- !!!SendOnPrice!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, isLossMaterials Boolean, isRestoreAccount_60000 Boolean, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss_20204 Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_60000 Integer, AccountId_60000 Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat, OperSumm_Account_60000 TFloat) ON COMMIT DROP;
-              -- !!!SendOnPrice!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer, isLossMaterials Boolean
-                                        , MIContainerId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                        , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
-                                        , InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                        , BusinessId_From Integer, BusinessId_To Integer
-                                        , isPartionCount Boolean, isPartionSumm Boolean
-                                        , PartionGoodsId_From Integer, PartionGoodsId_To Integer) ON COMMIT DROP;
-             -- !!! проводим - Loss !!!
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
+             -- !!! проводим - SendOnPrice !!!
              PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := inMovementId
                                                     , inUserId         := zfCalc_UserAdmin() :: Integer);
 
@@ -73,20 +50,8 @@ BEGIN
      -- !!!3 - ReturnIn!!!
      IF vbMovementDescId = zc_Movement_ReturnIn()
      THEN
-             -- таблица - альтернативные ContainerId
-             CREATE TEMP TABLE _tmpList_Alternative (ContainerId_Goods Integer, ContainerId_Summ_Alternative Integer, ContainerId_Summ Integer) ON COMMIT DROP;
-              -- !!!SendOnPrice!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10800 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-              -- !!!SendOnPrice!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                                        , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                        , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                                        , ContainerId_ProfitLoss_10700 Integer
-                                        , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                        , BusinessId_To Integer
-                                        , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
-                                        , PartionGoodsId Integer
-                                        , Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
              -- !!! проводим - ReturnIn !!!
              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
                                                  , inUserId         := zfCalc_UserAdmin() :: Integer
@@ -96,18 +61,8 @@ BEGIN
      -- !!!4 - Sale!!!
      IF vbMovementDescId = zc_Movement_Sale()
      THEN
-              -- !!!Sale!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-              -- !!!Sale!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                                        , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                        , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
-                                        , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer
-                                        , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                        , BusinessId_From Integer
-                                        , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
-                                        , PartionGoodsId Integer
-                                        , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_Sale_CreateTemp();
              -- !!! проводим - Sale !!!
              PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                              , inUserId         := zfCalc_UserAdmin() :: Integer
@@ -116,17 +71,8 @@ BEGIN
      -- !!!5 - ReturnOut!!!
      IF vbMovementDescId = zc_Movement_ReturnOut()
      THEN
-              -- !!!ReturnOut!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_70203 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-              -- !!!ReturnOut!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                                        , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                        , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                                        , ContainerId_ProfitLoss_70203 Integer
-                                        , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                        , BusinessId_From Integer
-                                        , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
-                                        , PartionGoodsId Integer) ON COMMIT DROP;
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_ReturnOut_CreateTemp();
              -- !!! проводим - ReturnOut !!!
              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
                                                   , inUserId         := zfCalc_UserAdmin() :: Integer
@@ -136,6 +82,8 @@ BEGIN
      -- !!!6.1. - Send!!!
      IF vbMovementDescId = zc_Movement_Send()
      THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_Send_CreateTemp();
              -- !!! проводим - Send !!!
              PERFORM gpComplete_Movement_Send (inMovementId     := inMovementId
                                              , inIsLastComplete := NULL
@@ -144,6 +92,8 @@ BEGIN
      -- !!!6.2. - ProductionUnion!!!
      IF vbMovementDescId = zc_Movement_ProductionUnion()
      THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
              -- !!! проводим - ProductionUnion !!!
              PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
                                                         , inIsLastComplete := NULL
@@ -152,6 +102,8 @@ BEGIN
      -- !!!6.3. - ProductionSeparate!!!
      IF vbMovementDescId = zc_Movement_ProductionSeparate()
      THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
              -- !!! проводим - ProductionSeparate !!!
              PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
                                                            , inIsLastComplete := NULL

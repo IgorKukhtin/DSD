@@ -155,6 +155,9 @@ type
     cxLabel21: TcxLabel;
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
+    spUpdatePriceCurrency: TdsdStoredProc;
+    actUpdatePriceCurrency: TdsdExecStoredProc;
+    bbUpdatePriceCurrency: TdxBarButton;
   private
     { Private declarations }
   public

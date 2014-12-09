@@ -15,13 +15,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
 
-     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                  , inUserId     := vbUserId);
+     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Sale())
+     THEN
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+     END IF;
 
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Sale_CreateTemp();
-
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                      , inUserId         := vbUserId

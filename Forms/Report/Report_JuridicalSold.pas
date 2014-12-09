@@ -103,6 +103,8 @@ type
     edCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
     InfoMoneyName_all: TcxGridDBColumn;
+    SaleSumm_10300: TcxGridDBColumn;
+    ReturnInSumm_10300: TcxGridDBColumn;
   private
     { Private declarations }
   public

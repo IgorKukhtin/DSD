@@ -4,31 +4,60 @@
 
 CREATE OR REPLACE VIEW Constant_ProfitLoss_Sale_ReturnIn_View
 AS
-   SELECT zc_Enum_ProfitLoss_10101() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10102() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost -- Сумма реализации: Продукция + Ирна
+    -- Сумма реализации: Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10101() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10102() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
   UNION ALL 
-   SELECT zc_Enum_ProfitLoss_10201() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10202() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost -- Скидка по акциям: Продукция + Ирна
+   -- Разница с оптовыми ценами (скидка по акциям): Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10200() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10201() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10200() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10202() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
   UNION ALL 
-   SELECT zc_Enum_ProfitLoss_10301() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10302() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost -- Скидка дополнительная: Продукция + Ирна
-  UNION ALL 
-   SELECT zc_Enum_ProfitLoss_10701() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10702() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost -- Сумма возвратов: Продукция + Ирна
+   -- Скидка дополнительная: Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10300() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10301() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10300() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10302() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+
+  UNION ALL
+   -- Сумма возвратов: Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10700() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10701() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10700() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10702() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
 
   UNION ALL 
-   SELECT zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost -- Реализация нашим компаниям: Ирна + Чапли
-  UNION ALL 
-   SELECT zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_70112() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost -- Возвраты от наших компаний: Ирна + Чапли
+    -- Реализация нашим компаниям: Ирна + Чапли
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   -- Возвраты от наших компаний: Ирна + Чапли
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70112() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
 
+  UNION ALL 
+   -- Себестоимость реализации: 104..Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10400() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10401() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10400() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10402() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
+  UNION ALL 
+   -- Себестоимость возвратов: 108..Продукция + Ирна
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10800() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10801() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10800() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10802() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost
 
   UNION ALL 
-   SELECT zc_Enum_ProfitLoss_10401() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10402() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost -- Себестоимость реализации: Продукция + Ирна
+   -- Реализация нашим компаниям: Ирна + Чапли
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
   UNION ALL 
-   SELECT zc_Enum_ProfitLoss_10801() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_10802() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost -- Себестоимость возвратов: Продукция + Ирна
-
-  UNION ALL 
-   SELECT zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost -- Реализация нашим компаниям: Ирна + Чапли
-  UNION ALL 
-   SELECT zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost UNION ALL SELECT zc_Enum_ProfitLoss_70112() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost -- Возвраты от наших компаний: Ирна + Чапли
-
-    ;
+   -- Возвраты от наших компаний: Ирна + Чапли
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70112() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost
+  ;
 
 
 ALTER TABLE Constant_ProfitLoss_Sale_ReturnIn_View OWNER TO postgres;
@@ -44,4 +73,4 @@ ALTER TABLE Constant_ProfitLoss_Sale_ReturnIn_View OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Constant_ProfitLoss_Sale_ReturnIn_View ORDER BY 1
+-- SELECT * FROM Constant_ProfitLoss_Sale_ReturnIn_View LEFT JOIN Object_ProfitLoss_View ON Object_ProfitLoss_View.ProfitLossId = Constant_ProfitLoss_Sale_ReturnIn_View.ProfitLossId ORDER BY 3

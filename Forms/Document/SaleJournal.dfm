@@ -2,26 +2,26 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 675
+  ExplicitWidth = 1036
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 582
+    Height = 584
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 582
-    ClientRectBottom = 578
-    ClientRectRight = 1016
+    ExplicitHeight = 584
+    ClientRectBottom = 584
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1014
-      ExplicitHeight = 576
+      ExplicitWidth = 1020
+      ExplicitHeight = 584
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 576
-        ExplicitWidth = 1014
-        ExplicitHeight = 576
+        Width = 1020
+        Height = 584
+        ExplicitWidth = 1020
+        ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -507,6 +507,13 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 30
+          end
+          object colIsElectron: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'.'
+            DataBinding.FieldName = 'isElectron'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 30
           end
         end
@@ -1109,6 +1116,363 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.ParamType = ptInput
     end
   end
+  object spTax: TdsdStoredProc [5]
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outInvNumberPartner_Master'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner_Master'
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 312
+  end
+  object DocumentTaxKindGuides: TdsdGuides [6]
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+  end
+  object PrintHeaderCDS: TClientDataSet [7]
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet [8]
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
+  end
+  object spSelectPrint: TdsdStoredProc [9]
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 248
+  end
+  object spSelectTax_Client: TdsdStoredProc [10]
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 296
+  end
+  object spSelectTax_Us: TdsdStoredProc [11]
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 344
+  end
+  object spGetReporNameTax: TdsdStoredProc [12]
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportNameTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSaleTax'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 360
+  end
+  object spGetReportName: TdsdStoredProc [13]
+    StoredProcName = 'gpGet_Movement_Sale_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSale'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 416
+  end
+  object spGetReporNameBill: TdsdStoredProc [14]
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportNameBill'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSaleBill'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 408
+  end
+  object PrintItemsSverkaCDS: TClientDataSet [15]
+    Aggregates = <>
+    Params = <>
+    Left = 644
+    Top = 302
+  end
+  object spChecked: TdsdStoredProc [16]
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 435
+  end
+  object spSelectPrintPack: TdsdStoredProc [17]
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 367
+    Top = 272
+  end
+  object spSelectPrintPack21: TdsdStoredProc [18]
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 127
+    Top = 488
+  end
+  object spSelectPrintPack22: TdsdStoredProc [19]
+    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 191
+    Top = 504
+  end
+  object spSelectPrintInvoice: TdsdStoredProc [20]
+    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 447
+    Top = 416
+  end
   inherited MasterDS: TDataSource
     Left = 64
     Top = 139
@@ -1156,7 +1520,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1370,363 +1734,6 @@ inherited SaleJournalForm: TSaleJournalForm
       end>
     Left = 408
     Top = 344
-  end
-  object spTax: TdsdStoredProc [13]
-    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId_inf'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'outInvNumberPartner_Master'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'InvNumberPartner_Master'
-        DataType = ftString
-      end
-      item
-        Name = 'outDocumentTaxKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-      end
-      item
-        Name = 'outDocumentTaxKindName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindName'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 296
-    Top = 312
-  end
-  object DocumentTaxKindGuides: TdsdGuides [14]
-    KeyField = 'Id'
-    LookupControl = edDocumentTaxKind
-    FormNameParam.Value = 'TDocumentTaxKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TDocumentTaxKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 912
-  end
-  object PrintHeaderCDS: TClientDataSet [15]
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 217
-  end
-  object PrintItemsCDS: TClientDataSet [16]
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 270
-  end
-  object spSelectPrint: TdsdStoredProc [17]
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 535
-    Top = 248
-  end
-  object spSelectTax_Client: TdsdStoredProc [18]
-    StoredProcName = 'gpSelect_Movement_Tax_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsSverkaCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisClientCopy'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 535
-    Top = 296
-  end
-  object spSelectTax_Us: TdsdStoredProc [19]
-    StoredProcName = 'gpSelect_Movement_Tax_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsSverkaCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisClientCopy'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 535
-    Top = 344
-  end
-  object spGetReporNameTax: TdsdStoredProc [20]
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameTax'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleTax'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 704
-    Top = 360
-  end
-  object spGetReportName: TdsdStoredProc [21]
-    StoredProcName = 'gpGet_Movement_Sale_ReportName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSale'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 704
-    Top = 416
-  end
-  object spGetReporNameBill: TdsdStoredProc [22]
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameBill'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleBill'
-        DataType = ftString
-      end>
-    PackSize = 1
-    Left = 536
-    Top = 408
-  end
-  object PrintItemsSverkaCDS: TClientDataSet [23]
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 302
-  end
-  object spChecked: TdsdStoredProc [24]
-    StoredProcName = 'gpUpdateMovement_Checked'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inChecked'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Checked'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end>
-    PackSize = 1
-    Left = 320
-    Top = 435
-  end
-  object spSelectPrintPack: TdsdStoredProc [25]
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 367
-    Top = 272
-  end
-  object spSelectPrintPack21: TdsdStoredProc [26]
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print21'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 127
-    Top = 488
-  end
-  object spSelectPrintPack22: TdsdStoredProc [27]
-    StoredProcName = 'gpSelect_Movement_Sale_Pack_Print22'
-    DataSet = PrintItemsCDS
-    DataSets = <
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 191
-    Top = 504
-  end
-  object spSelectPrintInvoice: TdsdStoredProc [28]
-    StoredProcName = 'gpSelect_Movement_Sale_Invoice_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 447
-    Top = 416
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Sale'

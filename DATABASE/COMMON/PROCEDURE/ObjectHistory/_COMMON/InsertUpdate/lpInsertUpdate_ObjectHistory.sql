@@ -1,103 +1,123 @@
-п»ї--DROP FUNCTION lpInsertUpdate_ObjectHistory(integer, integer, integer, TDateTime);
+-- DROP FUNCTION lpInsertUpdate_ObjectHistory (integer, integer, integer, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory(
 INOUT ioId integer, 
-IN inDescId integer, 
-IN inObjectId integer, 
-IN inOperDate TDateTime)
- AS
+   IN inDescId integer, 
+   IN inObjectId integer, 
+   IN inOperDate TDateTime
+)
+AS
 $BODY$
 DECLARE
   lEndDate TDateTime;
   lStartDate TDateTime;
   PriorId Integer;
+  findId Integer;
 BEGIN
-  -- РС‰РµРј ioId, РµСЃР»Рё РѕРЅРѕ СЂР°РІРЅРѕ 0.
+
   IF ioId = 0 THEN
+     -- Ищем ioId, если он равен 0
      SELECT ObjectHistory.Id INTO ioId
-       FROM ObjectHistory
-      WHERE ObjectHistory.DescId = inDescId 
-        AND ObjectHistory.ObjectId = inObjectId
-        AND ObjectHistory.StartDate = inOperDate;
-      -- Р•СЃР»Рё РЅР°С€Р»Рё Р·Р°РїРёСЃСЊ С‚Р°РєСѓСЋ, С‚Рѕ РµРµ Рё Р±СѓРґРµРј РјРµРЅСЏС‚СЊ
-      IF COALESCE(ioId, 0) <> 0 THEN
-         RETURN;
-      END IF;
+     FROM ObjectHistory
+     WHERE ObjectHistory.DescId = inDescId 
+       AND ObjectHistory.ObjectId = inObjectId
+       AND ObjectHistory.StartDate = inOperDate;
+     -- Если нашли запись такую, то ее и будем менять
+     IF COALESCE (ioId, 0) <> 0 THEN
+        RETURN;
+     END IF;
+  ELSE
+     -- Ищем любой Id, если он начинается с той же даты
+     findId:= (SELECT ObjectHistory.Id
+               FROM ObjectHistory
+               WHERE ObjectHistory.DescId = inDescId 
+                 AND ObjectHistory.ObjectId = inObjectId
+                 AND ObjectHistory.StartDate = inOperDate);
+     -- если это "другой" элемент
+     IF findId > 0 AND findId <> ioId
+     THEN
+         -- удалили "другой" элемент т.к. у него такие же параметры
+         DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId = findId;
+         DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId = findId;
+         DELETE FROM ObjectHistoryString WHERE ObjectHistoryId = findId;
+         DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId = findId;
+         DELETE FROM ObjectHistory WHERE Id = findId;
+     END IF;
   END IF;
 
-  -- Р—РґРµСЃСЊ РЅР°РґРѕ РёР·РјРµРЅРёС‚СЊ СЃРІ-РІРѕ EndDate Сѓ РЅРѕРІРѕРіРѕ РїСЂРµРґС‹РґСѓС‰РµРіРѕ РёС‚РµРјР°. 
-  UPDATE ObjectHistory SET EndDate = inOperDate
-   WHERE Id = (SELECT Id FROM ObjectHistory 
-                WHERE ObjectHistory.DescId = inDescId 
-                  AND ObjectHistory.ObjectId = inObjectId
-                  AND ObjectHistory.StartDate < inOperDate
-             ORDER BY ObjectHistory.StartDate DESC
-                LIMIT 1);
 
-  -- Р•СЃР»Рё РјРµРЅСЏРµС‚СЃСЏ Р·Р°РїРёСЃСЊ, С‚Рѕ РЅР°РґРѕ Р·Р°РїРѕРјРЅРёС‚СЊ РїСЂРµРґС‹РґСѓС‰РёР№ РР”
+  -- Здесь надо изменить св-во EndDate у предыдущего элемента относительно inOperDate
+  UPDATE ObjectHistory SET EndDate = inOperDate
+  WHERE Id = (SELECT Id FROM ObjectHistory 
+              WHERE ObjectHistory.DescId = inDescId 
+                AND ObjectHistory.ObjectId = inObjectId
+                AND ObjectHistory.StartDate < inOperDate
+              ORDER BY ObjectHistory.StartDate DESC
+              LIMIT 1);
+
+
+  -- Если меняется запись, то надо запомнить предыдущий ИД
   IF ioId <> 0 THEN
+     -- получаем дату текущего элемента
      SELECT StartDate INTO lStartDate FROM ObjectHistory WHERE Id = ioId;
+     -- параметры предыдущего элемента относительно ioId
      SELECT Id, StartDate INTO PriorId, lStartDate
-     FROM ObjectHistory 
-    WHERE ObjectHistory.DescId = inDescId 
-      AND ObjectHistory.ObjectId = inObjectId
-      AND ObjectHistory.StartDate < lStartDate
- ORDER BY ObjectHistory.StartDate DESC
-    LIMIT 1;
+     FROM ObjectHistory
+     WHERE ObjectHistory.DescId = inDescId
+       AND ObjectHistory.ObjectId = inObjectId
+       AND ObjectHistory.StartDate < lStartDate
+     ORDER BY ObjectHistory.StartDate DESC
+     LIMIT 1;
   END IF;
 
   lEndDate := NULL;
 
-   -- РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј EndDate. Р”Р»СЏ СЌС‚РѕРіРѕ РёС‰РµРј РёР»Рё Р±Р»РёР¶Р°Р№С€СѓСЋ Р·Р°РїРёСЃСЊ Рё Р±РµСЂРµРј РѕС‚С‚СѓРґР° StartDate РёР»Рё РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РґР°С‚Сѓ
-  SELECT MIN(StartDate) INTO lEndDate
-    FROM ObjectHistory
-   WHERE ObjectHistory.DescId = inDescId 
-     AND ObjectHistory.ObjectId = inObjectId
-     AND ObjectHistory.StartDate > inOperDate
-     AND ObjectHistory.Id <> ioId;
+  -- начальная дата следующего элемента относительно inOperDate
+  SELECT MIN (StartDate) INTO lEndDate
+  FROM ObjectHistory
+  WHERE ObjectHistory.DescId = inDescId
+    AND ObjectHistory.ObjectId = inObjectId
+    AND ObjectHistory.StartDate > inOperDate
+    AND ObjectHistory.Id <> ioId;
 
+  -- расчет EndDate для текущего элемента: или начальная дата следующего элемента относительно inOperDate или максимальная дату
   lEndDate := COALESCE(lEndDate, zc_DateEnd());
 
   IF COALESCE(ioId, 0) = 0 THEN
-     /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ РєР»Р°СЃСЃР° РѕР±СЉРµРєС‚Р°> , <РєРѕРґ РѕР±СЉРµРєС‚Р°> , <РґР°РЅРЅС‹Рµ>
-        Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ <РєР»СЋС‡Р°> */
+     -- дабавили текущий элемент: <ключ класса объекта> , <код объекта> , <данные> и вернули значение <ключа>
      INSERT INTO ObjectHistory (DescId, ObjectId, StartDate, EndDate)
             VALUES (inDescId, inObjectId, inOperDate, lEndDate) RETURNING Id INTO ioId;
   ELSE
-     /* РёР·РјРµРЅРёС‚СЊ <РєРѕРґ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡Р°> */
+     -- изменили текущий элемент по значению <ключа>: <код объекта>, <данные>
      UPDATE ObjectHistory SET StartDate = inOperDate, EndDate = lEndDate WHERE Id = ioId;
      IF NOT found THEN
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ РєР»Р°СЃСЃР° РѕР±СЉРµРєС‚Р°> , <РєРѕРґ РѕР±СЉРµРєС‚Р°> , <РґР°РЅРЅС‹Рµ> СЃРѕ Р·РЅР°С‡РµРЅРёРµРј <РєР»СЋС‡Р°> */
+       -- дабавили текущий элемент: <ключ класса объекта>, <код объекта> , <данные> со значением <ключа>
        INSERT INTO ObjectHistory (Id, DescId, ObjectId, StartDate, EndDate)
                     VALUES (ioId, inDescId, inObjectId, inOperDate, lEndDate);
      END IF;
   END IF;
 
-  IF COALESCE(PriorId, 0) <> 0 THEN
-     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN(StartDate)     
-                                           FROM ObjectHistory
-                                          WHERE ObjectHistory.DescId = inDescId 
-                                            AND ObjectHistory.ObjectId = inObjectId
-                                            AND ObjectHistory.StartDate > lStartDate), zc_DateEnd())  
+
+  -- если такой элемент был найден
+  IF COALESCE (PriorId, 0) <> 0
+  THEN
+     -- изменили EndDate у предыдущего элемента относительно ioId
+     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN (StartDate)     
+                                                  FROM ObjectHistory
+                                                  WHERE ObjectHistory.DescId = inDescId 
+                                                    AND ObjectHistory.ObjectId = inObjectId
+                                                    AND ObjectHistory.StartDate > lStartDate
+                                                 ), zc_DateEnd())  
      WHERE Id = PriorId;
   END IF;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 END;           
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_ObjectHistory(integer, integer, integer, TDateTime)
-  OWNER TO postgres; 
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.12.14                                        * add удалили "другой" элемент т.к. у него такие же параметры
+ 01.01.13                        *
+*/

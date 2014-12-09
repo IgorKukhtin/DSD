@@ -15,17 +15,16 @@ BEGIN
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat, OperSumm_Currency TFloat, OperSumm_80103 TFloat
+                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat, OperSumm_Currency TFloat, OperSumm_80103 TFloat
                                , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer, ContainerId_ProfitLoss_80103 Integer
                                , ContainerId_Partner Integer, ContainerId_Currency Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_From Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
                                , PartionGoodsId Integer
-                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+                               , PriceListPrice TFloat, Price TFloat, Price_original TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -34,4 +33,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpComplete_Movement_Sale_CreateTemp ()

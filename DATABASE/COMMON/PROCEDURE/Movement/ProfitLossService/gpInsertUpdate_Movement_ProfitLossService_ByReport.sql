@@ -1,27 +1,19 @@
-
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReport 
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, TVarChar );
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, Integer);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
-   --OUT ioId                       Integer   ,
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
-
     IN inSession                  TVarChar        -- сессия пользователя
 )
-RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbId Integer;
-
 BEGIN
-  
-       -- проверка прав пользователя на вызов процедуры
-       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
        
        
      /*   -- удаляем все документы сформированные автоматически
@@ -38,29 +30,29 @@ BEGIN
        ;
       */
       
-            -- создаются временные таблицы - для формирование данных для проводок
+     -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
+     -- 
      PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
-                                                     , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                     , inOperDate        :=inEndDate
-                                                     , inAmountIn        := 0  :: tfloat
-                                                     , inAmountOut       := Sum_Bonus
-                                                     , inComment         := '' :: TVarChar
-                                                     , inContractId      := ContractId_find
-                                                     , inInfoMoneyId     := InfoMoneyId_find
-                                                     , inJuridicalId     := JuridicalId
-                                                     , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
-                                                     , inUnitId          := 0  :: Integer
-                                                     , inContractConditionKindId   := ConditionKindId
-                                                     , inBonusKindId     := BonusKindId
-                                                     , inisLoad          := TRUE
-                                                     , inUserId          := vbUserId     --zfCalc_UserAdmin() :: Integer
-                                                      )
-    from gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) as a
-    where Sum_Bonus <> 0    -- and Sum_Bonus =30
-
-    ; 
+                                                      , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
+                                                      , inOperDate        := inEndDate
+                                                      , inAmountIn        := 0  :: tfloat
+                                                      , inAmountOut       := Sum_Bonus
+                                                      , inComment         := '' :: TVarChar
+                                                      , inContractId      := ContractId_find
+                                                      , inInfoMoneyId     := InfoMoneyId_find
+                                                      , inJuridicalId     := JuridicalId
+                                                      , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
+                                                      , inUnitId          := 0 :: Integer
+                                                      , inContractConditionKindId   := ConditionKindId
+                                                      , inBonusKindId     := BonusKindId
+                                                      , inisLoad          := TRUE
+                                                      , inUserId          := vbUserId
+                                                       )
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) AS tmp
+     WHERE Sum_Bonus <> 0
+    ;
 
 END;
 $BODY$
@@ -70,12 +62,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  03.12.14         *
-
 */
 
 -- тест
---SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport (inStartDate := '01.01.2013', inEndDate := '01.01.2013' , inSession:= '2')
---select * from gpInsertUpdate_Movement_ProfitLossService_ByReport(inStartDate := ('01.11.2014')::TDateTime , inEndDate := ('30.11.2014')::TDateTime ,  inSession := zfCalc_UserAdmin());
-
--- Function: lpComplete_Movement_All_CreateTemp ()
-
+-- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService_ByReport (inStartDate := '01.01.2013', inEndDate := '01.01.2013' , inSession:= zfCalc_UserAdmin())

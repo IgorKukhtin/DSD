@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
--- DROP FUNCTION gpInsertUpdate_MI_ProductionUnion_Child();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -19,10 +19,11 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionSeparate());
+
+   -- меняем параметр
+   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
@@ -42,8 +43,7 @@ BEGIN
    
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

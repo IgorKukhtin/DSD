@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
--- DROP FUNCTION gpInsertUpdate_MI_ProductionUnion_Master();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -21,10 +21,8 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ProductionUnion());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
 
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -51,8 +49,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

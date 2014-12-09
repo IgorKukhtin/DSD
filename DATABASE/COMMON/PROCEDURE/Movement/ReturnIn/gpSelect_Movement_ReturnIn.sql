@@ -102,7 +102,7 @@ BEGIN
            , Object_TaxKind.Id                	        AS DocumentTaxKindId
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
 
-           , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0  AS isEDI
+           , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -333,4 +333,4 @@ END $$;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2014', inEndDate:= '02.01.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

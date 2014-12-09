@@ -35,7 +35,7 @@ BEGIN
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-         AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
+         -- AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
          AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId;
 
 END;

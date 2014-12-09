@@ -169,34 +169,8 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
-     -- таблица - <Проводки>
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
-
-     -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , MIContainerId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat
-                               , InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_To Integer
-                               , UnitId_Item Integer, StorageId_Item Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
-     -- таблица - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_From Integer, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
-
-     -- таблица - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer
-                                    , ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                    , OperCount TFloat
-                                    , InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                    , BusinessId_From Integer
-                                    , UnitId_Item Integer, PartionGoodsId_Item Integer
-                                    , isPartionCount Boolean, isPartionSumm Boolean
-                                    , PartionGoodsId Integer) ON COMMIT DROP;
-     -- таблица - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
-
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
 
      -- заполняем таблицу - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
@@ -236,7 +210,7 @@ BEGIN
              (SELECT MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , Movement.OperDate AS PartionGoodsDate
@@ -244,9 +218,9 @@ BEGIN
                    , MovementItem.Amount AS OperCount
 
                   -- Управленческие назначения
-                  , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+                  , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                   -- Статьи назначения
-                  , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+                  , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
                     -- Бизнес из Товара
                   , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId_To
@@ -281,7 +255,7 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                   LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionUnion()
@@ -329,7 +303,7 @@ BEGIN
                    , MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
@@ -337,9 +311,9 @@ BEGIN
                    , MovementItem.Amount AS OperCount
 
                      -- Управленческие назначения
-                   , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+                   , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                      -- Статьи назначения
-                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+                   , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
                      -- Бизнес из Товара
                    , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId_From
@@ -377,7 +351,7 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                   LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionUnion()
@@ -553,6 +527,7 @@ BEGIN
                                                  , inMovementItemId := _tmpItem.MovementItemId
                                                  , inParentId       := NULL
                                                  , inContainerId    := _tmpItem.ContainerId_GoodsTo -- был опеределен выше
+                                                 , inAnalyzerId     := NULL
                                                  , inAmount         := _tmpItem.OperCount
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
@@ -651,6 +626,7 @@ BEGIN
                                                       , inMovementItemId := _tmpItem.MovementItemId
                                                       , inParentId       := NULL
                                                       , inContainerId    := _tmpItemSumm_group.ContainerId_To
+                                                      , inAnalyzerId     := NULL
                                                       , inAmount         := _tmpItemSumm_group.OperSumm
                                                       , inOperDate       := vbOperDate
                                                       , inIsActive       := TRUE

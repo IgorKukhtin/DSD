@@ -102,8 +102,8 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData AS InvNumberBranch
            , Object_Branch.ValueData                  AS BranchName
 
-           , COALESCE(MovementLinkMovement_Tax.MovementId, 0) <> 0   AS isEDI
-           , COALESCE(MovementBoolean_Electron.ValueData, false)     AS isElectron
+           , COALESCE(MovementLinkMovement_Tax.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE(MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -124,7 +124,7 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
-                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                      ON MovementBoolean_Electron.MovementId = Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -228,8 +228,6 @@ BEGIN
            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
-
-
            ;
 
 END;

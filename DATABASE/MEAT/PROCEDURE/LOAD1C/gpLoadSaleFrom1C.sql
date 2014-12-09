@@ -42,8 +42,8 @@ BEGIN
 
 
      -- таблица - <ѕроводки>
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (MovementItemId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIReport_insert (MovementItemId Integer) ON COMMIT DROP;
      -- !!!tmp!!! таблица - суммовые элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer) ON COMMIT DROP;
      -- !!!tmp!!! таблица - количественные элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
@@ -296,21 +296,15 @@ BEGIN
           IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
           THEN
               -- !!!удаление!!!
+              DROP TABLE _tmpMIContainer_insert;
+              DROP TABLE _tmpMIReport_insert;
               DROP TABLE _tmpItemSumm;
               DROP TABLE _tmpItem;
-              -- !!!Loss!!! таблица - суммовые элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-              CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
-              -- !!!Loss!!! таблица - количественные элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-              CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, PartionGoodsId_Item Integer
-                               , OperCount TFloat
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
-               -- ѕровели существующий документ - Loss
-               PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
-                                               , inUserId         := vbUserId);
+             -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+              PERFORM lpComplete_Movement_Loss_CreateTemp();
+              -- ѕровели существующий документ - Loss
+              PERFORM lpComplete_Movement_Loss (inMovementId     := vbMovementId
+                                              , inUserId         := vbUserId);
           END IF;
           END IF;
 
@@ -319,24 +313,12 @@ BEGIN
 
 
      -- !!!удаление!!!
+     DROP TABLE _tmpMIContainer_insert;
+     DROP TABLE _tmpMIReport_insert;
      DROP TABLE _tmpItemSumm;
      DROP TABLE _tmpItem;
-     -- !!!возвраты!!! таблица - альтернативные ContainerId
-     CREATE TEMP TABLE _tmpList_Alternative (ContainerId_Goods Integer, ContainerId_Summ_Alternative Integer, ContainerId_Summ Integer) ON COMMIT DROP;
-     -- !!!возвраты!!! таблица - суммовые элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10800 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
-     -- !!!возвраты!!!таблица - количественные элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                               , ContainerId_ProfitLoss_10700 Integer
-                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_To Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
-                               , PartionGoodsId Integer
-                               , Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
-
-
+     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+     PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
 
      -- !!!¬озвраты!!!
 
