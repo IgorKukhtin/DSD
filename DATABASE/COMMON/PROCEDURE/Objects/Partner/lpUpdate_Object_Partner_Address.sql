@@ -1,6 +1,7 @@
 -- Function: lpUpdate_Object_Partner_Address()
 
 DROP FUNCTION IF EXISTS lpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar,  TVarChar, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_Object_Partner_Address(
     IN inId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_Object_Partner_Address(
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
     IN inRoomNumber          TVarChar  ,    -- Номер квартиры
+    IN inIsCheckUnique       Boolean   ,    -- 
     IN inSession             TVarChar  ,    -- сессия пользователя
     IN inUserId              Integer        -- Пользователь
 )
@@ -51,7 +53,7 @@ BEGIN
                                           , inHouseNumber       := inHouseNumber
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
-                                          , inIsCheckUnique     := TRUE
+                                          , inIsCheckUnique     := inIsCheckUnique
                                           , inUserId            := inUserId
                                            ) AS tmp;
 

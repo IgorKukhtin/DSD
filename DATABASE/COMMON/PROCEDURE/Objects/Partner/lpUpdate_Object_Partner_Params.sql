@@ -29,6 +29,12 @@ AS
 $BODY$
 BEGIN
 
+    -- Проверка установки значений
+    IF COALESCE (inJuridicalId, 0) = 0 
+    THEN
+      RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
+    END IF;
+
     -- !!!меняются значения!!!
     inShortName         := TRIM (inShortName);
     inRegionName        := TRIM (inRegionName);

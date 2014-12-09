@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
--- DROP FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem();
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
