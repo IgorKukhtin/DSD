@@ -758,6 +758,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
