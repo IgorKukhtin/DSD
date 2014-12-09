@@ -57,45 +57,63 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
-   IF COALESCE(inId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Контрагент "%" не найден в справочнике контрагентов.', inPartnerName;
+   -- проверка
+   IF COALESCE (inId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
+   END IF;
+   -- проверка
+   IF COALESCE (TRIM (inStreetName), '') = '' THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Улица>.', inPartnerName;
    END IF;
 
-   SELECT ID INTO vbPersonalId 
-             FROM OBJECT WHERE DescId = zc_Object_Personal() AND ValueData = inPersonal;
-   IF COALESCE(vbPersonalId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Супервайзер "%" не найден в справочнике сотрудников.', inPersonal;
+
+   -- поиск
+   vbPersonalId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND PersonalName = inPersonal);
+   -- проверка
+   IF COALESCE (vbPersonalId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Супервайзера <%> в справочнике <Сотрудники>.', inPartnerName, inPersonal;
    END IF;
 
-   SELECT ID INTO vbPersonalTradeId 
-             FROM OBJECT WHERE DescId = zc_Object_Personal() AND ValueData = inPersonalTrade;
-   IF COALESCE(vbPersonalTradeId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Торговый представитель "%" не найден в справочнике сотрудников.', inPersonalTrade;
+
+   -- поиск
+   vbPersonalTradeId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND PersonalName = inPersonalTrade);
+   -- проверка
+   IF COALESCE (vbPersonalTradeId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Торговый представитель <%> в справочнике <Сотрудники>.', inPartnerName, inPersonalTrade;
    END IF;
 
-   SELECT ID INTO vbAreaId 
-             FROM OBJECT WHERE DescId = zc_Object_Area() AND ValueData = inArea;
-   IF COALESCE(vbAreaId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Регион "%" не найден в справочнике регионов.', inArea;
+
+   -- поиск
+   vbAreaId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Area() AND ValueData = inArea);
+   -- проверка
+   IF COALESCE (vbAreaId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Регионы>.', inPartnerName, inArea;
    END IF;
 
-   SELECT ID INTO vbPartnerTagId 
-             FROM OBJECT WHERE DescId = zc_Object_PartnerTag() AND ValueData = inPartnerTag;
-   IF COALESCE(vbPartnerTagId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Признак торговой точки "%" не найден в справочнике признаков торговой точки.', inPartnerTag;
+
+   -- поиск
+   vbPartnerTagId:= (SELECT Id FROM Object WHERE DescId = zc_Object_PartnerTag() AND ValueData = inPartnerTag);
+   -- проверка
+   IF COALESCE (vbPartnerTagId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Признак торговой точки>.', inPartnerName, inPartnerTag;
    END IF;
 
-   SELECT ID INTO vbCityKindId 
-             FROM OBJECT WHERE DescId = zc_Object_CityKind() AND ValueData = inCityKindName;
-   IF COALESCE(vbCityKindId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Вид населенного пункта "%" не найден в справочнике видов населенных пунктов.', inCityKindName;
+
+   -- поиск
+   vbCityKindId:= (SELECT Id FROM Object WHERE DescId = zc_Object_CityKind() AND ValueData = inCityKindName);
+   -- проверка
+   IF COALESCE (vbCityKindId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Вид населенного пункта>.', inPartnerName, inCityKindName;
    END IF;
 
-   SELECT ID INTO vbStreetKindId 
-             FROM OBJECT WHERE DescId = zc_Object_StreetKind() AND ValueData = inStreetKindName;
-   IF COALESCE(vbStreetKindId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка. Вид улицы "%" не найден в справочнике видов улиц.', inStreetKindName;
+
+   -- поиск
+   vbStreetKindId:= (SELECT Id FROM Object WHERE DescId = zc_Object_StreetKind() AND ValueData = inStreetKindName);
+   -- проверка
+   IF COALESCE (vbStreetKindId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Вид (улица,проспект)>.', inPartnerName, inStreetKindName;
    END IF;
+
 
   -- сохранили
   PERFORM  lpUpdate_Object_Partner_Address( inId                := inId
@@ -113,6 +131,7 @@ BEGIN
                                           , inHouseNumber       := inHouseNumber
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
+                                          , inIsCheckUnique     := FALSE
                                           , inSession           := inSession
                                           , inUserId            := vbUserId
                                            );
@@ -125,6 +144,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, vbAreaId);
    -- сохранили связь с <Признак торговой точки>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, vbPartnerTagId);
+
 
 END;
 $BODY$

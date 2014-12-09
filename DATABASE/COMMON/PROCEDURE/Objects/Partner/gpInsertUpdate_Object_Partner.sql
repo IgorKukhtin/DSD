@@ -99,6 +99,7 @@ BEGIN
                                           , inHouseNumber       := inHouseNumber
                                           , inCaseNumber        := inCaseNumber  
                                           , inRoomNumber        := inRoomNumber
+                                          , inIsCheckUnique     := TRUE
                                           , inSession           := inSession
                                           , inUserId            := vbUserId
                                            ) AS tmp;

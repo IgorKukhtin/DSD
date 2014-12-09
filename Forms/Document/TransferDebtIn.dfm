@@ -2,30 +2,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 662
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 696
+  ExplicitWidth = 1036
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 1020
-    Height = 529
-    Properties.ActivePage = cxTabSheetTaxCorrective
-    ExplicitTop = 133
+    Height = 531
+    ExplicitTop = 131
     ExplicitWidth = 1020
-    ExplicitHeight = 529
-    ClientRectBottom = 525
-    ClientRectRight = 1016
+    ExplicitHeight = 531
+    ClientRectBottom = 531
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 503
+      ExplicitWidth = 1020
+      ExplicitHeight = 507
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 503
-        ExplicitWidth = 1014
-        ExplicitHeight = 503
+        Width = 1020
+        Height = 507
+        ExplicitWidth = 1020
+        ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -157,8 +154,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1014
-        Height = 503
+        Width = 1020
+        Height = 507
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -520,7 +517,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -769,9 +766,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
           StoredProc = spSelectTaxCorrective
         end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
     end
     object actTaxJournalChoice: TOpenChoiceForm [6]
       Category = 'DSDLib'
@@ -1030,6 +1024,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1048,6 +1043,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedTaxCorrective
       StoredProcList = <
         item
@@ -1067,6 +1063,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1169,7 +1166,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
