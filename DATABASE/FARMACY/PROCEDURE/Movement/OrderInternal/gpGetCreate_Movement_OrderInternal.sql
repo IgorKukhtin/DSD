@@ -7,45 +7,60 @@ CREATE OR REPLACE FUNCTION gpGetCreate_Movement_OrderInternal(
     IN inSession           TVarChar   -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar, OrderKindId Integer,  OrderKindName TVarChar
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMovementId Integer;
+  DECLARE vbUserName TVarChar;
+  DECLARE vbUnitId Integer;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderInternal());
      vbUserId := inSession;
+     vbUnitId := lpGet_DefaultValue('zc_Object_Unit', vbUserId);
 
+     IF COALESCE(vbUnitId, 0) = 0 THEN 
+        SELECT ValueData INTO vbUserName FROM Object WHERE Object.Id = vbUserId;
+        RAISE EXCEPTION '” пользовател€ "%" не определено подразделение по умолчанию', vbUserName;
+     END IF;
+
+     -- ѕытаемс€ найти устраивающий нас документ. Ёто сама€ поздн€€ непроведенна€ за€вка от данной точки не позже недели. 
+     
+     SELECT max(Movement.Id) INTO vbMovementId 
+       FROM Movement
+            JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+       WHERE Movement.StatusId = zc_Enum_Status_UnComplete() 
+         AND Movement.DescId = zc_Movement_OrderInternal() 
+         AND Movement.OperDate > (current_date - interval '7 day')
+         AND MovementLinkObject_Unit.ObjectId = vbUnitId;
+
+     IF COALESCE (vbMovementId, 0) = 0 THEN
+        vbMovementId := gpInsertUpdate_Movement_OrderInternal(0, '', current_date, vbUnitId, 0, inSession);
+     END IF;
 
      RETURN QUERY
        SELECT
-             Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
-           , Movement.OperDate                                  AS OperDate
-           , Object_Status.ObjectCode                           AS StatusCode
-           , Object_Status.ValueData                            AS StatusName
-           , Object_Unit.Id                                     AS UnitId
-           , Object_Unit.ValueData                              AS UnitName
-
-       FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-
-       WHERE Movement.Id =  vbMovementId;
+             tmp.Id
+           , tmp.InvNumber
+           , tmp.OperDate
+           , tmp.StatusCode
+           , tmp.StatusName
+           , tmp.UnitId
+           , tmp.UnitName
+           , tmp.OrderKindId 
+           , tmp.OrderKindName
+       FROM gpGet_Movement_OrderInternal (vbMovementId, inSession) AS tmp;
 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGetCreate_Movement_OrderInternal (TVarChar) OWNER TO postgres;
 
 
 /*

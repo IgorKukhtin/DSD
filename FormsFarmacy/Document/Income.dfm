@@ -1,28 +1,29 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
-  ClientHeight = 668
-  ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 695
+  ClientHeight = 526
+  ClientWidth = 757
+  ExplicitTop = -25
+  ExplicitWidth = 765
+  ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1064
-    Height = 542
+    Width = 757
+    Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 1064
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1064
+    ExplicitWidth = 757
+    ExplicitHeight = 487
+    ClientRectBottom = 400
+    ClientRectRight = 757
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
-      ExplicitHeight = 518
+      ExplicitWidth = 757
+      ExplicitHeight = 463
       inherited cxGrid: TcxGrid
-        Width = 1064
-        Height = 518
-        ExplicitWidth = 1064
-        ExplicitHeight = 518
+        Width = 757
+        Height = 376
+        ExplicitWidth = 757
+        ExplicitHeight = 463
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -51,14 +52,9 @@ inherited IncomeForm: TIncomeForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = colSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colPrice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -90,14 +86,9 @@ inherited IncomeForm: TIncomeForm
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = colSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colPrice
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -113,9 +104,16 @@ inherited IncomeForm: TIncomeForm
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceGoods
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
           object colName: TcxGridDBColumn
@@ -124,7 +122,21 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 222
+          end
+          object colPartnerGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object colPartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 173
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -134,7 +146,7 @@ inherited IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 73
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -158,10 +170,10 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1064
+    Width = 757
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 757
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -251,12 +263,21 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 179
+    Top = 416
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Tag'
+          'Width')
+      end>
     Left = 40
-    Top = 640
+    Top = 432
   end
   inherited ActionList: TActionList
     Left = 55
@@ -332,6 +353,36 @@ inherited IncomeForm: TIncomeForm
         end>
       isShowModal = True
     end
+    object actChoiceGoods: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoiceGoods'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -347,12 +398,11 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Top = 448
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 96
+    Top = 448
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -567,7 +617,7 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     Left = 280
-    Top = 552
+    Top = 416
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -821,13 +871,13 @@ inherited IncomeForm: TIncomeForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Income_SetErased'
-    Left = 718
-    Top = 512
+    Left = 710
+    Top = 376
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Income_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 710
+    Top = 328
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'

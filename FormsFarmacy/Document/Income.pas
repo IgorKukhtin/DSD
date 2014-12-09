@@ -44,6 +44,8 @@ type
     edNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
     colPrice: TcxGridDBColumn;
+    colPartnerGoodsCode: TcxGridDBColumn;
+    colPartnerGoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

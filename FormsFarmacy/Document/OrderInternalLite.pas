@@ -42,6 +42,8 @@ type
     clPartionGoodsDate: TcxGridDBColumn;
     clPartionGoodsDateColor: TcxGridDBColumn;
     N2: TMenuItem;
+    cxLabel3: TcxLabel;
+    edOrderKind: TcxButtonEdit;
   private
     { Private declarations }
   public

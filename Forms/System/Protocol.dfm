@@ -18,14 +18,12 @@ inherited ProtocolForm: TProtocolForm
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
-      ExplicitHeight = 241
       inherited cxGrid: TcxGrid
         Width = 782
-        Height = 241
         ExplicitWidth = 782
-        ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

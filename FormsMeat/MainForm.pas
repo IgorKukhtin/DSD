@@ -181,8 +181,6 @@ type
     bbModelService: TdxBarButton;
     actReport_TransportHoursWork: TdsdOpenForm;
     bbReport_TransportHoursWork: TdxBarButton;
-    actProtocol: TdsdOpenForm;
-    bbProtocol: TdxBarButton;
     actService: TdsdOpenForm;
     bbJuridicalService: TdxBarButton;
     actReport_GoodsTax: TdsdOpenForm;
@@ -272,10 +270,6 @@ type
     actCountry: TdsdOpenForm;
     bbCountry: TdxBarButton;
     bbMaker: TdxBarButton;
-    actProtocolUser: TdsdOpenForm;
-    actProtocolMovement: TdsdOpenForm;
-    bbUserProtocol: TdxBarButton;
-    bbMovementProtocol: TdxBarButton;
     actReport_CheckTax: TdsdOpenForm;
     bbReport_CheckTax: TdxBarButton;
     actProfitLossService: TdsdOpenForm;

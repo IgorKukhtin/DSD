@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSum TFloat
+             , TotalCount TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -45,7 +45,7 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSumm.ValueData          AS TotalSum
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
@@ -96,10 +96,7 @@ BEGIN
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-
-
-            ;
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT();
 
 END;
 $BODY$

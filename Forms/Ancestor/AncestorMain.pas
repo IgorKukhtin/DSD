@@ -29,6 +29,8 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     actLookAndFeel: TAction;
     bbLookAndFillSettings: TdxBarButton;
+    actImportExportLink: TdsdOpenForm;
+    bbImportExportLink: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);

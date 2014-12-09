@@ -89,8 +89,6 @@ type
     bbPriceGroupSettings: TdxBarButton;
     actJuridicalSettings: TdsdOpenForm;
     bbJuridicalSettings: TdxBarButton;
-    actProtocolUser: TdsdOpenForm;
-    bbUserProtocol: TdxBarButton;
     actSaveData: TAction;
     bbSaveData: TdxBarButton;
     actContactPerson: TdsdOpenForm;
@@ -103,6 +101,8 @@ type
     bbReportOrderGoods: TdxBarButton;
     actOrderKind: TdsdOpenForm;
     bbOrderKind: TdxBarButton;
+    actOrderInternalLite: TdsdOpenForm;
+    bbOrderInternalLite: TdxBarButton;
     procedure actSaveDataExecute(Sender: TObject);
   private
     { Private declarations }

@@ -2,6 +2,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 535
   ClientWidth = 1073
+  ExplicitTop = -111
   ExplicitWidth = 1081
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -10,7 +11,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 1073
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
@@ -65,6 +65,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +108,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -176,6 +186,25 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
     Top = 243
   end

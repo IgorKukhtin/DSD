@@ -252,6 +252,23 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
       Top = 3
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
+    object cxLabel3: TcxLabel
+      Left = 624
+      Top = 4
+      Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
+    end
+    object edOrderKind: TcxButtonEdit
+      Left = 624
+      Top = 22
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Width = 137
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -407,12 +424,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternal'
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end
-      item
-      end>
     OutputType = otMultiDataSet
     Params = <
       item

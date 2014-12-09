@@ -1,21 +1,19 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  ExplicitWidth = 583
-  ExplicitHeight = 342
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
     Left = 0
-    Top = 28
+    Top = 26
     Width = 575
-    Height = 280
+    Height = 282
     Align = alClient
+    Focusable = False
     TabOrder = 4
     Properties.ActivePage = tsMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 276
-    ClientRectLeft = 2
-    ClientRectRight = 571
-    ClientRectTop = 2
+    ClientRectBottom = 282
+    ClientRectRight = 575
+    ClientRectTop = 0
     object tsMain: TcxTabSheet
       Caption = 'tsMain'
       ImageIndex = 0
@@ -23,8 +21,8 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 569
-        Height = 274
+        Width = 575
+        Height = 282
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -75,7 +73,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

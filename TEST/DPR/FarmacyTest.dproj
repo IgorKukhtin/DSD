@@ -176,8 +176,8 @@
 				<Form>BoxEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Kind\NDSKind.pas">
-				<Form>NDSKindForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
+				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitEdit.pas">
@@ -378,8 +378,8 @@
 				<Form>ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
-				<Form>SetUserDefaultsForm</Form>
+			<DCCReference Include="..\..\Forms\System\ImportExportLink.pas">
+				<Form>ImportExportLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
@@ -569,6 +569,24 @@
 			<DCCReference Include="..\..\Forms\Kind\OrderKindEdit.pas">
 				<Form>OrderKindEditForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTest.pas"/>
+			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
+				<Form>SetUserDefaultsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementProtocol.pas">
+				<Form>MovementProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas"/>
+			<DCCReference Include="..\..\Forms\Kind\NDSKind.pas">
+				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
