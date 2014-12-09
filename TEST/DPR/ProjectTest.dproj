@@ -1752,13 +1752,8 @@
 				<Form>Report_GoodsMI_ProductionUnionMDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
-				<Form>Report_GoodsMI_ProductionUnionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
-				<Form>ProductionUnionForm</Form>
-			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas"/>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\GoodsQuality.pas">
 				<Form>GoodsQualityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
