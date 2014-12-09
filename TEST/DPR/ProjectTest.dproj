@@ -1758,6 +1758,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
 				<Form>ProductionUnionForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsQuality.pas">
+				<Form>GoodsQualityForm</Form>
+			</DCCReference>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

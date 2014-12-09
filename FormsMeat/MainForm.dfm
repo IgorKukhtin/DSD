@@ -376,6 +376,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbGoodsQuality'
+        end
+        item
+          Visible = True
           ItemName = 'bbTradeMark'
         end
         item
@@ -2046,6 +2050,10 @@
       Action = actProductionUnionTech
       Category = 0
     end
+    object bbGoodsQuality: TdxBarButton
+      Action = actGoodsQuality
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -2246,6 +2254,17 @@
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsQuality: TdsdOpenForm [11]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1072#1088#1072#1084'. '#1082#1072#1095'. '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
+      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1103
+      FormName = 'TGoodsQualityForm'
+      FormNameParam.Value = 'TGoodsQualityForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
