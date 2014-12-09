@@ -1761,7 +1761,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsQuality.pas">
 				<Form>GoodsQualityForm</Form>
-			</DCCReference>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
