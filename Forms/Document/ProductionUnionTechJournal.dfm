@@ -11,19 +11,19 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Height = 608
     TabOrder = 2
     ExplicitTop = 124
-    ExplicitWidth = 1020
+    ExplicitWidth = 1096
     ExplicitHeight = 608
     ClientRectBottom = 604
     ClientRectRight = 1092
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 1014
+      ExplicitWidth = 1090
       ExplicitHeight = 582
       inherited cxGrid: TcxGrid
         Width = 1090
         Height = 224
-        ExplicitWidth = 1014
+        ExplicitWidth = 1090
         ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -174,7 +174,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Top = 224
         Width = 1090
         ExplicitTop = 224
-        ExplicitWidth = 1014
+        ExplicitWidth = 1090
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           Styles.Content = nil
           inherited colChildGoodsCode: TcxGridDBColumn
@@ -237,7 +237,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   inherited DataPanel: TPanel
     Width = 1096
     Height = 96
-    ExplicitWidth = 1020
+    ExplicitWidth = 1096
     ExplicitHeight = 96
     inherited edInvNumber: TcxTextEdit
       Left = 588
@@ -270,12 +270,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     inherited cxLabel15: TcxLabel
       Left = 740
       Top = 5
+      Visible = False
       ExplicitLeft = 740
       ExplicitTop = 5
     end
     inherited ceStatus: TcxButtonEdit
       Left = 804
       Top = 4
+      Visible = False
       ExplicitLeft = 804
       ExplicitTop = 4
       ExplicitHeight = 24
@@ -359,7 +361,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGetTotalSumm
         end
         item
         end
@@ -449,19 +450,22 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inFromId'
         Value = Null
-        Component = edFrom
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Value = False
-        Component = edTo
+        Component = GuidesTo
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsGroupId'
         Value = Null
-        Component = edGoodsGroup
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -592,7 +596,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Top = 168
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_ProductionUnion'
     Params = <
       item
         Name = 'ioId'
@@ -645,6 +648,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
+    Left = 478
+    Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
@@ -752,7 +757,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Name = 'inMovementId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
       end
       item
@@ -762,9 +767,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
-  end
-  inherited ChildCDS: TClientDataSet
-    MasterFields = 'MovementItemId'
   end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
@@ -889,19 +891,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = deStart
       end
       item
-        Component = deEnd
       end
       item
-        Component = edFrom
       end
       item
-        Component = edTo
       end
       item
-        Component = GoodsGroupGuides
       end
       item
       end
