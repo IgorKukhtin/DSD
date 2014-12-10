@@ -269,7 +269,6 @@ uses
   BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
   BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
-  ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
@@ -590,10 +589,14 @@ uses
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
   FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
-  Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas', {Report_GoodsMI_ProductionUnionMDForm: TParentForm}
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas', {Report_GoodsMI_ProductionUnionForm: TParentForm}
-  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas', {ProductionUnionForm: TParentForm}
- GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm};
+  Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas',
+  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas',
+  GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm},
+  ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
+  ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
+  ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
+  ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

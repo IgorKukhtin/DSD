@@ -142,7 +142,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit;
+     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -757,6 +757,8 @@ begin
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
+     if Component is TEDI then
+        result := (Component as TEDI).Directory;
      if Component is TDocument then begin
         if LowerCase(ComponentItem) = 'name' then
            result := TDocument(Component).GetName
@@ -850,8 +852,10 @@ begin
           else
              (Component as TcxDateEdit).Text := '';
         end;
+     if Component is TEDI then
+        (Component as TEDI).Directory := FValue;
      if Component is TBooleanStoredProcAction then
-        (Component as TBooleanStoredProcAction).Value := Value;
+        (Component as TBooleanStoredProcAction).Value := FValue;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TCustomGuides).TextValue := FValue;

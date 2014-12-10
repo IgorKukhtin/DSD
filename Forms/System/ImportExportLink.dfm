@@ -71,7 +71,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
           end
           object colLinkTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1074#1103#1079#1080
-            DataBinding.FieldName = 'LinkName'
+            DataBinding.FieldName = 'LinkTypeName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item

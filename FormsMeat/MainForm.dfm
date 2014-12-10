@@ -3,15 +3,16 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -288
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      28
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -150,6 +151,10 @@
         item
           Visible = True
           ItemName = 'bbImportSettings'
+        end
+        item
+          Visible = True
+          ItemName = 'bbImportExportLink'
         end
         item
           Visible = True
@@ -2239,16 +2244,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTech: TdsdOpenForm [11]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
-      FormName = 'TProductionUnionTechJournalForm'
-      FormNameParam.Value = 'TProductionUnionTechJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actGoodsQuality: TdsdOpenForm [11]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -2492,6 +2487,16 @@
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
       FormName = 'TReport_MemberForm'
       FormNameParam.Value = 'TReport_MemberForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnionTech: TdsdOpenForm [29]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
+      FormName = 'TProductionUnionTechJournalForm'
+      FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

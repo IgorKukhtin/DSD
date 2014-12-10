@@ -591,6 +591,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
+
 end;
 
 
