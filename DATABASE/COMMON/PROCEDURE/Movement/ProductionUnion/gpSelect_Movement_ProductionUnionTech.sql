@@ -42,8 +42,8 @@ BEGIN
                        )
 
        SELECT
-              Movement.Id					    AS Id
-            , MovementItem.Id					AS MovementItemId
+              Movement.Id					    AS MovementId
+            , MovementItem.Id					AS Id
             , Movement.InvNumber                AS InvNumber
             , Movement.OperDate                 AS OperDate
             , Object_From.Id                    AS FromId
@@ -148,8 +148,8 @@ BEGIN
 
     OPEN Cursor2 FOR
        SELECT
-              Movement.Id					    AS Id
-            , MovementItem.Id					AS MovementItemId
+              Movement.Id					    AS MovementId
+            , MovementItem.Id					AS Id
 
             , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode

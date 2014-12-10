@@ -121,7 +121,6 @@ type
     PaidKindName: TcxGridDBColumn;
     DocBranchName: TcxGridDBColumn;
     LastDocName: TcxGridDBColumn;
-    cbPeriod: TcxCheckBox;
     deStart: TcxDateEdit;
     cxlEnd: TcxLabel;
     deEnd: TcxDateEdit;
@@ -132,6 +131,13 @@ type
     deEndDate: TdxBarControlContainerItem;
     actPrint_byPartner: TdsdPrintAction;
     bbPrint_byPartner: TdxBarButton;
+    cxLabel5: TcxLabel;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    actRefreshPeriod: TdsdDataSetRefresh;
+    cbPeriod: TcxCheckBox;
   private
     { Private declarations }
   public

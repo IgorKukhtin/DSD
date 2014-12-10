@@ -55,13 +55,13 @@ BEGIN
                            )
                     -- все проводки: количественные + суммовые
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
-                                                , MIContainer.Id
+                                                , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END AS Id
                                                 , COALESCE (MIContainer.MovementItemId, 0) AS MovementItemId -- !!!может быть NULL!!!
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
                                                 , MIContainer.OperDate
                                                 , MIContainer.isActive
-                                                , CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() OR MIContainer.DescId = zc_MIContainer_SummCurrency() THEN 1 ELSE -1 END * MIContainer.Amount AS Amount
+                                                , SUM (CASE WHEN MIContainer.isActive = TRUE OR MIContainer.DescId = zc_MIContainer_Summ() OR MIContainer.DescId = zc_MIContainer_SummCurrency() THEN 1 ELSE -1 END * MIContainer.Amount) AS Amount
                                                 , tmpMovement.MovementId
                                                 , tmpMovement.MovementDescId
                                                 , tmpMovement.InvNumber
@@ -70,6 +70,19 @@ BEGIN
                                                 , tmpMovement.isInfoMoneyDetail
                                            FROM tmpMovement
                                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
+                                           GROUP BY MIContainer.DescId
+                                                , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END
+                                                , COALESCE (MIContainer.MovementItemId, 0)
+                                                , MIContainer.ParentId
+                                                , MIContainer.ContainerId
+                                                , MIContainer.OperDate
+                                                , MIContainer.isActive
+                                                , tmpMovement.MovementId
+                                                , tmpMovement.MovementDescId
+                                                , tmpMovement.InvNumber
+                                                , tmpMovement.isDestination
+                                                , tmpMovement.isParentDetail
+                                                , tmpMovement.isInfoMoneyDetail
                                           )
                -- проводки: только суммовые + определ€етс€ —чет
              , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*
@@ -180,7 +193,9 @@ BEGIN
                                                   , tmpMIContainer_Summ_all.isParentDetail
                                                   , tmpMIContainer_Summ_all.isInfoMoneyDetail
                                              FROM tmpMIContainer_Summ_all
-                                                  LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementId = tmpMIContainer_Summ_all.MovementId
+                                                  -- LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementId = tmpMIContainer_Summ_all.MovementId
+                                                  LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementItemId = tmpMIContainer_Summ_all.MovementItemId
+                                                                                    AND tmpMIContainer_Count_all.IsActive = tmpMIContainer_Summ_all.IsActive
                                              WHERE tmpMIContainer_Count_all.MovementId IS NULL
                                              GROUP BY tmpMIContainer_Summ_all.MovementItemId
                                                     , tmpMIContainer_Summ_all.isActive

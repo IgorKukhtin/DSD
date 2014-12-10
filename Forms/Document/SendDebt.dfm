@@ -1,23 +1,23 @@
 ﻿inherited SendDebtForm: TSendDebtForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 327
-  ClientWidth = 592
+  ClientHeight = 381
+  ClientWidth = 594
   AddOnFormData.isSingle = False
-  ExplicitWidth = 598
-  ExplicitHeight = 352
+  ExplicitWidth = 600
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 184
-    Top = 289
+    Top = 340
     ExplicitLeft = 184
-    ExplicitTop = 289
+    ExplicitTop = 340
   end
   inherited bbCancel: TcxButton
     Left = 328
-    Top = 289
+    Top = 340
     ExplicitLeft = 328
-    ExplicitTop = 289
+    ExplicitTop = 340
   end
   object cxLabel1: TcxLabel [2]
     Left = 152
@@ -40,17 +40,17 @@
   end
   object cxLabel2: TcxLabel [5]
     Left = 9
-    Top = 190
+    Top = 241
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1044#1077#1073#1077#1090')'
   end
   object cxLabel5: TcxLabel [6]
     Left = 8
-    Top = 140
+    Top = 191
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044#1077#1073#1077#1090')'
   end
   object cePaidKindFrom: TcxButtonEdit [7]
     Left = 9
-    Top = 211
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -61,7 +61,7 @@
   end
   object ceInfoMoneyFrom: TcxButtonEdit [8]
     Left = 8
-    Top = 160
+    Top = 211
     Properties.Buttons = <
       item
         Default = True
@@ -96,7 +96,7 @@
   end
   object ceContractFrom: TcxButtonEdit [12]
     Left = 153
-    Top = 211
+    Top = 262
     Enabled = False
     Properties.Buttons = <
       item
@@ -108,17 +108,17 @@
   end
   object cxLabel8: TcxLabel [13]
     Left = 153
-    Top = 190
+    Top = 241
     Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1044#1077#1073#1077#1090')'
   end
   object cxLabel10: TcxLabel [14]
     Left = 8
-    Top = 232
+    Top = 283
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [15]
     Left = 8
-    Top = 251
+    Top = 302
     TabOrder = 15
     Width = 576
   end
@@ -153,12 +153,12 @@
   end
   object cxLabel7: TcxLabel [20]
     Left = 312
-    Top = 140
+    Top = 191
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050#1088#1077#1076#1080#1090')'
   end
   object ceInfoMoneyTo: TcxButtonEdit [21]
     Left = 312
-    Top = 160
+    Top = 211
     Properties.Buttons = <
       item
         Default = True
@@ -169,17 +169,17 @@
   end
   object cxLabel9: TcxLabel [22]
     Left = 312
-    Top = 190
+    Top = 241
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1050#1088#1077#1076#1080#1090')'
   end
   object cxLabel11: TcxLabel [23]
     Left = 456
-    Top = 190
+    Top = 241
     Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1050#1088#1077#1076#1080#1090')'
   end
   object cePaidKindTo: TcxButtonEdit [24]
     Left = 312
-    Top = 211
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -190,7 +190,7 @@
   end
   object ceContractTo: TcxButtonEdit [25]
     Left = 456
-    Top = 211
+    Top = 262
     Enabled = False
     Properties.Buttons = <
       item
@@ -234,16 +234,50 @@
     Top = 96
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1050#1088#1077#1076#1080#1090')'
   end
+  object ceBranchFrom: TcxButtonEdit [30]
+    Left = 8
+    Top = 161
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 273
+  end
+  object cxLabel14: TcxLabel [31]
+    Left = 8
+    Top = 141
+    Caption = #1060#1080#1083#1080#1072#1083' ('#1044#1077#1073#1077#1090')'
+  end
+  object ceBranchTo: TcxButtonEdit [32]
+    Left = 312
+    Top = 161
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
+    Width = 272
+  end
+  object cxLabel15: TcxLabel [33]
+    Left = 312
+    Top = 141
+    Caption = #1060#1080#1083#1080#1072#1083' ('#1050#1088#1077#1076#1080#1090')'
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
-    Top = 281
+    Top = 332
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 281
+    Top = 332
   end
   inherited ActionList: TActionList
     Left = 95
-    Top = 280
+    Top = 331
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -263,7 +297,7 @@
         Value = '0'
       end>
     Left = 136
-    Top = 281
+    Top = 332
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SendDebt'
@@ -346,6 +380,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inBranchFromId'
+        Value = Null
+        Component = BranchFromGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inJuridicalToId'
         Value = ''
         Component = ContractJuridicalToGuides
@@ -381,6 +422,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inBranchToId'
+        Value = Null
+        Component = BranchToGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -402,6 +450,7 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -437,6 +486,7 @@
       end
       item
         Name = 'statusname'
+        Value = Null
         Component = FormParams
         DataType = ftString
       end
@@ -601,9 +651,35 @@
         Component = PartnerToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BranchFromId'
+        Value = Null
+        Component = BranchFromGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BranchFromName'
+        Value = Null
+        Component = BranchFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BranchToId'
+        Value = Null
+        Component = BranchToGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BranchToName'
+        Value = Null
+        Component = BranchToGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 280
-    Top = 138
+    Top = 189
   end
   object PaidKindFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -627,7 +703,7 @@
         DataType = ftString
       end>
     Left = 59
-    Top = 200
+    Top = 251
   end
   object InfoMoneyFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -651,7 +727,7 @@
         DataType = ftString
       end>
     Left = 192
-    Top = 146
+    Top = 197
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -669,7 +745,7 @@
       end>
     ActionItemList = <>
     Left = 280
-    Top = 272
+    Top = 323
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -738,7 +814,7 @@
         ComponentItem = 'inPaidKindId'
       end>
     Left = 216
-    Top = 205
+    Top = 256
   end
   object ContractJuridicalFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -855,7 +931,7 @@
         DataType = ftString
       end>
     Left = 504
-    Top = 205
+    Top = 256
   end
   object InfoMoneyToGuides: TdsdGuides
     KeyField = 'Id'
@@ -879,7 +955,7 @@
         DataType = ftString
       end>
     Left = 440
-    Top = 146
+    Top = 197
   end
   object PaidKindToGuides: TdsdGuides
     KeyField = 'Id'
@@ -903,7 +979,7 @@
         DataType = ftString
       end>
     Left = 347
-    Top = 208
+    Top = 259
   end
   object ContractJuridicalToGuides: TdsdGuides
     KeyField = 'Id'
@@ -1051,8 +1127,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 208
-    Top = 104
+    Left = 224
+    Top = 88
   end
   object PartnerToGuides: TdsdGuides
     KeyField = 'Id'
@@ -1107,5 +1183,57 @@
       end>
     Left = 504
     Top = 104
+  end
+  object BranchFromGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBranchFrom
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchFromGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 136
+    Top = 144
+  end
+  object BranchToGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBranchTo
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchToGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchToGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 528
+    Top = 152
   end
 end

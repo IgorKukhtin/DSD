@@ -117,6 +117,7 @@ type
     ParPartnerValue: TcxGridDBColumn;
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Spec: TdxBarButton;
+    colTotalSummChange: TcxGridDBColumn;
   private
     { Private declarations }
   public

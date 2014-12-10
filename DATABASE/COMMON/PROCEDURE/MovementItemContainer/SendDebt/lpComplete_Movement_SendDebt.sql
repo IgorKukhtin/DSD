@@ -64,8 +64,8 @@ BEGIN
              , 0 AS UnitId     -- не используется
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
-             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал Баланс: нужен для НАЛ долгов
+             , MILinkObject_Branch.ObjectId AS BranchId_Balance
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -89,6 +89,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
@@ -124,8 +127,8 @@ BEGIN
              , 0 AS UnitId     -- не используется
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
-             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал Баланс: нужен для НАЛ долгов
+             , MILinkObject_Branch.ObjectId AS BranchId_Balance
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -149,6 +152,9 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId

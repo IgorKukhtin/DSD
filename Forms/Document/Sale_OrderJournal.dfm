@@ -74,6 +74,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCurrency
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChange
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -125,6 +130,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCurrency
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChange
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -281,6 +291,16 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colTotalSummChange: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' (-)'#1089#1082'.(+)'#1085#1072#1094
+            DataBinding.FieldName = 'TotalSummChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'

@@ -26,7 +26,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - есть ли ограничения
-     vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
+     -- vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -64,12 +64,12 @@ BEGIN
             , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)   AS isPartionSumm 
             , Object_Goods.isErased       AS isErased
 
-       FROM (SELECT Object_Goods.*
+       FROM (/*SELECT Object_Goods.*
              FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey
                   JOIN Object AS Object_Goods ON Object_Goods.AccessKeyId = tmpRoleAccessKey.AccessKeyId AND Object_Goods.DescId = zc_Object_Goods()
              WHERE vbAccessKeyRight = TRUE
-            UNION ALL
-             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbAccessKeyRight = FALSE
+            UNION ALL*/
+             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() -- AND vbAccessKeyRight = FALSE
             ) AS Object_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
-             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , InvNumberOrder TVarChar
@@ -64,6 +64,7 @@ BEGIN
      SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
+--           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
@@ -83,6 +84,7 @@ BEGIN
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+           , MovementFloat_TotalSummChange.ValueData        AS TotalSummChange
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
            , MovementFloat_AmountCurrency.ValueData         AS TotalSummCurrency
 
@@ -200,6 +202,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
+                                    ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()

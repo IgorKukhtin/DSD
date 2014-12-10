@@ -19,6 +19,8 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                               , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                               , zc_Enum_Process_AccessKey_CashKiev()
                                               , zc_Enum_Process_AccessKey_CashZaporozhye()
+                                              , zc_Enum_Process_AccessKey_CashKharkov()
+                                              , zc_Enum_Process_AccessKey_CashKrRog()
                                                )
                                          THEN TRUE
                                     ELSE NULL

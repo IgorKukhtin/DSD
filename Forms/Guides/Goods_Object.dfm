@@ -148,8 +148,8 @@ object Goods_ObjectForm: TGoods_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -247,24 +247,35 @@ object Goods_ObjectForm: TGoods_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'FuelName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'FuelName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -288,6 +299,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 112
     Top = 152
   end

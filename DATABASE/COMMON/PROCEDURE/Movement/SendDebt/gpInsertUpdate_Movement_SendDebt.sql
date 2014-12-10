@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -18,12 +19,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
     IN inContractFromId      Integer   , -- Договор
     IN inPaidKindFromId      Integer   , -- Вид форм оплаты
     IN inInfoMoneyFromId     Integer   , -- Статьи назначения
+    IN inBranchFromId        Integer   , -- 
 
     IN inJuridicalToId       Integer   , -- Юр.лицо
     IN inPartnerToId         Integer   , -- Контрагент
     IN inContractToId        Integer   , -- Договор
     IN inPaidKindToId        Integer   , -- Вид форм оплаты
     IN inInfoMoneyToId       Integer   , -- Статьи назначения
+    IN inBranchToId          Integer   , -- 
 
     IN inComment             TVarChar  , -- Примечание
     
@@ -53,10 +56,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Дебет)>.';
      END IF;
      -- проверка
-     IF inPaidKindFromId = zc_Enum_PaidKind_SecondForm()
+     IF inPaidKindFromId = zc_Enum_PaidKind_SecondForm() AND COALESCE (inPartnerFromId, 0) = 0
         AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalFromId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
      THEN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент (Дебет)>.', lfGet_Object_ValueData (inPaidKindFromId);
+     ELSE IF inPaidKindFromId = zc_Enum_PaidKind_SecondForm() AND COALESCE (inPartnerFromId, 0) = 0
+          THEN  inPartnerFromId:= (SELECT ObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalFromId AND DescId = zc_ObjectLink_Partner_Juridical());
+          END IF;
      END IF;
 
      -- проверка
@@ -75,10 +81,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Кредит)>.';
      END IF;
      -- проверка
-     IF inPaidKindToId = zc_Enum_PaidKind_SecondForm()
+     IF inPaidKindToId = zc_Enum_PaidKind_SecondForm() AND COALESCE (inPartnerToId, 0) = 0
         AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalToId AND DescId = zc_ObjectLink_Partner_Juridical() GROUP BY ChildObjectId HAVING COUNT(*) = 1)
      THEN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент (Кредит)>.', lfGet_Object_ValueData (inPaidKindToId);
+     ELSE IF inPaidKindToId = zc_Enum_PaidKind_SecondForm() AND COALESCE (inPartnerToId, 0) = 0
+          THEN  inPartnerToId:= (SELECT ObjectId FROM ObjectLink WHERE ChildObjectId = inJuridicalToId AND DescId = zc_ObjectLink_Partner_Juridical());
+          END IF;
      END IF;
 
 
@@ -106,6 +115,10 @@ BEGIN
      -- сохранили связь с <Статьи назначения ОТ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioMasterId, inInfoMoneyFromId);
 
+     -- сохранили связь с <Филиал ОТ>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioMasterId, inBranchFromId);
+
+
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMasterId, inComment);
 
@@ -121,6 +134,9 @@ BEGIN
 
      -- сохранили связь с <Статьи назначения КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioChildId, inInfoMoneyToId);
+
+     -- сохранили связь с <Филиал КОМУ>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioChildId, inBranchToId);
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();

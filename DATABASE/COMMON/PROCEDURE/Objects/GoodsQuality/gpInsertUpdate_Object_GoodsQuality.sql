@@ -22,22 +22,35 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsQuality(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbGoodsId Integer;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsQuality());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- проверка уникальности товара
+     IF COALESCE (inGoodsId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено значение <Товар>.';
+     ELSE
+         vbGoodsId:= (SELECT Max(ChildObjectId) FROM ObjectLink where DescId = zc_ObjectLink_GoodsQuality_Goods() and ChildObjectId = inGoodsId);
+         IF COALESCE (vbGoodsId, 0) <> 0 
+         THEN 
+             RAISE EXCEPTION 'Ошибка. Значение <%> уже есть в справочнике.', lfGet_Object_ValueData (vbGoodsId);
+         END IF;   
+     END IF;   
+
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_GoodsQuality());
     
    -- проверка прав уникальности для свойства <Наименование >  
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsQuality(), inGoodsQualityName);
+   -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsQuality(), inGoodsQualityName);
    -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsQuality(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsQuality(), inCode, inGoodsQualityName
-                                , inAccessKeyId:= (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId));
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsQuality(), inCode, inGoodsQualityName);
+                                --, inAccessKeyId:= (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId));
    
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value1(), ioId, inValue1);
