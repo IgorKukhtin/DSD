@@ -2,27 +2,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 662
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 697
+  ExplicitWidth = 1028
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 1020
-    Height = 531
-    ExplicitTop = 131
+    Height = 529
+    ExplicitTop = 133
     ExplicitWidth = 1020
-    ExplicitHeight = 531
-    ClientRectBottom = 531
-    ClientRectRight = 1020
+    ExplicitHeight = 529
+    ClientRectBottom = 525
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 507
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1014
+      ExplicitHeight = 503
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 507
-        ExplicitWidth = 1020
-        ExplicitHeight = 507
+        Width = 1014
+        Height = 503
+        ExplicitWidth = 1014
+        ExplicitHeight = 503
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,8 +156,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 507
+        Width = 1014
+        Height = 503
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -517,7 +519,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -811,40 +813,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [10]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrintTaxCorrective_Us
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintTaxCorrective_Us
-        end>
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 19
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.DataType = ftString
-    end
-    object mactPrint: TMultiAction [11]
+    object mactPrint: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -857,39 +826,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-    end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [12]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrintTaxCorrective_Client
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintTaxCorrective_Client
-        end>
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 18
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.DataType = ftString
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -930,7 +866,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -1110,6 +1046,114 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
+    object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetReportNameTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTaxCorrective
+        end>
+      Caption = 'actSPPrintTaxCorrectiveProcName'
+    end
+    object actPrint_TaxCorrective_Us: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Us
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_TaxCorrective_Client: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_TaxCorrective_Client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Client
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+    end
+    object mactPrint_TaxCorrective_Us: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintTaxCorrectiveProcName
+        end
+        item
+          Action = actPrint_TaxCorrective_Us
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 19
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1166,7 +1210,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1292,11 +1336,11 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Action = mactPrint
     end
     object bbPrintTaxCorrective_Client: TdxBarButton [5]
-      Action = actPrint_TaxCorrective_Client
+      Action = mactPrint_TaxCorrective_Client
       Category = 0
     end
     object bbPrintTaxCorrective_Us: TdxBarButton [6]
-      Action = actPrint_TaxCorrective_Us
+      Action = mactPrint_TaxCorrective_Us
       Category = 0
     end
     object bbTaxCorrective: TdxBarButton
@@ -2595,5 +2639,28 @@ inherited TransferDebtInForm: TTransferDebtInForm
     PackSize = 1
     Left = 1003
     Top = 202
+  end
+  object spGetReportNameTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_TaxCorrective_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTaxCorrective'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 520
   end
 end

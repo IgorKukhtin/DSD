@@ -46,6 +46,12 @@ type
     colInvNumberMark: TcxGridDBColumn;
     actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
+    mactPrint_TaxCorrective_Us: TMultiAction;
   private
     { Private declarations }
   public
