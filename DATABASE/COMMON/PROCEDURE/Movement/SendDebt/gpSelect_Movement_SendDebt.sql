@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , JuridicalFromId Integer, JuridicalFromCode Integer, JuridicalFromName TVarChar
              , ItemFromName TVarChar, FromOKPO TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar
+             , BranchFromName TVarChar
 
              , InfoMoneyGroupToName TVarChar
              , InfoMoneyDestinationToName TVarChar
@@ -26,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , JuridicalToId Integer, JuridicalToCode Integer, JuridicalToName TVarChar
              , ItemToName TVarChar, ToOKPO TVarChar
              , PaidKindToId Integer, PaidKindToName TVarChar
+             , BranchToName TVarChar
              
              , Amount TFloat
              , Comment TVarChar
@@ -67,6 +69,7 @@ BEGIN
             , ObjectHistory_JuridicalDetails_From.OKPO AS FromOKPO
             , Object_PaidKind_From.Id                  AS PaidKindFromId
             , Object_PaidKind_From.ValueData           AS PaidKindFromName
+            , Object_Branch_From.ValueData             AS BranchFromName
 
             , View_InfoMoney_To.InfoMoneyGroupName       AS InfoMoneyGroupToName
             , View_InfoMoney_To.InfoMoneyDestinationName AS InfoMoneyDestinationToName
@@ -86,6 +89,7 @@ BEGIN
             , ObjectHistory_JuridicalDetails_To.OKPO AS ToOKPO
             , Object_PaidKind_To.Id                  AS PaidKindToId
             , Object_PaidKind_To.ValueData           AS PaidKindToName
+            , Object_Branch_To.ValueData             AS BranchToName
 
             , MI_Master.Amount             AS Amount
             , MIString_Comment.ValueData  AS Comment
@@ -124,6 +128,11 @@ BEGIN
                                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_From
+                                             ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
+                                            AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MI_Master.Id 
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -155,6 +164,11 @@ BEGIN
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
             
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_To
+                                             ON MILinkObject_Branch_To.MovementItemId = MI_Child.Id
+                                            AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch_To ON Object_Branch_To.Id = MILinkObject_Branch_To.ObjectId
+
       WHERE Movement.DescId = zc_Movement_SendDebt()
         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   

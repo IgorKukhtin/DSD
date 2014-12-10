@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , PartnerFromId Integer, PartnerFromName TVarChar
 
              , PaidKindFromId Integer, PaidKindFromName TVarChar
+             , BranchFromId Integer, BranchFromName TVarChar
 
              , InfoMoneyToId Integer, InfoMoneyToName TVarChar
              , ContractToId Integer, ContractToName TVarChar
@@ -24,6 +25,7 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , PartnerToId Integer, PartnerToName TVarChar
 
              , PaidKindToId Integer, PaidKindToName TVarChar
+             , BranchToId Integer, BranchToName TVarChar
              
              , Amount TFloat
              , Comment TVarChar
@@ -62,6 +64,8 @@ BEGIN
             , 0            AS PaidKindFromId
             , ''::TVarChar AS PaidKindFromName
 
+            , 0            AS BranchFromId
+            , ''::TVarChar AS BranchFromName
 
             , 0            AS InfoMoneyToId
             , ''::TVarChar AS InfoMoneyToName
@@ -76,6 +80,9 @@ BEGIN
 
             , 0            AS PaidKindToId
             , ''::TVarChar AS PaidKindToName
+
+            , 0            AS BranchToId
+            , ''::TVarChar AS BranchToName
 
             , 0::TFloat  AS Amount
             , ''::TVarChar AS Comment
@@ -110,6 +117,8 @@ BEGIN
             , Object_PaidKind_From.Id                  AS PaidKindFromId
             , Object_PaidKind_From.ValueData           AS PaidKindFromName
 
+            , Object_Branch_From.Id                    AS BranchFromId
+            , Object_Branch_From.ValueData             AS BranchFromName
 
             , View_InfoMoney_To.InfoMoneyId              AS InfoMoneyToId
             , View_InfoMoney_To.InfoMoneyName_all        AS InfoMoneyToName
@@ -124,6 +133,9 @@ BEGIN
 
             , Object_PaidKind_To.Id                  AS PaidKindToId
             , Object_PaidKind_To.ValueData           AS PaidKindToName
+
+            , Object_Branch_To.Id                    AS BranchToId
+            , Object_Branch_To.ValueData             AS BranchToName
 
             , MI_Master.Amount            AS Amount
             , MIString_Comment.ValueData  AS Comment
@@ -155,6 +167,12 @@ BEGIN
                                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_From
+                                             ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
+                                            AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
+
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MI_Master.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -184,7 +202,11 @@ BEGIN
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
 
- 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch_To
+                                             ON MILinkObject_Branch_To.MovementItemId = MI_Child.Id
+                                            AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch_To ON Object_Branch_To.Id = MILinkObject_Branch_To.ObjectId
+
                                     
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendDebt();

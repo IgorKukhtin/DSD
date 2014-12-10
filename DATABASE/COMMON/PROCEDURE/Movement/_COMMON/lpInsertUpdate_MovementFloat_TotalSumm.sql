@@ -22,6 +22,7 @@ $BODY$
   DECLARE vbOperSumm_Packer TFloat;
   DECLARE vbOperSumm_MVAT TFloat;
   DECLARE vbOperSumm_PVAT TFloat;
+  DECLARE vbOperSumm_PVAT_original TFloat;
   DECLARE vbOperSumm_Inventory TFloat;
 
   DECLARE vbTotalSummToPay   TFloat;
@@ -141,6 +142,11 @@ BEGIN
                   -- так переводится в валюту zc_Enum_Currency_Basis
                 * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
             AS NUMERIC (16, 2)) AS OperSumm_PVAT
+            -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
+          , CAST (OperSumm_PVAT_original
+                  -- так переводится в валюту zc_Enum_Currency_Basis
+                * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
+            AS NUMERIC (16, 2)) AS OperSumm_PVAT_original
 
             -- Сумма по Контрагенту
           , CAST (OperSumm_Partner
@@ -176,7 +182,7 @@ BEGIN
           , OperSumm_Child
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
-               , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperSumm_Currency
+               , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
      FROM 
@@ -217,6 +223,16 @@ BEGIN
                       -- если цены без НДС
                       THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner) AS NUMERIC (16, 2))
             END AS OperSumm_PVAT
+
+            -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
+          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                      -- если цены с НДС
+                      THEN (OperSumm_Partner_original)
+                 WHEN vbVATPercent > 0
+                      -- если цены без НДС
+                      THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
+            END AS OperSumm_PVAT_original
+
 
             -- Сумма по Контрагенту
           , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
@@ -293,6 +309,11 @@ BEGIN
                                  THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                             ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
                        END) AS OperSumm_Partner
+                  -- сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
+                , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                 THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                            ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
+                       END) AS OperSumm_Partner_original
 
                    -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
                  , SUM (CASE WHEN tmpMI.CountForPrice <> 0
@@ -323,6 +344,7 @@ BEGIN
             FROM (SELECT tmpMI.GoodsId
                        , tmpMI.GoodsKindId
                        , tmpMI.Price
+                       , tmpMI.Price_original
                        , tmpMI.CountForPrice
 
                          -- очень важное кол-во, для него расчет сумм
@@ -394,6 +416,7 @@ BEGIN
                                          THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                     ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                END AS Price
+                             , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
                              , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
                                -- !!!очень важное кол-во, для него расчет сумм!!!
@@ -559,8 +582,10 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
          -- Сохранили свойство <Итого сумма по накладной (с НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT);
+         -- Сохранили свойство <Итого сумма скидки по накладной>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbOperSumm_Partner - vbOperSumm_PVAT_original);
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
          -- Сохранили свойство <Итого сумма !!!в валюте!!! по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), inMovementId, vbOperSumm_Currency);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
@@ -594,4 +619,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 */
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= 162323)
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where DescId = zc_Movement_Sale() and OperDate between ('01.11.2014')::TDateTime and  ('31.12.2014')::TDateTime

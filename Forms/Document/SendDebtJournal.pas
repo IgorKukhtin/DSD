@@ -84,6 +84,8 @@ type
     actMovementItemContainer: TdsdOpenForm;
     bbMovementItemContainer: TdxBarButton;
     bbAddBonus: TdxBarButton;
+    BranchFromName: TcxGridDBColumn;
+    BranchToName: TcxGridDBColumn;
   private
   public
   end;

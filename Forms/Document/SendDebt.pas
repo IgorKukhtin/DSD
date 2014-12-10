@@ -51,6 +51,12 @@ type
     cePartnerTo: TcxButtonEdit;
     cxLabel13: TcxLabel;
     PartnerToGuides: TdsdGuides;
+    ceBranchFrom: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    BranchFromGuides: TdsdGuides;
+    ceBranchTo: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    BranchToGuides: TdsdGuides;
   private
     { Private declarations }
   public

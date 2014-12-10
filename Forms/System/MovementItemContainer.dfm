@@ -28,12 +28,6 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Position = spFooter
-              Column = colKreditAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colDebetAmount
             end
             item
@@ -45,6 +39,11 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Currency
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colKreditAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
