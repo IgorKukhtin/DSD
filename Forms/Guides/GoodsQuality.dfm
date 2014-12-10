@@ -53,13 +53,13 @@ object GoodsQualityForm: TGoodsQualityForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 39
       end
       object clName: TcxGridDBColumn
         Caption = #8470' 17'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 121
+        Width = 111
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -73,67 +73,74 @@ object GoodsQualityForm: TGoodsQualityForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 123
+        Width = 113
+      end
+      object clGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 105
       end
       object clValue1: TcxGridDBColumn
         Caption = #8470' 4'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 62
       end
       object clValue2: TcxGridDBColumn
         Caption = #8470'6'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 62
       end
       object clValue3: TcxGridDBColumn
         Caption = #8470' 7'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentVert = vaCenter
-        Width = 69
+        Width = 61
       end
       object clValue4: TcxGridDBColumn
         Caption = #8470' 8'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 61
       end
       object clValue5: TcxGridDBColumn
         Caption = #8470' 10'
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 61
       end
       object clValue6: TcxGridDBColumn
         Caption = #8470' 11'
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 63
       end
       object clValue7: TcxGridDBColumn
         Caption = #8470' 12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 63
       end
       object clValue8: TcxGridDBColumn
         Caption = #8470' 14'
         DataBinding.FieldName = 'Value8'
         HeaderAlignmentVert = vaCenter
-        Width = 69
+        Width = 60
       end
       object clValue9: TcxGridDBColumn
         Caption = #8470' 15'
         DataBinding.FieldName = 'Value9'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 62
       end
       object clValue10: TcxGridDBColumn
         Caption = #8470' 16'
         DataBinding.FieldName = 'Value10'
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 51
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -150,6 +157,22 @@ object GoodsQualityForm: TGoodsQualityForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 407
+    Top = 130
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 5
+    Width = 154
+  end
+  object cxLabel6: TcxLabel
+    Left = 407
+    Top = 94
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -231,11 +254,19 @@ object GoodsQualityForm: TGoodsQualityForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bb1'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -268,6 +299,20 @@ object GoodsQualityForm: TGoodsQualityForm
     object bbactShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object bb: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bb1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = ceInfoMoney
     end
   end
   object ActionList: TActionList
@@ -350,6 +395,13 @@ object GoodsQualityForm: TGoodsQualityForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -382,14 +434,18 @@ object GoodsQualityForm: TGoodsQualityForm
       end>
     Params = <
       item
+        Name = 'inInfoMoney'
+        Value = Null
+        Component = dsdInfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inShowAll'
         Value = Null
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = Null
       end>
     PackSize = 1
     Left = 48
@@ -548,5 +604,41 @@ object GoodsQualityForm: TGoodsQualityForm
     PackSize = 1
     Left = 128
     Top = 296
+  end
+  object dsdInfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdInfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdInfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 464
+    Top = 115
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = dsdInfoMoneyGuides
+      end
+      item
+        Component = actShowAll
+      end>
+    Left = 752
+    Top = 112
   end
 end

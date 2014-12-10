@@ -38,6 +38,12 @@ type
     bbPrintTaxCorrective_Us: TdxBarButton;
     clInvNumberPartner: TcxGridDBColumn;
     clInvNumberMark: TcxGridDBColumn;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    mactPrint_TaxCorrective_Client: TMultiAction;
+    mactPrint_TaxCorrective_Us: TMultiAction;
+    spGetReportNameTaxCorrective: TdsdStoredProc;
+    actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
+  cxMaskEdit;
 
 type
   TGoodsQualityForm = class(TParentForm)
@@ -63,6 +64,13 @@ type
     GoodsChoiceForm: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    bb: TdxBarControlContainerItem;
+    bb1: TdxBarControlContainerItem;
+    ceInfoMoney: TcxButtonEdit;
+    dsdInfoMoneyGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    RefreshDispatcher: TRefreshDispatcher;
+    clGoodsGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
