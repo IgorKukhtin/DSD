@@ -349,8 +349,8 @@
 			<DCCReference Include="..\..\Forms\Report\Report_HistoryCost.pas">
 				<Form>Report_HistoryCostForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
-				<Form>ProductionUnionForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnionTechJournal.pas">
+				<Form>ProductionUnionTechJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractConditionValue.pas">
 				<Form>ContractConditionValueForm</Form>
@@ -1752,8 +1752,10 @@
 				<Form>Report_GoodsMI_ProductionUnionMDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas">
-				<Form>Report_GoodsMI_ProductionUnionForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas"/>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\GoodsQuality.pas">
+				<Form>GoodsQualityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

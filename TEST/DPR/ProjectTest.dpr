@@ -138,7 +138,7 @@ uses
   ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
   Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
   Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
-  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm},
+  ProductionUnionTechJournal in '..\..\Forms\Document\ProductionUnionTechJournal.pas' {ProductionUnionTechJournalForm},
   ContractConditionValue in '..\..\Forms\Guides\ContractConditionValue.pas' {ContractConditionValueForm},
   ContractEdit in '..\..\Forms\Guides\ContractEdit.pas' {ContractEditForm},
   Box in '..\..\Forms\Box.pas' {BoxForm},
@@ -590,8 +590,10 @@ uses
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
   FileTypeKindTest in '..\SOURCE\Objects\All\FileTypeKindTest.pas',
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
-  Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
-  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas' {Report_GoodsMI_ProductionUnionForm: TParentForm};
+  Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas', {Report_GoodsMI_ProductionUnionMDForm: TParentForm}
+  Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas', {Report_GoodsMI_ProductionUnionForm: TParentForm}
+  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas', {ProductionUnionForm: TParentForm}
+ GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

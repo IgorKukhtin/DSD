@@ -53,6 +53,7 @@ type
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
+    procedure LoadGoodsQualityFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsKindWeighingFormTest;
@@ -410,6 +411,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
 end;
 
+procedure TLoadFormTest.LoadGoodsQualityFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
+end;
+
+
 procedure TLoadFormTest.LoadGoodsTagFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTagForm'));
@@ -757,6 +765,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
 
 end;
 
