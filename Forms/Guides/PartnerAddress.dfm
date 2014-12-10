@@ -3,7 +3,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 464
-  ClientWidth = 1177
+  ClientWidth = 1484
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1177
+    Width = 1484
     Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 1177
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -564,20 +565,13 @@ object PartnerAddressForm: TPartnerAddressForm
     TabOrder = 2
     Width = 245
   end
-  object cbPeriod: TcxCheckBox
-    Left = 394
-    Top = 36
-    Caption = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 3
-    Width = 148
-  end
   object deStart: TcxDateEdit
     Left = 544
     Top = 36
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 85
   end
   object cxlEnd: TcxLabel
@@ -596,8 +590,35 @@ object PartnerAddressForm: TPartnerAddressForm
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 10
+    TabOrder = 9
     Width = 85
+  end
+  object cxLabel5: TcxLabel
+    Left = 809
+    Top = 36
+    AutoSize = False
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+    Height = 17
+    Width = 65
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 880
+    Top = 35
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 305
+  end
+  object cbPeriod: TcxCheckBox
+    Left = 394
+    Top = 36
+    Action = actRefreshPeriod
+    TabOrder = 12
+    Width = 148
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -613,55 +634,6 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cbPeriod
-        Properties.Strings = (
-          'Action'
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'Caption'
-          'Checked'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBackground'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'State'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'Top'
-          'Touch'
-          'Transparent'
-          'Visible'
-          'Width')
-      end
-      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -670,6 +642,12 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = JuridicalGuides
@@ -796,6 +774,18 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -873,9 +863,9 @@ object PartnerAddressForm: TPartnerAddressForm
       Visible = ivAlways
     end
     object chkByDoc: TdxBarControlContainerItem
-      Caption = 'ChkByDoc'
+      Caption = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
       Category = 0
-      Hint = 'ChkByDoc'
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
       Visible = ivAlways
       Control = cbPeriod
     end
@@ -904,6 +894,20 @@ object PartnerAddressForm: TPartnerAddressForm
       Action = actPrint_byPartner
       Category = 0
     end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel5
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = ceInfoMoney
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -917,7 +921,7 @@ object PartnerAddressForm: TPartnerAddressForm
         item
           StoredProc = dsdStoredProc
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
@@ -1460,6 +1464,18 @@ object PartnerAddressForm: TPartnerAddressForm
       ReportNameParam.Value = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ReportNameParam.DataType = ftString
     end
+    object actRefreshPeriod: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1080#1090#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+      RefreshOnTabSetChanges = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -1494,6 +1510,13 @@ object PartnerAddressForm: TPartnerAddressForm
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1813,10 +1836,10 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = JuridicalGuides
       end
       item
-        Component = cbPeriod
+        Component = PeriodChoice
       end
       item
-        Component = PeriodChoice
+        Component = InfoMoneyGuides
       end>
     Left = 288
     Top = 184
@@ -1844,5 +1867,29 @@ object PartnerAddressForm: TPartnerAddressForm
     DateEnd = deEnd
     Left = 480
     Top = 120
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 984
+    Top = 69
   end
 end

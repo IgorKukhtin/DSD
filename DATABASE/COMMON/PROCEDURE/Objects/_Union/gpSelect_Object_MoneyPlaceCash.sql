@@ -16,19 +16,33 @@ $BODY$
 
   DECLARE vbIsConstraint Boolean;
   DECLARE vbObjectId_Constraint Integer;
+
+   DECLARE vbIsConstraint_Branch Boolean;
+   DECLARE vbObjectId_Constraint_Branch Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_StoragePlace());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определяется уровень доступа
+     -- определяется уровень доступа (группа юр.лиц)
      vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0);
      vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+
+     -- определяется уровень доступа (филиал)
+     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+     vbIsConstraint_Branch:= COALESCE (vbObjectId_Constraint_Branch, 0) > 0;
 
 
      -- Результат
      RETURN QUERY
      WITH View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801)
+        , tmpPersonal_Branch AS (SELECT View_Personal.MemberId
+                                 FROM ObjectLink AS ObjectLink_Unit_Branch
+                                      INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = ObjectLink_Unit_Branch.ObjectId
+                                 WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
+                                   AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                 GROUP BY View_Personal.MemberId
+                                )
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
           , Object_Cash.Valuedata AS Name
@@ -74,6 +88,7 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
      WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
+       AND vbIsConstraint = FALSE
     UNION ALL
      SELECT Object_Member.Id
           , Object_Member.ObjectCode     
@@ -94,9 +109,13 @@ BEGIN
           , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
      FROM Object AS Object_Member
+          LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
     WHERE Object_Member.DescId = zc_Object_Member()
       AND Object_Member.isErased = FALSE
+      AND (tmpPersonal_Branch.MemberId > 0
+           OR vbIsConstraint_Branch = FALSE
+          )
     UNION ALL
      SELECT Object_Partner.Id
           , Object_Partner.ObjectCode     
@@ -161,6 +180,7 @@ BEGIN
        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900()
        AND View_Contract.isErased = FALSE
        AND Object_Juridical.isErased = FALSE
+       AND vbIsConstraint = FALSE
     UNION ALL
      SELECT Object_Founder.Id
           , Object_Founder.ObjectCode     

@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsPeriod    Boolean   , --
     IN inJuridicalId       Integer  ,
+    IN inInfoMoneyId       Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -148,11 +150,11 @@ BEGIN
            , Object_PartnerTag.Id             AS PartnerTagId
            , Object_PartnerTag.ValueData      AS PartnerTagName
 
-           , Object_InfoMoney_View.InfoMoneyGroupName
-           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , (CASE WHEN tmpMovement.InfoMoneyId IS NULL THEN '---' ELSE '' END || Object_InfoMoney_View.InfoMoneyGroupName) :: TVarChar AS InfoMoneyGroupName
+           , (CASE WHEN tmpMovement.InfoMoneyId IS NULL THEN '---' ELSE '' END || Object_InfoMoney_View.InfoMoneyDestinationName) :: TVarChar AS InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode
-           , Object_InfoMoney_View.InfoMoneyName
-           , Object_InfoMoney_View.InfoMoneyName_all
+           , (CASE WHEN tmpMovement.InfoMoneyId IS NULL THEN '---' ELSE '' END || Object_InfoMoney_View.InfoMoneyName) :: TVarChar AS InfoMoneyName
+           , (CASE WHEN tmpMovement.InfoMoneyId IS NULL THEN '---' ELSE '' END || Object_InfoMoney_View.InfoMoneyName_all) :: TVarChar AS InfoMoneyName_all
 
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_BranchDoc.ValueData       AS DocBranchName
@@ -175,25 +177,46 @@ BEGIN
                                  END
                                + COALESCE (MLO_PaidKind.ObjectId, 0)
                                  ) AS PaidKindId
+                          , MAX (CASE WHEN ObjectLink_Contract_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                           THEN ObjectLink_Contract_InfoMoney.ChildObjectId
+                                      ELSE -1 * ObjectLink_Contract_InfoMoney.ChildObjectId
+                                 END
+                                 ) AS InfoMoneyId
                           , MAX (COALESCE (MILO_Branch.ObjectId, 0)) AS BranchId
                      FROM Object
                           INNER JOIN MovementLinkObject ON MovementLinkObject.ObjectId = Object.Id
-                          INNER JOIN Movement ON MovementLinkObject.MovementId = Movement.Id
+                          INNER JOIN Movement ON Movement.Id = MovementLinkObject.MovementId
                                              AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
                                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                                             AND inIsPeriod = TRUE
                           LEFT JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                 AND MovementItem.IsErased = FALSE
                           LEFT JOIN MovementItemLinkObject AS MILO_Branch ON MILO_Branch.MovementItemId = MovementItem.Id AND MILO_Branch.DescId =  zc_MILinkObject_Branch()
+                          LEFT JOIN MovementLinkObject AS MLO_Contract ON MLO_Contract.MovementId = Movement.Id AND MLO_Contract.DescId =  zc_MovementLinkObject_Contract()
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                               ON ObjectLink_Contract_InfoMoney.ObjectId = MLO_Contract.ObjectId
+                                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                      WHERE Object.DescId = zc_Object_Partner()
+                       AND inIsPeriod = TRUE
+                       AND (ObjectLink_Contract_InfoMoney.ChildObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                      GROUP BY Object.Id
                     ) AS tmpMovement ON tmpMovement.PartnerId = Object_Partner.id
 
          LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = CASE WHEN tmpMovement.DescId > 3000 THEN tmpMovement.DescId - 3000 WHEN tmpMovement.DescId > 2000 THEN tmpMovement.DescId - 2000 ELSE tmpMovement.DescId END
          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN tmpMovement.PaidKindId > 3000 THEN tmpMovement.PaidKindId - 3000 WHEN tmpMovement.PaidKindId > 2000 THEN tmpMovement.PaidKindId - 2000 ELSE tmpMovement.PaidKindId END
          LEFT JOIN Object AS Object_BranchDoc   ON Object_BranchDoc.Id   = tmpMovement.BranchId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                              ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
+                             AND tmpMovement.InfoMoneyId IS NULL
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (ABS (tmpMovement.InfoMoneyId), ObjectLink_Juridical_InfoMoney.ChildObjectId)
 
          LEFT JOIN ObjectString AS ObjectString_Address
                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
@@ -220,10 +243,6 @@ BEGIN
                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
          LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -234,11 +253,6 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                             ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
-                            AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
-        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
                               ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
@@ -300,12 +314,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.12.14                                        * add inInfoMoneyId
  03.12.14                                        * all
  01.12.14                                                       *
  17.10.14         *
@@ -313,4 +328,4 @@ ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, I
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, 0, '2')
+-- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, 0, 0, '2')
