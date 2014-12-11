@@ -775,8 +775,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
+
+
+//ProductionUnionTechEditForm
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
+
   // 11,12,14 Инна
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');

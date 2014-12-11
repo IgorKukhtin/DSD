@@ -1542,8 +1542,8 @@
 				<Form>ServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnionTechEdit.pas">
+				<Form>ProductionUnionTechEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
@@ -1774,6 +1774,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionPeresort.pas">
 				<Form>ProductionPeresortForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

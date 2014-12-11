@@ -519,7 +519,7 @@ uses
   GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  ProductionUnionTechEdit in '..\..\Forms\Document\ProductionUnionTechEdit.pas' {ProductionUnionTechEditForm: TParentForm},
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
   ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
@@ -599,7 +599,8 @@ uses
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
-  ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm};
+  ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
