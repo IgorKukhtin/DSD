@@ -1905,6 +1905,8 @@ BEGIN
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF (vbIsHistoryCost = FALSE)
+        AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
+        AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
         AND EXISTS (SELECT MovementLinkMovement_Master.MovementId
                     FROM MovementLinkMovement AS MovementLinkMovement_Master
                          INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId

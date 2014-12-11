@@ -25,12 +25,16 @@ $BODY$
     DECLARE vbExtraChargesPercent TFloat;
     DECLARE vbPaidKindId Integer;
 
+    DECLARE vbCurrencyDocumentId Integer;
+    DECLARE vbCurrencyPartnerId Integer;
+    DECLARE vbCurrencyPartnerValue TFloat;
+    DECLARE vbParPartnerValue TFloat;
+
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
 
-    DECLARE vbIsProcess_BranchIn Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -47,7 +51,14 @@ BEGIN
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId        AS GoodsPropertyId
           , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId   AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)
+
+          , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
+          , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())  AS CurrencyPartnerId
+          , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
+          , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
+
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId
+               , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyPartnerValue, vbParPartnerValue
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -58,6 +69,20 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                  ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                 AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+          LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                  ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                 AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                       ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                      AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                       ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                      AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind())
@@ -74,12 +99,8 @@ BEGIN
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
      WHERE Movement.Id = inMovementId
-       -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
-     -- Важный параметр - Прихрд на филиала или расход с филиала (в первом слчае вводится только "Дата (приход)")
-     vbIsProcess_BranchIn:= EXISTS (SELECT Id FROM Object_Unit_View WHERE Id = (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To()) AND BranchId = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0))
-                           ;
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -97,130 +118,27 @@ BEGIN
     END IF;
 
 
-    IF vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice()
-    THEN
-        -- Расчет Сумм
-        SELECT CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
-                         -- если цены без НДС или %НДС=0
-                         THEN OperSumm
-                    WHEN vbPriceWithVAT AND 1=1
-                         -- если цены c НДС
-                         THEN CAST ( (OperSumm) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                    WHEN vbPriceWithVAT
-                         -- если цены c НДС (Вариант может быть если первичен расчет НДС =1/6 )
-                         THEN OperSumm - CAST ( (OperSumm) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
-               END AS OperSumm_MVAT
-               -- Сумма с НДС
-             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                         -- если цены с НДС
-                         THEN (OperSumm)
-                    WHEN vbVATPercent > 0
-                         -- если цены без НДС
-                         THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm) AS NUMERIC (16, 2))
-               END AS OperSumm_PVAT
-             , TotalCountKg
-             , TotalCountSh
-
-               INTO vbOperSumm_MVAT, vbOperSumm_PVAT
-                  , vbTotalCountKg, vbTotalCountSh
-
-        FROM
-       (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                              THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                         ELSE CAST (tmpMI.Amount * tmpMI.Price AS NUMERIC (16, 2))
-                    END
-                   ) AS OperSumm
-
-                         -- ШТ
-                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.Amount
-                              ELSE 0
-                         END) AS TotalCountSh
-                         -- ВЕС
-                       , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                   THEN tmpMI.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                              WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
-                                   THEN tmpMI.Amount
-                              ELSE 0
-                         END) AS TotalCountKg
-
-        FROM (SELECT MovementItem.ObjectId AS GoodsId
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                   , CASE WHEN vbDiscountPercent <> 0
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          WHEN vbExtraChargesPercent <> 0
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                     END AS Price
-                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-                   , SUM (MovementItem.Amount) AS Amount
-
-              FROM MovementItem
-                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                   INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                               AND MIFloat_Price.ValueData <> 0
-                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-              WHERE MovementItem.MovementId = inMovementId
-                AND MovementItem.isErased = FALSE
-              GROUP BY MovementItem.ObjectId
-                     , MILinkObject_GoodsKind.ObjectId
-                     , MIFloat_Price.ValueData
-                     , MIFloat_CountForPrice.ValueData
-             ) AS tmpMI
-                       LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                             ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
-                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                            ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
-                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                            ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
-                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-        ) AS tmpMI;
-    END IF;
-
-
-     --
+    --
     OPEN Cursor1 FOR
---     WITH tmpObject_GoodsPropertyValue AS
-
-
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , Movement.OperDate                          AS OperDate
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
-           , vbPriceWithVAT                             AS PriceWithVAT
-           , vbVATPercent                               AS VATPercent
-           , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
+
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData END AS TotalCountSh
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
+           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+
+           , MovementFloat_AmountCurrency.ValueData     AS TotalSummCurrency
+
            , Object_From.ValueData             		    AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , Object_PaidKind.ValueData         		    AS PaidKindName
            , View_Contract.InvNumber        		    AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
-           , View_Contract.ContractKindName             AS ContractKind
+           , View_Contract.ContractKindName             AS ContractKindName
 
-           , Object_RouteSorting.ValueData 		        AS RouteSortingName
-
-           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
-           , '' :: TVarChar                             AS Through     -- через кого
 
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
@@ -286,46 +204,28 @@ BEGIN
            , BankAccount_To.BeneficiarysAccount                 AS BenefAccount_Int
            , BankAccount_To.Name                                AS BankAccount_Int
 
-           , Object_CurrencyPartner.Id                          AS CurrencyPartnerId
-           , Object_CurrencyPartner.ValueData                   AS CurrencyPartnerName
-           , Object_Currency_View.InternalName                  AS IntCurShortName
-           , Object_Currency_View.Name                          AS IntCurName
---           , 'российских рублях' :: TVarChar                    AS IntCurNameAllName
-           , CASE WHEN Object_Currency_View.Code = 980
+           , View_CurrencyPartner.Name                          AS CurrencyPartnerName
+           , View_CurrencyPartner.InternalName                  AS IntCurShortName
+           , View_CurrencyPartner.Name                          AS IntCurName
+
+           , CASE WHEN View_CurrencyPartner.Code = 980
                   THEN 'украинских гривнах'
-                  WHEN Object_Currency_View.Code = 840
+                  WHEN View_CurrencyPartner.Code = 840
                   THEN 'долларах США'
-                  WHEN Object_Currency_View.Code = 643
+                  WHEN View_CurrencyPartner.Code = 643
                   THEN 'российских рублях'
              ELSE '' END                                        AS IntCurNameAllName
 
-
-
        FROM Movement
+            LEFT JOIN Object_Currency_View AS View_CurrencyPartner ON View_CurrencyPartner.Id = vbCurrencyPartnerId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
-                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
-            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 14461)
-            LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, 14461)
-            LEFT JOIN MovementFloat AS MF_CurrencyPartnerNominalValue
-                                    ON MF_CurrencyPartnerNominalValue.MovementId =  Movement.Id
-                                   AND MF_CurrencyPartnerNominalValue.DescId = zc_MovementFloat_ParValue()
-            LEFT JOIN MovementFloat AS MF_CurrencyPartnerValue
-                                    ON MF_CurrencyPartnerValue.MovementId =  Movement.Id
-                                   AND MF_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
-
-
-
-            LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
-                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -335,15 +235,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -362,10 +257,6 @@ BEGIN
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 -- Contract
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -566,70 +457,45 @@ BEGIN
              Object_Goods.ObjectCode         AS GoodsCode
            , Object_GoodsGroup.ValueData     AS GoodsGroupName
            , Object_TradeMark.ValueData      AS TradeMarkName
-           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
-           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
+           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName_two
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
            , OS_Measure_InternalCode.ValueData  AS MeasureIntCode
 
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
-
-           , tmpMI.Price                     AS Price
-           , tmpMI.PriceInCur                AS PriceInCur
+           , (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) :: TFloat AS AmountPartner_Weight
 
            , tmpMI.CountForPrice             AS CountForPrice
+           , tmpMI.Price                     AS Price
+           , CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                       THEN 0
+                  WHEN vbCurrencyDocumentId = vbCurrencyPartnerId
+                       THEN tmpMI.Price
+                       -- так переводится в валюту vbCurrencyPartnerId
+                  ELSE CAST (tmpMI.Price * CASE WHEN vbCurrencyPartnerValue <> 0 THEN vbParPartnerValue / vbCurrencyPartnerValue ELSE 0 END AS NUMERIC (16, 3))
+             END AS Price_Curr
+
+             -- сумма в валюте
+           , CAST (
+             CASE WHEN vbCurrencyDocumentId = zc_Enum_Currency_Basis() AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                       THEN 0
+                  WHEN vbCurrencyDocumentId = vbCurrencyPartnerId
+                       THEN tmpMI.Price
+                       -- так переводится в валюту vbCurrencyPartnerId
+                  ELSE CAST (tmpMI.Price * CASE WHEN vbCurrencyPartnerValue <> 0 THEN vbParPartnerValue / vbCurrencyPartnerValue ELSE 0 END AS NUMERIC (16, 3))
+             END
+           * tmpMI.AmountPartner
+           * CASE WHEN tmpMI.CountForPrice <> 0 THEN 1 / tmpMI.CountForPrice ELSE 1 END
+             AS NUMERIC (16, 2)) AS AmountSumm_Curr
+
 
            , COALESCE (tmpObject_GoodsPropertyValue.GroupName, '')  AS GroupName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
-
-             -- сумма по ценам док-та
-           , CASE WHEN tmpMI.CountForPrice <> 0
-                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
-                  ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
-             END AS AmountSumm
-
-             -- расчет цены без НДС, до 4 знаков
-           , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE tmpMI.Price
-             END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             AS PriceNoVAT
-
-             -- расчет цены с НДС, до 4 знаков
-           , CASE WHEN vbPriceWithVAT <> TRUE
-                  THEN CAST (tmpMI.Price + tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE tmpMI.Price
-             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-             AS PriceWVAT
-
-             -- расчет суммы без НДС, до 2 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 2)) AS AmountSummNoVAT
-
-             -- расчет суммы с НДС, до 3 знаков
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
-                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
-                                              ELSE tmpMI.Price
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3)) AS AmountSummWVAT
-
-             -- расчет суммы с НДС, до 3 знаков в вал
-           , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT <> TRUE
-                                              THEN tmpMI.PriceInCur + tmpMI.PriceInCur * (vbVATPercent / 100)
-                                              ELSE tmpMI.PriceInCur
-                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3)) AS AmountSummWVATCur
-
-
-           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
---           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -641,51 +507,10 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
 
-                  , CASE
-
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) <> COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent = 0 AND vbDiscountPercent = 0
-                              THEN CAST ( (COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1)) AS NUMERIC (16, 2))
---
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN COALESCE (Object_CurrencyDocument.code, 980) = 980 AND COALESCE (Object_CurrencyPartner.Id, 0) = COALESCE (Object_CurrencyDocument.Id, 0) AND vbExtraChargesPercent = 0 AND vbDiscountPercent = 0
-                              THEN CAST (COALESCE (MIFloat_Price.ValueData, 0)  AS NUMERIC (16, 2))
-
-                         ELSE 0--(COALESCE (MIFloat_Price.ValueData, 0) / COALESCE (MF_CurrencyPartnerValue.ValueData,1) / COALESCE (MF_CurrencyPartnerNominalValue.ValueData,1))
-                    END AS PriceInCur
-
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
              FROM MovementItem
-/*
-            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-            LEFT JOIN Object_Currency_View AS Object_Currency_View ON Object_Currency_View.Id = MovementLinkObject_CurrencyPartner.ObjectId
-*/
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = MovementItem.MovementId
-                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = MovementItem.MovementId
-                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-
-            LEFT JOIN Object_Currency_View AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-            LEFT JOIN Object_Currency_View AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-            LEFT JOIN MovementFloat AS MF_CurrencyPartnerNominalValue
-                                    ON MF_CurrencyPartnerNominalValue.MovementId =  MovementItem.MovementId
-                                   AND MF_CurrencyPartnerNominalValue.DescId = zc_MovementFloat_ParValue()
-            LEFT JOIN MovementFloat AS MF_CurrencyPartnerValue
-                                    ON MF_CurrencyPartnerValue.MovementId =  MovementItem.MovementId
-                                   AND MF_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
-
-
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -709,11 +534,6 @@ BEGIN
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
-                    , MF_CurrencyPartnerValue.ValueData
-                    , MF_CurrencyPartnerNominalValue.ValueData
-                    , Object_CurrencyDocument.Id
-                    , Object_CurrencyPartner.Id
-                    , Object_CurrencyDocument.code
 
             ) AS tmpMI
 
@@ -761,6 +581,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Invoice_Print (Integer,TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.14                                        * all
  13.11.14                                                       * from sale_print
 */
 

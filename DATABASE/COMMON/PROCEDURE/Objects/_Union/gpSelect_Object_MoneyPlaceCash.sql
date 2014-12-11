@@ -42,6 +42,12 @@ BEGIN
                                  WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                    AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                  GROUP BY View_Personal.MemberId
+                                UNION ALL
+                                 SELECT View_Personal.MemberId
+                                 FROM Object_Personal_View AS View_Personal
+                                 WHERE View_Personal.PositionId = 81178 -- экспедитор
+                                    OR View_Personal.UnitId = 8409 -- Отдел экспедиторов
+                                 GROUP BY View_Personal.MemberId
                                 )
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
