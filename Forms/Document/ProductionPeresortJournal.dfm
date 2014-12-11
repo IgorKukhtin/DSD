@@ -1,5 +1,5 @@
-inherited ProductionUnionJournalForm: TProductionUnionJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
+inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' -'#1087#1077#1088#1077#1089#1086#1088#1090'>'
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1081
@@ -177,6 +177,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -199,10 +200,12 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TProductionUnionForm'
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TProductionUnionForm'
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

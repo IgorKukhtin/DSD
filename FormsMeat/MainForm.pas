@@ -442,6 +442,8 @@ type
     bbProductionUnionTech: TdxBarButton;
     actGoodsQuality: TdsdOpenForm;
     bbGoodsQuality: TdxBarButton;
+    actProductionPeresort: TdsdOpenForm;
+    bbProductionPeresort: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }

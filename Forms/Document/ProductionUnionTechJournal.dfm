@@ -646,6 +646,19 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Action = actRefresh
       end>
   end
+  inherited HeaderSaver: THeaderSaver
+    ControlList = <
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+  end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
     Left = 478

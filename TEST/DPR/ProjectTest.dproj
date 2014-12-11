@@ -1542,8 +1542,8 @@
 				<Form>ServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ProductionUnionTechEdit.pas">
+				<Form>ProductionUnionTechEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
@@ -1766,6 +1766,18 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
 				<Form>ContactPersonForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionPeresortJournal.pas">
+				<Form>ProductionPeresortJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionPeresort.pas">
+				<Form>ProductionPeresortForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
