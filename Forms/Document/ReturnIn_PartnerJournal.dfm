@@ -2,26 +2,26 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitWidth = 1114
-  ExplicitHeight = 569
+  ExplicitWidth = 1122
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
-    Height = 476
+    Height = 478
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1102
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1100
-      ExplicitHeight = 470
+      ExplicitWidth = 1106
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1100
-        Height = 470
-        ExplicitWidth = 1100
-        ExplicitHeight = 470
+        Width = 1106
+        Height = 478
+        ExplicitWidth = 1106
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -72,6 +72,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChange
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -118,6 +123,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChange
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -141,26 +151,26 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 70
           end
           object colOperDatePartner: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 49
+            Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 66
+            Width = 70
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 48
+            Width = 70
           end
           object colInvNumberMark: TcxGridDBColumn
             Caption = #8470' '#1079'.'#1084'.'
@@ -175,7 +185,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 62
+            Width = 70
           end
           object colOKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -260,6 +270,16 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object colTotalSummChange: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' (-)'#1089#1082'.(+)'#1085#1072#1094
+            DataBinding.FieldName = 'TotalSummChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
@@ -268,14 +288,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 58
+            Width = 75
           end
           object colChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
             DataBinding.FieldName = 'ChangePercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 56
+            Width = 65
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
@@ -329,7 +349,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 55
           end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -360,7 +380,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -368,14 +388,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 59
+            Width = 80
           end
           object colCurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
@@ -840,7 +860,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
