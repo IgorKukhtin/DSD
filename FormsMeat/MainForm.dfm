@@ -3,16 +3,15 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
-  ExplicitLeft = -288
   ExplicitWidth = 1094
-  ExplicitHeight = 254
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      45
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -3084,7 +3083,11 @@
       FormName = 'TProductionUnionJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inArticleLossId'
+          Value = '0'
+        end>
       isShowModal = False
     end
     object actLoss: TdsdOpenForm
