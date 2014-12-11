@@ -20,77 +20,67 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inPrice               TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inPayDate             TDateTime , -- Дата оплаты
-    IN inNDSinPrice          Boolean   ,
+    IN inPriceWithVAT        Boolean   ,
     IN inUnitName            TVarChar   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$
+   DECLARE vbUserId Integer;
+
    DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
+
    DECLARE vbMovementItemId Integer;
+   DECLARE vbPartnerGoodsId Integer;
    DECLARE vbGoodsId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbObjectId Integer;
+
 BEGIN
 
+   vbUserId := inSession::Integer;
+   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
+   -- Ищем документ по дате, номеру, юр лицу
+      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId)
+   SELECT Id, Movement.StatusId INTO vbMovementId, vbStatusId
+            FROM tmpStatus
+            JOIN Movement ON Movement.OperDate = inOperDate 
+                         AND Movement.DescId = zc_Movement_Income() 
+                         AND Movement.StatusId = tmpStatus.StatusId
+                         AND Movement.InvNumber = inInvNumber
+            JOIN MovementLinkObject AS MovementLinkObject_From
+                                    ON MovementLinkObject_From.MovementId = Movement.Id
+                                   AND MovementLinkObject_From.ObjectId = inJuridicalId
+                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
 
-/*	
+    SELECT MainId INTO vbUnitId 
+      FROM Object_ImportExportLink_View
+     WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
 
-  IF COALESCE(inPrice, 0) = 0 THEN 
-     RETURN;
-  END IF;
+  vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
+                                                 inJuridicalId, vbUnitId, zc_Enum_NDSKind_Medical(), 
+                                                 inContractId := 0, inUserId := vbUserId);
 
-  DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
-    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
-                                    AND OperDate < CURRENT_DATE);
+  -- Ищем товар для накладной. 
+      SELECT MAX(Goods_Retail.GoodsId), MAX(Goods_Juridical.GoodsId) INTO vbGoodsId, vbPartnerGoodsId
+        FROM Object_LinkGoods_View AS Goods_Juridical
+        JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
+                                                  AND Goods_Retail.ObjectId = vbObjectId
 
-  DELETE FROM LoadPriceList WHERE Id IN
-    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE(ContractId, 0) = inContractId
-                                    AND OperDate < CURRENT_DATE);
-   
-  SELECT Id INTO vbLoadPriceListId 
-    FROM LoadPriceList
-   WHERE JuridicalId = inJuridicalId AND OperDate = Current_Date AND COALESCE(ContractId, 0) = inContractId;
+       WHERE Goods_Juridical.ObjectId = inJuridicalId AND Goods_Juridical.GoodsCode = inGoodsCode;
 
-  IF COALESCE(vbLoadPriceListId, 0) = 0 THEN
-     INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice)
-             VALUES(inJuridicalId, inContractId, Current_Date, inNDSinPrice);
-  END IF;
+  -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена. 
+     SELECT MovementItem.Id INTO vbMovementItemId
+       FROM MovementItem 
+      WHERE MovementItem.MovementId = vbMovementId
+        AND MovementItem.DescId     = zc_MI_Master();
+  
+     vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, vbUserId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
-  SELECT Id INTO vbLoadPriceListItemsId 
-    FROM LoadPriceListItem 
-   WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
-
-   -- Ищем по общему коду 
-   IF (COALESCE(vbGoodsId, 0) = 0) AND (inCommonCode > 0) THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = inCommonCode;
-   END IF;
-   
-   -- Ищем по штрих-коду 
-   IF (COALESCE(vbGoodsId, 0) = 0) AND (inBarCode <> '') THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;
-   END IF;
-
-   -- Ищем по коду и inJuridicalId
-   IF (COALESCE(vbGoodsId, 0) = 0) THEN
-      SELECT GoodsMainId INTO vbGoodsId
-        FROM Object_LinkGoods_View 
-       WHERE ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
-   END IF;
-
-   IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
-      INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
-             VALUES(vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
-   ELSE
-      UPDATE LoadPriceListItem 
-         SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, 
-             Price = inPrice, ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
-       WHERE Id = vbLoadPriceListItemsId;
-   END IF;
-*/
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

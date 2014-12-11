@@ -3,15 +3,16 @@
   ClientWidth = 1086
   KeyPreview = True
   Position = poDesigned
+  ExplicitLeft = -288
   ExplicitWidth = 1094
-  ExplicitHeight = 261
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      28
+      45
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -96,18 +97,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUserProtocol'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementDesc'
         end
         item
@@ -162,6 +151,26 @@
         item
           Visible = True
           ItemName = 'bbImportSettings'
+        end
+        item
+          Visible = True
+          ItemName = 'bbImportExportLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbService_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUserProtocol'
         end
         item
           Visible = True
@@ -1735,11 +1744,6 @@
       Action = actProcess
       Category = 0
     end
-    object bbProtocol: TdxBarButton
-      Action = actProtocol
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
-      Category = 0
-    end
     object bbSetUserDefaults: TdxBarButton
       Action = actSetUserDefaults
       Category = 0
@@ -1762,14 +1766,6 @@
     end
     object bbLoad1CSale: TdxBarButton
       Action = actLoad1CSale
-      Category = 0
-    end
-    object bbUserProtocol: TdxBarButton
-      Action = actProtocolUser
-      Category = 0
-    end
-    object bbMovementProtocol: TdxBarButton
-      Action = actProtocolMovement
       Category = 0
     end
     object bbProfitLossService: TdxBarButton
@@ -2248,16 +2244,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTech: TdsdOpenForm [11]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
-      FormName = 'TProductionUnionTechJournalForm'
-      FormNameParam.Value = 'TProductionUnionTechJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actGoodsQuality: TdsdOpenForm [11]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -2501,6 +2487,16 @@
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
       FormName = 'TReport_MemberForm'
       FormNameParam.Value = 'TReport_MemberForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnionTech: TdsdOpenForm [29]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
+      FormName = 'TProductionUnionTechJournalForm'
+      FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2794,28 +2790,6 @@
       Hint = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       FormName = 'TCalendarForm'
       FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProtocolUser: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
-      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
-      FormName = 'TUserProtocolForm'
-      FormNameParam.Value = 'TUserProtocolForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProtocolMovement: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-      FormName = 'TMovementProtocolForm'
-      FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3762,17 +3736,6 @@
       Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
       Hint = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
       FormName = 'TModelServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProtocol: TdsdOpenForm
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      MoveParams = <>
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
-      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
-      FormName = 'TProtocolForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>

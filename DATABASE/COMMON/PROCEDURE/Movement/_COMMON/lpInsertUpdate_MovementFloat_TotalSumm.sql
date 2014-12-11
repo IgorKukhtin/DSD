@@ -59,7 +59,7 @@ BEGIN
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
      SELECT Movement.DescId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
-          , COALESCE (MovementFloat_VATPercent.ValueData, 0)
+          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)          AS ChangePrice
@@ -81,6 +81,12 @@ BEGIN
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                        ON MovementLinkObject_NDSKind.MovementId = Movement.Id
+                                       AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+           LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId 
+                                AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -603,6 +609,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.14                       * add NDSKind
  19.10.14                                        * add vbOperCount_Second
  09.08.14                                        * add zc_Movement_SendOnPrice
  19.07.14                                        * add zc_Movement_EDI

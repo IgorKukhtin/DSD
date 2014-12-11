@@ -34,8 +34,8 @@ BEGIN
          AND MovementLinkObject_Unit.ObjectId = inUnitId;
 
      IF COALESCE(vbMovementId, 0) = 0 THEN 
-        vbMovementId := gpInsertUpdate_Movement_OrderInternal(0, '', inOperDate, inUnitId, inSession);
-     END IF;
+        vbMovementId := gpInsertUpdate_Movement_OrderInternal(0, '', inOperDate, inUnitId, 0, inSession);
+     END IF;                                                                               
 
    SELECT 
          Object_Goods_View.Id INTO vbGoodsId

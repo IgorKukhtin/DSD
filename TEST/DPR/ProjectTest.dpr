@@ -269,7 +269,6 @@ uses
   BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
   BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
-  SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
@@ -594,6 +593,10 @@ uses
   Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas',
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas',
   GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm},
+  ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
+  ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
+  ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
+  ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm};
 
 {$R *.RES}

@@ -13,7 +13,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
   Vcl.Controls, MeDOC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, EDI;
 
 type
   TTaxJournalForm = class(TAncestorJournalForm)
@@ -80,6 +80,14 @@ type
     bbDocument: TdxBarButton;
     colContractCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    EDI: TEDI;
+    spGetDirectoryName: TdsdStoredProc;
+    mactMedocDECLAR: TMultiAction;
+    bbSaveDeclarForMedoc: TdxBarButton;
+    actGetDirectory: TdsdExecStoredProc;
+    mactMEDOCList: TMultiAction;
+    EDIAction: TEDIAction;
+    spTaxPrint: TdsdExecStoredProc;
   private
     { Private declarations }
   public

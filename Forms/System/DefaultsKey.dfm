@@ -3,11 +3,15 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Focusable = False
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
+        Width = 575
+        Height = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -45,16 +49,29 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
       end
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+  end
   inherited ActionList: TActionList
     inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Key'
           DataType = ftString
@@ -70,6 +87,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
       GuiParams = <
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FormClassName'
           DataType = ftString
@@ -97,6 +115,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DescName'
           DataType = ftString
@@ -119,6 +138,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     Params = <
       item
         Name = 'FormClassName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'FormClassName'
         DataType = ftString
@@ -126,6 +146,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
       end
       item
         Name = 'DescName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DescName'
         DataType = ftString
@@ -141,6 +162,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -161,6 +183,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
         DataType = ftBlob
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 360
     Top = 160
   end

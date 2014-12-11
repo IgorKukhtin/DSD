@@ -17,7 +17,8 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Top = 27
         Width = 798
         Height = 255
-        ExplicitTop = 27
+        ExplicitLeft = 24
+        ExplicitTop = 3
         ExplicitWidth = 798
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView

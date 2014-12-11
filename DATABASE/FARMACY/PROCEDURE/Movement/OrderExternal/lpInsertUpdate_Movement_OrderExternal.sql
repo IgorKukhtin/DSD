@@ -18,6 +18,10 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
+     IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
+        inInvNumber := (NEXTVAL ('Movement_OrderExternal_seq'))::TVarChar;
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderExternal(), inInvNumber, inOperDate, NULL);
 

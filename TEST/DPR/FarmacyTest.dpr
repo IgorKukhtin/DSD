@@ -63,7 +63,7 @@ uses
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
   Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
   BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
-  NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm},
+  ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
@@ -126,7 +126,7 @@ uses
   GoodsMainLite in '..\..\FormsFarmacy\Guides\GoodsMainLite.pas' {GoodsMainLiteForm: TParentForm},
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
-  SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
+  ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
   ObjectDesc in '..\..\Forms\System\ObjectDesc.pas' {ObjectDescForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
@@ -199,7 +199,13 @@ uses
   OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   OrderKindTest in '..\SOURCE\Objects\All\OrderKindTest.pas',
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
-  OrderKindEdit in '..\..\Forms\Kind\OrderKindEdit.pas' {OrderKindEditForm: TParentForm};
+  OrderKindEdit in '..\..\Forms\Kind\OrderKindEdit.pas' {OrderKindEditForm: TParentForm},
+  ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
+  SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
+  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
+  MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
+  ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
+  NDSKind in '..\..\Forms\Kind\NDSKind.pas' {NDSKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

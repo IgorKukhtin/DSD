@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , Amount TFloat
              , Price TFloat
              , Summ TFloat
@@ -31,6 +32,8 @@ BEGIN
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
+           , ''::TVarChar               AS PartnerGoodsCode
+           , ''::TVarChar               AS PartnerGoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TFloat)      AS Summ
@@ -58,8 +61,10 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
+           , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
            , MovementItem.Amount                AS Amount
-           , MIFloat_Summ.ValueData             AS Summ
+           , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
            , MIFloat_Price.ValueData            AS Price
            , MovementItem.isErased              AS isErased
 
@@ -69,12 +74,14 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+
+            LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
 
             ;
 
@@ -86,9 +93,11 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
+           , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
            , MovementItem.Amount                AS Amount
            , MIFloat_Price.ValueData            AS Price
-           , MIFloat_Summ.ValueData             AS Summ
+           , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -97,16 +106,17 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-            ;
+            LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId;
 
      END IF;
 
@@ -119,6 +129,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.12.14                         *
  03.07.14                                                       *
 
 */

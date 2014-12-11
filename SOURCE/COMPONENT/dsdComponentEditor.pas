@@ -43,7 +43,7 @@ implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
-     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors;
+     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI;
 
 procedure Register;
 begin
@@ -76,6 +76,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TEDI)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
   // и даже такой. ѕриходитс€ использовать дл€ кросса
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
@@ -119,6 +120,10 @@ begin
             begin
               Proc('Name');
               Proc('Data');
+            end;
+            if (Component is TEDI) then
+            begin
+              Proc('Directory');
             end;
             if (Component is TDefaultKey) then
             begin

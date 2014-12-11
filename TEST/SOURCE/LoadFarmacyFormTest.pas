@@ -257,6 +257,8 @@ procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalLiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalLiteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
 end;
@@ -329,18 +331,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
-{
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportExportLinkTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportExportLinkTypeForm');
+
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));

@@ -94,6 +94,22 @@ object AncestorMainForm: TAncestorMainForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUserProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbLookAndFillSettings'
         end
         item
@@ -123,12 +139,29 @@ object AncestorMainForm: TAncestorMainForm
       Visible = ivAlways
       ItemLinks = <>
     end
+    object bbProtocol: TdxBarButton
+      Action = actProtocol
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
+      Category = 0
+    end
+    object bbUserProtocol: TdxBarButton
+      Action = actProtocolUser
+      Category = 0
+    end
+    object bbMovementProtocol: TdxBarButton
+      Action = actProtocolMovement
+      Category = 0
+    end
     object bbSeparator: TdxBarSeparator
       Category = 0
       Visible = ivAlways
     end
     object bbLookAndFillSettings: TdxBarButton
       Action = actLookAndFeel
+      Category = 0
+    end
+    object bbImportExportLink: TdxBarButton
+      Action = actImportExportLink
       Category = 0
     end
   end
@@ -187,6 +220,51 @@ object AncestorMainForm: TAncestorMainForm
       Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
       FormName = 'TImportTypeForm'
       FormNameParam.Value = 'TImportTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actImportExportLink: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1057#1074#1103#1079#1080' '#1086#1073#1098#1077#1082#1090#1086#1074
+      Hint = #1057#1074#1103#1079#1080' '#1086#1073#1098#1077#1082#1090#1086#1074
+      FormName = 'TImportExportLinkForm'
+      FormNameParam.Name = 'ff'
+      FormNameParam.Value = 'TImportExportLinkForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocolUser: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TUserProtocolForm'
+      FormNameParam.Value = 'TUserProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocolMovement: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocol: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

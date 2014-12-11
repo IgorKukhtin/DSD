@@ -1,15 +1,23 @@
 inherited ObjectForm: TObjectForm
   Caption = #1054#1073#1098#1077#1082#1090#1099
-  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 583
   ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    ExplicitTop = 26
+    ExplicitHeight = 282
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 575
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
+        Width = 575
+        Height = 282
+        ExplicitWidth = 575
+        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

@@ -35,10 +35,13 @@ BEGIN
 
        WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)),
             JuridicalSettingsPriceList AS (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (inObjectId)),
-            MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId FROM MovementItem    
+         MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId  FROM MovementItem    
                                     JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid -- Связь товара сети с общим
-                                    WHERE movementid = inMovementId  AND ((inGoodsId = 0) OR (inGoodsId = movementItem.objectid)) )
+                               LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                      ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
 
+                                    WHERE movementid = inMovementId  AND ((inGoodsId = 0) OR (inGoodsId = movementItem.objectid))  
+                                    )
        INSERT INTO _tmpMI 
 
        SELECT row_number() OVER ()
@@ -84,29 +87,31 @@ BEGIN
           , Contract.Id AS ContractId
           , Contract.ValueData AS ContractName
           , COALESCE(ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-       FROM OBJECT AS MainGoods, OBJECT AS Goods, MovementItemOrder  -- Элемент документа заявка
-         ,  MovementItem AS PriceList  -- Прайс-лист
-       JOIN LastPriceList_View  -- Прайс-лист
-                    ON PriceList.MovementId  = LastPriceList_View.MovementId 
+
+    
+       FROM MovementItemOrder 
+              
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
+                                    ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                   AND MILinkObject_Goods.ObjectId = MovementItemOrder.GoodsId 
+
+           JOIN  MovementItem AS PriceList  -- Прайс-лист
+                   ON PriceList.Id = MILinkObject_Goods.MovementItemId
+             JOIN LastPriceList_View  -- Прайс-лист
+                   ON LastPriceList_View.MovementId  = PriceList.MovementId
+
    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                               ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
    LEFT JOIN JuridicalSettingsPriceList 
                     ON JuridicalSettingsPriceList.JuridicalId = LastPriceList_View.JuridicalId 
                    AND JuridicalSettingsPriceList.ContractId = LastPriceList_View.ContractId 
 
-   JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
-                                    ON MILinkObject_Goods.MovementItemId = PriceList.Id
-                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-
-   JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-              ON PriceList_GoodsLink.GoodsId = MILinkObject_Goods.ObjectId
-
+              
    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
 
    LEFT JOIN lpSelect_Object_JuridicalSettingsRetail(inObjectId) AS JuridicalSettings ON JuridicalSettings.JuridicalId = LastPriceList_View.JuridicalId  
-
-   
    
    JOIN OBJECT AS Juridical ON Juridical.Id = LastPriceList_View.JuridicalId
 
@@ -116,10 +121,13 @@ BEGIN
                          ON ObjectFloat_Deferment.ObjectId = Contract.Id
                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
    
-   WHERE  PriceList_GoodsLink.GoodsMainId = MovementItemOrder.GoodsMainId
-      AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> TRUE AND Goods.Id = MovementItemOrder.ObjectId
-      AND MainGoods.Id = MovementItemOrder.GoodsMainId
-     
+
+  LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = MovementItemOrder.GoodsMainId 
+  
+   LEFT JOIN OBJECT AS Goods-- Элемент документа заявка
+     ON Goods.Id = MovementItemOrder.ObjectId
+         
+   WHERE  COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> TRUE 
      ) AS ddd
    
    LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice;
@@ -133,6 +141,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.12.14                         *  чуть оптимизировал
  06.11.14                         *  add PartionGoodsDate
  22.10.14                         *  add inGoodsId
  22.10.14                         *  add MakerName

@@ -723,10 +723,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Document.pas"/>
-			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
-				<Form>SetUserDefaultsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
 				<Form>DefaultsKeyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1758,6 +1754,16 @@
 				<Form>GoodsQualityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\ImportExportLink.pas">
+				<Form>ImportExportLinkForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
+				<Form>ImportExportLinkTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\ContactPerson.pas">
 				<Form>ContactPersonForm</Form>
 				<DesignClass>TParentForm</DesignClass>
