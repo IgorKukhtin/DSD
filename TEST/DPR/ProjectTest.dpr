@@ -597,7 +597,9 @@ uses
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
-  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm};
+  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
+  ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
