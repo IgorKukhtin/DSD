@@ -16,7 +16,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     ClientRectBottom = 542
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1072
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
