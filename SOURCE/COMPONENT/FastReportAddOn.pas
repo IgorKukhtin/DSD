@@ -661,7 +661,7 @@ end; // function MoneyToString(S:Currency; kpk:boolean; usd:boolean):string;
 begin
     if Curr = 'USD' then
      Result := MoneyToString(n, true, true)
-    else if Curr = 'RUR' then
+    else if (Curr = 'RUR') OR (Curr = 'RUB') then
      Result := MoneyToString(n, true, false)
     else if Curr = 'EUR' then
      Result := CurrencyToStr(n, EUR, false)
