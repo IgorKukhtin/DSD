@@ -28,14 +28,14 @@ BEGIN
      -- определяется параметр
      vbGoodsPropertyId:= (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
                           FROM Movement
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                                                    ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
+                                                    ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                           WHERE Movement.Id = inMovementId
                          );
@@ -139,6 +139,7 @@ BEGIN
 
            , MovementItem.Id                                                        AS Id
            , Object_Goods.ObjectCode                                                AS GoodsCode
+           , Object_GoodsGroup.ValueData     AS GoodsGroupName
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')                       AS GoodsName_Juridical
@@ -189,8 +190,12 @@ BEGIN
             LEFT JOIN ObjectFloat AS OF_Box_Weight
                                   ON OF_Box_Weight.ObjectId = MILinkObject_Box.ObjectId
                                  AND OF_Box_Weight.DescId = zc_ObjectFloat_Box_Weight()
-
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
