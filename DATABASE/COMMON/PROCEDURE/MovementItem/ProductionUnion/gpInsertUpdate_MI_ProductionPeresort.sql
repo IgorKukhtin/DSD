@@ -30,6 +30,10 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
    
+    -- меняем параметр
+   IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+   IF inPartionGoodsDateChild <= '01.01.1900' THEN inPartionGoodsDateChild:= NULL; END IF;
+   
    IF COALESCE (ioId,0) <> 0
    THEN
       vbChildId := (SELECT Id FROM MovementItem where MovementId = inMovementId 
