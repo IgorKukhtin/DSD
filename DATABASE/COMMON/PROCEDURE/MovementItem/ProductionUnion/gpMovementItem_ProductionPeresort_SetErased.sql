@@ -1,3 +1,5 @@
+--select * from gpMovementItem_ProductionPeresort_SetErased(inMovementItemId := 7160388 ,  inSession := '5');
+
 -- Function: gpMovementItem_ProductionPeresort_SetErased (Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpMovementItem_ProductionPeresort_SetErased (Integer, TVarChar);
@@ -15,14 +17,14 @@ $BODY$
 BEGIN
    
    
-   outIsErased := (SELECT outIsErased FROM gpMovementItem_ProductionUnion_Master_SetErased(inMovementItemId, inSession));
+   outIsErased := (SELECT dd.outIsErased FROM gpMovementItem_ProductionUnion_Master_SetErased(inMovementItemId, inSession) as dd);
    
    IF COALESCE (inMovementItemId,0) <> 0
    THEN
       vbChildId := (SELECT Id FROM MovementItem where ParentId   = inMovementItemId
                                                   AND DescId     = zc_MI_Child()
                                                   AND isErased   = FALSE);
-      vboutIsErased:= (SELECT outIsErased FROM gpMovementItem_ProductionUnion_Child_SetErased(vbChildId, inSession));
+      vboutIsErased:= (SELECT dd1.outIsErased FROM gpMovementItem_ProductionUnion_Child_SetErased(vbChildId, inSession) as dd1);
    END IF; 
 
 END;

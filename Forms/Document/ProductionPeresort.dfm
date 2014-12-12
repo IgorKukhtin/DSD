@@ -981,12 +981,12 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
+    StoredProcName = 'gpMovementItem_ProductionPeresort_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
+    StoredProcName = 'gpMovementItem_ProductionPeresort_SetUnErased'
     Left = 718
     Top = 464
   end
