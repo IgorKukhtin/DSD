@@ -49,12 +49,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -84,12 +82,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -103,7 +99,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Styles.Footer = nil
           Styles.Header = nil
           object colCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -111,7 +107,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Width = 75
           end
           object colName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -119,7 +115,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Width = 150
           end
           object colGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072'('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -133,19 +129,49 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoodsDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
-            DataBinding.FieldName = 'PartionGoodsDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
           object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088
+            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088'('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Width = 121
+          end
+          object colGoodsChildName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsChildCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChildChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 133
+          end
+          object colGoodsKindChildName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsKindChildName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChildChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colPartionGoodsChild: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'PartionGoodsChild'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 166
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -155,130 +181,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 91
           end
-          object colCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094
-            DataBinding.FieldName = 'Count'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
-            DataBinding.FieldName = 'UnitName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actUnitChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentVert = vaCenter
-            Width = 104
-          end
-          object colStorageName: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093'.)'
-            DataBinding.FieldName = 'StorageName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actStorageChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
+          object colComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
-          end
-          object colStorageName_Partion: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
-            DataBinding.FieldName = 'StorageName_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
-          end
-          object colPartionGoodsName: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
-            DataBinding.FieldName = 'PartionGoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actPartionGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
-          end
-          object colPartionGoodsOperDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1076#1072#1090#1072' '#1058#1052#1062')'
-            DataBinding.FieldName = 'PartionGoodsOperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 61
-          end
-          object colPrice: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
-            DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
-          object clInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object clInfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clInfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 100
           end
         end
       end
@@ -413,7 +323,30 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChildChoice: TOpenChoiceForm [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsKindChildForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindChildId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindChildName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -449,48 +382,25 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actStorageChoiceForm: TOpenChoiceForm
+    object actGoodsChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'StorageForm'
-      FormName = 'TStorage_ObjectForm'
-      FormNameParam.Value = 'TStorage_ObjectForm'
+      Caption = 'GoodsChildForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'StorageId'
+          ComponentItem = 'GoodsChildId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'StorageName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actUnitChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'UnitForm'
-      FormName = 'TUnit_ObjectForm'
-      FormNameParam.Value = 'TUnit_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName'
+          ComponentItem = 'GoodsChildName'
           DataType = ftString
         end>
       isShowModal = True
@@ -566,7 +476,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MI_ProductionPeresort'
     Params = <
       item
         Name = 'inMovementId'
@@ -759,7 +669,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 56
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_ProductionUnion'
     Params = <
       item
         Name = 'inMovementId'
@@ -916,7 +826,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Send'
+    StoredProcName = 'gpInsertUpdate_Movement_ProductionUnion'
     Params = <
       item
         Name = 'ioId'
@@ -1070,17 +980,17 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
+    StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
     Left = 718
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MI_ProductionPeresort'
     Params = <
       item
         Name = 'ioId'
@@ -1112,36 +1022,20 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
-        Name = 'inPartionGoodsDate'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Count'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inHeadCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'ioPartionGoods'
+        Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
@@ -1151,32 +1045,38 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
-        Name = 'inAssetId'
+        Name = 'inGoodsChildId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AssetId'
+        ComponentItem = 'GoodsChildId'
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inPartionGoodsChild'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'PartionGoodsChild'
+        DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inStorageId'
+        Name = 'inGoodsKindChildId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'StorageId'
+        ComponentItem = 'GoodsKindChildId'
         ParamType = ptInput
       end
       item
-        Name = 'inPartionGoodsId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsId'
-        ParamType = ptInput
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end
       item
         Value = Null
