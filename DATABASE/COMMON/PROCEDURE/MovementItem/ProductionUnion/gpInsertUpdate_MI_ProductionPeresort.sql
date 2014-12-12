@@ -1,3 +1,6 @@
+--select * from gpInsertUpdate_MI_ProductionPeresort(ioId := 0 , inMovementId := 597577 , inGoodsId := 2589 , inAmount := 5 , inPartionGoods := '' , inComment := '' , inGoodsKindId := 8330 , inGoodsChildId := 0 , inPartionGoodsChild := '' , inGoodsKindChildId := 0 ,  inSession := '5');
+
+
 -- Function: gpInsertUpdate_MI_ProductionPeresort()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
@@ -7,26 +10,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
---    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)        	
---    IN inCount	     TFloat    , -- Количество батонов или упаковок 
---    IN inRealWeight        TFloat    , -- Фактический вес(информативно)
---    IN inCuterCount        TFloat    , -- Количество кутеров
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Комментарий	                   
     IN inGoodsKindId         Integer   , -- Виды товаров 
---    IN inReceiptId         Integer   , -- Рецептуры	
-
-
     IN inGoodsChildId        Integer   , -- Товары
-
---    IN inParentId            Integer   , -- Главный элемент документа
---    IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
---    IN inPartionGoodsDate    TDateTime , -- Партия товара	
-    IN inPartionGoodsChild     TVarChar  , -- Партия товара        
---    IN inComment             TVarChar  , -- Комментарий
+    IN inPartionGoodsChild   TVarChar  , -- Партия товара        
     IN inGoodsKindChildId    Integer   , -- Виды товаров
-
-                   
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -49,10 +38,10 @@ BEGIN
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := inAmount
-                                                  , inPartionClose     := ''::Boolean
-                                                  , inCount            := NULL--0 ::TFloat
-                                                  , inRealWeight       := NULL--0 ::TFloat
-                                                  , inCuterCount       := NULL--0 ::TFloat
+                                                  , inPartionClose     := NULL-- ''::Boolean
+                                                  , inCount            := 0 ::TFloat
+                                                  , inRealWeight       := 0 ::TFloat
+                                                  , inCuterCount       := 0 ::TFloat
                                                   , inPartionGoods     := inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
@@ -68,7 +57,7 @@ BEGIN
                                                  , inGoodsId          := inGoodsChildId
                                                  , inAmount           := inAmount
                                                  , inParentId         := ioId
-                                                 , inAmountReceipt    := NULL--inAmountReceipt
+                                                 , inAmountReceipt    := 0 ::TFloat
                                                  , inPartionGoodsDate := NULL
                                                  , inPartionGoods     := inPartionGoods
                                                  , inComment          := NULL--'' ::TVarChar
@@ -90,3 +79,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MI_ProductionPeresort (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPartionClose:= FALSE, inComment:= '', inCount:= 1, inRealWeight:= 1, inCuterCount:= 0, inReceiptId:= 0, inSession:= '2')
+--select * from gpInsertUpdate_MI_ProductionPeresort(ioId := 0 , inMovementId := 597577 , inGoodsId := 2589 , inAmount := 5 , inPartionGoods := '' , inComment := '' , inGoodsKindId := 8330 , inGoodsChildId := 0 , inPartionGoodsChild := '' , inGoodsKindChildId := 0 ,  inSession := '5');

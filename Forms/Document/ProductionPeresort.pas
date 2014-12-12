@@ -37,19 +37,13 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    colCount: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colStorageName: TcxGridDBColumn;
-    colPartionGoodsName: TcxGridDBColumn;
-    actUnitChoiceForm: TOpenChoiceForm;
-    actStorageChoiceForm: TOpenChoiceForm;
+    colComment: TcxGridDBColumn;
+    actGoodsChildChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
-    colPrice: TcxGridDBColumn;
-    colStorageName_Partion: TcxGridDBColumn;
-    colPartionGoodsDate: TcxGridDBColumn;
-    colPartionGoodsOperDate: TcxGridDBColumn;
+    colGoodsChildName: TcxGridDBColumn;
+    colPartionGoodsChild: TcxGridDBColumn;
+    colGoodsKindChildName: TcxGridDBColumn;
+    actGoodsKindChildChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
