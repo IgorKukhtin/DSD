@@ -131,6 +131,7 @@ BEGIN
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
 
              JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
+                              AND MovementItemChild.ParentId   = MovementItem.Id
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = tmpIsErased.isErased
                        
@@ -207,6 +208,7 @@ BEGIN
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
               
             JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
+                              AND MovementItemChild.ParentId   = MovementItem.Id
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = tmpIsErased.isErased
                        

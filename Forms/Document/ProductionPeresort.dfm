@@ -11,18 +11,18 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Width = 1128
     Height = 548
     ExplicitTop = 126
-    ExplicitWidth = 1072
-    ExplicitHeight = 542
+    ExplicitWidth = 1128
+    ExplicitHeight = 548
     ClientRectBottom = 548
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1072
-      ExplicitHeight = 518
+      ExplicitWidth = 1128
+      ExplicitHeight = 524
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 524
-        ExplicitWidth = 1072
-        ExplicitHeight = 518
+        ExplicitWidth = 1128
+        ExplicitHeight = 524
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -212,7 +212,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Width = 1128
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1072
+    ExplicitWidth = 1128
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1032,7 +1032,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'null'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1070,7 +1070,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end
       item
         Name = 'inPartionGoodsDateChild'
-        Value = Null
+        Value = 'null'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDateChild'
         DataType = ftDateTime

@@ -32,7 +32,8 @@ BEGIN
    
    IF COALESCE (ioId,0) <> 0
    THEN
-      vbChildId := (SELECT Id FROM MovementItem where MovementId = inMovementId
+      vbChildId := (SELECT Id FROM MovementItem where MovementId = inMovementId 
+                                                  AND ParentId   = ioid
                                                   AND DescId     = zc_MI_Child()
                                                   AND isErased   = FALSE);
    END IF;
@@ -65,7 +66,7 @@ BEGIN
                                                  , inParentId         := ioId
                                                  , inAmountReceipt    := 0 ::TFloat
                                                  , inPartionGoodsDate := inPartionGoodsDateChild
-                                                 , inPartionGoods     := inPartionGoods
+                                                 , inPartionGoods     := inPartionGoodsChild
                                                  , inComment          := NULL--'' ::TVarChar
                                                  , inGoodsKindId      := inGoodsKindChildId
                                                  , inUserId           := vbUserId
