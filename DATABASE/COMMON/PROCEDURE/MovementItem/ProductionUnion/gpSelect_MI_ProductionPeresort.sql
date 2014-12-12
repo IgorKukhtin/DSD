@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionPeresort(
 RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar
-             , Amount TFloat, PartionGoods TVarChar, PartionGoodsChild TVarChar
+             , Amount TFloat
+             , PartionGoods TVarChar, PartionGoodsDate TDateTime
+             , PartionGoodsChild TVarChar, PartionGoodsDateChild TDateTime
              , Comment TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
@@ -40,8 +42,11 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS Amount
 
             , CAST (NULL AS TVarchar)               AS PartionGoods
+            , CAST (NULL AS TDateTime)              AS PartionGoodsDate
+
             , CAST (NULL AS TVarchar)               AS PartionGoodsChild
-            
+            , CAST (NULL AS TDateTime)              AS PartionGoodsDateChild
+
             , CAST (NULL AS TVarchar)               AS Comment
     
             , CAST (NULL AS Integer)                AS GoodsKindId
@@ -84,7 +89,10 @@ BEGIN
             , MovementItem.Amount               AS Amount
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
+            , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
+
             , MIString_PartionGoodsChild.ValueData   AS PartionGoodsChild
+            , MIDate_PartionGoodsChild.ValueData     AS PartionGoodsDateChild
 
             , MIString_Comment.ValueData        AS Comment
 
@@ -117,7 +125,12 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-             JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = 597574--inMovementId
+
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+
+             JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = tmpIsErased.isErased
                        
@@ -126,6 +139,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoodsChild
                                           ON MIString_PartionGoodsChild.DescId = zc_MIString_PartionGoods()
                                          AND MIString_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
+
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoodsChild
+                                        ON MIDate_PartionGoodsChild.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindChild
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id
@@ -149,7 +166,10 @@ BEGIN
             , MovementItem.Amount               AS Amount
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
+            , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
+
             , MIString_PartionGoodsChild.ValueData   AS PartionGoodsChild
+            , MIDate_PartionGoodsChild.ValueData     AS PartionGoodsDateChild
 
             , MIString_Comment.ValueData        AS Comment
 
@@ -181,6 +201,11 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+              
             JOIN MovementItem AS MovementItemChild ON MovementItemChild.MovementId = inMovementId
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = tmpIsErased.isErased
@@ -190,6 +215,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoodsChild
                                           ON MIString_PartionGoodsChild.DescId = zc_MIString_PartionGoods()
                                          AND MIString_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
+
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoodsChild
+                                        ON MIDate_PartionGoodsChild.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindChild
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id

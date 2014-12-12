@@ -3,20 +3,24 @@
 
 -- Function: gpInsertUpdate_MI_ProductionPeresort()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий	                   
-    IN inGoodsKindId         Integer   , -- Виды товаров 
-    IN inGoodsChildId        Integer   , -- Товары
-    IN inPartionGoodsChild   TVarChar  , -- Партия товара        
-    IN inGoodsKindChildId    Integer   , -- Виды товаров
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                Integer   , -- Товары
+    IN inAmount                 TFloat    , -- Количество
+    IN inPartionGoods           TVarChar  , -- Партия товара
+    IN inPartionGoodsDate       TDateTime , -- Партия товара
+    IN inComment                TVarChar  , -- Комментарий	                   
+    IN inGoodsKindId            Integer   , -- Виды товаров 
+    IN inGoodsChildId           Integer   , -- Товары
+    IN inPartionGoodsChild      TVarChar  , -- Партия товара  
+    IN inPartionGoodsDateChild  TDateTime , -- Партия товара    
+    IN inGoodsKindChildId       Integer   , -- Виды товаров
+    IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
@@ -50,6 +54,8 @@ BEGIN
                                                   );
 
 
+   -- сохранили свойство <Партия товара> для мастера
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
 
    -- сохранили <Child>
    vbChildId := lpInsertUpdate_MI_ProductionUnion_Child(ioId          := vbChildId
@@ -58,7 +64,7 @@ BEGIN
                                                  , inAmount           := inAmount
                                                  , inParentId         := ioId
                                                  , inAmountReceipt    := 0 ::TFloat
-                                                 , inPartionGoodsDate := NULL
+                                                 , inPartionGoodsDate := inPartionGoodsDateChild
                                                  , inPartionGoods     := inPartionGoods
                                                  , inComment          := NULL--'' ::TVarChar
                                                  , inGoodsKindId      := inGoodsKindChildId

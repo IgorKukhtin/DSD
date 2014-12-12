@@ -1,26 +1,26 @@
 inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090'>'
-  ClientHeight = 668
-  ClientWidth = 1072
-  ExplicitWidth = 1080
-  ExplicitHeight = 702
+  ClientHeight = 674
+  ClientWidth = 1128
+  ExplicitWidth = 1136
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1072
-    Height = 542
+    Width = 1128
+    Height = 548
     ExplicitTop = 126
     ExplicitWidth = 1072
     ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1072
+    ClientRectBottom = 548
+    ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1072
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1072
-        Height = 518
+        Width = 1128
+        Height = 524
         ExplicitWidth = 1072
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -136,9 +136,16 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
+          object colPartionGoodsDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colGoodsChildName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
-            DataBinding.FieldName = 'GoodsChildCode'
+            DataBinding.FieldName = 'GoodsChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -173,6 +180,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 166
           end
+          object colPartionGoodsDateChild: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'PartionGoodsDateChild'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -195,7 +209,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1072
+    Width = 1128
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1072
@@ -327,8 +341,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindChildForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -350,8 +364,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -368,19 +382,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           DataType = ftString
         end>
       isShowModal = True
-    end
-    object actRefreshPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object actGoodsChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -664,7 +665,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
+    StoredProcName = 'gpUpdate_Status_ProductionUnion'
     Left = 128
     Top = 56
   end
@@ -1030,6 +1031,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -1060,15 +1069,19 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartionGoodsDateChild'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDateChild'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsKindChildId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindChildId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end
       item
         Value = Null
@@ -1094,7 +1107,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = actRefreshPrice
     ComponentList = <
       item
       end>

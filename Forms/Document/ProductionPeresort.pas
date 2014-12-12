@@ -33,7 +33,6 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
@@ -44,6 +43,8 @@ type
     colPartionGoodsChild: TcxGridDBColumn;
     colGoodsKindChildName: TcxGridDBColumn;
     actGoodsKindChildChoice: TOpenChoiceForm;
+    colPartionGoodsDate: TcxGridDBColumn;
+    colPartionGoodsDateChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

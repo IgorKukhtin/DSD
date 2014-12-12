@@ -281,6 +281,13 @@ inherited ProductionUnionForm: TProductionUnionForm
       isShowModal = True
     end
   end
+  inherited MasterDS: TDataSource
+    Left = 768
+    Top = 216
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 208
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion'
   end
@@ -304,7 +311,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionUnion'
-    Left = 96
+    Left = 80
     Top = 56
   end
   inherited spGet: TdsdStoredProc
@@ -432,8 +439,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         ParamType = ptUnknown
       end>
-    Left = 442
-    Top = 136
+    Left = 466
+    Top = 224
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
