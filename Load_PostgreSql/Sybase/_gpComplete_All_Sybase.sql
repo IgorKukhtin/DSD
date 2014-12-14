@@ -27,6 +27,16 @@ BEGIN
 
 
 
+     -- !!!0 - PriceCorrective!!!
+     IF vbMovementDescId = zc_Movement_Loss()
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_PriceCorrective_CreateTemp();
+             -- !!! проводим - Loss !!!
+             PERFORM lpComplete_Movement_PriceCorrective (inMovementId     := inMovementId
+                                                        , inUserId         := zfCalc_UserAdmin() :: Integer);
+
+     ELSE
      -- !!!1 - Loss!!!
      IF vbMovementDescId = zc_Movement_Loss()
      THEN
@@ -118,6 +128,7 @@ BEGIN
      END IF;
      END IF;
      END IF;
+     END IF;
 
 
 END;$BODY$
@@ -132,3 +143,74 @@ END;$BODY$
 -- тест
 -- SELECT * FROM gpComplete_All_Sybase (inMovementId:= 3581, inIsBefoHistoryCost:= FALSE, inIsNoHistoryCost = FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+
+/*
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10400()
+-- select *
+-- from MovementItemContainer 
+-- , 
+from Movement
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_Sale()
+and MovementItemContainer.DescId = zc_MIContainer_Count()
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+
+
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10800()
+from Movement
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_ReturnIn()
+and MovementItemContainer.DescId = zc_MIContainer_Count()
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+
+
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10400()
+from Movement, (select Container.Id from Object_Account_View JOIN Container ON Container.ObjectId = Object_Account_View.AccountId where AccountGroupId IN (zc_Enum_AccountGroup_20000(), zc_Enum_AccountGroup_60000())) AS Container
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_Sale()
+and MovementItemContainer.DescId = zc_MIContainer_Summ()
+and MovementItemContainer.ContainerId = Container.Id
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+
+
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10800()
+from Movement, (select Container.Id from Object_Account_View JOIN Container ON Container.ObjectId = Object_Account_View.AccountId where AccountGroupId IN (zc_Enum_AccountGroup_20000(), zc_Enum_AccountGroup_60000())) AS Container
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_ReturnIn()
+and MovementItemContainer.DescId = zc_MIContainer_Summ()
+and MovementItemContainer.ContainerId = Container.Id
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+
+
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10100()
+from Movement, Container
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_Sale()
+and MovementItemContainer.DescId = zc_MIContainer_Summ()
+and MovementItemContainer.ContainerId = Container.Id
+and Container.ObjectId not in (zc_Enum_Account_100301(), zc_Enum_Account_110101())
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+update MovementItemContainer set AnalyzerId = zc_Enum_ProfitLossDirection_10700()
+from Movement, Container
+where Movement.Id = MovementItemContainer.MovementId
+and AnalyzerId is null
+and Movement.DescId = zc_Movement_ReturnIn()
+and MovementItemContainer.DescId = zc_MIContainer_Summ()
+and MovementItemContainer.ContainerId = Container.Id
+and Container.ObjectId not in (zc_Enum_Account_100301(), zc_Enum_Account_110101())
+and MovementItemContainer.OperDAte < '01.06.2014'
+;
+
+
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where DescId in (zc_Movement_Sale(), zc_Movement_ReturnIn()) and OperDate between ('01.09.2014')::TDateTime and  ('31.10.2014')::TDateTime
+*/

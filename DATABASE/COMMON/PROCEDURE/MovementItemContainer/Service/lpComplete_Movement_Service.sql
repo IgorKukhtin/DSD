@@ -43,6 +43,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , AnalyzerId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -76,13 +77,13 @@ BEGIN
                -- Главное Юр.лицо всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , 0 AS UnitId     -- не используется
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS UnitId -- здесь используется (нужен для следующей проводки)
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
-             , zc_Branch_Basis() AS BranchId_Balance
-               -- Филиал ОПиУ: не используется
-             , 0 AS BranchId_ProfitLoss
+               -- Филиал Баланс: всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_ProfitLoss
 
                -- Месяц начислений: не используется
              , 0 AS ServiceDateId
@@ -90,10 +91,21 @@ BEGIN
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
 
+             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
+                         THEN zc_Enum_ProfitLossDirection_10300() -- !!!Скидка дополнительная!!!
+                    ELSE 0
+               END AS AnalyzerId
+
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -192,13 +204,13 @@ BEGIN
                -- Главное Юр.лицо всегда из договора
              , _tmpItem.JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+             , _tmpItem.UnitId -- из предыдущей проводки
              , 0 AS PositionId -- не используется
 
                -- Филиал Баланс: всегда из предыдущей проводки
              , _tmpItem.BranchId_Balance
-               -- Филиал ОПиУ: всегда по подразделению
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss
+               -- Филиал ОПиУ: всегда из предыдущей проводки
+             , _tmpItem.BranchId_ProfitLoss
 
                -- Месяц начислений: не используется
              , 0 AS ServiceDateId
@@ -209,14 +221,9 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                              ON MILinkObject_Unit.MovementItemId = _tmpItem.MovementItemId
-                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
-                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
        ;
 

@@ -1,17 +1,17 @@
--- Function: gpReport_Goods_Movement ()
+ -- Function: gpReport_Goods_Movement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
-    IN inStartDate    TDateTime ,  
+    IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
-    IN inJuridicalId  Integer   , 
+    IN inJuridicalId  Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inPaidKindId   Integer   , --
-    IN inInfoMoneyId  Integer,    -- Управленческая статья  
-    IN inIsPartner    Boolean,    -- 
-    IN inIsGoods      Boolean,    -- 
+    IN inInfoMoneyId  Integer,    -- Управленческая статья
+    IN inIsPartner    Boolean,    --
+    IN inIsGoods      Boolean,    --
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -28,9 +28,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
-             , Return_Summ TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat 
-              )   
+             , Sale_Summ TFloat, Sale_SummCost TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
+             , Return_Summ TFloat, Return_SummCost TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat
+              )
 AS
 $BODY$
 BEGIN
@@ -39,7 +39,7 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка. Не выбрано юр.лицов!!!';
    END IF;*/
-   
+
     -- !!!т.к. нельзя когда много данных в гриде!!!
     IF inStartDate + (INTERVAL '62 DAY') <= inEndDate AND inIsPartner = TRUE AND inIsGoods = TRUE
     THEN
@@ -48,8 +48,8 @@ BEGIN
 
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer, GoodsTagId Integer) ON COMMIT DROP;
-    IF inGoodsGroupId <> 0 
-    THEN 
+    IF inGoodsGroupId <> 0
+    THEN
         INSERT INTO _tmpGoods (GoodsId, TradeMarkId, GoodsTagId)
            SELECT lfObject_Goods_byGoodsGroup.GoodsId
                 , COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0)
@@ -62,7 +62,7 @@ BEGIN
                                      ON ObjectLink_Goods_GoodsTag.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
                                     AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
        ;
-    ELSE 
+    ELSE
         INSERT INTO _tmpGoods (GoodsId, TradeMarkId, GoodsTagId)
            SELECT Object.Id
                 , COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0)
@@ -81,11 +81,11 @@ BEGIN
 
    -- Результат
     RETURN QUERY
-    
+
     -- ограничиваем по Юр.лицу
-    WITH tmpMovement AS (SELECT tmpListContainer.JuridicalId 
+    WITH tmpMovement AS (SELECT tmpListContainer.JuridicalId
                               , MovementLinkObject_Partner.ObjectId AS PartnerId
-                              , tmpListContainer.ContractId 
+                              , tmpListContainer.ContractId
                               , tmpListContainer.InfoMoneyId
 
                               , _tmpGoods.TradeMarkId
@@ -112,32 +112,28 @@ BEGIN
                                     , ContainerLinkObject_Contract.ObjectId  AS ContractId
                                     , CASE WHEN isSale = TRUE THEN zc_Movement_Sale() ELSE zc_Movement_ReturnIn() END AS MovementDescId
                                     , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
-                               FROM (SELECT ProfitLossId AS Id, isSale FROM Constant_ProfitLoss_Sale_ReturnIn_View
+                               FROM (SELECT ProfitLossId AS Id, isSale FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isCost = FALSE
                                     ) AS tmpProfitLoss
                                          JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
                                                                   ON ContainerLO_ProfitLoss.ObjectId = tmpProfitLoss.Id
                                                                  AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                                         JOIN Container ON Container.Id = ContainerLO_ProfitLoss.ContainerId
-                                                       AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                                       AND Container.DescId = zc_Container_Summ()
                                          JOIN ReportContainerLink ON ReportContainerLink.ContainerId = ContainerLO_ProfitLoss.ContainerId
-                                         JOIN ReportContainerLink AS ReportContainerLink_Juridical ON ReportContainerLink_Juridical.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                                                                  AND ReportContainerLink_Juridical.ContainerId <> ReportContainerLink.ContainerId
+                                                                 AND ReportContainerLink.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                          JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                                  ON ContainerLO_Juridical.ContainerId = ReportContainerLink_Juridical.ContainerId
+                                                                  ON ContainerLO_Juridical.ContainerId = ReportContainerLink.ChildContainerId
                                                                  AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                  AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                          JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_Juridical.ContainerId
+                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink.ChildContainerId
                                                                  AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                  AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                                          JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                                  ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink_Juridical.ContainerId
+                                                                  ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink.ChildContainerId
                                                                  AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                  AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
-                                                                  ON ContainerLinkObject_Contract.ContainerId = ReportContainerLink_Juridical.ContainerId
-                                                                 AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                                                       ON ContainerLinkObject_Contract.ContainerId = ReportContainerLink.ChildContainerId
+                                                                      AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
                               ) AS tmpListContainer
                               JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
                                                                  AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
@@ -145,7 +141,7 @@ BEGIN
                               JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                                                AND MovementItem.DescId =  zc_MI_Master()
                               JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-           
+
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                            ON MovementLinkObject_Partner.MovementId = MIReport.MovementId
                                                           AND MovementLinkObject_Partner.DescId = tmpListContainer.MLO_DescId
@@ -155,9 +151,9 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                         GROUP BY tmpListContainer.JuridicalId 
+                         GROUP BY tmpListContainer.JuridicalId
                                 , MovementLinkObject_Partner.ObjectId
-                                , tmpListContainer.ContractId 
+                                , tmpListContainer.ContractId
                                 , tmpListContainer.InfoMoneyId
                                 , _tmpGoods.TradeMarkId
                                 , _tmpGoods.GoodsTagId
@@ -167,7 +163,7 @@ BEGIN
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)
                                 , tmpListContainer.MovementDescId
                                  )
-     SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
+     SELECT Object_GoodsGroup.ValueData AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.ObjectCode     AS GoodsCode
           , Object_Goods.ValueData      AS GoodsName
@@ -233,22 +229,24 @@ BEGIN
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
+         , 0 :: TFloat  AS Sale_SummCost
          , tmpOperationGroup.Sale_Amount_Weight :: TFloat  AS Sale_Amount_Weight
-         , tmpOperationGroup.Sale_Amount_Sh     :: TFloat  AS Sale_Amount_Sh 
+         , tmpOperationGroup.Sale_Amount_Sh     :: TFloat  AS Sale_Amount_Sh
 
-         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight 
-         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh 
+         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
+         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
+         , 0 :: TFloat  AS Return_SummCost
          , tmpOperationGroup.Return_Amount_Weight :: TFloat AS Return_Amount_Weight
          , tmpOperationGroup.Return_Amount_Sh     :: TFloat AS Return_Amount_Sh
 
-         , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight 
-         , tmpOperationGroup.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh 
+         , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight
+         , tmpOperationGroup.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh
 
      FROM (SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId
-                , tmpOperation.ContractId 
+                , tmpOperation.ContractId
                 , tmpOperation.InfoMoneyId
                 , tmpOperation.BranchId
 
@@ -270,7 +268,7 @@ BEGIN
                 , SUM (tmpOperation.Sale_AmountPartner_Sh)       AS Sale_AmountPartner_Sh
                 , SUM (tmpOperation.Return_AmountPartner_Weight) AS Return_AmountPartner_Weight
                 , SUM (tmpOperation.Return_AmountPartner_Sh)     AS Return_AmountPartner_Sh
-                
+
            FROM (SELECT CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END AS JuridicalId
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END AS PartnerId
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
@@ -293,7 +291,7 @@ BEGIN
                       , 0 AS  Sale_AmountPartner_Sh
                       , 0 AS  Return_AmountPartner_Weight
                       , 0 AS  Return_AmountPartner_Sh
-                      
+
                  FROM tmpMovement
                  GROUP BY CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END
                         , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END
@@ -305,7 +303,7 @@ BEGIN
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsId ELSE 0 END
                         , CASE WHEN inIsGoods = TRUE THEN tmpMovement.GoodsKindId ELSE 0 END
 
-                UNION ALL    
+                UNION ALL
                  SELECT CASE WHEN inIsPartner = TRUE THEN tmpMovement.JuridicalId ELSE 0 END AS JuridicalId
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.PartnerId ELSE 0 END AS PartnerId
                       , CASE WHEN inIsPartner = TRUE THEN tmpMovement.ContractId  ELSE 0 END AS ContractId
@@ -325,14 +323,14 @@ BEGIN
                       , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIContainer.Amount, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Return_Amount_Weight
                       , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_Amount_Sh
 
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Sale_AmountPartner_Weight
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Sale_AmountPartner_Sh
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10400() THEN -1 * COALESCE (MIContainer.Amount, 0) WHEN MIContainer.AnalyzerId <> 0 THEN 0 ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Sale_AmountPartner_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10400() THEN -1 * COALESCE (MIContainer.Amount, 0) WHEN MIContainer.AnalyzerId <> 0 THEN 0 ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) END ELSE 0 END) AS Sale_AmountPartner_Sh
 
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Return_AmountPartner_Weight
-                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Return_AmountPartner_Sh
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10800() THEN COALESCE (MIContainer.Amount, 0) WHEN MIContainer.AnalyzerId <> 0 THEN 0 ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ELSE 0 END) AS Return_AmountPartner_Weight
+                      , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10800() THEN COALESCE (MIContainer.Amount, 0) WHEN MIContainer.AnalyzerId <> 0 THEN 0 ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) END ELSE 0 END) AS Return_AmountPartner_Sh
 
                  FROM tmpMovement
-                      LEFT JOIN MovementItemContainer AS MIContainer 
+                      LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.MovementItemId = tmpMovement.MovementItemId
                                                      AND MIContainer.DescId = zc_MIContainer_Count()
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
@@ -357,14 +355,14 @@ BEGIN
 
            GROUP BY tmpOperation.JuridicalId
                   , tmpOperation.PartnerId
-                  , tmpOperation.ContractId 
+                  , tmpOperation.ContractId
                   , tmpOperation.InfoMoneyId
                   , tmpOperation.BranchId
                   , tmpOperation.TradeMarkId
                   , tmpOperation.GoodsTagId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
-                  
+
           ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -390,25 +388,27 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
           LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
-/*
+
          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
+--**
+/*
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
-                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id 
+                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
          LEFT JOIN Object_Street_View ON Object_Street_View.Id = ObjectLink_Partner_Street.ChildObjectId
 
@@ -417,7 +417,7 @@ BEGIN
                              AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
          LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
 
-         LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+         LEFT JOIN ObjectLink AS ObjectLink_City_Region
                              ON ObjectLink_City_Region.ObjectId = Object_Street_View.CityId
                             AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
          LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
@@ -427,6 +427,7 @@ BEGIN
                              AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
          LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
 */
+--**
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -438,7 +439,7 @@ BEGIN
           LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
           LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
@@ -447,7 +448,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                              ON ObjectLink_Partner_Personal.ObjectId = tmpOperationGroup.PartnerId 
+                              ON ObjectLink_Partner_Personal.ObjectId = tmpOperationGroup.PartnerId
                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
          LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -460,7 +461,7 @@ BEGIN
                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
     ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -478,4 +479,4 @@ ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inJuridicalId:= 0, inGoodsGroupId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE,  inIsGoods:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.11.2014', inEndDate:= '30.11.2014', inJuridicalId:= 0, inGoodsGroupId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE,  inIsGoods:= TRUE,  inSession:= zfCalc_UserAdmin());

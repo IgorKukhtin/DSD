@@ -105,6 +105,10 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     SaleSumm_10300: TcxGridDBColumn;
     ReturnInSumm_10300: TcxGridDBColumn;
+    colPriceCorrectiveSumm: TcxGridDBColumn;
+    colServiceRealSumm: TcxGridDBColumn;
+    PriceCorrectiveJournal: TdsdOpenForm;
+    ServiceRealJournal: TdsdOpenForm;
   private
     { Private declarations }
   public

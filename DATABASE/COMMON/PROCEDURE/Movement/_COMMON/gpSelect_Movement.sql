@@ -32,6 +32,8 @@ $BODY$
 
    DECLARE vbDescId Integer; 
    DECLARE vbIndex  Integer;
+   DECLARE vbIsSaleRealDesc    Boolean;
+   DECLARE vbIsServiceRealDesc Boolean;
 
    DECLARE vbObjectId_Constraint Integer;
 BEGIN
@@ -45,13 +47,28 @@ BEGIN
      IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
 
 
+     --
+     vbIsSaleRealDesc:= FALSE;
+     vbIsServiceRealDesc:= FALSE;
+
      -- таблица - MovementDesc - типы документов
      CREATE TEMP TABLE _tmpMovementDesc (DescId Integer) ON COMMIT DROP;
      -- парсим типы документов
      vbIndex := 1;
      WHILE split_part (inDescSet, ';', vbIndex) <> '' LOOP
-         EXECUTE 'SELECT '||split_part(inDescSet, ';', vbIndex) INTO vbDescId;
-         INSERT INTO _tmpMovementDesc SELECT vbDescId;
+         IF split_part (inDescSet, ';', vbIndex) = 'SaleRealDesc'
+         THEN vbIsSaleRealDesc = TRUE;
+         ELSE
+             IF split_part (inDescSet, ';', vbIndex) = 'ServiceRealDesc'
+             THEN vbIsServiceRealDesc = TRUE;
+             ELSE
+                 -- парсим
+                 EXECUTE 'SELECT ' || split_part (inDescSet, ';', vbIndex) INTO vbDescId;
+                 -- добавляем то что нашли
+                 INSERT INTO _tmpMovementDesc SELECT vbDescId;
+             END IF;
+         END IF;
+         -- теперь следуюющий
          vbIndex := vbIndex + 1;
      END LOOP;
 
@@ -101,6 +118,8 @@ BEGIN
                   , tmpContainer.PaidKindId
                   , MAX (MIContainer.MovementItemId) AS MovementItemId
                   , SUM (MIContainer.Amount) AS AmountSumm
+                  , CASE WHEN Movement.DescId = zc_Movement_Service() AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN TRUE ELSE FALSE END AS isSaleRealDesc
+                  , CASE WHEN Movement.DescId = zc_Movement_Service() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_ProfitLossDirection_10300() THEN TRUE ELSE FALSE END AS isServiceRealDesc
              FROM
             (SELECT Container.Id                              AS ContainerId
                   , Container.ObjectId                        AS AccountId
@@ -157,6 +176,8 @@ BEGIN
                     , tmpContainer.ContractId
                     , tmpContainer.InfoMoneyId
                     , tmpContainer.PaidKindId
+                    , CASE WHEN Movement.DescId = zc_Movement_Service() AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() THEN TRUE ELSE FALSE END
+                    , CASE WHEN Movement.DescId = zc_Movement_Service() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_ProfitLossDirection_10300() THEN TRUE ELSE FALSE END
             ) AS tmpMIContainer
 
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMIContainer.MovementDescId
@@ -173,8 +194,9 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMIContainer.PaidKindId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
-
-         ;
+       WHERE (isSaleRealDesc = TRUE OR vbIsSaleRealDesc = FALSE OR tmpMIContainer.MovementDescId <> zc_Movement_Service())
+         AND (isServiceRealDesc = TRUE OR vbIsServiceRealDesc = FALSE OR tmpMIContainer.MovementDescId <> zc_Movement_Service())
+      ;
   
    
 END;
@@ -182,10 +204,10 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.14                                        * add vbIsSaleRealDesc and vbIsServiceRealDesc
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  07.09.14                                        * add Branch...
  31.08.14                                        * ALL

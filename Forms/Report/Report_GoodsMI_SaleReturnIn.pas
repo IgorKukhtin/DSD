@@ -90,6 +90,28 @@ type
     Return_SummCost: TcxGridDBColumn;
     actPrint_byPartner: TdsdPrintAction;
     bbPrint_byPartner: TdxBarButton;
+    edBranch: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    BranchGuides: TdsdGuides;
+    ceArea: TcxButtonEdit;
+    cxLabel20: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    AreaGuides: TdsdGuides;
+    RetailGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ñåTradeMark: TcxButtonEdit;
+    TradeMarkGuides: TdsdGuides;
+    cbTradeMark: TcxCheckBox;
+    bbTradeMark: TdxBarControlContainerItem;
+    Sale_Summ_10200: TcxGridDBColumn;
+    Sale_Summ_10300: TcxGridDBColumn;
+    Sale_Amount_10500_Weight: TcxGridDBColumn;
+    Sale_Amount_40200_Weight: TcxGridDBColumn;
+    Return_Amount_40200_Weight: TcxGridDBColumn;
+    Sale_SummCost_10500: TcxGridDBColumn;
+    Sale_SummCost_40200: TcxGridDBColumn;
+    Return_SummCost_40200: TcxGridDBColumn;
   private
     { Private declarations }
   public

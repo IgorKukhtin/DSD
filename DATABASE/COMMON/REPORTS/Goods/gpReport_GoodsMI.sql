@@ -25,27 +25,38 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              )   
 AS
 $BODY$
+   DECLARE vbIsGoods Boolean;
+   DECLARE vbIsUnit Boolean;
 BEGIN
+    vbIsGoods:= FALSE;
+    vbIsUnit:= FALSE;
+
     -- Ограничения по товарам
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
+        -- устанавливается признак
+        vbIsGoods:= TRUE;
+        -- заполнение
         INSERT INTO _tmpGoods (GoodsId)
            SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE 
+    /*ELSE
         INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();*/
     END IF;
 
     -- Ограничения по подразделениям
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     IF inUnitId <> 0
     THEN
+        -- устанавливается признак
+        vbIsUnit:= TRUE;
+        -- заполнение
         INSERT INTO _tmpUnit (UnitId)
            SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
-    ELSE
+    /*ELSE
         INSERT INTO _tmpUnit (UnitId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Unit();
+           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Unit();*/
     END IF;
 
 
@@ -75,35 +86,31 @@ BEGIN
                                   INNER JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
                                                                  ON ContainerLO_ProfitLoss.ObjectId = tmpProfitLoss.Id
                                                                 AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                                  INNER JOIN Container ON Container.Id = ContainerLO_ProfitLoss.ContainerId
-                                                      AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                                      AND Container.DescId = zc_Container_Summ()
                                   INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = ContainerLO_ProfitLoss.ContainerId
-                                  INNER JOIN ReportContainerLink AS ReportContainerLink_child ON ReportContainerLink_child.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                                                             AND ReportContainerLink_child.ContainerId <> ReportContainerLink.ContainerId
+                                                                AND ReportContainerLink.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                   INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                                 ON ContainerLO_Juridical.ContainerId = ReportContainerLink_child.ContainerId
+                                                                 ON ContainerLO_Juridical.ContainerId = ReportContainerLink.ChildContainerId
                                                                 AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                 AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink_child.ContainerId
+                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink.ChildContainerId
                                                                 AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                 AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                                 ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink_child.ContainerId
+                                                                 ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink.ChildContainerId
                                                                 AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                              ) AS tmpReportContainer
                              INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
                                                                       AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                           ON MovementLinkObject_Unit.MovementId = MIReport.MovementId
-                                                          AND MovementLinkObject_Unit.DescId = tmpReportContainer.MLO_DescId
-                             INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                          ON MovementLinkObject_Unit.MovementId = MIReport.MovementId
+                                                         AND MovementLinkObject_Unit.DescId = tmpReportContainer.MLO_DescId
+                             LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
                              INNER JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                                                     AND MovementItem.DescId = zc_MI_Master()
-                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                             LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -118,7 +125,8 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                      ON MovementFloat_ChangePercent.MovementId = MIReport.MovementId
                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-
+                         WHERE (_tmpUnit.UnitId > 0 OR vbIsUnit = FALSE)
+                           AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
                        GROUP BY tmpReportContainer.InfoMoneyId
                               , MovementItem.Id
                               , MovementItem.ObjectId

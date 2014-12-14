@@ -26,28 +26,43 @@ BEGIN
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
       WITH tmpContainer AS (SELECT Container.Id AS ContainerId
                                  , ReportContainerLink.ReportContainerId
+                                 , ReportContainerLink.ChildContainerId AS ContainerId_inf
                             FROM Container
                                  JOIN ReportContainerLink ON ReportContainerLink.ContainerId = Container.Id
                             WHERE Container.ObjectId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                               AND Container.DescId = zc_Container_Summ()
                            )
-      , tmpMIReport_all AS (SELECT tmpContainer.ContainerId
-                                 , CASE WHEN MIReport.PassiveContainerId = tmpContainer.ContainerId
-                                             THEN MIReport.ActiveContainerId
-                                        WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId
-                                             THEN MIReport.PassiveContainerId
-                                   END AS ContainerId_inf
-                                 , MIReport.MovementItemId
+      -- , tmpMIReport_all AS (SELECT tmpContainer.ContainerId
+          , tmpMIReport AS (SELECT tmpContainer.ContainerId
+                                 , tmpContainer.ContainerId_inf
+                                 -- , MIReport.MovementItemId
                                  , SUM (CASE WHEN MIReport.ActiveAccountId = zc_Enum_Account_100301() THEN -1 ELSE 1 END * MIReport.Amount) AS Amount
+                                 , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
+                                 , MILinkObject_Branch.ObjectId AS BranchId_ProfitLoss
+                                 , MILinkObject_Route.ObjectId  AS RouteId_inf
                             FROM tmpContainer
                                  JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
                                                                     AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                  ON MILinkObject_Unit.MovementItemId = MIReport.MovementItemId
+                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                                 -- AND MILinkObject_Unit.ObjectId >0
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                                                  ON MILinkObject_Branch.MovementItemId = MIReport.MovementItemId
+                                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                                                                 -- AND MILinkObject_Branch.ObjectId >0
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                                                  ON MILinkObject_Route.MovementItemId = MIReport.MovementItemId
+                                                                 AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                                                 -- AND MILinkObject_Route.ObjectId >0
                             GROUP BY tmpContainer.ContainerId
-                                   , MIReport.MovementItemId
-                                   , MIReport.ActiveContainerId
-                                   , MIReport.PassiveContainerId
+                                   , tmpContainer.ContainerId_inf
+                                   -- , MIReport.MovementItemId
+                                   , MILinkObject_Unit.ObjectId
+                                   , MILinkObject_Branch.ObjectId
+                                   , MILinkObject_Route.ObjectId
                            )
-          , tmpMIReport AS (SELECT tmpMIReport_all.ContainerId
+/*          , tmpMIReport AS (SELECT tmpMIReport_all.ContainerId
                                  , tmpMIReport_all.ContainerId_inf
                                  , SUM (tmpMIReport_all.Amount) AS Amount
                                  , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
@@ -71,7 +86,7 @@ BEGIN
                                    , MILinkObject_Unit.ObjectId
                                    , MILinkObject_Branch.ObjectId
                                    , MILinkObject_Route.ObjectId
-                           )
+                           )*/
   , tmpProfitLoss AS (SELECT tmpMIReport.ContainerId_inf
                            , tmpMIReport.UnitId_ProfitLoss
                            , tmpMIReport.BranchId_ProfitLoss

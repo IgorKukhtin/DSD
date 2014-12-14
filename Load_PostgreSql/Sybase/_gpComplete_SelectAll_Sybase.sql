@@ -141,5 +141,26 @@ create table dba._pgMovementReComlete
     ,ItemName TVarCharMedium
  ,primary key (MovementId)
 */
+/*
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , MovementDesc.ItemName
+     FROM (SELECT MovementItemContainer.MovementId
+           FROM Container
+                INNER JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
+                                               ON ContainerLO_ProfitLoss.ContainerId = Container.Id
+                                              AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                              AND ContainerLO_ProfitLoss.ObjectId = 0
+                INNER JOIN MovementItemContainer
+                        ON MovementItemContainer.ContainerId = Container.Id
+                       AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+           WHERE Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
+           GROUP BY MovementItemContainer.MovementId
+          ) AS tmp
+          LEFT JOIN Movement ON Movement.Id = tmp.MovementId
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+*/
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014')
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inIsBefoHistoryCost:= FALSE)
