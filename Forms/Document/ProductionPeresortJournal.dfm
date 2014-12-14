@@ -482,6 +482,10 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     Left = 400
     Top = 200
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 368
+    Top = 144
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>

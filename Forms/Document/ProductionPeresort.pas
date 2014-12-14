@@ -33,23 +33,18 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    colCount: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colStorageName: TcxGridDBColumn;
-    colPartionGoodsName: TcxGridDBColumn;
-    actUnitChoiceForm: TOpenChoiceForm;
-    actStorageChoiceForm: TOpenChoiceForm;
+    colComment: TcxGridDBColumn;
+    actGoodsChildChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
-    colPrice: TcxGridDBColumn;
-    colStorageName_Partion: TcxGridDBColumn;
+    colGoodsChildName: TcxGridDBColumn;
+    colPartionGoodsChild: TcxGridDBColumn;
+    colGoodsKindChildName: TcxGridDBColumn;
+    actGoodsKindChildChoice: TOpenChoiceForm;
     colPartionGoodsDate: TcxGridDBColumn;
-    colPartionGoodsOperDate: TcxGridDBColumn;
+    colPartionGoodsDateChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -53,6 +53,8 @@ type
     OperDate: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
   private
     { Private declarations }
   public
