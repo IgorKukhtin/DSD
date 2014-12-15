@@ -48,6 +48,13 @@ type
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
+    Amount_10500_Weight: TcxGridDBColumn;
+    Amount_10500_Sh: TcxGridDBColumn;
+    Amount_40200_Weight: TcxGridDBColumn;
+    Amount_40200_Sh: TcxGridDBColumn;
+    SummPartner_10200: TcxGridDBColumn;
+    SummPartner_10300: TcxGridDBColumn;
+    SummDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -25,7 +25,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , AmountPartner_Weight TFloat, AmountPartner_Sh TFloat
              , SummPartner_calc TFloat
              , SummPartner TFloat
-             , SummDif TFloat
+             , SummDiff TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )   
 AS
@@ -220,7 +220,7 @@ BEGIN
          , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END) :: TFloat                                AS AmountPartner_Sh
          , tmpOperationGroup.SummPartner_calc :: TFloat   AS SummPartner_calc
          , tmpOperationGroup.SummPartner :: TFloat        AS SummPartner
-         , (tmpOperationGroup.SummPartner - tmpOperationGroup.SummPartner_calc) :: TFloat AS SummDif
+         , (tmpOperationGroup.SummPartner - tmpOperationGroup.SummPartner_calc) :: TFloat AS SummDiff
 
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
