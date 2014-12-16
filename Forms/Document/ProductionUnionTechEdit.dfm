@@ -1,5 +1,5 @@
 ﻿inherited ProductionUnionTechEditForm: TProductionUnionTechEditForm
-  ActiveControl = ceAmountDebet
+  ActiveControl = ceRealWeight
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' /'#1047#1072#1082#1083#1072#1076#1082#1091' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 276
   ClientWidth = 605
@@ -28,104 +28,39 @@
     Left = 184
     Top = 5
     Caption = #1044#1072#1090#1072
+    Visible = False
   end
   object Код: TcxLabel [3]
     Left = 8
     Top = 5
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Visible = False
   end
-  object cxLabel2: TcxLabel [4]
-    Left = 184
-    Top = 51
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-  end
-  object cxLabel4: TcxLabel [5]
-    Left = 9
-    Top = 140
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  end
-  object cxLabel5: TcxLabel [6]
-    Left = 295
-    Top = 51
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-  end
-  object cePaidKind: TcxButtonEdit [7]
-    Left = 184
-    Top = 69
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 5
-    Width = 97
-  end
-  object ceUnit: TcxButtonEdit [8]
-    Left = 8
-    Top = 159
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 273
-  end
-  object ceInfoMoney: TcxButtonEdit [9]
-    Left = 295
-    Top = 69
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 304
-  end
-  object ceOperDate: TcxDateEdit [10]
+  object ceOperDate: TcxDateEdit [4]
     Left = 184
     Top = 24
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
+    Visible = False
     Width = 97
   end
-  object ceAmountDebet: TcxCurrencyEdit [11]
-    Left = 293
-    Top = 24
+  object ceRealWeight: TcxCurrencyEdit [5]
+    Left = 8
+    Top = 157
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 6
-    Width = 142
+    TabOrder = 4
+    Width = 110
   end
-  object cxLabel7: TcxLabel [12]
-    Left = 293
-    Top = 5
-    Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
+  object cxLabel7: TcxLabel [6]
+    Left = 8
+    Top = 140
+    Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
   end
-  object ceJuridical: TcxButtonEdit [13]
+  object ceRecipe: TcxButtonEdit [7]
     Left = 8
     Top = 114
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 273
-  end
-  object cxLabel6: TcxLabel [14]
-    Left = 8
-    Top = 95
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-  end
-  object ceContract: TcxButtonEdit [15]
-    Left = 8
-    Top = 68
     Properties.Buttons = <
       item
         Default = True
@@ -133,85 +68,144 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 156
+    Width = 342
   end
-  object cxLabel8: TcxLabel [16]
+  object cxLabel6: TcxLabel [8]
     Left = 8
-    Top = 50
-    Caption = #1044#1086#1075#1086#1074#1086#1088
+    Top = 95
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
-  object cxLabel10: TcxLabel [17]
+  object cxLabel10: TcxLabel [9]
     Left = 8
-    Top = 179
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Top = 184
+    Caption = #1050#1086#1084#1077#1085#1090#1072#1088#1080#1081' '#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077
   end
-  object ceComment: TcxTextEdit [18]
+  object ceComment: TcxTextEdit [10]
     Left = 8
-    Top = 197
-    TabOrder = 10
-    Width = 591
+    Top = 201
+    TabOrder = 5
+    Width = 441
   end
-  object ceAmountKredit: TcxCurrencyEdit [19]
-    Left = 447
-    Top = 24
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 7
-    Width = 152
+  object cxLabel9: TcxLabel [11]
+    Left = 460
+    Top = 183
+    Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
   end
-  object cxLabel3: TcxLabel [20]
-    Left = 447
-    Top = 5
-    Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
-  end
-  object cxLabel9: TcxLabel [21]
-    Left = 296
-    Top = 140
-    Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-  end
-  object ceOperDatePartner: TcxDateEdit [22]
-    Left = 296
-    Top = 159
+  object ceDatePartionGoods: TcxDateEdit [12]
+    Left = 460
+    Top = 201
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 22
+    TabOrder = 12
     Width = 137
   end
-  object edInvNumberPartner: TcxTextEdit [23]
-    Left = 447
-    Top = 159
-    TabOrder = 23
-    Width = 152
-  end
-  object cxLabel11: TcxLabel [24]
-    Left = 447
-    Top = 140
-    Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
-  end
-  object edInvNumber: TcxTextEdit [25]
+  object edInvNumber: TcxTextEdit [13]
     Left = 8
     Top = 24
     Properties.ReadOnly = True
-    TabOrder = 25
+    TabOrder = 13
     Text = '0'
+    Visible = False
     Width = 156
   end
-  object cePartner: TcxButtonEdit [26]
-    Left = 296
-    Top = 114
+  object ceGooodsAndKind: TcxButtonEdit [14]
+    Left = 8
+    Top = 74
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 26
-    Width = 303
+    TabOrder = 14
+    Width = 342
   end
-  object cxLabel12: TcxLabel [27]
-    Left = 296
+  object cxLabel12: TcxLabel [15]
+    Left = 8
+    Top = 55
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel3: TcxLabel [16]
+    Left = 124
+    Top = 140
+    Caption = #1050#1086#1083'. '#1073#1072#1090#1086#1085#1086#1074
+  end
+  object ceCount: TcxCurrencyEdit [17]
+    Left = 124
+    Top = 157
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 17
+    Width = 110
+  end
+  object cxLabel4: TcxLabel [18]
+    Left = 240
+    Top = 140
+    Caption = #1050#1091#1090#1077#1088' '#1092#1072#1082#1090
+  end
+  object ceСuterCount: TcxCurrencyEdit [19]
+    Left = 240
+    Top = 157
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 19
+    Width = 110
+  end
+  object cxLabel11: TcxLabel [20]
+    Left = 371
+    Top = 139
+    Caption = #1050#1091#1090#1077#1088' '#1079#1072#1103#1074'.'
+  end
+  object ceСuterReq: TcxCurrencyEdit [21]
+    Left = 371
+    Top = 156
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 21
+    Width = 110
+  end
+  object cxLabel13: TcxLabel [22]
+    Left = 487
+    Top = 139
+    Caption = #1050#1086#1083' '#1079#1072#1103#1074'.'
+  end
+  object ceAmountReq: TcxCurrencyEdit [23]
+    Left = 487
+    Top = 156
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 23
+    Width = 110
+  end
+  object cxLabel2: TcxLabel [24]
+    Left = 374
+    Top = 8
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel5: TcxLabel [25]
+    Left = 371
     Top = 95
-    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+  end
+  object ceRecipeCode: TcxCurrencyEdit [26]
+    Left = 371
+    Top = 112
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 26
+    Width = 110
+  end
+  object ceGooodsKindGuides: TcxButtonEdit [27]
+    Left = 371
+    Top = 74
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 145
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -247,7 +241,7 @@
     Top = 228
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Service'
+    StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_MasterTech'
     Params = <
       item
         Name = 'ioid'
@@ -273,28 +267,26 @@
       item
         Name = 'inOperDatePartner'
         Value = 0d
-        Component = ceOperDatePartner
+        Component = ceDatePartionGoods
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inInvNumberPartner'
         Value = ''
-        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inamountIn'
         Value = 0.000000000000000000
-        Component = ceAmountDebet
+        Component = ceRealWeight
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inamountOut'
         Value = 0.000000000000000000
-        Component = ceAmountKredit
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -313,28 +305,24 @@
       item
         Name = 'incontractid'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ininfomoneyid'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'injuridicalid'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPartnerId'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -346,35 +334,24 @@
       item
         Name = 'inpaidkindid'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inunitid'
         Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 488
     Top = 224
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Service'
+    StoredProcName = 'gpGet_Movement_ProductionUnionTech'
     Params = <
       item
         Name = 'inMovementId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inMovementId_Value'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
       end
       item
@@ -386,10 +363,18 @@
         ParamType = ptInput
       end
       item
-        Name = 'Id'
+        Name = 'inFromId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ToId'
+        ParamType = ptInput
       end
       item
         Name = 'InvNumber'
@@ -405,37 +390,35 @@
       item
         Name = 'OperDatePartner'
         Value = 0d
-        Component = ceOperDatePartner
+        Component = ceDatePartionGoods
         DataType = ftDateTime
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
-        Component = edInvNumberPartner
         DataType = ftString
       end
       item
         Name = 'AmountIn'
         Value = 0.000000000000000000
-        Component = ceAmountDebet
+        Component = ceRealWeight
         DataType = ftFloat
       end
       item
         Name = 'AmountOut'
         Value = 0.000000000000000000
-        Component = ceAmountKredit
         DataType = ftFloat
       end
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'TextValue'
       end
       item
@@ -459,40 +442,28 @@
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -504,107 +475,31 @@
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'ContractInvNumber'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PartnerId'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PartnerName'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 544
     Top = 216
   end
-  object PaidKindGuides: TdsdGuides
+  object RecipeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 218
-    Top = 48
-  end
-  object UnitGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 128
-    Top = 145
-  end
-  object InfoMoneyGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 456
-    Top = 49
-  end
-  object JuridicalGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceJuridical
+    LookupControl = ceRecipe
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
@@ -613,29 +508,25 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -643,44 +534,36 @@
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'PartnerId'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PartnerName'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -694,7 +577,7 @@
         Value = ''
         DataType = ftString
       end>
-    Left = 160
+    Left = 128
     Top = 97
   end
   object GuidesFiller: TGuidesFiller
@@ -704,123 +587,21 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = JuridicalGuides
+        Guides = RecipeGuides
       end
       item
-        Guides = ContractGuides
       end
       item
-        Guides = PaidKindGuides
       end
       item
-        Guides = InfoMoneyGuides
       end>
     ActionItemList = <>
     Left = 264
     Top = 178
   end
-  object ContractGuides: TdsdGuides
+  object GooodsAndKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceContract
-    FormNameParam.Value = 'TContractChoiceForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'InfoMoneyName_all'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'MasterJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'MasterJuridicalName'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 104
-    Top = 49
-  end
-  object PartnerGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = cePartner
+    LookupControl = ceGooodsAndKind
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TPartner_ObjectForm'
@@ -829,14 +610,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartnerGuides
+        Component = GooodsAndKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -844,14 +625,14 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -859,17 +640,71 @@
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = RecipeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 456
-    Top = 97
+    Left = 200
+    Top = 57
+  end
+  object GooodsKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGooodsKindGuides
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GooodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GooodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = RecipeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = RecipeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = RecipeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = RecipeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 52
   end
 end
