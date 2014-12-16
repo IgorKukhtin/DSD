@@ -1,11 +1,11 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_MasterTech()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
 --    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
+--    IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
@@ -25,12 +25,18 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
    vbMovementId = COALESCE ((SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
+   vbOperDate   = COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId), inOperDate);
       -- сохранили <Документ>
-   vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL);
+   vbMovementId := lpInsertUpdate_Movement (ioId               := vbMovementId
+                                          , inDescid           := zc_Movement_ProductionUnion()
+                                          , inInvNumber        := inInvNumber
+                                          , inOperDate         := vbOperDate
+                                          , inParentId         := NULL);
 
    -- сохранили связь с <От кого (в документе)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
