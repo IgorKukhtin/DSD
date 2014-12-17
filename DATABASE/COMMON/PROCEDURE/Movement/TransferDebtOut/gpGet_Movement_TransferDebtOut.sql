@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberOrder TVarChar
+             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
@@ -38,7 +39,8 @@ BEGIN
                0 	     	                        AS Id
              , tmpInvNum.InvNumber                  AS InvNumber
              , CAST ('' as TVarChar)                AS InvNumberPartner
-             , inOperDate			                AS OperDate
+             , CAST ('' as TVarChar)                AS InvNumberOrder 
+             , inOperDate			    AS OperDate
              , Object_Status.Code                   AS StatusCode
              , Object_Status.Name              	    AS StatusName
 
@@ -100,7 +102,8 @@ BEGIN
              Movement.Id				                AS Id
            , Movement.InvNumber				            AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Movement.OperDate				            AS OperDate
+           , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+           , Movement.OperDate				        AS OperDate
           
            , Object_Status.ObjectCode    		        AS StatusCode
            , Object_Status.ValueData     		        AS StatusName
@@ -148,6 +151,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -254,6 +261,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.12.14         * add InvNumberOrder
  03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner
  17.05.14                                        * add Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
