@@ -4,7 +4,8 @@
 
 CREATE OR REPLACE VIEW Constant_ProfitLoss_Goods_View
 AS
-   SELECT * FROM Constant_ProfitLoss_Sale_ReturnIn_View
+   SELECT ProfitLossGroupId, ProfitLossDirectionId, ProfitLossId, isSale, isCost
+             FROM Constant_ProfitLoss_Sale_ReturnIn_View
   UNION ALL 
    -- Скидка за вес: Продукция + Ирна
    SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10500() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10501() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
