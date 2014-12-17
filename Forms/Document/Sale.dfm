@@ -3,8 +3,8 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitWidth = 1028
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -660,6 +660,7 @@ inherited SaleForm: TSaleForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     Properties.ReadOnly = False
+    Properties.UseThousandSeparator = True
     TabOrder = 11
     Width = 40
   end

@@ -473,8 +473,7 @@ var i: integer;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) then
-       try
+    if (Operation = opRemove) then begin
          if Assigned(Params) then
             for i := 0 to Params.Count - 1 do
                if Params[i].Component = AComponent then
@@ -485,9 +484,7 @@ begin
                    DataSets[i].DataSet := nil;
          if AComponent = DataSet then
             DataSet := nil;
-       except
-         // запинали ухо!
-       end;
+    end;
 end;
 
 function TdsdStoredProc.ParamByName(const Value: string): TdsdParam;
@@ -739,8 +736,14 @@ begin
           case DataType of
             ftInteger: Result := '0';
           end;
-     if Component is TcxCurrencyEdit then
-        Result := (Component as TcxCurrencyEdit).Value;
+     if Component is TcxCurrencyEdit then begin
+        with (Component as TcxCurrencyEdit) do
+          if Parent.ClassName = 'TPlaceForm' then begin // Если стоим в тулбаре, то приходится брать из текста
+             Result := StrToFloatDef(EditingText, 0)
+          end
+          else
+            Result := (Component as TcxCurrencyEdit).Value;
+     end;
      if Component is TCustomGuides then begin
         if LowerCase(ComponentItem) = 'textvalue'  then
            Result := (Component as TCustomGuides).TextValue
