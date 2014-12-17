@@ -129,8 +129,8 @@ BEGIN
 
           , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
           , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())  AS CurrencyPartnerId
-          , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyPartnerValue
-          , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParPartnerValue
+          , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
+          , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
 

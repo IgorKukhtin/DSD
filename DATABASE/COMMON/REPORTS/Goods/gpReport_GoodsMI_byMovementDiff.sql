@@ -69,7 +69,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-   WITH tmpMI_diff AS  (SELECT MovementItem.MovementId
+    WITH tmpMI_diff AS (SELECT MovementItem.MovementId
                              , MovementItem.Id AS MovementItemId
                              , MovementItem.ObjectId AS GoodsId
                         FROM Movement
@@ -90,11 +90,6 @@ BEGIN
                           AND CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MovementItem.Amount END
                               <> COALESCE (MIFloat_AmountPartner.ValueData, 0)
                        )
-
-       , tmpProfitLoss AS (SELECT ProfitLossId AS Id, zc_MovementLinkObject_From() AS MLO_DescId, zc_MovementLinkObject_To() AS MLO_Partner_DescId  FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = TRUE AND isCost = FALSE AND inDescId = zc_Movement_Sale()
-                          UNION ALL
-                           SELECT ProfitLossId AS Id, zc_MovementLinkObject_To() AS MLO_DescId, zc_MovementLinkObject_From() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn()
-                          )
            , tmpMIReport AS (SELECT tmpMI_diff.MovementItemId
                                   , tmpMI_diff.MovementId
                                   , tmpMI_diff.GoodsId
@@ -119,6 +114,10 @@ BEGIN
                              WHERE MIReport.ActiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                 OR MIReport.PassiveAccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                             )
+       , tmpProfitLoss AS (SELECT ProfitLossId AS Id, zc_MovementLinkObject_From() AS MLO_DescId, zc_MovementLinkObject_To() AS MLO_Partner_DescId  FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = TRUE AND isCost = FALSE AND inDescId = zc_Movement_Sale()
+                          UNION ALL
+                           SELECT ProfitLossId AS Id, zc_MovementLinkObject_To() AS MLO_DescId, zc_MovementLinkObject_From() AS MLO_Partner_DescId FROM Constant_ProfitLoss_Sale_ReturnIn_View WHERE isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn()
+                          )
        , tmpReportContainerSumm AS
                       (SELECT ContainerLO_Juridical.ObjectId AS JuridicalId
                             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
@@ -130,6 +129,7 @@ BEGIN
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
                             , COALESCE (MIFloat_Price.ValueData, 0)
+                              -- так переводится в валюту zc_Enum_Currency_Basis
                             * CASE WHEN COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN 1 ELSE CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_CurrencyValue.ValueData / MovementFloat_ParValue.ValueData ELSE 0 END END
                               AS Price
                             , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -405,6 +405,7 @@ ALTER FUNCTION gpReport_GoodsMI_byMovementDiff (TDateTime, TDateTime, Integer, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.14                                        * all
  18.05.14                                        * all
  08.04.14                                        * all
  04.04.14         *

@@ -2,29 +2,27 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 702
+  ExplicitWidth = 1036
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1020
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1016
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 514
+      ExplicitWidth = 1020
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 514
-        ExplicitWidth = 1014
-        ExplicitHeight = 514
+        Width = 1020
+        Height = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -202,8 +200,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1014
-        Height = 514
+        Width = 1020
+        Height = 518
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -567,7 +565,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 223
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 223
     end
     object cxLabel3: TcxLabel
@@ -885,6 +883,12 @@ inherited ReturnInForm: TReturnInForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
       MoveParams = <>
@@ -909,8 +913,8 @@ inherited ReturnInForm: TReturnInForm
         item
           StoredProc = spSelectTaxCorrective
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 11
       Status = mtUncomplete
       DataSource = TaxCorrectiveDS
@@ -929,8 +933,8 @@ inherited ReturnInForm: TReturnInForm
         end
         item
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 13
       Status = mtDelete
       DataSource = TaxCorrectiveDS
@@ -948,8 +952,8 @@ inherited ReturnInForm: TReturnInForm
         item
           StoredProc = spSelectTaxCorrective
         end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 12
       Status = mtComplete
       DataSource = TaxCorrectiveDS
@@ -1162,6 +1166,9 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    inherited actAddMask: TdsdExecStoredProc
+      TabSheet = tsMain
+    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1337,7 +1344,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

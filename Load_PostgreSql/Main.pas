@@ -6888,7 +6888,7 @@ begin
                   inPriceWithVAT:=toSqlQuery.FieldByName('RetV').AsBoolean;
                   fOpenSqToQuery ('select ValueData AS RetV from ObjectFloat where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectFloat_PriceList_VATPercent()');
                   inVATPercent:=toSqlQuery.FieldByName('RetV').AsInteger;
-                  fOpenSqToQuery ('select ObjectId AS RetV from ObjectLink where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectLink_PriceList_Currency()');
+                  fOpenSqToQuery ('select ChildObjectId AS RetV from ObjectLink where ObjectId='+IntToStr(FieldByName('Id_Postgres').AsInteger) + ' and DescId = zc_ObjectLink_PriceList_Currency()');
                   if toSqlQuery.FieldByName('RetV').AsInteger<>0
                   then inCurrencyId:=toSqlQuery.FieldByName('RetV').AsInteger
                   else inCurrencyId:=14461;//грн

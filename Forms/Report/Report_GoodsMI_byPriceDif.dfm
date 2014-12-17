@@ -36,10 +36,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clAmountPartner_Weight
             end
             item
@@ -513,7 +509,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_byPriceDif'
+    StoredProcName = 'gpReport_GoodsMI_byPriceDiff'
     Params = <
       item
         Name = 'inStartDate'

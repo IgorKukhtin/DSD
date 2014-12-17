@@ -303,7 +303,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110201()  -- Транзит + деньги в пути
-                                                                      , zc_Enum_Account_110301()) -- Транзит + расчетный счет
+                                                                      , zc_Enum_Account_110301()) -- Транзит + расчетный счет + расчетный счет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -313,6 +313,25 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_InfoMoney() -- CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
                                                                             , inObjectId_1        := _tmpItem.InfoMoneyId -- _tmpItem.ObjectId
+                                                                             )
+                                            WHEN _tmpItem.AccountId IN (zc_Enum_Account_110302()) -- Транзит + расчетный счет + валютный
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
+                                                                                                                                             , zc_Enum_AccountDirection_40200()
+                                                                                                                                             , zc_Enum_AccountDirection_40500()
+                                                                                                                                              )
+                                                                                                               THEN zc_ContainerLinkObject_Cash()
+                                                                                                          ELSE zc_ContainerLinkObject_BankAccount()
+                                                                                                     END
+                                                                            , inObjectId_1        := CASE WHEN _tmpItem.IsActive = FALSE THEN _tmpItem.ObjectId ELSE (SELECT ObjectId FROM _tmpItem WHERE IsActive = FALSE) END
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Currency()
+                                                                            , inObjectId_2        := _tmpItem.CurrencyId
                                                                              )
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -451,6 +470,25 @@ BEGIN
                 ContainerId_Currency = CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
                                               OR _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                  THEN 0
+                                            WHEN _tmpItem.AccountId IN (zc_Enum_Account_110302()) -- Транзит + расчетный счет + валютный
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()
+                                                                            , inParentId          := _tmpItem.ContainerId
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100()
+                                                                                                                                             , zc_Enum_AccountDirection_40200()
+                                                                                                                                             , zc_Enum_AccountDirection_40500()
+                                                                                                                                              )
+                                                                                                               THEN zc_ContainerLinkObject_Cash()
+                                                                                                          ELSE zc_ContainerLinkObject_BankAccount()
+                                                                                                     END
+                                                                            , inObjectId_1        := CASE WHEN _tmpItem.IsActive = FALSE THEN _tmpItem.ObjectId ELSE (SELECT ObjectId FROM _tmpItem WHERE IsActive = FALSE) END
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Currency()
+                                                                            , inObjectId_2        := _tmpItem.CurrencyId
+                                                                             )
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()
                                                                             , inParentId          := _tmpItem.ContainerId

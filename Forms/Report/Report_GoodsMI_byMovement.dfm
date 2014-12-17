@@ -76,14 +76,6 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_10500_Weight
             end
             item
@@ -156,14 +148,6 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'

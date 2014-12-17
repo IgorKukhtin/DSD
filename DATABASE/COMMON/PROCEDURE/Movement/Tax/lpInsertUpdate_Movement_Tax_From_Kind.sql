@@ -34,6 +34,10 @@ $BODY$
 
    DECLARE vbDiscountPercent TFloat;
    DECLARE vbExtraChargesPercent TFloat;
+
+  DECLARE vbCurrencyDocumentId Integer;
+  DECLARE vbCurrencyValue TFloat;
+  DECLARE vbParValue TFloat;
 BEGIN
       -- это значит пользователь установил в журнале "другой" тип формирования
       IF inDocumentTaxKindId_inf <> 0 THEN inDocumentTaxKindId:= inDocumentTaxKindId_inf; END IF;
@@ -88,8 +92,14 @@ BEGIN
            , zc_Enum_PaidKind_FirstForm() AS PaidKindId
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+
+           , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
+           , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
+           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
+
              INTO vbMovementId_Sale, vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId, vbPaidKindId
                 , vbDiscountPercent, vbExtraChargesPercent
+                , vbCurrencyDocumentId, vbCurrencyValue, vbParValue
       FROM Movement
            LEFT JOIN MovementString AS MS_InvNumberPartner
                                     ON MS_InvNumberPartner.MovementId = Movement.Id
@@ -116,6 +126,17 @@ BEGIN
                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                   AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                        ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                       AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+           LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                   ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                  AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+           LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                   ON MovementFloat_ParValue.MovementId = Movement.Id
+                                  AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -468,7 +489,10 @@ BEGIN
       INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective)
          SELECT tmpMI.GoodsId
               , tmpMI.GoodsKindId
-              , tmpMI.Price
+              , CAST (tmpMI.Price
+                  -- так переводится в валюту zc_Enum_Currency_Basis
+                * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
+                AS NUMERIC (16, 2)) AS Price
               , tmpMI.CountForPrice
               , CASE WHEN tmpMI.Amount_Sale > 0 THEN tmpMI.Amount_Sale ELSE 0 END AS Amount_Tax
               , tmpMI.Amount_ReturnIn + CASE WHEN tmpMI.Amount_Sale < 0 THEN -1 * tmpMI.Amount_Sale ELSE 0 END AS Amount_TaxCorrective
