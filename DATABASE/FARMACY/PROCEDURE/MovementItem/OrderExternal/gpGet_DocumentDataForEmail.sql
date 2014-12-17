@@ -49,8 +49,8 @@ BEGIN
        RETURN QUERY
        SELECT
          'А вот и заголовок'::TVarChar, 'Это супер письмо!!!'::TVarChar, 'test@dsd.biz.ua'::TVarChar
-       , vbMail, 'dsd.biz.ua'::TVarChar, 25
-       , 'test@dsd.biz.ua'::TVarChar, 'testtest'::TVarChar;
+       , vbMail, 'smtp.mail.ru'::TVarChar, 2525
+       , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
 
 END;
 $BODY$

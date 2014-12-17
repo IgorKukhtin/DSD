@@ -23,7 +23,6 @@ type
     property Active: boolean read FActive;
   end;
 
-
 implementation
 
 uses SysUtils;

@@ -2,7 +2,7 @@ unit MeDOC;
 
 interface
 
-uses MeDocXML, dsdAction, DB;
+uses MeDocXML, dsdAction, DB, Classes;
 
 type
 
@@ -20,8 +20,13 @@ type
   private
     FHeaderDataSet: TDataSet;
     FItemsDataSet: TDataSet;
+    FDirectory: string;
+    FAskFilePath: boolean;
+    procedure SetDirectory(const Value: string);
   protected
     function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
   published
     property QuestionBeforeExecute;
     property InfoAfterExecute;
@@ -32,6 +37,8 @@ type
     property SecondaryShortCuts;
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
     property ItemsDataSet: TDataSet read FItemsDataSet write FItemsDataSet;
+    property Directory: string read FDirectory write SetDirectory;
+    property AskFilePath: boolean read FAskFilePath write FAskFilePath default true;
   end;
 
   TMedocCorrectiveAction = class(TMedocAction)
@@ -175,6 +182,12 @@ end;
 
 { TMedocAction }
 
+constructor TMedocAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  AskFilePath := true;
+end;
+
 function TMedocAction.LocalExecute: boolean;
 begin
   result := false;
@@ -183,8 +196,13 @@ begin
     DefaultExt := '*.xml';
     FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
                 trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
+    if Directory <> '' then begin
+       if not DirectoryExists(Directory) then
+          ForceDirectories(Directory);
+       FileName := Directory + FileName;
+    end;
     Filter := '‘‡ÈÎ˚ ÃÂƒÓÍ (.xml)|*.xml|';
-    if Execute then begin
+    if (not AskFilePath) or Execute then begin
        with TMedoc.Create do
        try
          CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName);
@@ -198,6 +216,11 @@ begin
   end;
 end;
 
+procedure TMedocAction.SetDirectory(const Value: string);
+begin
+  FDirectory := Value;
+end;
+
 { TMedocCorrectiveAction }
 
 function TMedocCorrectiveAction.LocalExecute: boolean;
@@ -208,8 +231,13 @@ begin
     DefaultExt := '*.xml';
     FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
                 trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
+    if Directory <> '' then begin
+       if not DirectoryExists(Directory) then
+          ForceDirectories(Directory);
+       FileName := Directory + FileName;
+    end;
     Filter := '‘‡ÈÎ˚ ÃÂƒÓÍ (.xml)|*.xml|';
-    if Execute then begin
+    if (not AskFilePath) or Execute then begin
        with TMedocCorrective.Create do
        try
          CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName);

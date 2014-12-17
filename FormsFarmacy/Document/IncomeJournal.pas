@@ -12,7 +12,7 @@ uses
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave;
 
 type
   TIncomeJournalForm = class(TAncestorJournalForm)
@@ -30,6 +30,12 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalSumm: TcxGridDBColumn;
+    ADOQueryAction1: TADOQueryAction;
+    actGetDataForSend: TdsdExecStoredProc;
+    mactSendOneDoc: TMultiAction;
+    MultiAction2: TMultiAction;
+    bbSendData: TdxBarButton;
+    spGetDataForSend: TdsdStoredProc;
   private
     { Private declarations }
   public

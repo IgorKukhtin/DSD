@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbJuridicalId Integer;
    DECLARE vbCurrencyId Integer;
+   DECLARE vbAmountCurrency TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
@@ -119,6 +120,14 @@ BEGIN
        vbMovementItemId := lpInsertUpdate_Movement (0, zc_Movement_BankStatementItem(), inDocNumber, inOperDate, vbMovementId);              
     END IF;
 
+    -- Если валюта оличается от базовой, то сделаем ряд расчетов
+    IF vbCurrencyId <> zc_Enum_Currency_Basis() THEN
+       vbAmountCurrency := inAmount;
+       inAmount := ;
+
+       
+    END IF;
+
     -- сохранили свойство <Сумма операции>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), vbMovementItemId, inAmount);
      -- сохранили свойство <ОКПО>
@@ -133,6 +142,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankMFO (), vbMovementItemId, inBankMFO);
      -- сохранили свойство <Название банка>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId, inBankName);
+     -- сохранили свойство <Валюта>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency (), vbMovementItemId, vbCurrencyId);
      -- сохранили свойство <Валюта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency (), vbMovementItemId, vbCurrencyId);
 
@@ -298,18 +309,6 @@ BEGIN
     END IF;
 
    
-/*
-    IF (COALESCE(vbInfoMoneyId, 0) = 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN 
-       -- Находим <Управленческие статьи> у Юр. Лица
-       SELECT ChildObjectId INTO vbInfoMoneyId 
-       FROM ObjectLink 
-       WHERE ObjectId = vbJuridicalId AND DescId = zc_ObjectLink_Juridical_InfoMoney();
-       IF COALESCE(vbInfoMoneyId, 0) <> 0 THEN
-          -- сохранили связь с <Управленческие статьи>
-          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
-       END IF;
-    END IF;*/
-
 /*   -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
   */

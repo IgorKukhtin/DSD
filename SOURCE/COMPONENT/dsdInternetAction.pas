@@ -53,7 +53,8 @@ type
 implementation
 
 uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, cxGridExportLink,
-     VCL.ActnList, cxControls;
+     VCL.ActnList, cxControls, IdExplicitTLSClientServerBase, IdSSLOpenSSL,
+     IdGlobal;
 
 { TdsdSMTPAction }
 
@@ -93,12 +94,22 @@ var EMsg: TIdMessage;
     EText: TIdText;
     i: integer;
     Stream: TFileStream;
+    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 begin
+  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  FIdSSLIOHandlerSocketOpenSSL.MaxLineAction := maException;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvTLSv1;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmUnassigned;
+  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.VerifyDepth := 0;
+
   result := false;
   FIdSMTP := TIdSMTP.Create(nil);
   FIdSMTP.Host:= Host;
+  FIdSMTP.Port := Port;
   FIdSMTP.Password:= Password;
   FIdSMTP.Username:= Username;
+  FIdSMTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
+  FIdSMTP.UseTLS := utUseExplicitTLS;
 
   EMsg := TIdMessage.Create(FIdSMTP);
   EMsg.OnInitializeISO := Self.LInitializeISO;

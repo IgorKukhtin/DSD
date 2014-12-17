@@ -96,11 +96,6 @@ inherited OrderExternalForm: TOrderExternalForm
           OptionsData.DeletingConfirmation = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Content = nil
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PartnerGoodsCode'
@@ -162,6 +157,24 @@ inherited OrderExternalForm: TOrderExternalForm
           end
         end
       end
+      object cxGridExport: TcxGrid
+        Left = 532
+        Top = 40
+        Width = 250
+        Height = 200
+        TabOrder = 1
+        Visible = False
+        object cxGridExportDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ExportDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+        end
+        object cxGridExportLevel1: TcxGridLevel
+          GridView = cxGridExportDBTableView
+        end
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -192,7 +205,6 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 139
-      ExplicitHeight = 22
       Width = 139
     end
     object cxLabel3: TcxLabel
@@ -253,11 +265,20 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 640
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object actGridExportToExcel: TdsdGridToExcel [2]
+      Category = 'Export'
+      TabSheet = tsMain
+      MoveParams = <>
+      ColumnNameDataSet = PrintHeaderCDS
+      Grid = cxGridExport
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ShortCut = 16472
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -304,7 +325,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -395,6 +416,42 @@ inherited OrderExternalForm: TOrderExternalForm
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
       ImageIndex = 53
       ShortCut = 16467
+    end
+    object mactGridExportToExcel: TMultiAction
+      Category = 'Export'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExportStoredproc
+        end
+        item
+          Action = actGridExportToExcel
+        end>
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1069#1082#1089#1077#1083#1100' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1069#1082#1089#1077#1083#1100' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      ImageIndex = 27
+    end
+    object actExportStoredproc: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      StoredProc = spGetExportParam
+      StoredProcList = <
+        item
+          StoredProc = spGetExportParam
+        end
+        item
+          StoredProc = spSelectExport
+        end>
+      Caption = 'actExportStoredproc'
+    end
+    object egToText: TExportGrid
+      Category = 'Export'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
+      ImageIndex = 42
     end
   end
   inherited MasterDS: TDataSource
@@ -524,6 +581,14 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportToText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportToExcel'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -564,6 +629,14 @@ inherited OrderExternalForm: TOrderExternalForm
       Action = mactSMTPSend
       Category = 0
     end
+    object bbExportToExcel: TdxBarButton
+      Action = mactGridExportToExcel
+      Category = 0
+    end
+    object bbExportToText: TdxBarButton
+      Action = egToText
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -574,8 +647,8 @@ inherited OrderExternalForm: TOrderExternalForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
-    Left = 830
-    Top = 265
+    Left = 798
+    Top = 273
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -956,12 +1029,6 @@ inherited OrderExternalForm: TOrderExternalForm
     Left = 508
     Top = 246
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
@@ -1126,5 +1193,55 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 80
     Top = 160
+  end
+  object spSelectExport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderExternal_Export'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 607
+    Top = 192
+  end
+  object ExportDS: TDataSource
+    DataSet = PrintItemsCDS
+    Left = 688
+    Top = 192
+  end
+  object spGetExportParam: TdsdStoredProc
+    StoredProcName = 'gpGet_OrderExternal_ExportParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'DefaultFileName'
+        Value = Null
+        Component = actGridExportToExcel
+        ComponentItem = 'DefaultFileName'
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 232
   end
 end

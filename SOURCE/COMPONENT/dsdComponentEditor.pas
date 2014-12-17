@@ -43,7 +43,7 @@ implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
-     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI;
+     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc;
 
 procedure Register;
 begin
@@ -78,6 +78,9 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TEDI)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TADOQueryAction)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TMedocAction)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TExportGrid)), Proc);
   // и даже такой. Приходится использовать для кросса
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
   // и примерно такой же для Pivot
@@ -120,6 +123,20 @@ begin
             begin
               Proc('Name');
               Proc('Data');
+            end;
+            if (Component is TADOQueryAction) then
+            begin
+              Proc('ConnectionString');
+              Proc('QueryText');
+            end;
+            if (Component is TExportGrid) then
+            begin
+              Proc('ExportType');
+              Proc('DefaultFileName');
+            end;
+            if (Component is TMedocAction) then
+            begin
+              Proc('Directory');
             end;
             if (Component is TEDI) then
             begin

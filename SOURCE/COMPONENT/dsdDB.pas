@@ -142,7 +142,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI;
+     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -854,8 +854,19 @@ begin
         end;
      if Component is TEDI then
         (Component as TEDI).Directory := FValue;
+     if Component is TMedocAction then
+        (Component as TMedocAction).Directory := FValue;
+     if Component is TExportGrid then
+        (Component as TExportGrid).DefaultFileName := FValue;
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue;
+     if Component is TADOQueryAction then begin
+        if LowerCase(ComponentItem) = 'connectionstring' then begin
+           (Component as TADOQueryAction).ConnectionString := FValue;
+        end else
+           if LowerCase(ComponentItem) = 'querytext' then
+              (Component as TADOQueryAction).QueryText := FValue;
+     end;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TCustomGuides).TextValue := FValue;

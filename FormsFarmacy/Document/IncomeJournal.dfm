@@ -1,25 +1,24 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 535
-  ClientWidth = 1073
-  ExplicitTop = -111
-  ExplicitWidth = 1081
+  ClientWidth = 807
+  ExplicitWidth = 815
   ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1073
+    Width = 807
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1073
+    ClientRectRight = 807
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1073
+        Width = 807
         Height = 478
         ExplicitWidth = 1073
         ExplicitHeight = 478
@@ -179,7 +178,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1073
+    Width = 807
     ExplicitWidth = 1073
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -259,6 +258,41 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object ADOQueryAction1: TADOQueryAction
+      Category = 'dsdImportExport'
+      MoveParams = <>
+    end
+    object actGetDataForSend: TdsdExecStoredProc
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      StoredProc = spGetDataForSend
+      StoredProcList = <
+        item
+          StoredProc = spGetDataForSend
+        end>
+      Caption = 'actGetDataForSend'
+    end
+    object mactSendOneDoc: TMultiAction
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDataForSend
+        end
+        item
+          Action = ADOQueryAction1
+        end
+        item
+          Action = actComplete
+        end>
+      Caption = 'mactSendOneDoc'
+    end
+    object MultiAction2: TMultiAction
+      Category = 'dsdImportExport'
+      MoveParams = <>
+      ActionList = <>
+      Caption = 'MultiAction2'
     end
   end
   inherited MasterDS: TDataSource
@@ -382,6 +416,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbSendData'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -421,6 +459,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Hint = #1057#1095#1077#1090
       Visible = ivAlways
       ImageIndex = 21
+    end
+    object bbSendData: TdxBarButton
+      Action = mactSendOneDoc
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -564,5 +606,34 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spGetDataForSend: TdsdStoredProc
+    StoredProcName = 'gpGetDataForSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ConnectionString'
+        Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'ConnectionString'
+      end
+      item
+        Name = 'QueryText'
+        Value = Null
+        Component = ADOQueryAction1
+        ComponentItem = 'QueryText'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 48
   end
 end

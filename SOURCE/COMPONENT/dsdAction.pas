@@ -497,9 +497,16 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TdsdGridToExcel = class(TdsdCustomAction)
+  type
+    TcxExport = (cxegExportToHtml, cxegExportToXml,
+                 cxegExportToText, cxegExportToExcel, cxegExportToXlsx);
+
+  TExportGrid = class(TdsdCustomAction)
   private
     FGrid: TcxControl;
+    FExportType: TcxExport;
+    FDefaultFileName: string;
+    FColumnNameDataSet: TDataSet;
     procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent;
@@ -508,11 +515,19 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property ColumnNameDataSet: TDataSet read FColumnNameDataSet write FColumnNameDataSet;
+    property ExportType: TcxExport read FExportType write FExportType default cxegExportToExcel;
     property Grid: TcxControl read FGrid write SetGrid;
     property Caption;
     property Hint;
     property ImageIndex;
     property ShortCut;
+    property DefaultFileName: string read FDefaultFileName write FDefaultFileName;
+  end;
+
+  TdsdGridToExcel = class(TExportGrid)
+  public
+    constructor Create(AOwner: TComponent); override;
   end;
 
   // Действие печати
@@ -603,7 +618,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet,
-  cxGridAddOn, cxTextEdit;
+  cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions;
 
 procedure Register;
 begin
@@ -624,6 +639,7 @@ begin
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
   RegisterActions('DSDLib', [TFileDialogAction], TFileDialogAction);
+  RegisterActions('DSDLib', [TExportGrid], TExportGrid);
   RegisterActions('DSDLib', [TInsertUpdateChoiceAction],
     TInsertUpdateChoiceAction);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
@@ -1264,6 +1280,101 @@ begin
   end;
 end;
 
+{ TExportGrid }
+
+constructor TExportGrid.Create(AOwner: TComponent);
+begin
+  inherited;
+  PostDataSetBeforeExecute := true;
+  ExportType := cxegExportToExcel;
+end;
+
+function TExportGrid.LocalExecute: Boolean;
+ const ConstFileName = '#$#$#$';
+       cFieldName = 'FieldName';
+       cDisplayName = 'DisplayName';
+var FileName: string;
+    i: integer;
+begin
+  result := true;
+  if not Assigned(FGrid) then
+  begin
+    ShowMessage('Не установлено свойство Grid');
+    exit;
+  end;
+  if DefaultFileName = '' then
+     FileName := ConstFileName
+  else
+     FileName := DefaultFileName;
+  case ExportType of
+    cxegExportToHtml: FileName := FileName + '.html';
+    cxegExportToXml: FileName := FileName + '.xml';
+    cxegExportToText: FileName := FileName + '.txt';
+    cxegExportToExcel: FileName := FileName + '.xls';
+    cxegExportToXlsx: FileName := FileName + '.xlsx';
+  end;
+  if FGrid is TcxGrid then begin
+     // грид скрыт и нужен только для выгрузки, то добавим колонки во View
+     if not FGrid.Visible then begin
+        if TcxGrid(FGrid).ViewCount > 0 then begin
+           if TcxGrid(FGrid).Views[0].DataController is TcxGridDBDataController then begin
+              while TcxGridDBTableView(TcxGrid(FGrid).Views[0]).ColumnCount > 0 do
+                    TcxGridDBTableView(TcxGrid(FGrid).Views[0]).Columns[0].Free;
+              TcxGridDBDataController(TcxGrid(FGrid).Views[0].DataController).CreateAllItems;
+              // Вот тут устанавливаем имена колонок
+              if Assigned(ColumnNameDataSet) then begin
+                 with TcxGridDBTableView(TcxGrid(FGrid).Views[0]) do
+                   for I := 0 to ColumnCount - 1 do begin
+                     if ColumnNameDataSet.Locate(cFieldName, Columns[i].DataBinding.FieldName, [loCaseInsensitive]) then
+                        Columns[i].Caption := ColumnNameDataSet.FieldByName(cDisplayName).AsString;
+                   end;
+              end;
+           end;
+        end;
+     end;
+     case ExportType of
+       cxegExportToHtml:  ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+       cxegExportToXml:   ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+       cxegExportToText:  ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed);
+       cxegExportToExcel: ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
+       cxegExportToXlsx:  ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
+     end;
+  end;
+  if FGrid is TcxCustomPivotGrid then begin
+     case ExportType of
+       cxegExportToHtml:  cxExportPivotGridToHTML(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
+       cxegExportToXml:   cxExportPivotGridToXML(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
+       cxegExportToText:  cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
+       cxegExportToExcel,
+       cxegExportToXlsx:  cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
+     end;
+  end;
+  ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
+    SW_SHOWNORMAL);
+end;
+
+procedure TExportGrid.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then begin
+    if (Operation = opRemove) and (AComponent = FGrid) then
+       FGrid := nil;
+    if (Operation = opRemove) and (AComponent = FColumnNameDataSet) then
+       FColumnNameDataSet := nil;
+  end;
+end;
+
+procedure TExportGrid.SetGrid(const Value: TcxControl);
+begin
+  if not((Value is TcxGrid) or (Value is TcxCustomPivotGrid)) then
+  begin
+    ShowMessage('Компонент может быть только типа TcxGrid или TcxPivotGrid');
+    exit;
+  end;
+  FGrid := Value;
+end;
+
 { TdsdGridToExcel }
 
 constructor TdsdGridToExcel.Create(AOwner: TComponent);
@@ -1272,43 +1383,7 @@ begin
   Caption := 'Выгрузка в Excel';
   Hint := 'Выгрузка в Excel';
   ShortCut := TextToShortCut('Ctrl+X');
-  PostDataSetBeforeExecute := true
-end;
-
-function TdsdGridToExcel.LocalExecute: Boolean;
-begin
-  result := true;
-  if not Assigned(FGrid) then
-  begin
-    ShowMessage('Не установлено свойство Grid');
-    exit;
-  end;
-  if FGrid is TcxGrid then
-    ExportGridToExcel('#$#$#$.xls', TcxGrid(FGrid), IsCtrlPressed);
-  if FGrid is TcxCustomPivotGrid then
-    cxExportPivotGridToExcel('#$#$#$.xls', TcxCustomPivotGrid(FGrid),
-      IsCtrlPressed);
-  ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil,
-    SW_SHOWNORMAL);
-end;
-
-procedure TdsdGridToExcel.Notification(AComponent: TComponent;
-  Operation: TOperation);
-begin
-  inherited;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) and (AComponent = FGrid) then
-      FGrid := nil;
-end;
-
-procedure TdsdGridToExcel.SetGrid(const Value: TcxControl);
-begin
-  if not((Value is TcxGrid) or (Value is TcxCustomPivotGrid)) then
-  begin
-    ShowMessage('Компонент может быть только типа TcxGrid или TcxPivotGrid');
-    exit;
-  end;
-  FGrid := Value;
+  ExportType := cxegExportToExcel;
 end;
 
 { TdsdPrintAction }

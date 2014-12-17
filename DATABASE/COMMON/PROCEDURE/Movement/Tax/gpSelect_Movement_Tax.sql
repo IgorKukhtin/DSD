@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberBranch TVarChar, BranchName TVarChar
              , isEDI Boolean
              , isElectron Boolean
+             , isMedoc Boolean
               )
 AS
 $BODY$
@@ -104,6 +105,7 @@ BEGIN
 
            , COALESCE(MovementLinkMovement_Tax.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE(MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
+           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -146,6 +148,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
+                                      ON MovementBoolean_Medoc.MovementId =  Movement.Id
+                                     AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -238,6 +244,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.12.14                        * add isMedoc
  08.10.14         *  dell MovementBoolean_Electron было 2 раза
  12.08.14                                        * add isEDI and isElectron
  03.05.14                                        * add ContractTagName

@@ -56,68 +56,42 @@ BEGIN
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
-       SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
-           , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
-           , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
-           , MovementItem.Amount                AS Amount
-           , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
-           , MIFloat_Price.ValueData            AS Price
-           , MovementItem.isErased              AS isErased
+        SELECT
+             MovementItem.Id
+           , MovementItem.GoodsId
+           , MovementItem.GoodsCode
+           , MovementItem.GoodsName
+           , MovementItem.PartnerGoodsCode
+           , MovementItem.PartnerGoodsName
+           , MovementItem.Amount
+           , MovementItem.Price
+           , MovementItem.AmountSumm
+           , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = tmpIsErased.isErased
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-
-            LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
-
-            ;
+            JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = inMovementId
+                                                         AND MovementItem.isErased   = tmpIsErased.isErased;
 
      ELSE
 
      RETURN QUERY
        SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
-           , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
-           , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
-           , MovementItem.Amount                AS Amount
-           , MIFloat_Price.ValueData            AS Price
-           , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
-           , MovementItem.isErased              AS isErased
+             MovementItem.Id
+           , MovementItem.GoodsId
+           , MovementItem.GoodsCode
+           , MovementItem.GoodsName
+           , MovementItem.PartnerGoodsCode
+           , MovementItem.PartnerGoodsName
+           , MovementItem.Amount
+           , MovementItem.Price
+           , MovementItem.AmountSumm
+           , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = tmpIsErased.isErased
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                             ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-
-            LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
-
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId;
-
+            JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = inMovementId
+                                                         AND MovementItem.isErased   = tmpIsErased.isErased;
      END IF;
 
 END;
