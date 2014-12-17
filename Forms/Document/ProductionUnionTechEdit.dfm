@@ -25,9 +25,9 @@
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 184
-    Top = 5
-    Caption = #1044#1072#1090#1072
+    Left = 487
+    Top = 182
+    Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
     Visible = False
   end
   object Код: TcxLabel [3]
@@ -37,19 +37,19 @@
     Visible = False
   end
   object ceOperDate: TcxDateEdit [4]
-    Left = 184
-    Top = 24
+    Left = 487
+    Top = 201
+    Enabled = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Visible = False
     Width = 97
   end
   object ceRealWeight: TcxCurrencyEdit [5]
     Left = 8
-    Top = 157
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.0000'
     TabOrder = 4
     Width = 110
   end
@@ -86,29 +86,16 @@
     TabOrder = 5
     Width = 441
   end
-  object cxLabel9: TcxLabel [11]
-    Left = 460
-    Top = 183
-    Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
-  end
-  object ceDatePartionGoods: TcxDateEdit [12]
-    Left = 460
-    Top = 201
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 12
-    Width = 137
-  end
-  object edInvNumber: TcxTextEdit [13]
+  object edInvNumber: TcxTextEdit [11]
     Left = 8
     Top = 24
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 11
     Text = '0'
     Visible = False
     Width = 156
   end
-  object ceGooodsAndKind: TcxButtonEdit [14]
+  object ceGooodsAndKind: TcxButtonEdit [12]
     Left = 8
     Top = 74
     Properties.Buttons = <
@@ -117,85 +104,77 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 12
     Width = 342
   end
-  object cxLabel12: TcxLabel [15]
+  object cxLabel12: TcxLabel [13]
     Left = 8
-    Top = 55
+    Top = 51
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   end
-  object cxLabel3: TcxLabel [16]
+  object cxLabel3: TcxLabel [14]
     Left = 124
     Top = 140
     Caption = #1050#1086#1083'. '#1073#1072#1090#1086#1085#1086#1074
   end
-  object ceCount: TcxCurrencyEdit [17]
+  object ceCount: TcxCurrencyEdit [15]
     Left = 124
-    Top = 157
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 17
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.0000'
+    TabOrder = 15
     Width = 110
   end
-  object cxLabel4: TcxLabel [18]
+  object cxLabel4: TcxLabel [16]
     Left = 240
     Top = 140
     Caption = #1050#1091#1090#1077#1088' '#1092#1072#1082#1090
   end
-  object ceСuterCount: TcxCurrencyEdit [19]
+  object ceСuterCount: TcxCurrencyEdit [17]
     Left = 240
-    Top = 157
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.0000'
+    TabOrder = 17
+    Width = 110
+  end
+  object cxLabel11: TcxLabel [18]
+    Left = 371
+    Top = 140
+    Caption = #1050#1091#1090#1077#1088' '#1079#1072#1103#1074'.'
+  end
+  object ceСuterReq: TcxCurrencyEdit [19]
+    Left = 371
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.0000'
     TabOrder = 19
     Width = 110
   end
-  object cxLabel11: TcxLabel [20]
-    Left = 371
-    Top = 139
-    Caption = #1050#1091#1090#1077#1088' '#1079#1072#1103#1074'.'
+  object cxLabel13: TcxLabel [20]
+    Left = 487
+    Top = 140
+    Caption = #1050#1086#1083' '#1079#1072#1103#1074'.'
   end
-  object ceСuterReq: TcxCurrencyEdit [21]
-    Left = 371
-    Top = 156
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+  object ceAmountReq: TcxCurrencyEdit [21]
+    Left = 487
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.0000'
     TabOrder = 21
     Width = 110
   end
-  object cxLabel13: TcxLabel [22]
-    Left = 487
-    Top = 139
-    Caption = #1050#1086#1083' '#1079#1072#1103#1074'.'
-  end
-  object ceAmountReq: TcxCurrencyEdit [23]
-    Left = 487
-    Top = 156
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 23
-    Width = 110
-  end
-  object cxLabel2: TcxLabel [24]
+  object cxLabel2: TcxLabel [22]
     Left = 374
-    Top = 8
+    Top = 51
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
   end
-  object cxLabel5: TcxLabel [25]
+  object cxLabel5: TcxLabel [23]
     Left = 371
     Top = 95
     Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
-  object ceRecipeCode: TcxCurrencyEdit [26]
-    Left = 371
-    Top = 112
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 26
-    Width = 110
-  end
-  object ceGooodsKindGuides: TcxButtonEdit [27]
+  object ceGooodsKindGuides: TcxButtonEdit [24]
     Left = 371
     Top = 74
     Properties.Buttons = <
@@ -204,8 +183,14 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 24
     Width = 145
+  end
+  object ceRecipeCode: TcxTextEdit [25]
+    Left = 371
+    Top = 113
+    TabOrder = 25
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -233,6 +218,16 @@
         ParamType = ptInput
       end
       item
+        Name = 'FromId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ToId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
         Name = 'inMovementId_Value'
         Value = '0'
         ParamType = ptInput
@@ -251,95 +246,95 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
-        Value = '0'
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inOperDatePartner'
-        Value = 0d
-        Component = ceDatePartionGoods
-        DataType = ftDateTime
+        Name = 'inFromId'
+        Component = FormParams
+        ComponentItem = 'FromId'
         ParamType = ptInput
       end
       item
-        Name = 'inInvNumberPartner'
+        Name = 'inToId'
         Value = ''
-        DataType = ftString
+        Component = FormParams
+        ComponentItem = 'ToId'
         ParamType = ptInput
       end
       item
-        Name = 'inamountIn'
+        Name = 'inGoodsId'
+        Value = 0.000000000000000000
+        Component = GooodsAndKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCount'
+        Value = ''
+        Component = ceCount
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRealWeight'
         Value = 0.000000000000000000
         Component = ceRealWeight
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inamountOut'
-        Value = 0.000000000000000000
+        Name = 'inCuterCount'
+        Value = ''
+        Component = ceСuterCount
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'incomment'
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inbusinessid'
+        Name = 'inGoodsKindId'
         Value = ''
+        Component = GooodsKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'incontractid'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'ininfomoneyid'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'injuridicalid'
-        Value = ''
+        Name = 'inReceiptId'
+        Value = '0'
         Component = RecipeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inPartnerId'
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
         Value = ''
         Component = GooodsAndKindGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
-        Name = 'injuridicalbasisid'
         Value = ''
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
-        Name = 'inpaidkindid'
         Value = ''
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
-        Name = 'inunitid'
         Value = ''
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     Left = 488
     Top = 224
@@ -388,111 +383,123 @@
         DataType = ftDateTime
       end
       item
-        Name = 'OperDatePartner'
-        Value = 0d
-        Component = ceDatePartionGoods
-        DataType = ftDateTime
+        Name = 'GoodsId'
+        Value = ''
+        Component = GooodsAndKindGuides
+        ComponentItem = 'Key'
       end
       item
-        Name = 'InvNumberPartner'
+        Name = 'GoodsName'
         Value = ''
+        Component = GooodsAndKindGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = ''
+        Component = GooodsKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = ''
+        Component = GooodsKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'AmountIn'
-        Value = 0.000000000000000000
-        Component = ceRealWeight
-        DataType = ftFloat
-      end
-      item
-        Name = 'AmountOut'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
+        Name = 'ReceiptId'
+        Value = 0d
         Component = RecipeGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicalName'
+        Name = 'ReceiptCode'
         Value = ''
+        Component = ceRecipeCode
+        DataType = ftString
+      end
+      item
+        Name = 'ReceiptName'
+        Value = 0.000000000000000000
         Component = RecipeGuides
         ComponentItem = 'TextValue'
-      end
-      item
-        Name = 'JuridicalBasisId'
-        Value = ''
-      end
-      item
-        Name = 'JuridicalBasisName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'BusinessId'
-        Value = ''
-      end
-      item
-        Name = 'BusinessName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'UnitId'
-        Value = ''
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
         DataType = ftString
       end
       item
         Name = 'Comment'
-        Value = ''
+        Value = 0.000000000000000000
         Component = ceComment
         DataType = ftString
       end
       item
-        Name = 'ContractId'
+        Name = 'Count'
         Value = ''
+        Component = ceCount
+        DataType = ftFloat
       end
       item
-        Name = 'ContractInvNumber'
+        Name = 'RealWeight'
+        Value = ''
+        Component = ceRealWeight
+        DataType = ftFloat
+      end
+      item
+        Name = 'CuterCount'
+        Value = ''
+        Component = ceСuterCount
+        DataType = ftFloat
+      end
+      item
+        Name = 'isErased'
+        Value = ''
+        DataType = ftBoolean
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
         Value = ''
         DataType = ftString
+        ParamType = ptUnknown
       end
       item
-        Name = 'PartnerId'
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
         Value = ''
         Component = GooodsAndKindGuides
         ComponentItem = 'Key'
+        ParamType = ptUnknown
       end
       item
-        Name = 'PartnerName'
         Value = ''
         Component = GooodsAndKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
       end>
     Left = 544
     Top = 216
