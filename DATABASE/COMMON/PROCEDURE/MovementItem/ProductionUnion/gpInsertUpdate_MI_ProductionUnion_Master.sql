@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -25,27 +25,20 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
 
    -- сохранили <Элемент документа>
-   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   -- сохранили связь с <Рецептуры>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Receipt(), ioId, inReceiptId);
-   
-   -- сохранили связь с <Виды товаров>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-   
-   -- сохранили свойство <партия закрыта (да/нет)>
-   PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_PartionClose(), ioId, inPartionClose);
-   
-   -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementItemString(zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-   -- сохранили свойство <Комментарий>
-   PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
-   -- сохранили свойство <Количество батонов или упаковок>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
-   -- сохранили свойство <Фактический вес(информативно)>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_RealWeight(), ioId, inRealWeight);
-   -- сохранили свойство <Количество кутеров>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_CuterCount(), ioId, inCuterCount);
+   ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
+                                                  , inMovementId       := inMovementId
+                                                  , inGoodsId          := inGoodsId
+                                                  , inAmount           := inAmount
+                                                  , inPartionClose     := inPartionClose
+                                                  , inCount            := inCount
+                                                  , inRealWeight       := inRealWeight
+                                                  , inCuterCount       := inCuterCount
+                                                  , inPartionGoods     := inPartionGoods
+                                                  , inComment          := inComment
+                                                  , inGoodsKindId      := inGoodsKindId
+                                                  , inReceiptId        := inReceiptId
+                                                  , inUserId           := vbUserId
+                                                  );
 
 END;
 $BODY$
@@ -54,6 +47,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master
+
  24.07.13                                        * Важен порядок полей
  22.07.13         * add GoodsKind
  17.07.13         *              

@@ -519,7 +519,7 @@ uses
   GoodsTagEdit in '..\..\Forms\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   Partner1CLink in '..\..\Forms\LOAD1C\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  ProductionUnionTechEdit in '..\..\Forms\Document\ProductionUnionTechEdit.pas' {ProductionUnionTechEditForm: TParentForm},
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   IncomeTest in '..\SOURCE\Movement\All\Farmacy\IncomeTest.pas',
   ProductionUnionTest in '..\SOURCE\Movement\All\ProductionUnionTest.pas',
@@ -591,13 +591,16 @@ uses
   IncomeMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\IncomeMovementItemTest.pas',
   Report_GoodsMI_ProductionUnionMD in '..\..\Forms\Report\Report_GoodsMI_ProductionUnionMD.pas' {Report_GoodsMI_ProductionUnionMDForm: TParentForm},
   Report_GoodsMI_ProductionUnion in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion.pas',
-  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas',
   GoodsQuality in '..\..\Forms\Guides\GoodsQuality.pas' {GoodsQualityForm: TParentForm},
   ImportExportLink in '..\..\Forms\System\ImportExportLink.pas' {ImportExportLinkForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   ImportExportLinkTest in '..\SOURCE\Objects\All\ImportExportLinkTest.pas',
   ImportExportLinkTypeTest in '..\SOURCE\Objects\All\ImportExportLinkTypeTest.pas',
-  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm};
+  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
+  ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
+  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -141,6 +141,8 @@ BEGIN
                END AS OperSumm
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN -1 * _tmpItem.OperSumm_Currency
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
+                         THEN -1 * _tmpItem.OperSumm_Currency
                     ELSE 0
                END AS OperSumm_Currency
              , CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
@@ -167,7 +169,10 @@ BEGIN
              , 0 AS AccountGroupId, 0 AS AccountDirectionId                   -- сформируем позже
 
              , CASE WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
-                         THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
+                         THEN CASE WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+                                        THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + расчетный счет
+                                   ELSE zc_Enum_Account_110302() -- Транзит + расчетный счет + валютный
+                              END
                     ELSE 0
                END AS AccountId -- ... или сформируем позже
 
@@ -211,6 +216,8 @@ BEGIN
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
                     WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+                         THEN _tmpItem.CurrencyId
+                    WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                          THEN _tmpItem.CurrencyId
                     ELSE 0
                END AS CurrencyId

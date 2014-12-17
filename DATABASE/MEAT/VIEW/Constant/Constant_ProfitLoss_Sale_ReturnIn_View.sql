@@ -26,10 +26,14 @@ AS
    SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10700() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10702() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
 
   UNION ALL 
-    -- Реализация нашим компаниям: Ирна + Чапли
+    -- Реализация нашим компаниям: Ирна + Чапли + Дворкин + ЕКСПЕРТ-АГРОТРЕЙД
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
   UNION ALL
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70103() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70104() AS ProfitLossId, TRUE AS isSale, FALSE AS isCost
   UNION ALL
    -- Возвраты от наших компаний: Ирна + Чапли
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, FALSE AS isCost
@@ -48,10 +52,14 @@ AS
    SELECT zc_Enum_ProfitLossGroup_10000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_10800() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_10802() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost
 
   UNION ALL 
-   -- Реализация нашим компаниям: Ирна + Чапли
+   -- Реализация нашим компаниям: Ирна + Чапли + Дворкин + ЕКСПЕРТ-АГРОТРЕЙД
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70101() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
   UNION ALL
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70102() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
+  UNION ALL 
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70103() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
+  UNION ALL
+   SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70100() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70104() AS ProfitLossId, TRUE AS isSale, TRUE AS isCost
   UNION ALL 
    -- Возвраты от наших компаний: Ирна + Чапли
    SELECT zc_Enum_ProfitLossGroup_70000() AS ProfitLossGroupId, zc_Enum_ProfitLossDirection_70110() AS ProfitLossDirectionId, zc_Enum_ProfitLoss_70111() AS ProfitLossId, FALSE AS isSale, TRUE AS isCost

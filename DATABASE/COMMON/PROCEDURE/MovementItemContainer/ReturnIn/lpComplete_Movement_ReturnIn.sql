@@ -16,6 +16,8 @@ $BODY$
 
   DECLARE vbOperSumm_Partner_byItem TFloat;
   DECLARE vbOperSumm_Partner TFloat;
+  DECLARE vbOperSumm_Partner_ChangePercent_byItem TFloat;
+  DECLARE vbOperSumm_Partner_ChangePercent TFloat;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -246,13 +248,13 @@ BEGIN
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Goods, ContainerId_GoodsPartner, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
-                         , OperCount, OperCount_Partner, tmpOperSumm_Partner, OperSumm_Partner
+                         , OperCount, OperCount_Partner, tmpOperSumm_Partner, tmpOperSumm_Partner_original, OperSumm_Partner, OperSumm_Partner_ChangePercent
                          , ContainerId_ProfitLoss_10700
                          , ContainerId_Partner, AccountId_Partner, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
                          , isPartionCount, isPartionSumm, isTareReturning
                          , PartionGoodsId
-                         , Price, CountForPrice)
+                         , Price, Price_original, CountForPrice)
         SELECT
               _tmp.MovementItemId
             , 0 AS ContainerId_Goods
@@ -266,8 +268,20 @@ BEGIN
             , _tmp.OperCount
             , _tmp.OperCount_Partner
 
-              -- промежуточная сумма по Контрагенту !!! без скидки !!! - с округлением до 2-х знаков
+              -- промежуточная сумма по Контрагенту !!!почти без скидки(т.е. учтена если надо)!!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_Partner
+              -- промежуточная (в ценах док-та) сумма по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков
+            , _tmp.tmpOperSumm_Partner_original
+
+              -- конечная сумма по Контрагенту !!!без скидки!!!
+            , CASE WHEN vbPriceWithVAT = TRUE  OR vbVATPercent = 0
+                      -- если цены с НДС или %НДС=0, тогда ничего не делаем
+                      THEN _tmp.tmpOperSumm_Partner_original
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда получаем сумму с НДС
+                      THEN CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_original AS NUMERIC (16, 2))
+              END AS OperSumm_Partner -- !!!результат!!!
+
               -- конечная сумма по Контрагенту
             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                       -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
@@ -287,7 +301,7 @@ BEGIN
                                 WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                 ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp.tmpOperSumm_Partner) AS NUMERIC (16, 2))
                            END
-              END AS OperSumm_Partner
+              END AS OperSumm_Partner_ChangePercent
 
               -- Счет - прибыль (ОПиУ - Сумма возвратов)
             , 0 AS ContainerId_ProfitLoss_10700
@@ -322,6 +336,7 @@ BEGIN
             , 0 AS PartionGoodsId
 
             , _tmp.Price
+            , _tmp.Price_original
             , _tmp.CountForPrice
 
         FROM 
@@ -335,16 +350,21 @@ BEGIN
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
  
                   , tmpMI.Price
+                  , tmpMI.Price_original
                   , tmpMI.CountForPrice
                     -- количество для склада
                   , tmpMI.OperCount
                     -- количество у контрагента
                   , tmpMI.OperCount_Partner
 
-                    -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
+                    -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
                     END AS tmpOperSumm_Partner
+                    -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
+                  , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price_original AS NUMERIC (16, 2))
+                    END AS tmpOperSumm_Partner_original
 
                     -- Управленческие назначения
                   , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
@@ -370,6 +390,7 @@ BEGIN
                                THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
+                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
               FROM Movement
@@ -441,8 +462,17 @@ BEGIN
 
 
      -- Расчеты сумм
-     SELECT -- Расчет Итоговой суммы по Контрагенту
+     SELECT -- Расчет Итоговой суммы по Контрагенту !!!без скидки!!!
             CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                    -- если цены с НДС или %НДС=0, тогда ничего не делаем
+                    THEN _tmpItem.tmpOperSumm_Partner_original
+                 WHEN vbVATPercent > 0
+                    -- если цены без НДС, тогда получаем сумму с НДС
+                    THEN CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_original AS NUMERIC (16, 2))
+            END AS OperSumm_Partner
+
+            -- Расчет Итоговой суммы по Контрагенту
+          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
                     THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                               WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
@@ -461,17 +491,24 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
             END
-            INTO vbOperSumm_Partner
-     FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner
+            INTO vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent
+     FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price AS NUMERIC (16, 2))
                         END) AS tmpOperSumm_Partner
+                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner_original -- так получаем по каждому товару отдельно (даже если он повторяется)
+                            WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_original / _tmpItem.CountForPrice AS NUMERIC (16, 2))
+                                                             ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_original AS NUMERIC (16, 2))
+                        END) AS tmpOperSumm_Partner_original
            FROM (SELECT _tmpItem.Price
+                      , _tmpItem.Price_original
                       , _tmpItem.CountForPrice
                       , SUM (_tmpItem.OperCount_Partner) AS OperCount_Partner
                       , SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
+                      , SUM (_tmpItem.tmpOperSumm_Partner_original) AS tmpOperSumm_Partner_original
                  FROM _tmpItem
                  GROUP BY _tmpItem.Price
+                        , _tmpItem.Price_original
                         , _tmpItem.CountForPrice
                         , _tmpItem.GoodsId
                         , _tmpItem.GoodsKindId
@@ -480,14 +517,22 @@ BEGIN
      ;
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
-     SELECT SUM (_tmpItem.OperSumm_Partner) INTO vbOperSumm_Partner_byItem FROM _tmpItem;
+     SELECT SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent) INTO vbOperSumm_Partner_byItem, vbOperSumm_Partner_ChangePercent_byItem FROM _tmpItem;
 
-     -- если не равны ДВЕ Итоговые суммы по Контрагенту
+     -- если не равны ДВЕ Итоговые суммы по Контрагенту !!!без скидки!!!
      IF COALESCE (vbOperSumm_Partner, 0) <> COALESCE (vbOperSumm_Partner_byItem, 0)
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner = _tmpItem.OperSumm_Partner - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
          WHERE _tmpItem.MovementItemId IN (SELECT MAX (_tmpItem.MovementItemId) FROM _tmpItem WHERE _tmpItem.OperSumm_Partner IN (SELECT MAX (_tmpItem.OperSumm_Partner) FROM _tmpItem)
+                                          );
+     END IF;
+     -- если не равны ДВЕ Итоговые суммы по Контрагенту
+     IF COALESCE (vbOperSumm_Partner_ChangePercent, 0) <> COALESCE (vbOperSumm_Partner_ChangePercent_byItem, 0)
+     THEN
+         -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
+         UPDATE _tmpItem SET OperSumm_Partner_ChangePercent = _tmpItem.OperSumm_Partner_ChangePercent - (vbOperSumm_Partner_ChangePercent_byItem - vbOperSumm_Partner_ChangePercent)
+         WHERE _tmpItem.MovementItemId IN (SELECT MAX (_tmpItem.MovementItemId) FROM _tmpItem WHERE _tmpItem.OperSumm_Partner_ChangePercent IN (SELECT MAX (_tmpItem.OperSumm_Partner_ChangePercent) FROM _tmpItem)
                                           );
      END IF;
 
@@ -580,11 +625,29 @@ BEGIN
                                                                                  )
                                                         END;
 
-     -- 1.2.2. формируются Проводки для количественного учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, OperCount, vbOperDate, TRUE
-       FROM _tmpItem;
-       -- WHERE OperCount <> 0;
+     -- 1.2.2. формируются Проводки для количественного учета (остаток)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_Goods
+            , zc_Enum_ProfitLossDirection_10800() AS AnalyzerId -- Себестоимость возвратов
+            , 0 AS ParentId
+            , OperCount_Partner
+            , vbOperDate
+            , TRUE
+       FROM _tmpItem
+       -- убрал т.к. хоть одна проводка должна быть?
+       -- WHERE OperCount_Partner <> 0
+      UNION ALL
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_Goods
+            , zc_Enum_ProfitLossDirection_40200() AS AnalyzerId -- Содержание филиалов
+            , 0 AS ParentId
+            , OperCount - OperCount_Partner
+            , vbOperDate
+            , TRUE
+       FROM _tmpItem
+       WHERE (OperCount - OperCount_Partner) <> 0
+      ;
 
 
      -- 1.2.3. дальше !!!Возвратная тара не учавствует!!!, поэтому удаляем
@@ -709,11 +772,28 @@ BEGIN
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId;
 
-     -- 1.3.2. формируются Проводки для суммового учета : с/с1
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, _tmpItemSumm.OperSumm, vbOperDate, TRUE
+     -- 1.3.2. формируются Проводки для суммового учета (остаток)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
+            , _tmpItemSumm.ContainerId
+            , zc_Enum_ProfitLossDirection_10800() AS AnalyzerId -- Себестоимость возвратов
+            , 0 AS ParentId
+            , _tmpItemSumm.OperSumm_Partner
+            , vbOperDate
+            , TRUE
        FROM _tmpItemSumm
-       WHERE _tmpItemSumm.OperSumm <> 0;
+       WHERE _tmpItemSumm.OperSumm_Partner <> 0
+      UNION ALL
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
+            , _tmpItemSumm.ContainerId
+            , zc_Enum_ProfitLossDirection_40200() AS AnalyzerId -- Содержание филиалов
+            , 0 AS ParentId
+            , _tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_Partner
+            , vbOperDate
+            , TRUE
+       FROM _tmpItemSumm
+       WHERE _tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_Partner <> 0
+      ;
 
 
      -- 2.1. создаем контейнеры для Проводки - Прибыль
@@ -765,6 +845,7 @@ BEGIN
                         -- определяем ProfitLossId - для учета себестоимости реализации : с/с2
                       , CASE WHEN vbIsCorporate_From = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
+                              AND _tmpItem_group.ProfitLossId > 0
                                   THEN _tmpItem_group.ProfitLossId
                              WHEN _tmpItem_group.ProfitLossGroupId = zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
                               AND _tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_20900()  -- Ирна
@@ -799,7 +880,7 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                         THEN zc_Enum_ProfitLossDirection_10800() -- 10400; "Себестоимость возвратов"
                                    WHEN vbIsCorporate_From = TRUE
-                                        THEN zc_Enum_ProfitLossDirection_70100() -- 70300; "Реализация нашим компаниям"
+                                        THEN zc_Enum_ProfitLossDirection_70110() -- 70110; "Возвраты от наших компаний"
                                    WHEN vbMemberId_From = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
@@ -826,9 +907,9 @@ BEGIN
                                    , CASE WHEN zc_Enum_InfoMoney_20801() = vbInfoMoneyId_CorporateFrom
                                                THEN NULL -- Алан
                                           WHEN zc_Enum_InfoMoney_20901() = vbInfoMoneyId_CorporateFrom
-                                               THEN zc_Enum_ProfitLoss_70101() -- Ирна
+                                               THEN zc_Enum_ProfitLoss_70111() -- Возвраты от наших компаний + Ирна
                                           WHEN zc_Enum_InfoMoney_21001() = vbInfoMoneyId_CorporateFrom
-                                               THEN zc_Enum_ProfitLoss_70102() -- Чапли
+                                               THEN zc_Enum_ProfitLoss_70112() -- Возвраты от наших компаний + Чапли
                                           WHEN zc_Enum_InfoMoney_21101() = vbInfoMoneyId_CorporateFrom
                                                THEN NULL -- Дворкин
                                           WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateFrom
@@ -926,7 +1007,7 @@ BEGIN
                         END AS AccountId
 
                  FROM _tmpItem
-                 -- WHERE _tmpItem.OperSumm_Partner <> 0 !!!нельзя ограничивать, т.к. этот AccountId в проводках для отчета!!!
+                 -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот AccountId в проводках для отчета!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
@@ -1031,7 +1112,7 @@ BEGIN
                              ELSE _tmpItem.InfoMoneyId -- иначе берем по товару
                         END AS InfoMoneyId_calc
                  FROM _tmpItem
-                 -- WHERE _tmpItem.OperSumm_Partner <> 0 !!!нельзя ограничивать, т.к. этот ContainerId в проводках для отчета!!!
+                 -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот ContainerId в проводках для отчета!!!
                  GROUP BY _tmpItem.AccountId_Partner
                         , _tmpItem.AccountId_Transit
                         , _tmpItem.InfoMoneyId
@@ -1042,22 +1123,31 @@ BEGIN
      ;
 
      -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (подотчетные лица)
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_Partner, 0 AS ParentId, -1 * _tmpItem_group.OperSumm
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpItem_group.ContainerId_Partner
+            , _tmpItem_group.AnalyzerId
+            , 0 AS ParentId
+            , -1 * _tmpItem_group.OperSumm
             , CASE WHEN _tmpItem_group.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
             , FALSE
-       FROM (SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, SUM (_tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+       FROM (SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10700() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+           UNION ALL
+             SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10300() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
      UNION ALL
        -- это две проводки для счета Транзит
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_Transit, 0 AS ParentId
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpItem_group.ContainerId_Transit
+            , 0 AS AnalyzerId
+            , 0 AS ParentId
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN -1 ELSE 1 END * _tmpItem_group.OperSumm
             , tmpOperDate.OperDate
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN FALSE ELSE TRUE END AS IsActive
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
-            JOIN (SELECT _tmpItem.ContainerId_Transit, SUM (_tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem WHERE _tmpItem.AccountId_Transit <> 0 GROUP BY _tmpItem.ContainerId_Transit
+            JOIN (SELECT _tmpItem.ContainerId_Transit, SUM (_tmpItem.OperSumm_Partner_ChangePercent) AS OperSumm FROM _tmpItem WHERE _tmpItem.AccountId_Transit <> 0 GROUP BY _tmpItem.ContainerId_Transit
                  ) AS _tmpItem_group ON _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
      ;
 
@@ -1080,6 +1170,7 @@ BEGIN
            FROM (SELECT -- определяем ProfitLossId - для Сумма возвратов
                         CASE WHEN vbIsCorporate_From = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
+                              AND _tmpItem_group.ProfitLossId > 0
                                   THEN _tmpItem_group.ProfitLossId
                              WHEN _tmpItem_group.ProfitLossGroupId = zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
                               AND _tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_20900() -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -1115,7 +1206,7 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                         THEN zc_Enum_ProfitLossDirection_10700() -- 10100; "Сумма возвратов"
                                    WHEN vbIsCorporate_From = TRUE
-                                        THEN zc_Enum_ProfitLossDirection_70100() -- 70300; "Реализация нашим компаниям"
+                                        THEN zc_Enum_ProfitLossDirection_70110() -- 70110; "Возвраты от наших компаний"
                                    WHEN vbMemberId_From = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
@@ -1136,9 +1227,9 @@ BEGIN
                                    , CASE WHEN zc_Enum_InfoMoney_20801() = vbInfoMoneyId_CorporateFrom
                                                THEN NULL -- Алан
                                           WHEN zc_Enum_InfoMoney_20901() = vbInfoMoneyId_CorporateFrom
-                                               THEN zc_Enum_ProfitLoss_70101() -- Ирна
+                                               THEN zc_Enum_ProfitLoss_70111() -- Возвраты от наших компаний + Ирна
                                           WHEN zc_Enum_InfoMoney_21001() = vbInfoMoneyId_CorporateFrom
-                                               THEN zc_Enum_ProfitLoss_70102() -- Чапли
+                                               THEN zc_Enum_ProfitLoss_70112() -- Возвраты от наших компаний + Чапли
                                           WHEN zc_Enum_InfoMoney_21101() = vbInfoMoneyId_CorporateFrom
                                                THEN NULL -- Дворкин
                                           WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateFrom
@@ -1146,7 +1237,7 @@ BEGIN
                                      END AS ProfitLossId
                              FROM _tmpItem
                              -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
-                             -- WHERE _tmpItem.OperSumm_Partner <> 0
+                             -- WHERE _tmpItem.OperSumm_Partner <> 0 OR _tmpItem.OperSumm_Partner_ChangePercent <> 0
                              GROUP BY _tmpItem.InfoMoneyDestinationId
                                     , _tmpItem.BusinessId_To
                                     , _tmpItem.GoodsKindId
@@ -1166,7 +1257,7 @@ BEGIN
        -- Сумма возвратов
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
        FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
-                  , SUM (_tmpItem.OperSumm_Partner) AS OperSumm
+                  , SUM (_tmpItem.OperSumm_Partner_ChangePercent) AS OperSumm
              FROM _tmpItem
              GROUP BY _tmpItem.ContainerId_ProfitLoss_10700
             ) AS _tmpItem_group
@@ -1308,7 +1399,7 @@ BEGIN
                             , _tmpItem.AccountId_Transit
                             , _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
                             , zc_Enum_Account_100301 () AS AccountId_ProfitLoss   -- 100301; "прибыль текущего периода"
-                            , _tmpItem.OperSumm_Partner AS OperSumm -- !!!плюс, значит "убыток"!!!
+                            , _tmpItem.OperSumm_Partner_ChangePercent AS OperSumm -- !!!плюс, значит "убыток"!!!
                                                                     -- п.с. убыток: Active=ContainerId_ProfitLoss а доход: Passive=ContainerId_ProfitLoss
                        FROM _tmpItem
                       ) AS _tmpCalc_all

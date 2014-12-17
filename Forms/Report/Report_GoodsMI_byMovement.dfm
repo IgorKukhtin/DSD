@@ -14,17 +14,17 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     Height = 294
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1128
     ExplicitHeight = 294
     ClientRectBottom = 294
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1128
       ExplicitHeight = 294
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 294
-        ExplicitWidth = 1020
+        ExplicitWidth = 1128
         ExplicitHeight = 294
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -67,6 +67,41 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountChangePercent_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_10500_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10300
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +143,41 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountChangePercent_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_10500_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10300
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -119,6 +189,15 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colItemName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'ItemName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
           object clInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -262,7 +341,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 60
           end
           object clAmountPartner_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -270,6 +349,26 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object Amount_10500_Weight: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1074#1077#1089
+            DataBinding.FieldName = 'Amount_10500_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_40200_Weight: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085'.'#1074#1077#1089
+            DataBinding.FieldName = 'Amount_40200_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1096#1090'. ('#1089#1082#1083#1072#1076')'
@@ -294,7 +393,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 60
           end
           object clAmountPartner_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'.  '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1050#1086#1083'.'#1096#1090'.  ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -304,8 +403,50 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object Amount_10500_Sh: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1096#1090'.'
+            DataBinding.FieldName = 'Amount_10500_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_40200_Sh: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1096#1090'.'
+            DataBinding.FieldName = 'Amount_40200_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummPartner_10200: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummPartner_10200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummPartner_10300: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'SummPartner_10300'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clSummPartner_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090#1085#1072#1103
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' ('#1088#1072#1089#1095'. '#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'SummPartner_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -315,15 +456,24 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 70
           end
           object clSummPartner: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085' ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'SummPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Width = 70
+          end
+          object clSummDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'SummDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -363,7 +513,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   inherited Panel: TPanel
     Width = 1128
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1128
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59

@@ -2,16 +2,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1200
-  ExplicitLeft = -227
-  ExplicitWidth = 1208
-  ExplicitHeight = 702
+  ExplicitWidth = 1216
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
     Width = 1200
     Height = 537
-    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 131
     ExplicitWidth = 1200
     ExplicitHeight = 537
@@ -58,6 +56,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -76,7 +75,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 250
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -91,14 +90,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 120
           end
           object colMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 25
+            Width = 45
           end
           object colChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
@@ -116,7 +115,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -126,7 +125,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -735,8 +734,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
     end
     object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
@@ -998,16 +1000,21 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
         end>
       isShowModal = True
+    end
+    inherited actAddMask: TdsdExecStoredProc
+      TabSheet = tsMain
     end
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1070,6 +1077,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteTax
       StoredProcList = <
         item
@@ -1078,8 +1086,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           StoredProc = spSelectTax
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       ImageIndex = 11
       Status = mtUncomplete
       DataSource = TaxDS
@@ -1088,6 +1096,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedTax
       StoredProcList = <
         item
@@ -1097,8 +1106,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       ImageIndex = 13
       Status = mtDelete
       DataSource = TaxDS
@@ -1107,6 +1116,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteTax
       StoredProcList = <
         item
@@ -1115,8 +1125,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           StoredProc = spSelectTax
         end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       ImageIndex = 12
       Status = mtComplete
       DataSource = TaxDS
@@ -1343,6 +1353,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -1423,6 +1434,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1809,6 +1821,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1822,12 +1835,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1835,6 +1850,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1842,6 +1858,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1849,12 +1866,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
@@ -1879,6 +1898,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1891,6 +1911,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1898,6 +1919,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1905,32 +1927,20 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end>
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
     Left = 396
     Top = 228
   end
@@ -2506,12 +2516,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = TaxCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = Null
         Component = TaxCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
@@ -2554,6 +2566,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2569,6 +2582,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2590,6 +2604,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = TaxCDS
         ComponentItem = 'Id'
         ParamType = ptInput

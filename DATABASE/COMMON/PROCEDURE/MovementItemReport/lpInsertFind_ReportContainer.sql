@@ -72,10 +72,10 @@ BEGIN
          SELECT NEXTVAL ('reportcontainer_id_seq') INTO vbReportContainerId;
 
          -- добавили Аналитики
-         INSERT INTO ReportContainerLink (ReportContainerId, ContainerId, AccountId, AccountKindId, KeyValue, MasterKeyValue, ChildKeyValue)
-            SELECT vbReportContainerId, inActiveContainerId, inActiveAccountId, zc_Enum_AccountKind_Active(), vbKeyValue, vbMasterKeyValue, vbChildKeyValue
+         INSERT INTO ReportContainerLink (ReportContainerId, ContainerId, AccountId, AccountKindId, ChildContainerId, ChildAccountId, KeyValue, MasterKeyValue, ChildKeyValue)
+            SELECT vbReportContainerId, inActiveContainerId, inActiveAccountId, zc_Enum_AccountKind_Active(), inPassiveContainerId, inPassiveAccountId, vbKeyValue, vbMasterKeyValue, vbChildKeyValue
            UNION ALL
-            SELECT vbReportContainerId, inPassiveContainerId, inPassiveAccountId, zc_Enum_AccountKind_Passive(), vbKeyValue, vbMasterKeyValue, vbChildKeyValue
+            SELECT vbReportContainerId, inPassiveContainerId, inPassiveAccountId, zc_Enum_AccountKind_Passive(), inActiveContainerId, inActiveAccountId, vbKeyValue, vbMasterKeyValue, vbChildKeyValue
             ;
 
      END IF;  
@@ -93,6 +93,7 @@ ALTER FUNCTION lpInsertFind_ReportContainer (Integer, Integer, Integer, Integer)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.14                                        * add ChildContainerId and ChildAccountId 
  13.08.14                                        * ALL
  19.09.13                                        * optimize
  29.08.13                                        *

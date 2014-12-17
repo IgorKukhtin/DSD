@@ -210,6 +210,21 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_RePrice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale_40208
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnIn_40208
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -391,6 +406,21 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_RePrice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale_40208
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnIn_40208
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -837,6 +867,28 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object CountSale_10500: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'. (c'#1082#1080#1076#1082#1072' '#1074#1077#1089')'
+        DataBinding.FieldName = 'CountSale_10500'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountSale_40208: TcxGridDBColumn
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+        DataBinding.FieldName = 'CountSale_40208'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object PriceSale: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1086#1076'.'
         DataBinding.FieldName = 'PriceSale'
@@ -873,7 +925,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
       end
       object SummSale_40208: TcxGridDBColumn
-        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1074#1077#1089')'
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089#1091#1084#1084#1072' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'SummSale_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -887,6 +939,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object CountReturnIn: TcxGridDBColumn
         Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountReturnIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountReturnIn_40208: TcxGridDBColumn
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'. )'
+        DataBinding.FieldName = 'CountReturnIn_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; '
@@ -920,7 +983,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 75
       end
       object SummReturnIn_40208: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1089#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1074#1077#1089')'
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089#1091#1084#1084#1072' ('#1087#1088#1080' '#1074'.'#1087#1086#1082'. )'
         DataBinding.FieldName = 'SummReturnIn_40208'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -1002,7 +1065,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 75
       end
       object CountInventory: TcxGridDBColumn
-        Caption = #1050#1086#1083'. (-) '#1091#1073#1099#1083#1100' (+) '#1101#1082#1086#1085#1086#1084'. '
+        Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '
         DataBinding.FieldName = 'CountInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -1025,7 +1088,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 45
       end
       object SummInventory: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' (-) '#1091#1073#1099#1083#1100' (+) '#1101#1082#1086#1085#1086#1084'. '
+        Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '
         DataBinding.FieldName = 'SummInventory'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4

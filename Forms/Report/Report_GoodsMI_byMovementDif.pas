@@ -47,7 +47,7 @@ type
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
-    clSummDif: TcxGridDBColumn;
+    clSummDiff: TcxGridDBColumn;
     clUnitName: TcxGridDBColumn;
     clUnitCode: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;

@@ -48,8 +48,8 @@ BEGIN
 
        RETURN QUERY
        SELECT
-         'А вот и заголовок'::TVarChar, 'Это супер письмо!!!'::TVarChar, 'test@dsd.biz.ua'::TVarChar
-       , vbMail, 'smtp.mail.ru'::TVarChar, 2525
+         'А вот и заголовок'::TVarChar, 'Это супер письмо!!!'::TVarChar, 'zakaz_family-neboley@mail.ru'::TVarChar
+       , vbMail, 'smtp.mail.ru'::TVarChar, 465
        , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
 
 END;

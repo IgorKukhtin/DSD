@@ -2,7 +2,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1020
   ExplicitWidth = 1028
-  ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -282,6 +281,13 @@ inherited ProductionUnionForm: TProductionUnionForm
       isShowModal = True
     end
   end
+  inherited MasterDS: TDataSource
+    Left = 768
+    Top = 216
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 208
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion'
   end
@@ -305,7 +311,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionUnion'
-    Left = 96
+    Left = 80
     Top = 56
   end
   inherited spGet: TdsdStoredProc
@@ -433,16 +439,16 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
         ParamType = ptUnknown
       end>
-    Left = 442
-    Top = 136
+    Left = 466
+    Top = 224
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetUnErased'
-    Left = 382
-    Top = 200
+    Left = 334
+    Top = 224
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Master'

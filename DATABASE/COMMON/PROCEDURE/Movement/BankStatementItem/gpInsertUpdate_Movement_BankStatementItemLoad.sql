@@ -122,6 +122,10 @@ BEGIN
 
     -- Если валюта оличается от базовой, то сделаем ряд расчетов
     IF vbCurrencyId <> zc_Enum_Currency_Basis() THEN
+       SELECT Amount, ParValue, Amount, ParValue
+                 INTO outCurrencyValue, outParValue
+                    , inCurrencyPartnerValue, inParPartnerValue -- !!!меняется значение!!!
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyId,  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
        vbAmountCurrency := inAmount;
        inAmount := ;
 

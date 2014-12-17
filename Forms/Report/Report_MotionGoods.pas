@@ -144,6 +144,9 @@ type
     SummSale_40208: TcxGridDBColumn;
     SummReturnIn_40208: TcxGridDBColumn;
     SummInventory_RePrice: TcxGridDBColumn;
+    CountSale_10500: TcxGridDBColumn;
+    CountSale_40208: TcxGridDBColumn;
+    CountReturnIn_40208: TcxGridDBColumn;
   private
   public
   end;
