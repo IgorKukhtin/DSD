@@ -1,11 +1,15 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -39,6 +43,7 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_TransferDebtOut (ioId               := ioId
                                                    , inInvNumber        := inInvNumber
                                                    , inInvNumberPartner := inInvNumberPartner
+                                                   , inInvNumberOrder   := inInvNumberOrder
                                                    , inOperDate         := inOperDate
                                                    , inChecked          := inChecked
                                                    , inPriceWithVAT     := inPriceWithVAT
@@ -86,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.12.14         * add InvNumberOrder
  03.09.14         * add inChecked
  20.06.14                                                       * add InvNumberPartner
  17.04.14                                        * add восстановить/удалить Налоговую
