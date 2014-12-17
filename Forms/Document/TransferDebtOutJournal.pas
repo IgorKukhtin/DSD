@@ -71,6 +71,7 @@ type
     clChecked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
+    colInvNumberOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

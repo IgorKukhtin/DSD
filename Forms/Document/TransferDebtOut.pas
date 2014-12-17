@@ -108,6 +108,8 @@ type
     bbCompleteTaxCorrective: TdxBarButton;
     bbUnCompleteTaxCorrective: TdxBarButton;
     bbSetErasedTaxCorrective: TdxBarButton;
+    cxLabel17: TcxLabel;
+    edInvNumberOrder: TcxTextEdit;
   private
     { Private declarations }
   public

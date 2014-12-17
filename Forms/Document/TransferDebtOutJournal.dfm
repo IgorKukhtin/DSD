@@ -2,23 +2,19 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitLeft = -91
-  ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitWidth = 1081
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -102,6 +98,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -131,6 +128,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colInvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'InvNumberOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colInvNumberPartner_Master: TcxGridDBColumn
@@ -480,6 +485,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -503,6 +509,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -526,6 +533,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -549,6 +557,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -711,6 +720,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportNameSaleBill'
       ReportNameParam.DataType = ftString
@@ -751,6 +761,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       MoveParams = <
         item
           FromParam.Name = 'id'
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
           ToParam.Value = Null
@@ -1051,12 +1062,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
         ParamType = ptInput
@@ -1070,21 +1083,25 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'outInvNumberPartner_Master'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
       end
       item
         Name = 'outDocumentTaxKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 312
   end
@@ -1119,6 +1136,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 535
     Top = 176
   end
@@ -1150,6 +1168,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 919
     Top = 152
   end
@@ -1181,6 +1200,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 919
     Top = 200
   end
@@ -1203,6 +1223,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 920
     Top = 256
   end
@@ -1225,6 +1246,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         ComponentItem = 'ReportNameSale'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 704
     Top = 416
   end
@@ -1242,10 +1264,12 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'gpGet_Movement_Sale_ReportNameBill'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ReportNameSaleBill'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 536
     Top = 408
   end
@@ -1288,17 +1312,20 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Params = <
       item
         Name = 'ioId '
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inChecked'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
       end>
+    PackSize = 1
     Left = 320
     Top = 435
   end
