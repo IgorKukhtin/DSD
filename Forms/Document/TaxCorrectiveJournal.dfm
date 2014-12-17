@@ -401,7 +401,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    object actElectron: TdsdExecStoredProc [2]
+    object MedocCorrectiveActionList: TMedocCorrectiveAction [0]
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocCorrectiveActionList'
+      HeaderDataSet = PrintItemsCDS
+      ItemsDataSet = PrintItemsCDS
+      AskFilePath = False
+    end
+    object actElectron: TdsdExecStoredProc [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spElectron
@@ -413,7 +421,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actChecked: TdsdExecStoredProc [3]
+    object actChecked: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChecked
@@ -425,7 +433,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actDocument: TdsdExecStoredProc [4]
+    object actDocument: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spDocument
@@ -450,7 +458,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    object actMovementCheck: TdsdOpenForm [10]
+    object actMovementCheck: TdsdOpenForm [11]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -679,6 +687,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Action = mactMEDOCList
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
@@ -689,7 +700,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actGetDirectory: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spGetDirectoryName
+      StoredProcList = <
+        item
+          StoredProc = spGetDirectoryName
+        end>
       Caption = 'actGetDirectory'
     end
     object mactMEDOCList: TMultiAction
@@ -700,7 +715,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Action = spTaxPrint
         end
         item
-          Action = EDIAction
+          Action = MedocCorrectiveActionList
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
@@ -711,13 +726,18 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       StartDateParam.Value = Null
       EndDateParam.Value = Null
       EDIDocType = ediDeclarReturn
+      spHeader = spUpdateIsMedoc
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
     object spTaxPrint: TdsdExecStoredProc
       Category = 'TaxLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
       Caption = 'spTaxPrint'
     end
   end
@@ -1245,12 +1265,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       item
         Name = 'Directory'
         Value = Null
-        Component = EDI
+        Component = MedocCorrectiveActionList
         ComponentItem = 'Directory'
         DataType = ftString
       end>
     PackSize = 1
     Left = 512
     Top = 144
+  end
+  object spUpdateIsMedoc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 160
   end
 end

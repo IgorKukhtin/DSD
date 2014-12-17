@@ -288,6 +288,7 @@ initialization
   RegisterClass (TkbmMemTable);
 
   // Собственнтые компоненты
+  RegisterClass (TADOQueryAction);
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);

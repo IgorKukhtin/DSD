@@ -78,6 +78,8 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
+    spUpdateIsMedoc: TdsdStoredProc;
+    MedocCorrectiveActionList: TMedocCorrectiveAction;
   private
     { Private declarations }
   public

@@ -39,7 +39,6 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colSumm: TcxGridDBColumn;
     colClientCode: TcxGridDBColumn;
     cxLabel5: TcxLabel;
@@ -52,6 +51,18 @@ type
     spGetDocumentDataForEmail: TdsdStoredProc;
     mactSMTPSend: TMultiAction;
     bbSendEMail: TdxBarButton;
+    cxGridExportDBTableView: TcxGridDBTableView;
+    cxGridExportLevel1: TcxGridLevel;
+    cxGridExport: TcxGrid;
+    spSelectExport: TdsdStoredProc;
+    ExportDS: TDataSource;
+    actGridExportToExcel: TdsdGridToExcel;
+    mactGridExportToExcel: TMultiAction;
+    actExportStoredproc: TdsdExecStoredProc;
+    bbExportToExcel: TdxBarButton;
+    egToText: TExportGrid;
+    bbExportToText: TdxBarButton;
+    spGetExportParam: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -88,6 +88,9 @@ type
     mactMEDOCList: TMultiAction;
     EDIAction: TEDIAction;
     spTaxPrint: TdsdExecStoredProc;
+    colIsMedoc: TcxGridDBColumn;
+    spUpdateIsMedoc: TdsdStoredProc;
+    MedocListAction: TMedocAction;
   private
     { Private declarations }
   public

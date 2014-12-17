@@ -38,53 +38,24 @@ BEGIN
 --                              )
 
        SELECT
-             tmpMovement.Id                             AS Id
-           , tmpMovement.InvNumber                      AS InvNumber
-           , tmpMovement.OperDate                       AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSumm.ValueData          AS TotalSum
-           , Object_From.Id                             AS FromId
-           , Object_From.ValueData                      AS FromName
-           , Object_To.Id                               AS ToId
-           , Object_To.ValueData                        AS ToName
-           , Object_Contract.Id                         AS ContractId
-           , Object_Contract.ValueData                  AS ContractName
+             Movement_OrderExternal_View.Id
+           , Movement_OrderExternal_View.InvNumber
+           , Movement_OrderExternal_View.OperDate
+           , Movement_OrderExternal_View.StatusCode
+           , Movement_OrderExternal_View.StatusName
+           , Movement_OrderExternal_View.TotalCount
+           , Movement_OrderExternal_View.TotalSum
+--           , Movement_OrderExternal_View.PriceWithVAT
+           , Movement_OrderExternal_View.FromId
+           , Movement_OrderExternal_View.FromName
+           , Movement_OrderExternal_View.ToId
+           , Movement_OrderExternal_View.ToName
+           , Movement_OrderExternal_View.ContractId
+           , Movement_OrderExternal_View.ContractName
 
-       FROM (SELECT Movement.id, Movement.InvNumber, Movement.OperDate, Movement.StatusId
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            ) AS tmpMovement
-
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  tmpMovement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  tmpMovement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = tmpMovement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = tmpMovement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId;
+       FROM Movement_OrderExternal_View 
+             JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
+             WHERE Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate;
 
 END;
 $BODY$

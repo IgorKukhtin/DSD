@@ -9,12 +9,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatementItem(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Debet TFloat, Kredit TFloat
+             , AmountSumm TFloat, AmountCurrency TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
              , LinkJuridicalId integer, LinkJuridicalName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId integer, ContractName TVarChar
+             , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , UnitId integer, UnitName TVarChar, CurrencyName TVarChar
              , BankAccount TVarChar, BankMFO TVarChar, BankName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
@@ -47,6 +50,8 @@ BEGIN
                ELSE 
                  - MovementFloat_Amount.ValueData 
              END::TFloat AS Kredit
+           , MovementFloat_Amount.ValueData         AS AmountSumm
+           , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
            , MovementString_OKPO.ValueData  AS OKPO
            , MovementString_JuridicalName.ValueData AS JuridicalName
            , MovementString_Comment.ValueData AS Comment
@@ -65,6 +70,10 @@ BEGIN
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
            , Object_Currency.ValueData    AS CurrencyName
+           , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
+           , MovementFloat_ParValue.ValueData                  AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
 
            , MovementString_BankAccount.ValueData AS BankAccount
            , MovementString_BankMFO.ValueData AS BankMFO
@@ -81,7 +90,24 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId =  Movement.Id
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
+                                    ON MovementFloat_AmountCurrency.MovementId =  Movement.Id
+                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
             
+
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()

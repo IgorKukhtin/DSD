@@ -57,9 +57,9 @@ type
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
       Directory: String);
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
-    procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
+    procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
       Directory: String);
-    procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;
+    procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
       Directory: String);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
@@ -334,7 +334,7 @@ begin
 end;
 
 procedure TEDI.DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;
-  Directory: String);
+  StoredProc: TdsdStoredProc; Directory: String);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '012';
@@ -575,8 +575,11 @@ begin
     7), 7) + '1' + FormatDateTime('mmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
-  if not SendToFTP then
+  if not SendToFTP then begin
+     if Assigned(StoredProc) then
+        StoredProc.Execute;
      exit;
+  end;
 
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
@@ -623,7 +626,7 @@ begin
 end;
 
 procedure TEDI.DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
-  Directory: String);
+     StoredProc: TdsdStoredProc;  Directory: String);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '010';
@@ -811,8 +814,11 @@ begin
     7), 7) + '1' + FormatDateTime('mmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
-  if not SendToFTP then
-    exit;
+  if not SendToFTP then begin
+     if Assigned(StoredProc) then
+        StoredProc.Execute;
+     exit;
+  end;
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
@@ -1707,13 +1713,13 @@ begin
     ediComDocSave:
       EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory);
     ediDeclar:
-      EDI.DeclarSave(HeaderDataSet, ListDataSet, Directory);
+      EDI.DeclarSave(HeaderDataSet, ListDataSet, spHeader, Directory);
     ediReceipt:
       EDI.ReceiptLoad(spHeader, Directory);
     ediReturnComDoc:
       EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory);
     ediDeclarReturn:
-      EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, Directory);
+      EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, spHeader, Directory);
     ediDesadv:
       EDI.DESADVSave(HeaderDataSet, ListDataSet);
     ediOrdrsp:

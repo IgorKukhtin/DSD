@@ -50,15 +50,27 @@ type
     property FileName: TdsdParam read FFileName write FFileName;
   end;
 
+  TADOQueryAction = class (TdsdCustomAction)
+  private
+    FConnectionString: string;
+    FQueryText: string;
+  protected
+    function LocalExecute: Boolean; override;
+  published
+    property ConnectionString: string read FConnectionString write FConnectionString;
+    property QueryText: string read FQueryText write FQueryText;
+  end;
+
   procedure Register;
 
 implementation
 
-uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils;
+uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils, ADODB;
 
 procedure Register;
 begin
-  RegisterActions('DSDLib', [TExternalSaveAction], TExternalSaveAction);
+  RegisterActions('dsdImportExport', [TExternalSaveAction], TExternalSaveAction);
+  RegisterActions('dsdImportExport', [TADOQueryAction], TADOQueryAction);
 end;
 
 { TFileExternalSave }
@@ -177,6 +189,21 @@ end;
 procedure TExternalSaveAction.SetFieldDefs(const Value: TFieldDefs);
 begin
   FFileDataSet.FieldDefs.Assign(Value);
+end;
+
+{ TADOQueryAction }
+
+function TADOQueryAction.LocalExecute: Boolean;
+var Query: TADOQuery;
+begin
+  Query := TADOQuery.Create(nil);
+  try
+    Query.ConnectionString := Self.ConnectionString;
+    Query.SQL.Text := QueryText;
+    Query.ExecSQL;
+  finally
+    Query.Free;
+  end;
 end;
 
 end.

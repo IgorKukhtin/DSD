@@ -39,64 +39,25 @@ BEGIN
                               )
 
        SELECT
-             Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
-           , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
-           , Object_From.Id                             AS FromId
-           , Object_From.ValueData                      AS FromName
-           , Object_To.Id                               AS ToId
-           , Object_To.ValueData                        AS ToName
-           , Object_NDSKind.Id                          AS NDSKindId
-           , Object_NDSKind.ValueData                   AS NDSKindName
+             Movement_Income_View.Id
+           , Movement_Income_View.InvNumber
+           , Movement_Income_View.OperDate
+           , Movement_Income_View.StatusCode
+           , Movement_Income_View.StatusName
+           , Movement_Income_View.TotalCount
+           , Movement_Income_View.TotalSumm
+           , Movement_Income_View.PriceWithVAT
+           , Movement_Income_View.FromId
+           , Movement_Income_View.FromName
+           , Movement_Income_View.ToId
+           , Movement_Income_View.ToName
+           , Movement_Income_View.NDSKindId
+           , Movement_Income_View.NDSKindName
 
+       FROM Movement_Income_View 
+             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+             WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
 
-
-
-       FROM (SELECT Movement.id
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-            ) AS tmpMovement
-
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
-
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                         ON MovementLinkObject_NDSKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-
-            LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
-
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT();
 
 END;
 $BODY$

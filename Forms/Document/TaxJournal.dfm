@@ -2,7 +2,6 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitTop = -108
   ExplicitWidth = 1118
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -21,7 +20,6 @@ inherited TaxJournalForm: TTaxJournalForm
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 478
-        ExplicitTop = 24
         ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -373,6 +371,12 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
       end
     end
@@ -414,7 +418,15 @@ inherited TaxJournalForm: TTaxJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    object actChecked: TdsdExecStoredProc [2]
+    object MedocListAction: TMedocAction [0]
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocListAction'
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
+      AskFilePath = False
+    end
+    object actChecked: TdsdExecStoredProc [3]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChecked
@@ -426,7 +438,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [3]
+    object actElectron: TdsdExecStoredProc [4]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spElectron
@@ -438,7 +450,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actDocument: TdsdExecStoredProc [4]
+    object actDocument: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spDocument
@@ -455,7 +467,7 @@ inherited TaxJournalForm: TTaxJournalForm
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
     end
-    object actMovementCheck: TdsdOpenForm [8]
+    object actMovementCheck: TdsdOpenForm [9]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -672,6 +684,9 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Action = mactMEDOCList
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
@@ -697,7 +712,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = spTaxPrint
         end
         item
-          Action = EDIAction
+          Action = MedocListAction
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
@@ -709,6 +724,7 @@ inherited TaxJournalForm: TTaxJournalForm
       EndDateParam.Value = Null
       EDI = EDI
       EDIDocType = ediDeclar
+      spHeader = spUpdateIsMedoc
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -1258,7 +1274,7 @@ inherited TaxJournalForm: TTaxJournalForm
     ConnectionParams.Password.Value = Null
     SendToFTP = False
     Left = 544
-    Top = 144
+    Top = 88
   end
   object spGetDirectoryName: TdsdStoredProc
     StoredProcName = 'gpGetDirectoryName'
@@ -1268,12 +1284,28 @@ inherited TaxJournalForm: TTaxJournalForm
       item
         Name = 'Directory'
         Value = Null
-        Component = EDI
+        Component = MedocListAction
         ComponentItem = 'Directory'
         DataType = ftString
       end>
     PackSize = 1
     Left = 512
-    Top = 144
+    Top = 112
+  end
+  object spUpdateIsMedoc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 160
   end
 end

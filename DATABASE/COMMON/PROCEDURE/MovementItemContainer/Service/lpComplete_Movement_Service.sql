@@ -77,7 +77,7 @@ BEGIN
                -- Главное Юр.лицо всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS UnitId -- здесь используется (нужен для следующей проводки)
+             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId -- здесь используется (нужен для следующей проводки)
              , 0 AS PositionId -- не используется
 
                -- Филиал Баланс: всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)

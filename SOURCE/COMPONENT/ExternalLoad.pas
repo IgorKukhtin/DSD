@@ -136,7 +136,7 @@ const cArchive = 'Archive';
 
 procedure Register;
 begin
-  RegisterActions('DSDLib', [TExecuteImportSettingsAction], TExecuteImportSettingsAction);
+  RegisterActions('dsdImportExport', [TExecuteImportSettingsAction], TExecuteImportSettingsAction);
 end;
 
 function GetFileType(FileTypeName: string): TDataSetType;

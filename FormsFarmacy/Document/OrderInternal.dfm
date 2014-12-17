@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1222
+  ExplicitTop = -142
   ExplicitWidth = 1230
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -691,7 +692,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1085#1091#1102' '#1094#1077#1085#1091
       ImageIndex = 55
-      ShortCut = 32
+      ShortCut = 114
     end
     object actSetLinkGoodsForm: TdsdOpenForm
       Category = 'DSDLib'

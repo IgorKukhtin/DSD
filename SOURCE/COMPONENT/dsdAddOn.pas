@@ -1641,7 +1641,7 @@ begin
      FAfterClose(DataSet);
 
   for i := 0 to FCreateColumnList.Count - 1 do
-    View.Columns[View.ColumnCount - 1].Destroy;
+    View.Columns[View.ColumnCount - 1].Free;
 
   FCreateColumnList.Clear;
 end;
