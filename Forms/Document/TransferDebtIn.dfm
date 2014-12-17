@@ -2,29 +2,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 662
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 696
+  ExplicitWidth = 1036
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 1020
-    Height = 529
-    ExplicitTop = 133
+    Height = 531
+    ExplicitTop = 131
     ExplicitWidth = 1020
-    ExplicitHeight = 529
-    ClientRectBottom = 525
-    ClientRectRight = 1016
+    ExplicitHeight = 531
+    ClientRectBottom = 531
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 503
+      ExplicitWidth = 1020
+      ExplicitHeight = 507
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 503
-        ExplicitWidth = 1014
-        ExplicitHeight = 503
+        Width = 1020
+        Height = 507
+        ExplicitWidth = 1020
+        ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -77,7 +75,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 220
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -117,7 +115,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -127,7 +125,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 80
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
@@ -156,8 +154,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1014
-        Height = 503
+        Width = 1020
+        Height = 507
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -519,7 +517,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -769,6 +767,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
     object actTaxJournalChoice: TOpenChoiceForm [6]
       Category = 'DSDLib'
       MoveParams = <>
@@ -897,6 +901,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
+    inherited actAddMask: TdsdExecStoredProc
+      TabSheet = tsMain
+    end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -969,8 +976,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           StoredProc = spSelectTaxCorrective
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 11
       Status = mtUncomplete
       DataSource = TaxCorrectiveDS
@@ -989,8 +996,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 13
       Status = mtDelete
       DataSource = TaxCorrectiveDS
@@ -1008,8 +1015,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           StoredProc = spSelectTaxCorrective
         end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 12
       Status = mtComplete
       DataSource = TaxCorrectiveDS
@@ -1210,7 +1217,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

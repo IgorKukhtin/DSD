@@ -14,37 +14,34 @@ type
   TProductionUnionTechEditForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
      Ó‰: TcxLabel;
-    cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    cxLabel5: TcxLabel;
-    cePaidKind: TcxButtonEdit;
-    ceUnit: TcxButtonEdit;
-    ceInfoMoney: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    ceAmountDebet: TcxCurrencyEdit;
+    ceRealWeight: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    PaidKindGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    ceRecipe: TcxButtonEdit;
+    RecipeGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
-    ceContract: TcxButtonEdit;
-    cxLabel8: TcxLabel;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    ContractGuides: TdsdGuides;
-    ceAmountKredit: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
     cxLabel9: TcxLabel;
-    ceOperDatePartner: TcxDateEdit;
-    edInvNumberPartner: TcxTextEdit;
-    cxLabel11: TcxLabel;
+    ceDatePartionGoods: TcxDateEdit;
     edInvNumber: TcxTextEdit;
-    cePartner: TcxButtonEdit;
+    ceGooodsAndKind: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    PartnerGuides: TdsdGuides;
+    GooodsAndKindGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceCount: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ce—uterCount: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    ce—uterReq: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    ceAmountReq: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    cxLabel5: TcxLabel;
+    ceRecipeCode: TcxCurrencyEdit;
+    GooodsKindGuides: TdsdGuides;
+    ceGooodsKindGuides: TcxButtonEdit;
   private
     { Private declarations }
   public

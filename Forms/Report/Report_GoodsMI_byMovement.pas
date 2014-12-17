@@ -54,6 +54,12 @@ type
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
+    Amount_10500_Weight: TcxGridDBColumn;
+    Amount_40200_Weight: TcxGridDBColumn;
+    Amount_10500_Sh: TcxGridDBColumn;
+    Amount_40200_Sh: TcxGridDBColumn;
+    SummPartner_10200: TcxGridDBColumn;
+    SummPartner_10300: TcxGridDBColumn;
   private
     { Private declarations }
   public

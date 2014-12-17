@@ -111,7 +111,7 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
-           , 'J1201005'::TVarChar                       AS CHARCODE  
+           , 'J1201006'::TVarChar                       AS CHARCODE  
            , 'Неграш О.В.'::TVarChar                    AS N10 
            , 'оплата з поточного рахунка'::TVarChar     AS N9
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
