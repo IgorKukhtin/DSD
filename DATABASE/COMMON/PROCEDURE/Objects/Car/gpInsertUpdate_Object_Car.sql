@@ -1,8 +1,21 @@
  -- Function: gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(INOUT ioId Integer, IN incode Integer, IN inName TVarChar, IN inRegistrationCertificate TVarChar, IN inCarModelId Integer, IN inUnitId Integer, IN inPersonalDriverId Integer, IN inFuelMasterId Integer, IN inFuelChildId Integer, IN inSession TVarChar)
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
+   INOUT ioId                       Integer, 
+      IN incode                     Integer, 
+      IN inName                     TVarChar, 
+      IN inRegistrationCertificate  TVarChar, 
+      IN inCarModelId               Integer, 
+      IN inUnitId                   Integer, 
+      IN inPersonalDriverId         Integer, 
+      IN inFuelMasterId             Integer,
+      IN inFuelChildId              Integer,
+      IN inJuridicalId              Integer,        
+      IN inSession                  TVarChar
+      )
   RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -40,18 +53,21 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_FuelMaster(), ioId, inFuelMasterId);
    -- сохранили связь с <Вид топлива (дополнительный)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_FuelChild(), ioId, inFuelChildId);
+   -- сохранили связь с <юр.лицом>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Juridical(), ioId, inJuridicalId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.12.14         * add Juridical               
  04.09.14                                        * !!!RESTORE!!!
 */
 

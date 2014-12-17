@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -50,6 +51,10 @@ BEGIN
            , CAST (0 as Integer)    AS FuelChildId
            , CAST (0 as Integer)    AS FuelChildCode
            , CAST ('' as TVarChar)  AS FuelChildName
+           
+           , CAST (0 as Integer)    AS JuridicalId
+           , CAST (0 as Integer)    AS JuridicalCode
+           , CAST ('' as TVarChar)  AS JuridicalName
 
            , CAST (NULL AS Boolean) AS isErased
 
@@ -84,6 +89,10 @@ BEGIN
            , Object_FuelChild.ObjectCode  AS FuelChildCode
            , Object_FuelChild.ValueData   AS FuelChildName
            
+           , Object_Juridical.Id          AS JuridicalId
+           , Object_Juridical.ObjectCode  AS JuridicalCode
+           , Object_Juridical.ValueData   AS JuridicalName           
+           
            , Object_Car.isErased AS isErased
            
        FROM Object AS Object_Car
@@ -111,6 +120,10 @@ BEGIN
                                                             AND ObjectLink_Car_FuelChild.DescId = zc_ObjectLink_Car_FuelChild()
             LEFT JOIN Object AS Object_FuelChild ON Object_FuelChild.Id = ObjectLink_Car_FuelChild.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
+                                                       AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId            
+
        WHERE Object_Car.Id = inId;
       
    END IF;
@@ -123,6 +136,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.12.14         * add Juridical               
  30.09.13                                        * add Object_Personal_View
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind               
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind               
