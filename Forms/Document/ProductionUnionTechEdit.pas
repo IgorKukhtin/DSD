@@ -23,8 +23,6 @@ type
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    cxLabel9: TcxLabel;
-    ceDatePartionGoods: TcxDateEdit;
     edInvNumber: TcxTextEdit;
     ceGooodsAndKind: TcxButtonEdit;
     cxLabel12: TcxLabel;
@@ -39,9 +37,9 @@ type
     ceAmountReq: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;
-    ceRecipeCode: TcxCurrencyEdit;
     GooodsKindGuides: TdsdGuides;
     ceGooodsKindGuides: TcxButtonEdit;
+    ceRecipeCode: TcxTextEdit;
   private
     { Private declarations }
   public
