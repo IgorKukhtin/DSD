@@ -1570,7 +1570,7 @@ BEGIN
              GROUP BY _tmpItem.MovementItemId
                     , _tmpItem.ContainerId_ProfitLoss_10200
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!можно ограничить!!!
       UNION ALL
        -- Скидка дополнительная
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE

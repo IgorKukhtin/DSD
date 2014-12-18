@@ -1232,7 +1232,7 @@ BEGIN
                             , _tmpItem.InfoMoneyDestinationId_calc
                             , _tmpItem.InfoMoneyDestinationId
                             , _tmpItem.BusinessId_To
-                            , _tmpItem.ProfitLossId
+                            , _tmpItem.ProfitLossId_Corporate
                        FROM (SELECT  _tmpItem.InfoMoneyDestinationId
                                    , _tmpItem.BusinessId_To
                                    , _tmpItem.GoodsKindId
@@ -1269,21 +1269,25 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
        -- Сумма возвратов
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
+       FROM (SELECT _tmpItem.MovementItemId
+                  , _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
                   , zc_Enum_ProfitLossDirection_10700()   AS AnalyzerId -- Сумма возвратов
                   , SUM (_tmpItem.OperSumm_Partner) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10700
+             GROUP BY _tmpItem.MovementItemId
+                    , _tmpItem.ContainerId_ProfitLoss_10700
             ) AS _tmpItem_group
        -- WHERE _tmpItem_group.OperSumm_Partner <> 0 -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
       UNION ALL
        -- Сумма возвратов
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
+       FROM (SELECT _tmpItem.MovementItemId
+                  , _tmpItem.ContainerId_ProfitLoss_10700 AS ContainerId_ProfitLoss
                   , zc_Enum_ProfitLossDirection_10300()   AS AnalyzerId -- Скидка дополнительная
                   , SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10700
+             GROUP BY _tmpItem.MovementItemId
+                    , _tmpItem.ContainerId_ProfitLoss_10700
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!можно ограничить!!!
        ;

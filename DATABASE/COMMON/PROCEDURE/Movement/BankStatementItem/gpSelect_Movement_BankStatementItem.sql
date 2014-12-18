@@ -67,13 +67,15 @@ BEGIN
 
            , View_Contract_InvNumber.ContractId
            , View_Contract_InvNumber.InvNumber AS ContractName          
-           , Object_Unit.Id               AS UnitId
-           , Object_Unit.ValueData        AS UnitName
-           , Object_Currency.ValueData    AS CurrencyName
+
            , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
            , MovementFloat_ParValue.ValueData                  AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
+
+           , Object_Unit.Id               AS UnitId
+           , Object_Unit.ValueData        AS UnitName
+           , Object_Currency.ValueData    AS CurrencyName
 
            , MovementString_BankAccount.ValueData AS BankAccount
            , MovementString_BankMFO.ValueData AS BankMFO
