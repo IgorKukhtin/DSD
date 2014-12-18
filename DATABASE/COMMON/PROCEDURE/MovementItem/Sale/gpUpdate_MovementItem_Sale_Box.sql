@@ -55,4 +55,4 @@ ALTER FUNCTION gpUpdate_MovementItem_Sale_Box (Integer, TVarChar) OWNER TO postg
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MovementItem_Sale_Box (inMovementId:= 562895, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUpdate_MovementItem_Sale_Box (inMovementId:= 752816, inSession:= zfCalc_UserAdmin())
