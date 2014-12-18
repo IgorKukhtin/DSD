@@ -56,6 +56,9 @@ type
     ceFuelChild: TcxButtonEdit;
     FuelChildGuides: TdsdGuides;
     CarModelGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public
