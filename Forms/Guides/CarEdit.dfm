@@ -576,7 +576,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 207
+    Left = 175
     Top = 327
   end
 end
