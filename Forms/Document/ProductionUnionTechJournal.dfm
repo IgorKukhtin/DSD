@@ -448,16 +448,24 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'inMovementId_Value'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-        end
-        item
           Name = 'inOperDate'
           Value = 41791d
           Component = deStart
           DataType = ftDateTime
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
         end>
       isShowModal = False
       ActionType = acUpdate

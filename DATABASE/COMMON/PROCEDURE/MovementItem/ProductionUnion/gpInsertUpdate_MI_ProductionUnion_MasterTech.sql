@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_MasterTech()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
+--    IN inAmount              TFloat    , -- Количество
 --    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
     IN inCount	             TFloat    , -- Количество батонов или упаковок
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
@@ -25,25 +26,27 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbAmount TFloat;
    DECLARE vbOperDate TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
-   vbMovementId = COALESCE ((SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
+   vbMovementId = COALESCE ((SELECT MovementId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
    vbOperDate   = COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId), inOperDate);
+   vbAmount = inCuterCount * 100;
       -- сохранили <Документ>
    vbMovementId := lpInsertUpdate_Movement (ioId               := vbMovementId
                                           , inDescid           := zc_Movement_ProductionUnion()
-                                          , inInvNumber        := inInvNumber
+                                          , inInvNumber        := COALESCE ((SELECT InvNumber FROM Movement WHERE Movement.Id = vbMovementId), '')
                                           , inOperDate         := vbOperDate
                                           , inParentId         := NULL);
 
    -- сохранили связь с <От кого (в документе)>
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), vbMovementId, inFromId);
    -- сохранили связь с <Кому (в документе)>
-   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), vbMovementId, inToId);
    -- пересчитали Итоговые суммы по накладной
-   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
    -- сохранили протокол
    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -52,12 +55,12 @@ BEGIN
    ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := vbMovementId--inMovementId
                                                   , inGoodsId          := inGoodsId
-                                                  , inAmount           := inAmount
-                                                  , inPartionClose     := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), 0)--inPartionClose
+                                                  , inAmount           := vbAmount
+                                                  , inPartionClose     := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), False)--inPartionClose
                                                   , inCount            := inCount
                                                   , inRealWeight       := inRealWeight
                                                   , inCuterCount       := inCuterCount
-                                                  , inPartionGoods     := COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), 0)--inPartionGoods
+                                                  , inPartionGoods     := COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '')--inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inReceiptId        := inReceiptId
