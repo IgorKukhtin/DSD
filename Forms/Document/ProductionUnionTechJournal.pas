@@ -55,6 +55,7 @@ type
     ToName: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
+    AmountOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public
