@@ -56,11 +56,9 @@ type
     cxGridExport: TcxGrid;
     spSelectExport: TdsdStoredProc;
     ExportDS: TDataSource;
-    actGridExportToExcel: TdsdGridToExcel;
-    mactGridExportToExcel: TMultiAction;
+    mactExportToPartner: TMultiAction;
     actExportStoredproc: TdsdExecStoredProc;
     bbExportToExcel: TdxBarButton;
-    egToText: TExportGrid;
     bbExportToText: TdxBarButton;
     spGetExportParam: TdsdStoredProc;
   private

@@ -52,7 +52,10 @@ BEGIN
       WHERE Movement_Income_View.Id = inMovementId; */
 
       ;
-      SELECT vbConnectionString, 'SELECT * FROM Goods'::TBlob;
+      SELECT vbConnectionString, 'call "DBA"."LoadIncomeBillItems"( in inInvNumber TVarCharMedium,in inOperDate DateTime,
+  in inPriceWithVAT TBoolean, in inOKPO TVarCharMedium, in inUnitId Integer, in inNDS TSumm, 
+  in inGoodsCode integer, in inAmount TSumm, in inPrice TSumm) 
+begin'::TBlob;
 
 
 END;

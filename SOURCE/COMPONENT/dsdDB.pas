@@ -859,8 +859,12 @@ begin
         (Component as TEDI).Directory := FValue;
      if Component is TMedocAction then
         (Component as TMedocAction).Directory := FValue;
-     if Component is TExportGrid then
-        (Component as TExportGrid).DefaultFileName := FValue;
+     if Component is TExportGrid then begin
+        if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
+           (Component as TExportGrid).DefaultFileName := FValue;
+        if LowerCase(ComponentItem) = LowerCase('ExportType') then
+           (Component as TExportGrid).ExportType := FValue;
+     end;
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue;
      if Component is TADOQueryAction then begin

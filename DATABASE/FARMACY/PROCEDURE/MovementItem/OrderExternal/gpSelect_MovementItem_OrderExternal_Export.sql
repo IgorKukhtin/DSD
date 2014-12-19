@@ -12,6 +12,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbJuridicalId Integer;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -19,6 +20,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderExternal());
      vbUserId := inSession;
+
+   SELECT FromId INTO vbJuridicalId
+       FROM Movement_OrderExternal_View 
+       WHERE Movement_OrderExternal_View.Id = inMovementId;
+
+     IF vbJuridicalId = 59611 THEN --Оптима
+
 
      OPEN Cursor1 FOR
        SELECT 'CodeDebet'::TVarChar AS FieldName, 'код дебитора'::TVarChar AS DisplayName
@@ -50,6 +58,25 @@ BEGIN
 
      RETURN NEXT Cursor2;
 
+     END IF;
+
+   IF vbJuridicalId = 59610 THEN --БАДМ
+     OPEN Cursor1 FOR
+       SELECT ''::TVarChar AS FieldName, ''::TVarChar AS DisplayName;
+
+     RETURN NEXT Cursor1;
+
+     OPEN Cursor2 FOR
+       SELECT            
+             MovementItem.PartnerGoodsCode::TVarChar as CODE
+           , MovementItem.Amount                     as CNT
+           
+        FROM MovementItem_OrderExternal_View AS MovementItem
+       WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
+
+     RETURN NEXT Cursor2;
+
+   END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

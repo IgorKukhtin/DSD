@@ -65,7 +65,7 @@ type
 
 implementation
 
-uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils, ADODB;
+uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils, ADODB, Math;
 
 procedure Register;
 begin
@@ -130,19 +130,26 @@ begin
   TVKSmartDBF(FDataSet).DBFFileName := FileName;
   TVKSmartDBF(FDataSet).OEM := FOEM;
   TVKSmartDBF(FDataSet).AccessMode.OpenReadWrite := true;
-  if CreateFile then begin
+  if CreateFile or (not FileExists(FileName)) then begin
      if FileExists(FileName) then
         DeleteFile(FileName);
      for I := 0 to FFieldDefs.Count - 1 do begin
        with TVKSmartDBF(FDataSet).DBFFieldDefs.Add as TVKDBFFieldDef do begin
           Name := FFieldDefs[i].Name;
           case FFieldDefs[i].DataType of
-            ftString: field_type := 'C';
+            ftString: begin
+              field_type := 'C';
+              len :=  min(FFieldDefs[i].Size, 254);
+              dec :=  FFieldDefs[i].Precision;
+            end;
             ftInteger, ftBCD: field_type := 'N';
+            ftFloat: begin
+              field_type := 'N';
+              len := 10;
+              dec := 4;
+            end;
             ftDate: field_type := 'D';
           end;
-          len :=  FFieldDefs[i].Size;
-          dec :=  FFieldDefs[i].Precision;
        end;
      end;
      TVKSmartDBF(FDataSet).CreateTable;
