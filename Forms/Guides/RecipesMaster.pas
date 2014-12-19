@@ -1,4 +1,4 @@
-unit Goods_byRecipes;
+unit RecipesMaster;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TGoods_byRecipesForm = class(TParentForm)
+  TRecipesMasterForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -62,5 +62,5 @@ type
 implementation
 {$R *.dfm}
 initialization
-  RegisterClass(TGoods_byRecipesForm);
+  RegisterClass(TRecipesMasterForm);
 end.

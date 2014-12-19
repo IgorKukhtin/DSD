@@ -71,6 +71,10 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
+            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
+            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
+            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
@@ -114,6 +118,9 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
+                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -172,6 +179,7 @@ BEGIN
 
 
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE(MILinkObject_GoodsKind.ObjectId, tmpMovementItemOrder.GoodsKindId)
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem.ObjectId, tmpMovementItemOrder.ObjectId)
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -266,7 +274,9 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Intege
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.12.14                                                        *
  09.12.14                                                        *
 */
 
