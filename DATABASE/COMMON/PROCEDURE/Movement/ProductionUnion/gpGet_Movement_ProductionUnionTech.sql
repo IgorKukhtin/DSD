@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(
     IN inSession     TVarChar       -- сессия пользователя
 
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
 --             , StatusCode Integer, StatusName TVarChar
 --             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -35,7 +35,7 @@ BEGIN
      RETURN QUERY
      SELECT
               0                                                     AS Id
-            , CAST (NEXTVAL ('movement_productionunion_seq') AS TVarChar) AS InvNumber
+--            , CAST (NEXTVAL ('movement_productionunion_seq') AS TVarChar) AS InvNumber
             , inOperDate                                            AS OperDate
 /*
             , Object_Status.Code                                    AS StatusCode
@@ -70,7 +70,7 @@ BEGIN
      RETURN QUERY
      SELECT
               Movement.Id
-            , Movement.InvNumber
+--            , Movement.InvNumber
             , Movement.OperDate
 /*
             , Object_Status.ObjectCode                              AS StatusCode

@@ -13,7 +13,6 @@ uses
 type
   TProductionUnionTechEditForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
-    Код: TcxLabel;
     ceOperDate: TcxDateEdit;
     ceRealWeight: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
@@ -23,7 +22,6 @@ type
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    edInvNumber: TcxTextEdit;
     ceGooodsAndKind: TcxButtonEdit;
     cxLabel12: TcxLabel;
     GooodsAndKindGuides: TdsdGuides;
