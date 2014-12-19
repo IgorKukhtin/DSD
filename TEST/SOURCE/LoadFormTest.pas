@@ -344,6 +344,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_byRecipesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_byRecipesForm');
+
 end;
 
 procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;

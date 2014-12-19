@@ -157,7 +157,7 @@ uses
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
   TransportServiceTest in '..\SOURCE\Movement\All\TransportServiceTest.pas',
-  Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm},
+  Goods_byRecipes in '..\..\Forms\Guides\Goods_byRecipes.pas' {Goods_byRecipesForm},
   Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
   JuridicalTree in '..\..\Forms\Guides\JuridicalTree.pas' {JuridicalTreeForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
@@ -600,7 +600,8 @@ uses
   ProductionPeresortJournal in '..\..\Forms\Document\ProductionPeresortJournal.pas' {ProductionPeresortJournalForm: TParentForm},
   ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
-  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm};
+  ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
+  Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
