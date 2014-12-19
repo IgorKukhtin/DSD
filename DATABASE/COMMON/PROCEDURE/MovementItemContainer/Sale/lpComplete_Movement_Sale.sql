@@ -1058,43 +1058,37 @@ BEGIN
                                      AND _tmpItem_byDestination.BusinessId_From = _tmpItem.BusinessId_From
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
-     -- 2.2. формируются Проводки - Прибыль (Себестоимость) + !!!добавлен MovementItemId!!!
+     -- 2.2. формируются Проводки - Прибыль (Себестоимость) + !!!нет MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
        -- Проводки по разнице в весе : с/с2 - с/с3
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItemSumm.MovementItemId
-                  , _tmpItemSumm.ContainerId_ProfitLoss_40208 AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_40200()       AS AnalyzerId -- Содержание филиалов
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss_40208 AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_40200()       AS AnalyzerId -- Содержание филиалов
                   , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm
              FROM _tmpItemSumm
-             GROUP BY _tmpItemSumm.MovementItemId
-                    , _tmpItemSumm.ContainerId_ProfitLoss_40208
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40208
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!нулевые не нужны!!!
       UNION ALL
        -- Проводки по скидкам в весе : с/с1 - с/с2
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItemSumm.MovementItemId
-                  , _tmpItemSumm.ContainerId_ProfitLoss_10500 AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_10500()       AS AnalyzerId -- Скидка за вес
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss_10500 AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_10500()       AS AnalyzerId -- Скидка за вес
                   , SUM (_tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_ChangePercent) AS OperSumm
              FROM _tmpItemSumm
-             GROUP BY _tmpItemSumm.MovementItemId
-                    , _tmpItemSumm.ContainerId_ProfitLoss_10500
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10500
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!нулевые не нужны!!!
       UNION ALL
        -- Проводки по себестоимости реализации : с/с3
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItemSumm.MovementItemId
-                  , _tmpItemSumm.ContainerId_ProfitLoss_10400 AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_10400()       AS AnalyzerId -- Себестоимость реализации
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss_10400 AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_10400()       AS AnalyzerId -- Себестоимость реализации
                   , SUM (_tmpItemSumm.OperSumm_Partner)       AS OperSumm
              FROM _tmpItemSumm
-             GROUP BY _tmpItemSumm.MovementItemId
-                    , _tmpItemSumm.ContainerId_ProfitLoss_10400
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!нулевые не нужны!!!
        ;
 
 
@@ -1314,23 +1308,32 @@ BEGIN
           ) AS _tmpItem_byInfoMoney
      WHERE _tmpItem.InfoMoneyId = _tmpItem_byInfoMoney.InfoMoneyId;
 
-     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (подотчетные лица) + !!!нет MovementItemId!!!
+     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (подотчетные лица) + !!!добавлен MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
             , _tmpItem_group.AnalyzerId
             , 0 AS ParentId
             , _tmpItem_group.OperSumm
             , CASE WHEN _tmpItem_group.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
             , TRUE AS IsActive
-       FROM (SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10100() AS AnalyzerId, SUM (_tmpItem.OperSumm_PriceList) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+       FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10100() AS AnalyzerId, SUM (_tmpItem.OperSumm_PriceList) AS OperSumm
+             FROM _tmpItem
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+             -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
+             -- HAVING SUM (_tmpItem.OperSumm_PriceList) <> 0
            UNION ALL
-             SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10200() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10200() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) AS OperSumm
+             FROM _tmpItem
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+             HAVING SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) <> 0 -- !!!можно ограничить!!!
            UNION ALL
-             SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10300() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, zc_Enum_ProfitLossDirection_10300() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm
+             FROM _tmpItem
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
+             HAVING SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) <> 0 -- !!!можно ограничить!!!
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
      UNION ALL
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
@@ -1546,43 +1549,37 @@ BEGIN
      WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId
        AND _tmpItem.BusinessId_From = _tmpItem_byDestination.BusinessId_From;
 
-     -- 4.1.2. формируются Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная) + !!!добавлен MovementItemId!!!
+     -- 4.1.2. формируются Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная) + !!!нет MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
        -- Сумма реализации
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItem.MovementItemId
-                  , _tmpItem.ContainerId_ProfitLoss_10100  AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_10100()    AS AnalyzerId -- Сумма реализации
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10100  AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_10100()    AS AnalyzerId -- Сумма реализации
                   , -1 * SUM (_tmpItem.OperSumm_PriceList) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.MovementItemId
-                    , _tmpItem.ContainerId_ProfitLoss_10100
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10100
             ) AS _tmpItem_group
-       -- WHERE _tmpItem_group.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
       UNION ALL
        -- Разница с оптовыми ценами (Скидка по акциям)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItem.MovementItemId
-                  , _tmpItem.ContainerId_ProfitLoss_10200 AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_10200()   AS AnalyzerId -- Разница с оптовыми ценами (Скидка по акциям)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10200 AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_10200()   AS AnalyzerId -- Разница с оптовыми ценами (Скидка по акциям)
                   , 1 * SUM (_tmpItem.OperSumm_PriceList - _tmpItem.OperSumm_Partner) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.MovementItemId
-                    , _tmpItem.ContainerId_ProfitLoss_10200
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10200
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0 -- !!!можно ограничить!!!
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
       UNION ALL
        -- Скидка дополнительная
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItem.MovementItemId
-                  , _tmpItem.ContainerId_ProfitLoss_10300 AS ContainerId_ProfitLoss
-                  , zc_Enum_ProfitLossDirection_10300()   AS AnalyzerId -- Скидка дополнительная
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, _tmpItem_group.AnalyzerId, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItem.ContainerId_ProfitLoss_10300 AS ContainerId_ProfitLoss
+                  , 0 AS AnalyzerId -- zc_Enum_ProfitLossDirection_10300()   AS AnalyzerId -- Скидка дополнительная
                   , 1 * SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_Partner_ChangePercent) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.MovementItemId
-                    , _tmpItem.ContainerId_ProfitLoss_10300
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10300
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0 -- !!!можно ограничить!!!
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
       ;
 
      -- 5.1.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> ОПиУ(разница в весе))
@@ -1771,7 +1768,7 @@ BEGIN
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
                  -- !!!ограничили, т.к. нулевые не нужны!!!
-                 WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1841,7 +1838,7 @@ BEGIN
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
                  -- !!!ограничили, т.к. нулевые не нужны!!!
-                 WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1911,7 +1908,7 @@ BEGIN
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
                  -- !!!ограничили, т.к. нулевые не нужны!!!
-                 WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1943,6 +1940,7 @@ BEGIN
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF (vbIsHistoryCost = FALSE)
+        AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
         AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
         AND EXISTS (SELECT MovementLinkMovement_Master.MovementId
@@ -1970,7 +1968,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 17.12.14                                        * all
+ 18.12.14                                        * all
  19.10.14                                        * add inIsLastComplete = FALSE, тогда перепроводим Налоговую
  07.09.14                                        * add zc_ContainerLinkObject_Branch to vbPartnerId_To
  05.09.14                                        * add zc_ContainerLinkObject_Branch to Физ.лица (подотчетные лица)

@@ -97,7 +97,8 @@ $BODY$BEGIN
            --, lfObject_InfoMoney.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
            --, lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
-           , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
+           , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_Detail
+           -- , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
            --, Object_by.ObjectCode         AS ByObjectCode
            , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_by.ValueData) :: TVarChar AS ByObjectName
@@ -152,7 +153,7 @@ $BODY$BEGIN
             FROM
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                 , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
+                 , 0 AS InfoMoneyId_Detail -- ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                  , ContainerLinkObject_Cash.ObjectId AS CashId
                  , ContainerLinkObject_BankAccount.ObjectId AS BankAccountId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
@@ -163,21 +164,21 @@ $BODY$BEGIN
                  , ContainerLinkObject_PaidKind.ObjectId AS PaidKindId
 
                  , ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
-                 , ContainerLO_Business.ObjectId AS BusinessId
+                 , 0 AS BusinessId -- ContainerLO_Business.ObjectId AS BusinessId
 
                  , SUM (tmpMIContainer_Remains.AmountRemainsStart) AS AmountRemainsStart
                  , SUM (tmpMIContainer_Remains.AmountDebet) AS AmountDebet
                  , SUM (tmpMIContainer_Remains.AmountKredit) AS AmountKredit
                  , SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS AmountRemainsEnd
 
-                 , SUM (COALESCE (tmpMIContainer_RemainsCount.AmountRemainsStart, 0)) AS CountRemainsStart
-                 , SUM (COALESCE (tmpMIContainer_RemainsCount.AmountDebet, 0)) AS CountDebet
-                 , SUM (COALESCE (tmpMIContainer_RemainsCount.AmountKredit, 0)) AS CountKredit
-                 , SUM (COALESCE (tmpMIContainer_RemainsCount.AmountRemainsStart, 0) + COALESCE (tmpMIContainer_Remains.AmountDebet, 0) - COALESCE (tmpMIContainer_Remains.AmountKredit, 0)) AS CountRemainsEnd
+                 , 0 AS CountRemainsStart -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountRemainsStart, 0)) AS CountRemainsStart
+                 , 0 AS CountDebet -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountDebet, 0)) AS CountDebet
+                 , 0 AS CountKredit -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountKredit, 0)) AS CountKredit
+                 , 0 AS CountRemainsEnd -- SUM (COALESCE (tmpMIContainer_RemainsCount.AmountRemainsStart, 0) + COALESCE (tmpMIContainer_Remains.AmountDebet, 0) - COALESCE (tmpMIContainer_Remains.AmountKredit, 0)) AS CountRemainsEnd
             FROM
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId
-                      , Container.ParentId
+                      -- , Container.ParentId
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
@@ -189,12 +190,12 @@ $BODY$BEGIN
                  GROUP BY Container.ObjectId
                         , Container.Amount
                         , Container.Id
-                        , Container.ParentId
+                        -- , Container.ParentId
                  HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
                 ) AS tmpMIContainer_Remains
-                LEFT JOIN
+                /*LEFT JOIN
                 (SELECT Container.Id AS ContainerId
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
@@ -203,20 +204,20 @@ $BODY$BEGIN
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
-                WHERE Container.DescId = zc_Container_Count()
+                 WHERE Container.DescId = zc_Container_Count()
                  GROUP BY Container.ObjectId
                         , Container.Amount
                         , Container.Id
                  HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                ) AS tmpMIContainer_RemainsCount ON tmpMIContainer_RemainsCount.ContainerId = tmpMIContainer_Remains.ParentId
+                ) AS tmpMIContainer_RemainsCount ON tmpMIContainer_RemainsCount.ContainerId = tmpMIContainer_Remains.ParentId*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
@@ -244,12 +245,12 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-                LEFT JOIN ContainerLinkObject AS ContainerLO_Business
+                /*LEFT JOIN ContainerLinkObject AS ContainerLO_Business
                                               ON ContainerLO_Business.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()*/
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
-                   , ContainerLinkObject_InfoMoneyDetail.ObjectId
+                   -- , ContainerLinkObject_InfoMoneyDetail.ObjectId
                    , ContainerLinkObject_Cash.ObjectId
                    , ContainerLinkObject_BankAccount.ObjectId
                    , ContainerLinkObject_Juridical.ObjectId
@@ -259,7 +260,7 @@ $BODY$BEGIN
                    , ContainerLinkObject_Goods.ObjectId
                    , ContainerLinkObject_PaidKind.ObjectId
                    , ContainerLO_JuridicalBasis.ObjectId
-                   , ContainerLO_Business.ObjectId
+                   -- , ContainerLO_Business.ObjectId
 
            ) AS tmpReportOperation_two
            LEFT JOIN tmpAccountFind ON tmpAccountFind.AccountId = tmpReportOperation_two.AccountId
@@ -274,7 +275,7 @@ $BODY$BEGIN
                                       )
 
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
-           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
+           -- LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = JuridicalBasisId

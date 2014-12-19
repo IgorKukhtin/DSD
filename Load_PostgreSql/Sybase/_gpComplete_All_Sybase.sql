@@ -65,7 +65,7 @@ BEGIN
              -- !!! проводим - ReturnIn !!!
              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
                                                  , inUserId         := zfCalc_UserAdmin() :: Integer
-                                                 , inIsLastComplete := inIsNoHistoryCost);
+                                                 , inIsLastComplete := FALSE); -- inIsNoHistoryCost);
 
      ELSE
      -- !!!4 - Sale!!!
@@ -76,7 +76,7 @@ BEGIN
              -- !!! проводим - Sale !!!
              PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
                                              , inUserId         := zfCalc_UserAdmin() :: Integer
-                                             , inIsLastComplete := inIsNoHistoryCost);
+                                             , inIsLastComplete := FALSE); -- inIsNoHistoryCost);
      ELSE
      -- !!!5 - ReturnOut!!!
      IF vbMovementDescId = zc_Movement_ReturnOut()
@@ -86,7 +86,7 @@ BEGIN
              -- !!! проводим - ReturnOut !!!
              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
                                                   , inUserId         := zfCalc_UserAdmin() :: Integer
-                                                  , inIsLastComplete := inIsNoHistoryCost);
+                                                  , inIsLastComplete := NULL); -- inIsNoHistoryCost);
 
      ELSE
      -- !!!6.1. - Send!!!

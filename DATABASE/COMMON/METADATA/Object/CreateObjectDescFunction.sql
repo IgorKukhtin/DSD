@@ -588,6 +588,9 @@ CREATE OR REPLACE FUNCTION zc_Object_CorrespondentAccount() RETURNS Integer AS $
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CorrespondentAccount', 'Корреспондентский счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CorrespondentAccount');
 
+CREATE OR REPLACE FUNCTION zc_Object_AnalyzerId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_AnalyzerId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_AnalyzerId', 'Типы аналитик для проводок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AnalyzerId');
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -606,6 +609,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.12.14                                        * zc_Object_AnalyzerId
  08.12.14         * add zc_Object_GoodsQuality
  24.11.14         * add GoodsGroupAnalyst
  06.11.14         * add zc_Object_RetailReport() 

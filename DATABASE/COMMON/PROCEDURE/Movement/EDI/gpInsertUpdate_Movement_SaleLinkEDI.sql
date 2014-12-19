@@ -43,11 +43,11 @@ BEGIN
                                   , inUserId     := vbUserId);
 
      -- Обнуление количества у покупателя
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+     /*PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
      FROM MovementItem
      WHERE MovementItem.DescId     = zc_MI_Master()
        AND MovementItem.isErased   = FALSE
-       AND MovementItem.MovementId = inMovementId;
+       AND MovementItem.MovementId = inMovementId;*/
 
 
      -- перенос данных из ComDoc в документ
@@ -55,7 +55,7 @@ BEGIN
                                          , inMovementItemId:= tmpMI.MovementItemId
                                          , inGoodsId       := tmpMI_EDI.GoodsId
                                          , inGoodsKindId   := tmpMI_EDI.GoodsKindId
-                                         , inAmountPartner := tmpMI_EDI.AmountPartner
+                                         , inAmountPartner := COALESCE (tmpMI_EDI.AmountPartner, 0)
                                          , inPrice         := tmpMI_EDI.Price
                                          , inUserId        := vbUserId
                                           )
@@ -79,7 +79,7 @@ BEGIN
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                   , COALESCE (MIFloat_Price.ValueData, 0)
           ) AS tmpMI_EDI
-          LEFT JOIN (SELECT MAX (MovementItem.Id)                               AS MovementItemId
+          FULL JOIN (SELECT MAX (MovementItem.Id)                               AS MovementItemId
                           , MovementItem.ObjectId                               AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                           , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
