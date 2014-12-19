@@ -146,6 +146,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object AmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'AmountOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'

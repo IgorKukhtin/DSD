@@ -42,10 +42,10 @@ BEGIN
                        )
 
        SELECT
-              Movement.Id					    AS MovementId
-            , MovementItem.Id					AS Id
+              COALESCE(Movement.Id, 0)	        AS MovementId
+            , COALESCE(MovementItem.Id, 0)  	AS Id
             , Movement.InvNumber                AS InvNumber
-            , Movement.OperDate                 AS OperDate
+            , COALESCE(Movement.OperDate, tmpMovementItemOrder.OperDate)  AS OperDate
             , Object_From.Id                    AS FromId
             , Object_From.ValueData             AS FromName
             , Object_To.Id                      AS ToId
@@ -58,13 +58,14 @@ BEGIN
 
             , MovementItem.Amount               AS Amount
 
-            , MIBoolean_PartionClose.ValueData  AS PartionClose
+            , COALESCE(MIBoolean_PartionClose.ValueData, FALSE)  AS PartionClose
             , MIString_PartionGoods.ValueData   AS PartionGoods
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
+            , tmpMovementItemOrder.AmountOrder  AS AmountOrder
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -73,8 +74,9 @@ BEGIN
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
-            , Object_Status.ObjectCode                 AS StatusCode
-            , Object_Status.ValueData                  AS StatusName
+            , Object_Status.ObjectCode          AS StatusCode
+            , Object_Status.ValueData           AS StatusName
+
 
             , MovementItem.isErased             AS isErased
 
@@ -96,21 +98,22 @@ BEGIN
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = tmpIsErased.isErased
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
              JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
                                               ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -136,11 +139,51 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+     FULL JOIN (  SELECT Movement.OperDate                                              AS OperDate
+                       , MovementItem.ObjectId                                          AS ObjectId
+                       , MILO_GoodsKind.ObjectId                                        AS GoodsKindId
+                       , MLO_From.ObjectId                                              AS FromId
+                       , MLO_To.ObjectId                                                AS ToId
+                       , MovementItem.Amount + COALESCE(MovementItemFloat.ValueData, 0) AS AmountOrder
+                    FROM Movement
+                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                     AND MovementItem.DescId     = zc_MI_Master()
+               LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                     AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+               LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                               AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+               LEFT JOIN MovementLinkObject AS MLO_From
+                                            ON MLO_From.MovementId = Movement.Id
+                                           AND MLO_From.DescId = zc_MovementLinkObject_From()
+               LEFT JOIN MovementLinkObject AS MLO_To
+                                            ON MLO_To.MovementId = Movement.Id
+                                           AND MLO_To.DescId = zc_MovementLinkObject_To()
 
-       WHERE MovementLinkObject_From.ObjectId = CASE WHEN inFromId = 0 THEN MovementLinkObject_From.ObjectId ELSE inFromId END
-         AND MovementLinkObject_To.ObjectId   = CASE WHEN inToId = 0   THEN MovementLinkObject_To.ObjectId ELSE inToId END
+                   WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                     AND Movement.DescId = zc_Movement_OrderInternal()
+                     AND Movement.StatusId <> zc_Enum_Status_Erased()
+
+                ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ObjectId = MovementItem.ObjectId
+                                         AND tmpMovementItemOrder.GoodsKindId = MILO_GoodsKind.ObjectId
+                                         AND tmpMovementItemOrder.OperDate = Movement.OperDate
+                                         AND tmpMovementItemOrder.FromId = MovementLinkObject_From.ObjectId
+                                         AND tmpMovementItemOrder.ToId = MovementLinkObject_To.ObjectId
+
+
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE(MILinkObject_GoodsKind.ObjectId, tmpMovementItemOrder.GoodsKindId)
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem.ObjectId, tmpMovementItemOrder.ObjectId)
+             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+             LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE(MovementLinkObject_From.ObjectId, tmpMovementItemOrder.FromId)
+             LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE(MovementLinkObject_To.ObjectId, tmpMovementItemOrder.ToId)
+
+
+
+
+       WHERE COALESCE(MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId = 0 THEN COALESCE(MovementLinkObject_From.ObjectId,0) ELSE inFromId END
+         AND COALESCE(MovementLinkObject_To.ObjectId,0)   = CASE WHEN inToId = 0   THEN COALESCE(MovementLinkObject_To.ObjectId,0) ELSE inToId END
 
        ORDER BY MovementItem.Id
             ;
@@ -230,6 +273,6 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Intege
 -- тест
 /*
 BEGIN;
- select * from gpSelect_Movement_ProductionUnionTech (inStartDate := ('03.06.2014')::TDateTime , inEndDate := ('03.06.2014')::TDateTime , inFromId := 0 , inToId := 0 , inGoodsGroupId := 0, inisErased := 'True',  inSession := '5');
+select * from gpSelect_Movement_ProductionUnionTech(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inFromId := 0 , inToId := 0 , inGoodsGroupId := 0 , inIsErased := 'False' ,  inSession := '5');
 COMMIT;
 */

@@ -18,13 +18,13 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 32
-    Top = 78
+    Top = 62
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 32
-    Top = 55
+    Top = 46
     Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088
   end
   object cxButton1: TcxButton
@@ -50,12 +50,12 @@
   end
   object Код: TcxLabel
     Left = 32
-    Top = 11
+    Top = 5
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
     Left = 32
-    Top = 34
+    Top = 22
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -63,23 +63,23 @@
   end
   object cxLabel5: TcxLabel
     Left = 32
-    Top = 157
+    Top = 126
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 107
+    Top = 86
     Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
   end
   object ceRegistrationCertificate: TcxTextEdit
     Left = 32
-    Top = 130
+    Top = 102
     TabOrder = 8
     Width = 273
   end
   object ceCarModel: TcxButtonEdit
     Left = 32
-    Top = 172
+    Top = 143
     Properties.Buttons = <
       item
         Default = True
@@ -91,12 +91,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 32
-    Top = 203
+    Top = 166
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
     Left = 32
-    Top = 218
+    Top = 182
     Properties.Buttons = <
       item
         Default = True
@@ -108,12 +108,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 245
+    Top = 205
     Caption = #1042#1086#1076#1080#1090#1077#1083#1100
   end
   object cePersonalDriver: TcxButtonEdit
     Left = 32
-    Top = 258
+    Top = 220
     Properties.Buttons = <
       item
         Default = True
@@ -125,12 +125,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 32
-    Top = 285
+    Top = 243
     Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
   end
   object ceFuelMaster: TcxButtonEdit
     Left = 32
-    Top = 298
+    Top = 258
     Properties.Buttons = <
       item
         Default = True
@@ -142,12 +142,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 32
-    Top = 325
+    Top = 281
     Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
   end
   object ceFuelChild: TcxButtonEdit
     Left = 32
-    Top = 338
+    Top = 297
     Properties.Buttons = <
       item
         Default = True
@@ -157,11 +157,29 @@
     TabOrder = 17
     Width = 273
   end
+  object cxLabel8: TcxLabel
+    Left = 32
+    Top = 320
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
+  end
+  object ceJuridical: TcxButtonEdit
+    Left = 32
+    Top = 336
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -174,6 +192,7 @@
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -182,6 +201,7 @@
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -245,7 +265,15 @@
         Value = ''
         Component = FuelChildGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 32
   end
@@ -256,8 +284,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 184
-    Top = 104
+    Left = 312
+    Top = 96
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Car'
@@ -352,9 +380,23 @@
         Component = FuelChildGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 64
-    Top = 48
+    PackSize = 1
+    Left = 65528
+    Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -378,6 +420,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -397,12 +441,14 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 135
-    Top = 207
+    Left = 119
+    Top = 159
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalDriver
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -423,11 +469,13 @@
         ParamType = ptInput
       end>
     Left = 207
-    Top = 247
+    Top = 191
   end
   object FuelMasterGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceFuelMaster
+    FormNameParam.Value = 'TFuelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TFuelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -447,12 +495,14 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 151
-    Top = 279
+    Left = 183
+    Top = 239
   end
   object FuelChildGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceFuelChild
+    FormNameParam.Value = 'TFuelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TFuelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -472,12 +522,14 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 159
-    Top = 343
+    Left = 231
+    Top = 279
   end
   object CarModelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCarModel
+    FormNameParam.Value = 'TCarModelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -497,7 +549,34 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 159
-    Top = 167
+    Left = 183
+    Top = 127
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 175
+    Top = 327
   end
 end

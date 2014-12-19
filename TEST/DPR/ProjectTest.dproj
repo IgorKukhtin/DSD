@@ -302,10 +302,10 @@
 			<DCCReference Include="..\..\Forms\CarModelEdit.pas">
 				<Form>CarModelEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Car.pas">
+			<DCCReference Include="..\..\Forms\Guides\Car.pas">
 				<Form>CarForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\CarEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\CarEdit.pas">
 				<Form>CarEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Position.pas">

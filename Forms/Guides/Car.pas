@@ -62,6 +62,7 @@ type
     clPersonalDriverName: TcxGridDBColumn;
     clFuelMasterName: TcxGridDBColumn;
     clFuelChildName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
