@@ -2,8 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1126
-  ExplicitHeight = 562
+  ExplicitWidth = 1134
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -376,6 +376,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object DocumentValue: TcxGridDBColumn
+            DataBinding.FieldName = 'DocumentValue'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -483,36 +489,30 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object actPrint_TaxCorrective_Reestr: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrintTaxCorrective_Reest
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintTaxCorrective_Reest
-        end>
+      StoredProcList = <>
       Caption = #1056#1077#1077#1089#1090#1088
       Hint = #1056#1077#1077#1089#1090#1088
       ImageIndex = 21
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
           Name = 'StartDate'
           Value = 41640d
-          Component = deEnd
+          Component = deStart
           DataType = ftDateTime
+          ParamType = ptInput
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
         end>
       ReportName = 'PrintMovement_TaxCorrectiveReestr'
       ReportNameParam.Name = 'PrintMovement_TaxCorrectiveReestr'
@@ -1110,43 +1110,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <>
     Left = 788
     Top = 286
-  end
-  object spSelectPrintTaxCorrective_Reest: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TaxCorrective_Reestr'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inIsRegisterDate'
-        Value = 'False'
-        Component = edIsRegisterDate
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 674
-    Top = 362
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Checked'

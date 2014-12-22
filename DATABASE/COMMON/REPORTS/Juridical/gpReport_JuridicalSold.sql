@@ -34,7 +34,7 @@ RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, Jur
              , DebetSumm TFloat, KreditSumm TFloat
              , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat
              , PriceCorrectiveSumm TFloat
-             , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
+             , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, ChangeCurrencySumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
               )
 AS
@@ -152,6 +152,7 @@ BEGIN
         Operation.ServiceRealSumm::TFloat,
         Operation.TransferDebtSumm::TFloat,
         Operation.SendDebtSumm::TFloat,
+        Operation.ChangeCurrencySumm :: TFloat,
         Operation.OtherSumm::TFloat,
 
         Operation.EndAmount ::TFloat AS EndAmount_A,
@@ -182,6 +183,7 @@ BEGIN
                      SUM (Operation_all.ServiceRealSumm)     AS ServiceRealSumm,
                      SUM (Operation_all.TransferDebtSumm)    AS TransferDebtSumm,
                      SUM (Operation_all.SendDebtSumm)        AS SendDebtSumm,
+                     SUM (Operation_all.ChangeCurrencySumm)        AS ChangeCurrencySumm,
                      SUM (Operation_all.OtherSumm)           AS OtherSumm,
                      SUM (Operation_all.EndAmount)           AS EndAmount
           FROM
@@ -212,6 +214,7 @@ BEGIN
                  AS ServiceRealSumm
 
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm
+               , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Currency()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ChangeCurrencySumm
                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_ReturnOut()
                                                                                                                   , zc_Movement_Sale(), zc_Movement_ReturnIn()
                                                                                                                   , zc_Movement_PriceCorrective()
@@ -219,6 +222,7 @@ BEGIN
                                                                                                                   , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
                                                                                                                   , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_TransportService()
                                                                                                                   , zc_Movement_SendDebt()
+                                                                                                                  , zc_Movement_Currency()
                                                                                                                    )
                                                                                  THEN MIContainer.Amount
                                                                             ELSE 0
@@ -252,7 +256,7 @@ BEGIN
                   AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                 ) AS tmpContainer
                 LEFT JOIN MovementItemContainer AS MIContainer
-                                                ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                AND MIContainer.OperDate >= inStartDate
            GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.BranchId
          ) AS Operation_all

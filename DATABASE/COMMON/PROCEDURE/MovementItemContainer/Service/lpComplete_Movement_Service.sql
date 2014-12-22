@@ -92,7 +92,7 @@ BEGIN
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
 
              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
-                         THEN zc_Enum_ProfitLossDirection_10300() -- !!!Скидка дополнительная!!!
+                         THEN zc_Enum_AnalyzerId_SaleSumm_10300() -- !!!Сумма, реализация, Скидка дополнительная!!!
                     ELSE 0
                END AS AnalyzerId
 

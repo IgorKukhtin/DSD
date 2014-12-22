@@ -28,13 +28,14 @@ CREATE TABLE MovementItemContainer(
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
-CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer (MovementId, DescId);
-CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate_MovementDescId ON MovementItemContainer (ContainerId, OperDate, MovementDescId);
-CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate ON MovementItemContainer (ContainerId, OperDate);
++CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer (MovementId, DescId);
++CREATE INDEX idx_MovementItemContainer_ContainerId_Analyzer_OperDate ON MovementItemContainer (ContainerId_Analyzer, OperDate);
++CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate ON MovementItemContainer (AnalyzerId, OperDate);
++CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate ON MovementItemContainer (ContainerId, OperDate);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate_DescId ON MovementItemContainer (ContainerId, OperDate, DescId);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate ON MovementItemContainer (ContainerId, DescId, OperDate);
-CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer (ParentId);
 CREATE INDEX idx_MovementItemContainer_MovementItemId ON MovementItemContainer (MovementItemId);
+CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer (ParentId);
 -- CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer (ContainerId, DescId, OperDate, Amount);
                                                                          
 DO $$ 
@@ -56,7 +57,8 @@ $$;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 18.12.14                                        * add idx_MovementItemContainer_ContainerId_OperDate_MovementDescId
+ 20.12.14                                        * add idx_MovementItemContainer_ContainerId_Analyzer_OperDate
+ 18.12.14                                        * add idx_MovementItemContainer_AnalyzerId_OperDate
  18.12.14                                        * add idx_MovementItemContainer_ContainerId_OperDate + del idx_MovementItemContainer_ContainerId_OperDate_DescId + del idx_MovementItemContainer_ContainerId_DescId_OperDate
  26.10.14                                        * add idx_MovementItemContainer_ContainerId_OperDate_DescId AND idx_MovementItemContainer_ContainerId_DescId_OperDate
  26.10.14                                        * add index ???idx_MovementItemContainer_MovementItemId???

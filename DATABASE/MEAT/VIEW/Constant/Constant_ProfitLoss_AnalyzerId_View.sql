@@ -64,7 +64,7 @@ AS
         , Object.ObjectCode
         , Object.ValueData
         , TRUE AS isSale
-        , TRUE AS isCost
+        , FALSE AS isCost
         , FALSE AS isSumm
    FROM Object
    WHERE Object.DescId = zc_Object_ProfitLossDirection()
@@ -75,7 +75,7 @@ AS
         , Object.ObjectCode
         , Object.ValueData
         , FALSE AS isSale
-        , TRUE AS isCost
+        , FALSE AS isCost
         , FALSE AS isSumm
    FROM Object
    WHERE Object.DescId = zc_Object_ProfitLossDirection()

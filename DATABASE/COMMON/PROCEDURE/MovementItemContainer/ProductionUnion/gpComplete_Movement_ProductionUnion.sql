@@ -445,6 +445,7 @@ BEGIN
                                                                                          , inPartionGoodsId         := _tmpItemChild.PartionGoodsId
                                                                                          , inAssetId                := _tmpItemChild.AssetId
                                                                                          , inBranchId               := vbBranchId_From
+                                                                                         , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                           );
      -- определяется ContainerId_GoodsTo для Master(приход)-элементы количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsTo = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
@@ -458,6 +459,7 @@ BEGIN
                                                                                   , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                   , inAssetId                := _tmpItem.AssetId
                                                                                   , inBranchId               := vbBranchId_To
+                                                                                  , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                    );
 
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -527,7 +529,11 @@ BEGIN
                                                  , inMovementItemId := _tmpItem.MovementItemId
                                                  , inParentId       := NULL
                                                  , inContainerId    := _tmpItem.ContainerId_GoodsTo -- был опеределен выше
+                                                 , inAccountId      := NULL
                                                  , inAnalyzerId     := NULL
+                                                 , inObjectId_Analyzer       := NULL
+                                                 , inWhereObjectId_Analyzer  := NULL
+                                                 , inContainerId_Analyzer    := NULL
                                                  , inAmount         := _tmpItem.OperCount
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
@@ -626,7 +632,11 @@ BEGIN
                                                       , inMovementItemId := _tmpItem.MovementItemId
                                                       , inParentId       := NULL
                                                       , inContainerId    := _tmpItemSumm_group.ContainerId_To
+                                                      , inAccountId      := NULL
                                                       , inAnalyzerId     := NULL
+                                                      , inObjectId_Analyzer       := NULL
+                                                      , inWhereObjectId_Analyzer  := NULL
+                                                      , inContainerId_Analyzer    := NULL
                                                       , inAmount         := _tmpItemSumm_group.OperSumm
                                                       , inOperDate       := vbOperDate
                                                       , inIsActive       := TRUE

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inOperDate               TDateTime, 
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inIsPartionCount         Boolean , 
     IN inPartionGoodsId         Integer , 
     IN inAssetId                Integer , 
-    IN inBranchId               Integer   -- эта аналитика нужна для филиала
+    IN inBranchId               Integer , -- эта аналитика нужна для филиала
+    IN inAccountId              Integer   -- эта аналитика нужна для "товар в пути"
 )
   RETURNS Integer
 AS
@@ -36,6 +38,8 @@ BEGIN
                                                  , inObjectId_1        := inPartionGoodsId -- CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
                                                  , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_3          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ
@@ -53,6 +57,8 @@ BEGIN
                                                  , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_AssetTo()
                                                  , inObjectId_2        := inAssetId
+                                                 , inDescId_3          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      ELSE
      -- 20200 Прочие ТМЦ + 20300 МНМА
@@ -72,6 +78,8 @@ BEGIN
                                                  , inObjectId_2        := inMemberId
                                                  , inDescId_3          := zc_ContainerLinkObject_PartionGoods()
                                                  , inObjectId_3        := inPartionGoodsId
+                                                 , inDescId_4          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_4        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      ELSE
      -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
@@ -91,6 +99,8 @@ BEGIN
                                                  , inObjectId_2        := CASE WHEN COALESCE (inBranchId, 0) IN (0, zc_Branch_Basis(), 301310) THEN inGoodsKindId ELSE 0 END -- !!!+ филиал Запорожье!!
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
+                                                 , inDescId_4          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_4        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      -- !!!Other!!!
           -- 0)Товар 1)Подразделение
@@ -104,6 +114,8 @@ BEGIN
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_2          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                    );
      END IF;
      END IF;
@@ -116,12 +128,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.11.14                                        * add inAccountId
  08.11.14                                        * add !!!+ филиал Запорожье!!
  17.08.14                                        * add inPartionGoodsId always
  27.07.14                                        * add МНМА

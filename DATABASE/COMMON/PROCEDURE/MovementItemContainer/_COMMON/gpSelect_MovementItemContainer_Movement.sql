@@ -57,6 +57,7 @@ BEGIN
                   , tmpMIContainer_all AS (SELECT MIContainer.DescId AS MIContainerDescId
                                                 , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END AS Id
                                                 , COALESCE (MIContainer.MovementItemId, 0) AS MovementItemId -- !!!может быть NULL!!!
+                                                , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END AS AccountId_110101
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
                                                 , MIContainer.OperDate
@@ -73,6 +74,7 @@ BEGIN
                                            GROUP BY MIContainer.DescId
                                                 , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN 0 ELSE MIContainer.Id END
                                                 , COALESCE (MIContainer.MovementItemId, 0)
+                                                , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.AccountId ELSE 0 END
                                                 , MIContainer.ParentId
                                                 , MIContainer.ContainerId
                                                 , MIContainer.OperDate
@@ -106,6 +108,7 @@ BEGIN
               , tmpMIContainer_Count_2 AS (SELECT tmpMIContainer_Count_all.GoodsId
                                                 , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                                 , tmpMIContainer_Count_all.MovementItemId
+                                                , tmpMIContainer_Count_all.AccountId_110101
                                                 , tmpMIContainer_Count_all.ParentId
                                                 , tmpMIContainer_Count_all.isActive
                                                 , tmpMIContainer_Count_all.Amount AS Amount_Count
@@ -126,6 +129,7 @@ BEGIN
                                                 , tmpMIContainer_Count_2.GoodsId
                                                 , tmpMIContainer_Count_2.GoodsKindId
                                                 , tmpMIContainer_Count_2.MovementItemId
+                                                , tmpMIContainer_Count_2.AccountId_110101
                                                 , tmpMIContainer_Count_2.isActive
                                                 , tmpMIContainer_Count_2.Amount_Count
                                                 , tmpMIContainer_Count_2.MovementId
@@ -145,6 +149,7 @@ BEGIN
                                                 , tmpMIContainer_Count_3.GoodsId
                                                 , tmpMIContainer_Count_3.GoodsKindId
                                                 , tmpMIContainer_Count_3.MovementItemId
+                                                , tmpMIContainer_Count_3.AccountId_110101
                                                 , tmpMIContainer_Count_3.isActive
                                                 , tmpMIContainer_Count_3.Amount_Count
                                                 , tmpMIContainer_Count_3.MovementId
@@ -159,11 +164,12 @@ BEGIN
                                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                               ON CLO_GoodsKind.ContainerId = tmpMIContainer_Count_3.ContainerId_Parent
                                                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                                            AND tmpMIContainer_Count_3.isParentDetail = TRUE
+                                                                             AND tmpMIContainer_Count_3.isParentDetail = TRUE
                                           )
                     -- проводки: количественные + если их нет тогда нужен MovementItemId
                   , tmpMIContainer_Count AS (SELECT tmpMIContainer_Count_4.MovementItemId        AS MovementItemId
                                                   , tmpMIContainer_Count_4.MovementItemId_Parent AS MovementItemId_Parent
+                                                  , tmpMIContainer_Count_4.AccountId_110101
                                                   , tmpMIContainer_Count_4.GoodsId_Parent
                                                   , tmpMIContainer_Count_4.GoodsKindId_Parent
                                                   , tmpMIContainer_Count_4.GoodsId
@@ -180,6 +186,7 @@ BEGIN
                                             UNION ALL
                                              SELECT tmpMIContainer_Summ_all.MovementItemId
                                                   , NULL AS MovementItemId_Parent
+                                                  , tmpMIContainer_Summ_all.AccountId_110101
                                                   , NULL AS GoodsId_Parent
                                                   , NULL AS GoodsKindId_Parent
                                                   , NULL AS GoodsId
@@ -196,8 +203,10 @@ BEGIN
                                                   -- LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementId = tmpMIContainer_Summ_all.MovementId
                                                   LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementItemId = tmpMIContainer_Summ_all.MovementItemId
                                                                                     AND tmpMIContainer_Count_all.IsActive = tmpMIContainer_Summ_all.IsActive
+                                                                                    AND tmpMIContainer_Count_all.AccountId_110101 = tmpMIContainer_Summ_all.AccountId_110101
                                              WHERE tmpMIContainer_Count_all.MovementId IS NULL
                                              GROUP BY tmpMIContainer_Summ_all.MovementItemId
+                                                    , tmpMIContainer_Summ_all.AccountId_110101
                                                     , tmpMIContainer_Summ_all.isActive
                                                     , tmpMIContainer_Summ_all.MovementId
                                                     , tmpMIContainer_Summ_all.MovementDescId
@@ -236,6 +245,7 @@ BEGIN
                                FROM tmpMIContainer_Count
                                     INNER JOIN tmpMIContainer_Summ_all ON tmpMIContainer_Summ_all.MovementItemId = tmpMIContainer_Count.MovementItemId
                                                                       AND tmpMIContainer_Summ_all.IsActive = tmpMIContainer_Count.IsActive
+                                                                      AND tmpMIContainer_Summ_all.AccountId_110101 = tmpMIContainer_Count.AccountId_110101
                               )
         -- проводки: к суммовым привязываются суммовые "главные" (надо для определения "главного" + что б показать некоторые проперти из проводки-корреспондента)
      , tmpMIContainer_Summ AS (SELECT tmpMIContainer.Id

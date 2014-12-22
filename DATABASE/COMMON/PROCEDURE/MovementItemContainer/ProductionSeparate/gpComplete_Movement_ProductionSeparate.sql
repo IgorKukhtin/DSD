@@ -451,6 +451,7 @@ BEGIN
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                     , inBranchId               := vbBranchId_From
+                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      );
 
      -- определяется ContainerId_GoodsTo для Child(приход)-элементы количественного учета
@@ -465,6 +466,7 @@ BEGIN
                                                                                        , inPartionGoodsId         := _tmpItemChild.PartionGoodsId
                                                                                        , inAssetId                := _tmpItemChild.AssetId
                                                                                        , inBranchId               := vbBranchId_To
+                                                                                       , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                         );
 
 
@@ -728,7 +730,11 @@ BEGIN
                                                  , inMovementItemId := _tmpItemChild.MovementItemId
                                                  , inParentId       := NULL
                                                  , inContainerId    := _tmpItemSummChild.ContainerId_To
+                                                 , inAccountId      := NULL
                                                  , inAnalyzerId     := NULL
+                                                 , inObjectId_Analyzer       := NULL
+                                                 , inWhereObjectId_Analyzer  := NULL
+                                                 , inContainerId_Analyzer    := NULL
                                                  , inAmount         := (OperSumm)
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
