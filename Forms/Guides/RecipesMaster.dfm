@@ -56,35 +56,12 @@ object RecipesMasterForm: TRecipesMasterForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
-      end
-      object clTradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clMeasureName: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
@@ -94,16 +71,16 @@ object RecipesMasterForm: TRecipesMasterForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object ReceiptCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1087#1077#1087#1090#1091#1088#1099
-        DataBinding.FieldName = 'ReceiptCode'
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object ReceiptName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
-        DataBinding.FieldName = 'ReceiptName'
+      object GoodsName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -115,6 +92,13 @@ object RecipesMasterForm: TRecipesMasterForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object GoodsKindCompleteName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
+        DataBinding.FieldName = 'GoodsKindCompleteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 65
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -122,6 +106,30 @@ object RecipesMasterForm: TRecipesMasterForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object clMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object clTradeMarkName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+        DataBinding.FieldName = 'TradeMarkName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -279,17 +287,42 @@ object RecipesMasterForm: TRecipesMasterForm
           DataType = ftString
         end
         item
-          Name = 'FuelName'
+          Name = 'GoodsId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'FuelName'
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
-          Name = 'GoodsGroupName'
+          Name = 'GoodsKindId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'GoodsGroupName'
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsKindCompleteId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindCompleteId'
+        end
+        item
+          Name = 'GoodsKindCompleteName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindCompleteName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -306,7 +339,7 @@ object RecipesMasterForm: TRecipesMasterForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_Receipt'
     DataSet = ClientDataSet
     DataSets = <
       item

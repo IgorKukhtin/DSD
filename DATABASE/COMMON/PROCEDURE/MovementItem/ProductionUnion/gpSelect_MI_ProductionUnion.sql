@@ -165,6 +165,10 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
+            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
+            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
+            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
@@ -186,6 +190,12 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
+                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -238,6 +248,15 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
+            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
+            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
+            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+
+            , Object_Receipt.Id                 AS ReceiptId
+            , Object_Receipt.ObjectCode         AS ReceiptCode
+            , Object_Receipt.ValueData          AS ReceiptName
+
+
             , MovementItem.isErased             AS isErased
 
 
@@ -246,6 +265,11 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                              ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -268,6 +292,12 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
+                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -289,3 +319,8 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 
 -- тест
 -- SELECT * FROM gpSelect_MI_ProductionUnion (inMovementId:= 1, inShowAll:= TRUE, inSession:= '2')
+/*
+BEGIN;
+ select * from gpGet_Movement_ProductionUnion(inMovementId := 385717 , inOperDate := ('02.06.2014')::TDateTime ,  inSession := '5');
+COMMIT;
+*/

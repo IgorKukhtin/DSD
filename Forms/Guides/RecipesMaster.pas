@@ -50,9 +50,10 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    ReceiptName: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
+    GoodsKindCompleteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

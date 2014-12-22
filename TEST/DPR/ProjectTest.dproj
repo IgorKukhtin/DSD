@@ -378,9 +378,6 @@
 			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportServiceTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Goods_byRecipes.pas">
-				<Form>Goods_byRecipesForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Unit_Object.pas">
 				<Form>Unit_ObjectForm</Form>
 			</DCCReference>
@@ -1255,7 +1252,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
 				<Form>ProductionSeparateForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PriceCorrectiveJournal.pas">
@@ -1413,7 +1409,6 @@
 			<DCCReference Include="..\SOURCE\Objects\All\PositionTest.pas"/>
 			<DCCReference Include="..\..\FormsMeat\Guides\BranchLink.pas">
 				<Form>BranchLinkForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
@@ -1785,6 +1780,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Goods_Object.pas">
 				<Form>Goods_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RecipesMaster.pas">
+				<Form>RecipesMasterForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
