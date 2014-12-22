@@ -35,6 +35,9 @@ BEGIN
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
+            , CAST (NULL AS Integer)                AS GoodsCompleteKindId
+            , CAST (NULL AS Integer)                AS GoodsCompleteKindCode
+            , CAST (NULL AS TVarchar)               AS GoodsCompleteKindName
 
             , CAST (NULL AS Integer)                AS ReceiptId
             , CAST (NULL AS Integer)                AS ReceiptCode
@@ -79,6 +82,9 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
+            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
+            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -102,6 +108,12 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
+                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -268,6 +280,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  02.06.14                                                       *
  27.05.14                                                       * поменял все
  16.07.13         *

@@ -378,8 +378,8 @@
 			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportServiceTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Goods_Object.pas">
-				<Form>Goods_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Goods_byRecipes.pas">
+				<Form>Goods_byRecipesForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Unit_Object.pas">
 				<Form>Unit_ObjectForm</Form>
@@ -1781,6 +1781,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
 				<Form>ProductionUnionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Goods_Object.pas">
+				<Form>Goods_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
