@@ -212,7 +212,7 @@ object ReceiptForm: TReceiptForm
     ExplicitTop = 329
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ContractConditionDS
+      DataController.DataSource = ReceiptChildDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -430,26 +430,6 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsPeriod'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartDate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEnd'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEndDate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsEndDate'
         end
         item
           Visible = True
@@ -737,13 +717,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'InfoMoneyId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
@@ -874,14 +854,7 @@ object ReceiptForm: TReceiptForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'Name'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -908,13 +881,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
         end>
@@ -931,13 +904,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'BonusKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ContractConditionCDS
+          Component = ReceiptChildCDS
           ComponentItem = 'BonusKindName'
           DataType = ftString
         end>
@@ -962,7 +935,7 @@ object ReceiptForm: TReceiptForm
           StoredProc = spInsertUpdateReceiptChild
         end>
       Caption = 'actUpdateDataSetCCK'
-      DataSource = ContractConditionDS
+      DataSource = ReceiptChildDS
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1057,25 +1030,25 @@ object ReceiptForm: TReceiptForm
         Name = 'inStartDate'
         Value = 41852d
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inEndDate'
         Value = 41852d
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inIsPeriod'
         Value = 'False'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Name = 'inIsEndDate'
         Value = 'False'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 216
@@ -1129,14 +1102,14 @@ object ReceiptForm: TReceiptForm
     Left = 272
     Top = 184
   end
-  object ContractConditionDS: TDataSource
-    DataSet = ContractConditionCDS
+  object ReceiptChildDS: TDataSource
+    DataSet = ReceiptChildCDS
     Left = 102
     Top = 413
   end
-  object ContractConditionCDS: TClientDataSet
+  object ReceiptChildCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ContractId'
+    IndexFieldNames = 'ReceiptId'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
@@ -1152,14 +1125,14 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inComment'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
@@ -1167,7 +1140,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inValue'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
@@ -1182,21 +1155,21 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inContractConditionKindId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
       end
       item
         Name = 'inBonusKindId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = Null
-        Component = ContractConditionCDS
+        Component = ReceiptChildCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end>
@@ -1206,10 +1179,10 @@ object ReceiptForm: TReceiptForm
   end
   object spSelectReceiptChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptChild'
-    DataSet = ContractConditionCDS
+    DataSet = ReceiptChildCDS
     DataSets = <
       item
-        DataSet = ContractConditionCDS
+        DataSet = ReceiptChildCDS
       end>
     Params = <>
     PackSize = 1

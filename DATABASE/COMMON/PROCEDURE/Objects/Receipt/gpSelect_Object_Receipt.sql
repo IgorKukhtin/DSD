@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Receipt()
 
--- DROP FUNCTION gpSelect_Object_Receipt();
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession     TVarChar       -- сессия пользователя

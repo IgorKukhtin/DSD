@@ -64,8 +64,8 @@ type
     clValue: TcxGridDBColumn;
     clsfcisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    ContractConditionDS: TDataSource;
-    ContractConditionCDS: TClientDataSet;
+    ReceiptChildDS: TDataSource;
+    ReceiptChildCDS: TClientDataSet;
     spInsertUpdateReceiptChild: TdsdStoredProc;
     spSelectReceiptChild: TdsdStoredProc;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
