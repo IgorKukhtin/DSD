@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
 --             , StatusCode Integer, StatusName TVarChar
 --             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindId Integer, /*GoodsKindCode Integer,*/ GoodsKindName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
+             , GoodsCompleteKindId Integer, GoodsCompleteKindName TVarChar
              , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
              , Comment TVarChar
              , /*Amount TFloat,*/ Count TFloat, RealWeight TFloat,  CuterCount TFloat
@@ -51,32 +52,49 @@ BEGIN
             , 0   		                                            AS GoodsCode
             , CAST ('' AS TVarChar) 				                AS GoodsName
             , 0   		                                            AS GoodsKindId
---            , 0   		                                            AS GoodsKindCode
             , CAST ('' AS TVarChar) 				                AS GoodsKindName
+
+            , CAST (COALESCE(Object_GoodsKind.Id , 0) AS Integer)          AS GoodsCompleteKindId
+            , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar) AS GoodsCompleteKindName
+
             , 0   		                                            AS ReceiptId
             , 0   		                                            AS ReceiptCode
             , CAST ('' AS TVarChar) 				                AS ReceiptName
             , CAST ('' AS TVarChar) 				                AS Comment
 ---            , 0   		                                            AS Amount
-            , 0   		                                            AS Count
-            , 0   		                                            AS RealWeight
-            , 0   		                                            AS CuterCount
+            , CAST (0 AS TFloat)		                            AS Count
+            , CAST (0 AS TFloat)		                            AS RealWeight
+            , CAST (0 AS TFloat)   		                            AS CuterCount
             , CAST (COALESCE(MI_Order.Amount,0) + COALESCE(MIF_AmountSecond.ValueData, 0) AS TFloat)  AS AmountOrder
             , CAST (COALESCE(MIF_CuterCountOrder.ValueData, 0) AS TFloat)                             AS CuterCountOrder
             , False                                                 AS isErased
 
 
      FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-     LEFT JOIN Object AS Object_From ON Object_From.Id = inFromId
-     LEFT JOIN Object AS Object_To ON Object_To.Id = inToId
-             LEFT JOIN MovementItem AS MI_Order
-                    ON MI_Order.Id         = inMIOrderId
-                   AND MI_Order.DescId     = zc_MI_Master()
-             LEFT JOIN MovementItemFloat AS MIF_AmountSecond ON MIF_AmountSecond.MovementItemId = MI_Order.Id
-                   AND MIF_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-             LEFT JOIN MovementItemFloat AS MIF_CuterCount ON MIF_CuterCount.MovementItemId = MI_Order.Id
-                   AND MIF_AmountSecond.DescId = zc_MIFloat_CuterCount();
 
+     LEFT JOIN Object AS Object_From ON Object_From.Id = inFromId
+
+     LEFT JOIN Object AS Object_To ON Object_To.Id = inToId
+
+     LEFT JOIN MovementItem AS MI_Order
+            ON MI_Order.Id         = inMIOrderId
+           AND MI_Order.DescId     = zc_MI_Master()
+
+     LEFT JOIN MovementItemFloat AS MIF_AmountSecond
+            ON MIF_AmountSecond.MovementItemId = MI_Order.Id
+           AND MIF_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+
+     LEFT JOIN MovementItemFloat AS MIF_CuterCountOrder
+            ON MIF_CuterCountOrder.MovementItemId = MI_Order.Id
+           AND MIF_CuterCountOrder.DescId = zc_MIFloat_CuterCount()
+
+     LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+            ON MILO_GoodsKind.MovementItemId = MI_Order.Id
+           AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+     LEFT JOIN Object AS Object_GoodsKind
+            ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
+    ;
 
      ELSE
      RETURN QUERY
@@ -97,8 +115,11 @@ BEGIN
             , Object_Goods.ObjectCode                               AS GoodsCode
             , Object_Goods.ValueData                                AS GoodsName
             , Object_GoodsKind.Id                                   AS GoodsKindId
---            , Object_GoodsKind.ObjectCode                           AS GoodsKindCode
             , Object_GoodsKind.ValueData                            AS GoodsKindName
+
+            , Object_GoodsCompleteKind.Id                           AS GoodsCompleteKindId
+            , Object_GoodsCompleteKind.ValueData                    AS GoodsCompleteKindName
+
             , Object_Receipt.Id                                     AS ReceiptId
             , Object_Receipt.ObjectCode                             AS ReceiptCode
             , Object_Receipt.ValueData                              AS ReceiptName
@@ -154,6 +175,12 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
+                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsKind.Id = MILO_GoodsCompleteKind.ObjectId
+
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
