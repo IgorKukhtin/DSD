@@ -2,26 +2,29 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1020
   ExplicitWidth = 1028
+  ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 122
+    Top = 124
     Width = 1020
-    Height = 610
+    Height = 608
     TabOrder = 2
-    ExplicitTop = 122
+    ExplicitTop = 124
     ExplicitWidth = 1020
-    ExplicitHeight = 610
-    ClientRectBottom = 610
-    ClientRectRight = 1020
+    ExplicitHeight = 608
+    ClientRectBottom = 604
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 586
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1014
+      ExplicitHeight = 582
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 228
-        ExplicitWidth = 1020
-        ExplicitHeight = 228
+        Width = 1014
+        Height = 224
+        ExplicitWidth = 1014
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -125,6 +128,13 @@ inherited ProductionUnionForm: TProductionUnionForm
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object GoodsCompleteKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
+            DataBinding.FieldName = 'GoodsCompleteKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -142,15 +152,15 @@ inherited ProductionUnionForm: TProductionUnionForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 90
           end
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 228
-        Width = 1020
-        ExplicitTop = 228
-        ExplicitWidth = 1020
+        Top = 224
+        Width = 1014
+        ExplicitTop = 224
+        ExplicitWidth = 1014
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           Styles.Content = nil
           inherited colChildGoodsCode: TcxGridDBColumn
@@ -216,7 +226,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     ExplicitWidth = 1020
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 22
+      ExplicitHeight = 24
     end
   end
   inherited ActionList: TActionList
@@ -269,13 +279,13 @@ inherited ProductionUnionForm: TProductionUnionForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          ComponentItem = 'GoodsCompleteKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          ComponentItem = 'GoodsCompleteKindName'
           DataType = ftString
         end>
       isShowModal = True
@@ -295,7 +305,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -535,6 +545,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsCompleteKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsCompleteKindId'
         ParamType = ptInput
       end
       item

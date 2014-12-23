@@ -32,6 +32,7 @@ type
     colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
     clChildPartionGoodsDate: TcxGridDBColumn;
+    GoodsCompleteKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

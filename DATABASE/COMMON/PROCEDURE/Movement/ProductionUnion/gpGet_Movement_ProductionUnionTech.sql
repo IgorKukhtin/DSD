@@ -1,10 +1,11 @@
 -- Function: gpGet_Movement_ProductionUnionTech()
-
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(
     IN inId          Integer,       -- ключ Документа
+    IN inMIOrderId   Integer,       -- ключ
     IN inOperDate    TDateTime,     -- дата Документа
     IN inFromId      Integer,
     IN inToId        Integer,
@@ -19,6 +20,7 @@ RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
              , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
              , Comment TVarChar
              , /*Amount TFloat,*/ Count TFloat, RealWeight TFloat,  CuterCount TFloat
+             , AmountOrder TFloat,  CuterCountOrder TFloat
              , isErased boolean
 
                )
@@ -59,12 +61,22 @@ BEGIN
             , 0   		                                            AS Count
             , 0   		                                            AS RealWeight
             , 0   		                                            AS CuterCount
+            , CAST (COALESCE(MI_Order.Amount,0) + COALESCE(MIF_AmountSecond.ValueData, 0) AS TFloat)  AS AmountOrder
+            , CAST (COALESCE(MIF_CuterCountOrder.ValueData, 0) AS TFloat)                             AS CuterCountOrder
             , False                                                 AS isErased
 
 
      FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
      LEFT JOIN Object AS Object_From ON Object_From.Id = inFromId
-     LEFT JOIN Object AS Object_To ON Object_To.Id = inToId;
+     LEFT JOIN Object AS Object_To ON Object_To.Id = inToId
+             LEFT JOIN MovementItem AS MI_Order
+                    ON MI_Order.Id         = inMIOrderId
+                   AND MI_Order.DescId     = zc_MI_Master()
+             LEFT JOIN MovementItemFloat AS MIF_AmountSecond ON MIF_AmountSecond.MovementItemId = MI_Order.Id
+                   AND MIF_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+             LEFT JOIN MovementItemFloat AS MIF_CuterCount ON MIF_CuterCount.MovementItemId = MI_Order.Id
+                   AND MIF_AmountSecond.DescId = zc_MIFloat_CuterCount();
+
 
      ELSE
      RETURN QUERY
@@ -97,6 +109,10 @@ BEGIN
             , MIFloat_Count.ValueData                               AS Count
             , MIFloat_RealWeight.ValueData                          AS RealWeight
             , MIFloat_CuterCount.ValueData                          AS CuterCount
+
+            , CAST (COALESCE(MI_Order.Amount,0) + COALESCE(MIF_AmountSecond.ValueData, 0) AS TFloat) AS AmountOrder
+            , CAST (COALESCE(MIF_CuterCountOrder.ValueData, 0) AS TFloat)                            AS CuterCountOrder
+
             , MovementItem.isErased                                 AS isErased
 
 
@@ -104,6 +120,15 @@ BEGIN
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.Id         = inId
+
+             LEFT JOIN MovementItem AS MI_Order
+                    ON MI_Order.Id         = inMIOrderId
+                   AND MI_Order.DescId     = zc_MI_Master()
+             LEFT JOIN MovementItemFloat AS MIF_AmountSecond ON MIF_AmountSecond.MovementItemId = MI_Order.Id
+                   AND MIF_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+             LEFT JOIN MovementItemFloat AS MIF_CuterCountOrder ON MIF_CuterCountOrder.MovementItemId = MI_Order.Id
+                   AND MIF_CuterCountOrder.DescId = zc_MIFloat_CuterCount()
+
 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

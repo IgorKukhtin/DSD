@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_All_CreateTemp ();
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_All_CreateTemp()
+CREATE OR REPLACE FUNCTION lpComplete_Movement_All_CreateTemp ()
 RETURNS VOID
 AS
 $BODY$
 BEGIN
      -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, AnalyzerId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
+                                             , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer
+                                             , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMIReport_insert (Id Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ActiveContainerId Integer, PassiveContainerId Integer, ActiveAccountId Integer, PassiveAccountId Integer, ReportContainerId Integer, ChildReportContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
 
 END;$BODY$

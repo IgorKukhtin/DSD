@@ -1,22 +1,24 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)        	
-    IN inCount	             TFloat    , -- Количество батонов или упаковок 
+    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
+    IN inCount	             TFloat    , -- Количество батонов или упаковок
     IN inRealWeight          TFloat    , -- Фактический вес(информативно)
     IN inCuterCount          TFloat    , -- Количество кутеров
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий	                   
-    IN inGoodsKindId         Integer   , -- Виды товаров 
-    IN inReceiptId           Integer   , -- Рецептуры	                   
+    IN inComment             TVarChar  , -- Комментарий
+    IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
+    IN inReceiptId           Integer   , -- Рецептуры
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -36,6 +38,7 @@ BEGIN
                                                   , inPartionGoods     := inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
+                                                  , inGoodsCompleteKindId := inGoodsCompleteKindId
                                                   , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
                                                   );
@@ -46,12 +49,13 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master
 
  24.07.13                                        * Важен порядок полей
  22.07.13         * add GoodsKind
- 17.07.13         *              
+ 17.07.13         *
  30.06.13                                        *
 
 */

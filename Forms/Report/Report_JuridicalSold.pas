@@ -109,6 +109,8 @@ type
     colServiceRealSumm: TcxGridDBColumn;
     PriceCorrectiveJournal: TdsdOpenForm;
     ServiceRealJournal: TdsdOpenForm;
+    colChangeCurrencySumm: TcxGridDBColumn;
+    CurrencyJournal: TdsdOpenForm;
   private
     { Private declarations }
   public

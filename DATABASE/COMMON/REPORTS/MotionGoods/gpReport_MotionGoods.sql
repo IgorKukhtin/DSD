@@ -23,24 +23,51 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , PartionGoodsName TVarChar, AssetToName TVarChar
 
              , CountStart TFloat
+             , CountStart_Weight TFloat
              , CountEnd TFloat
+             , CountEnd_Weight TFloat
+
              , CountIncome TFloat
+             , CountIncome_Weight TFloat
              , CountReturnOut TFloat
+             , CountReturnOut_Weight TFloat
+
              , CountSendIn TFloat
+             , CountSendIn_Weight TFloat
              , CountSendOut TFloat
+             , CountSendOut_Weight TFloat
+
              , CountSendOnPriceIn TFloat
+             , CountSendOnPriceIn_Weight TFloat
              , CountSendOnPriceOut TFloat
+             , CountSendOnPriceOut_Weight TFloat
+
              , CountSale TFloat
+             , CountSale_Weight TFloat
              , CountSale_10500 TFloat
+             , CountSale_10500_Weight TFloat
              , CountSale_40208 TFloat
+             , CountSale_40208_Weight TFloat
+
              , CountReturnIn TFloat
+             , CountReturnIn_Weight TFloat
              , CountReturnIn_40208 TFloat
+             , CountReturnIn_40208_Weight TFloat
+
              , CountLoss TFloat
+             , CountLoss_Weight TFloat
              , CountInventory TFloat
+             , CountInventory_Weight TFloat
+
              , CountProductionIn TFloat
+             , CountProductionIn_Weight TFloat
              , CountProductionOut TFloat
+             , CountProductionOut_Weight TFloat
+
              , CountTotalIn TFloat
+             , CountTotalIn_Weight TFloat
              , CountTotalOut TFloat
+             , CountTotalOut_Weight TFloat
 
              , SummStart TFloat
              , SummEnd TFloat
@@ -238,32 +265,32 @@ BEGIN
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10400() -- Себестоимость реализации
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10500() -- Скидка за вес
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- Кол-во, реализация, Скидка за вес
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale_10500
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов (Разница в весе)
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- Кол-во, реализация, Разница в весе
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale_40208
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10800() -- Себестоимость возвратов
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- Кол-во, возврат, от покупателя
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnIn
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов (Разница в весе)
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- Кол-во, возврат, Разница в весе
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnIn_40208
@@ -374,32 +401,32 @@ BEGIN
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10400() -- Себестоимость реализации
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10500() -- Скидка за вес
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- Сумма с/с, реализация, Скидка за вес
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale_10500
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов (Разница в весе)
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale_40208
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10800() -- Себестоимость возвратов
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- Сумма с/с, возврат, от покупателя
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
-                                                   AND MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_40200() -- Содержание филиалов (Разница в весе)
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- Сумма с/с, возврат, Разница в весе
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnIn_40208
@@ -476,24 +503,51 @@ BEGIN
         , Object_AssetTo.ValueData       AS AssetToName
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
+        , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
         , CAST (tmpMIContainer_group.CountEnd            AS TFloat) AS CountEnd
+        , CAST (tmpMIContainer_group.CountEnd * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END            AS TFloat) AS CountEnd_Weight
+
         , CAST (tmpMIContainer_group.CountIncome         AS TFloat) AS CountIncome
+        , CAST (tmpMIContainer_group.CountIncome * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END         AS TFloat) AS CountIncome_Weight
         , CAST (tmpMIContainer_group.CountReturnOut      AS TFloat) AS CountReturnOut
+        , CAST (tmpMIContainer_group.CountReturnOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END      AS TFloat) AS CountReturnOut_Weight
+
         , CAST (tmpMIContainer_group.CountSendIn         AS TFloat) AS CountSendIn
+        , CAST (tmpMIContainer_group.CountSendIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END         AS TFloat) AS CountSendIn_Weight
         , CAST (tmpMIContainer_group.CountSendOut        AS TFloat) AS CountSendOut
+        , CAST (tmpMIContainer_group.CountSendOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END        AS TFloat) AS CountSendOut_Weight
+
         , CAST (tmpMIContainer_group.CountSendOnPriceIn  AS TFloat) AS CountSendOnPriceIn
+        , CAST (tmpMIContainer_group.CountSendOnPriceIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPriceIn_Weight
         , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
+        , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
+
         , CAST (tmpMIContainer_group.CountSale           AS TFloat) AS CountSale
+        , CAST (tmpMIContainer_group.CountSale * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSale_Weight
         , CAST (tmpMIContainer_group.CountSale_10500     AS TFloat) AS CountSale_10500
+        , CAST (tmpMIContainer_group.CountSale_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END     AS TFloat) AS CountSale_10500_Weight
         , CAST (tmpMIContainer_group.CountSale_40208     AS TFloat) AS CountSale_40208
+        , CAST (tmpMIContainer_group.CountSale_40208 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END     AS TFloat) AS CountSale_40208_Weight
+
         , CAST (tmpMIContainer_group.CountReturnIn       AS TFloat) AS CountReturnIn
+        , CAST (tmpMIContainer_group.CountReturnIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountReturnIn_Weight
         , CAST (tmpMIContainer_group.CountReturnIn_40208 AS TFloat) AS CountReturnIn_40208
+        , CAST (tmpMIContainer_group.CountReturnIn_40208 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountReturnIn_40208_Weight
+
         , CAST (tmpMIContainer_group.CountLoss           AS TFloat) AS CountLoss
+        , CAST (tmpMIContainer_group.CountLoss * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountLoss_Weight
         , CAST (tmpMIContainer_group.CountInventory      AS TFloat) AS CountInventory
+        , CAST (tmpMIContainer_group.CountInventory * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END      AS TFloat) AS CountInventory_Weight
+
         , CAST (tmpMIContainer_group.CountProductionIn   AS TFloat) AS CountProductionIn
+        , CAST (tmpMIContainer_group.CountProductionIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END   AS TFloat) AS CountProductionIn_Weight
         , CAST (tmpMIContainer_group.CountProductionOut  AS TFloat) AS CountProductionOut
+        , CAST (tmpMIContainer_group.CountProductionOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountProductionOut_Weight
+
         , CAST (tmpMIContainer_group.CountTotalIn        AS TFloat) AS CountTotalIn
+        , CAST (tmpMIContainer_group.CountTotalIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END        AS TFloat) AS CountTotalIn_Weight
         , CAST (tmpMIContainer_group.CountTotalOut       AS TFloat) AS CountTotalOut
+        , CAST (tmpMIContainer_group.CountTotalOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountTotalOut_Weight
 
         , CAST (tmpMIContainer_group.SummStart            AS TFloat) AS SummStart
         , CAST (tmpMIContainer_group.SummEnd              AS TFloat) AS SummEnd
@@ -612,19 +666,26 @@ BEGIN
               , tmpMIContainer_all.AssetToId
               , SUM (tmpMIContainer_all.CountStart)          AS CountStart
               , SUM (tmpMIContainer_all.CountEnd)            AS CountEnd
+
               , SUM (tmpMIContainer_all.CountIncome)         AS CountIncome
               , SUM (tmpMIContainer_all.CountReturnOut)      AS CountReturnOut
+
               , SUM (tmpMIContainer_all.CountSendIn)         AS CountSendIn
               , SUM (tmpMIContainer_all.CountSendOut)        AS CountSendOut
+
               , SUM (tmpMIContainer_all.CountSendOnPriceIn)  AS CountSendOnPriceIn
               , SUM (tmpMIContainer_all.CountSendOnPriceOut) AS CountSendOnPriceOut
+
               , SUM (tmpMIContainer_all.CountSale)           AS CountSale
               , SUM (tmpMIContainer_all.CountSale_10500)     AS CountSale_10500
               , SUM (tmpMIContainer_all.CountSale_40208)     AS CountSale_40208
+
               , SUM (tmpMIContainer_all.CountReturnIn)       AS CountReturnIn
               , SUM (tmpMIContainer_all.CountReturnIn_40208) AS CountReturnIn_40208
+
               , SUM (tmpMIContainer_all.CountLoss)           AS CountLoss
               , SUM (tmpMIContainer_all.CountInventory)      AS CountInventory
+
               , SUM (tmpMIContainer_all.CountProductionIn)   AS CountProductionIn
               , SUM (tmpMIContainer_all.CountProductionOut)  AS CountProductionOut
 

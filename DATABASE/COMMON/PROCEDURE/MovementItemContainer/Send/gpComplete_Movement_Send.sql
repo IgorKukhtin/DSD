@@ -322,6 +322,7 @@ BEGIN
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_From
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                     , inBranchId               := _tmpItem.BranchId_From
+                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN _tmpItem.UnitId_Item ELSE _tmpItem.UnitId_To END
@@ -334,6 +335,7 @@ BEGIN
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                     , inBranchId               := _tmpItem.BranchId_To
+                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      );
 
      -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
@@ -344,7 +346,11 @@ BEGIN
                                                                                 , inMovementItemId := MovementItemId
                                                                                 , inParentId       := NULL
                                                                                 , inContainerId    := ContainerId_GoodsTo -- был опеределен выше
+                                                                                , inAccountId      := NULL
                                                                                 , inAnalyzerId     := NULL
+                                                                                , inObjectId_Analyzer       := NULL
+                                                                                , inWhereObjectId_Analyzer  := NULL
+                                                                                , inContainerId_Analyzer    := NULL
                                                                                 , inAmount         := OperCount
                                                                                 , inOperDate       := OperDate
                                                                                 , inIsActive       := TRUE                                                                                 );
@@ -471,7 +477,11 @@ BEGIN
                                                                                     , inMovementItemId := _tmpItem.MovementItemId 
                                                                                     , inParentId       := NULL
                                                                                     , inContainerId    := _tmpItemSumm.ContainerId_To
+                                                                                    , inAccountId      := NULL
                                                                                     , inAnalyzerId     := NULL
+                                                                                    , inObjectId_Analyzer       := NULL
+                                                                                    , inWhereObjectId_Analyzer  := NULL
+                                                                                    , inContainerId_Analyzer    := NULL
                                                                                     , inAmount         := OperSumm
                                                                                     , inOperDate       := OperDate
                                                                                     , inIsActive       := TRUE

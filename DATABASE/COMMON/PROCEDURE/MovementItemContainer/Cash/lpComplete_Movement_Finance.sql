@@ -579,15 +579,33 @@ BEGIN
     ;
 
 
-     -- 3. формируются Проводки 
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AnalyzerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId, _tmpItem.AnalyzerId, 0 AS ParentId
+     -- 3. формируются Проводки + !!!есть MovementItemId!!!
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , ParentId, Amount, OperDate, IsActive)
+       -- это "обычные" проводки
+       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId
+            , _tmpItem.AccountId                  AS AccountId
+            , _tmpItem.AnalyzerId                 AS AnalyzerId
+            , _tmpItem.ObjectId                   AS ObjectId_Analyzer
+            , 0                                   AS WhereObjectId_Analyzer
+            , _tmpItem.ContainerId                AS ContainerId_Analyzer
+            , 0 AS ParentId
             , _tmpItem.OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
       UNION ALL
-       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_Diff, _tmpItem.AnalyzerId, 0 AS ParentId
+       -- это !!!одна!!! проводка для "курсовой разницы"
+       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Diff
+            , zc_Enum_Account_100301()            AS AccountId -- прибыль текущего периода
+            , 0                                   AS AnalyzerId
+            , _tmpItem.ObjectId                   AS ObjectId_Analyzer
+            , 0                                   AS WhereObjectId_Analyzer
+            , _tmpItem.ContainerId_Diff           AS ContainerId_Analyzer
+            , 0 AS ParentId
             , _tmpItem.OperSumm_Diff
             , _tmpItem.OperDate
             , FALSE AS IsActive -- !!!всегда по Кредиту!!!
@@ -595,7 +613,14 @@ BEGIN
        WHERE _tmpItem.ContainerId_Diff <> 0
       UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета 
-       SELECT 0, zc_MIContainer_SummCurrency() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId_Currency, _tmpItem.AnalyzerId, 0 AS ParentId
+       SELECT 0, zc_MIContainer_SummCurrency() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Currency
+            , 0                                   AS AccountId
+            , 0                                   AS AnalyzerId
+            , 0                                   AS ObjectId_Analyzer
+            , 0                                   AS WhereObjectId_Analyzer
+            , _tmpItem.ContainerId_Currency       AS ContainerId_Analyzer
+            , 0 AS ParentId
             , _tmpItem.OperSumm_Currency
             , _tmpItem.OperDate
             , _tmpItem.IsActive

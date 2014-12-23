@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGetDescSets(
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE (IncomeDesc TVarChar, ReturnOutDesc TVarChar, SaleDesc TVarChar, SaleRealDesc TVarChar, ReturnInDesc TVarChar, ReturnInRealDesc TVarChar
-             , MoneyDesc TVarChar , ServiceDesc TVarChar, TransferDebtDesc TVarChar, SendDebtDesc TVarChar, OtherDesc TVarChar, PriceCorrectiveDesc TVarChar, ServiceRealDesc TVarChar)
+             , MoneyDesc TVarChar , ServiceDesc TVarChar, TransferDebtDesc TVarChar, SendDebtDesc TVarChar
+             , OtherDesc TVarChar, PriceCorrectiveDesc TVarChar, ServiceRealDesc TVarChar, ChangeCurrencyDesc TVarChar)
 AS
 $BODY$
 BEGIN
@@ -29,13 +30,13 @@ BEGIN
         , zc_Movement_PriceCorrective() :: TVarChar AS PriceCorrectiveDesc
         , (zc_Movement_ProfitLossService() :: TVarChar || ';' || zc_Movement_Service() :: TVarChar || ';' || zc_Movement_TransportService() :: TVarChar || ';' || 'ServiceRealDesc') :: TVarChar
                                             AS ServiceRealDesc
+        , zc_Movement_Currency() :: TVarChar AS ChangeCurrencyDesc
       ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGetDescSets (TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

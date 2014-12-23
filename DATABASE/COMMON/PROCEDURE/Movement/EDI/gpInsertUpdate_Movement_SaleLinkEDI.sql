@@ -53,10 +53,10 @@ BEGIN
      -- перенос данных из ComDoc в документ
      PERFORM lpInsertUpdate_MI_SaleCOMDOC (inMovementId    := inMovementId
                                          , inMovementItemId:= tmpMI.MovementItemId
-                                         , inGoodsId       := tmpMI_EDI.GoodsId
-                                         , inGoodsKindId   := tmpMI_EDI.GoodsKindId
+                                         , inGoodsId       := COALESCE (tmpMI_EDI.GoodsId, tmpMI.GoodsId)
+                                         , inGoodsKindId   := COALESCE (tmpMI_EDI.GoodsKindId, tmpMI.GoodsKindId)
                                          , inAmountPartner := COALESCE (tmpMI_EDI.AmountPartner, 0)
-                                         , inPrice         := tmpMI_EDI.Price
+                                         , inPrice         := COALESCE (tmpMI_EDI.Price, tmpMI.Price)
                                          , inUserId        := vbUserId
                                           )
      FROM (SELECT MovementItem.ObjectId                               AS GoodsId
@@ -96,9 +96,9 @@ BEGIN
                      GROUP BY MovementItem.ObjectId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                             , COALESCE (MIFloat_Price.ValueData, 0)
-                    ) AS tmpMI ON tmpMI.GoodsId = tmpMI_EDI.GoodsId
+                    ) AS tmpMI ON tmpMI.GoodsId     = tmpMI_EDI.GoodsId
                               AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
-                              AND tmpMI.Price = tmpMI_EDI.Price
+                              AND tmpMI.Price       = tmpMI_EDI.Price
       ;
 
      -- пересчитали Итоговые суммы по накладной

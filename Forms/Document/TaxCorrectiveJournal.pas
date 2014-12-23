@@ -52,7 +52,6 @@ type
     colRegistered: TcxGridDBColumn;
     colOperDate_Child: TcxGridDBColumn;
     colInvNumberPartner_Master: TcxGridDBColumn;
-    spSelectPrintTaxCorrective_Reest: TdsdStoredProc;
     actPrint_TaxCorrective_Reestr: TdsdPrintAction;
     bbPrintTaxCorrective_Reestr: TdxBarButton;
     colInvNumberBranch: TcxGridDBColumn;
@@ -82,6 +81,7 @@ type
     MedocCorrectiveActionList: TMedocCorrectiveAction;
     colIsMedoc: TcxGridDBColumn;
     actUpdateIsMedoc: TdsdExecStoredProc;
+    DocumentValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -147,6 +147,26 @@ type
     CountSale_10500: TcxGridDBColumn;
     CountSale_40208: TcxGridDBColumn;
     CountReturnIn_40208: TcxGridDBColumn;
+
+    CountStart_Weight: TcxGridDBColumn;
+    CountEnd_Weight: TcxGridDBColumn;
+    CountIncome_Weight: TcxGridDBColumn;
+    CountReturnOut_Weight: TcxGridDBColumn;
+    CountSendIn_Weight: TcxGridDBColumn;
+    CountSendOut_Weight: TcxGridDBColumn;
+    CountSendOnPriceIn_Weight: TcxGridDBColumn;
+    CountSendOnPriceOut_Weight: TcxGridDBColumn;
+    CountSale_Weight: TcxGridDBColumn;
+    CountSale_10500_Weight: TcxGridDBColumn;
+    CountSale_40208_Weight: TcxGridDBColumn;
+    CountReturnIn_Weight: TcxGridDBColumn;
+    CountReturnIn_40208_Weight: TcxGridDBColumn;
+    CountProductionIn_Weight: TcxGridDBColumn;
+    CountProductionOut_Weight: TcxGridDBColumn;
+    CountLoss_Weight: TcxGridDBColumn;
+    CountInventory_Weight: TcxGridDBColumn;
+    CountTotalIn_Weight: TcxGridDBColumn;
+    CountTotalOut_Weight: TcxGridDBColumn;
   private
   public
   end;

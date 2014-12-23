@@ -482,6 +482,7 @@ BEGIN
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_From
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                     , inBranchId               := vbBranchId_From
+                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN 0 ELSE vbUnitId_To END
@@ -494,6 +495,7 @@ BEGIN
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                     , inBranchId               := vbBranchId_To
+                                                                                    , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      );
      -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
      UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId             := 0
@@ -503,7 +505,11 @@ BEGIN
                                                                                 , inMovementItemId := _tmpItem.MovementItemId
                                                                                 , inParentId       := NULL
                                                                                 , inContainerId    := _tmpItem.ContainerId_GoodsTo -- был опеределен выше
+                                                                                , inAccountId      := NULL
                                                                                 , inAnalyzerId     := NULL
+                                                                                , inObjectId_Analyzer       := NULL
+                                                                                , inWhereObjectId_Analyzer  := NULL
+                                                                                , inContainerId_Analyzer    := NULL
                                                                                 , inAmount         := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                                                 THEN _tmpItem.OperCount -- !!!количество ушло!!!
                                                                                                            ELSE _tmpItem.OperCount_Partner -- !!!количество пришло!!!
@@ -716,7 +722,11 @@ BEGIN
                                                                                     , inMovementItemId := _tmpItem.MovementItemId
                                                                                     , inParentId       := NULL
                                                                                     , inContainerId    := _tmpItemSumm.ContainerId_To
+                                                                                    , inAccountId      := NULL
                                                                                     , inAnalyzerId     := NULL
+                                                                                    , inObjectId_Analyzer       := NULL
+                                                                                    , inWhereObjectId_Analyzer  := NULL
+                                                                                    , inContainerId_Analyzer    := NULL
                                                                                     , inAmount         := _tmpItemSumm.OperSumm_Partner + _tmpItemSumm.OperSumm_Account_60000
                                                                                     , inOperDate       := vbOperDate
                                                                                     , inIsActive       := TRUE

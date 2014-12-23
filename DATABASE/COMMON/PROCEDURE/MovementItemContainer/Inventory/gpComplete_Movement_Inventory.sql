@@ -313,8 +313,9 @@ BEGIN
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId
                                                                                 , inAssetId                := _tmpItem.AssetId
                                                                                 , inBranchId               := vbBranchId
+                                                                                , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  );
-
+                                             
      -- заполняем таблицу - количественный расчетный остаток на конец vbOperDate, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим), т.к. один и тот же товар может быть введен несколько раз то привязываемся к MAX (_tmpItem.MovementItemId)
      INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, GoodsId, OperCount)
         SELECT COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId

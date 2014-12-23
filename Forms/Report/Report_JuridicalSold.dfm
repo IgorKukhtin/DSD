@@ -2,6 +2,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 556
   ClientWidth = 1020
+  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -150,6 +151,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = colServiceRealSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colChangeCurrencySumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -276,6 +282,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = colServiceRealSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colChangeCurrencySumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -669,7 +680,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 80
           end
           object ReturnInSumm_10300: TcxGridDBColumn
-            Caption = 'C'#1082#1080#1076#1082#1072' ('#1074#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. )'
+            Caption = 'C'#1082#1080#1076#1082#1072' ('#1074#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.)'
             DataBinding.FieldName = 'ReturnInSumm_10300'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -761,6 +772,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colChangeCurrencySumm: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1088#1072#1079#1085'.  (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'.'
+            DataBinding.FieldName = 'ChangeCurrencySumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -2761,6 +2783,126 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       isShowModal = False
     end
+    object CurrencyJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'CurrencyJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AccountId'
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ChangeCurrencyDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AccountName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 184
@@ -2990,6 +3132,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Column = colServiceRealSumm
         Action = ServiceRealJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colChangeCurrencySumm
+        Action = CurrencyJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end>
@@ -3224,6 +3372,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Value = Null
         Component = FormParams
         ComponentItem = 'ServiceRealDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ChangeCurrencyDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ChangeCurrencyDesc'
         DataType = ftString
       end>
     PackSize = 1
