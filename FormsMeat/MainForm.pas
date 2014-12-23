@@ -444,6 +444,8 @@ type
     bbGoodsQuality: TdxBarButton;
     actProductionPeresort: TdsdOpenForm;
     bbProductionPeresort: TdxBarButton;
+    actReceipt: TdsdOpenForm;
+    bbReceipt: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }

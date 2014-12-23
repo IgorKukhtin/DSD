@@ -97,6 +97,7 @@ type
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
+    procedure LoadReceiptFormTest;
     procedure LoadRoleFormTest;
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
@@ -1543,6 +1544,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportEditForm');
+end;
+
+procedure TLoadFormTest.LoadReceiptFormTest;
+begin
+  // Рецептуры
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
+
 end;
 
 procedure TLoadFormTest.SetUp;
