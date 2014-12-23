@@ -1,4 +1,4 @@
-unit ReceipEdit;
+unit ReceiptEdit;
 
 interface
 
