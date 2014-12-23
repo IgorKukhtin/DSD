@@ -366,7 +366,7 @@
     StoredProcName = 'gpGet_Movement_ProductionUnionTech'
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'

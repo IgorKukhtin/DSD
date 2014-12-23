@@ -962,6 +962,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsCompleteKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsCompleteKindId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inReceiptId'
         Value = Null
         Component = MasterCDS

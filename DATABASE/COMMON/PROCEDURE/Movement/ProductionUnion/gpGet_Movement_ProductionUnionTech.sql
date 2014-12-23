@@ -137,10 +137,9 @@ BEGIN
             , MovementItem.isErased                                 AS isErased
 
 
-     FROM    Movement
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              AND MovementItem.Id         = inId
+     FROM    MovementItem
+             JOIN Movement ON Movement.Id = MovementItem.MovementId
+                          AND Movement.DescId = zc_Movement_ProductionUnion()
 
              LEFT JOIN MovementItem AS MI_Order
                     ON MI_Order.Id         = inMIOrderId
@@ -179,7 +178,7 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
                                               ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
                                              AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
 
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -205,8 +204,9 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 */
-     WHERE --Movement.Id = inMovementId
-        Movement.DescId = zc_Movement_ProductionUnion();
+     WHERE  MovementItem.DescId     = zc_MI_Master()
+       AND  MovementItem.Id         = inId
+       ;
 
 
      END IF;
