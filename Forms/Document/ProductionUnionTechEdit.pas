@@ -38,6 +38,9 @@ type
     GooodsKindGuides: TdsdGuides;
     ceGooodsKindGuides: TcxButtonEdit;
     ceRecipeCode: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    ceGooodsCompleateKindGuides: TcxButtonEdit;
+    GooodsCompleteKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
