@@ -7,7 +7,7 @@ uses
   cxLookAndFeelPainters, Vcl.Menus, cxControls, cxPCdxBarPopupMenu, cxContainer,
   cxEdit, cxCheckBox, cxCurrencyEdit, cxLabel, cxTextEdit, cxPC, Vcl.Controls,
   dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, cxMemo;
 
 type
   TMemberEditForm = class(TAncestorEditDialogForm)
@@ -29,6 +29,8 @@ type
     edEmail: TcxTextEdit;
     spInsertUpdateContact: TdsdStoredProc;
     spGetMemberContact: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    EMailSign: TcxMemo;
   private
     { Private declarations }
   public

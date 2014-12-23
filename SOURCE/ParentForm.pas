@@ -55,7 +55,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
   cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid,
-  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad, dsdInternetAction;
+  Vcl.DBActns, ExternalDocumentLoad, ExternalLoad, dsdInternetAction, cxMemo;
 
 {$R *.dfm}
 
@@ -274,6 +274,7 @@ initialization
   RegisterClass (TcxGrid);
   RegisterClass (TcxLabel);
   RegisterClass (TcxLookupComboBox);
+  RegisterClass (TcxMemo);
   RegisterClass (TcxPageControl);
   RegisterClass (TcxPopupEdit);
   RegisterClass (TcxPropertiesStore);

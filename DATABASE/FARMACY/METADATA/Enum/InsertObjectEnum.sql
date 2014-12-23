@@ -102,6 +102,14 @@ END $$;
 DO $$
 BEGIN
 
+     -- !!! Валюты
+     IF zc_Enum_Currency_Basis() IS NULL
+     THEN IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980)
+          THEN PERFORM lpUpdate_Object_Enum_byCode (inCode:= 980,  inDescId:= zc_Object_Currency(), inEnumName:= 'zc_Enum_Currency_Basis');
+          -- ELSE PERFORM lpInsertUpdate_Object_Enum (inId:=zc_Enum_Currency_Basis(),  inDescId:= zc_Object_Currency(), inCode:= 980, inName:= 'грн', inEnumName:= 'zc_Enum_Currency_Basis');
+          END IF;
+     END IF;
+
      -- !!! Глобальные константы
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_Marion(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Коды Мариона', inEnumName:= 'zc_Enum_GlobalConst_Marion');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BarCode(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'Штрих-коды', inEnumName:= 'zc_Enum_GlobalConst_BarCode');
@@ -264,6 +272,9 @@ BEGIN
      -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_WorkHours(),     '(не используется).Используется для расчета Фонда за план часов в рабочие дни на человека.');
      
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoneyDestination_20500(), inDescId:= zc_Object_InfoMoneyDestination(), inCode:= 20500,  inName:= 'Предоплата', inEnumName:= 'zc_Enum_InfoMoneyDestination_20500');
+
+-- КОНСТАНТА НИЖЕ НЕ СТАВИТСЯ АВТОМАТОМ!!! 
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://91.210.37.210/farmacy/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
      
 END $$;
 

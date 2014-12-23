@@ -7,13 +7,14 @@ CREATE OR REPLACE FUNCTION gpGet_DocumentDataForEmail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 
-RETURNS TABLE (Subject TVarChar, Body TVarChar, AddressFrom TVarChar, AddressTo TVarChar
+RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
              , Host TVarChar, Port Integer, UserName TVarChar, Password TVarChar
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMail TVarChar;
   DECLARE vbUserMail TVarChar;
+  DECLARE vbUserMailSign TBlob;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -32,10 +33,13 @@ BEGIN
        RAISE EXCEPTION 'У юридического лица нет контактактных лиц с e-mail';
     END IF;
 
-    SELECT ObjectString.valuedata INTO vbUserMail 
+    SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData INTO vbUserMail, vbUserMailSign
       FROM ObjectLink AS User_Link_Member 
-                    JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
+               LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
                      AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
+             LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign 
+                                  ON ObjectBlob_EMailSign.ObjectId = ObjectString_Email.ObjectId
+                                 AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
      WHERE User_Link_Member.ObjectId = vbUserId AND User_Link_Member.DescId = zc_objectlink_user_member();
  
     IF COALESCE(vbUserMail, '') = '' THEN 
@@ -48,7 +52,7 @@ BEGIN
 
        RETURN QUERY
        SELECT
-         'А вот и заголовок'::TVarChar, 'Это супер письмо!!!'::TVarChar, 'zakaz_family-neboley@mail.ru'::TVarChar
+         'А вот и заголовок'::TVarChar, vbUserMailSign, 'zakaz_family-neboley@mail.ru'::TVarChar
        , vbMail, 'smtp.mail.ru'::TVarChar, 465
        , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
 

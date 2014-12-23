@@ -109,7 +109,7 @@ begin
   FIdSMTP.Password:= Password;
   FIdSMTP.Username:= Username;
   FIdSMTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
-  FIdSMTP.UseTLS := utUseExplicitTLS;
+  FIdSMTP.UseTLS := utUseImplicitTLS;
 
   EMsg := TIdMessage.Create(FIdSMTP);
   EMsg.OnInitializeISO := Self.LInitializeISO;

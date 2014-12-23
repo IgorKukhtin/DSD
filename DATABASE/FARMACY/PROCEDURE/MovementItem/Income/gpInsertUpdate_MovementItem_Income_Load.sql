@@ -63,20 +63,31 @@ BEGIN
   vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
                                                  inJuridicalId, vbUnitId, zc_Enum_NDSKind_Medical(), 
                                                  inContractId := 0, inUserId := vbUserId);
+  -- »щем товар 
+      SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
+        FROM Object_Goods_View AS Goods_Juridical
+
+       WHERE Goods_Juridical.ObjectId = inJuridicalId AND Goods_Juridical.GoodsCode = inGoodsCode;
+  
+  --≈сли вдруг такого нет, то мы его ќЅя«ј“≈Ћ№Ќќ добавл€ем
+     IF COALESCE(vbPartnerGoodsId, 0) = 0 THEN
+        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId, vbUserId, NULL, '');    
+     END IF;
 
   -- »щем товар дл€ накладной. 
-      SELECT MAX(Goods_Retail.GoodsId), MAX(Goods_Juridical.GoodsId) INTO vbGoodsId, vbPartnerGoodsId
+      SELECT MAX(Goods_Retail.GoodsId) INTO vbGoodsId
         FROM Object_LinkGoods_View AS Goods_Juridical
         JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
                                                   AND Goods_Retail.ObjectId = vbObjectId
 
-       WHERE Goods_Juridical.ObjectId = inJuridicalId AND Goods_Juridical.GoodsCode = inGoodsCode;
+       WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
 
   -- »щем товар в документе. ѕока ключи: код поставщика, документ, цена. 
      SELECT MovementItem.Id INTO vbMovementItemId
-       FROM MovementItem 
+       FROM MovementItem_Income_View AS MovementItem
+        
       WHERE MovementItem.MovementId = vbMovementId
-        AND MovementItem.DescId     = zc_MI_Master();
+        AND MovementItem.PartnerGoodsId = vbPartnerGoodsId;
   
      vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, vbUserId);
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);

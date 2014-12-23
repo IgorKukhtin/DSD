@@ -80,6 +80,8 @@ type
     mactPrint_TaxCorrective_Us: TMultiAction;
     spUpdateIsMedoc: TdsdStoredProc;
     MedocCorrectiveActionList: TMedocCorrectiveAction;
+    colIsMedoc: TcxGridDBColumn;
+    actUpdateIsMedoc: TdsdExecStoredProc;
   private
     { Private declarations }
   public

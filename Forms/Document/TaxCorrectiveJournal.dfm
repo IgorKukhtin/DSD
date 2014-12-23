@@ -2,6 +2,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
+  ExplicitLeft = -336
   ExplicitWidth = 1126
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -376,6 +377,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            HeaderAlignmentVert = vaCenter
+          end
         end
       end
     end
@@ -534,6 +540,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Action = MedocAction
+        end
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actRefresh
         end>
       InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
@@ -716,6 +728,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Action = MedocCorrectiveActionList
+        end
+        item
+          Action = actUpdateIsMedoc
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
@@ -726,7 +741,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       StartDateParam.Value = Null
       EndDateParam.Value = Null
       EDIDocType = ediDeclarReturn
-      spHeader = spUpdateIsMedoc
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -739,6 +753,16 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           StoredProc = spSelectPrintTaxCorrective_Client
         end>
       Caption = 'spTaxPrint'
+    end
+    object actUpdateIsMedoc: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMedoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMedoc
+        end>
+      Caption = 'actUpdateIsMedoc'
     end
   end
   inherited MasterDS: TDataSource

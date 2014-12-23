@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MemberContact(
     IN inId          Integer,        -- Физические лица 
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (EMail TVarChar) AS
+RETURNS TABLE (EMail TVarChar, EMailSign TBlob) AS
 $BODY$
 BEGIN
 
@@ -17,13 +17,18 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-           CAST ('' as TVarChar)  AS Email;
+           ''::TVarChar AS Email
+         , ''::TBlob    AS EMailSign;
    ELSE
        RETURN QUERY 
      SELECT 
          ObjectString_Email.ValueData           AS Email
+       , ObjectBlob_EmailSign.ValueData         AS EmailSign
 
      FROM ObjectString AS ObjectString_Email 
+             LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign 
+                                  ON ObjectBlob_EMailSign.ObjectId = ObjectString_Email.ObjectId
+                                 AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
           WHERE ObjectString_Email.ObjectId = inId 
             AND ObjectString_Email.DescId = zc_ObjectString_Member_Email();
      

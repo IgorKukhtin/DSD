@@ -3,8 +3,8 @@ inherited ContactPersonForm: TContactPersonForm
   ClientHeight = 335
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 952
-  ExplicitHeight = 370
+  ExplicitWidth = 944
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -110,6 +110,12 @@ inherited ContactPersonForm: TContactPersonForm
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TContactPersonEditForm'
       FormNameParam.Value = 'TContactPersonEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TContactPersonEditForm'

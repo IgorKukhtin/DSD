@@ -111,6 +111,7 @@ type
     property ActiveControl: TWinControl read FActiveControl
       write FActiveControl;
     // При установке данного свойства Action будет активирован только если TabSheet активен
+    // Установка данного свойства не работает в RunTime. Только в момент дизайна и загрузки
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
     // задание списка параметров, которые изменяются перед выполнением действия
     property MoveParams: TCollection read FMoveParams write FMoveParams;
@@ -1729,7 +1730,7 @@ procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
   var AllowChange: Boolean);
 begin
   if Assigned(FOnPageChanging) then
-    FOnPageChanging(Sender, NewPage, AllowChange);
+     FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
   Visible := Enabled;
 end;
@@ -1747,6 +1748,9 @@ end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
 begin
+  // Установка данного свойства не работает в RunTime. Только в момент дизайна и загрузки
+  if Self.ComponentState = [csFreeNotification] then
+     exit;
   FTabSheet := Value;
   if Assigned(FTabSheet) then
   begin

@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberContact (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberContact (Integer, TVarChar, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberContact(
     IN inId	             Integer   ,    -- ключ объекта <Физические лица> 
     IN inEmail               TVarChar  ,    -- Email 
+    IN inEMailSign           TBlob     ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS VOID AS
@@ -23,14 +25,18 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_EMail(), inId, inEMail);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBlob( zc_ObjectBlob_Member_EMailSign(), inId, inEMailSign);
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_MemberContact(Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MemberContact(Integer, TVarChar, TBlob, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.14                        * 
  18.11.14                        * add 
 */
 

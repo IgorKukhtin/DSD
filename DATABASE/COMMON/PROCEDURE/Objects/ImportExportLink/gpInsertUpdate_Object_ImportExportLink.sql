@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportExportLink(
  INOUT ioId	                 Integer   ,    -- внутренний ключ объекта  
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportExportLink(
     IN inObjectMainId            Integer   ,    -- первый объект связи 
     IN inObjectChildId           Integer   ,    -- второй объект связи
     IN inImportExportLinkTypeId  Integer   ,    -- тип связи
+    IN inText                    TBlob     ,    -- текстовое поле
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -31,6 +33,8 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ImportExportLink_LinkType(), ioId, inImportExportLinkTypeId);  
 
+   PERFORM lpInsertUpdate_ObjectBlob (zc_ObjectBlob_ImportExportLink_Text(), ioId, inText);  
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);   
 
@@ -38,13 +42,14 @@ END;$BODY$
 
 LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ImportExportLink(Integer, Integer, TVarChar, Integer, Integer, Integer, TBlob, TVarChar) OWNER TO postgres;
   
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.12.14                         *
  09.12.14                         *
  08.12.14                         *
 */

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberBranch TVarChar, BranchName TVarChar
              , isEDI Boolean
              , isElectron Boolean
+             , isMedoc Boolean
               )
 AS
 $BODY$
@@ -121,6 +122,7 @@ BEGIN
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean  AS isElectron
+           , COALESCE(MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -155,6 +157,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
+                                      ON MovementBoolean_Medoc.MovementId =  Movement.Id
+                                     AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
