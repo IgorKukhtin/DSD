@@ -74,9 +74,9 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
-            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
-            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -121,9 +121,9 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -180,14 +180,14 @@ BEGIN
                      AND Movement.StatusId <> zc_Enum_Status_Erased()
 
                 ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ObjectId = MovementItem.ObjectId
-                                         AND tmpMovementItemOrder.GoodsKindId = MILO_GoodsKind.ObjectId
+                                         AND tmpMovementItemOrder.GoodsKindId = MILO_GoodsKindComplete.ObjectId
                                          AND tmpMovementItemOrder.OperDate = Movement.OperDate
                                          AND tmpMovementItemOrder.FromId = MovementLinkObject_From.ObjectId
                                          AND tmpMovementItemOrder.ToId = MovementLinkObject_To.ObjectId
 
 
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE(MILinkObject_GoodsKind.ObjectId, tmpMovementItemOrder.GoodsKindId)
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem.ObjectId, tmpMovementItemOrder.ObjectId)
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -198,8 +198,8 @@ BEGIN
 
 
 
-       WHERE COALESCE(MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId = 0 THEN COALESCE(MovementLinkObject_From.ObjectId,0) ELSE inFromId END
-         AND COALESCE(MovementLinkObject_To.ObjectId,0)   = CASE WHEN inToId = 0   THEN COALESCE(MovementLinkObject_To.ObjectId,0) ELSE inToId END
+       WHERE COALESCE(Object_From.Id,0) = CASE WHEN inFromId = 0 THEN COALESCE(COALESCE(Object_From.Id,0),0) ELSE inFromId END
+         AND COALESCE(Object_To.Id,0)   = CASE WHEN inToId = 0   THEN COALESCE(COALESCE(Object_To.Id,0),0) ELSE inToId END
 
        ORDER BY MovementItem.Id
             ;

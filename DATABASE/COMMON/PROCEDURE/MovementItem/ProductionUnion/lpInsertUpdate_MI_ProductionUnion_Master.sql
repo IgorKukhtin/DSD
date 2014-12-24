@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inReceiptId           Integer   , -- Рецептуры
     IN inUserId              Integer     -- пользователь
 )
@@ -36,7 +36,7 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
    -- сохранили связь с <Виды товаров ГП>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsCompleteKindId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
    -- сохранили свойство <партия закрыта (да/нет)>
    PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_PartionClose(), ioId, inPartionClose);

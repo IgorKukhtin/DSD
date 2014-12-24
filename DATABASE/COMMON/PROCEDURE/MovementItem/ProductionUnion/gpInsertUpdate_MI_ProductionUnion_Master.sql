@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inReceiptId           Integer   , -- Рецептуры
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -38,7 +38,7 @@ BEGIN
                                                   , inPartionGoods     := inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsCompleteKindId := inGoodsCompleteKindId
+                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId
                                                   , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
                                                   );

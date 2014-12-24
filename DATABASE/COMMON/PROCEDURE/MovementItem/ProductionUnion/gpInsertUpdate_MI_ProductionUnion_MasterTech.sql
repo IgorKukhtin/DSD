@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
 --    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inReceiptId           Integer   , -- Рецептуры
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -30,16 +30,20 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbInvNumber TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
    vbMovementId = COALESCE ((SELECT MovementId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
    vbOperDate   = COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId), inOperDate);
+   vbInvNumber = COALESCE ((SELECT InvNumber FROM Movement WHERE Movement.Id = vbMovementId), CAST (NEXTVAL ('movement_productionunion_seq') AS TVarChar));
+
+
    vbAmount = inCuterCount * 100;
       -- сохранили <Документ>
    vbMovementId := lpInsertUpdate_Movement (ioId               := vbMovementId
                                           , inDescid           := zc_Movement_ProductionUnion()
-                                          , inInvNumber        := COALESCE ((SELECT InvNumber FROM Movement WHERE Movement.Id = vbMovementId), '')
+                                          , inInvNumber        := vbInvNumber
                                           , inOperDate         := vbOperDate
                                           , inParentId         := NULL);
 
@@ -65,7 +69,7 @@ BEGIN
                                                   , inPartionGoods     := CAST(COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '') AS TVarChar)--inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsCompleteKindId := inGoodsCompleteKindId
+                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId
                                                   , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
                                                   );
