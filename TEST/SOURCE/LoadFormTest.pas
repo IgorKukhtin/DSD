@@ -1558,6 +1558,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptCostForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptCostEditForm');
+  //Типы рецептур
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptKindForm');
 
 end;
 

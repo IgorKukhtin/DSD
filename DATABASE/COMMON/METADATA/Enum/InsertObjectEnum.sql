@@ -254,6 +254,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
 
+
+     -- !!! Типы рецептур
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReceiptKind_Complete(),  inDescId:= zc_Object_ReceiptKind(), inCode:= 1, inName:= 'Смешивание', inEnumName:= 'zc_Enum_ReceiptKind_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReceiptKind_Separate(), inDescId:= zc_Object_ReceiptKind(), inCode:= 2, inName:= 'Разделение',  inEnumName:= 'zc_Enum_ReceiptKind_Separate');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReceiptKind_CompleteEtalon(), inDescId:= zc_Object_ReceiptKind(), inCode:= 3, inName:= 'Смешивание (эталонная)',inEnumName:= 'zc_Enum_ReceiptKind_CompleteEtalon');
+
+
      -- !!!
      -- !!! Виды товаров
      -- !!!
