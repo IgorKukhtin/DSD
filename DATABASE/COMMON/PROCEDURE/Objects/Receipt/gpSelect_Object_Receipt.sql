@@ -1,7 +1,6 @@
 -- Function: gpSelect_Object_Receipt()
 
--- DROP FUNCTION gpSelect_Object_Receipt();
-DROP FUNCTION IF EXISTS gpSelect_Object_Receipt  (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession     TVarChar       -- сессия пользователя
@@ -12,7 +11,7 @@ RETURNS TABLE (Id Integer, Name TVarChar, Code TVarChar, Comment TVarChar,
                Main boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
-               GoodsCompleteKindId Integer, GoodsCompleteKindCode Integer, GoodsCompleteKindName TVarChar,
+               GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar,
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
                isErased boolean) AS
@@ -50,9 +49,9 @@ BEGIN
          , Object_GoodsKind.ObjectCode AS GoodsKindCode
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
-         , Object_GoodsKindComplete.Id          AS GoodsCompleteKindId
-         , Object_GoodsKindComplete.ObjectCode  AS GoodsCompleteKindCode
-         , Object_GoodsKindComplete.ValueData   AS GoodsCompleteKindName
+         , Object_GoodsKindComplete.Id          AS GoodsKindCompleteId
+         , Object_GoodsKindComplete.ObjectCode  AS GoodsKindCompleteCode
+         , Object_GoodsKindComplete.ValueData   AS GoodsKindCompleteName
 
          , Object_ReceiptCost.Id          AS ReceiptCostId
          , Object_ReceiptCost.ObjectCode  AS ReceiptCostCode
@@ -144,8 +143,7 @@ ALTER FUNCTION gpSelect_Object_Receipt (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 23.12.14                                                       *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.07.13         * rename zc_ObjectDate_
  10.07.13         *
 */
