@@ -643,7 +643,7 @@
     FormNameParam.Value = 'TReceiptKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TReceiptKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

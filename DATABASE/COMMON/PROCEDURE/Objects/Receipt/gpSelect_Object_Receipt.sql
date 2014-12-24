@@ -58,8 +58,8 @@ BEGIN
          , Object_ReceiptCost.ValueData   AS ReceiptCostName
 
          , Object_ReceiptKind.Id          AS ReceiptKindId
-         , Object_ReceiptCost.ObjectCode  AS ReceiptKindCode
-         , Object_ReceiptCost.ValueData   AS ReceiptKindName
+         , Object_ReceiptKind.ObjectCode  AS ReceiptKindCode
+         , Object_ReceiptKind.ValueData   AS ReceiptKindName
 
          , Object_Receipt.isErased AS isErased
 
