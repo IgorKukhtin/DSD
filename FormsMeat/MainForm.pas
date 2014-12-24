@@ -446,6 +446,8 @@ type
     bbProductionPeresort: TdxBarButton;
     actReceipt: TdsdOpenForm;
     bbReceipt: TdxBarButton;
+    actReceiptCost: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
   public
     { Public declarations }

@@ -1,9 +1,9 @@
-object RecipesMasterForm: TRecipesMasterForm
+object ReceiptCostForm: TReceiptCostForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099' ('#1087#1086' '#1088#1077#1094#1077#1087#1090#1091#1088#1077') >'
-  ClientHeight = 404
-  ClientWidth = 835
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093'>'
+  ClientHeight = 376
+  ClientWidth = 390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,31 +19,27 @@ object RecipesMasterForm: TRecipesMasterForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
-    Width = 835
-    Height = 376
+    Top = 26
+    Width = 390
+    Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = False
-    ExplicitWidth = 523
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -52,84 +48,27 @@ object RecipesMasterForm: TRecipesMasterForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Options.Editing = False
+        Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Options.Editing = False
+        Width = 243
       end
-      object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089
-        DataBinding.FieldName = 'Weight'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1088#1077#1094#1087#1077#1087#1090#1091#1088#1099
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object GoodsKindCompleteName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
-        DataBinding.FieldName = 'GoodsKindCompleteName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 65
-      end
-      object clIsErased: TcxGridDBColumn
+      object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object clMeasureName: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object clTradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -138,22 +77,17 @@ object RecipesMasterForm: TRecipesMasterForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 280
+    Left = 40
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 200
-    Top = 296
+    Left = 24
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = clName
-        Properties.Strings = (
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -164,7 +98,7 @@ object RecipesMasterForm: TRecipesMasterForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 56
+    Left = 240
     Top = 88
   end
   object dxBarManager: TdxBarManager
@@ -184,12 +118,12 @@ object RecipesMasterForm: TRecipesMasterForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 192
-    Top = 96
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -205,20 +139,49 @@ object RecipesMasterForm: TRecipesMasterForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbInsert'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
         end
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbToExcel'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -230,25 +193,62 @@ object RecipesMasterForm: TRecipesMasterForm
       Action = actRefresh
       Category = 0
     end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel1
+    object bbInsert: TdxBarButton
+      Action = actInsert
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
-      Caption = '    '
+    object bbEdit: TdxBarButton
+      Action = actUpdate
       Category = 0
-      Hint = '    '
+    end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+      ImageIndex = 2
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+      ImageIndex = 8
+    end
+    object bbToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '       '
+      Category = 0
+      Hint = '       '
       Visible = ivAlways
     end
-    object bbChoiceGuides: TdxBarButton
+    object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 136
-    Top = 96
+    Left = 264
+    Top = 136
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TReceiptCostEditForm'
+      FormNameParam.Value = 'TReceiptCostEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -263,6 +263,30 @@ object RecipesMasterForm: TRecipesMasterForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TReceiptCostEditForm'
+      FormNameParam.Value = 'TReceiptCostEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -272,12 +296,7 @@ object RecipesMasterForm: TRecipesMasterForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Code'
+          DataType = ftString
         end
         item
           Name = 'TextValue'
@@ -285,61 +304,53 @@ object RecipesMasterForm: TRecipesMasterForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsId'
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsKindId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'GoodsKindName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsKindCompleteId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindCompleteId'
-        end
-        item
-          Name = 'GoodsKindCompleteName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsKindCompleteName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
-    object dsdGridToExcel1: TdsdGridToExcel
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Receipt'
+    StoredProcName = 'gpSelect_Object_ReceiptCost'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -347,12 +358,28 @@ object RecipesMasterForm: TRecipesMasterForm
       end>
     Params = <>
     PackSize = 1
-    Left = 120
+    Left = 144
+    Top = 152
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 304
     Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
-    Top = 152
+    Left = 176
+    Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -362,6 +389,7 @@ object RecipesMasterForm: TRecipesMasterForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -369,14 +397,16 @@ object RecipesMasterForm: TRecipesMasterForm
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 208
-    Top = 192
+    Left = 48
+    Top = 216
   end
 end

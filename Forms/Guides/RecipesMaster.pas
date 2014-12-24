@@ -26,7 +26,9 @@ type
   TRecipesMasterForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
+    clWeight: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     clTradeMarkName: TcxGridDBColumn;
@@ -51,7 +53,7 @@ type
     GoodsName: TcxGridDBColumn;
     Code: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    GoodsCompleteKindName: TcxGridDBColumn;
+    GoodsKindCompleteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -603,7 +603,10 @@ uses
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm},
   RecipesMaster in '..\..\Forms\Guides\RecipesMaster.pas' {RecipesMasterForm: TParentForm},
   Receipt in '..\..\Forms\Guides\Receipt.pas' {ReceiptForm: TParentForm},
-  ReceiptEdit in '..\..\Forms\Guides\ReceiptEdit.pas' {ReceiptEditForm: TParentForm};
+  ReceiptEdit in '..\..\Forms\Guides\ReceiptEdit.pas' {ReceiptEditForm: TParentForm},
+  ReceiptCost in '..\..\Forms\Guides\ReceiptCost.pas' {ReceiptCostForm: TParentForm},
+  ReceiptCostEdit in '..\..\Forms\Guides\ReceiptCostEdit.pas' {ReceiptCostEditForm: TParentForm},
+  ReceiptKind in '..\..\Forms\Kind\ReceiptKind.pas' {ReceiptKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
