@@ -1553,6 +1553,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
+  // Затраты в рецептурах
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptCostForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptCostEditForm');
 
 end;
 

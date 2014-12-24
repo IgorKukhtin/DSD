@@ -25,7 +25,6 @@ object ReceiptForm: TReceiptForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 303
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -209,7 +208,6 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 329
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReceiptChildDS
@@ -606,19 +604,6 @@ object ReceiptForm: TReceiptForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
         end>
       isShowModal = True
       ActionType = acUpdate

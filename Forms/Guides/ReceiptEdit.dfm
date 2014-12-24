@@ -116,6 +116,7 @@
   object ceValue: TcxCurrencyEdit
     Left = 32
     Top = 97
+    EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 13
@@ -310,12 +311,6 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
-        Value = 0.000000000000000000
-        Component = ceCode
-        ParamType = ptInput
-      end
-      item
         Name = 'inName'
         Value = ''
         Component = edName
@@ -323,41 +318,115 @@
         ParamType = ptInput
       end
       item
-        Name = 'inRegistrationCertificate'
-        Value = ''
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = ceCode
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inCarModelId'
+        Name = 'inComment'
         Value = ''
+        Component = ceComment
+        DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId '
-        Value = ''
-        Component = ReceiptCostGuides
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPersonalDriverId '
-        Value = ''
-        Component = ReceiptKindGuides
-        ParamType = ptInput
-      end
-      item
-        Name = 'inFuelMasterId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inFuelChildId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inValue'
         Value = Null
+        Component = ceValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValueCost'
+        Value = ''
+        Component = ceValueCost
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inTaxExit'
+        Value = ''
+        Component = ceTaxExit
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionValue'
+        Value = ''
+        Component = cePartionValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionCount'
+        Value = ''
+        Component = cePartionCount
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWeightPackage'
+        Value = Null
+        Component = ceWeightPackage
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = edEndDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMain'
+        Value = Null
+        Component = ceisReceipt_Main
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = GoodsKindCompleteGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReceiptCostId'
+        Value = Null
+        Component = ReceiptCostGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReceiptKindId'
+        Value = Null
+        Component = ReceiptKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -380,7 +449,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -398,71 +467,126 @@
         DataType = ftString
       end
       item
-        Name = 'CarModelId'
+        Name = 'Comment'
         Value = ''
-      end
-      item
-        Name = 'CarModelName'
-        Value = ''
+        Component = ceComment
         DataType = ftString
       end
       item
-        Name = 'RegistrationCertificate'
+        Name = 'Value'
         Value = ''
+        Component = ceValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ValueCost'
+        Value = ''
+        Component = ceValueCost
+        DataType = ftFloat
+      end
+      item
+        Name = 'TaxExit'
+        Value = ''
+        Component = ceTaxExit
+        DataType = ftFloat
+      end
+      item
+        Name = 'PartionValue'
+        Value = ''
+        Component = cePartionValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'PartionCount'
+        Value = ''
+        Component = cePartionCount
+        DataType = ftFloat
+      end
+      item
+        Name = 'WeightPackage'
+        Value = ''
+        Component = ceWeightPackage
+        DataType = ftFloat
+      end
+      item
+        Name = 'StartDate'
+        Value = 0d
+        Component = edStartDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndDate'
+        Value = ''
+        Component = edEndDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'Main'
+        Value = ''
+        Component = ceisReceipt_Main
+        DataType = ftBoolean
+      end
+      item
+        Name = 'GoodsId'
+        Value = 'Null'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsName'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'GoodsKindId'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsKindName'
+        Value = 0
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'GoodsKindCompleteId'
+        Value = Null
+        Component = GoodsKindCompleteGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsKindCompleteName'
+        Value = Null
+        Component = GoodsKindCompleteGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'UnitId'
-        Value = ''
+        Name = 'ReceiptCostId'
+        Value = Null
         Component = ReceiptCostGuides
-        ComponentItem = 'key'
+        ComponentItem = 'Key'
       end
       item
-        Name = 'UnitName'
-        Value = ''
+        Name = 'ReceiptCostName'
+        Value = Null
         Component = ReceiptCostGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'PersonalDriverId'
-        Value = ''
+        Name = 'ReceiptKindId'
+        Value = Null
         Component = ReceiptKindGuides
-        ComponentItem = 'key'
+        ComponentItem = 'Key'
       end
       item
-        Name = 'PersonalDriverName'
-        Value = ''
+        Name = 'ReceiptKindName'
+        Value = Null
         Component = ReceiptKindGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'FuelMasterId'
-        Value = ''
-      end
-      item
-        Name = 'FuelMasterName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'FuelChildId'
-        Value = ''
-      end
-      item
-        Name = 'FuelChildName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = Null
-      end
-      item
-        Name = 'JuridicalName'
-        Value = Null
-        DataType = ftString
       end>
     PackSize = 1
     Left = 65528
@@ -543,6 +667,7 @@
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoods
+    Key = 'Null'
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoods_ObjectForm'
@@ -569,6 +694,7 @@
   object GoodsKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsKind
+    Key = '0'
     FormNameParam.Value = 'TGoodsKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoodsKindForm'
