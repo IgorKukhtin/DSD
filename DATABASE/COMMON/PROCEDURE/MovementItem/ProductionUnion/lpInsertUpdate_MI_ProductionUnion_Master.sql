@@ -1,23 +1,23 @@
--- Function: lpInsertUpdate_MI_ProductionUnion_Master()
+п»ї-- Function: lpInsertUpdate_MI_ProductionUnion_Master()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
-    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
-    IN inCuterCount          TFloat    , -- Количество кутеров
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inReceiptId           Integer   , -- Рецептуры
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
+    IN inMovementId          Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚>
+    IN inGoodsId             Integer   , -- РўРѕРІР°СЂС‹
+    IN inAmount              TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ
+    IN inPartionClose	     Boolean   , -- РїР°СЂС‚РёСЏ Р·Р°РєСЂС‹С‚Р° (РґР°/РЅРµС‚)
+    IN inCount	             TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°С‚РѕРЅРѕРІ РёР»Рё СѓРїР°РєРѕРІРѕРє
+    IN inRealWeight          TFloat    , -- Р¤Р°РєС‚РёС‡РµСЃРєРёР№ РІРµСЃ(РёРЅС„РѕСЂРјР°С‚РёРІРЅРѕ)
+    IN inCuterCount          TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ РєСѓС‚РµСЂРѕРІ
+    IN inPartionGoods        TVarChar  , -- РџР°СЂС‚РёСЏ С‚РѕРІР°СЂР°
+    IN inComment             TVarChar  , -- РљРѕРјРјРµРЅС‚Р°СЂРёР№
+    IN inGoodsKindId         Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ
+    IN inGoodsKindCompleteId Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ  Р“Рџ
+    IN inReceiptId           Integer   , -- Р РµС†РµРїС‚СѓСЂС‹
+    IN inUserId              Integer     -- РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
 )
 RETURNS Integer AS
 $BODY$
@@ -25,35 +25,35 @@ $BODY$
 
 BEGIN
 
-   -- определяется признак Создание/Корректировка
+   -- РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїСЂРёР·РЅР°Рє РЎРѕР·РґР°РЅРёРµ/РљРѕСЂСЂРµРєС‚РёСЂРѕРІРєР°
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-   -- сохранили <Элемент документа>
+   -- СЃРѕС…СЂР°РЅРёР»Рё <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   -- сохранили связь с <Рецептуры>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р РµС†РµРїС‚СѓСЂС‹>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Receipt(), ioId, inReceiptId);
 
-   -- сохранили связь с <Виды товаров>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-   -- сохранили связь с <Виды товаров ГП>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ Р“Рџ>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
-   -- сохранили свойство <партия закрыта (да/нет)>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <РїР°СЂС‚РёСЏ Р·Р°РєСЂС‹С‚Р° (РґР°/РЅРµС‚)>
    PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_PartionClose(), ioId, inPartionClose);
 
-   -- сохранили свойство <Партия товара>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <РџР°СЂС‚РёСЏ С‚РѕРІР°СЂР°>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
-   -- сохранили свойство <Комментарий>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <РљРѕРјРјРµРЅС‚Р°СЂРёР№>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
-   -- сохранили свойство <Количество батонов или упаковок>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°С‚РѕРЅРѕРІ РёР»Рё СѓРїР°РєРѕРІРѕРє>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
-   -- сохранили свойство <Фактический вес(информативно)>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <Р¤Р°РєС‚РёС‡РµСЃРєРёР№ РІРµСЃ(РёРЅС„РѕСЂРјР°С‚РёРІРЅРѕ)>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_RealWeight(), ioId, inRealWeight);
-   -- сохранили свойство <Количество кутеров>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <РљРѕР»РёС‡РµСЃС‚РІРѕ РєСѓС‚РµСЂРѕРІ>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_CuterCount(), ioId, inCuterCount);
 
-   -- сохранили протокол
+   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
@@ -61,12 +61,12 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
- 11.12.14         * из gp
+ 11.12.14         * РёР· gp
 
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM lpInsertUpdate_MI_ProductionUnion_Master (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPartionClose:= FALSE, inComment:= '', inCount:= 1, inRealWeight:= 1, inCuterCount:= 0, inReceiptId:= 0, inSession:= '2')

@@ -1,90 +1,81 @@
--- View: Object_Contract_View
+Ôªø-- View: Recipe_byGoodsKind_View
+DROP VIEW IF EXISTS Recipe_byGoodsKind_View;
 
-CREATE OR REPLACE VIEW Object_Contract_View AS
-  SELECT Object_Contract_InvNumber_View.ContractId
-       , Object_Contract_InvNumber_View.ContractCode  
-       , Object_Contract_InvNumber_View.InvNumber
-       , Object_Contract_InvNumber_View.isErased
-       , ObjectDate_Start.ValueData                  AS StartDate
-       , ObjectDate_End.ValueData                    AS EndDate
+CREATE OR REPLACE VIEW Recipe_byGoodsKind_View AS
+     SELECT
+           Object_Receipt.Id                            AS Id
+         , Object_Receipt.ValueData                     AS NAME
 
-       , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
-       , ObjectLink_Contract_JuridicalBasis.ChildObjectId    AS JuridicalBasisId
-       , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
-       , Object_Contract_InvNumber_View.InfoMoneyId
+         , OL_Receipt_Goods.ChildObjectId               AS GoodsId
+--         , Object_Goods.ObjectCode                  AS GoodsCode
+--         , Object_Goods.ValueData                   AS GoodsName
+         , OL_ReceiptChild_Goods.ChildObjectId          AS ChildGoodsId
+         , OL_Receipt_GoodsKind.ChildObjectId           AS GoodsKindId
+--         , Object_GoodsKind.ValueData                   AS GoodsKindName
 
-       , Object_Contract_InvNumber_View.ContractStateKindId
-       , Object_Contract_InvNumber_View.ContractStateKindCode
-       , Object_Contract_InvNumber_View.ContractStateKindName
+         , OL_ReceiptChild_GoodsKind.ChildObjectId      AS ChildGoodsKindId
+--         , Object_GoodsKindChild.ValueData              AS ChildGoodsKindName
 
-       , Object_Contract_InvNumber_View.ContractTagId
-       , Object_Contract_InvNumber_View.ContractTagCode
-       , Object_Contract_InvNumber_View.ContractTagName
+     FROM Object AS Object_Receipt
 
-       , Object_ContractKind.Id              AS ContractKindId
-       , Object_ContractKind.ObjectCode      AS ContractKindCode
-       , Object_ContractKind.ValueData       AS ContractKindName
+         INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                  ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                 AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                 AND ObjectBoolean_Main.ValueData = True
 
-         -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
-       , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
-       , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
-       
-  FROM Object_Contract_InvNumber_View
-       LEFT JOIN ObjectDate AS ObjectDate_Start
-                            ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId
-                           AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
-                           AND Object_Contract_InvNumber_View.InvNumber <> '-'
-       LEFT JOIN ObjectDate AS ObjectDate_End
-                            ON ObjectDate_End.ObjectId = Object_Contract_InvNumber_View.ContractId
-                           AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
-                           AND Object_Contract_InvNumber_View.InvNumber <> '-'
-       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                            ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
-                           AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-                           AND Object_Contract_InvNumber_View.InvNumber <> '-'
-       LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+          LEFT JOIN ObjectLink AS OL_Receipt_Goods
+                               ON OL_Receipt_Goods.ObjectId = Object_Receipt.Id
+                              AND OL_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
 
-       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                            ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
-                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-       LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                            ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Contract_InvNumber_View.ContractId 
-                           AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+          LEFT JOIN ObjectLink AS OL_Receipt_GoodsKind
+                               ON OL_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                              AND OL_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
 
-       LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                            ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
-                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+          LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                               ON ObjectDate_StartDate.ObjectId = Object_Receipt.Id
+                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_Receipt_Start()
+
+          LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                               ON ObjectDate_EndDate.ObjectId = Object_Receipt.Id
+                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_Receipt_End()
+--CHILD
+
+          INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                               ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = Object_Receipt.Id
+                               AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
 
 
-       -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
-       LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
-                             ON ObjectFloat_ChangePercent.ObjectId = Object_Contract_InvNumber_View.ContractId
-                            AND ObjectFloat_ChangePercent.DescId = zc_ObjectFloat_Contract_ChangePercent()  
-       LEFT JOIN ObjectFloat AS ObjectFloat_ChangePrice
-                             ON ObjectFloat_ChangePrice.ObjectId = Object_Contract_InvNumber_View.ContractId
-                            AND ObjectFloat_ChangePrice.DescId = zc_ObjectFloat_Contract_ChangePrice()  
-  ;
+          INNER JOIN ObjectLink AS OL_ReceiptChild_Goods
+                                ON OL_ReceiptChild_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                               AND OL_ReceiptChild_Goods.ChildObjectId = OL_Receipt_Goods.ChildObjectId
+                               AND OL_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+
+          LEFT JOIN ObjectLink AS OL_ReceiptChild_GoodsKind
+                               ON OL_ReceiptChild_GoodsKind.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                              AND OL_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
 
 
-ALTER TABLE Object_Contract_View  OWNER TO postgres;
+--          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Receipt_Goods.ChildObjectId
+--          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Receipt_GoodsKind.ChildObjectId
+--          LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = OL_ReceiptChild_GoodsKind.ChildObjectId
+
+
+     WHERE Object_Receipt.DescId = zc_Object_Receipt()
+       AND Object_Receipt.isErased = False
+     ;
+
+
+
+
+ALTER TABLE Recipe_byGoodsKind_View  OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
-               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 20.05.14                                        * add InvNumber <> '-'
- 20.05.14                                        * add ContractKind...
- 26.04.14                                        * del ContractKeyId
- 25.04.14                                        * add ContractKeyId
- 24.04.14                                        * all
- 13.02.14                                        * add Object_ContractStateKind...
- 14.01.14                                        * add Object_Contract_InvNumber_View_InvNumber_View
- 08.01.14                        * 
- 18.11.13                                        * !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
- 14.11.13         * add ContractCode      
- 20.10.13                                        *
+ –ò–°–¢–û–†–ò–Ø –†–ê–ó–†–ê–ë–û–¢–ö–ò: –î–ê–¢–ê, –ê–í–¢–û–†
+               –§–µ–ª–æ–Ω—é–∫ –ò.–í.   –ö—É—Ö—Ç–∏–Ω –ò.–í.   –ö–ª–∏–º–µ–Ω—Ç—å–µ–≤ –ö.–ò.   –ú–∞–Ω—å–∫–æ –î.–ê.
+ 25.12.14                                                       *
 */
 
--- ÚÂÒÚ
--- SELECT * FROM Object_Contract_View
+-- —Ç–µ—Å—Ç
+-- SELECT * FROM Recipe_byGoodsKind_View

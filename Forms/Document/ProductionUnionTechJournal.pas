@@ -59,6 +59,7 @@ type
     GoodsKindCompleteName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
+    MIOrderId: TcxGridDBColumn;
   private
     { Private declarations }
   public

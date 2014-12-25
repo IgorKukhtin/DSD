@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_ProductionUnionTech()
+п»ї-- Function: gpSelect_Movement_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inToId           Integer,
     IN inGoodsGroupId   Integer,
     IN inisErased       Boolean, --
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inSession        TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
 RETURNS SETOF refcursor
 AS
@@ -18,11 +18,11 @@ $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
 
-    -- Ограничения по товару
+    -- РћРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ С‚РѕРІР°СЂСѓ
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 
     IF inGoodsGroupId <> 0
@@ -149,12 +149,16 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+
+
      FULL JOIN (  SELECT MovementItem.Id                                                AS MIOrderId
                        , Movement.OperDate                                              AS OperDate
                        , MovementItem.ObjectId                                          AS ObjectId
                        , MILO_GoodsKind.ObjectId                                        AS GoodsKindId
                        , MLO_From.ObjectId                                              AS FromId
                        , MLO_To.ObjectId                                                AS ToId
+                       , Recipe_byGoodsKind_View.ChildGoodsId                           AS ChildGoodsId
+                       , Recipe_byGoodsKind_View.ChildGoodsKindId                       AS ChildGoodsKindId
                        , MovementItem.Amount + COALESCE(MIF_AmountSecond.ValueData, 0)  AS AmountOrder
                        , COALESCE(MIF_CuterCount.ValueData, 0)                          AS CuterCount
                     FROM Movement
@@ -175,12 +179,16 @@ BEGIN
                                             ON MLO_To.MovementId = Movement.Id
                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
 
+               LEFT JOIN Recipe_byGoodsKind_View ON Recipe_byGoodsKind_View.GoodsId = MovementItem.ObjectId
+                                                AND Recipe_byGoodsKind_View.GoodsKindId = MILO_GoodsKind.ObjectId
+
                    WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                      AND Movement.DescId = zc_Movement_OrderInternal()
                      AND Movement.StatusId <> zc_Enum_Status_Erased()
 
-                ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ObjectId = MovementItem.ObjectId
-                                         AND tmpMovementItemOrder.GoodsKindId = MILO_GoodsKindComplete.ObjectId
+                ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ChildGoodsId = MovementItem.ObjectId
+                                         AND tmpMovementItemOrder.ChildGoodsKindId = MILO_GoodsKind.ObjectId
+                                         AND tmpMovementItemOrder.GoodsKindId =  COALESCE(MILO_GoodsKindComplete.ObjectId, 123) --
                                          AND tmpMovementItemOrder.OperDate = Movement.OperDate
                                          AND tmpMovementItemOrder.FromId = MovementLinkObject_From.ObjectId
                                          AND tmpMovementItemOrder.ToId = MovementLinkObject_To.ObjectId
@@ -281,14 +289,14 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Intege
 
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
 
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  19.12.14                                                        *
  09.12.14                                                        *
 */
 
--- тест
+-- С‚РµСЃС‚
 /*
 BEGIN;
 select * from gpSelect_Movement_ProductionUnionTech(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inFromId := 0 , inToId := 0 , inGoodsGroupId := 0 , inIsErased := 'False' ,  inSession := '5');

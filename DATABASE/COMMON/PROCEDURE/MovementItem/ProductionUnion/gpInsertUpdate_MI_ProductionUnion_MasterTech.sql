@@ -1,28 +1,28 @@
--- Function: gpInsertUpdate_MI_ProductionUnion_MasterTech()
+п»ї-- Function: gpInsertUpdate_MI_ProductionUnion_MasterTech()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
---    IN inMovementId          Integer   , -- Ключ объекта <Документ>
---    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inGoodsId             Integer   , -- Товары
---    IN inAmount              TFloat    , -- Количество
---    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
-    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
-    IN inCuterCount          TFloat    , -- Количество кутеров
---    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
-    IN inReceiptId           Integer   , -- Рецептуры
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
+--    IN inMovementId          Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚>
+--    IN inInvNumber           TVarChar  , -- РќРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°
+    IN inOperDate            TDateTime , -- Р”Р°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
+    IN inFromId              Integer   , -- РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
+    IN inToId                Integer   , -- РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
+    IN inGoodsId             Integer   , -- РўРѕРІР°СЂС‹
+--    IN inAmount              TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ
+--    IN inPartionClose	     Boolean   , -- РїР°СЂС‚РёСЏ Р·Р°РєСЂС‹С‚Р° (РґР°/РЅРµС‚)
+    IN inCount	             TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°С‚РѕРЅРѕРІ РёР»Рё СѓРїР°РєРѕРІРѕРє
+    IN inRealWeight          TFloat    , -- Р¤Р°РєС‚РёС‡РµСЃРєРёР№ РІРµСЃ(РёРЅС„РѕСЂРјР°С‚РёРІРЅРѕ)
+    IN inCuterCount          TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ РєСѓС‚РµСЂРѕРІ
+--    IN inPartionGoods        TVarChar  , -- РџР°СЂС‚РёСЏ С‚РѕРІР°СЂР°
+    IN inComment             TVarChar  , -- РљРѕРјРјРµРЅС‚Р°СЂРёР№
+    IN inGoodsKindId         Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ
+    IN inGoodsKindCompleteId Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ  Р“Рџ
+    IN inReceiptId           Integer   , -- Р РµС†РµРїС‚СѓСЂС‹
+    IN inSession             TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
 RETURNS Integer AS
 $BODY$
@@ -32,7 +32,7 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbInvNumber TVarChar;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
+   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
    vbMovementId = COALESCE ((SELECT MovementId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
    vbOperDate   = COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId), inOperDate);
@@ -40,24 +40,24 @@ BEGIN
 
 
    vbAmount = inCuterCount * 100;
-      -- сохранили <Документ>
+      -- СЃРѕС…СЂР°РЅРёР»Рё <Р”РѕРєСѓРјРµРЅС‚>
    vbMovementId := lpInsertUpdate_Movement (ioId               := vbMovementId
                                           , inDescid           := zc_Movement_ProductionUnion()
                                           , inInvNumber        := vbInvNumber
                                           , inOperDate         := vbOperDate
                                           , inParentId         := NULL);
 
-   -- сохранили связь с <От кого (в документе)>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), vbMovementId, inFromId);
-   -- сохранили связь с <Кому (в документе)>
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), vbMovementId, inToId);
-   -- пересчитали Итоговые суммы по накладной
+   -- РїРµСЂРµСЃС‡РёС‚Р°Р»Рё РС‚РѕРіРѕРІС‹Рµ СЃСѓРјРјС‹ РїРѕ РЅР°РєР»Р°РґРЅРѕР№
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
-   -- сохранили протокол
+   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 
-   -- сохранили <Элемент документа>
+   -- СЃРѕС…СЂР°РЅРёР»Рё <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
    ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := vbMovementId--inMovementId
                                                   , inGoodsId          := inGoodsId
@@ -79,12 +79,12 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  12.12.14                                                        *
 
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpInsertUpdate_MI_ProductionUnion_MasterTech (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPartionClose:= FALSE, inComment:= '', inCount:= 1, inRealWeight:= 1, inCuterCount:= 0, inReceiptId:= 0, inSession:= '2')
