@@ -60,7 +60,7 @@ type
     clIsErased: TcxGridDBColumn;
     cxGridContractCondition: TcxGrid;
     cxGridDBTableViewContractCondition: TcxGridDBTableView;
-    cContractConditionKindName: TcxGridDBColumn;
+    colGoodsKindName: TcxGridDBColumn;
     clValue: TcxGridDBColumn;
     clsfcisErased: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
@@ -68,29 +68,18 @@ type
     ReceiptChildCDS: TClientDataSet;
     spInsertUpdateReceiptChild: TdsdStoredProc;
     spSelectReceiptChild: TdsdStoredProc;
-    ContractConditionKindChoiceForm: TOpenChoiceForm;
+    ReceiptChildChoiceForm: TOpenChoiceForm;
     InsertRecordCCK: TInsertRecord;
     bbInsertRecCCK: TdxBarButton;
-    actContractCondition: TdsdUpdateDataSet;
+    actReceiptChild: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
-    PaidKindChoiceForm: TOpenChoiceForm;
     actUpdateDataSet: TdsdUpdateDataSet;
-    JuridicalChoiceForm: TOpenChoiceForm;
-    ContractKindChoiceForm: TOpenChoiceForm;
-    InfoMoneyChoiceForm: TOpenChoiceForm;
-    clCode: TcxGridDBColumn;
+    clReceiptCode: TcxGridDBColumn;
     ChildViewAddOn: TdsdDBViewAddOn;
-    clBonusKindName: TcxGridDBColumn;
-    BonusKindChoiceForm: TOpenChoiceForm;
+    colGoodsName: TcxGridDBColumn;
+    Goods_ObjectChoiceForm: TOpenChoiceForm;
     colComment: TcxGridDBColumn;
-    clccInfoMoneyName: TcxGridDBColumn;
-    InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
     clValueCost: TcxGridDBColumn;
-    PersonalTradeChoiceForm: TOpenChoiceForm;
-    PersonalCollationChoiceForm: TOpenChoiceForm;
-    BankAccountChoiceForm: TOpenChoiceForm;
-    ContractTagChoiceForm: TOpenChoiceForm;
-    PersonalChoiceForm: TOpenChoiceForm;
     clTaxExit: TcxGridDBColumn;
     bbStartDate: TdxBarControlContainerItem;
     bbEnd: TdxBarControlContainerItem;
@@ -99,6 +88,9 @@ type
     bbIsPeriod: TdxBarControlContainerItem;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    colStartDate: TcxGridDBColumn;
+    colEndDate: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

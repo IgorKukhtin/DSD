@@ -73,6 +73,8 @@ type
     ceGoodsKindComplete: TcxButtonEdit;
     GoodsKindCompleteGuides: TdsdGuides;
     cxLabel4: TcxLabel;
+    ceReceiptCode: TcxTextEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

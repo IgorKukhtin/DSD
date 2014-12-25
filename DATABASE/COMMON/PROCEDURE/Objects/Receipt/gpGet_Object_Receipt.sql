@@ -1,12 +1,12 @@
 ﻿-- Function: gpGet_Object_Receipt(integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_Receipt(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
     IN inId          Integer,       -- Составляющие рецептур 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, Code TVarChar, Comment TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                StartDate TDateTime, EndDate TDateTime,
                Main boolean,
@@ -27,10 +27,11 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)   AS Id
-           , CAST ('' as TVarChar) AS NAME
+             CAST (0 as Integer)                       AS Id
+           , lfGet_ObjectCode (0, zc_Object_Receipt()) AS Code 
+           , CAST ('' as TVarChar)                     AS NAME
           
-           , CAST ('' as TVarChar) AS Code
+           , CAST ('' as TVarChar) AS ReceiptCode
            , CAST ('' as TVarChar) AS Comment         
  
            , CAST (NULL as TFloat) AS Value  
@@ -73,10 +74,11 @@ BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_Receipt.Id        AS Id
-         , Object_Receipt.ValueData AS NAME
+           Object_Receipt.Id         AS Id
+         , Object_Receipt.ObjectCode AS Code
+         , Object_Receipt.ValueData  AS NAME
           
-         , ObjectString_Code.ValueData    AS Code
+         , ObjectString_Code.ValueData    AS ReceiptCode
          , ObjectString_Comment.ValueData AS Comment         
  
          , ObjectFloat_Value.ValueData         AS Value  

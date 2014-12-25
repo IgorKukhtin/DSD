@@ -13,7 +13,7 @@ BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-   Directory := 'd:\medoc\data\';
+   Directory := 'с:\medoc\data\';
       
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
