@@ -114,7 +114,7 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses UploadUnloadData, Dialogs, Forms;
+uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal;
 {$R *.dfm}
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);

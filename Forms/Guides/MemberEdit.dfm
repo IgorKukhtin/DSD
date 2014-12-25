@@ -111,8 +111,20 @@
       end
       object edEmail: TcxTextEdit
         Left = 7
-        Top = 31
+        Top = 25
         TabOrder = 1
+        Width = 273
+      end
+      object cxLabel6: TcxLabel
+        Left = 7
+        Top = 55
+        Caption = 'E-mail '#1087#1086#1076#1087#1080#1089#1100
+      end
+      object EMailSign: TcxMemo
+        Left = 7
+        Top = 76
+        TabOrder = 3
+        Height = 145
         Width = 273
       end
     end
@@ -260,6 +272,13 @@
         Component = edEmail
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inEmailSign'
+        Value = Null
+        Component = EMailSign
+        DataType = ftWideString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 144
@@ -281,6 +300,12 @@
         Name = 'EMail'
         Value = ''
         Component = edEmail
+        DataType = ftString
+      end
+      item
+        Name = 'EMailSign'
+        Value = Null
+        Component = EMailSign
         DataType = ftString
       end>
     PackSize = 1

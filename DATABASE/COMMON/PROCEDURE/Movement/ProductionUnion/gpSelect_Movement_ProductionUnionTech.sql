@@ -66,6 +66,9 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , tmpMovementItemOrder.AmountOrder  AS AmountOrder
+            , tmpMovementItemOrder.CuterCount   AS CuterCount
+            , tmpMovementItemOrder.MIOrderId    AS MIOrderId
+
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -146,17 +149,22 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
-     FULL JOIN (  SELECT Movement.OperDate                                              AS OperDate
+     FULL JOIN (  SELECT MovementItem.Id                                                AS MIOrderId
+                       , Movement.OperDate                                              AS OperDate
                        , MovementItem.ObjectId                                          AS ObjectId
                        , MILO_GoodsKind.ObjectId                                        AS GoodsKindId
                        , MLO_From.ObjectId                                              AS FromId
                        , MLO_To.ObjectId                                                AS ToId
-                       , MovementItem.Amount + COALESCE(MovementItemFloat.ValueData, 0) AS AmountOrder
+                       , MovementItem.Amount + COALESCE(MIF_AmountSecond.ValueData, 0)  AS AmountOrder
+                       , COALESCE(MIF_CuterCount.ValueData, 0)                          AS CuterCount
                     FROM Movement
                     JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      AND MovementItem.DescId     = zc_MI_Master()
-               LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
-                     AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+               LEFT JOIN MovementItemFloat AS MIF_AmountSecond ON MIF_AmountSecond.MovementItemId = MovementItem.Id
+                     AND MIF_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+               LEFT JOIN MovementItemFloat AS MIF_CuterCount ON MIF_CuterCount.MovementItemId = MovementItem.Id
+                     AND MIF_AmountSecond.DescId = zc_MIFloat_CuterCount()
+
                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

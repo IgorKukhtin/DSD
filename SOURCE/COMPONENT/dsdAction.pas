@@ -111,6 +111,7 @@ type
     property ActiveControl: TWinControl read FActiveControl
       write FActiveControl;
     // При установке данного свойства Action будет активирован только если TabSheet активен
+    // Установка данного свойства не работает в RunTime. Только в момент дизайна и загрузки
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
     // задание списка параметров, которые изменяются перед выполнением действия
     property MoveParams: TCollection read FMoveParams write FMoveParams;
@@ -499,7 +500,9 @@ type
 
   type
     TcxExport = (cxegExportToHtml, cxegExportToXml,
-                 cxegExportToText, cxegExportToExcel, cxegExportToXlsx);
+                 cxegExportToText, cxegExportToExcel,
+                 cxegExportToXlsx,
+                 cxegExportToDbf);
 
   TExportGrid = class(TdsdCustomAction)
   private
@@ -618,7 +621,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet,
-  cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions;
+  cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave;
 
 procedure Register;
 begin
@@ -1312,6 +1315,7 @@ begin
     cxegExportToText: FileName := FileName + '.txt';
     cxegExportToExcel: FileName := FileName + '.xls';
     cxegExportToXlsx: FileName := FileName + '.xlsx';
+    cxegExportToDbf: FileName := FileName + '.dbf';
   end;
   if FGrid is TcxGrid then begin
      // грид скрыт и нужен только для выгрузки, то добавим колонки во View
@@ -1338,6 +1342,13 @@ begin
        cxegExportToText:  ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed);
        cxegExportToExcel: ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
        cxegExportToXlsx:  ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
+       cxegExportToDbf:   with TcxGridDBTableView(TcxGrid(FGrid).Views[0]).DataController.DataSource do
+                             with TFileExternalSave.Create(DataSet.FieldDefs, DataSet, FileName, true) do
+                                try
+                                  Execute(FileName);
+                                finally
+                                  Free
+                                end;
      end;
   end;
   if FGrid is TcxCustomPivotGrid then begin
@@ -1719,7 +1730,7 @@ procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
   var AllowChange: Boolean);
 begin
   if Assigned(FOnPageChanging) then
-    FOnPageChanging(Sender, NewPage, AllowChange);
+     FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
   Visible := Enabled;
 end;
@@ -1737,6 +1748,9 @@ end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
 begin
+  // Установка данного свойства не работает в RunTime. Только в момент дизайна и загрузки
+  if Self.ComponentState = [csFreeNotification] then
+     exit;
   FTabSheet := Value;
   if Assigned(FTabSheet) then
   begin

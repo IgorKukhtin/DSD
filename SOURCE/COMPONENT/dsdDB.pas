@@ -142,7 +142,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
-     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc;
+     kbmMemTable, kbmMemCSVStreamFormat, cxButtonEdit, EDI, ExternalSave, Medoc,
+     cxMemo;
 
 var
   DefaultStreamFormat: TkbmCSVStreamFormat;
@@ -725,6 +726,8 @@ begin
         result := (Component as TPivotAddOn).GetCurrentData;
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
+     if Component is TcxMemo then
+        Result := (Component as TcxMemo).Text;
      if Component is TcxButtonEdit then
         Result := (Component as TcxButtonEdit).Text;
      if (Component is TDataSet) then
@@ -833,6 +836,8 @@ begin
         SetInDataSet(TDataSet(Component), ComponentItem, FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
+     if Component is TcxMemo then
+        (Component as TcxMemo).Text := FValue;
      if Component is TcxButtonEdit then
         (Component as TcxButtonEdit).Text := FValue;
      if Component is TdsdFormParams then
@@ -859,8 +864,12 @@ begin
         (Component as TEDI).Directory := FValue;
      if Component is TMedocAction then
         (Component as TMedocAction).Directory := FValue;
-     if Component is TExportGrid then
-        (Component as TExportGrid).DefaultFileName := FValue;
+     if Component is TExportGrid then begin
+        if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
+           (Component as TExportGrid).DefaultFileName := FValue;
+        if LowerCase(ComponentItem) = LowerCase('ExportType') then
+           (Component as TExportGrid).ExportType := FValue;
+     end;
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue;
      if Component is TADOQueryAction then begin

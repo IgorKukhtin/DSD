@@ -13,6 +13,7 @@ type
   /// Используейте данный Интерфейс для вызова методов на сервере базе данных
   ///	</remarks>
   IStorage = interface
+    function GetConnection: string;
     ///	<summary>
     /// Процедура вызова обработчика XML структры на среднем уровне.
     ///	</summary>
@@ -26,6 +27,7 @@ type
     ///	  если true, то процедуры выполняются в цикле на среднем уровне
     ///	</param>
     function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
+    property Connection: String read GetConnection;
   end;
 
   TStorageFactory = class
@@ -72,7 +74,9 @@ type
     function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
     function ProcessMultiDataSet: Variant;
+    function GetConnection: string;
   public
+    property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
   end;
 
@@ -86,24 +90,33 @@ type
   var
     IdHTTPWork: TIdHTTPWork;
 
+function TStorage.GetConnection: string;
+begin
+  result := FConnection;
+end;
+
 class function TStorage.NewInstance: TObject;
 var
-  f: text;
+  StringList: TStringList;
   ConnectionString: string;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
     try
-      AssignFile(F, ConnectionPath);
-      Reset(f);
-      readln(f, ConnectionString);
-      readln(f, ConnectionString);
-      readln(f, ConnectionString);
-      CloseFile(f);
-      // Вырезаем строку подключения
-      ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
-      ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
-      ConnectionString := ReplaceStr(ConnectionString, ' ', #13#10);
+      StringList := TStringList.Create;
+      try
+        StringList.LoadFromFile(ConnectionPath);
+        if StringList.Count = 1 then
+           ConnectionString := StringList[0]
+        else begin
+           // Вырезаем строку подключения
+           ConnectionString := StringList[2];
+           ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
+           ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
+        end;
+      finally
+        StringList.Free;
+      end;
     except
       ConnectionString := 'http://localhost/dsd/index.php';
     end;

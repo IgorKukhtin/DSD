@@ -91,6 +91,7 @@ type
     colIsMedoc: TcxGridDBColumn;
     spUpdateIsMedoc: TdsdStoredProc;
     MedocListAction: TMedocAction;
+    actUpdateIsMedoc: TdsdExecStoredProc;
   private
     { Private declarations }
   public

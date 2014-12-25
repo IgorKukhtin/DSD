@@ -97,6 +97,7 @@ type
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
+    procedure LoadReceiptFormTest;
     procedure LoadRoleFormTest;
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
@@ -345,8 +346,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_byRecipesForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoods_byRecipesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecipesMasterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecipesMasterForm');
 
 end;
 
@@ -1543,6 +1544,24 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportEditForm');
+end;
+
+procedure TLoadFormTest.LoadReceiptFormTest;
+begin
+  // Рецептуры
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
+  // Затраты в рецептурах
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptCostForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptCostEditForm');
+  //Типы рецептур
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptKindForm');
+
 end;
 
 procedure TLoadFormTest.SetUp;

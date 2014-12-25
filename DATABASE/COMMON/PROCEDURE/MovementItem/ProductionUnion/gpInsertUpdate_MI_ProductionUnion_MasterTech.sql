@@ -58,11 +58,11 @@ BEGIN
                                                   , inMovementId       := vbMovementId--inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := vbAmount
-                                                  , inPartionClose     := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), False)--inPartionClose
+                                                  , inPartionClose     := CAST(COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), False) AS BOOLEAN)--inPartionClose
                                                   , inCount            := inCount
                                                   , inRealWeight       := inRealWeight
                                                   , inCuterCount       := inCuterCount
-                                                  , inPartionGoods     := COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '')--inPartionGoods
+                                                  , inPartionGoods     := CAST(COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '') AS TVarChar)--inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inGoodsCompleteKindId := inGoodsCompleteKindId

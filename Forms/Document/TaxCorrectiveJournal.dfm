@@ -376,6 +376,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            HeaderAlignmentVert = vaCenter
+          end
           object DocumentValue: TcxGridDBColumn
             DataBinding.FieldName = 'DocumentValue'
             Visible = False
@@ -534,6 +539,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Action = MedocAction
+        end
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actRefresh
         end>
       InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
@@ -716,6 +727,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Action = MedocCorrectiveActionList
+        end
+        item
+          Action = actUpdateIsMedoc
         end>
       View = cxGridDBTableView
       Caption = 'mactMEDOCList'
@@ -726,7 +740,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       StartDateParam.Value = Null
       EndDateParam.Value = Null
       EDIDocType = ediDeclarReturn
-      spHeader = spUpdateIsMedoc
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -739,6 +752,16 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           StoredProc = spSelectPrintTaxCorrective_Client
         end>
       Caption = 'spTaxPrint'
+    end
+    object actUpdateIsMedoc: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      StoredProc = spUpdateIsMedoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMedoc
+        end>
+      Caption = 'actUpdateIsMedoc'
     end
   end
   inherited MasterDS: TDataSource

@@ -22,22 +22,25 @@ type
     GuidesFiller: TGuidesFiller;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    ceGooodsAndKind: TcxButtonEdit;
+    ceGooods: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    GooodsAndKindGuides: TdsdGuides;
+    GooodsRecipesGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     ceCount: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
     ce—uterCount: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
-    ce—uterReq: TcxCurrencyEdit;
+    ce—uterCountOrder: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
-    ceAmountReq: TcxCurrencyEdit;
+    ceAmountOrder: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;
     GooodsKindGuides: TdsdGuides;
     ceGooodsKindGuides: TcxButtonEdit;
     ceRecipeCode: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    ceGooodsCompleateKindGuides: TcxButtonEdit;
+    GooodsCompleteKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

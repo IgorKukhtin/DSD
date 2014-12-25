@@ -8,6 +8,7 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , MovementItem.ObjectId              AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , MILinkObject_Goods.ObjectId        AS PartnerGoodsId
            , Object_PartnerGoods.GoodsCode      AS PartnerGoodsCode
            , Object_PartnerGoods.GoodsName      AS PartnerGoodsName
            , MovementItem.Amount                AS Amount

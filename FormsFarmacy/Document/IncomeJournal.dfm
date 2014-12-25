@@ -10,17 +10,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 807
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 807
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 807
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 807
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 807
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 807
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -179,7 +179,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   inherited Panel: TPanel
     Width = 807
-    ExplicitWidth = 1073
+    ExplicitWidth = 807
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

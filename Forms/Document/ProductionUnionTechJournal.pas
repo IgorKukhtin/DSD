@@ -56,6 +56,9 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     AmountOrder: TcxGridDBColumn;
+    GoodsCompleteKindName: TcxGridDBColumn;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
   private
     { Private declarations }
   public

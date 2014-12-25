@@ -156,6 +156,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object GoodsCompleteKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
+            DataBinding.FieldName = 'GoodsCompleteKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -425,13 +432,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          ComponentItem = 'GoodsCompleteKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          ComponentItem = 'GoodsCompleteKindName'
           DataType = ftString
         end>
       isShowModal = True
@@ -455,10 +462,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'inOperDate'
+          Name = 'OperDate'
           Value = 41791d
           Component = deStart
           DataType = ftDateTime
+          ParamType = ptInput
         end
         item
           Name = 'FromId'
@@ -476,6 +484,47 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = False
       ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TProductionUnionTechEditForm'
+      FormNameParam.Value = 'TProductionUnionTechEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInput
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end>
+      isShowModal = True
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -563,6 +612,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -631,6 +684,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = actInsert
       Category = 0
     end
   end

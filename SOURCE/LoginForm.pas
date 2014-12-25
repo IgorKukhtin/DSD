@@ -34,7 +34,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Storage, Authentication, CommonData, MessagesUnit;
+  Storage, Authentication, CommonData, MessagesUnit, StrUtils;
 
 procedure TLoginForm.btnOkClick(Sender: TObject);
 var TextMessage: String;
@@ -51,6 +51,7 @@ begin
         else
            // Выбрасываем все что после Context
            TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
+        TextMessage := ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
         TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
     end;
   end;

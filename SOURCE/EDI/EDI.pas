@@ -338,7 +338,6 @@ procedure TEDI.DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;
 const
   C_DOC = 'J12';
   C_DOC_SUB = '012';
-  C_DOC_VER = '5';
   C_DOC_CNT = '1';
   C_REG = '28';
   C_RAJ = '01';
@@ -349,7 +348,17 @@ var
   i: integer;
   XMLFileName, P7SFileName, C_DOC_TYPE: string;
   lDirectory: string;
+  C_DOC_VER: string;
+  F: TFormatSettings;
 begin
+   F.DateSeparator := '.';
+   F.TimeSeparator := ':';
+   F.ShortDateFormat := 'dd.mm.yyyy';
+   F.ShortTimeFormat := 'hh24:mi:ss';
+   if HeaderDataSet.FieldByName('OperDate').asDateTime >= StrToDateTime( '01.12.2014', F) then
+     C_DOC_VER := '6'
+   else
+     C_DOC_VER := '5';
   // создать xml файл
   C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount')
     .asInteger);
@@ -415,10 +424,10 @@ begin
 
   DECLAR.DECLARBODY.H02G2D := DECLAR.DECLARBODY.H01G1D;
   DECLAR.DECLARBODY.H02G3S := DECLAR.DECLARBODY.H01G2S;
-
-  DECLAR.DECLARBODY.H04G1D := DECLAR.DECLARBODY.HPODFILL;
-
-  DECLAR.DECLARBODY.H03G1S := 'Оплата з поточного рахунка';
+  if C_DOC_VER = '5' then begin
+     DECLAR.DECLARBODY.H04G1D := DECLAR.DECLARBODY.HPODFILL;
+     DECLAR.DECLARBODY.H03G1S := 'Оплата з поточного рахунка';
+  end;
 
   // DECLAR.DECLARBODY.H01G1D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
   // DEC1LAR.DECLARBODY.H01G2S := HeaderDataSet.FieldByName('ContractName').AsString;
@@ -630,7 +639,6 @@ procedure TEDI.DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
 const
   C_DOC = 'J12';
   C_DOC_SUB = '010';
-  C_DOC_VER = '5';
   C_DOC_CNT = '1';
   C_REG = '28';
   C_RAJ = '01';
@@ -641,10 +649,21 @@ var
   i: integer;
   XMLFileName, P7SFileName, C_DOC_TYPE: string;
   lDirectory: string;
+  C_DOC_VER: string;
+  F: TFormatSettings;
 begin
-  // создать xml файл
-  C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount')
+   F.DateSeparator := '.';
+   F.TimeSeparator := ':';
+   F.ShortDateFormat := 'dd.mm.yyyy';
+   F.ShortTimeFormat := 'hh24:mi:ss';
+   // создать xml файл
+   C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount')
     .asInteger);
+
+   if HeaderDataSet.FieldByName('OperDate').asDateTime >= StrToDateTime( '01.12.2014', F) then
+     C_DOC_VER := '6'
+   else
+     C_DOC_VER := '5';
 
   DECLAR := NewDECLAR;
   DECLAR.OwnerDocument.Encoding := 'WINDOWS-1251';
@@ -1202,6 +1221,20 @@ begin
   // Установка сетификатов
   try
     FileName := ExtractFilePath(ParamStr(0)) + 'Exite_Для Шифрования.cer';
+    ComSigner.SetCryptToCertCert(FileName);
+  except
+    on E: Exception do
+    begin
+      ComSigner := null;
+      raise Exception.Create
+        ('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert ' + FileName +
+        #10#13 + E.Message);
+    end;
+  end;
+
+  // Установка сетификатов
+  try
+    FileName := ExtractFilePath(ParamStr(0)) + '27399.cer';
     ComSigner.SetCryptToCertCert(FileName);
   except
     on E: Exception do

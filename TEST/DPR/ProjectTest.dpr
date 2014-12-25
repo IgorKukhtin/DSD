@@ -157,7 +157,6 @@ uses
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
   TransportServiceTest in '..\SOURCE\Movement\All\TransportServiceTest.pas',
-  Goods_byRecipes in '..\..\Forms\Guides\Goods_byRecipes.pas' {Goods_byRecipesForm},
   Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
   JuridicalTree in '..\..\Forms\Guides\JuridicalTree.pas' {JuridicalTreeForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
@@ -601,7 +600,13 @@ uses
   ProductionPeresort in '..\..\Forms\Document\ProductionPeresort.pas' {ProductionPeresortForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm: TParentForm},
-  Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm};
+  Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm: TParentForm},
+  RecipesMaster in '..\..\Forms\Guides\RecipesMaster.pas' {RecipesMasterForm: TParentForm},
+  Receipt in '..\..\Forms\Guides\Receipt.pas' {ReceiptForm: TParentForm},
+  ReceiptEdit in '..\..\Forms\Guides\ReceiptEdit.pas' {ReceiptEditForm: TParentForm},
+  ReceiptCost in '..\..\Forms\Guides\ReceiptCost.pas' {ReceiptCostForm: TParentForm},
+  ReceiptCostEdit in '..\..\Forms\Guides\ReceiptCostEdit.pas' {ReceiptCostEditForm: TParentForm},
+  ReceiptKind in '..\..\Forms\Kind\ReceiptKind.pas' {ReceiptKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

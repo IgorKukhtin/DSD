@@ -96,6 +96,11 @@ inherited OrderExternalForm: TOrderExternalForm
           OptionsData.DeletingConfirmation = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PartnerGoodsCode'
@@ -205,6 +210,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 139
+      ExplicitHeight = 22
       Width = 139
     end
     object cxLabel3: TcxLabel
@@ -270,15 +276,14 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actGridExportToExcel: TdsdGridToExcel [2]
+    object actExportToPartner: TExportGrid [2]
       Category = 'Export'
       TabSheet = tsMain
       MoveParams = <>
       ColumnNameDataSet = PrintHeaderCDS
       Grid = cxGridExport
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ShortCut = 16472
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -417,7 +422,7 @@ inherited OrderExternalForm: TOrderExternalForm
       ImageIndex = 53
       ShortCut = 16467
     end
-    object mactGridExportToExcel: TMultiAction
+    object mactExportToPartner: TMultiAction
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -425,10 +430,10 @@ inherited OrderExternalForm: TOrderExternalForm
           Action = actExportStoredproc
         end
         item
-          Action = actGridExportToExcel
+          Action = actExportToPartner
         end>
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1069#1082#1089#1077#1083#1100' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1069#1082#1089#1077#1083#1100' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
       ImageIndex = 27
     end
     object actExportStoredproc: TdsdExecStoredProc
@@ -443,15 +448,6 @@ inherited OrderExternalForm: TOrderExternalForm
           StoredProc = spSelectExport
         end>
       Caption = 'actExportStoredproc'
-    end
-    object egToText: TExportGrid
-      Category = 'Export'
-      MoveParams = <>
-      ExportType = cxegExportToText
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
-      ImageIndex = 42
     end
   end
   inherited MasterDS: TDataSource
@@ -584,10 +580,6 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
-          ItemName = 'bbExportToText'
-        end
-        item
-          Visible = True
           ItemName = 'bbExportToExcel'
         end>
     end
@@ -630,12 +622,15 @@ inherited OrderExternalForm: TOrderExternalForm
       Category = 0
     end
     object bbExportToExcel: TdxBarButton
-      Action = mactGridExportToExcel
+      Action = mactExportToPartner
       Category = 0
     end
     object bbExportToText: TdxBarButton
-      Action = egToText
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
       Category = 0
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1058#1077#1082#1089#1090
+      Visible = ivAlways
+      ImageIndex = 42
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1237,8 +1232,14 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Name = 'DefaultFileName'
         Value = Null
-        Component = actGridExportToExcel
+        Component = actExportToPartner
         ComponentItem = 'DefaultFileName'
+      end
+      item
+        Name = 'ExportType'
+        Value = Null
+        Component = actExportToPartner
+        ComponentItem = 'ExportType'
       end>
     PackSize = 1
     Left = 608
