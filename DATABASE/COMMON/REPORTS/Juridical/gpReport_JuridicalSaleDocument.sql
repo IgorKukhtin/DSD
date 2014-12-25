@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSaleDocument(
     IN inStartDate        TDateTime , -- 
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSaleDocument(
     IN inAccountId        Integer   , --
     IN inContractId       Integer   , --
     IN inPaidKindId       Integer   , --
+    IN inBranchId         Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
@@ -66,6 +68,10 @@ BEGIN
                                           AND MovementLinkObject_PaidKind.DescId = tmpDesc.DescId_PaidKind
               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                           ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                          AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                           AND MovementLinkObject_Contract.DescId = tmpDesc.DescId_Contract
@@ -84,6 +90,7 @@ BEGIN
 
         WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId 
     ORDER BY OperDate;
     

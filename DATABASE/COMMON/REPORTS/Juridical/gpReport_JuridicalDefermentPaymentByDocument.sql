@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inOperDate         TDateTime , -- 
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inAccountId        Integer   , --
     IN inContractId       Integer   , --
     IN inPaidKindId       Integer   , --
+    IN inBranchId         Integer   , --
     IN inPeriodCount      Integer   , --
     IN inSumm             TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
@@ -75,6 +77,10 @@ BEGIN
                                           AND MovementLinkObject_PaidKind.DescId = tmpDesc.DescId_PaidKind
               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                           ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                          AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                           AND MovementLinkObject_Contract.DescId = tmpDesc.DescId_Contract
@@ -93,6 +99,7 @@ BEGIN
 
         WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+          AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId
     ORDER BY OperDate;
     
@@ -124,6 +131,9 @@ BEGIN
               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                           AND MovementLinkObject_PaidKind.DescId = tmpDesc.DescId_PaidKind
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                           ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                          AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                           AND MovementLinkObject_Contract.DescId = tmpDesc.DescId_Contract
@@ -132,6 +142,7 @@ BEGIN
 
       	 WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
            AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
       	   AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId;
       	 
      -- 	raise EXCEPTION 'vbNextOperDate %, % ', vbNextOperDate, vbOperDate   	 ;
@@ -160,6 +171,10 @@ BEGIN
                                                   ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                  AND MovementLinkObject_PaidKind.DescId = tmpDesc.DescId_PaidKind
 
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                                  ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = tmpDesc.DescId_Contract
@@ -172,6 +187,7 @@ BEGIN
 
                 WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
                   AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+                  AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                   AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId;
 
              -- новый период

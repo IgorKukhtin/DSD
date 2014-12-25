@@ -27,6 +27,7 @@ RETURNS Integer
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbMovementId_TaxCorrective Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -38,6 +39,31 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
+
+
+     -- меняется дата у всех корректировок
+     IF ioId <> 0 AND NOT EXISTS (SELECT MovementId FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner() AND ValueData = inOperDatePartner)
+     THEN
+         -- поиск любой проведенной корректировки
+         vbMovementId_TaxCorrective:= (SELECT MAX (MovementLinkMovement.MovementId) FROM MovementLinkMovement INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId AND Movement.StatusId = zc_Enum_Status_Complete() WHERE MovementLinkMovement.MovementChildId = ioId AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master());
+         -- проверка - все корректировки должны быть хотя бы распроведены
+         IF vbMovementId_TaxCorrective <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Изменение даты невозможно, документ <Корректировка к налоговой> № <%> от <%> в статусе <%>.', (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementString_InvNumberPartner()), (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementId_TaxCorrective), lfGet_Object_ValueData (zc_Enum_Status_Complete());
+         END IF;
+         -- меняется дата
+         UPDATE Movement SET OperDate = inOperDatePartner
+         FROM MovementLinkMovement
+         WHERE Movement.Id = MovementLinkMovement.MovementId
+           AND MovementLinkMovement.MovementChildId = ioId
+           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (MovementLinkMovement.MovementId, inUserId, FALSE)
+         FROM MovementLinkMovement
+         WHERE MovementLinkMovement.MovementChildId = ioId
+           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+     END IF;
+
 
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
@@ -103,6 +129,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.12.14				         * add меняется дата у всех корректировок
  26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId

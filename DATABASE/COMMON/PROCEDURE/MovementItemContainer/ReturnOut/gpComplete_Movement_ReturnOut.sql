@@ -17,7 +17,7 @@ BEGIN
 
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
-     PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
+     PERFORM lpComplete_Movement_ReturnOut_CreateTemp();
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
                                           , inUserId         := vbUserId
