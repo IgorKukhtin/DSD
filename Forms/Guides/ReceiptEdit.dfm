@@ -56,10 +56,11 @@
   object ceCode: TcxCurrencyEdit
     Left = 32
     Top = 19
+    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 84
+    Width = 77
   end
   object cxLabel5: TcxLabel
     Left = 32
@@ -101,7 +102,7 @@
     Width = 303
   end
   object ceisReceipt_Main: TcxCheckBox
-    Left = 173
+    Left = 278
     Top = 19
     Caption = #1043#1083#1072#1074#1085#1099#1081
     TabOrder = 11
@@ -268,6 +269,18 @@
     Top = 357
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
+  object ceReceiptCode: TcxTextEdit
+    Left = 115
+    Top = 19
+    Enabled = False
+    TabOrder = 35
+    Width = 158
+  end
+  object cxLabel6: TcxLabel
+    Left = 115
+    Top = 5
+    Caption = #1050#1086#1076#1088#1077#1094#1077#1087#1090#1091#1088#1099
+  end
   object ActionList: TActionList
     Left = 65528
     Top = 105
@@ -321,7 +334,6 @@
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -467,6 +479,12 @@
         DataType = ftString
       end
       item
+        Name = 'ReceiptCode'
+        Value = Null
+        Component = ceReceiptCode
+        DataType = ftString
+      end
+      item
         Name = 'Comment'
         Value = ''
         Component = ceComment
@@ -589,8 +607,7 @@
         ComponentItem = 'TextValue'
       end>
     PackSize = 1
-    Left = 65528
-    Top = 40
+    Top = 64
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -604,7 +621,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 104
+    Top = 8
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 296
@@ -715,8 +732,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 60
-    Top = 222
+    Left = 68
+    Top = 246
   end
   object GoodsKindCompleteGuides: TdsdGuides
     KeyField = 'Id'

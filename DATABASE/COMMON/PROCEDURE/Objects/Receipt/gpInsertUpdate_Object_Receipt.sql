@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
--- DROP FUNCTION gpInsertUpdate_Object_Receipt();
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Receipt (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Receipt (Integer, TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
     IN inName                TVarChar  , -- Наименование
-    IN inCode                TVarChar  , -- Код рецептуры 
+    IN inCode                Integer   , -- Код рецептуры 
     IN inComment             TVarChar  , -- Комментарий
     IN inValue               TFloat    , -- Значение (Количество)
     IN inValueCost           TFloat    , -- Значение затрат(Количество)
@@ -26,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbGoodsCode TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -35,8 +39,19 @@ BEGIN
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Receipt(), inName);
 
+   IF COALESCE(inGoodsId, 0) >0
+   THEN
+       vbGoodsCode := (SELECT ObjectCode FROM Object WHERE descId = zc_Object_Goods() and id = inGoodsId);
+   END IF;
+   IF COALESCE(vbGoodsCode, '0') <> '0'
+   THEN
+       vbGoodsCode :=''||vbGoodsCode||'-'||inComment||'' ;
+   ELSE 
+       RAISE EXCEPTION 'Ошибка.У параметра <Товар> не установлен код.';
+   END IF;
+
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Receipt(), 0, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Receipt(), inCode, inName);
    
    -- сохранили связь с <Товаром>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_Goods(), ioId, inGoodsId);   
@@ -49,9 +64,10 @@ BEGIN
    -- сохранили связь с <Виды рецептур>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_ReceiptKind(), ioId, inReceiptKindId);
 
+   
 
    -- сохранили свойство <Код рецептуры>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Code(), ioId, inCode);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Code(), ioId, vbGoodsCode);
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Receipt_Comment(), ioId, inComment);
 
@@ -84,12 +100,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.12.14         *
  19.07.13         * rename zc_ObjectDate_               
  10.07.13         * 
 

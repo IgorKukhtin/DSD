@@ -3,7 +3,7 @@ object ReceiptForm: TReceiptForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1094#1077#1087#1090#1091#1088#1099'>'
   ClientHeight = 467
-  ClientWidth = 1186
+  ClientWidth = 1152
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object ReceiptForm: TReceiptForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1186
+    Width = 1152
     Height = 297
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1186
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,12 +45,20 @@ object ReceiptForm: TReceiptForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 71
+        Width = 39
+      end
+      object clReceiptCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+        DataBinding.FieldName = 'ReceiptCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -57,7 +66,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 137
+        Width = 173
       end
       object colValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' ('#1082#1086#1083'.)'
@@ -65,7 +74,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 92
+        Width = 62
       end
       object clValueCost: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090' ('#1082#1086#1083'.)'
@@ -73,7 +82,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 93
+        Width = 83
       end
       object clTaxExit: TcxGridDBColumn
         Caption = '% '#1074#1099#1093#1086#1076#1072
@@ -106,7 +115,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 77
+        Width = 70
       end
       object clEndDate: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072
@@ -114,7 +123,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 78
+        Width = 69
       end
       object clMain: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1075#1083#1072#1074#1085#1099#1081
@@ -122,7 +131,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 82
+        Width = 59
       end
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -182,7 +191,7 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 108
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -201,13 +210,14 @@ object ReceiptForm: TReceiptForm
   object cxGridContractCondition: TcxGrid
     Left = 0
     Top = 323
-    Width = 1186
+    Width = 1152
     Height = 144
     Align = alBottom
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 1186
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReceiptChildDS
@@ -227,88 +237,78 @@ object ReceiptForm: TReceiptForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clBonusKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
-        DataBinding.FieldName = 'BonusKindName'
+      object colGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = BonusKindChoiceForm
+            Action = Goods_ObjectChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 155
       end
-      object cContractConditionKindName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractConditionKindName'
+      object colGoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = ContractConditionKindChoiceForm
+            Action = ReceiptChildChoiceForm
+            Caption = 'GoodsKindChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 112
       end
-      object clccInfoMoneyName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = InfoMoneyChoiceForm_ContractCondition
-            Default = True
-            Kind = bkEllipsis
-          end>
+      object colStartDate: TcxGridDBColumn
+        Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072
+        DataBinding.FieldName = 'StartDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 141
+        Width = 77
       end
-      object colInsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        Visible = False
+      object colEndDate: TcxGridDBColumn
+        Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072
+        DataBinding.FieldName = 'EndDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
+        Width = 77
       end
-      object colUpdateName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateName'
+      object colWeight: TcxGridDBColumn
+        Caption = #1042#1093#1086#1076#1080#1090' '#1074' '#1086#1073#1097#1080#1081' '#1074#1077#1089' '#1074#1099#1093#1086#1076#1072
+        DataBinding.FieldName = 'Weight'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
+        Width = 137
       end
-      object colInsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        Visible = False
+      object colTaxExit: TcxGridDBColumn
+        Caption = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093#1086#1076#1072
+        DataBinding.FieldName = 'TaxExit'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 75
-      end
-      object colUpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateDate'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 75
+        Width = 148
       end
       object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 300
+        Width = 239
       end
       object clsfcisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -537,29 +537,6 @@ object ReceiptForm: TReceiptForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object PaidKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PaidKindChoiceForm'
-      FormName = 'TPaidKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PaidKindId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PaidKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -611,29 +588,6 @@ object ReceiptForm: TReceiptForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object ContractKindChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ContractKindChoiceForm'
-      FormName = 'TContractKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractKindName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -648,120 +602,6 @@ object ReceiptForm: TReceiptForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
-    end
-    object InfoMoneyChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyCode'
-        end
-        item
-          Name = 'InfoMoneyGroupId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyGroupId'
-        end
-        item
-          Name = 'InfoMoneyGroupName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyGroupName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ReceiptChildCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ReceiptChildCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object JuridicalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end
-        item
-          Name = 'OKPO'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'OKPO'
-          DataType = ftString
-        end
-        item
-          Name = 'JuridicalCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'JuridicalCode'
-        end>
-      isShowModal = True
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -778,52 +618,6 @@ object ReceiptForm: TReceiptForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
-    end
-    object ContractTagChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'ContractTagChoiceForm'
-      FormName = 'TContractTagForm'
-      FormNameParam.Value = 'TContractTagForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractTagId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ContractTagName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object BankAccountChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'BankAccountChoiceForm'
-      FormName = 'TBankAccountForm'
-      FormNameParam.Value = 'TBankAccountForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BankAccountId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BankAccountName'
-          DataType = ftString
-        end>
-      isShowModal = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -855,48 +649,48 @@ object ReceiptForm: TReceiptForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object ContractConditionKindChoiceForm: TOpenChoiceForm
+    object ReceiptChildChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'ContractConditionKindChoiceForm'
-      FormName = 'TContractConditionKindForm'
-      FormNameParam.Value = ''
+      Caption = 'ReceiptChildForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ReceiptChildCDS
-          ComponentItem = 'ContractConditionKindId'
+          ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ReceiptChildCDS
-          ComponentItem = 'ContractConditionKindName'
+          ComponentItem = 'GoodsKindName'
           DataType = ftString
         end>
       isShowModal = False
     end
-    object BonusKindChoiceForm: TOpenChoiceForm
+    object Goods_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'BonusKindChoiceForm'
-      FormName = 'TBonusKindForm'
-      FormNameParam.Value = 'TBonusKindForm'
+      Caption = 'Goods_ObjectChoiceForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ReceiptChildCDS
-          ComponentItem = 'BonusKindId'
+          ComponentItem = 'GoodsId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ReceiptChildCDS
-          ComponentItem = 'BonusKindName'
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end>
       isShowModal = False
@@ -905,13 +699,13 @@ object ReceiptForm: TReceiptForm
       Category = 'DSDLib'
       MoveParams = <>
       View = cxGridDBTableViewContractCondition
-      Action = ContractConditionKindChoiceForm
+      Action = Goods_ObjectChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099'>'
       ImageIndex = 0
     end
-    object actContractCondition: TdsdUpdateDataSet
+    object actReceiptChild: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spInsertUpdateReceiptChild
@@ -933,75 +727,6 @@ object ReceiptForm: TReceiptForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object PersonalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PersonalChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object PersonalTradeChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PersonalTradeChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalTradeName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
-    object PersonalCollationChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PersonalCollationChoiceForm'
-      FormName = 'TPersonal_ObjectForm'
-      FormNameParam.Value = 'TPersonal_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalCollationName'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
@@ -1010,31 +735,7 @@ object ReceiptForm: TReceiptForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41852d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41852d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Name = 'inIsPeriod'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Name = 'inIsEndDate'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end>
+    Params = <>
     PackSize = 1
     Left = 216
     Top = 224
@@ -1115,14 +816,6 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inComment'
-        Value = Null
-        Component = ReceiptChildCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inValue'
         Value = Null
         Component = ReceiptChildCDS
@@ -1131,31 +824,64 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
       end
       item
-        Name = 'inContractId'
+        Name = 'inWeight'
+        Value = Null
+        Component = ReceiptChildCDS
+        ComponentItem = 'Weight'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inTaxExit'
+        Value = Null
+        Component = ReceiptChildCDS
+        ComponentItem = 'TaxExit'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = ReceiptChildCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = ReceiptChildCDS
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ReceiptChildCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReceiptId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'inContractConditionKindId'
+        Name = 'inGoodsId'
         Value = Null
         Component = ReceiptChildCDS
-        ComponentItem = 'ContractConditionKindId'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
-        Name = 'inBonusKindId'
+        Name = 'inGoodsKindId'
         Value = Null
         Component = ReceiptChildCDS
-        ComponentItem = 'BonusKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = Null
-        Component = ReceiptChildCDS
-        ComponentItem = 'InfoMoneyId'
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end>
     PackSize = 1
