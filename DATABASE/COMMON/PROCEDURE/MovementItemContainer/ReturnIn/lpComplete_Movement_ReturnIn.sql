@@ -1607,11 +1607,14 @@ BEGIN
      ;
 
 
-     -- !!!6.0. формируются свойства в элементах документа из данных для проводок!!!
+     -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_To)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
           ) AS tmp;
+     -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_To);
+
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

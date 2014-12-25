@@ -132,7 +132,7 @@ BEGIN
     -- таблица -
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpContainer_Count (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpContainer_Count (ContainerId Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, Amount TFloat) ON COMMIT DROP;
 
 
     IF inGoodsGroupId <> 0
@@ -191,12 +191,14 @@ BEGIN
                                                          AND Container.DescId = zc_Container_Count()
                                      INNER JOIN tmpLocation ON tmpLocation.ContainerId = Container.Id
                                )
+       , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId FROM Object_Account_View AS View_Account /*WHERE View_Account.AccountGroupId = inAccountGroupId*/)
        , tmpContainer_Count AS (SELECT Container.Id AS ContainerId
                                      , Container.LocationId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                      , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                      , COALESCE (CLO_AssetTo.ObjectId, 0) AS AssetToId
+                                     , COALESCE (CLO_Account.ObjectId, 0) AS AccountId
                                      , Container.Amount
                                 FROM tmpContainer_Count2 AS Container
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
@@ -205,9 +207,15 @@ BEGIN
                                                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
                                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
+                                                                                 AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                     LEFT JOIN tmpAccount ON tmpAccount.AccountId = CLO_Account.ObjectId
+                                -- WHERE (CLO_Account.ContainerId IS NULL AND inAccountGroupId = zc_Enum_AccountGroup_20000()) OR COALESCE (inAccountGroupId, 0) = 0 OR tmpAccount.AccountId IS NOT NULL
+                                -- WHERE ((COALESCE (tmpAccount.AccountGroupId, 0) <> zc_Enum_AccountGroup_110000() AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) OR inIsInfoMoney = FALSE)
+                                --    OR (tmpAccount.AccountGroupId = zc_Enum_AccountGroup_110000() AND inAccountGroupId = zc_Enum_AccountGroup_110000())
                                )
-           INSERT INTO _tmpContainer_Count (ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, Amount)
-             SELECT ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, Amount FROM tmpContainer_Count;
+           INSERT INTO _tmpContainer_Count (ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, Amount)
+             SELECT ContainerId, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, Amount FROM tmpContainer_Count;
 /*
      IF (SELECT COUNT(*) FROM _tmpContainer_Count) <= 300
      THEN
@@ -226,6 +234,7 @@ BEGIN
                                        , tmpContainer_Count.GoodsKindId
                                        , tmpContainer_Count.PartionGoodsId
                                        , tmpContainer_Count.AssetToId
+                                       , tmpContainer_Count.AccountId
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Income()
                                                         THEN MIContainer.Amount
@@ -266,34 +275,78 @@ BEGIN
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
+                                                    AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- Кол-во, реализация, Скидка за вес
+                                                    AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale_10500
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- Кол-во, реализация, Разница в весе
+                                                    AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Sale_40208
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
+                                                    AND MIContainer.ContainerId_Analyzer <> 0
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_SaleReal
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500() -- Кол-во, реализация, Скидка за вес
+                                                    AND MIContainer.ContainerId_Analyzer <> 0
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_SaleReal_10500
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() -- Кол-во, реализация, Разница в весе
+                                                    AND MIContainer.ContainerId_Analyzer <> 0
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_SaleReal_40208
+
+
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- Кол-во, возврат, от покупателя
+                                                    AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnIn
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- Кол-во, возврат, Разница в весе
+                                                    AND (tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE)
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_ReturnIn_40208
+
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() -- Кол-во, возврат, от покупателя
+                                                    AND MIContainer.ContainerId_Analyzer <> 0
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ReturnInReal
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() -- Кол-во, возврат, Разница в весе
+                                                    AND MIContainer.ContainerId_Analyzer <> 0
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS Amount_ReturnInReal_40208
+
 
                                        , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Loss()
@@ -318,8 +371,8 @@ BEGIN
                                                    ELSE 0
                                               END) AS Amount_ProductionOut
 
-                                       , tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Start
-                                       , tmpContainer_Count.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) AS Amount_End
+                                       , CASE WHEN tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE THEN tmpContainer_Count.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS Amount_Start
+                                       , CASE WHEN tmpContainer_Count.AccountId = 0 OR inIsInfoMoney = TRUE THEN tmpContainer_Count.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) ELSE 0 END AS Amount_End
                                   FROM _tmpContainer_Count AS tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
@@ -333,9 +386,15 @@ BEGIN
                                          , tmpContainer_Count.GoodsKindId
                                          , tmpContainer_Count.PartionGoodsId
                                          , tmpContainer_Count.AssetToId
+                                         , tmpContainer_Count.AccountId
                                          , tmpContainer_Count.Amount
                                  )
-       , tmpAccount AS (SELECT View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId = inAccountGroupId OR COALESCE (inAccountGroupId, 0) = 0)
+       , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId FROM Object_Account_View AS View_Account
+                        -- WHERE (((View_Account.AccountGroupId = inAccountGroupId OR COALESCE (inAccountGroupId, 0) = 0)) AND AccountGroupId <> zc_Enum_AccountGroup_110000())
+                        --    OR (inAccountGroupId = zc_Enum_AccountGroup_110000() AND AccountGroupId = zc_Enum_AccountGroup_110000())
+                        WHERE ((View_Account.AccountGroupId = inAccountGroupId OR COALESCE (inAccountGroupId, 0) = 0)) 
+                           OR (inAccountGroupId = zc_Enum_AccountGroup_20000() AND AccountGroupId = zc_Enum_AccountGroup_110000())
+                       )
        , tmpContainer_Summ AS (SELECT tmpContainer_Count.ContainerId AS ContainerId_Count
                                     , tmpContainer_Count.LocationId
                                     , tmpContainer_Count.GoodsId
@@ -344,6 +403,7 @@ BEGIN
                                     , tmpContainer_Count.AssetToId
                                     , Container.Id                         AS ContainerId_Summ
                                     , Container.ObjectId                   AS AccountId
+                                    , tmpAccount.AccountGroupId            AS AccountGroupId
                                     , Container.Amount
                                FROM _tmpContainer_Count AS tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
@@ -353,6 +413,7 @@ BEGIN
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
                                       , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END AS ContainerId_Summ
                                       , tmpContainer_Summ.AccountId
+                                      , tmpContainer_Summ.AccountGroupId
                                       , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
                                       , tmpContainer_Summ.GoodsKindId
@@ -402,34 +463,78 @@ BEGIN
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
+                                                   AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- Сумма с/с, реализация, Скидка за вес
+                                                   AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale_10500
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
-                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
+                                                   AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Sale_40208
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
+                                                   AND MIContainer.ContainerId_Analyzer <> 0
+                                                       THEN -1 * MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_SaleReal
+                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() -- Сумма с/с, реализация, Скидка за вес
+                                                   AND MIContainer.ContainerId_Analyzer <> 0
+                                                       THEN -1 * MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_SaleReal_10500
+                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() -- Сумма с/с, реализация, Разница в весе
+                                                   AND MIContainer.ContainerId_Analyzer <> 0
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_SaleReal_40208
+
+
+                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- Сумма с/с, возврат, от покупателя
+                                                   AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnIn
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- Сумма с/с, возврат, Разница в весе
+                                                   AND (tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE)
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_ReturnIn_40208
+
+                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() -- Сумма с/с, возврат, от покупателя
+                                                   AND MIContainer.ContainerId_Analyzer <> 0
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_ReturnInReal
+                                      , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND MIContainer.MovementDescId = zc_Movement_ReturnIn()
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() -- Сумма с/с, возврат, Разница в весе
+                                                   AND MIContainer.ContainerId_Analyzer <> 0
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_ReturnInReal_40208
+
 
                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Loss()
@@ -464,8 +569,8 @@ BEGIN
                                                   ELSE 0
                                               END) AS Amount_ProductionOut
 
-                                       , tmpContainer_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Start
-                                       , tmpContainer_Summ.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) AS Amount_End
+                                       , CASE WHEN tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE THEN tmpContainer_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS Amount_Start
+                                       , CASE WHEN tmpContainer_Summ.AccountGroupId <> zc_Enum_AccountGroup_110000() OR inIsInfoMoney = TRUE THEN tmpContainer_Summ.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)) ELSE 0 END AS Amount_End
                                  FROM tmpContainer_Summ
                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
                                                                                     AND MIContainer.OperDate >= inStartDate
@@ -477,6 +582,7 @@ BEGIN
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
                                         , CASE WHEN inIsInfoMoney = TRUE THEN tmpContainer_Summ.ContainerId_Summ ELSE 0 END
                                         , tmpContainer_Summ.AccountId
+                                        , tmpContainer_Summ.AccountGroupId
                                         , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
                                         , tmpContainer_Summ.GoodsKindId
@@ -740,30 +846,30 @@ BEGIN
 
         FROM (SELECT COALESCE (tmpMIContainer_Summ.ContainerId, tmpMIContainer_Count.ContainerId) AS ContainerId
                    , COALESCE (tmpMIContainer_Summ.ContainerId_Summ, CASE WHEN inIsInfoMoney = TRUE THEN tmpMIContainer_Count.ContainerId ELSE 0 END) AS ContainerId_Summ
-                   , COALESCE (tmpMIContainer_Summ.AccountId, 0) AS AccountId
+                   , COALESCE (tmpMIContainer_Summ.AccountId, tmpMIContainer_Count.AccountId) AS AccountId
                    , COALESCE (tmpMIContainer_Summ.LocationId, tmpMIContainer_Count.LocationId) AS LocationId
                    , COALESCE (tmpMIContainer_Summ.GoodsId, tmpMIContainer_Count.GoodsId) AS GoodsId
                    , COALESCE (tmpMIContainer_Summ.GoodsKindId, tmpMIContainer_Count.GoodsKindId) AS GoodsKindId
                    , COALESCE (tmpMIContainer_Summ.PartionGoodsId, tmpMIContainer_Count.PartionGoodsId) AS PartionGoodsId
                    , COALESCE (tmpMIContainer_Summ.AssetToId, tmpMIContainer_Count.AssetToId) AS AssetToId
 
-                   , COALESCE (tmpMIContainer_Count.CountStart, 0) AS CountStart
-                   , COALESCE (tmpMIContainer_Count.CountEnd, 0) AS CountEnd
-                   , COALESCE (tmpMIContainer_Count.CountIncome, 0) AS CountIncome
-                   , COALESCE (tmpMIContainer_Count.CountReturnOut, 0) AS CountReturnOut
-                   , COALESCE (tmpMIContainer_Count.CountSendIn, 0) AS CountSendIn
-                   , COALESCE (tmpMIContainer_Count.CountSendOut, 0) AS CountSendOut
-                   , COALESCE (tmpMIContainer_Count.CountSendOnPriceIn, 0) AS CountSendOnPriceIn
-                   , COALESCE (tmpMIContainer_Count.CountSendOnPriceOut, 0) AS CountSendOnPriceOut
-                   , COALESCE (tmpMIContainer_Count.CountSale, 0) AS CountSale
-                   , COALESCE (tmpMIContainer_Count.CountSale_10500, 0) AS CountSale_10500
-                   , COALESCE (tmpMIContainer_Count.CountSale_40208, 0) AS CountSale_40208
-                   , COALESCE (tmpMIContainer_Count.CountReturnIn, 0) AS CountReturnIn
-                   , COALESCE (tmpMIContainer_Count.CountReturnIn_40208, 0) AS CountReturnIn_40208
-                   , COALESCE (tmpMIContainer_Count.CountLoss, 0) AS CountLoss
-                   , COALESCE (tmpMIContainer_Count.CountInventory, 0) AS CountInventory
-                   , COALESCE (tmpMIContainer_Count.CountProductionIn, 0) AS CountProductionIn
-                   , COALESCE (tmpMIContainer_Count.CountProductionOut, 0) AS CountProductionOut
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountStart, 0) END AS CountStart
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountEnd, 0) END AS CountEnd
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountIncome, 0) END AS CountIncome
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountReturnOut, 0) END AS CountReturnOut
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSendIn, 0) END AS CountSendIn
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSendOut, 0) END AS CountSendOut
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSendOnPriceIn, 0) END AS CountSendOnPriceIn
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSendOnPriceOut, 0) END AS CountSendOnPriceOut
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSale, 0) END AS CountSale
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSale_10500, 0) END AS CountSale_10500
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountSale_40208, 0) END AS CountSale_40208
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountReturnIn, 0) END AS CountReturnIn
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountReturnIn_40208, 0) END AS CountReturnIn_40208
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountLoss, 0) END AS CountLoss
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountInventory, 0) END AS CountInventory
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountProductionIn, 0) END AS CountProductionIn
+                   , CASE WHEN inIsInfoMoney = FALSE AND tmpMIContainer_Summ.AccountGroupId = zc_Enum_AccountGroup_60000() THEN 0 ELSE COALESCE (tmpMIContainer_Count.CountProductionOut, 0) END AS CountProductionOut
 
                    , COALESCE (tmpMIContainer_Summ.SummStart, 0) AS SummStart
                    , COALESCE (tmpMIContainer_Summ.SummEnd, 0) AS SummEnd
@@ -785,7 +891,7 @@ BEGIN
                    , COALESCE (tmpMIContainer_Summ.SummProductionOut, 0) AS SummProductionOut
               FROM
              (SELECT tmpMIContainer_Count.ContainerId
-                   , 0 AS AccountId
+                   , tmpMIContainer_Count.AccountId
                    , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
@@ -832,6 +938,7 @@ BEGIN
              (SELECT tmpMIContainer_Summ.ContainerId_Count AS ContainerId
                    , tmpMIContainer_Summ.ContainerId_Summ
                    , tmpMIContainer_Summ.AccountId
+                   , tmpMIContainer_Summ.AccountGroupId
                    , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
@@ -878,6 +985,7 @@ BEGIN
               GROUP BY tmpMIContainer_Summ.ContainerId_Count
                      , tmpMIContainer_Summ.ContainerId_Summ
                      , tmpMIContainer_Summ.AccountId
+                     , tmpMIContainer_Summ.AccountGroupId
                      , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
                      , tmpMIContainer_Summ.GoodsKindId
