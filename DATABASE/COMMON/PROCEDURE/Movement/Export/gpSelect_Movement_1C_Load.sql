@@ -205,7 +205,7 @@ BEGIN
                                                                                         THEN MovementLinkObject_From.ObjectId
                                                                                    ELSE ObjectLink_Partner_Juridical.ChildObjectId
                                                                               END
-                  AND Movement.OperDate BETWEEN ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND ObjectHistory_JuridicalDetails_ViewByDate.EndDate  
+                  AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate  
 
 
             LEFT JOIN MovementItem AS MIMaster ON MIMaster.MovementId = Movement.Id

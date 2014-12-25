@@ -1,30 +1,27 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 766
+  ExplicitWidth = 1036
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 124
+    Top = 122
     Width = 1020
-    Height = 608
+    Height = 610
     TabOrder = 2
-    ExplicitTop = 124
+    ExplicitTop = 122
     ExplicitWidth = 1020
-    ExplicitHeight = 608
-    ClientRectBottom = 604
-    ClientRectRight = 1016
+    ExplicitHeight = 610
+    ClientRectBottom = 610
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1014
-      ExplicitHeight = 582
+      ExplicitWidth = 1020
+      ExplicitHeight = 586
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 224
-        ExplicitWidth = 1014
-        ExplicitHeight = 224
+        Width = 1020
+        Height = 228
+        ExplicitWidth = 1020
+        ExplicitHeight = 228
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -157,10 +154,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
       end
       inherited cxGridChild: TcxGrid
-        Top = 224
-        Width = 1014
-        ExplicitTop = 224
-        ExplicitWidth = 1014
+        Top = 228
+        Width = 1020
+        ExplicitTop = 228
+        ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           Styles.Content = nil
           inherited colChildGoodsCode: TcxGridDBColumn
@@ -226,7 +223,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     ExplicitWidth = 1020
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 24
+      ExplicitHeight = 22
     end
   end
   inherited ActionList: TActionList
@@ -305,7 +302,7 @@ inherited ProductionUnionForm: TProductionUnionForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -445,9 +442,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
       end
       item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Name = 'inIsPeresort'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 466
     Top = 224

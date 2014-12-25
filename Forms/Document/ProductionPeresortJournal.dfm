@@ -1,9 +1,9 @@
 inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' -'#1087#1077#1088#1077#1089#1086#1088#1090'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitWidth = 1089
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -129,30 +129,30 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 100
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            Width = 80
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 80
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 150
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 150
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
@@ -284,10 +284,9 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inArticleLossId'
-        Value = 'False'
-        Component = FormParams
-        ComponentItem = 'inArticleLossId'
+        Name = 'inIsPeresort'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 136
@@ -473,11 +472,6 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'inArticleLossId'
-        Value = Null
-        ParamType = ptInput
       end>
     Left = 400
     Top = 200
@@ -499,7 +493,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

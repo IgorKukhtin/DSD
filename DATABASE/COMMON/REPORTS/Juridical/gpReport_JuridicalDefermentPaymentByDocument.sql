@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
     IN inPeriodCount      Integer   , --
-    IN inSumm             TFloat    , 
+    IN inSaleSumm             TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
@@ -112,7 +112,7 @@ BEGIN
       CREATE TEMP TABLE _tempMovement (Id Integer, DescId_Contract Integer, DescId_PaidKind Integer, Summ TFloat) ON COMMIT DROP; 
       
       -- пока сумма найденных меньше искомой
-      WHILE (vbOperSumm < inSumm) AND NOT (vbNextOperDate IS NULL) LOOP
+      WHILE (vbOperSumm < inSaleSumm) AND NOT (vbNextOperDate IS NULL) LOOP
          -- поиск даты
          SELECT MAX (Movement.OperDate) INTO vbNextOperDate
          FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind
@@ -251,7 +251,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
