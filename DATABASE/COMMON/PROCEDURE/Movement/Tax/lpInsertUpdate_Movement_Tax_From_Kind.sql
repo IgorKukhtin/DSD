@@ -489,10 +489,11 @@ BEGIN
       INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective)
          SELECT tmpMI.GoodsId
               , tmpMI.GoodsKindId
-              , CAST (tmpMI.Price
-                  -- так переводится в валюту zc_Enum_Currency_Basis
-                * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
-                AS NUMERIC (16, 2)) AS Price
+              , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                          -- так переводится в валюту zc_Enum_Currency_Basis
+                          THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                     ELSE tmpMI.Price
+                END AS Price
               , tmpMI.CountForPrice
               , CASE WHEN tmpMI.Amount_Sale > 0 THEN tmpMI.Amount_Sale ELSE 0 END AS Amount_Tax
               , tmpMI.Amount_ReturnIn + CASE WHEN tmpMI.Amount_Sale < 0 THEN -1 * tmpMI.Amount_Sale ELSE 0 END AS Amount_TaxCorrective
@@ -508,7 +509,10 @@ BEGIN
                                       -- в налоговых цены всегда будут без НДС
                                       THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
-                                 ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                 ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0
+                                                THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                      END
                             END AS Price
                           , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale

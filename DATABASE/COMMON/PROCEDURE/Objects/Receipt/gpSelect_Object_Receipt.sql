@@ -1,11 +1,11 @@
 -- Function: gpSelect_Object_Receipt()
 
--- DROP FUNCTION gpSelect_Object_Receipt();
+DROP FUNCTION IF EXISTS gpSelect_Object_Receipt(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, Code TVarChar, Comment TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                StartDate TDateTime, EndDate TDateTime,
                Main boolean,
@@ -23,10 +23,11 @@ BEGIN
 
    RETURN QUERY
      SELECT
-           Object_Receipt.Id        AS Id
-         , Object_Receipt.ValueData AS NAME
+           Object_Receipt.Id         AS Id
+         , Object_Receipt.ObjectCode AS Code
+         , Object_Receipt.ValueData  AS NAME
 
-         , ObjectString_Code.ValueData    AS Code
+         , ObjectString_Code.ValueData    AS ReceiptCode
          , ObjectString_Comment.ValueData AS Comment
 
          , ObjectFloat_Value.ValueData         AS Value
@@ -58,8 +59,8 @@ BEGIN
          , Object_ReceiptCost.ValueData   AS ReceiptCostName
 
          , Object_ReceiptKind.Id          AS ReceiptKindId
-         , Object_ReceiptCost.ObjectCode  AS ReceiptKindCode
-         , Object_ReceiptCost.ValueData   AS ReceiptKindName
+         , Object_ReceiptKind.ObjectCode  AS ReceiptKindCode
+         , Object_ReceiptKind.ValueData   AS ReceiptKindName
 
          , Object_Receipt.isErased AS isErased
 

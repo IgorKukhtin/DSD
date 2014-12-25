@@ -1,12 +1,12 @@
 ﻿-- Function: gpGet_Object_Receipt(integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_Receipt(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Receipt(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
     IN inId          Integer,       -- Составляющие рецептур 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, Code TVarChar, Comment TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                StartDate TDateTime, EndDate TDateTime,
                Main boolean,
@@ -27,23 +27,24 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)   AS Id
-           , CAST ('' as TVarChar) AS NAME
+             CAST (0 as Integer)                       AS Id
+           , lfGet_ObjectCode (0, zc_Object_Receipt()) AS Code 
+           , CAST ('' as TVarChar)                     AS NAME
           
-           , CAST ('' as TVarChar) AS Code
+           , CAST ('' as TVarChar) AS ReceiptCode
            , CAST ('' as TVarChar) AS Comment         
  
-           , CAST ('' as TVarChar) AS Value  
-           , CAST ('' as TVarChar) AS ValueCost
-           , CAST ('' as TVarChar) AS TaxExit
-           , CAST ('' as TVarChar) AS PartionValue
-           , CAST ('' as TVarChar) AS PartionCount
-           , CAST ('' as TVarChar) AS WeightPackage
+           , CAST (NULL as TFloat) AS Value  
+           , CAST (NULL as TFloat) AS ValueCost
+           , CAST (NULL as TFloat) AS TaxExit
+           , CAST (NULL as TFloat) AS PartionValue
+           , CAST (NULL as TFloat) AS PartionCount
+           , CAST (NULL as TFloat) AS WeightPackage
                                                         
-           , CAST ('' as TDateTime) AS StartDate
-           , CAST ('' as TDateTime) AS EndDate
+           , CAST (NULL as TDateTime) AS StartDate
+           , CAST (NULL as TDateTime) AS EndDate
         
-           , CAST (NULL AS Boolean) AS Main
+           , CAST (False AS Boolean) AS Main
          
            , CAST (0 as Integer)   AS GoodsId
            , CAST (0 as Integer)   AS GoodsCode
@@ -65,17 +66,19 @@ BEGIN
            , CAST (0 as Integer)   AS ReceiptKindCode
            , CAST ('' as TVarChar) AS ReceiptKindName
 
-           , CAST (NULL AS Boolean) AS isErased
+           , CAST (False AS Boolean) AS isErased
 
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Receipt();
+     --  FROM Object 
+       --WHERE Object.DescId = zc_Object_Receipt()
+       ;
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_Receipt.Id        AS Id
-         , Object_Receipt.ValueData AS NAME
+           Object_Receipt.Id         AS Id
+         , Object_Receipt.ObjectCode AS Code
+         , Object_Receipt.ValueData  AS NAME
           
-         , ObjectString_Code.ValueData    AS Code
+         , ObjectString_Code.ValueData    AS ReceiptCode
          , ObjectString_Comment.ValueData AS Comment         
  
          , ObjectFloat_Value.ValueData         AS Value  
@@ -107,8 +110,8 @@ BEGIN
          , Object_ReceiptCost.ValueData   AS ReceiptCostName
 
          , Object_ReceiptKind.Id          AS ReceiptKindId
-         , Object_ReceiptCost.ObjectCode  AS ReceiptKindCode
-         , Object_ReceiptCost.ValueData   AS ReceiptKindName
+         , Object_ReceiptKind.ObjectCode  AS ReceiptKindCode
+         , Object_ReceiptKind.ValueData   AS ReceiptKindName
 
          , Object_Receipt.isErased AS isErased
          
@@ -203,3 +206,4 @@ ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpGet_Object_Receipt (100, '2')
+--select * from gpGet_Object_Receipt(inId := 0 ,  inSession := '5');

@@ -121,6 +121,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -477,7 +478,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Left = 966
@@ -603,6 +604,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.ComponentItem = 'PeriodNumber'
         end
         item
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm1'
           FromParam.DataType = ftFloat
@@ -633,12 +635,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -651,12 +655,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -689,6 +695,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.ComponentItem = 'PeriodNumber'
         end
         item
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm2'
           FromParam.DataType = ftFloat
@@ -719,12 +726,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -737,12 +746,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm2'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -775,6 +786,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.ComponentItem = 'PeriodNumber'
         end
         item
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm3'
           FromParam.DataType = ftFloat
@@ -805,12 +817,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -823,12 +837,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm3'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -861,6 +877,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.ComponentItem = 'PeriodNumber'
         end
         item
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm4'
           FromParam.DataType = ftFloat
@@ -891,12 +908,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -909,12 +928,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm4'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -947,6 +968,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.ComponentItem = 'PeriodNumber'
         end
         item
+          FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'SaleSumm5'
           FromParam.DataType = ftFloat
@@ -977,12 +999,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -995,12 +1019,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm5'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -1044,12 +1070,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1062,12 +1090,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -1116,12 +1146,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'JuridicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end
         item
           Name = 'StartContractDate'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1134,12 +1166,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Name = 'Summ'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
         end
         item
           Name = 'ContractNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
@@ -1426,6 +1460,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inContractDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
@@ -1433,6 +1468,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
@@ -1446,14 +1482,23 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
         ParamType = ptInput
       end
       item
@@ -1471,6 +1516,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         DataType = ftFloat
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 192
     Top = 192
   end
@@ -1504,6 +1550,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Params = <
       item
         Name = 'inStartDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
@@ -1518,6 +1565,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
@@ -1531,16 +1579,26 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 200
     Top = 248
   end

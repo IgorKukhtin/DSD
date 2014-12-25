@@ -25,7 +25,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 366
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 96
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -780,7 +779,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 60
       end
       object CountStart_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089
         DataBinding.FieldName = 'CountStart_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -790,6 +788,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceStart: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1085'.'
@@ -827,7 +826,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 55
       end
       object CountIncome_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1074#1077#1089
         DataBinding.FieldName = 'CountIncome_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -837,6 +835,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceIncome: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1086#1089#1090'.'
@@ -874,7 +873,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 60
       end
       object CountReturnOut_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1074#1077#1089
         DataBinding.FieldName = 'CountReturnOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -884,6 +882,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceReturnOut: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1074'.'#1087#1086#1089#1090'.'
@@ -921,7 +920,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 60
       end
       object CountSendIn_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountSendIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -931,6 +929,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceSendIn: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1080#1093'.'#1087'. '
@@ -969,7 +968,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 60
       end
       object CountSendOut_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountSendOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -979,6 +977,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceSendOut: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1088#1072#1089#1093'. '#1087'.'
@@ -1016,7 +1015,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountSendOnPriceIn_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountSendOnPriceIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1026,6 +1024,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceSendOnPriceIn: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1080#1093'. '#1092'. '
@@ -1063,7 +1062,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountProductionIn_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1088#1086#1080#1079#1074'. '#1087#1088#1080#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountProductionIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1073,6 +1071,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceProductionIn: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088'.'#1087#1088#1080#1093'.'
@@ -1110,7 +1109,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountSendOnPriceOut_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountSendOnPriceOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1120,6 +1118,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceSendOnPriceOut: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1088#1072#1089#1093'.'#1092'. '
@@ -1157,7 +1156,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountSale_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074#1077#1089
         DataBinding.FieldName = 'CountSale_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1181,7 +1179,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 80
       end
       object CountSale_10500_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1057#1082#1080#1076#1082#1072', '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'CountSale_10500_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1190,7 +1187,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object CountSale_40208: TcxGridDBColumn
         Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -1205,7 +1202,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 100
       end
       object CountSale_40208_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'CountSale_40208_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1275,7 +1271,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountReturnIn_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1074#1077#1089
         DataBinding.FieldName = 'CountReturnIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1285,6 +1280,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object CountReturnIn_40208: TcxGridDBColumn
         Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.)'
@@ -1298,7 +1294,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 100
       end
       object CountReturnIn_40208_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1074'.'#1087#1086#1082'.)'
         DataBinding.FieldName = 'CountReturnIn_40208_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1308,6 +1303,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceReturnIn: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1074'.'#1087#1086#1082'. '
@@ -1343,7 +1339,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object CountLoss: TcxGridDBColumn
         Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'.'
@@ -1404,7 +1400,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountProductionOut_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1055#1088#1086#1080#1079#1074'. '#1088#1072#1089#1093'. '#1074#1077#1089
         DataBinding.FieldName = 'CountProductionOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1414,6 +1409,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceProductionOut: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088'.'#1088#1072#1089#1093'. '
@@ -1451,7 +1447,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountInventory_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1042#1077#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
         DataBinding.FieldName = 'CountInventory_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1461,6 +1456,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceInventory: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1091#1073'.,'#1101#1082'.'
@@ -1510,7 +1506,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountEnd_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1074#1077#1089
         DataBinding.FieldName = 'CountEnd_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1520,6 +1515,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceEnd: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1082'. '
@@ -1557,7 +1553,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountTotalIn_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1048#1090#1086#1075#1086' '#1087#1088#1080#1093#1086#1076' '#1074#1077#1089
         DataBinding.FieldName = 'CountTotalIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1567,6 +1562,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceTotalIn: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1080#1090'.'#1087#1088#1080#1093'.'
@@ -1605,7 +1601,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 70
       end
       object CountTotalOut_Weight: TcxGridDBColumn
-        AlternateCaption = '70'
         Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1074#1077#1089
         DataBinding.FieldName = 'CountTotalOut_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1615,6 +1610,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 70
       end
       object PriceTotalOut: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1080#1090'.'#1088#1072#1089#1093'.'

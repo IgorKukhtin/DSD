@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_MasterTech  (Integer, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_MasterTech(
 --    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment             TVarChar  , -- Комментарий
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
     IN inReceiptId           Integer   , -- Рецептуры
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -56,13 +58,14 @@ BEGIN
                                                   , inMovementId       := vbMovementId--inMovementId
                                                   , inGoodsId          := inGoodsId
                                                   , inAmount           := vbAmount
-                                                  , inPartionClose     := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), False)--inPartionClose
+                                                  , inPartionClose     := CAST(COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_PartionClose()), False) AS BOOLEAN)--inPartionClose
                                                   , inCount            := inCount
                                                   , inRealWeight       := inRealWeight
                                                   , inCuterCount       := inCuterCount
-                                                  , inPartionGoods     := COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '')--inPartionGoods
+                                                  , inPartionGoods     := CAST(COALESCE ((SELECT ValueData FROM MovementItemString WHERE MovementItemId = ioId AND DescId = zc_MIString_PartionGoods()), '') AS TVarChar)--inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
+                                                  , inGoodsCompleteKindId := inGoodsCompleteKindId
                                                   , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
                                                   );
@@ -74,6 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  12.12.14                                                        *
 
 */
