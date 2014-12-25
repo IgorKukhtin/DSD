@@ -267,6 +267,7 @@ begin
   for I := 0 to Params.Count - 1 do
       if Params[i].ParamType in [ptOutput, ptInputOutput] then
          if XMLDocument.DocumentElement.HasAttribute(LowerCase(Params[i].Name)) then
+            // XMLDocument режет перевод строки!!! приходится делать так
             Params[i].Value := XMLDocument.DocumentElement.Attributes[LowerCase(Params[i].Name)];
 end;
 

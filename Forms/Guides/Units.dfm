@@ -178,8 +178,8 @@ object UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -333,6 +333,7 @@ object UnitForm: TUnitForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -358,12 +359,14 @@ object UnitForm: TUnitForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -412,6 +415,7 @@ object UnitForm: TUnitForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 416
     Top = 160
   end

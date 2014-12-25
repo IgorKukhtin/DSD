@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
+    IN inPaymentDate         TDateTime , -- Дата платежа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -23,7 +23,7 @@ BEGIN
      vbUserId := inSession;
 
      ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
-                                          , inFromId, inToId, inNDSKindId, inContractId, vbUserId);
+                                          , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate, vbUserId);
 
 
 END;
@@ -34,6 +34,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.12.14                         *
  02.12.14                                                        *
  10.07.14                                                        *
 

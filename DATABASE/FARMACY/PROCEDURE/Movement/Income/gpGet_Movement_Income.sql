@@ -1,6 +1,6 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
+             , ContractId Integer, ContractName TVarChar
+             , PaymentDate TDateTime
               )
 AS
 $BODY$
@@ -38,7 +40,9 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS ToName
              , 0                     			        AS NDSKindId
              , CAST ('' AS TVarChar) 				AS NDSKindName
-
+             , 0                     			        AS ContractId
+             , CAST ('' AS TVarChar) 				AS ContractName
+             , CAST (NULL AS TDateTime)                         AS PaymentDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -57,6 +61,9 @@ BEGIN
            , Movement_Income_View.ToName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
+           , Movement_Income_View.ContractId
+           , Movement_Income_View.ContractName
+           , Movement_Income_View.PaymentDate 
 
        FROM Movement_Income_View       
       WHERE Movement_Income_View.Id = inMovementId;

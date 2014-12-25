@@ -3,6 +3,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
   ClientHeight = 395
   ClientWidth = 847
   AddOnFormData.isAlwaysRefresh = False
+  ExplicitLeft = -65
   ExplicitWidth = 855
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -67,7 +68,7 @@ inherited ImportExportLinkForm: TImportExportLinkForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 184
+            Width = 133
           end
           object colLinkTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1089#1074#1103#1079#1080
@@ -81,6 +82,14 @@ inherited ImportExportLinkForm: TImportExportLinkForm
               end>
             HeaderAlignmentVert = vaCenter
             Width = 81
+          end
+          object colText: TcxGridDBColumn
+            Caption = #1058#1077#1082#1089#1090
+            DataBinding.FieldName = 'SomeText'
+            PropertiesClassName = 'TcxBlobEditProperties'
+            Properties.BlobPaintStyle = bpsText
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
         end
       end
@@ -235,6 +244,14 @@ inherited ImportExportLinkForm: TImportExportLinkForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'LinkTypeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inText'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SomeText'
+        DataType = ftWideString
         ParamType = ptInput
       end>
     PackSize = 1

@@ -29,19 +29,22 @@ BEGIN
 
 
      OPEN Cursor1 FOR
-       SELECT 'CodeDebet'::TVarChar AS FieldName, 'код дебитора'::TVarChar AS DisplayName
- UNION SELECT 'CodePoint'::TVarChar AS FieldName, 'код адреса доставки'::TVarChar AS DisplayName
- UNION SELECT 'GoodsCode'::TVarChar AS FieldName, 'код товара'::TVarChar AS DisplayName
- UNION SELECT 'Amount'::TVarChar    AS FieldName, 'кол-во'::TVarChar AS DisplayName;
+       SELECT ''::TVarChar AS FieldName, ''::TVarChar AS DisplayName;
 
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
        SELECT            
-             JuridicalKey.IntegerKey as CodeDebet
-           , PointKey.IntegerKey     as CodePoint
-           , MovementItem.PartnerGoodsCode::Integer as GoodsCode
-           , MovementItem.Amount                    as Amount
+--             JuridicalKey.IntegerKey as CodeDebet
+--           , PointKey.IntegerKey     as CodePoint
+             ''::VarChar(10)                        AS Field1
+           , ''::VarChar(10)                        AS Field2
+           , ''::VarChar(10)                        AS Field3
+           , MovementItem.Amount                    as ZAKAZ
+           , ''::VarChar(10)                        AS Field4
+           , ''::VarChar(10)                        AS Field5
+           , ''::VarChar(10)                        AS Field6
+           , MovementItem.PartnerGoodsCode::Integer as KOD
            
         FROM Movement_OrderExternal_View AS Movement
          LEFT JOIN Object_ImportExportLink_View AS PointKey ON PointKey.LinkTypeId = zc_Enum_ImportExportLinkType_UnitJuridical()
@@ -86,6 +89,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Export (Integer, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.12.14                         *
  12.12.14                         *
  06.11.14                         *
  20.10.14                         *

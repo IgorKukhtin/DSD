@@ -111,7 +111,7 @@ implementation
 
 uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
-  FormStorage, UnilWin, OrdrspXML;
+  FormStorage, UnilWin, OrdrspXML, StrUtils;
 
 procedure Register;
 begin
@@ -1673,13 +1673,14 @@ begin
     FInsertEDIEvents.Execute;
 
     // перекинуть на FTP
-    PutFileToFTP(FileName, Directory);
+    PutFileToFTP(ReplaceStr(FileName, '.xml', '.p7s'), Directory);
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
       'Документ отправлен на FTP';
     FInsertEDIEvents.Execute;
   finally
     // Удаляем
+    DeleteFile(ReplaceStr(FileName, '.xml', '.p7s'));
     DeleteFile(FileName);
   end;
 end;

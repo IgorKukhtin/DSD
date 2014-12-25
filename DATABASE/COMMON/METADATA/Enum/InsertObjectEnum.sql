@@ -633,6 +633,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_UnitJuridical(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 1, inName:= 'Связь подразделений для поставщиков', inEnumName:= 'zc_Enum_ImportExportLinkType_UnitJuridical');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_UnitUnitId(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 2, inName:= 'Связь подразделения со старым складом', inEnumName:= 'zc_Enum_ImportExportLinkType_UnitUnitId');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_DefaultFileName(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 3, inName:= 'Имя файла по умолчанию', inEnumName:= 'zc_Enum_ImportExportLinkType_DefaultFileName');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_UnitEmailSign(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 4, inName:= 'Подпись для подразделения', inEnumName:= 'zc_Enum_ImportExportLinkType_UnitEmailSign');
 
 END $$;
 

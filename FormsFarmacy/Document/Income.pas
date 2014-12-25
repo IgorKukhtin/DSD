@@ -46,6 +46,9 @@ type
     colPrice: TcxGridDBColumn;
     colPartnerGoodsCode: TcxGridDBColumn;
     colPartnerGoodsName: TcxGridDBColumn;
+    ContractGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edContract: TcxButtonEdit;
   private
     { Private declarations }
   public

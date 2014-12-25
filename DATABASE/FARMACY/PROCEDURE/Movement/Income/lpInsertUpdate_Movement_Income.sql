@@ -1,6 +1,12 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
+    (Integer, TVarChar, TDateTime, Boolean, 
+     Integer, Integer, Integer, Integer, Integer);
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
+    (Integer, TVarChar, TDateTime, Boolean, 
+     Integer, Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
+    IN inPaymentDate         TDateTime , -- Дата платежа
     IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -31,6 +38,8 @@ BEGIN
 
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+     -- 
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), ioId, inPaymentDate);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -46,6 +55,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.12.14                         *
  02.12.14                        *
 
 */

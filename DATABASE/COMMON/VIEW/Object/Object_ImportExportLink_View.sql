@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW Object_ImportExportLink_View AS
      , ObjectChild.ValueData                AS ObjectChildName
      , ObjectLink_LinkType.ChildObjectId    AS LinkTypeId
      , LinkType.ValueData                   AS LinkTypeName
+     , ObjectBlob_Text.ValueData            AS SomeText
    FROM Object AS Object_ImportExportLink
        LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
                             ON ObjectLink_ObjectMain.ObjectId = Object_ImportExportLink.Id
@@ -26,6 +27,10 @@ CREATE OR REPLACE VIEW Object_ImportExportLink_View AS
                             ON ObjectLink_LinkType.ObjectId = Object_ImportExportLink.Id
                            AND ObjectLink_LinkType.DescId = zc_ObjectLink_ImportExportLink_LinkType()
        LEFT JOIN Object AS LinkType ON LinkType.Id = ObjectLink_LinkType.ChildObjectId
+
+       LEFT JOIN ObjectBlob AS ObjectBlob_Text
+                            ON ObjectBlob_Text.ObjectId = Object_ImportExportLink.Id
+                           AND ObjectBlob_Text.DescId = zc_ObjectBlob_ImportExportLink_Text()
 
  WHERE Object_ImportExportLink.DescId = zc_Object_ImportExportLink();
 

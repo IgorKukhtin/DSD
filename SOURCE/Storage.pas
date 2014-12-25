@@ -132,14 +132,6 @@ begin
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
     Instance.XMLDocument := TXMLDocument.Create(nil);
-{    try
-      Instance.IdHTTP.Connect;
-    except
-      on E: EIdHostRequired do
-         raise Exception.Create('По указанному адресу Web сервер не найден. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-      on E: Exception do
-         raise E;
-    end;}
   end;
   NewInstance := Instance;
 end;

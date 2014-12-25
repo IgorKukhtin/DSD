@@ -10,7 +10,7 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit;
+  cxGrid, cxPC, cxButtonEdit, cxMemo, cxBlobEdit;
 
 type
   TImportExportLinkForm = class(TAncestorDBGridForm)
@@ -24,6 +24,7 @@ type
     OpenObjectChildForm: TOpenChoiceForm;
     colLinkTypeName: TcxGridDBColumn;
     OpenLinkTypeForm: TOpenChoiceForm;
+    colText: TcxGridDBColumn;
   private
     { Private declarations }
   public

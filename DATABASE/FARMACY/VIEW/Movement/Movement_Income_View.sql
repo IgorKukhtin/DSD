@@ -10,6 +10,7 @@ SELECT       Movement.Id                                AS Id
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementLinkObject_From.ObjectId           AS FromId
@@ -18,6 +19,9 @@ SELECT       Movement.Id                                AS Id
            , Object_To.ValueData                        AS ToName
            , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
            , Object_NDSKind.ValueData                   AS NDSKindName
+           , MovementLinkObject_Contract.ObjectId       AS ContractId
+           , Object_Contract.ValueData                  AS ContractName
+           , MovementDate_Payment.ValueData             AS PaymentDate
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -29,6 +33,10 @@ SELECT       Movement.Id                                AS Id
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -48,10 +56,19 @@ SELECT       Movement.Id                                AS Id
 
             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementDate    AS MovementDate_Payment
+                                      ON MovementDate_Payment.MovementId =  Movement.Id
+                                     AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
 
            WHERE Movement.DescId = zc_Movement_Income();
 
