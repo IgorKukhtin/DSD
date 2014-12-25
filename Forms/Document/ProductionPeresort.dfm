@@ -1,9 +1,9 @@
 inherited ProductionPeresortForm: TProductionPeresortForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 674
   ClientWidth = 1128
-  ExplicitWidth = 1136
-  ExplicitHeight = 708
+  ExplicitWidth = 1144
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -232,9 +232,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     end
     inherited cxLabel2: TcxLabel
       Left = 89
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
       ExplicitLeft = 89
-      ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -865,60 +863,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
-        Value = 0d
-        DataType = ftDateTime
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
+        Name = 'inIsPeresort'
+        Value = True
         DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1125,12 +1073,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Left = 508
     Top = 246
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
@@ -1176,6 +1118,21 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 328
     Top = 16
@@ -1199,6 +1156,21 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'TextValue'
         Value = ''
         Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

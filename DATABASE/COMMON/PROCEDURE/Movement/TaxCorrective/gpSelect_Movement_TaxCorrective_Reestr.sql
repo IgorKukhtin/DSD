@@ -26,7 +26,7 @@ BEGIN
        FROM Object AS ObjectJuridical
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
                                                                 ON OH_JuridicalDetails.JuridicalId = ObjectJuridical.Id
-                                                               AND inStartDate BETWEEN OH_JuridicalDetails.StartDate AND OH_JuridicalDetails.EndDate
+                                                               AND inStartDate >= OH_JuridicalDetails.StartDate AND inStartDate < OH_JuridicalDetails.EndDate
        WHERE ObjectJuridical.id = zc_Juridical_Basis();
     RETURN NEXT Cursor1;
 
@@ -42,6 +42,7 @@ BEGIN
                                            ,  FALSE, inSession)) AS tmpReestr
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
                                                                 ON OH_JuridicalDetails.JuridicalId = tmpReestr.FromId
+                                                               AND OperDate < OH_JuridicalDetails.StartDate AND OperDate < OH_JuridicalDetails.EndDate
        WHERE tmpReestr.StatusCode = 2
        ORDER BY ToName, OperDate, InvNumber_Master, InvNumberPartner_Master, InvNumberPartner_Child
       ;
