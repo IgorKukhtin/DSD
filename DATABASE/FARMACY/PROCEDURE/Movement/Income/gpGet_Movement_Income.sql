@@ -30,7 +30,7 @@ BEGIN
          SELECT
                0                                                AS Id
              , CAST (NEXTVAL ('movement_Income_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
+             , CURRENT_DATE::TDateTime                          AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (False as Boolean)                          AS PriceWithVAT
@@ -42,7 +42,7 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS NDSKindName
              , 0                     			        AS ContractId
              , CAST ('' AS TVarChar) 				AS ContractName
-             , CAST (NULL AS TDateTime)                         AS PaymentDate
+             , CURRENT_DATE::TDateTime                          AS PaymentDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE

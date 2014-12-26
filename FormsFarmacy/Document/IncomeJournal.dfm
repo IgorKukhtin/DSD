@@ -3,7 +3,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 469
   ClientWidth = 807
   ExplicitLeft = -25
-  ExplicitTop = -113
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -13,17 +12,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Height = 412
     TabOrder = 3
     ExplicitWidth = 807
-    ExplicitHeight = 478
+    ExplicitHeight = 412
     ClientRectBottom = 412
     ClientRectRight = 807
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 807
-      ExplicitHeight = 478
+      ExplicitHeight = 412
       inherited cxGrid: TcxGrid
         Width = 807
         Height = 412
         ExplicitWidth = 807
-        ExplicitHeight = 478
+        ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -170,6 +169,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentVert = vaCenter
             Width = 136
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086

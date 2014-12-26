@@ -395,41 +395,44 @@ begin
         else
            if TImportSettingsItems(Items[i]).ItemName = '%CONTRACT%' then
               StoredProc.Params.Items[i].Value := AImportSettings.ContractId
-           else begin
-             if TImportSettingsItems(Items[i]).ItemName <> '' then begin
-                vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
-                case StoredProc.Params[i].DataType of
-                  ftDateTime: begin
-                     try
-                       Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
-                       D := VarToDateTime(Value);
-                       StoredProc.Params.Items[i].Value := D;
-                     except
-                       on E: EVariantTypeCastError do
-                          StoredProc.Params.Items[i].Value := Date;
-                       on E: Exception do
-                          raise E;
-                     end;
-                  end;
-                  ftFloat: begin
-                     try
-                       Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
-                       Ft := gfStrToFloat(Value);
-                       StoredProc.Params.Items[i].Value := Ft;
-                     except
-                       on E: EVariantTypeCastError do
-                          StoredProc.Params.Items[i].Value := 0;
-                       on E: Exception do
-                          raise E;
-                     end;
-                  end
-                  else
-                    if VarIsNULL(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value) then
-                       StoredProc.Params.Items[i].Value := ''
+           else
+             if TImportSettingsItems(Items[i]).ItemName = '%LASTRECORD%' then
+                StoredProc.Params.Items[i].Value := AExternalLoad.isLastRecord
+             else begin
+               if TImportSettingsItems(Items[i]).ItemName <> '' then begin
+                  vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
+                  case StoredProc.Params[i].DataType of
+                    ftDateTime: begin
+                       try
+                         Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
+                         D := VarToDateTime(Value);
+                         StoredProc.Params.Items[i].Value := D;
+                       except
+                         on E: EVariantTypeCastError do
+                            StoredProc.Params.Items[i].Value := Date;
+                         on E: Exception do
+                            raise E;
+                       end;
+                    end;
+                    ftFloat: begin
+                       try
+                         Value := AExternalLoad.FDataSet.FieldByName(vbFieldName).Value;
+                         Ft := gfStrToFloat(Value);
+                         StoredProc.Params.Items[i].Value := Ft;
+                       except
+                         on E: EVariantTypeCastError do
+                            StoredProc.Params.Items[i].Value := 0;
+                         on E: Exception do
+                            raise E;
+                       end;
+                    end
                     else
-                       StoredProc.Params.Items[i].Value := trim(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value);
-                end;
-             end;
+                      if VarIsNULL(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value) then
+                         StoredProc.Params.Items[i].Value := ''
+                      else
+                         StoredProc.Params.Items[i].Value := trim(AExternalLoad.FDataSet.FieldByName(vbFieldName).Value);
+                  end;
+               end;
           end;
     end;
     StoredProc.Execute;

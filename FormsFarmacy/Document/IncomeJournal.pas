@@ -39,6 +39,7 @@ type
     colTotalSummMVAT: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
+    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

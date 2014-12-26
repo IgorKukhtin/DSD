@@ -7,6 +7,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            TVarChar,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, TDateTime, 
+           Boolean,
+           TVarChar,
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
@@ -19,9 +29,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inAmount              TFloat    ,  
     IN inPrice               TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
-    IN inPayDate             TDateTime , -- Дата оплаты
+    IN inPaymentDate         TDateTime , -- Дата оплаты
     IN inPriceWithVAT        Boolean   ,
-    IN inUnitName            TVarChar   ,
+    IN inUnitName            TVarChar  ,
+    IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -37,7 +48,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbNDSKindId Integer;
-
+   DECLARE vbContractId Integer;
 BEGIN
 
    vbUserId := inSession::Integer;
@@ -68,6 +79,18 @@ BEGIN
      END IF;
 
   -- А вот тут попытка угадать договор.
+     -- Если даты не равны, то ищем любой договор с отсрочкой платежа
+     IF inPaymentDate <> inOperDate THEN
+     	SELECT MAX(Id) INTO vbContractId 
+     	   FROM Object_Contract_View 
+     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
+     ELSE
+     -- иначе любой договор без отсрочки платежа
+     	SELECT MAX(Id) INTO vbContractId 
+     	   FROM Object_Contract_View 
+     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
+     END IF;	     	
+  
 
   -- Ищем товар 
       SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
@@ -93,7 +116,7 @@ BEGIN
      IF (COALESCE(vbMovementId, 0) = 0) OR (COALESCE(vbNDSKindId, 0) <> 0) THEN
         vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
                                                        inJuridicalId, vbUnitId, vbNDSKindId, 
-                                                       inContractId := 0, inUserId := vbUserId);
+                                                       inContractId := vbContractId , inPaymentDate := inPaymentDate, inUserId := vbUserId);
      END IF;
 
 
@@ -110,7 +133,12 @@ BEGIN
      -- Срок годности заодно влепим
      IF NOT (inExpirationDate IS NULL) THEN 
         -- сохранили свойство <Срок годности>
-        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inExpirationDate);
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), vbMovementItemId, inExpirationDate);
+     END IF;
+
+     IF inisLastRecord THEN
+        -- пересчитали Итоговые суммы
+        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
      END IF;
 
 
@@ -123,5 +151,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.12.14                        *   
+ 25.12.14                        *   
  02.12.14                        *   
 */

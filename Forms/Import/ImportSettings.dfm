@@ -4,6 +4,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   ClientWidth = 1184
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitLeft = -386
   ExplicitWidth = 1192
   ExplicitHeight = 366
   PixelsPerInch = 96
@@ -26,6 +27,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -196,9 +198,11 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1076#1072#1085#1085#1099#1093
             DataBinding.FieldName = 'ParamValue'
             PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownAutoWidth = False
             Properties.Items.Strings = (
               '%OBJECT%'
-              '%CONTRACT%')
+              '%CONTRACT%'
+              '%LASTRECORD%')
             HeaderAlignmentVert = vaCenter
             Width = 113
           end
@@ -347,11 +351,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
@@ -370,11 +376,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FileTypeId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'FileTypeName'
           DataType = ftString
@@ -391,11 +399,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
@@ -412,11 +422,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -429,6 +441,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       FileOpenDialog.FavoriteLinks = <>
       FileOpenDialog.FileTypes = <>
       FileOpenDialog.Options = [fdoPickFolders]
+      Param.Value = Null
       Param.Component = MasterCDS
       Param.ComponentItem = 'Directory'
       Param.DataType = ftString
@@ -443,11 +456,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ImportTypeId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ImportTypeName'
           DataType = ftString
@@ -558,18 +573,21 @@ inherited ImportSettingsForm: TImportSettingsForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
@@ -577,36 +595,42 @@ inherited ImportSettingsForm: TImportSettingsForm
       end
       item
         Name = 'inJuridicalId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inContractId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inFileTypeId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'FileTypeId'
         ParamType = ptInput
       end
       item
         Name = 'inImportTypeId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ImportTypeId'
         ParamType = ptInput
       end
       item
         Name = 'inStartRow'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'StartRow'
         ParamType = ptInput
       end
       item
         Name = 'inHDR'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HDR'
         DataType = ftBoolean
@@ -614,6 +638,7 @@ inherited ImportSettingsForm: TImportSettingsForm
       end
       item
         Name = 'inDirectory'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Directory'
         DataType = ftString
@@ -621,11 +646,13 @@ inherited ImportSettingsForm: TImportSettingsForm
       end
       item
         Name = 'inQuery'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Query'
         DataType = ftWideString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 232
     Top = 123
   end
@@ -657,6 +684,7 @@ inherited ImportSettingsForm: TImportSettingsForm
         Value = '0'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 784
     Top = 80
   end
@@ -667,12 +695,14 @@ inherited ImportSettingsForm: TImportSettingsForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inName'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ParamValue'
         DataType = ftString
@@ -680,23 +710,27 @@ inherited ImportSettingsForm: TImportSettingsForm
       end
       item
         Name = 'inImportSettingsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inImportTypeItemsId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'ImportTypeItemsId'
         ParamType = ptInput
       end
       item
         Name = 'inDefaultValue'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'DefaultValue'
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 792
     Top = 155
   end
@@ -721,10 +755,12 @@ inherited ImportSettingsForm: TImportSettingsForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 192
     Top = 192
   end
@@ -735,10 +771,12 @@ inherited ImportSettingsForm: TImportSettingsForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 632
     Top = 136
   end

@@ -16,6 +16,7 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
     function EOF: boolean;
+    function isLastRecord: boolean;
     function RecordCount: integer;
     procedure Next;     virtual;
     procedure Close;    virtual; abstract;
@@ -43,6 +44,17 @@ end;
 function TExternalData.EOF: boolean;
 begin
   result := (not Assigned(FDataSet)) or (not FDataSet.Active) or FDataSet.Eof;
+end;
+
+function TExternalData.isLastRecord: boolean;
+begin
+  result := false;
+  exit;
+  if FDataSet.EOF then
+     exit;
+  FDataSet.Next;
+  result := FDataSet.EOF;
+  FDataSet.Prior;
 end;
 
 procedure TExternalData.Next;

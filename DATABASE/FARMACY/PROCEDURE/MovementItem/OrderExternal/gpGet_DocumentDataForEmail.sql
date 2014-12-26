@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbUserMail TVarChar;
   DECLARE vbUserMailSign TBlob;
   DECLARE vbUnitSign TBlob;
+  DECLARE vbJuridicalName TVarChar;
   DECLARE vbZakazName TVarChar;
 BEGIN
 
@@ -23,10 +24,10 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId := lpGetUserBySession (inSession);
 
-   SELECT mail INTO vbMail FROM 
+   SELECT mail, JuridicalName INTO vbMail, vbJuridicalName FROM 
           MovementLinkObject 
   
-     JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = ObjectId 
+     LEFT JOIN Object_ContactPerson_View ON Object_ContactPerson_View.JuridicalId = ObjectId 
 
     WHERE DescId = zc_MovementLinkObject_From()
       AND MovementId = inId;
@@ -65,7 +66,7 @@ BEGIN
 
        RETURN QUERY
        SELECT
-         ('Заказ - '||COALESCE(vbZakazName, ''))::TVarChar, (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 'zakaz_family-neboley@mail.ru'::TVarChar
+         ('Заказ '||vbJuridicalName||' от - '||COALESCE(vbZakazName, ''))::TVarChar, (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 'zakaz_family-neboley@mail.ru'::TVarChar
        , vbMail, 'smtp.mail.ru'::TVarChar, 465
        , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
 

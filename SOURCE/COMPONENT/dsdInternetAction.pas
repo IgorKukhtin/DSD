@@ -230,7 +230,7 @@ var GUID: TGuid;
 begin
   CreateGUID(GUID);
   FFileName := ExtractFilePath(ParamStr(0)) + GUIDToString(GUID) + '.xls';
-  ExportGridToExcel(FFileName, FcxGrid, IsCtrlPressed);
+  ExportGridToExcel(FFileName, FcxGrid, IsCtrlPressed, true, false);
   try
     result := inherited LocalExecute;
   finally

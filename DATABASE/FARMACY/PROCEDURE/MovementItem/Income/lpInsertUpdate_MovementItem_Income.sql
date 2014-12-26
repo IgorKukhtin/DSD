@@ -21,9 +21,6 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
-     -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

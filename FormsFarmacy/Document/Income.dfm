@@ -280,6 +280,19 @@ inherited IncomeForm: TIncomeForm
       TabOrder = 6
       Width = 140
     end
+    object edPaymentDate: TcxDateEdit
+      Left = 570
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 15
+      Width = 100
+    end
+    object cxLabel6: TcxLabel
+      Left = 570
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -726,6 +739,25 @@ inherited IncomeForm: TIncomeForm
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaymentDate'
+        Value = Null
+        Component = edPaymentDate
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248
@@ -783,13 +815,18 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'inContractId'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
+        Name = 'inPaymentDate'
         Value = ''
-        ParamType = ptUnknown
+        Component = edPaymentDate
+        DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Value = 0.000000000000000000
@@ -848,13 +885,16 @@ inherited IncomeForm: TIncomeForm
         Control = edInvNumber
       end
       item
+        Control = edContract
       end
       item
+        Control = edPaymentDate
       end
       item
         Control = edOperDate
       end
       item
+        Control = edNDSKind
       end
       item
         Control = edFrom
@@ -863,6 +903,7 @@ inherited IncomeForm: TIncomeForm
         Control = edTo
       end
       item
+        Control = edPriceWithVAT
       end
       item
       end
@@ -1155,10 +1196,11 @@ inherited IncomeForm: TIncomeForm
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractForm'
-    PositionDataSet = 'MasterDS'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1175,7 +1217,7 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 583
-    Top = 40
+    Left = 703
+    Top = 16
   end
 end
