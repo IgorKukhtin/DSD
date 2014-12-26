@@ -181,7 +181,7 @@ BEGIN
       SELECT Movement.Id				                                    AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
-           , 'J1201205'::TVarChar                                           AS CHARCODE
+           , 'J1201006'::TVarChar                                           AS CHARCODE
            , 'Неграш О.В.'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
@@ -374,10 +374,10 @@ BEGIN
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
-                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
+                                                               AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate AND Movement.OperDate < OH_JuridicalDetails_To.EndDate
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
-                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+                                                               AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate AND Movement.OperDate < OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
                                    ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId

@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_ProductionUnionTech()
+Ôªø-- Function: gpSelect_Movement_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inToId           Integer,
     IN inGoodsGroupId   Integer,
     IN inisErased       Boolean, --
-    IN inSession        TVarChar       -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
+    IN inSession        TVarChar       -- —Å–µ—Å—Å–∏—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è
 )
 RETURNS SETOF refcursor
 AS
@@ -18,11 +18,11 @@ $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
-     -- ÔÓ‚ÂÍ‡ Ô‡‚ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ Ì‡ ‚˚ÁÓ‚ ÔÓˆÂ‰Û˚
+     -- –ø—Ä–æ–≤–µ—Ä–∫–∞ –ø—Ä–∞–≤ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–∞ –≤—ã–∑–æ–≤ –ø—Ä–æ—Ü–µ–¥—É—Ä—ã
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
 
-    -- Œ„‡ÌË˜ÂÌËˇ ÔÓ ÚÓ‚‡Û
+    -- –û–≥—Ä–∞–Ω–∏—á–µ–Ω–∏—è –ø–æ —Ç–æ–≤–∞—Ä—É
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 
     IF inGoodsGroupId <> 0
@@ -74,9 +74,9 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
-            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
-            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -121,9 +121,9 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -149,12 +149,16 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+
+
      FULL JOIN (  SELECT MovementItem.Id                                                AS MIOrderId
                        , Movement.OperDate                                              AS OperDate
                        , MovementItem.ObjectId                                          AS ObjectId
                        , MILO_GoodsKind.ObjectId                                        AS GoodsKindId
                        , MLO_From.ObjectId                                              AS FromId
                        , MLO_To.ObjectId                                                AS ToId
+                       , Recipe_byGoodsKind_View.ChildGoodsId                           AS ChildGoodsId
+                       , Recipe_byGoodsKind_View.ChildGoodsKindId                       AS ChildGoodsKindId
                        , MovementItem.Amount + COALESCE(MIF_AmountSecond.ValueData, 0)  AS AmountOrder
                        , COALESCE(MIF_CuterCount.ValueData, 0)                          AS CuterCount
                     FROM Movement
@@ -175,19 +179,23 @@ BEGIN
                                             ON MLO_To.MovementId = Movement.Id
                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
 
+               LEFT JOIN Recipe_byGoodsKind_View ON Recipe_byGoodsKind_View.GoodsId = MovementItem.ObjectId
+                                                AND Recipe_byGoodsKind_View.GoodsKindId = MILO_GoodsKind.ObjectId
+
                    WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                      AND Movement.DescId = zc_Movement_OrderInternal()
                      AND Movement.StatusId <> zc_Enum_Status_Erased()
 
-                ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ObjectId = MovementItem.ObjectId
-                                         AND tmpMovementItemOrder.GoodsKindId = MILO_GoodsKind.ObjectId
+                ) AS tmpMovementItemOrder ON tmpMovementItemOrder.ChildGoodsId = MovementItem.ObjectId
+                                         AND tmpMovementItemOrder.ChildGoodsKindId = MILO_GoodsKind.ObjectId
+                                         AND tmpMovementItemOrder.GoodsKindId =  COALESCE(MILO_GoodsKindComplete.ObjectId, 123) --
                                          AND tmpMovementItemOrder.OperDate = Movement.OperDate
                                          AND tmpMovementItemOrder.FromId = MovementLinkObject_From.ObjectId
                                          AND tmpMovementItemOrder.ToId = MovementLinkObject_To.ObjectId
 
 
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE(MILinkObject_GoodsKind.ObjectId, tmpMovementItemOrder.GoodsKindId)
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem.ObjectId, tmpMovementItemOrder.ObjectId)
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -198,8 +206,8 @@ BEGIN
 
 
 
-       WHERE COALESCE(MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId = 0 THEN COALESCE(MovementLinkObject_From.ObjectId,0) ELSE inFromId END
-         AND COALESCE(MovementLinkObject_To.ObjectId,0)   = CASE WHEN inToId = 0   THEN COALESCE(MovementLinkObject_To.ObjectId,0) ELSE inToId END
+       WHERE COALESCE(Object_From.Id,0) = CASE WHEN inFromId = 0 THEN COALESCE(COALESCE(Object_From.Id,0),0) ELSE inFromId END
+         AND COALESCE(Object_To.Id,0)   = CASE WHEN inToId = 0   THEN COALESCE(COALESCE(Object_To.Id,0),0) ELSE inToId END
 
        ORDER BY MovementItem.Id
             ;
@@ -281,14 +289,14 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime,TDateTime,Intege
 
 
 /*
- »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+ –ò–°–¢–û–†–ò–Ø –†–ê–ó–†–ê–ë–û–¢–ö–ò: –î–ê–¢–ê, –ê–í–¢–û–†
 
-               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+               –§–µ–ª–æ–Ω—é–∫ –ò.–í.   –ö—É—Ö—Ç–∏–Ω –ò.–í.   –ö–ª–∏–º–µ–Ω—Ç—å–µ–≤ –ö.–ò.   –ú–∞–Ω—å–∫–æ –î.–ê.
  19.12.14                                                        *
  09.12.14                                                        *
 */
 
--- ÚÂÒÚ
+-- —Ç–µ—Å—Ç
 /*
 BEGIN;
 select * from gpSelect_Movement_ProductionUnionTech(inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('01.06.2014')::TDateTime , inFromId := 0 , inToId := 0 , inGoodsGroupId := 0 , inIsErased := 'False' ,  inSession := '5');

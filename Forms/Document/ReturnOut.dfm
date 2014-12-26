@@ -2,8 +2,8 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
   ClientWidth = 838
-  ExplicitWidth = 846
-  ExplicitHeight = 702
+  ExplicitWidth = 854
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -76,6 +76,7 @@ inherited ReturnOutForm: TReturnOutForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -447,28 +448,6 @@ inherited ReturnOutForm: TReturnOutForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameReturnOut'
-      ReportNameParam.ParamType = ptInput
-    end
     object mactPrint_ReturnOut: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
@@ -523,6 +502,28 @@ inherited ReturnOutForm: TReturnOutForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameReturnOut'
+      ReportNameParam.ParamType = ptInput
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -549,11 +550,13 @@ inherited ReturnOutForm: TReturnOutForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
@@ -709,6 +712,7 @@ inherited ReturnOutForm: TReturnOutForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
       item
+        Param.Value = Null
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
@@ -783,6 +787,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1157,6 +1162,7 @@ inherited ReturnOutForm: TReturnOutForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1170,12 +1176,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1183,6 +1191,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
@@ -1190,6 +1199,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -1197,6 +1207,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'ioCountForPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
@@ -1204,12 +1215,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'outAmountSumm'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
@@ -1217,6 +1230,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inPartionGoods'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
@@ -1224,12 +1238,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
@@ -1246,22 +1262,6 @@ inherited ReturnOutForm: TReturnOutForm
       end>
     Left = 160
     Top = 368
-  end
-  inherited spGetTotalSumm: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TotalSumm'
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-      end>
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1383,7 +1383,7 @@ inherited ReturnOutForm: TReturnOutForm
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

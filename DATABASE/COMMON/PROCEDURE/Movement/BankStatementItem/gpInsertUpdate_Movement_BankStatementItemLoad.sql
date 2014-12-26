@@ -65,7 +65,7 @@ BEGIN
 
         JOIN ObjectHistory_JuridicalDetails_ViewByDate 
           ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = ObjectLink_Bank_Juridical.ChildObjectId
-         AND inOperDate BETWEEN ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND ObjectHistory_JuridicalDetails_ViewByDate.EndDate
+         AND inOperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND inOperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate
        WHERE Object_BankAccount_View.NAME = inBankAccountMain; 
    END IF;
   

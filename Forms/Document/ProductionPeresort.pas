@@ -35,7 +35,6 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsSverkaCDS: TClientDataSet;
     colComment: TcxGridDBColumn;
     actGoodsChildChoiceForm: TOpenChoiceForm;
     actPartionGoodsChoiceForm: TOpenChoiceForm;
@@ -45,6 +44,7 @@ type
     actGoodsKindChildChoice: TOpenChoiceForm;
     colPartionGoodsDate: TcxGridDBColumn;
     colPartionGoodsDateChild: TcxGridDBColumn;
+    colGoodsChildCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

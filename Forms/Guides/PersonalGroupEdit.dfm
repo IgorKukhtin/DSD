@@ -94,6 +94,7 @@
     Top = 192
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -106,6 +107,7 @@
     end
     object dsdExecStoredProc: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -114,6 +116,7 @@
       Caption = 'Ok'
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -154,6 +157,7 @@
         Component = UnitGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 32
   end
@@ -209,6 +213,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 72
     Top = 104
   end
@@ -234,8 +239,10 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

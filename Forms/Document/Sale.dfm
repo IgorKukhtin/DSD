@@ -3,8 +3,8 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1028
-  ExplicitHeight = 695
+  ExplicitWidth = 1036
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2825,7 +2825,7 @@ inherited SaleForm: TSaleForm
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

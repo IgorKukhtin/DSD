@@ -2,18 +2,19 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inStartDate      TDateTime,
     IN inEndDate        TDateTime,
     IN inIsErased       Boolean  ,
-    IN inArticleLossId  Integer  ,     -- статья для пересорта
+    IN inIsPeresort     Boolean  ,     -- пересорт
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-               , TotalCount TFloat, TotalCountChild TFloat
-               , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar)
-
+             , TotalCount TFloat, TotalCountChild TFloat
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -72,30 +73,27 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
-                                  ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
-                                 AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
-                            --     AND (MovementLinkObject_ArticleLoss.ObjectId = inArticleLossId OR inArticleLossId = 0)     
-     WHERE MovementLinkObject_ArticleLoss.ObjectId = inArticleLossId OR inArticleLossId = 0
-          
-          ;
-
+          INNER JOIN MovementBoolean AS MovementBoolean_Peresort
+                                     ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                    AND MovementBoolean_Peresort.ValueData = inIsPeresort
+    ;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 11.12.14         * add inArticleLoss
+ 26.12.14                                        * add inIsPeresort
+ 26.12.14                                        * del inArticleLossId
+ 11.12.14         * add inArticleLossId
  03.06.14                                                        *
  16.17.13                                        * DROP FUNCTION
  15.07.13         *
  30.06.13                                        *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.06.2014', inEndDate:= '01.07.2014', inIsErased:=true, inArticleLossId:=0, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.06.2014', inEndDate:= '01.07.2014', inIsErased:=true, inIsPeresort:=false, inSession:= '2')

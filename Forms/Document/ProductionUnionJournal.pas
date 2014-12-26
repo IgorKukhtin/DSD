@@ -38,7 +38,6 @@ type
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalCountChild: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

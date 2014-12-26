@@ -1,27 +1,27 @@
 inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
-  ClientWidth = 1096
-  ExplicitWidth = 1104
+  ClientWidth = 1097
+  ExplicitWidth = 1105
   ExplicitHeight = 766
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 124
-    Width = 1096
+    Width = 1097
     Height = 608
     TabOrder = 2
     ExplicitTop = 124
     ExplicitWidth = 1096
     ExplicitHeight = 608
     ClientRectBottom = 604
-    ClientRectRight = 1092
+    ClientRectRight = 1093
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 1090
       ExplicitHeight = 582
       inherited cxGrid: TcxGrid
-        Width = 1090
+        Width = 1091
         Height = 224
         ExplicitWidth = 1090
         ExplicitHeight = 224
@@ -160,9 +160,9 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object GoodsCompleteKindName: TcxGridDBColumn
+          object GoodsKindCompleteName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
-            DataBinding.FieldName = 'GoodsCompleteKindName'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -182,11 +182,15 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object MIOrderId: TcxGridDBColumn
+            DataBinding.FieldName = 'MIOrderId'
+            Width = 65
+          end
         end
       end
       inherited cxGridChild: TcxGrid
         Top = 224
-        Width = 1090
+        Width = 1091
         ExplicitTop = 224
         ExplicitWidth = 1090
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -249,7 +253,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1096
+    Width = 1097
     Height = 96
     ExplicitWidth = 1096
     ExplicitHeight = 96
@@ -432,13 +436,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsCompleteKindId'
+          ComponentItem = 'GoodsKindCompleteId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsCompleteKindName'
+          ComponentItem = 'GoodsKindCompleteName'
           DataType = ftString
         end>
       isShowModal = True
@@ -481,6 +485,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Component = GuidesTo
           ComponentItem = 'Key'
           ParamType = ptInput
+        end
+        item
+          Name = 'MIOrderId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MIOrderId'
+          ParamType = ptInput
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -522,6 +533,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           Value = Null
           Component = GuidesTo
           ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'MIOrderId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MIOrderId'
           ParamType = ptInput
         end>
       isShowModal = True
@@ -694,6 +712,37 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 96
     Top = 272
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'MIOrderId'
+        Value = Null
+        ParamType = ptInput
+      end>
   end
   inherited StatusGuides: TdsdGuides
     Left = 856
@@ -959,6 +1008,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
       end
       item

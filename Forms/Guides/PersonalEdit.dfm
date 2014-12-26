@@ -285,6 +285,7 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 115
     Top = 166
   end
@@ -416,6 +417,7 @@
         Component = cbMain
         DataType = ftBoolean
       end>
+    PackSize = 1
     Left = 96
     Top = 134
   end
@@ -444,7 +446,7 @@
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

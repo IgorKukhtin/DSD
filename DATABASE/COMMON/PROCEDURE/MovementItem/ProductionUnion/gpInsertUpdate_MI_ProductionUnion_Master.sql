@@ -1,32 +1,32 @@
--- Function: gpInsertUpdate_MI_ProductionUnion_Master()
+п»ї-- Function: gpInsertUpdate_MI_ProductionUnion_Master()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, Boolean , TFloat, TFloat, TFloat, TVarChar,TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)
-    IN inCount	             TFloat    , -- Количество батонов или упаковок
-    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
-    IN inCuterCount          TFloat    , -- Количество кутеров
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment             TVarChar  , -- Комментарий
-    IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inGoodsCompleteKindId Integer   , -- Виды товаров  ГП
-    IN inReceiptId           Integer   , -- Рецептуры
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
+    IN inMovementId          Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚>
+    IN inGoodsId             Integer   , -- РўРѕРІР°СЂС‹
+    IN inAmount              TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ
+    IN inPartionClose	     Boolean   , -- РїР°СЂС‚РёСЏ Р·Р°РєСЂС‹С‚Р° (РґР°/РЅРµС‚)
+    IN inCount	             TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°С‚РѕРЅРѕРІ РёР»Рё СѓРїР°РєРѕРІРѕРє
+    IN inRealWeight          TFloat    , -- Р¤Р°РєС‚РёС‡РµСЃРєРёР№ РІРµСЃ(РёРЅС„РѕСЂРјР°С‚РёРІРЅРѕ)
+    IN inCuterCount          TFloat    , -- РљРѕР»РёС‡РµСЃС‚РІРѕ РєСѓС‚РµСЂРѕРІ
+    IN inPartionGoods        TVarChar  , -- РџР°СЂС‚РёСЏ С‚РѕРІР°СЂР°
+    IN inComment             TVarChar  , -- РљРѕРјРјРµРЅС‚Р°СЂРёР№
+    IN inGoodsKindId         Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ
+    IN inGoodsKindCompleteId Integer   , -- Р’РёРґС‹ С‚РѕРІР°СЂРѕРІ  Р“Рџ
+    IN inReceiptId           Integer   , -- Р РµС†РµРїС‚СѓСЂС‹
+    IN inSession             TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
+   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
 
-   -- сохранили <Элемент документа>
+   -- СЃРѕС…СЂР°РЅРёР»Рё <Р­Р»РµРјРµРЅС‚ РґРѕРєСѓРјРµРЅС‚Р°>
    ioId :=lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
@@ -38,7 +38,7 @@ BEGIN
                                                   , inPartionGoods     := inPartionGoods
                                                   , inComment          := inComment
                                                   , inGoodsKindId      := inGoodsKindId
-                                                  , inGoodsCompleteKindId := inGoodsCompleteKindId
+                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId
                                                   , inReceiptId        := inReceiptId
                                                   , inUserId           := vbUserId
                                                   );
@@ -48,17 +48,17 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master
 
- 24.07.13                                        * Важен порядок полей
+ 24.07.13                                        * Р’Р°Р¶РµРЅ РїРѕСЂСЏРґРѕРє РїРѕР»РµР№
  22.07.13         * add GoodsKind
  17.07.13         *
  30.06.13                                        *
 
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpInsertUpdate_MI_ProductionUnion_Master (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPartionClose:= FALSE, inComment:= '', inCount:= 1, inRealWeight:= 1, inCuterCount:= 0, inReceiptId:= 0, inSession:= '2')

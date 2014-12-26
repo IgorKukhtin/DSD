@@ -39,8 +39,8 @@ type
     ceGooodsKindGuides: TcxButtonEdit;
     ceRecipeCode: TcxTextEdit;
     cxLabel8: TcxLabel;
-    ceGooodsCompleateKindGuides: TcxButtonEdit;
-    GooodsCompleteKindGuides: TdsdGuides;
+    ceGooodsKindCompleateGuides: TcxButtonEdit;
+    GooodsKindCompleateGuides: TdsdGuides;
   private
     { Private declarations }
   public

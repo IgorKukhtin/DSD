@@ -4,7 +4,7 @@
   ClientWidth = 594
   AddOnFormData.isSingle = False
   ExplicitWidth = 600
-  ExplicitHeight = 370
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -415,6 +415,7 @@
       end
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -444,6 +445,7 @@
       end
       item
         Name = 'statusname'
+        Value = Null
         Component = FormParams
         DataType = ftString
       end
@@ -878,7 +880,7 @@
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

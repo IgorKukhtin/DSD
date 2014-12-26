@@ -1,15 +1,15 @@
--- Function: gpGet_Movement_ProductionUnionTech()
+п»ї-- Function: gpGet_Movement_ProductionUnionTech()
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_ProductionUnionTech (Integer, Integer, TDateTime, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnionTech(
-    IN inId          Integer,       -- ключ Документа
-    IN inMIOrderId   Integer,       -- ключ
-    IN inOperDate    TDateTime,     -- дата Документа
+    IN inId          Integer,       -- РєР»СЋС‡ Р”РѕРєСѓРјРµРЅС‚Р°
+    IN inMIOrderId   Integer,       -- РєР»СЋС‡
+    IN inOperDate    TDateTime,     -- РґР°С‚Р° Р”РѕРєСѓРјРµРЅС‚Р°
     IN inFromId      Integer,
     IN inToId        Integer,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 
 )
 RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
@@ -17,8 +17,8 @@ RETURNS TABLE (Id Integer, /*InvNumber TVarChar,*/ OperDate TDateTime
 --             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , GoodsCompleteKindId Integer, GoodsCompleteKindName TVarChar
-             , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
+             , GoodsKindCompleteId Integer, GoodsKindCompleteName TVarChar
+             , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , Comment TVarChar
              , /*Amount TFloat,*/ Count TFloat, RealWeight TFloat,  CuterCount TFloat
              , AmountOrder TFloat,  CuterCountOrder TFloat
@@ -30,7 +30,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
+     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
      IF COALESCE (inId, 0) = 0
@@ -54,11 +54,11 @@ BEGIN
             , 0   		                                            AS GoodsKindId
             , CAST ('' AS TVarChar) 				                AS GoodsKindName
 
-            , CAST (COALESCE(Object_GoodsKind.Id , 0) AS Integer)          AS GoodsCompleteKindId
-            , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar) AS GoodsCompleteKindName
+            , CAST (COALESCE(Object_GoodsKind.Id , 0) AS Integer)          AS GoodsKindCompleteId
+            , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)  AS GoodsKindCompleteName
 
             , 0   		                                            AS ReceiptId
-            , 0   		                                            AS ReceiptCode
+            , CAST ('' AS TVarChar)                                 AS ReceiptCode
             , CAST ('' AS TVarChar) 				                AS ReceiptName
             , CAST ('' AS TVarChar) 				                AS Comment
 ---            , 0   		                                            AS Amount
@@ -117,11 +117,11 @@ BEGIN
             , Object_GoodsKind.Id                                   AS GoodsKindId
             , Object_GoodsKind.ValueData                            AS GoodsKindName
 
-            , Object_GoodsCompleteKind.Id                           AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ValueData                    AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id                           AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ValueData                    AS GoodsKindCompleteName
 
             , Object_Receipt.Id                                     AS ReceiptId
-            , Object_Receipt.ObjectCode                             AS ReceiptCode
+            , ObjectString_Code.ValueData                           AS ReceiptCode
             , Object_Receipt.ValueData                              AS ReceiptName
             , MIString_Comment.ValueData                            AS Comment
 --            , MovementItem.Amount                                   AS Amount
@@ -137,10 +137,9 @@ BEGIN
             , MovementItem.isErased                                 AS isErased
 
 
-     FROM    Movement
-             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              AND MovementItem.Id         = inId
+     FROM    MovementItem
+             JOIN Movement ON Movement.Id = MovementItem.MovementId
+                          AND Movement.DescId = zc_Movement_ProductionUnion()
 
              LEFT JOIN MovementItem AS MI_Order
                     ON MI_Order.Id         = inMIOrderId
@@ -170,16 +169,20 @@ BEGIN
                                               ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_Code
+                                    ON ObjectString_Code.ObjectId = Object_Receipt.Id
+                                   AND ObjectString_Code.DescId = zc_ObjectString_Receipt_Code()
+
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -205,8 +208,9 @@ BEGIN
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 */
-     WHERE --Movement.Id = inMovementId
-        Movement.DescId = zc_Movement_ProductionUnion();
+     WHERE  MovementItem.DescId     = zc_MI_Master()
+       AND  MovementItem.Id         = inId
+       ;
 
 
      END IF;
@@ -218,10 +222,10 @@ LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  12.12.14                                                        *
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpGet_Movement_ProductionUnionTech (inMovementId := 0, inOperDate := '01.01.2014', inSession:= '2')

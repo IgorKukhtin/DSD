@@ -35,9 +35,9 @@ BEGIN
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
-            , CAST (NULL AS Integer)                AS GoodsCompleteKindId
-            , CAST (NULL AS Integer)                AS GoodsCompleteKindCode
-            , CAST (NULL AS TVarchar)               AS GoodsCompleteKindName
+            , CAST (NULL AS Integer)                AS GoodsKindCompleteId
+            , CAST (NULL AS Integer)                AS GoodsKindCompleteCode
+            , CAST (NULL AS TVarchar)               AS GoodsKindCompleteName
 
             , CAST (NULL AS Integer)                AS ReceiptId
             , CAST (NULL AS Integer)                AS ReceiptCode
@@ -82,9 +82,9 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
-            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
-            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -109,10 +109,10 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -165,9 +165,9 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
-            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
-            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -191,10 +191,10 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
@@ -248,9 +248,9 @@ BEGIN
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
-            , Object_GoodsCompleteKind.Id         AS GoodsCompleteKindId
-            , Object_GoodsCompleteKind.ObjectCode AS GoodsCompleteKindCode
-            , Object_GoodsCompleteKind.ValueData  AS GoodsCompleteKindName
+            , Object_GoodsKindComplete.Id         AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
@@ -292,10 +292,10 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILO_GoodsCompleteKind
-                                              ON MILO_GoodsCompleteKind.MovementItemId = MovementItem.Id
-                                             AND MILO_GoodsCompleteKind.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsCompleteKind ON Object_GoodsCompleteKind.Id = MILO_GoodsCompleteKind.ObjectId
+             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
 
        ORDER BY MovementItem.Id

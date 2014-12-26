@@ -9,7 +9,8 @@ uses
   Datasnap.DBClient, dsdAction, System.Classes, Vcl.ActnList, dxBarExtItems,
   dxBar, cxClasses, cxPropertiesStore, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, Vcl.Controls, cxGrid,
-  cxPCdxBarPopupMenu, Vcl.Menus, cxPC;
+  cxPCdxBarPopupMenu, Vcl.Menus, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TUnit_ObjectForm = class(TAncestorEnumForm)

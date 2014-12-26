@@ -187,7 +187,7 @@
     Top = 11
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
   end
-  object ceGooodsCompleateKindGuides: TcxButtonEdit [25]
+  object ceGooodsKindCompleateGuides: TcxButtonEdit [25]
     Left = 531
     Top = 34
     Enabled = False
@@ -328,9 +328,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsCompleteKindId'
+        Name = 'inGoodsKindCompleateId'
         Value = ''
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -366,7 +366,7 @@
     StoredProcName = 'gpGet_Movement_ProductionUnionTech'
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
@@ -433,15 +433,15 @@
         DataType = ftString
       end
       item
-        Name = 'GoodsCompleteKindId'
+        Name = 'GoodsKindCompleateId'
         Value = ''
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'GoodsCompleteKindName'
+        Name = 'GoodsKindCompleateName'
         Value = ''
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -688,15 +688,15 @@
         DataType = ftString
       end
       item
-        Name = 'GoodsCompleteKindId'
+        Name = 'GoodsKindCompleteId'
         Value = Null
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'GoodsCompleteKindName'
+        Name = 'GoodsKindCompleteName'
         Value = Null
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -757,9 +757,9 @@
     Left = 416
     Top = 4
   end
-  object GooodsCompleteKindGuides: TdsdGuides
+  object GooodsKindCompleateGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceGooodsCompleateKindGuides
+    LookupControl = ceGooodsKindCompleateGuides
     FormNameParam.Value = 'TGoodsKind_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TGoodsKind_ObjectForm'
@@ -768,14 +768,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GooodsCompleteKindGuides
+        Component = GooodsKindCompleateGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
