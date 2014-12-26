@@ -142,7 +142,11 @@ begin
               len :=  min(FFieldDefs[i].Size, 254);
               dec :=  FFieldDefs[i].Precision;
             end;
-            ftInteger, ftBCD: field_type := 'N';
+            ftInteger, ftBCD: begin
+              field_type := 'N';
+              len := 10;
+              dec := 0;
+            end;
             ftFloat: begin
               field_type := 'N';
               len := 10;

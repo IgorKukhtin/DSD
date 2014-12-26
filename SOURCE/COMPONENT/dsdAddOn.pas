@@ -1232,6 +1232,8 @@ begin
 end;
 
 procedure THeaderSaver.OnEnter(Sender: TObject);
+var
+  DateTime: TDateTime;
 begin
   if Sender is TcxTextEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxTextEdit).Text;
@@ -1239,8 +1241,12 @@ begin
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxCurrencyEdit).Text;
-  if Sender is TcxDateEdit then
-     FEnterValue.Values[TComponent(Sender).Name] := DateToStr((Sender as TcxDateEdit).Date);
+  if Sender is TcxDateEdit then begin
+        DateTime := (Sender as TcxDateEdit).Date;
+        if DateTime = -700000 then
+           DateTime := 0;
+     FEnterValue.Values[TComponent(Sender).Name] := DateToStr(DateTime);
+  end;
   if Sender is TcxCheckBox then
      FEnterValue.Values[TComponent(Sender).Name] := BoolToStr((Sender as TcxCheckBox).Checked);
 end;

@@ -21,17 +21,6 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
-
-     -- сохранили свойство <Сумма>
---     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inAmount * inPrice);
-
-     -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

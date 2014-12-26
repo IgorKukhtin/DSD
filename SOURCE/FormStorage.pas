@@ -204,13 +204,9 @@ begin
         end;
       end;
     // Загрузить пользователские дефолты!!!
-   // try
       for i := 0 to Result.ComponentCount - 1 do
           if Result.Components[i] is TdsdUserSettingsStorageAddOn then
              TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
-   // except
-
-   // end;
 end;
 
 function TdsdFormStorage.LoadFile(FileName: string): AnsiString;

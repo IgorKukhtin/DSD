@@ -46,6 +46,11 @@ type
     colPrice: TcxGridDBColumn;
     colPartnerGoodsCode: TcxGridDBColumn;
     colPartnerGoodsName: TcxGridDBColumn;
+    ContractGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edContract: TcxButtonEdit;
+    edPaymentDate: TcxDateEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

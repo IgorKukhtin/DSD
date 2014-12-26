@@ -1,27 +1,28 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
-  ClientHeight = 535
+  ClientHeight = 469
   ClientWidth = 807
+  ExplicitLeft = -25
   ExplicitWidth = 815
-  ExplicitHeight = 562
+  ExplicitHeight = 496
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 807
-    Height = 478
+    Height = 412
     TabOrder = 3
     ExplicitWidth = 807
-    ExplicitHeight = 478
-    ClientRectBottom = 478
+    ExplicitHeight = 412
+    ClientRectBottom = 412
     ClientRectRight = 807
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 807
-      ExplicitHeight = 478
+      ExplicitHeight = 412
       inherited cxGrid: TcxGrid
         Width = 807
-        Height = 478
+        Height = 412
         ExplicitWidth = 807
-        ExplicitHeight = 478
+        ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -66,9 +67,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Kind = skSum
             end
             item
-              Format = ',0.00'
+              Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = colTotalSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = colTotalSummMVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,9 +115,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Kind = skSum
             end
             item
-              Format = ',0.00'
+              Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = colTotalSumm
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = colTotalSummMVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -140,18 +151,30 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Width = 88
           end
           object colFromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 187
           end
           object colToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 200
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentVert = vaCenter
+            Width = 136
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -163,15 +186,29 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colTotalSummMVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentVert = vaCenter
+            Width = 111
+          end
           object colTotalSumm: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
+          end
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentVert = vaCenter
+            Width = 56
           end
         end
       end

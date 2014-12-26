@@ -303,7 +303,7 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inPartnerId'

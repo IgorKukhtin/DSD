@@ -22,6 +22,10 @@ BEGIN
 
      ioId := lpInsertUpdate_MovementItem_Income(ioId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
 
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -30,6 +34,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.12.14                        *
  07.12.14                        *
  03.07.14                                                       *
 */

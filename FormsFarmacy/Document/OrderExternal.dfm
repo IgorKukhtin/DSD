@@ -2,6 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
   ClientWidth = 846
+  ExplicitLeft = -64
   ExplicitWidth = 854
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -243,7 +244,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object cxLabel4: TcxLabel
       Left = 532
       Top = 5
-      Caption = #1050#1086#1084#1091
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -366,6 +367,16 @@ inherited OrderExternalForm: TOrderExternalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetDocumentDataForEmail: TdsdExecStoredProc
+      Category = 'SendEMail'
+      MoveParams = <>
+      StoredProc = spGetDocumentDataForEmail
+      StoredProcList = <
+        item
+          StoredProc = spGetDocumentDataForEmail
+        end>
+      Caption = 'actGetDocumentDataForEmail'
+    end
     object SMTPGridAction: TdsdSMTPGridAction
       Category = 'SendEMail'
       MoveParams = <>
@@ -394,16 +405,6 @@ inherited OrderExternalForm: TOrderExternalForm
       ToAddress.Component = FormParams
       ToAddress.ComponentItem = 'AddressTo'
       cxGrid = cxGrid
-    end
-    object actGetDocumentDataForEmail: TdsdExecStoredProc
-      Category = 'SendEMail'
-      MoveParams = <>
-      StoredProc = spGetDocumentDataForEmail
-      StoredProcList = <
-        item
-          StoredProc = spGetDocumentDataForEmail
-        end>
-      Caption = 'actGetDocumentDataForEmail'
     end
     object mactSMTPSend: TMultiAction
       Category = 'SendEMail'

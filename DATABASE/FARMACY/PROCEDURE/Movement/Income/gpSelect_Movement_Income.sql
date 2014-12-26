@@ -9,11 +9,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
+             , ContractId Integer, ContractName TVarChar
+             , PaymentDate TDateTime
               )
 
 AS
@@ -45,6 +47,7 @@ BEGIN
            , Movement_Income_View.StatusCode
            , Movement_Income_View.StatusName
            , Movement_Income_View.TotalCount
+           , Movement_Income_View.TotalSummMVAT
            , Movement_Income_View.TotalSumm
            , Movement_Income_View.PriceWithVAT
            , Movement_Income_View.FromId
@@ -53,7 +56,9 @@ BEGIN
            , Movement_Income_View.ToName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
-
+           , Movement_Income_View.ContractId
+           , Movement_Income_View.ContractName
+           , Movement_Income_View.PaymentDate 
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
@@ -68,6 +73,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.12.14                        *
  15.07.14                                                        *
  10.07.14                                                        *
 

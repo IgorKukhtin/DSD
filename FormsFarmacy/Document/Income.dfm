@@ -2,7 +2,6 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 757
-  ExplicitTop = -25
   ExplicitWidth = 765
   ExplicitHeight = 553
   PixelsPerInch = 96
@@ -13,17 +12,17 @@ inherited IncomeForm: TIncomeForm
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 757
-    ExplicitHeight = 487
+    ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 757
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 757
-      ExplicitHeight = 463
+      ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 757
         Height = 376
         ExplicitWidth = 757
-        ExplicitHeight = 463
+        ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -151,6 +150,9 @@ inherited IncomeForm: TIncomeForm
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -159,8 +161,8 @@ inherited IncomeForm: TIncomeForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -201,6 +203,7 @@ inherited IncomeForm: TIncomeForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
+      TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 218
       ExplicitHeight = 22
@@ -209,7 +212,7 @@ inherited IncomeForm: TIncomeForm
     object cxLabel3: TcxLabel
       Left = 195
       Top = 5
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
       Left = 195
@@ -219,47 +222,76 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 7
-      Width = 270
+      TabOrder = 4
+      Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 477
+      Left = 377
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 8
-      Width = 270
+      TabOrder = 5
+      Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 477
+      Left = 377
       Top = 5
-      Caption = #1050#1086#1084#1091
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 271
+      Left = 232
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 10
+      TabOrder = 11
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 477
-      Top = 46
+      Left = 377
+      Top = 45
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 477
-      Top = 64
+      Left = 377
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 12
+      TabOrder = 13
       Width = 124
+    end
+    object cxLabel5: TcxLabel
+      Left = 568
+      Top = 5
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
+    end
+    object edContract: TcxButtonEdit
+      Left = 570
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 140
+    end
+    object edPaymentDate: TcxDateEdit
+      Left = 570
+      Top = 63
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 15
+      Width = 100
+    end
+    object cxLabel6: TcxLabel
+      Left = 570
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -707,6 +739,25 @@ inherited IncomeForm: TIncomeForm
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaymentDate'
+        Value = Null
+        Component = edPaymentDate
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248
@@ -764,13 +815,18 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'inContractId'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
+        Name = 'inPaymentDate'
         Value = ''
-        ParamType = ptUnknown
+        Component = edPaymentDate
+        DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Value = 0.000000000000000000
@@ -829,13 +885,16 @@ inherited IncomeForm: TIncomeForm
         Control = edInvNumber
       end
       item
+        Control = edContract
       end
       item
+        Control = edPaymentDate
       end
       item
         Control = edOperDate
       end
       item
+        Control = edNDSKind
       end
       item
         Control = edFrom
@@ -844,6 +903,7 @@ inherited IncomeForm: TIncomeForm
         Control = edTo
       end
       item
+        Control = edPriceWithVAT
       end
       item
       end
@@ -1080,16 +1140,15 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 360
-    Top = 8
+    Left = 304
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientGridDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1106,8 +1165,7 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
-    Top = 8
+    Left = 464
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1133,7 +1191,33 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
-    Top = 56
+    Left = 464
+    Top = 80
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 703
+    Top = 16
   end
 end

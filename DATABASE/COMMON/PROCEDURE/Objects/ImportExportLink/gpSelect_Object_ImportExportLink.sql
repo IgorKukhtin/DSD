@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ImportExportLink(
 )
 RETURNS TABLE (Id Integer, IntegerKey Integer, StringKey TVarChar
             , MainId Integer, ValueId Integer, ObjectMainName TVarChar, ObjectChildName TVarChar
-            , LinkTypeId Integer, LinkTypeName TVarChar, ) AS
+            , LinkTypeId Integer, LinkTypeName TVarChar, SomeText TBlob) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -24,6 +24,7 @@ $BODY$BEGIN
      , Object_ImportExportLink_View.ObjectChildName
      , Object_ImportExportLink_View.LinkTypeId
      , Object_ImportExportLink_View.LinkTypeName
+     , Object_ImportExportLink_View.SomeText
 
    FROM Object_ImportExportLink_View;
   

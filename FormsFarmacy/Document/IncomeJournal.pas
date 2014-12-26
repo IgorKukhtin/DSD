@@ -36,6 +36,10 @@ type
     MultiAction2: TMultiAction;
     bbSendData: TdxBarButton;
     spGetDataForSend: TdsdStoredProc;
+    colTotalSummMVAT: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    colPaymentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

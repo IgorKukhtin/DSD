@@ -138,7 +138,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Width = 180
           end
           object colToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

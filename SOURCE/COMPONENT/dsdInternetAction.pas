@@ -54,7 +54,7 @@ implementation
 
 uses SysUtils, IdMessage, IdText, IdAttachmentFile, IdSMTP, cxGridExportLink,
      VCL.ActnList, cxControls, IdExplicitTLSClientServerBase, IdSSLOpenSSL,
-     IdGlobal;
+     IdGlobal, StrUtils;
 
 { TdsdSMTPAction }
 
@@ -127,7 +127,7 @@ begin
                               '<meta http-equiv="content-type" content="text/html; charset=Windows-1251">'+
                               '<title>' + Subject + '</title></head>'+
               '<body bgcolor="#ffffff">'+
-              MessageText + '</body></html>';
+              ReplaceStr(MessageText, #10, '<br>') + '</body></html>';
 
     EText.ContentType := 'text/html';
     EText.CharSet := 'Windows-1251';
@@ -142,7 +142,7 @@ begin
          Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
          try
             with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
-                 FileName := 'Заказ.xls';
+                 FileName := Subject + '.xls';
                  LoadFromStream(Stream);
             end;
          finally
@@ -230,7 +230,7 @@ var GUID: TGuid;
 begin
   CreateGUID(GUID);
   FFileName := ExtractFilePath(ParamStr(0)) + GUIDToString(GUID) + '.xls';
-  ExportGridToExcel(FFileName, FcxGrid, IsCtrlPressed);
+  ExportGridToExcel(FFileName, FcxGrid, IsCtrlPressed, true, false);
   try
     result := inherited LocalExecute;
   finally

@@ -28,8 +28,8 @@ BEGIN
 
        RETURN QUERY
        SELECT
-         'el_zakaz'::TVarChar
-        , 3;
+         ('Заказ - '||COALESCE(vbMainJuridicalName, '')||' от '||COALESCE(vbUnitName, ''))::TVarChar
+        , 5;
    END IF;
 
    IF vbJuridicalId = 59610 THEN --БАДМ

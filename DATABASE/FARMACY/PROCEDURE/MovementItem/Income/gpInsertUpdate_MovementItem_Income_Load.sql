@@ -7,6 +7,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            TVarChar,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, TDateTime, 
+           Boolean,
+           TVarChar,
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
@@ -19,9 +29,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inAmount              TFloat    ,  
     IN inPrice               TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
-    IN inPayDate             TDateTime , -- Дата оплаты
+    IN inPaymentDate         TDateTime , -- Дата оплаты
     IN inPriceWithVAT        Boolean   ,
-    IN inUnitName            TVarChar   ,
+    IN inUnitName            TVarChar  ,
+    IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -36,7 +47,8 @@ $BODY$
    DECLARE vbGoodsId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbObjectId Integer;
-
+   DECLARE vbNDSKindId Integer;
+   DECLARE vbContractId Integer;
 BEGIN
 
    vbUserId := inSession::Integer;
@@ -55,14 +67,31 @@ BEGIN
                                     ON MovementLinkObject_From.MovementId = Movement.Id
                                    AND MovementLinkObject_From.ObjectId = inJuridicalId
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
+  -- Ищем подразделение
 
     SELECT MainId INTO vbUnitId 
       FROM Object_ImportExportLink_View
      WHERE ValueId = inJuridicalId AND StringKey = inUnitName;
 
-  vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
-                                                 inJuridicalId, vbUnitId, zc_Enum_NDSKind_Medical(), 
-                                                 inContractId := 0, inUserId := vbUserId);
+  -- Если не нашли, то сразу ругнемся. Подразделение должно быть!
+     IF COALESCE(vbUnitId, 0) = 0 THEN
+        RAISE EXCEPTION 'Не установлено Подразделение';
+     END IF;
+
+  -- А вот тут попытка угадать договор.
+     -- Если даты не равны, то ищем любой договор с отсрочкой платежа
+     IF inPaymentDate <> inOperDate THEN
+     	SELECT MAX(Id) INTO vbContractId 
+     	   FROM Object_Contract_View 
+     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
+     ELSE
+     -- иначе любой договор без отсрочки платежа
+     	SELECT MAX(Id) INTO vbContractId 
+     	   FROM Object_Contract_View 
+     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
+     END IF;	     	
+  
+
   -- Ищем товар 
       SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
         FROM Object_Goods_View AS Goods_Juridical
@@ -75,12 +104,21 @@ BEGIN
      END IF;
 
   -- Ищем товар для накладной. 
-      SELECT MAX(Goods_Retail.GoodsId) INTO vbGoodsId
+      SELECT Goods_Retail.GoodsId, Object_Goods_View.NDSKindId INTO vbGoodsId, vbNDSKindId
         FROM Object_LinkGoods_View AS Goods_Juridical
         JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
                                                   AND Goods_Retail.ObjectId = vbObjectId
+        JOIN Object_Goods_View ON Goods_Retail.GoodsId = Object_Goods_View.Id                                          
 
        WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
+
+   -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
+     IF (COALESCE(vbMovementId, 0) = 0) OR (COALESCE(vbNDSKindId, 0) <> 0) THEN
+        vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
+                                                       inJuridicalId, vbUnitId, vbNDSKindId, 
+                                                       inContractId := vbContractId , inPaymentDate := inPaymentDate, inUserId := vbUserId);
+     END IF;
+
 
   -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена. 
      SELECT MovementItem.Id INTO vbMovementItemId
@@ -92,6 +130,20 @@ BEGIN
      vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, vbUserId);
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
 
+     -- Срок годности заодно влепим
+     IF NOT (inExpirationDate IS NULL) THEN 
+        -- сохранили свойство <Срок годности>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), vbMovementItemId, inExpirationDate);
+     END IF;
+
+     IF inisLastRecord THEN
+        -- пересчитали Итоговые суммы
+        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     END IF;
+
+
+     -- сохранили протокол
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -99,5 +151,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.12.14                        *   
+ 25.12.14                        *   
  02.12.14                        *   
 */

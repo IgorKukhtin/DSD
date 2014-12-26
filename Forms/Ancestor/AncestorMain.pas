@@ -103,7 +103,7 @@ begin
           spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
           spUserProtocol.Execute;
         except
-
+          // Обязательно так, потому как иначе он может зациклиться.
         end;
      end;
      TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
