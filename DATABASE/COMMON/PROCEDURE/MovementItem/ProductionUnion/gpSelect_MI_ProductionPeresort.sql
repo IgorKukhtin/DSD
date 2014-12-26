@@ -17,7 +17,6 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , Comment TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
-            
              , isErased Boolean
              )
 AS
@@ -226,19 +225,13 @@ BEGIN
                                               ON MILinkObject_GoodsKindChild.MovementItemId = MovementItemChild.Id
                                              AND MILinkObject_GoodsKindChild.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = MILinkObject_GoodsKindChild.ObjectId
-
-      
             ;
-   
+
    END IF;
-
-   
-
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MI_ProductionPeresort (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

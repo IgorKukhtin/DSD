@@ -159,6 +159,7 @@
     Top = 96
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -170,9 +171,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -245,6 +248,7 @@
         Component = PositionLevelGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 304
     Top = 40
   end
@@ -338,6 +342,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 304
     Top = 160
   end
@@ -363,8 +368,10 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -388,6 +395,8 @@
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -413,6 +422,8 @@
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePositionLevel
+    FormNameParam.Value = 'TPositionLevelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionLevelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

@@ -205,7 +205,7 @@ from (
              , ContractCondition_DefermentPayment.ContractConditionKindId
              , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
              , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
-             , ContractCondition_DefermentPayment.ContractDate
+             , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
          FROM ContainerLinkObject AS CLO_Juridical
               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
               LEFT JOIN ContainerLinkObject AS CLO_Contract
@@ -215,7 +215,7 @@ from (
               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
               LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value::Integer, inOperDate) :: Date AS ContractDate
+                              , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
                               , ContractConditionKindId
                               , Value :: Integer AS DayCount
                            FROM Object_ContractCondition_View

@@ -339,7 +339,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Width = 80
           end
           object clStartContractDate: TcxGridDBColumn
-            Caption = #1054#1090#1089#1088#1086#1095#1082#1072' '#1076#1086
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1072' '#1085#1072#1095'.'#1076#1072#1090#1072
             DataBinding.FieldName = 'StartContractDate'
             Visible = False
             HeaderAlignmentHorz = taCenter

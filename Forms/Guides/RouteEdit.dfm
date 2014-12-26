@@ -134,6 +134,7 @@
     Top = 10
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -145,9 +146,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -205,6 +208,7 @@
         Component = FreightGuides
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 328
     Top = 72
   end
@@ -293,6 +297,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
+    PackSize = 1
     Left = 328
     Top = 130
   end
@@ -317,8 +322,10 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -342,6 +349,8 @@
   object RouteKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRouteKind
+    FormNameParam.Value = 'TRouteKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -367,6 +376,8 @@
   object FreightGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceFreight
+    FormNameParam.Value = 'TFreightForm'
+    FormNameParam.DataType = ftString
     FormName = 'TFreightForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -392,6 +403,8 @@
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
