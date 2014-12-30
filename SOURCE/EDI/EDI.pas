@@ -1304,9 +1304,14 @@ begin
       ParamByName('inOrderOperDate').Value :=
         VarToDateTime(Заголовок.ДатаДокументу);
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
-    if Заголовок.КодТипуДокументу = '007' then
-       ParamByName('inPartnerOperDate').Value :=
-         VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу)
+    if Заголовок.КодТипуДокументу = '007' then begin
+       if Заголовок.ДокПідстава.ДатаДокументу = '' then
+          ParamByName('inPartnerOperDate').Value :=
+            VarToDateTime(Заголовок.ДатаДокументу)
+       else
+          ParamByName('inPartnerOperDate').Value :=
+            VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу)
+    end
     else
        ParamByName('inPartnerOperDate').Value :=
          VarToDateTime(Заголовок.ДатаДокументу);
