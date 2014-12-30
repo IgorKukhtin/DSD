@@ -17,15 +17,14 @@ BEGIN
      RETURN QUERY 
        SELECT
             ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_TotalSumm.ValueData) , '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
-       FROM Movement
+       FROM (SELECT inMovementId AS Id) AS Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
                                    AND Movement.DescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective())
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-       WHERE Movement.Id = inMovementId;
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm();
   
 END;
 $BODY$

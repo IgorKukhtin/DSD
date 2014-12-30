@@ -18,9 +18,13 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_CashDnepr()
                                               , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                               , zc_Enum_Process_AccessKey_CashKiev()
-                                              , zc_Enum_Process_AccessKey_CashZaporozhye()
-                                              , zc_Enum_Process_AccessKey_CashKharkov()
                                               , zc_Enum_Process_AccessKey_CashKrRog()
+                                              , zc_Enum_Process_AccessKey_CashNikolaev()
+                                              , zc_Enum_Process_AccessKey_CashKharkov()
+                                              , zc_Enum_Process_AccessKey_CashCherkassi()
+                                              , zc_Enum_Process_AccessKey_CashDoneck()
+                                              , zc_Enum_Process_AccessKey_CashOdessa()
+                                              , zc_Enum_Process_AccessKey_CashZaporozhye()
                                                )
                                          THEN TRUE
                                     ELSE NULL
@@ -64,6 +68,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                                , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                                               , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                                                , zc_Enum_Process_InsertUpdate_Movement_Tax()
                                                , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()

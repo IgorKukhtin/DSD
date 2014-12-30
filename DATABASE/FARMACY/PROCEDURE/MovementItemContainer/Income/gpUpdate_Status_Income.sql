@@ -14,7 +14,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_Income (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_Income (inMovementId, FALSE,inSession);
+            PERFORM gpComplete_Movement_Income (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_Income (inMovementId, inSession);
          ELSE

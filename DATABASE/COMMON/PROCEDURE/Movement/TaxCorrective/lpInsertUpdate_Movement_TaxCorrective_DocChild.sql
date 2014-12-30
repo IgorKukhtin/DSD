@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective_DocChild (Integer, TVarChar, TDateTime, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TaxCorrective_DocChild(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
+ INOUT ioId                  Integer   , -- Ключ объекта
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inMovement_ChildId    Integer   , -- Налоговая накладная
@@ -26,6 +26,13 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_UnComplete()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+
+     -- проверка - номер договора должен быть одинаковый
+     IF COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Contract()), 0)
+        <> COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovement_ChildId AND DescId = zc_MovementLinkObject_Contract()), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.№ договора в корректировке не соответсвует № договора в налоговой.';
      END IF;
 
      -- сохранили связь с <Налоговая накладная>

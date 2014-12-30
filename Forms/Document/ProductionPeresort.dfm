@@ -413,6 +413,12 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = MasterCDS
           ComponentItem = 'GoodsChildName'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsChildCode'
         end>
       isShowModal = True
     end
@@ -602,9 +608,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1083,9 +1086,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       end
       item
         Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
       end

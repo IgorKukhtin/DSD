@@ -215,6 +215,7 @@ begin
   finally
     Query.Free;
   end;
+  result := true;
 end;
 
 end.

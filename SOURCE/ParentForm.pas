@@ -34,6 +34,7 @@ type
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function Execute(Sender: TComponent; Params: TdsdParams): boolean;
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
@@ -91,6 +92,12 @@ begin
   OnCloseQuery := FormCloseQuery;
   KeyPreview := true;
   FisAlreadyOpen := false;
+end;
+
+destructor TParentForm.Destroy;
+begin
+//  ShowMessage(Self.Name);
+  inherited;
 end;
 
 function TParentForm.Execute(Sender: TComponent; Params: TdsdParams): boolean;

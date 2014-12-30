@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat   , -- Цена
---    IN inSumm                TFloat    , -- Сумма
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS

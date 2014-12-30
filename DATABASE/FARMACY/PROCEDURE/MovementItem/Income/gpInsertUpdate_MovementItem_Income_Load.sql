@@ -17,6 +17,30 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            Boolean,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, 
+           TVarChar,
+           TDateTime, 
+           Boolean,
+           TVarChar,
+           Boolean,
+           TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, 
+           TVarChar,
+           TDateTime, 
+           Boolean,
+           TVarChar,
+           TVarChar,
+           Boolean,
+           TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , 
@@ -29,9 +53,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inAmount              TFloat    ,  
     IN inPrice               TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
+    IN inPartitionGoods      TVarChar  ,   
     IN inPaymentDate         TDateTime , -- Дата оплаты
     IN inPriceWithVAT        Boolean   ,
     IN inUnitName            TVarChar  ,
+    IN inMakerName           TVarChar  ,
     IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -50,7 +76,7 @@ $BODY$
    DECLARE vbNDSKindId Integer;
    DECLARE vbContractId Integer;
 BEGIN
-
+	
    vbUserId := inSession::Integer;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
@@ -67,6 +93,7 @@ BEGIN
                                     ON MovementLinkObject_From.MovementId = Movement.Id
                                    AND MovementLinkObject_From.ObjectId = inJuridicalId
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From();
+ 
   -- Ищем подразделение
 
     SELECT MainId INTO vbUnitId 
@@ -98,17 +125,17 @@ BEGIN
 
        WHERE Goods_Juridical.ObjectId = inJuridicalId AND Goods_Juridical.GoodsCode = inGoodsCode;
   
-  --Если вдруг такого нет, то мы его ОБЯЗАТЕЛЬНО добавляем
+    --Если вдруг такого нет, то мы его ОБЯЗАТЕЛЬНО добавляем
      IF COALESCE(vbPartnerGoodsId, 0) = 0 THEN
-        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId, vbUserId, NULL, '');    
+        vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId, vbUserId, NULL, inMakerName);    
      END IF;
-
+ 
   -- Ищем товар для накладной. 
       SELECT Goods_Retail.GoodsId, Object_Goods_View.NDSKindId INTO vbGoodsId, vbNDSKindId
         FROM Object_LinkGoods_View AS Goods_Juridical
-        JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
+        LEFT JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
                                                   AND Goods_Retail.ObjectId = vbObjectId
-        JOIN Object_Goods_View ON Goods_Retail.GoodsId = Object_Goods_View.Id                                          
+        LEFT JOIN Object_Goods_View ON Goods_Retail.GoodsId = Object_Goods_View.Id                                          
 
        WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
 
@@ -136,6 +163,13 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), vbMovementItemId, inExpirationDate);
      END IF;
 
+     -- Ну и серию, если есть 
+     IF COALESCE(inPartitionGoods, '') <> '' THEN 
+        -- сохранили свойство <Серия>
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), vbMovementItemId, inPartitionGoods);
+     END IF;
+     
+
      IF inisLastRecord THEN
         -- пересчитали Итоговые суммы
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -151,6 +185,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.12.14                        *   
  26.12.14                        *   
  25.12.14                        *   
  02.12.14                        *   

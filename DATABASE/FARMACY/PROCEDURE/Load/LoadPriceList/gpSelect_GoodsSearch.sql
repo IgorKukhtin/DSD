@@ -16,12 +16,14 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId := inSession;
+     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
      RETURN QUERY
        SELECT
@@ -45,12 +47,17 @@ BEGIN
        FROM LoadPriceListItem 
 
             JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+            LEFT JOIN (SELECT * FROM lpSelect_Object_JuridicalSettingsPriceListRetail (vbObjectId)) AS JuridicalSettingsPriceList
+                    ON JuridicalSettingsPriceList.JuridicalId = LoadPriceList.JuridicalId 
+                   AND JuridicalSettingsPriceList.ContractId = LoadPriceList.ContractId 
+
             LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId
             LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId = LoadPriceList.JuridicalId 
                                        AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
-      WHERE upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') AND inGoodsSearch <> ''; 
+      WHERE upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') AND inGoodsSearch <> ''
+        AND COALESCE(JuridicalSettingsPriceList.isPriceClose, FALSE) <> TRUE; 
 
 END;
 $BODY$

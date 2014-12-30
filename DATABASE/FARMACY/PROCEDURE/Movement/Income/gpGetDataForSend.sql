@@ -17,7 +17,9 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
-     vbUserId := inSession;
+ 
+    PERFORM lpCheckComplete_Movement_Income (inMovementId);
+    vbUserId := inSession;
 
          SELECT 
              Object_ImportExportLink_View.IntegerKey       
@@ -37,7 +39,7 @@ BEGIN
        FROM (SELECT 
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
           ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
-          ','||MovementItem.GoodsCode||','||MovementItem.Amount||','||MovementItem.Price||')'::text AS OneProcedure
+          ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||MovementItem.Price||')'::text AS OneProcedure
        FROM Movement_Income_View    
          LEFT JOIN ObjectHistory_JuridicalDetails_View AS Juridical ON Juridical.JuridicalId = Movement_Income_View.FromId
          LEFT JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = Movement_Income_View.Id
@@ -56,6 +58,7 @@ ALTER FUNCTION gpGetDataForSend (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.12.14                         *
  09.12.14                         *
  03.07.14                                                       *
 

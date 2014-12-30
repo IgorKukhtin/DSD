@@ -29,12 +29,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceMarketing() 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceSB() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceSB' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceFirstForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceFirstForm' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashOfficialDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashOfficialDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKharkov() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKharkov' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKrRog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKrRog' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashNikolaev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashNikolaev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKharkov() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKharkov' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashCherkassi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashCherkassi' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -124,24 +129,17 @@ BEGIN
 
 
  -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashAll()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса ВСЕ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashAll');
+ -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashDnepr()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 21
                                    , inName:= 'Касса Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashDnepr');
-
- -- по Филиалу ограничиваются Документы для Кассы
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKiev()
-                                   , inDescId:= zc_Object_Process()
-                                   , inCode:= 21
-                                   , inName:= 'Касса Киев (доступ просмотра)'
-                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashKiev');
- -- по Филиалу ограничиваются Документы для Кассы
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashZaporozhye()
-                                   , inDescId:= zc_Object_Process()
-                                   , inCode:= 21
-                                   , inName:= 'Касса Запорожье (доступ просмотра)'
-                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashZaporozhye');
  -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                    , inDescId:= zc_Object_Process()
@@ -149,17 +147,53 @@ BEGIN
                                    , inName:= 'Касса Днепр-БН (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashOfficialDnepr');
  -- по Филиалу ограничиваются Документы для Кассы
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKharkov()
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKiev()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 21
-                                   , inName:= 'Касса ХАРЬКОВ (доступ просмотра)'
-                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashKharkov');
+                                   , inName:= 'Касса Киев (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashKiev');
  -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKrRog()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 21
                                    , inName:= 'Касса КРИВОЙ РОГ (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashKrRog');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashNikolaev()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса НИКОЛАЕВ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashNikolaev');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKharkov()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса ХАРЬКОВ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashKharkov');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashCherkassi()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса ЧЕРКАССЫ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashCherkassi');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashDoneck()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса ДОНЕЦК (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashDoneck');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashOdessa()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса ОДЕССА (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashOdessa');
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashZaporozhye()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса Запорожье (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashZaporozhye');
 
                                    
  -- по Филиалу ограничиваются Документы для Услуг
@@ -356,6 +390,10 @@ END $$;
 /*
 -- !!!update AccessKeyId!!!
 update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashKiev() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 14686  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKiev();
-update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashKharkov() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279790  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
 update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashKrRog() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279788  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKrRog();
+update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashNikolaev() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279789  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
+update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashKharkov() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279790  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
+update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashCherkassi() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 279791  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
+update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashDoneck() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 280185  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
+update Movement set AccessKeyId = zc_Enum_Process_AccessKey_CashOdessa() from MovementItem where MovementItem.MovementId = Movement.Id and MovementItem.ObjectId = 280296  and Movement.DescId = zc_Movement_Cash() and AccessKeyId <> zc_Enum_Process_AccessKey_CashKharkov();
 */
