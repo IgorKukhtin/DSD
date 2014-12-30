@@ -15,13 +15,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
+
+
+   -- определяем ключ доступа
+   vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
+
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- сохранили <Документ>
-   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL);
+   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, vbAccessKeyId);
 
    -- сохранили связь с <От кого (в документе)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -36,7 +44,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
    -- сохранили протокол
-   -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+   PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
