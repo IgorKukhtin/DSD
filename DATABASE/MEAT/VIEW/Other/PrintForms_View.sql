@@ -167,7 +167,7 @@ AS
              zc_movement_sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.12.2014' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('31.12.2014' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax1214' AS TVarChar)
