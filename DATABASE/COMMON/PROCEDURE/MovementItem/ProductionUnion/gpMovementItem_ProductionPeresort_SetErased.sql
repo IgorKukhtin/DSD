@@ -22,8 +22,7 @@ BEGIN
    IF COALESCE (inMovementItemId,0) <> 0
    THEN
       vbChildId := (SELECT Id FROM MovementItem where ParentId   = inMovementItemId
-                                                  AND DescId     = zc_MI_Child()
-                                                  AND isErased   = FALSE);
+                                                  AND DescId     = zc_MI_Child());
       vboutIsErased:= (SELECT dd1.outIsErased FROM gpMovementItem_ProductionUnion_Child_SetErased(vbChildId, inSession) as dd1);
    END IF; 
 

@@ -70,8 +70,12 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                               ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                              ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                             AND CLO_Account.ContainerId IS NULL
                           )
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
                            , COALESCE (tmpMI_Goods.GoodsId, tmpRemains.GoodsId)         AS GoodsId

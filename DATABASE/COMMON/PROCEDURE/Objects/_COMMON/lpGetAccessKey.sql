@@ -39,6 +39,7 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                        , zc_Enum_Process_InsertUpdate_Movement_Loss()
                        , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                       , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                        , zc_Enum_Process_InsertUpdate_Movement_Tax()
                        , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
@@ -117,6 +118,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Tax()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
@@ -146,6 +148,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Tax()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
@@ -207,6 +210,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_Tax()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
@@ -236,6 +240,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Loss()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Inventory()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()
 
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_Tax()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
