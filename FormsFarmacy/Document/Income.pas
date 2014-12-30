@@ -51,6 +51,13 @@ type
     edContract: TcxButtonEdit;
     edPaymentDate: TcxDateEdit;
     cxLabel6: TcxLabel;
+    colExpirationDate: TcxGridDBColumn;
+    ceTotalSummMVAT: TcxCurrencyEdit;
+    ceTotalSummPVAT: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    colPartitionGoods: TcxGridDBColumn;
+    colMakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

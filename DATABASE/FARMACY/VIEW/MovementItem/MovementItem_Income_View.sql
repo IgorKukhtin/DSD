@@ -16,11 +16,22 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
            , MovementItem.isErased              AS isErased
            , MovementItem.MovementId            AS MovementId
+           , MIDate_ExpirationDate.ValueData    AS ExpirationDate
+           , MIString_PartionGoods.ValueData    AS PartionGoods
+           , Object_PartnerGoods.MakerName      AS MakerName
 
        FROM  MovementItem 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+            LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()                                         
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                              ON MILinkObject_Goods.MovementItemId = MovementItem.Id

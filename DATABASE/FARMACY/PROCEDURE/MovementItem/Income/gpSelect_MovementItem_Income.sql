@@ -14,6 +14,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat
              , Summ TFloat
              , isErased Boolean
+             , ExpirationDate TDateTime
+             , PartionGoods TVarChar
+             , MakerName TVarChar
               )
 AS
 $BODY$
@@ -38,6 +41,9 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TFloat)      AS Summ
            , FALSE                      AS isErased
+           , NULL::TDateTime            AS ExpirationDate
+           , NULL::TVarChar             AS PartionGoods
+           , NULL::TVarChar             AS MakerName
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -67,6 +73,9 @@ BEGIN
            , MovementItem.Price
            , MovementItem.AmountSumm
            , MovementItem.isErased
+           , MovementItem.ExpirationDate
+           , MovementItem.PartionGoods
+           , MovementItem.MakerName
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -87,6 +96,9 @@ BEGIN
            , MovementItem.Price
            , MovementItem.AmountSumm
            , MovementItem.isErased
+           , MovementItem.ExpirationDate
+           , MovementItem.PartionGoods
+           , MovementItem.MakerName
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -103,6 +115,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.12.14                         *
  09.12.14                         *
  03.07.14                                                       *
 

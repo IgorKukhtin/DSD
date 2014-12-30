@@ -3,7 +3,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
   ClientWidth = 798
   ExplicitWidth = 806
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,8 +16,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Top = 27
         Width = 798
         Height = 255
-        ExplicitLeft = 24
-        ExplicitTop = 3
+        ExplicitTop = 27
         ExplicitWidth = 798
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -43,15 +41,17 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 83
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxTextEditProperties'
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 97
           end
           object colCode: TcxGridDBColumn

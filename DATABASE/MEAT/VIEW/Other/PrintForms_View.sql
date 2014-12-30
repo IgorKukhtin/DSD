@@ -172,6 +172,16 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax1214' AS TVarChar)
       UNION
+--налоговая c 01.01.2015
+      SELECT
+             zc_movement_sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('01.01.2015' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax0115' AS TVarChar)
+      UNION
 
 --коррект
       SELECT

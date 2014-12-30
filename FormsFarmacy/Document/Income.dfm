@@ -1,27 +1,28 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
-  ClientWidth = 757
-  ExplicitWidth = 765
+  ClientWidth = 776
+  ExplicitTop = -170
+  ExplicitWidth = 784
   ExplicitHeight = 553
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 757
+    Width = 776
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 757
+    ExplicitWidth = 732
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 757
+    ClientRectRight = 776
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 757
+      ExplicitWidth = 732
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 757
+        Width = 776
         Height = 376
-        ExplicitWidth = 757
+        ExplicitWidth = 732
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -167,15 +168,33 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            Options.Editing = False
+            Width = 70
+          end
+          object colPartitionGoods: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 757
+    Width = 776
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 757
+    ExplicitWidth = 732
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -205,9 +224,9 @@ inherited IncomeForm: TIncomeForm
       Top = 63
       TabOrder = 8
       ExplicitTop = 63
-      ExplicitWidth = 218
+      ExplicitWidth = 181
       ExplicitHeight = 22
-      Width = 218
+      Width = 181
     end
     object cxLabel3: TcxLabel
       Left = 195
@@ -242,19 +261,19 @@ inherited IncomeForm: TIncomeForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 232
+      Left = 195
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 11
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 377
+      Left = 323
       Top = 45
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 377
+      Left = 323
       Top = 63
       Properties.Buttons = <
         item
@@ -262,7 +281,7 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 124
+      Width = 86
     end
     object cxLabel5: TcxLabel
       Left = 568
@@ -281,7 +300,7 @@ inherited IncomeForm: TIncomeForm
       Width = 140
     end
     object edPaymentDate: TcxDateEdit
-      Left = 570
+      Left = 426
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -289,9 +308,77 @@ inherited IncomeForm: TIncomeForm
       Width = 100
     end
     object cxLabel6: TcxLabel
-      Left = 570
+      Left = 426
       Top = 45
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object ceTotalSummMVAT: TcxCurrencyEdit
+      Left = 616
+      Top = 50
+      EditValue = 1111111.000000000000000000
+      Enabled = False
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Style.BorderColor = clBtnFace
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      StyleDisabled.BorderColor = clBtnFace
+      StyleDisabled.BorderStyle = ebsSingle
+      StyleDisabled.TextColor = clBtnText
+      TabOrder = 17
+      Width = 94
+    end
+    object ceTotalSummPVAT: TcxCurrencyEdit
+      Left = 616
+      Top = 69
+      EditValue = 1111111.000000000000000000
+      Enabled = False
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Style.BorderColor = clBtnFace
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      StyleDisabled.BorderColor = clBtnFace
+      StyleDisabled.BorderStyle = ebsSingle
+      StyleDisabled.TextColor = clBtnText
+      TabOrder = 18
+      Width = 94
+    end
+    object cxLabel7: TcxLabel
+      Left = 528
+      Top = 51
+      Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel8: TcxLabel
+      Left = 542
+      Top = 70
+      Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -972,10 +1059,10 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
-        Name = 'inSumm'
+        Name = 'inPrice'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Summ'
+        ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1065,6 +1152,27 @@ inherited IncomeForm: TIncomeForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Summ'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSummMVAT'
+        Value = Null
+        Component = ceTotalSummMVAT
+        DataType = ftFloat
+      end
+      item
+        Name = 'TotalSummPVAT'
+        Value = Null
+        Component = ceTotalSummPVAT
+        DataType = ftFloat
+      end>
     Left = 420
     Top = 188
   end
@@ -1173,7 +1281,7 @@ inherited IncomeForm: TIncomeForm
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TNDSKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1217,7 +1325,7 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 703
-    Top = 16
+    Left = 687
+    Top = 144
   end
 end

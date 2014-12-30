@@ -1562,7 +1562,7 @@ begin
     if (Operation = opRemove) and Assigned(Params) then
       for i := 0 to Params.Count - 1 do
         if Params[i].Component = AComponent then
-          Params[i].Component := nil;
+           Params[i].Component := nil;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);
@@ -1723,7 +1723,7 @@ begin
     if (Operation = opRemove) and (AComponent = TabSheet) then
       TabSheet := nil;
   if (Operation = opRemove) and (AComponent = ActiveControl) then
-    ActiveControl := nil;
+      ActiveControl := nil;
 end;
 
 procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
