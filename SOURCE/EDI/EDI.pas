@@ -1304,8 +1304,12 @@ begin
       ParamByName('inOrderOperDate').Value :=
         VarToDateTime(Заголовок.ДатаДокументу);
     ParamByName('inPartnerInvNumber').Value := Заголовок.НомерДокументу;
-    ParamByName('inPartnerOperDate').Value :=
-      VarToDateTime(Заголовок.ДатаДокументу);
+    if Заголовок.КодТипуДокументу = '007' then
+       ParamByName('inPartnerOperDate').Value :=
+         VarToDateTime(Заголовок.ДокПідстава.ДатаДокументу)
+    else
+       ParamByName('inPartnerOperDate').Value :=
+         VarToDateTime(Заголовок.ДатаДокументу);
     if Заголовок.КодТипуДокументу = '012' then
     begin
       ParamByName('inDesc').Value := 'Return';

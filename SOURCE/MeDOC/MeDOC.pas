@@ -273,6 +273,7 @@ begin
   ZVIT.TRANSPORT.VERSION := '3.0';
   ZVIT.ORG.FIELDS.EDRPOU := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
+
   with ZVIT.ORG.CARD.FIELDS do begin
     PERTYPE := '0';
     //перший день періоду

@@ -2,7 +2,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 807
-  ExplicitLeft = -25
   ExplicitWidth = 815
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -532,12 +531,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 80
