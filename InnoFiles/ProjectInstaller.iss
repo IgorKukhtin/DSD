@@ -37,6 +37,9 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 Source: "..\BIN\Project.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\INIT\init.php"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+;Source: "midas.dll"; DestDir: "{sys}"; Flags: onlyifdoesntexist regserver
+;Source: "midas.dll"; DestDir: "{app}"; Flags: onlyifdoesntexist regserver
+Source: "midas.dll"; DestDir: {app};
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
