@@ -79,7 +79,30 @@ BEGIN
 
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Cash());
+-- 280297;9;"Касса Крым";f;"грн";"филиал Крым";"ТОВ АЛАН";"";"Нал"
+-- 280298;10;"Касса Никополь";f;"грн";"филиал Никополь";"ТОВ АЛАН";"";"Нал"
+
+     vbAccessKeyId:= CASE WHEN inCashId = 296540 -- Касса Днепр БН
+                               THEN zc_Enum_Process_AccessKey_CashOfficialDnepr()
+                          WHEN inCashId = 14686 -- Касса Киев
+                               THEN zc_Enum_Process_AccessKey_CashKiev()
+                          WHEN inCashId = 279788 -- Касса Кривой Рог
+                               THEN zc_Enum_Process_AccessKey_CashKrRog()
+                          WHEN inCashId = 279789 -- Касса Николаев
+                               THEN zc_Enum_Process_AccessKey_CashNikolaev()
+                          WHEN inCashId = 279790 -- касса Харьков
+                               THEN zc_Enum_Process_AccessKey_CashKharkov()
+                          WHEN inCashId = 279791 -- Касса Черкассы
+                               THEN zc_Enum_Process_AccessKey_CashCherkassi()
+                          WHEN inCashId = 280185 -- Касса Донецк
+                               THEN zc_Enum_Process_AccessKey_CashDoneck()
+                          WHEN inCashId = 280296 -- Касса Одесса
+                               THEN zc_Enum_Process_AccessKey_CashOdessa()
+                          WHEN inCashId = 301799 -- Касса Запорожье
+                               THEN zc_Enum_Process_AccessKey_CashZaporozhye()
+                          ELSE zc_Enum_Process_AccessKey_CashDnepr() -- lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Cash())
+                     END;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 

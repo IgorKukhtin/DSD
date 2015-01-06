@@ -61,7 +61,8 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY  
+     RETURN QUERY
+     WITH tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101())
      SELECT a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.JuridicalGroupName
              , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
              , a.BranchId, a.BranchCode, a.BranchName
@@ -208,6 +209,7 @@ from (
              , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
          FROM ContainerLinkObject AS CLO_Juridical
               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
+              LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
               LEFT JOIN ContainerLinkObject AS CLO_Contract
                                             ON CLO_Contract.ContainerId = Container.Id
                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
@@ -238,7 +240,8 @@ from (
                                              AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
              LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
          WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+            -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+            AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
          GROUP BY Container.Id
                 , Container.ObjectId
                 , Container.Amount

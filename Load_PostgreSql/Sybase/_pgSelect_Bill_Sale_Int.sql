@@ -361,7 +361,7 @@ from
 
 end
 //
--- select * from dba._pgSelect_Bill_Sale ('2014-11-07', '2014-11-07') as a where InvNumber_my = 197622
+-- select * from dba._pgSelect_Bill_Sale ('2014-12-25', '2014-12-25') as a where InvNumber_my = 206764
 /*
 create table dba._pgBillLoad_union (BillId Integer, BillId_union Integer);
 */

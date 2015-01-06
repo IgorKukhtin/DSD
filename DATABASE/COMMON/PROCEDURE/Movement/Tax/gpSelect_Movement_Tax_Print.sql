@@ -31,7 +31,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
 
-     -- определяется <Налоговый документ> и его параметры 
+     -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
           , Movement_Tax.StatusId                    AS StatusId_Tax
           , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
@@ -75,7 +75,7 @@ BEGIN
      -- очень важная проверка
      IF COALESCE (vbMovementId_Tax, 0) = 0 OR COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete()
      THEN
-         IF COALESCE (vbMovementId_Tax, 0) = 0 
+         IF COALESCE (vbMovementId_Tax, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Документ <%> не создан.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
          END IF;
@@ -111,8 +111,8 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
-           , 'J1201006'::TVarChar                       AS CHARCODE  
-           , 'Неграш О.В.'::TVarChar                    AS N10 
+           , 'J1201006'::TVarChar                       AS CHARCODE
+           , 'Неграш О.В.'::TVarChar                    AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , vbPriceWithVAT                             AS PriceWithVAT
@@ -126,7 +126,7 @@ BEGIN
            , Object_From.ValueData             		AS FromName
            , Object_To.ValueData               		AS ToName
 
-           , View_Contract.InvNumber         		AS ContractName 
+           , View_Contract.InvNumber         		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
@@ -173,7 +173,7 @@ BEGIN
 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementId = inMovementId 
+                                           ON MovementLinkMovement_Sale.MovementId = inMovementId
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
@@ -324,7 +324,7 @@ BEGIN
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
-                        THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' 
+                        THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
@@ -342,6 +342,10 @@ BEGIN
              END) :: TVarChar AS GoodsName_two
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
+           , CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
+                  WHEN Object_Measure.ObjectCode=2 THEN '2009'
+             ELSE ''     END                        AS MeasureCode
+
 
            , MovementItem.Amount                    AS Amount
            , MovementItem.Amount                    AS AmountPartner
@@ -362,13 +366,13 @@ BEGIN
 
            , CASE WHEN vbPriceWithVAT = TRUE
                   THEN CAST (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE MIFloat_Price.ValueData 
+                  ELSE MIFloat_Price.ValueData
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
              AS PriceNoVAT
 
            , CASE WHEN vbPriceWithVAT = FALSE
                   THEN CAST (MIFloat_Price.ValueData + MIFloat_Price.ValueData * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE MIFloat_Price.ValueData 
+                  ELSE MIFloat_Price.ValueData
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
              AS PriceWVAT
 
@@ -516,6 +520,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.12.14                                                       * add MeasureCode
  23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name

@@ -15,14 +15,13 @@ $BODY$
 BEGIN
    
    
-   outIsErased := (SELECT outIsErased FROM gpMovementItem_ProductionUnion_Master_SetUnErased(inMovementItemId, inSession));
+   outIsErased := (SELECT tmp.outIsErased FROM gpMovementItem_ProductionUnion_Master_SetUnErased(inMovementItemId, inSession) AS tmp);
    
    IF COALESCE (inMovementItemId,0) <> 0
    THEN
       vbChildId := (SELECT Id FROM MovementItem where ParentId   = inMovementItemId
-                                                  AND DescId     = zc_MI_Child()
-                                                  AND isErased   = True);
-      vboutIsErased:= (SELECT outIsErased FROM gpMovementItem_ProductionUnion_Child_SetUnErased(vbChildId, inSession));
+                                                  AND DescId     = zc_MI_Child());
+      vboutIsErased:= (SELECT tmp.outIsErased FROM gpMovementItem_ProductionUnion_Child_SetUnErased(vbChildId, inSession) AS tmp);
    END IF; 
 
 END;

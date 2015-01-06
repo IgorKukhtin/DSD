@@ -40,6 +40,9 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+   -- пересчитали Итоговые суммы по накладной
+   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
    
@@ -50,9 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
  11.12.14         * из gp
-
 */
 
 -- тест
