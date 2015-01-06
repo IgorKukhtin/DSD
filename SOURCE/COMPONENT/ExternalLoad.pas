@@ -25,6 +25,8 @@ type
     FFileFilter: string;
     FExtendedProperties: string;
     FStartRecord: integer;
+    // Создаем тут обработку mmo файлов
+    procedure CreateMMODataSet(FileName: string);
   protected
     procedure First; override;
   public
@@ -130,7 +132,8 @@ type
 implementation
 
 uses VCL.ActnList, SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin,
-     DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows;
+     DBClient, TypInfo, Variants, UtilConvert, WinApi.Windows, StrUtils,
+     System.Types;
 
 const cArchive = 'Archive';
 
@@ -144,13 +147,13 @@ begin
   if FileTypeName = 'ODBC' then
      result := dtODBC
   else
-    if FileTypeName = '' then
+    if FileTypeName = 'DBF' then
        result := dtDBF
     else
       if FileTypeName = 'Excel' then
          result := dtXLS
       else
-        if FileTypeName = '' then
+        if FileTypeName = 'MMO' then
            result := dtMMO
         else
           raise Exception.Create('Тип файла "' + FileTypeName + '" не определен в программе');
@@ -223,7 +226,8 @@ end;
 procedure TFileExternalLoad.Close;
 begin
   FDataSet.Close;
-  FAdoConnection.Connected := false;
+  if Assigned(FAdoConnection) then
+     FAdoConnection.Connected := false;
 end;
 
 constructor TFileExternalLoad.Create(DataSetType: TDataSetType; StartRecord: integer; ExtendedProperties: string);
@@ -242,6 +246,99 @@ begin
              FFileExtension := '*.xls';
              FFileFilter := 'Файлы выгрузки Excel|*.xls;*.xlsx|';
            end;
+  end;
+end;
+
+procedure TFileExternalLoad.CreateMMODataSet(FileName: string);
+var
+  StringList: TStringList;
+  OkpoFrom, OkpoTo, InvNumber, InvTaxNumber,
+  Remark: string;
+  OperDate, PaymentDate: TDateTime;
+  PriceWithVAT: boolean;
+  SyncCode: Integer;
+  ElementList: TStringDynArray;
+  i: integer;
+begin
+  FDataSet := TClientDataSet.Create(nil);
+  FDataSet.FieldDefs.Add('OKPOFrom', ftString, 255);
+  FDataSet.FieldDefs.Add('OKPOTo', ftString, 255);
+  FDataSet.FieldDefs.Add('InvNumber', ftString, 255);
+  FDataSet.FieldDefs.Add('OperDate', ftDateTime);
+  FDataSet.FieldDefs.Add('InvTaxNumber', ftString, 255);
+  FDataSet.FieldDefs.Add('PaymentDate', ftDateTime);
+  FDataSet.FieldDefs.Add('PriceWithVAT', ftBoolean);
+  FDataSet.FieldDefs.Add('SyncCode', ftInteger);
+  FDataSet.FieldDefs.Add('Remark', ftString, 255);
+
+  FDataSet.FieldDefs.Add('GoodsCode', ftString, 255);
+  FDataSet.FieldDefs.Add('GoodsName', ftString, 255);
+  FDataSet.FieldDefs.Add('MakerCode', ftString, 255);
+  FDataSet.FieldDefs.Add('MakerName', ftString, 255);
+  FDataSet.FieldDefs.Add('CommonCode', ftString, 255);
+  FDataSet.FieldDefs.Add('VAT', ftInteger);
+  FDataSet.FieldDefs.Add('PartitionGoods', ftString, 255); // Номер серии
+  FDataSet.FieldDefs.Add('ExpirationDate', ftDateTime);    // Срок годности
+
+  FDataSet.FieldDefs.Add('Amount', ftFloat);    // Количество
+  FDataSet.FieldDefs.Add('Price', ftFloat);     // Цена Отпускная (для аптеки это закупочная)
+
+  TClientDataSet(FDataSet).CreateDataSet;
+  // Считываем файл
+  StringList := TStringList.Create;
+  try
+    StringList.LoadFromFile(FileName);
+    // Загрузка заголовка. 3 строки
+    ElementList := SplitString(StringList[0], #9);
+    OkpoFrom := ElementList[1];
+    OkpoTo := ElementList[2];
+    ElementList := SplitString(StringList[1], #9);
+    InvNumber := ElementList[0];
+    OperDate := VarToDateTime(ElementList[1]);
+    InvTaxNumber := ElementList[2];
+    if ElementList[13] = '' then
+       PaymentDate := OperDate
+    else
+       PaymentDate := VarToDateTime(ElementList[13]);
+
+    PriceWithVAT := ElementList[14] = '1';
+    SyncCode := StrToInt(ElementList[15]);
+
+    ElementList := SplitString(StringList[2], #9);
+    Remark := ElementList[0];
+    for I := 3 to StringList.Count - 1 do
+        // разбираем строки
+        with FDataSet do begin
+          Append;
+          FieldByName('OKPOFrom').AsString := OkpoFrom;
+          FieldByName('OKPOTo').AsString := OkpoTo;
+          FieldByName('InvNumber').AsString := InvNumber;
+          FieldByName('OperDate').AsDateTime := OperDate;
+          FieldByName('InvTaxNumber').AsString := InvTaxNumber;
+          FieldByName('PaymentDate').AsDateTime := PaymentDate;
+          FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
+          FieldByName('SyncCode').AsInteger := SyncCode;
+          FieldByName('Remark').AsString := Remark;
+
+          ElementList := SplitString(StringList[i], #9);
+          FieldByName('GoodsCode').AsString := ElementList[0];
+          FieldByName('GoodsName').AsString := ElementList[1];
+          FieldByName('MakerCode').AsString := ElementList[2];
+          FieldByName('MakerName').AsString := ElementList[3];
+          FieldByName('CommonCode').AsString := ElementList[4];
+          FieldByName('VAT').AsInteger := StrToInt(ElementList[8]);
+          FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
+          if ElementList[13] = '' then
+             FieldByName('ExpirationDate').AsDateTime := OperDate
+          else
+             FieldByName('ExpirationDate').AsDateTime := VarToDateTime(ElementList[13]);    // Срок годности
+
+          FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
+          FieldByName('Price').AsFloat  := gfStrToFloat(ElementList[20]) / FieldByName('Amount').AsFloat;    // Цена Отпускная (для аптеки это закупочная)
+          Post;
+        end;
+  finally
+    StringList.Free;
   end;
 end;
 
@@ -266,6 +363,7 @@ var strConn :  widestring;
     ListName: string;
 begin
   case FDataSetType of
+    dtMMO: CreateMMODataSet(FileName);
     dtDBF: begin
         FDataSet := TVKSmartDBF.Create(nil);
         TVKSmartDBF(FDataSet).DBFFileName := AnsiString(FileName);
@@ -468,8 +566,11 @@ begin
              end;
           end
           else begin
-            if ImportSettings.FileType = dtXLS then
-               FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+            case ImportSettings.FileType of
+               dtXLS: FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound, false);
+               dtMMO: FilesInDir('*.mmo', ImportSettings.Directory, iFilesCount, saFound, false);
+               dtDBF: FilesInDir('*.dbf', ImportSettings.Directory, iFilesCount, saFound, false);
+            end;
           end;
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do

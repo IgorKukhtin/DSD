@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:documentation>Додаток 2 до Податкової накладної
+		(ЗАТВЕРДЖЕНО Наказ Міністерства фінансів України 22 вересня 2014 року N 957 (у редакції наказу Міністерства фінансів України від 14 листопада 2014 року N 1129)</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="common_types.xsd"/>
+	<xs:element name="DECLAR" type="DeclarContent"/>
+	<xs:complexType name="DeclarContent">
+		<xs:sequence>
+			<xs:element name="DECLARHEAD" type="DHead"/>
+			<xs:element name="DECLARBODY" type="DBody">
+       <xs:unique name="URXXXXG1D"> <xs:selector xpath="RXXXXG1D"/> <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG2S"> <xs:selector xpath="RXXXXG2S"/> <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG3S"> <xs:selector xpath="RXXXXG3S"/> <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG4">  <xs:selector xpath="RXXXXG4"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG4S">	<xs:selector xpath="RXXXXG4S"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG105_2S">	<xs:selector xpath="RXXXXG105_2S"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG5">  <xs:selector xpath="RXXXXG5"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG6">  <xs:selector xpath="RXXXXG6"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG7">  <xs:selector xpath="RXXXXG7"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG8">  <xs:selector xpath="RXXXXG8"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG9">  <xs:selector xpath="RXXXXG9"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG111">  <xs:selector xpath="RXXXXG111"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG10">  <xs:selector xpath="RXXXXG10"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+       <xs:unique name="URXXXXG11">  <xs:selector xpath="RXXXXG11"/>  <xs:field xpath="@ROWNUM"/>  </xs:unique>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DHead">
+		<xs:sequence>
+			<xs:element name="TIN" type="DGLong"/>
+			<xs:element name="C_DOC" type="xs:string" fixed="J12"/>
+			<xs:element name="C_DOC_SUB" type="xs:string" fixed="012"/>
+			<xs:element name="C_DOC_VER" type="xs:string" fixed="7"/>
+			<xs:element name="C_DOC_TYPE" type="xs:nonNegativeInteger"/>
+			<xs:element name="C_DOC_CNT" type="xs:nonNegativeInteger"/>
+			<xs:element name="C_REG" type="DGsti"/>
+			<xs:element name="C_RAJ" type="DGsti"/>
+			<xs:element name="PERIOD_MONTH" type="DGMonth"/>
+			<xs:element name="PERIOD_TYPE" type="DGPType"/>
+			<xs:element name="PERIOD_YEAR" type="DGYear"/>
+			<xs:element name="C_STI_ORIG" type="DGc_dpi"/>
+			<xs:element name="C_DOC_STAN" type="DGSTAN"/>
+			<xs:element name="LINKED_DOCS" nillable="true" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DOC" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="C_DOC" type="DGC_DOC"/>
+									<xs:element name="C_DOC_SUB" type="DGC_DOC_SUB"/>
+									<xs:element name="C_DOC_VER" type="DGC_DOC_VER"/>
+									<xs:element name="C_DOC_TYPE" type="xs:nonNegativeInteger"/>
+									<xs:element name="C_DOC_CNT" type="xs:nonNegativeInteger"/>
+									<xs:element name="C_DOC_STAN" type="DGSTAN"/>
+									<xs:element name="FILENAME" type="DGFilename"/>
+								</xs:sequence>
+								<xs:attribute name="NUM" type="xs:nonNegativeInteger"/>
+								<xs:attribute name="TYPE" type="DGTypeLinkDoc"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+				<xs:unique name="UH_DOC_NUM">
+					<xs:selector xpath="DOC"/>
+					<xs:field xpath="@NUM"/>
+				</xs:unique>
+			</xs:element>
+			<xs:element name="D_FILL" type="DGDate"/>
+			<xs:element name="SOFTWARE" type="xs:string" nillable="true" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DBody">
+		<xs:sequence>
+			<!--HEAD-->
+			<xs:element name="HERPN" type="DGchk" nillable="true" minOccurs="0"/>
+			<xs:element name="H01" type="DGchk" nillable="true" minOccurs="0"/>
+			<xs:element name="HORIG1" type="DGchk" nillable="true" minOccurs="0"/>
+			<xs:element name="HTYPR" type="DGPNtypr" nillable="true" minOccurs="0"/>
+
+			<xs:element name="HNUM" type="DGI7nom"/>
+			<xs:element name="HNUM1" type="DGspecNom" nillable="true" minOccurs="0"/>
+			<xs:element name="HNUM2" type="DGI4nom" nillable="true" minOccurs="0"/>
+
+			<xs:element name="HFILL" type="DGDate"/>
+			<xs:element name="HPODFILL" type="DGDate"/>
+			<xs:element name="HPODNUM" type="DGI7nom"/>
+			<xs:element name="HPODNUM1" type="DGspecNom" nillable="true" minOccurs="0"/>
+			<xs:element name="HPODNUM2" type="DGI4nom" nillable="true" minOccurs="0"/>
+			<xs:element name="H01G1D" type="DGDate" nillable="true" minOccurs="0"/>
+			<xs:element name="H01G2S" type="xs:string" nillable="true" minOccurs="0"/>
+
+			<xs:element name="HNAMESEL" type="DGHNAME"/>
+			<xs:element name="HNAMEBUY" type="DGHNAME"/>
+			<xs:element name="HKSEL" type="DGHIPN0"/>
+			<xs:element name="HKBUY" type="DGHIPN0"/>
+			<xs:element name="HLOCSEL" type="DGHLOC" nillable="true" minOccurs="0"/>
+			<xs:element name="HLOCBUY" type="DGHLOC" nillable="true" minOccurs="0"/>
+			<xs:element name="HTELSEL" type="DGHTEL" nillable="true" minOccurs="0"/>
+			<xs:element name="HTELBUY" type="DGHTEL" nillable="true" minOccurs="0"/>
+			<xs:element name="H02G1S" type="xs:string" nillable="true" minOccurs="0"/>
+			<xs:element name="H02G2D" type="DGDate" nillable="true" minOccurs="0"/>
+			<xs:element name="H02G3S" type="xs:string" nillable="true" minOccurs="0"/>
+
+			<!--BODY-->
+			<!--TABLE №1-->
+			<xs:element name="RXXXXG1D" type="DateColumn" maxOccurs="9999"/>
+			<xs:element name="RXXXXG2S" type="StrColumn" maxOccurs="9999"/>
+			<xs:element name="RXXXXG3S" type="StrColumn" maxOccurs="9999"/>
+			<xs:element name="RXXXXG4" type="UKTZEDColumn" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG4S" type="StrColumn" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG105_2S" type="DGI4lzColumn" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG5" type="Decimal6Column_R" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG6" type="Decimal12Column_R" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG7" type="Decimal12Column_R" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG8" type="Decimal6Column_R" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG9" type="Decimal2Column" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG111" type="Decimal2Column" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG10" type="Decimal2Column" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<xs:element name="RXXXXG11" type="Decimal2Column" nillable="true" minOccurs="0" maxOccurs="9999"/>
+			<!--/TABLE №1-->
+
+			<xs:element name="R01G9" type="DGdecimal2" nillable="true" minOccurs="0"/>
+			<xs:element name="R01G111" type="DGdecimal2" nillable="true" minOccurs="0"/>
+			<xs:element name="R01G10" type="DGdecimal2" nillable="true" minOccurs="0"/>
+			<xs:element name="R01G11" type="DGdecimal2" nillable="true" minOccurs="0"/>
+
+			<xs:element name="R02G9" type="DGdecimal2" nillable="true" minOccurs="0"/>
+			<xs:element name="R02G111" type="DGdecimal2" nillable="true" minOccurs="0"/>
+
+			<!--FOOTER-->
+			<xs:element name="H10G2S" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
