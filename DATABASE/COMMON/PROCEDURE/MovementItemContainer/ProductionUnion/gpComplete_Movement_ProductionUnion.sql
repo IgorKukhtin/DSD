@@ -31,6 +31,7 @@ $BODY$
   DECLARE vbJuridicalId_Basis_To Integer;
   DECLARE vbBusinessId_To Integer;
 
+  DECLARE vbIsPeresort Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionUnion());
@@ -61,9 +62,15 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
+          , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+
             INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
+               , vbIsPeresort
      FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                    ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                   AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -470,7 +477,7 @@ BEGIN
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId_From
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
-            , SUM (ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
+            , SUM (/*ABS*/ (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
         FROM _tmpItemChild
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
@@ -510,7 +517,17 @@ BEGIN
 
      -- группируем и получаем таблицу - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
-        SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From, 0 AS MIContainerId_To, 0 AS ContainerId_To, 0 AS AccountId_To, _tmpItemSummChild.InfoMoneyId_Detail_From, SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From, _tmpItemSummChild.InfoMoneyId_Detail_From;
+        SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
+             , 0 AS MIContainerId_To
+             , 0 AS ContainerId_To
+             , CASE WHEN vbIsPeresort = TRUE THEN _tmpItemSummChild.AccountId_From ELSE 0 END AS AccountId_To
+             , _tmpItemSummChild.InfoMoneyId_Detail_From
+             , SUM (_tmpItemSummChild.OperSumm)
+        FROM _tmpItemSummChild
+        GROUP BY _tmpItemSummChild.MovementItemId_Parent
+               , _tmpItemSummChild.ContainerId_From
+               , CASE WHEN vbIsPeresort = TRUE THEN _tmpItemSummChild.AccountId_From ELSE 0 END
+               , _tmpItemSummChild.InfoMoneyId_Detail_From;
 
 
      -- для теста - Master - Summ
@@ -580,6 +597,7 @@ BEGIN
                              END AS InfoMoneyDestinationId_calc
                       FROM _tmpItem
                       WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
+                        AND vbIsPeresort = FALSE -- !!!если НЕ пересортица!!!
                       GROUP BY _tmpItem.InfoMoneyDestinationId
                              , CASE WHEN (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()) -- Доходы + Продукция
                                       OR (_tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
@@ -615,12 +633,14 @@ BEGIN
                                                     , inAssetId                := _tmpItem.AssetId
                                                      ) AS ContainerId_To
                 , _tmpItem.MovementItemId
+                , _tmpItemSumm_group.AccountId_To
                 , _tmpItemSumm_group.InfoMoneyId_Detail_To
            FROM _tmpItem
                 JOIN (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.AccountId_To, _tmpItemSumm.InfoMoneyId_Detail_To FROM _tmpItemSumm GROUP BY _tmpItemSumm.MovementItemId, _tmpItemSumm.AccountId_To, _tmpItemSumm.InfoMoneyId_Detail_To
                      ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem.MovementItemId
           ) AS _tmpItem_group
      WHERE _tmpItemSumm.MovementItemId = _tmpItem_group.MovementItemId
+       AND _tmpItemSumm.AccountId_To = _tmpItem_group.AccountId_To
        AND _tmpItemSumm.InfoMoneyId_Detail_To = _tmpItem_group.InfoMoneyId_Detail_To;
 
      -- формируются Проводки для суммового учета - Кому + определяется MIContainer.Id (суммовой)

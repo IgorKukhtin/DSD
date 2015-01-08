@@ -150,6 +150,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -579,7 +580,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object MultiAction1: TMultiAction
+    object actCopyData: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -592,7 +593,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Action = actRefresh
         end>
-      Caption = 'MultiAction1'
       ImageIndex = 59
     end
     object spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc
@@ -603,8 +603,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           StoredProc = spUpdateMIIsMask
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
+      Caption = 'spUpdateMIIsMaskExecStoredProc'
     end
     object PersonalServiceJournalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -799,7 +798,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Visible = ivNever
     end
     object bbPersonalServiceList: TdxBarButton [15]
-      Action = MultiAction1
+      Action = actCopyData
       Category = 0
     end
     object bbTax: TdxBarButton

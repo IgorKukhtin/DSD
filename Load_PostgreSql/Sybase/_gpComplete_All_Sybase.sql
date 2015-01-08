@@ -28,7 +28,7 @@ BEGIN
 
 
      -- !!!0 - PriceCorrective!!!
-     IF vbMovementDescId = zc_Movement_Loss()
+     IF vbMovementDescId = zc_Movement_PriceCorrective()
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_PriceCorrective_CreateTemp();

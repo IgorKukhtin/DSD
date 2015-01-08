@@ -197,6 +197,8 @@ BEGIN
   ;
 */
 
+   IF inTradeMarkId <> 0
+   THEN
    -- изменили свойство <Торговая марка> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, inTradeMarkId)
    FROM ObjectLink
@@ -266,6 +268,10 @@ BEGIN
                      )
   ;
 
+   END IF; -- inTradeMarkId <> 0
+
+   IF inGoodsTagId <> 0
+   THEN
    -- изменили свойство <Признак товара> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, inGoodsTagId)
    FROM ObjectLink
@@ -335,7 +341,10 @@ BEGIN
                      )
   ;
   
-  
+   END IF; -- inGoodsTagId <> 0
+
+   IF inGoodsGroupAnalystId <> 0
+   THEN
      -- изменили свойство <Группа товаров(аналитика)> у всех товаров этой группы
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, inGoodsGroupAnalystId)
    FROM ObjectLink
@@ -404,6 +413,7 @@ BEGIN
                         AND ObjectLink.ChildObjectId = ioId
                      )
   ;
+   END IF; -- inGoodsGroupAnalystId <> 0
   
   
    -- сохранили протокол

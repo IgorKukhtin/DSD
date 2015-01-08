@@ -58,8 +58,8 @@ BEGIN
                          AND zfGetPaidKindFrom1CType (Sale1C.VidDoc) = zc_Enum_PaidKind_SecondForm()
                          AND Sale1C.ClientCode <> 0
                          -- !!!потом вернуть!!!
-                         -- AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
-                         -- AND LENGTH (TRIM (Sale1C.ClientOKPO)) > 5
+                         AND (TRIM (Sale1C.ClientOKPO) <> '' OR TRIM (Sale1C.ClientINN) <> '')
+                         AND LENGTH (TRIM (Sale1C.ClientOKPO)) >= 5
                        GROUP BY Sale1C.ClientCode
                       ) AS tmp
                       ) AS tmp
@@ -100,28 +100,12 @@ BEGIN
                                              , inUserId     := vbUserId)
    FROM 
          -- сохранение Контрагента
-        (SELECT lpInsertUpdate_Object_Partner (ioId              := tmpAll.PartnerId
-                                             , inPartnerName     := tmpAll.ClientName
-                                             , inAddress         := ''
-                                             , inCode            := 0
-                                             , inShortName      := NULL
-                                             , inGLNCode         := NULL
-                                             , inHouseNumber     := NULL
-                                             , inCaseNumber      := NULL
-                                             , inRoomNumber      := NULL
-                                             , inStreetId        := NULL
-                                             , inPrepareDayCount := NULL
-                                             , inDocumentDayCount:= NULL
-                                             , inJuridicalId     := tmpContract.JuridicalId
-                                             , inRouteId         := NULL
-                                             , inRouteSortingId  := NULL
-                                             , inPersonalTakeId  := NULL
-                                             , inPriceListId     := NULL
-                                             , inPriceListPromoId:= NULL
-                                             , inStartPromo      := NULL
-                                             , inEndPromo        := NULL
-                                             , inUserId          := vbUserId
-                                         ) AS PartnerId
+        (SELECT lpInsertUpdate_Object_Partner_by1C (ioId          := tmpAll.PartnerId
+                                                  , inCode        := 0
+                                                  , inName        := tmpAll.ClientName
+                                                  , inJuridicalId := tmpContract.JuridicalId
+                                                  , inUserId      := vbUserId
+                                                   ) AS PartnerId
               , tmpContract.JuridicalId
               , tmpContract.ContractId
               , tmpAll.Partner1CLinkId
@@ -136,7 +120,8 @@ BEGIN
                                                              , inInvNumberArchive   := ''
                                                              , inComment            := ''
                                                              , inBankAccountExternal:= ''
-    
+                                                             , inGLNCode            := ''
+
                                                              , inSigningDate        := '01.01.2000'
                                                              , inStartDate          := '01.01.2000'
                                                              , inEndDate            := '31.12.2020'
@@ -153,7 +138,7 @@ BEGIN
                                                              , inBankAccountId      := NULL
                                                              , inContractTagId      := 113113 -- Прямой
     
-                                                             , inAreaId             := NULL
+                                                             , inAreaContractId     := NULL
                                                              , inContractArticleId  := NULL
                                                              , inContractStateKindId:= NULL
                                                              , inBankId             := NULL
@@ -181,6 +166,7 @@ BEGIN
                                                               , inJuridicalGroupId:= vbJuridicalGroupId
                                                               , inGoodsPropertyId := NULL
                                                               , inRetailId        := NULL
+                                                              , inRetailReportId  := NULL
                                                               , inInfoMoneyId     := zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                               , inPriceListId     := NULL
                                                               , inPriceListPromoId:= NULL

@@ -24,8 +24,28 @@ BEGIN
      SELECT COUNT(*), MAX (BranchId_Link)
             INTO vbSaleCount, vbBranchId_Link
      FROM Sale1C
+               LEFT JOIN (SELECT Object_Partner1CLink.Id          AS Partner1CLinkId
+                          , Object_Partner1CLink.ObjectCode  AS ClientCode
+                          , ObjectLink_Partner1CLink_Branch.ChildObjectId                 AS BranchId
+                          , COALESCE (ObjectLink_Partner1CLink_Contract.ChildObjectId, 0) AS ContractId
+                     FROM Object AS Object_Partner1CLink
+                          INNER JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                                ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                               AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                          LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                               ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                              AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                     WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                    ) AS tmpPartner1CLink ON tmpPartner1CLink.ClientCode = Sale1C.ClientCode
+                                         AND tmpPartner1CLink.BranchId = zfGetBranchLinkFromBranchPaidKind(zfGetBranchFromUnitId (Sale1C.UnitId), zfGetPaidKindFrom1CType(Sale1C.VidDoc))
+
+               LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                    ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.Partner1CLinkId
+                                   AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
      WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-       AND Sale1C.BranchId = inBranchId;
+       AND Sale1C.BranchId = inBranchId
+       AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+    ;
 
 
      CREATE TEMP TABLE _tmpResult (Value Integer) ON COMMIT DROP;
@@ -51,6 +71,7 @@ BEGIN
                                  AND (ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0 OR Object_To.DescId <> zc_Object_Partner()) -- проверка Договор только для контрагента
                                  AND ObjectLink_Partner1CLink_Partner.ChildObjectId <> 0 -- еще проверка что есть объект
                                  AND ObjectLink_Partner1CLink_Branch.ChildObjectId = vbBranchId_Link
+                                 AND COALESCE (ObjectLink_Partner1CLink_Partner.ChildObjectId, 0) <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
                               )
         , tmpGoodsByGoodsKind1CLink AS (SELECT Object_GoodsByGoodsKind1CLink.ObjectCode
                                         FROM Object AS Object_GoodsByGoodsKind1CLink

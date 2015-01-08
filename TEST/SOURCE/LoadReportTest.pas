@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadReportFormTest;
 var
  i : integer;
 begin
+// exit;
 
   // Другие
   LoadReportFromFile('Шаблон по точкам доставки', ReportPath + '\Отчеты (товарные)\Шаблон по точкам доставки.fr3');
