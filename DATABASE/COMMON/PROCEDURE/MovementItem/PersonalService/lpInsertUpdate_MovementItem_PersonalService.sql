@@ -32,7 +32,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- рассчитываем сумму (затраты)
-     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) - COALESCE (inSummSocialIn, 0);
+     outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0);
      -- рассчитываем сумму к выплате из кассы

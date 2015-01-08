@@ -11,6 +11,11 @@ AS
 $BODY$
 BEGIN
 
+     -- распределение <Сумма на карточку (БН) для распределения>
+     PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
+                                                       , inUserId     := inUserId);
+
+
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;

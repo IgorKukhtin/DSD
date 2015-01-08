@@ -98,7 +98,7 @@ BEGIN
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
-            , COALESCE (COALESCE (MIBoolean_Main.ValueData, ObjectBoolean_Personal_Main.ValueData), False) :: Boolean   AS isMain
+            , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_Unit.Id                          AS UnitId
@@ -135,7 +135,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                         ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummService 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                         ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
             LEFT JOIN MovementItemFloat AS MIFloat_SummCard

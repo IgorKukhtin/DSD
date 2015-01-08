@@ -80,7 +80,7 @@ BEGIN
 
    -- игнорируем пустую строчку в Excel
    IF COALESCE (inId, 0) = 0
-      AND TRIM (COALESCE (inPartnerNamem, '')) = ''
+      AND TRIM (COALESCE (inPartnerName, '')) = ''
       AND TRIM (COALESCE (inOKPO, '')) = ''
       AND TRIM (COALESCE (inRetailName, '')) = ''
       AND TRIM (COALESCE (inRegionName, '')) = ''
@@ -122,31 +122,88 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Ключ>.', inPartnerName;
    END IF;
    -- проверка
-   IF COALESCE (TRIM (inStreetName), '') = '' THEN
+   IF NOT EXISTS (SELECT Id FROM Object WHERE Id = inId AND DescId = zc_Object_Partner()) THEN
+      RAISE EXCEPTION 'Ошибка.Не найден контрагент <%> со значением ключ <%>.', inPartnerName, inId;
+   END IF;
+   -- проверка
+   IF 1=0 AND COALESCE (TRIM (inStreetName), '') = '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не определено значение <Улица>.', inPartnerName;
    END IF;
 
 
    -- поиск
    vbRetailId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Retail() AND TRIM (ValueData) = TRIM (inRetailName));
+   -- добавление
+   IF COALESCE (vbRetailId, 0) = 0 AND TRIM (inRetailName) <> '' THEN
+     vbRetailId:= gpInsertUpdate_Object_Retail (ioId         := vbRetailId
+                                              , inCode       := 0
+                                              , inName       := TRIM (inRetailName)
+                                              , inGLNCode    := ''
+                                              , inSession    := inSession
+                                               );
+   END IF;
    -- проверка
-   IF COALESCE (vbRetailId, 0) = 0 THEN
+   IF COALESCE (vbRetailId, 0) = 0 AND TRIM (inRetailName) <> '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Торговая сеть>.', inPartnerName, inRetailName;
    END IF;
 
 
+IF inArea = 'дніпропетровськ' THEN inArea:= 'Дніпропетровськ'; END IF;
+ 
+
+IF /*inId IN (293467, 296066) AND */ TRIM (inStreetKindName) = '' THEN inStreetKindName:= 'вулиця'; END IF;
+IF inStreetKindName = 'Шосе' THEN inStreetKindName:= 'шосе'; END IF;
+IF inStreetKindName = 'улица' THEN inStreetKindName:= 'вулиця'; END IF;
+IF inStreetKindName = 'площадь' THEN inStreetKindName:= 'площа'; END IF;
+
+
+IF inPartnerTag = 'дистритриб`ютор' OR inPartnerTag = 'дистриб' || CHR (39) || 'ютор' THEN inPartnerTag:= 'дистриб`ютор'; END IF;
+
+IF inPersonal = 'Ковальчук Ігорь Леонідович' THEN inPersonal:= 'Ковальчук Ігор Леонідович'; END IF;
+IF inPersonalTrade = 'Ковальчук Ігорь Леонідович' THEN inPersonalTrade:= 'Ковальчук Ігор Леонідович'; END IF;
+IF inPersonal = 'Антонченко Наталья Осиповна' THEN inPersonal:= 'Антонченко Наталія Осипівна'; END IF;
+IF inPersonalTrade = 'Антонченко Наталья Осиповна' THEN inPersonalTrade:= 'Антонченко Наталія Осипівна'; END IF;
+
+IF inPersonal = 'Конюхов Сергій Генадійович' THEN inPersonal:= 'Конюхов Сергій Геннадійович'; END IF;
+IF inPersonalTrade = 'Конюхов Сергій Генадійович' THEN inPersonalTrade:= 'Конюхов Сергій Геннадійович'; END IF;
+
+IF inPersonal = 'Тюлю Анна Федорівна' THEN inPersonal:= 'Тюлю Ганна Федорівна'; END IF;
+IF inPersonalTrade = 'Тюлю Анна Федорівна' THEN inPersonalTrade:= 'Тюлю Ганна Федорівна'; END IF;
+
+IF inPersonalTrade = 'Гажев Олександр Олександрович' THEN inPersonalTrade:= 'Гажев Олександр Олександрович'; END IF;
+
+IF inPersonalTrade = 'Мурзаєва Катерина Валеріїївна' THEN inPersonalTrade:= 'Мурзаєва Катерина Валеріївна'; END IF;
+IF inPersonalTrade = 'Трубин Алексей' OR inPersonalTrade = 'Трубин Алексей Сергеевич' THEN inPersonalTrade:= 'Трубін Олексій Сергійович'; END IF;
+IF inPersonalTrade = 'Гуслістий Олександр' THEN inPersonalTrade:= 'Гуслистий Олександр Анатолійович'; END IF;
+IF inPersonalTrade = 'Мигуль Людмила' THEN inPersonalTrade:= 'Мигуль Людмила Валентинівна'; END IF;
+IF inPersonalTrade = 'Петренко Евгений' THEN inPersonalTrade:= 'Петренко Євгеній Анатолійович'; END IF;
+IF inPersonalTrade = 'Павлова Оксана' THEN inPersonalTrade:= 'Павлова Оксана Анатоліївна'; END IF;
+IF inPersonalTrade = 'Леуш Иван' THEN inPersonalTrade:= 'Леуш Іван Володимирович'; END IF;
+IF inPersonalTrade = 'Мигуль Людмила' THEN inPersonalTrade:= 'Мигуль Людмила Валентинівна'; END IF;
+IF inPersonalTrade = 'Гордіенко Максим' THEN inPersonalTrade:= 'Гордієнко Максим Сергійович'; END IF;
+IF inPersonalTrade = 'Чернявський Євген' THEN inPersonalTrade:= 'Чернявський Євгеній Вікторович'; END IF;
+IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко Вікторія Григорівна'; END IF;
+ IF inPersonal = 'Мукосеева Олена Касьянівна' THEN inPersonal:= 'Мукосєєва Олена Кос`янівна'; END IF;
+ IF inPersonalTrade = 'Мукосеева Олена Касьянівна' THEN inPersonalTrade:= 'Мукосєєва Олена Кос`янівна'; END IF;
+ IF inPersonalTrade = 'Герасименко Марина Анатольевна' THEN inPersonalTrade:= 'Герасименко Марина  Анатоліївна'; END IF;
+
+
+   -- замена
+   IF POSITION (CHR (39) in inPersonal) > 0 THEN inPersonal:= left (inPersonal, POSITION (CHR (39) in inPersonal) - 1) || '`' || right (inPersonal, length (inPersonal) - POSITION (CHR (39) in inPersonal)); END IF;
    -- поиск
    vbPersonalId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND TRIM (PersonalName) = TRIM (inPersonal));
    -- проверка
-   IF COALESCE (vbPersonalId, 0) = 0 THEN
+   IF COALESCE (vbPersonalId, 0) = 0 AND TRIM (inPersonal) <> '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Супервайзера <%> в справочнике <Сотрудники>.', inPartnerName, inPersonal;
    END IF;
 
 
+   -- замена
+   IF POSITION (CHR (39) in inPersonalTrade) > 0 THEN inPersonalTrade:= left (inPersonalTrade, POSITION (CHR (39) in inPersonalTrade) - 1) || '`' || right (inPersonalTrade, length (inPersonalTrade) - POSITION (CHR (39) in inPersonalTrade)); END IF;
    -- поиск
    vbPersonalTradeId:= (SELECT MAX (PersonalId) FROM Object_Personal_View WHERE isMain = TRUE AND TRIM (PersonalName) = TRIM (inPersonalTrade));
    -- проверка
-   IF COALESCE (vbPersonalTradeId, 0) = 0 THEN
+   IF COALESCE (vbPersonalTradeId, 0) = 0 AND TRIM (inPersonalTrade) <> ''  THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение Торговый представитель <%> в справочнике <Сотрудники>.', inPartnerName, inPersonalTrade;
    END IF;
 
@@ -170,7 +227,7 @@ BEGIN
    -- поиск
    vbCityKindId:= (SELECT Id FROM Object WHERE DescId = zc_Object_CityKind() AND TRIM (ValueData) = TRIM (inCityKindName));
    -- проверка
-   IF COALESCE (vbCityKindId, 0) = 0 THEN
+   IF COALESCE (vbCityKindId, 0) = 0 AND COALESCE (TRIM (inStreetName), '') <> '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Вид населенного пункта>.', inPartnerName, inCityKindName;
    END IF;
 
@@ -178,34 +235,38 @@ BEGIN
    -- поиск
    vbStreetKindId:= (SELECT Id FROM Object WHERE DescId = zc_Object_StreetKind() AND TRIM (ValueData) = TRIM (inStreetKindName));
    -- проверка
-   IF COALESCE (vbStreetKindId, 0) = 0 THEN
+   IF COALESCE (vbStreetKindId, 0) = 0 AND COALESCE (TRIM (inStreetName), '') <> '' THEN
       RAISE EXCEPTION 'Ошибка.Для контрагента <%> не найдено значение <%> в справочнике <Вид (улица,проспект)>.', inPartnerName, inStreetKindName;
    END IF;
 
+   IF COALESCE (TRIM (inStreetName), '') <> ''
+   THEN
+   -- сохранили
+   PERFORM  lpUpdate_Object_Partner_Address( inId                := inId
+                                           , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                           , inShortName         := inShortName
+                                           , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
+                                           , inRegionName        := inRegionName
+                                           , inProvinceName      := inProvinceName
+                                           , inCityName          := inCityName
+                                           , inCityKindId        := vbCityKindId
+                                           , inProvinceCityName  := inProvinceCityName  
+                                           , inPostalCode        := inPostalCode
+                                           , inStreetName        := inStreetName
+                                           , inStreetKindId      := vbStreetKindId
+                                           , inHouseNumber       := inHouseNumber
+                                           , inCaseNumber        := inCaseNumber  
+                                           , inRoomNumber        := inRoomNumber
+                                           , inIsCheckUnique     := FALSE
+                                           , inSession           := inSession
+                                           , inUserId            := vbUserId
+                                            );
+   END IF;
 
-  -- сохранили
-  PERFORM  lpUpdate_Object_Partner_Address( inId                := inId
-                                          , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
-                                          , inShortName         := inShortName
-                                          , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
-                                          , inRegionName        := inRegionName
-                                          , inProvinceName      := inProvinceName
-                                          , inCityName          := inCityName
-                                          , inCityKindId        := vbCityKindId
-                                          , inProvinceCityName  := inProvinceCityName  
-                                          , inPostalCode        := inPostalCode
-                                          , inStreetName        := inStreetName
-                                          , inStreetKindId      := vbStreetKindId
-                                          , inHouseNumber       := inHouseNumber
-                                          , inCaseNumber        := inCaseNumber  
-                                          , inRoomNumber        := inRoomNumber
-                                          , inIsCheckUnique     := FALSE
-                                          , inSession           := inSession
-                                          , inUserId            := vbUserId
-                                           );
-
+   IF TRIM (inRetailName) <> '' THEN
    -- сохранили связь !!!Юр лица!!! с <Торговая сеть)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Juridical_Personal(), (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()), vbRetailId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Juridical_Retail(), (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical()), vbRetailId);
+   END IF;
 
    -- сохранили связь с <Сотрудник (супервайзер)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, vbPersonalId);
@@ -230,5 +291,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_Object_Partner_Address()
-
-

@@ -66,7 +66,7 @@ type
     actUpdateIsMain: TdsdExecStoredProc;
     bbUpdateIsMain: TdxBarButton;
     bbPersonalServiceList: TdxBarButton;
-    MultiAction1: TMultiAction;
+    actCopyData: TMultiAction;
     spUpdateMIIsMaskExecStoredProc: TdsdExecStoredProc;
     spUpdateMIIsMask: TdsdStoredProc;
     PersonalServiceJournalChoiceForm: TOpenChoiceForm;

@@ -533,6 +533,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object colIsMedoc: TcxGridDBColumn
+            Caption = #1052#1077#1076#1086#1082
+            DataBinding.FieldName = 'IsMedoc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
       end
     end
