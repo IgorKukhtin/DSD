@@ -254,11 +254,12 @@ var
   StringList: TStringList;
   OkpoFrom, OkpoTo, InvNumber, InvTaxNumber,
   Remark: string;
-  OperDate, PaymentDate: TDateTime;
+  OperDate, PaymentDate, ExpirationDate: TDateTime;
   PriceWithVAT: boolean;
   SyncCode: Integer;
   ElementList: TStringDynArray;
   i: integer;
+  Price: Currency;
 begin
   FDataSet := TClientDataSet.Create(nil);
   FDataSet.FieldDefs.Add('OKPOFrom', ftString, 255);
@@ -309,33 +310,44 @@ begin
     for I := 3 to StringList.Count - 1 do
         // разбираем строки
         with FDataSet do begin
-          Append;
-          FieldByName('OKPOFrom').AsString := OkpoFrom;
-          FieldByName('OKPOTo').AsString := OkpoTo;
-          FieldByName('InvNumber').AsString := InvNumber;
-          FieldByName('OperDate').AsDateTime := OperDate;
-          FieldByName('InvTaxNumber').AsString := InvTaxNumber;
-          FieldByName('PaymentDate').AsDateTime := PaymentDate;
-          FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
-          FieldByName('SyncCode').AsInteger := SyncCode;
-          FieldByName('Remark').AsString := Remark;
-
           ElementList := SplitString(StringList[i], #9);
-          FieldByName('GoodsCode').AsString := ElementList[0];
-          FieldByName('GoodsName').AsString := ElementList[1];
-          FieldByName('MakerCode').AsString := ElementList[2];
-          FieldByName('MakerName').AsString := ElementList[3];
-          FieldByName('CommonCode').AsString := ElementList[4];
-          FieldByName('VAT').AsInteger := StrToInt(ElementList[8]);
-          FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
+          Price := gfStrToFloat(ElementList[20]) / gfStrToFloat(ElementList[15]);
           if ElementList[13] = '' then
-             FieldByName('ExpirationDate').AsDateTime := OperDate
+             ExpirationDate := OperDate
           else
-             FieldByName('ExpirationDate').AsDateTime := VarToDateTime(ElementList[13]);    // Срок годности
+             ExpirationDate := VarToDateTime(ElementList[13]);    // Срок годности
+          // Проверяем задвоенные позиции
+          if Locate('GoodsCode;PartitionGoods;ExpirationDate;Price',
+                      VarArrayOf([ElementList[0], ElementList[10], ExpirationDate, Price]), []) then begin
+             Edit;
+             FieldByName('Amount').AsFloat := FieldByName('Amount').AsFloat + gfStrToFloat(ElementList[15]);    // Количество
+             Post
+          end
+          else begin
+            Append;
+            FieldByName('OKPOFrom').AsString := OkpoFrom;
+            FieldByName('OKPOTo').AsString := OkpoTo;
+            FieldByName('InvNumber').AsString := InvNumber;
+            FieldByName('OperDate').AsDateTime := OperDate;
+            FieldByName('InvTaxNumber').AsString := InvTaxNumber;
+            FieldByName('PaymentDate').AsDateTime := PaymentDate;
+            FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
+            FieldByName('SyncCode').AsInteger := SyncCode;
+            FieldByName('Remark').AsString := Remark;
 
-          FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
-          FieldByName('Price').AsFloat  := gfStrToFloat(ElementList[20]) / FieldByName('Amount').AsFloat;    // Цена Отпускная (для аптеки это закупочная)
-          Post;
+            FieldByName('GoodsCode').AsString := ElementList[0];
+            FieldByName('GoodsName').AsString := ElementList[1];
+            FieldByName('MakerCode').AsString := ElementList[2];
+            FieldByName('MakerName').AsString := ElementList[3];
+            FieldByName('CommonCode').AsString := ElementList[4];
+            FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
+            FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
+            FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
+
+            FieldByName('Amount').AsFloat := gfStrToFloat(ElementList[15]);    // Количество
+            FieldByName('Price').AsFloat  := Price;    // Цена Отпускная (для аптеки это закупочная)
+            Post;
+          end;
         end;
   finally
     StringList.Free;

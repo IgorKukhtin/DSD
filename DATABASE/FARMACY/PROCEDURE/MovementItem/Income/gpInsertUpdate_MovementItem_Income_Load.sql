@@ -107,7 +107,7 @@ BEGIN
 
   -- А вот тут попытка угадать договор.
      -- Если даты не равны, то ищем любой договор с отсрочкой платежа
-     IF inPaymentDate <> inOperDate THEN
+     IF inPaymentDate > (inOperDate + interval '1 day') THEN
      	SELECT MAX(Id) INTO vbContractId 
      	   FROM Object_Contract_View 
      	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
@@ -194,6 +194,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.01.15                        *   
  29.12.14                        *   
  26.12.14                        *   
  25.12.14                        *   

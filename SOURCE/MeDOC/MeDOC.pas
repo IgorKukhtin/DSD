@@ -17,9 +17,9 @@ type
 
   TMedocCorrective = class
   private
-    procedure CreateJ1201005XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
-    procedure CreateJ1201006XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
-    procedure CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201205XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201206XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+    procedure CreateJ1201207XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   end;
@@ -504,7 +504,7 @@ end;
 
 { TMedocCorrective }
 
-procedure TMedocCorrective.CreateJ1201005XMLFile(HeaderDataSet,
+procedure TMedocCorrective.CreateJ1201205XMLFile(HeaderDataSet,
   ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IXMLZVITType;
@@ -522,7 +522,7 @@ begin
     //перший день періоду
     PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
     //код документу
-    CHARCODE := HeaderDataSet.FieldByName('CHARCODE').AsString;
+    CHARCODE := 'J1201205';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     //Id документа
     DOCID := HeaderDataSet.FieldByName('Id').AsString;
   end;
@@ -629,7 +629,7 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
-procedure TMedocCorrective.CreateJ1201006XMLFile(HeaderDataSet,
+procedure TMedocCorrective.CreateJ1201206XMLFile(HeaderDataSet,
   ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IXMLZVITType;
@@ -647,7 +647,7 @@ begin
     //перший день періоду
     PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
     //код документу
-    CHARCODE := 'J1201006';//HeaderDataSet.FieldByName('CHARCODE').AsString;
+    CHARCODE := 'J1201206';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     //Id документа
     DOCID := HeaderDataSet.FieldByName('Id').AsString;
   end;
@@ -754,7 +754,7 @@ begin
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
-procedure TMedocCorrective.CreateJ1201007XMLFile(HeaderDataSet,
+procedure TMedocCorrective.CreateJ1201207XMLFile(HeaderDataSet,
   ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IXMLZVITType;
@@ -772,7 +772,7 @@ begin
     //перший день періоду
     PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
     //код документу
-    CHARCODE := 'J1201007';//HeaderDataSet.FieldByName('CHARCODE').AsString;
+    CHARCODE := 'J1201207';//HeaderDataSet.FieldByName('CHARCODE').AsString;
     //Id документа
     DOCID := HeaderDataSet.FieldByName('Id').AsString;
   end;
@@ -881,8 +881,21 @@ end;
 
 procedure TMedocCorrective.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
   FileName: string);
+var
+  F: TFormatSettings;
 begin
-  CreateJ1201005XMLFile(HeaderDataSet, ItemsDataSet, FileName);
+   F.DateSeparator := '.';
+   F.TimeSeparator := ':';
+   F.ShortDateFormat := 'dd.mm.yyyy';
+   F.ShortTimeFormat := 'hh24:mi:ss';
+   if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.12.2014', F) then
+      CreateJ1201205XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   else begin
+     if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.01.2015', F) then
+        CreateJ1201206XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+     else
+        CreateJ1201207XMLFile(HeaderDataSet, ItemsDataSet, FileName)
+   end;
 end;
 
 end.

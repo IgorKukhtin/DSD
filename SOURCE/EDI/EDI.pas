@@ -664,10 +664,14 @@ begin
    C_DOC_TYPE := IntToStr(HeaderDataSet.FieldByName('SendDeclarAmount')
     .asInteger);
 
-   if HeaderDataSet.FieldByName('OperDate').asDateTime >= StrToDateTime( '01.12.2014', F) then
-     C_DOC_VER := '6'
-   else
-     C_DOC_VER := '5';
+   if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.12.2014', F) then
+     C_DOC_VER := '5'
+   else begin
+     if HeaderDataSet.FieldByName('OperDate').asDateTime < StrToDateTime( '01.01.2015', F) then
+        C_DOC_VER := '6'
+     else
+        C_DOC_VER := '7'
+   end;
 
   DECLAR := NewDECLAR;
   DECLAR.OwnerDocument.Encoding := 'WINDOWS-1251';

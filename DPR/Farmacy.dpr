@@ -76,7 +76,7 @@ begin
   begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TMainFormInstance, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;
