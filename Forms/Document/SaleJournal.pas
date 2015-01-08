@@ -107,6 +107,7 @@ type
     ParPartnerValue: TcxGridDBColumn;
     bbPrint_Spec: TdxBarButton;
     actPrint_Spec: TdsdPrintAction;
+    colIsMedoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

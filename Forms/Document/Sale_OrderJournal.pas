@@ -117,6 +117,7 @@ type
     actPrint_Pack22: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
+    colIsMedoc: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -703,11 +703,11 @@ BEGIN
                                                        ) AS ChildReportContainerId
                    , tmpMIReport.OperSumm AS Amount
                    , vbOperDate AS OperDate
-              FROM (SELECT (tmpCalc.OperSumm)       AS OperSumm
-                         , tmpCalc.ContainerId_To   AS ActiveContainerId
-                         , tmpCalc.ContainerId_From AS PassiveContainerId
-                         , tmpCalc.AccountId_To     AS ActiveAccountId
-                         , tmpCalc.AccountId_From   AS PassiveAccountId
+              FROM (SELECT ABS (tmpCalc.OperSumm)       AS OperSumm
+                         , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_To   ELSE tmpCalc.ContainerId_From END AS ActiveContainerId
+                         , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.ContainerId_From ELSE tmpCalc.ContainerId_To   END AS PassiveContainerId
+                         , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.AccountId_To     ELSE tmpCalc.AccountId_From   END AS ActiveAccountId
+                         , CASE WHEN tmpCalc.OperSumm > 0 THEN tmpCalc.AccountId_From   ELSE tmpCalc.AccountId_To     END AS PassiveAccountId
                          , tmpCalc.MovementItemId
                     FROM (SELECT _tmpItemSumm.MovementItemId
                                , _tmpItemSummChild.ContainerId_From
