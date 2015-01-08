@@ -39,7 +39,7 @@ Source: "..\INIT\init.php"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;Source: "midas.dll"; DestDir: "{sys}"; Flags: onlyifdoesntexist regserver
 ;Source: "midas.dll"; DestDir: "{app}"; Flags: onlyifdoesntexist regserver
-Source: "midas.dll"; DestDir: {app};
+Source: "midas.dll"; DestDir: "{sys}"; Flags: regtypelib
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -50,3 +50,5 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[ThirdParty]
+UseRelativePaths=True
