@@ -147,6 +147,10 @@ BEGIN
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
            , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
+           , CAST('Ман АЕ 1913 ВР Фургон- рефрежератор-С' AS TVarChar)    AS CarName
+           , CAST('Ман АЕ 1955 ВР Прицеп' AS TVarChar)                    AS CarTrailerName
+           , CAST('Литвиненко А,М № посв, кіа 585542' AS TVarChar)        AS DriverName
+
 
 
        FROM Movement
