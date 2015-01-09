@@ -6934,6 +6934,10 @@ begin
      //
      myEnabledCB(cbPriceListItems);
      //
+     try StrToInt(SessionIdEdit.Text) except SessionIdEdit.Text:='70';end;
+     if StrToInt(SessionIdEdit.Text)=0 then SessionIdEdit.Text:='70';
+
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -6948,7 +6952,11 @@ begin
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
         Add('where (PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0)');
-        Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-70) or PriceListItems_byHistory.Id_Postgres is null)');
+        if StrToInt(SessionIdEdit.Text) >= 1000
+        then
+            else if StrToInt(SessionIdEdit.Text) >= 100
+                 then Add('  and (PriceListItems_byHistory.EndDate>(ToDay()-'+SessionIdEdit.Text+') and PriceListItems_byHistory.NewPrice<>0)')
+                 else Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-'+SessionIdEdit.Text+') or PriceListItems_byHistory.Id_Postgres is null)');
 // Add('  and GoodsProperty.Id_Postgres = 7836 and PriceList_byHistory.Id_Postgres = 18840');
         Add('order by PriceListId_PG, GoodsId_PG, OperDate');
         Open;
