@@ -107,7 +107,7 @@ BEGIN
 
   -- А вот тут попытка угадать договор.
      -- Если даты не равны, то ищем любой договор с отсрочкой платежа
-     IF inPaymentDate <> inOperDate THEN
+     IF inPaymentDate > (inOperDate + interval '1 day') THEN
      	SELECT MAX(Id) INTO vbContractId 
      	   FROM Object_Contract_View 
      	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
@@ -117,7 +117,13 @@ BEGIN
      	   FROM Object_Contract_View 
      	  WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) = 0;
      END IF;	     	
-  
+
+     -- Ищем хоть какой-нить договор
+     IF COALESCE(vbContractId, 0) = 0 THEN 
+     	SELECT MAX(Id) INTO vbContractId 
+     	   FROM Object_Contract_View 
+     	  WHERE Object_Contract_View.JuridicalId = inJuridicalId;
+     END IF;
 
   -- Ищем товар 
       SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
@@ -147,12 +153,15 @@ BEGIN
      END IF;
 
 
-  -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена. 
+  -- Ищем товар в документе. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
      SELECT MovementItem.Id INTO vbMovementItemId
        FROM MovementItem_Income_View AS MovementItem
         
       WHERE MovementItem.MovementId = vbMovementId
-        AND MovementItem.PartnerGoodsId = vbPartnerGoodsId;
+        AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
+        AND MovementItem.Price = MovementItem.Price
+        AND MovementItem.PartionGoods = inPartitionGoods
+        AND MovementItem.ExpirationDate = inExpirationDate;
   
      vbMovementItemId := lpInsertUpdate_MovementItem_Income(vbMovementItemId, vbMovementId, vbGoodsId, inAmount, inPrice, vbUserId);
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), vbMovementItemId, vbPartnerGoodsId);
@@ -185,6 +194,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.01.15                        *   
  29.12.14                        *   
  26.12.14                        *   
  25.12.14                        *   

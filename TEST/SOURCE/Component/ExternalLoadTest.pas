@@ -13,6 +13,7 @@ type
     // подготавливаем данные для тестирования
     procedure SetUp; override;
   published
+    procedure LoadMMOTest;
     procedure LoadPriceListTest;
   end;
 
@@ -22,6 +23,24 @@ uses Storage, Authentication, ExternalLoad, SysUtils, CommonData, JuridicalTest,
      dsdDB, DB, Variants;
 
 { TExternalLoadTest }
+
+procedure TExternalLoadTest.LoadMMOTest;
+var ImportSettings: TImportSettings;
+    JuridicalId: Integer;
+begin
+  ImportSettings := TImportSettings.Create(TImportSettingsItems);
+  ImportSettings.FileType := dtMMO;
+  ImportSettings.Directory := '..\DOC\Управление заказами в аптеках\Приходные накладные\Медхаус\';
+  JuridicalId := 0;
+  try
+    JuridicalId := TJuridical.Create.GetDataSet.FieldByName('Id').AsInteger;
+  except
+
+  end;
+  if JuridicalId = 0 then exit;
+  TExecuteImportSettings.Create.Execute(ImportSettings);
+
+end;
 
 procedure TExternalLoadTest.LoadPriceListTest;
 var ImportSettings: TImportSettings;

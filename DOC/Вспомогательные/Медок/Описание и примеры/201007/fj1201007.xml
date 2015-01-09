@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<ZVIT>
+  <TRANSPORT>
+    <CREATEDATE>05.01.2015</CREATEDATE>
+    <VERSION>4.0</VERSION>
+  </TRANSPORT>
+  <ORG>
+    <FIELDS>
+      <EDRPOU>30012346</EDRPOU>
+    </FIELDS>
+       <CARD>
+      <FIELDS>
+        <PERTYPE>0</PERTYPE>
+        <PERDATE>01.01.2015</PERDATE>
+        <CHARCODE>J1201007</CHARCODE>
+        <DOCID>1</DOCID>
+	</FIELDS>
+<DOCUMENT>
+        <ROW TAB="0" LINE="0" NAME="A5_10">
+          <VALUE>2100</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A5_11">
+          <VALUE>2100</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A5_7">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A5_71">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A5_8">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A5_9">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A6_10">
+          <VALUE>без ПДВ</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A6_11">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_10">
+          <VALUE>2100</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_11">
+          <VALUE>2100</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_7">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_71">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_8">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="A7_9">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="EDR_POK">
+          <VALUE>34184323</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="FIRM_ADR">
+          <VALUE>вулиця Павла Тичини, буд. 13, М.КИЇВ обл., 01001</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="FIRM_EDRPOU">
+          <VALUE>30012346</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="FIRM_INN">
+          <VALUE>111333555777</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="FIRM_NAME">
+          <VALUE>ООО "Главная линия"</VALUE>
+        </ROW>
+<ROW TAB="0" LINE="0" NAME="N10">
+          <VALUE>Р.Д. Первиченко</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N11">
+          <VALUE>05.01.2015</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N20">
+          <VALUE>0</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N2_1">
+          <VALUE>55</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N2_11">
+          <VALUE>55</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N2_1I">
+          <VALUE>55</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N3">
+          <VALUE>Тест "Юридична особа"</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N4">
+          <VALUE>555777999</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N5">
+          <VALUE>вулиця Новоконстантинывська, буд. 73/2, корпус 3, оф. 5545, місто МУКАЧЕВЕ, ЗАКАРПАТСЬКА обл., 31311</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N8">
+          <VALUE>Договір поставки</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N81">
+          <VALUE>0112</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N82">
+          <VALUE>10.12.2014</VALUE>
+        </ROW>
+        <ROW TAB="0" LINE="0" NAME="N9">
+          <VALUE>Оплата з поточного рахунку</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A1">
+          <VALUE>I</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A110">
+          <VALUE>2100</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A12">
+          <VALUE>05.01.2015</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A13">
+          <VALUE>Услуга</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A14">
+          <VALUE>шт</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A141">
+          <VALUE>2009</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A15">
+          <VALUE>30</VALUE>
+        </ROW>
+        <ROW TAB="1" LINE="0" NAME="TAB1_A16">
+          <VALUE>70</VALUE>
+        </ROW>
+      </DOCUMENT>
+    </CARD>
+  </ORG>
+</ZVIT>
