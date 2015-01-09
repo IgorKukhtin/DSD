@@ -38,6 +38,7 @@ BEGIN
        SELECT vbConnectionString, STRING_AGG (OneProcedure, ';')::TBlob
        FROM (SELECT 
      'call "DBA"."LoadIncomeBillItems"('''||Movement_Income_View.InvNumber||''','''||to_char(Movement_Income_View.OperDate, 'yyyy-mm-dd')||
+          ''','''||to_char(Movement_Income_View.PaymentDate, 'yyyy-mm-dd')||
           ''','||Movement_Income_View.PriceWithVAT::integer||','''||coalesce(Juridical.OKPO,'')||''','||vbUnitId||','||ObjectFloat_NDSKind_NDS.ValueData||
           ','||MovementItem.GoodsCode||','''||MovementItem.GoodsName||''','||MovementItem.Amount||','||MovementItem.Price||')'::text AS OneProcedure
        FROM Movement_Income_View    

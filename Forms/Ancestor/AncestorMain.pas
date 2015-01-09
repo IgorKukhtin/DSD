@@ -78,36 +78,43 @@ begin
 end;
 
 procedure TAncestorMainForm.OnException(Sender: TObject; E: Exception);
+  function GetTextMessage(E: Exception; var isMessage: boolean): string;
+  begin
+    isMessage := false;
+    if E is EStorageException then begin
+       isMessage := (E as EStorageException).ErrorCode = 'P0001';
+       if pos('context', AnsilowerCase(E.Message)) = 0 then
+          Result := E.Message
+       else
+          // Выбрасываем все что после Context
+          Result := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
+       exit;
+    end;
+    if (E is EOutOfMemory) or (E is EVariantOutOfMemoryError)
+        or ((E is EDBClient) and (EDBClient(E).ErrorCode = 9473)) then begin
+       Result := 'Слишком большой объем данных.'#10#13'Операция не может быть выполнена.'#10#13'Измените параметры запроса';
+       exit;
+    end;
+    Result := E.Message;
+  end;
 var TextMessage: String;
     isMessage: boolean;
 begin
-  if E is ESortException then begin
+  if E is ESortException then
+     exit;
 
-  end
-  else begin
-     isMessage := false;
-     if (E is EStorageException) then begin
-        isMessage := (E as EStorageException).ErrorCode = 'P0001';
+  TextMessage := GetTextMessage(E, isMessage);
 
-        if pos('context', AnsilowerCase(E.Message)) = 0 then
-           TextMessage := E.Message
-         else
-           // Выбрасываем все что после Context
-           TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1)
-     end
-     else
-        TextMessage := E.Message;
-     if not isMessage then begin
-        // Сохраняем протокол в базе
-        try
-          spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
-          spUserProtocol.Execute;
-        except
-          // Обязательно так, потому как иначе он может зациклиться.
-        end;
-     end;
-     TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
+  if not isMessage then begin
+    // Сохраняем протокол в базе
+    try
+      spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
+      spUserProtocol.Execute;
+    except
+      // Обязательно так, потому как иначе он может зациклиться.
+    end;
   end;
+  TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
 end;
 
 procedure TAncestorMainForm.FormCreate(Sender: TObject);
