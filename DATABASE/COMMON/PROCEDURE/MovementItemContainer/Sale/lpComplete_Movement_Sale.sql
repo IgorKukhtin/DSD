@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Sale(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbMovementId_Tax Integer;
+
   DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
 
   DECLARE vbContainerId_Analyzer Integer;
@@ -2138,6 +2140,21 @@ BEGIN
                                                        , inDocumentTaxKindId_inf := NULL
                                                        , inUserId                := inUserId
                                                         );
+     END IF;
+
+     -- 6.4. ФИНИШ - в Налоговой устанавливается признак "Проверен"
+     vbMovementId_Tax:= (SELECT MovementLinkMovement_Master.MovementChildId
+                         FROM MovementLinkMovement AS MovementLinkMovement_Master
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
+                                                            ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                           AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                           AND MovementLinkObject_DocumentTaxKind_Master.ObjectId = zc_Enum_DocumentTaxKind_Tax()
+                         WHERE MovementLinkMovement_Master.MovementId = inMovementId
+                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                        );
+     IF vbMovementId_Tax <> 0
+     THEN -- сохранили свойство <Проверен>
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), vbMovementId_Tax, (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked()));
      END IF;
 
 END;

@@ -50,6 +50,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
               Kind = skSum
               Column = colSummOut
             end>
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -322,6 +323,9 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actRefresh
+        end
+        item
           Action = actBeforeMove
         end
         item
@@ -467,6 +471,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -478,6 +483,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 320
     Top = 264
   end
@@ -507,6 +513,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 112
   end
@@ -561,6 +568,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 336
     Top = 216
   end
@@ -590,6 +598,7 @@ inherited LoadMoneyFrom1CForm: TLoadMoneyFrom1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 216
   end
