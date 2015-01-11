@@ -111,6 +111,8 @@ type
     ServiceRealJournal: TdsdOpenForm;
     colChangeCurrencySumm: TcxGridDBColumn;
     CurrencyJournal: TdsdOpenForm;
+    clRetailName: TcxGridDBColumn;
+    clRetailReportName: TcxGridDBColumn;
   private
     { Private declarations }
   public

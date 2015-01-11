@@ -112,6 +112,8 @@ type
     Sale_SummCost_10500: TcxGridDBColumn;
     Sale_SummCost_40200: TcxGridDBColumn;
     Return_SummCost_40200: TcxGridDBColumn;
+    Return_Summ_10300: TcxGridDBColumn;
+    GoodsGroupAnalystName: TcxGridDBColumn;
   private
     { Private declarations }
   public

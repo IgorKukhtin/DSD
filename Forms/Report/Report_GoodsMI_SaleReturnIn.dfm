@@ -3,7 +3,6 @@
   ClientHeight = 387
   ClientWidth = 1462
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -480
   ExplicitWidth = 1478
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -14,17 +13,17 @@
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1454
+    ExplicitWidth = 1462
     ExplicitHeight = 307
     ClientRectBottom = 307
     ClientRectRight = 1462
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1454
+      ExplicitWidth = 1462
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 1462
         Height = 307
-        ExplicitWidth = 1454
+        ExplicitWidth = 1462
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -127,6 +126,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_SummCost_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_Summ_10300
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -232,6 +236,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_SummCost_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_Summ_10300
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -453,6 +462,14 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
+          end
+          object GoodsGroupAnalystName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+            DataBinding.FieldName = 'GoodsGroupAnalystName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object clGoodsTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
@@ -734,6 +751,17 @@
             Options.Editing = False
             Width = 80
           end
+          object Return_Summ_10300: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085' ('#1087#1088#1080' '#1074#1086#1079#1074#1088'.)'
+            DataBinding.FieldName = 'Return_Summ_10300'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object Return_SummCost: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088' '#1089'/'#1089', '#1075#1088#1085
             DataBinding.FieldName = 'Return_SummCost'
@@ -840,7 +868,7 @@
   inherited Panel: TPanel
     Width = 1462
     Height = 54
-    ExplicitWidth = 1454
+    ExplicitWidth = 1462
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60

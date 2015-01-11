@@ -92,7 +92,7 @@ procedure TAncestorMainForm.OnException(Sender: TObject; E: Exception);
     end;
     if (E is EOutOfMemory) or (E is EVariantOutOfMemoryError)
         or ((E is EDBClient) and (EDBClient(E).ErrorCode = 9473)) then begin
-       Result := 'Слишком большой объем данных.'#10#13'Операция не может быть выполнена.'#10#13'Измените параметры запроса';
+       Result := 'Невозможно показать большой объем данных.'#10#13'Закройте другие приложения.'#10#13'Или установите другие условия для выбора данных.';
        exit;
     end;
     Result := E.Message;

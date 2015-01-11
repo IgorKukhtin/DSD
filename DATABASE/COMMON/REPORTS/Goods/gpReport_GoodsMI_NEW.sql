@@ -184,7 +184,7 @@ BEGIN
                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
                                                                  ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerId_Analyzer
                                                                 AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                                -- AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+                                                                AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
 
                              LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_Analyzer
                              LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
