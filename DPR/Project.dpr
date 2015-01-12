@@ -1,6 +1,7 @@
 program Project;
 
 uses
+  Windows,
   Vcl.Forms,
   Controls,
   Classes,
@@ -88,8 +89,12 @@ begin
       if ShowModal = mrOk then
       begin
          TUpdater.AutomaticUpdateProgram;
+         Application.ProcessMessages;
          Application.CreateForm(TMainForm, MainFormInstance);
          Application.CreateForm(TdmMain, dmMain);
+         // Меняем раскладку клавиатуры на UA
+         LoadKeyboardLayout('00000419', KLF_ACTIVATE);
+   //      LoadKeyboardLayout('00000422', KLF_ACTIVATE);
       end;
   Application.Run;
 end.
