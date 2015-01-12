@@ -136,11 +136,11 @@ BEGIN
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
                             , SUM (CASE WHEN inDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE -1 * MIContainer.Amount END) AS SummPartner
-                            , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10200() -- Разница с оптовыми ценами
+                            , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200() -- Разница с оптовыми ценами
                                              THEN CASE WHEN inDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE -1 * MIContainer.Amount END
                                         ELSE 0
                                    END) AS SummPartner_10200
-                            , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_ProfitLossDirection_10300() -- Скидка дополнительная
+                            , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10300(), zc_Enum_AnalyzerId_ReturnInSumm_10300()) -- Скидка дополнительная
                                              THEN CASE WHEN inDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE -1 * MIContainer.Amount END
                                         ELSE 0
                                    END) AS SummPartner_10300
