@@ -3,7 +3,7 @@ object GoodsTagForm: TGoodsTagForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1079#1085#1072#1082#1080' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 481
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsTagForm: TGoodsTagForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
+    Width = 481
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,14 +52,20 @@ object GoodsTagForm: TGoodsTagForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 57
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 243
+        Width = 229
+      end
+      object clGoodsGroupAnalystName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074'('#1072#1085#1072#1083#1080#1090#1080#1082#1072')'
+        DataBinding.FieldName = 'GoodsGroupAnalystName'
+        HeaderAlignmentVert = vaCenter
+        Width = 181
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -286,6 +293,7 @@ object GoodsTagForm: TGoodsTagForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -302,13 +310,28 @@ object GoodsTagForm: TGoodsTagForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupAnalystId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupAnalystId'
+        end
+        item
+          Name = 'GoodsGroupAnalystName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupAnalystName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -334,6 +357,7 @@ object GoodsTagForm: TGoodsTagForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 144
     Top = 152
   end
@@ -344,10 +368,12 @@ object GoodsTagForm: TGoodsTagForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 216
   end
