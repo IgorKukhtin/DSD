@@ -19,6 +19,7 @@ SELECT       Movement.Id                                AS Id
            , Object_To.ValueData                        AS ToName
            , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
            , Object_NDSKind.ValueData                   AS NDSKindName
+           , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
            , MovementLinkObject_Contract.ObjectId       AS ContractId
            , Object_Contract.ValueData                  AS ContractName
            , MovementDate_Payment.ValueData             AS PaymentDate
@@ -56,6 +57,10 @@ SELECT       Movement.Id                                AS Id
 
             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -79,6 +84,7 @@ ALTER TABLE Movement_Income_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.01.15                        * 
  12.09.14                        * 
 */
 
