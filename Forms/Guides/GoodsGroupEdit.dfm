@@ -135,6 +135,7 @@
   object ceGoodsGroupAnalyst: TcxButtonEdit
     Left = 8
     Top = 209
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -451,6 +452,19 @@
         Name = 'TextValue'
         Value = ''
         Component = GoodsTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'GoodsGroupAnalystId'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsGroupAnalystName'
+        Value = Null
+        Component = GoodsGroupAnalystGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
