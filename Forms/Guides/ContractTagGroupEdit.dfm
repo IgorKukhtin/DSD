@@ -1,8 +1,8 @@
-object ContractTagEditForm: TContractTagEditForm
+object ContractTagGroupEditForm: TContractTagGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 190
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
+  ClientHeight = 142
   ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object ContractTagEditForm: TContractTagEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 39
-    Top = 156
+    Left = 41
+    Top = 100
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object ContractTagEditForm: TContractTagEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 183
-    Top = 156
+    Left = 185
+    Top = 100
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -57,23 +57,6 @@ object ContractTagEditForm: TContractTagEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
-  end
-  object cxLabel11: TcxLabel
-    Left = 8
-    Top = 101
-    Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1076#1086#1075#1086#1074#1086#1088#1072
-  end
-  object ceContractTagGroup: TcxButtonEdit
-    Left = 8
-    Top = 120
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
@@ -107,7 +90,7 @@ object ContractTagEditForm: TContractTagEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ContractTag'
+    StoredProcName = 'gpInsertUpdate_Object_ContractTagGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -130,13 +113,6 @@ object ContractTagEditForm: TContractTagEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'inContractTagGroupId'
-        Value = Null
-        Component = ContractTagGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 104
@@ -153,7 +129,7 @@ object ContractTagEditForm: TContractTagEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_ContractTag'
+    StoredProcName = 'gpGet_Object_ContractTagGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -173,19 +149,6 @@ object ContractTagEditForm: TContractTagEditForm
         Name = 'Name'
         Value = ''
         Component = edName
-        DataType = ftString
-      end
-      item
-        Name = 'ContractTagGroupId'
-        Value = Null
-        Component = ContractTagGroupGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'ContractTagGroupName'
-        Value = Null
-        Component = ContractTagGroupGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     PackSize = 1
@@ -208,31 +171,7 @@ object ContractTagEditForm: TContractTagEditForm
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 48
-    Top = 40
-  end
-  object ContractTagGroupGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceContractTagGroup
-    FormNameParam.Value = 'TContractTagGroupForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractTagGroupForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractTagGroupGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractTagGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 120
-    Top = 104
+    Left = 8
+    Top = 48
   end
 end
