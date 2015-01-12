@@ -4,14 +4,14 @@
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1094
-  ExplicitHeight = 254
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
-      45
+      26
       0)
     inherited dxBar: TdxBar
       ItemLinks = <

@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractTag(
  INOUT ioId	                 Integer,       -- ключ объекта <Призник договора>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
+    IN inContractTagGroupId  Integer,       -- Группы признаков договоров
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -30,13 +32,16 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractTag(), vbCode_calc, inName);
    
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractTag_ContractTagGroup(), ioId, inContractTagGroupId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,Integer,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
