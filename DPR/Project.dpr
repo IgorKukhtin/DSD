@@ -92,9 +92,6 @@ begin
          Application.ProcessMessages;
          Application.CreateForm(TMainForm, MainFormInstance);
          Application.CreateForm(TdmMain, dmMain);
-         // Меняем раскладку клавиатуры на UA
-         LoadKeyboardLayout('00000419', KLF_ACTIVATE);
-   //      LoadKeyboardLayout('00000422', KLF_ACTIVATE);
       end;
   Application.Run;
 end.
