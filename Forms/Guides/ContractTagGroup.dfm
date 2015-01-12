@@ -225,8 +225,8 @@ object ContractTagGroupForm: TContractTagGroupForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TContractTagEditForm'
-      FormNameParam.Value = 'TContractTagEditForm'
+      FormName = 'TContractTagGroupEditForm'
+      FormNameParam.Value = 'TContractTagGroupEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -290,8 +290,8 @@ object ContractTagGroupForm: TContractTagGroupForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TContractTagEditForm'
-      FormNameParam.Value = 'TContractTagEditForm'
+      FormName = 'TContractTagGroupEditForm'
+      FormNameParam.Value = 'TContractTagGroupEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -341,7 +341,7 @@ object ContractTagGroupForm: TContractTagGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractTag'
+    StoredProcName = 'gpSelect_Object_ContractTagGroup'
     DataSet = ClientDataSet
     DataSets = <
       item

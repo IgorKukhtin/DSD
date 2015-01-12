@@ -90,7 +90,7 @@ object ContractTagGroupEditForm: TContractTagGroupEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ContractTag'
+    StoredProcName = 'gpInsertUpdate_Object_ContractTagGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -129,7 +129,7 @@ object ContractTagGroupEditForm: TContractTagGroupEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_ContractTag'
+    StoredProcName = 'gpGet_Object_ContractTagGroup'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -272,6 +272,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbContractTagGroup'
+        end
+        item
+          Visible = True
           ItemName = 'bbContractArticle'
         end
         item
@@ -2073,6 +2077,10 @@
       Action = actReceiptCost
       Category = 0
     end
+    object bbContractTagGroup: TdxBarButton
+      Action = actContractTagGroup
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPersonalCash: TdsdOpenForm [0]
@@ -2552,6 +2560,17 @@
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077' ('#1058#1077#1093#1085#1086#1083#1086#1075')'
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContractTagGroup: TdsdOpenForm [35]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+      Hint = #1043#1088#1091#1087#1087#1099' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+      FormName = 'TContractTagGroupForm'
+      FormNameParam.Value = 'TContractTagGroupForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -4563,6 +4582,9 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 56
+  end
+  inherited StoredProc: TdsdStoredProc
+    Top = 112
   end
   inherited ClientDataSet: TClientDataSet
     Left = 136
