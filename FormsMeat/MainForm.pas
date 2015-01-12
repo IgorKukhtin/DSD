@@ -454,6 +454,8 @@ type
     dxBarButton1: TdxBarButton;
     actContractTagGroup: TdsdOpenForm;
     bbContractTagGroup: TdxBarButton;
+    actContractTag: TdsdOpenForm;
+    bbContractTag: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

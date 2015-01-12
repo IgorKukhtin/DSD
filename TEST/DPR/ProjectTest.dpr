@@ -606,7 +606,9 @@ uses
   ReceiptEdit in '..\..\Forms\Guides\ReceiptEdit.pas' {ReceiptEditForm: TParentForm},
   ReceiptCost in '..\..\Forms\Guides\ReceiptCost.pas' {ReceiptCostForm: TParentForm},
   ReceiptCostEdit in '..\..\Forms\Guides\ReceiptCostEdit.pas' {ReceiptCostEditForm: TParentForm},
-  ReceiptKind in '..\..\Forms\Kind\ReceiptKind.pas' {ReceiptKindForm: TParentForm};
+  ReceiptKind in '..\..\Forms\Kind\ReceiptKind.pas' {ReceiptKindForm: TParentForm},
+  ContractTagGroup in '..\..\Forms\Guides\ContractTagGroup.pas' {ContractTagGroupForm: TParentForm},
+  ContractTagGroupEdit in '..\..\Forms\Guides\ContractTagGroupEdit.pas' {ContractTagGroupEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
