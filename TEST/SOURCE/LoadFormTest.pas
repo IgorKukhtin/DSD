@@ -291,6 +291,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagEditForm');
+  // Группы признаков договоров
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagGroupEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
