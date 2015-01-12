@@ -13,7 +13,11 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxLabel;
 
+const
+  WM_ChangeKeyboard = WM_USER + 1;
+
 type
+
   TMainForm = class(TAncestorMainForm)
     bbGoodsDocuments: TdxBarSubItem;
     actMeasure: TdsdOpenForm;
@@ -449,6 +453,9 @@ type
     actReceiptCost: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    procedure ChangeKeyboard(var Message: TMessage); message WM_ChangeKeyboard;
   public
     { Public declarations }
   end;
@@ -469,6 +476,18 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMainForm.ChangeKeyboard(var Message: TMessage);
+begin
+  //LoadKeyboardLayout('00000419', KLF_ACTIVATE); ru
+  LoadKeyboardLayout('00000422', KLF_ACTIVATE); //ukr
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  inherited;
+  PostMessage(Handle, WM_ChangeKeyboard, 0, 0);
 end;
 
 end.

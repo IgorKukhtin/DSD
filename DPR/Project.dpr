@@ -1,6 +1,7 @@
 program Project;
 
 uses
+  Windows,
   Vcl.Forms,
   Controls,
   Classes,
@@ -88,6 +89,7 @@ begin
       if ShowModal = mrOk then
       begin
          TUpdater.AutomaticUpdateProgram;
+         Application.ProcessMessages;
          Application.CreateForm(TMainForm, MainFormInstance);
          Application.CreateForm(TdmMain, dmMain);
       end;
